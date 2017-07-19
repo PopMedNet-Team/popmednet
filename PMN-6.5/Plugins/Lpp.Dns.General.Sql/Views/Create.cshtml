@@ -1,0 +1,33 @@
+﻿@model Lpp.Dns.General.SqlDistribution.Models.SqlDistributionModel
+@{ 
+    this.Stylesheet("SqlDistribution.css");
+    var id = Html.UniqueId();
+}
+ 
+<div class="SqlEditor">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Sql Query
+        </div>
+        <div class="panel-body">
+            <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label>Enter the query string to execute at the DataMarts</label>
+                    <textarea id="@id" name="SqlQuery" class="form-control" required>@Model.SqlQuery</textarea>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('#@id').keyup(function () {
+                var form = $("form.trackChanges");
+                if (form) {
+                    form.formChanged(true);
+                }
+            });
+        });
+    </script>       
+</div>
+ 

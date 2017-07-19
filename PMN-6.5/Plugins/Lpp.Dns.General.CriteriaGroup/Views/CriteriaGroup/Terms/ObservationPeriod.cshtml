@@ -1,0 +1,55 @@
+﻿@model Lpp.Dns.General.CriteriaGroup.Models.ObservationPeriodModel
+@{ this.Stylesheet("CriteriaGroup.min.css"); }
+@{
+    var id = Html.UniqueId().TrimStart('_');
+}
+
+<div class="panel panel-default ObservationPeriodTerm Term">
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        <span>Observation Period Range<img src="/Content/img/icons/help16.gif" class="helptip" title="Dates may differ by network and are based on encounter dates." /></span>
+    </div>
+    <div class="panel-body">
+    <input name="TermName" value= "ObservationPeriod" hidden="hidden" style="display:none" />
+    <div class="ObservationPeriod" id="ObservationPeriod_@id">
+        <div class="ObservationPeriodInput ui-form">
+            <div>
+                <label class="Selections">Start Period</label>
+                <label style="color: red; font-size: x-small;">(MM/DD/YYYY)</label>
+            </div>
+            <div>
+                <span class="k-invalid-msg" data-for="StartPeriod"></span>
+                <input name="StartPeriod" id="StartPeriod_@id" type="date" value="@(Model.StartPeriod == null ? "" : Model.StartPeriod.Value.ToString("MM/dd/yyyy"))" maxlength="10" data-datepicker="datepicker" data-format="MM/dd/yyyy" />
+            </div>
+        </div>
+        <div class="ObservationPeriodInput ui-form">
+            <div>
+                <label class="Selections">End Period</label>
+                <label style="color: red; font-size: x-small;">(MM/DD/YYYY)</label>
+            </div>
+            <div>
+                <span class="k-invalid-msg" data-for="EndPeriod"></span>
+                <input name="EndPeriod" id="EndPeriod_@id" type="date" value="@(Model.EndPeriod == null ? "" : Model.EndPeriod.Value.ToString("MM/dd/yyyy"))" maxlength="10" data-datepicker="datepicker" data-format="MM/dd/yyyy"/>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $('.trackChanges').kendoValidator({
+            rules: {
+                dateValidation: function (input) {
+                    if ((input.is('[id="StartPeriod_@id"]') || input.is('[id="EndPeriod_@id"]')) && input.val() != "") {
+                        return kendo.parseDate(input.val()) != null;
+                    }
+                    return true;
+                }
+            },
+            messages: {
+                dateValidation: ""
+            },
+            validateOnBlur: true
+        });
+    });
+    </script>
+</div>

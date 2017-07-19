@@ -1,0 +1,122 @@
+﻿@model Lpp.Dns.HealthCare.Summary.Models.SummaryRequestViewModel
+@using Lpp.Dns.DTO.Enums
+@{ this.Stylesheet( "Medical.css" ); }
+
+<div class="MedicalRequest Display ui-form">
+    <div class="row">
+        <div class="col-md-6">
+            @if (Model.Base.RequestType.ShowMetricType)
+            {
+            <div class="panel panel-default">
+                <div class="panel-heading">Metric Type</div>
+                <div class="panel-body">@Model.Base.MetricTypes.Where(v => v == Model.Base.MetricType).Select(s => s).FirstOrDefault()</div>
+            </div>
+            }
+            @if (!Model.Base.Codes.NullOrEmpty())
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">Codes</div>
+                    <div class="panel-body">
+                        <div>@System.Web.HttpUtility.HtmlDecode(Model.Codeses)</div>
+                    </div>
+                </div>
+            }
+            @if (Model.Base.RequestType.ShowOutputCriteria)
+            { 
+            <div class="panel panel-default">
+                <div class="panel-heading">Output Criteria</div>
+                <div class="panel-body">
+                    <p class="alert alert-info">Output the top XX by age group, sex. For example, selecting 20 will output the 20 most frequent occurrences identified in the specific table.</p>
+                    <div>@Model.Base.OutputCriteriaList.Where(v => v.Code == Model.Base.OutputCriteria).Select(s => s.Name).FirstOrDefault()</div>
+                </div>
+            </div>
+            }
+            @if (Model.Base.RequestType.ShowSetting)
+            {        
+                <div class="panel panel-default">
+                    <div class="panel-heading">Setting</div>
+                    <div class="panel-body">@Model.Base.Settings.Where(v => v.Code == Model.Base.Setting).Select(s => s.Name).FirstOrDefault()</div>
+                </div>
+            }
+            @if (Model.Base.RequestType.ShowCoverage)
+            {        
+                <div class="panel panel-default">
+                    <div class="panel-heading">Coverage</div>
+                    <div class="panel-body">@Model.Base.Coverages.Where(v => v.Code == Model.Base.Coverage).Select(s => s.Name).FirstOrDefault()</div>
+                </div>
+            }
+            @if (Model.Base.RequestType.ShowAge)
+            {        
+                <div class="panel panel-default">
+                    <div class="panel-heading">Age Stratification</div>
+                    <div class="panel-body">@Model.Base.AgeStratifications.Where(v => v.StratificationCategoryId == Model.Base.AgeStratification).Select(s => s.CategoryText + " " + s.ClassificationText).FirstOrDefault()</div>
+                </div>
+            }
+            @if (Model.Base.RequestType.ShowSex)
+            {        
+                <div class="panel panel-default">
+                    <div class="panel-heading">Sex Stratification</div>
+                    <div class="panel-body">@Model.Base.Gender</div>
+                </div>
+            } 
+
+
+        </div>
+        <div class="col-md-5">
+        @if (!Model.Base.RequestType.IsMetadataRequest)
+                {
+                    if (!Model.Base.RequestType.Name.StartsWith("Prev: Dispensings by National Drug Code"))
+                    {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Observation Period Selector</div>
+                        <div class="panel-body">
+                            <table class="table" style="width:100%;">
+                                    <tr>                                         
+                                        <td>Start Period</td>
+                                        <td></td>
+                                        <td>End Period</td>
+                                        <td></td>                                    
+                                    </tr>
+                                    <tr>                                     
+                                        <td>                                             
+                                            @Model.Base.StartPeriod
+                                        </td>
+                                        <td>
+                                            @if (Model.Base.ByYearsOrQuarters == "ByQuarters")
+                                            {                                                                                                
+                                                @Model.Base.StartQuarter
+                                            }
+                                        </td>
+                                        <td>
+                                            @Model.Base.EndPeriod
+                                        </td>
+                                        <td>
+                                            @if (Model.Base.ByYearsOrQuarters == "ByQuarters")
+                                            {                                                
+                                                    @Model.Base.EndQuarter
+                                            }
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                    }
+                }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

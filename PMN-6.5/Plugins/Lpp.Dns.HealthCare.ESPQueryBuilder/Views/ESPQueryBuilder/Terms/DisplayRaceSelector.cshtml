@@ -1,0 +1,15 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+  @{
+    Layout = null;
+}
+<div class="RaceSelectorTerm Term panel panel-default">
+    <div class="panel-heading">Race</div>
+    <div class="panel-body">
+        <ul class="list-group">
+        @Html.Raw( string.Join( "", 
+            from rc in Model.Base.RaceSelections
+            join id in (Model.Base.Race??"").Split(',') on rc.StratificationCategoryId.ToString() equals id
+            select "<li class='list-group-item'>" + rc.CategoryText + "</li>"))
+        </ul>
+    </div>
+</div>

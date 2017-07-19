@@ -1,0 +1,135 @@
+﻿@model Lpp.Dns.HealthCare.Conditions.Models.ConditionsViewModel
+@{ this.Stylesheet( "ESPQueryBuilder.css" ); }
+
+<div class="MedicalRequest Display ui-form">
+    <div class="ui-form">
+    <div class="ReportType">
+     
+        <div class="ui-groupbox">
+            <div class="ui-groupbox-header"><span>Disease Selected</span></div>
+            <div class="ui-form"><div><label class="Selections">Disease</label></div></div><br />
+            @Model.Base.Disease
+        </div>
+
+    </div>
+
+    <br />
+
+    <div class="Parameters">
+        <div class="LeftParamBlock">
+            <div class="ui-groupbox">
+                <div class="ui-groupbox-header"><span>Observation Period Range<img src="/Content/img/icons/help16.gif" class="helptip" title="Dates may differ by network and are based on encounter dates." /></span></div>
+                <table>
+                    <tr>
+                        <td><div class="ui-form"><div><label class="Selections">Start Period</label></div></div></td>
+                        <td><div class="ui-form"><div><label class="Selections">End Period</label></div></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="DisplayField">@(Model.Base.StartPeriodDate == null ? "(None)" : Model.Base.StartPeriodDate.Value.ToString("MM/dd/yyyy"))</div></td>
+                        <td><div class="DisplayField">@(Model.Base.EndPeriodDate == null ? "(None)" : Model.Base.EndPeriodDate.Value.ToString("MM/dd/yyyy"))</div></td>
+                    </tr>
+                </table>
+            </div><br />
+
+            <div>
+                <div class="AgeBlock">
+                    <div class="ui-groupbox">
+                        <div class="ui-groupbox-header"><span>Age Range</span></div>
+                            <table>
+                                <tr>
+                                    <td><div class="ui-form"><div><label class="Selections">Min</label></div></div></td>
+                                    <td><div class="ui-form"><div><label class="Selections">Max</label></div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="DisplayField">@Model.Base.MinAge</div></td>
+                                    <td><div class="DisplayField">@Model.Base.MaxAge</div></td>
+                                </tr>
+                            </table>
+                    </div>
+                </div>
+                <div class="SexBlock">
+                    <div class="ui-groupbox">
+                        <div class="ui-groupbox-header"><span>Gender</span></div>
+                        <table>
+                            <tr>
+                                <td><div class="ui-form"><div><label class="Selections">Sex</label></div></div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="DisplayField">
+                                        @Model.Base.SexSelections.Where(v => v.StratificationCategoryId == Model.Base.Sex).Select(s => s.CategoryText).FirstOrDefault()
+                                    </div>
+                                </td> 
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br class="clear" />
+            </div>
+        </div>
+
+        <div class="RightParamBlock">
+            <div class="ui-groupbox">
+                <div class="ui-groupbox-header"><span>Races Selected</span></div>
+                <div class="Selections Display"><ul>
+                    @Html.Raw( string.Join( "", 
+                        from rc in Model.Base.RaceSelections
+                        join id in (Model.Base.Race??"").Split(',') on rc.StratificationCategoryId.ToString() equals id
+                        select "<li>" + rc.CategoryText + "</li>"))
+                </ul></div>
+            </div>
+        </div>
+@*        <div class="RightParamBlock">
+            <div class="ui-groupbox">
+                <div class="ui-groupbox-header"><span>Ethnicities Selected</span></div>
+                <div class="Selections Display"><ul>
+                    @Html.Raw( string.Join( "", 
+                        from rc in Model.Base.EthnicitySelections
+                        join id in (Model.Base.Ethnicity??"").Split(',') on rc.StratificationCategoryId.ToString() equals id
+                        select "<li>" + rc.CategoryText + "</li>"))
+                </ul></div>
+            </div>
+        </div>*@
+
+        <br class="clear" />
+    </div>
+
+    <div class="Report">
+        <div class="ui-groupbox">
+            <div class="ui-groupbox-header"><span>Reports Selected</span></div>
+            <div class="Selections Display"><ul>
+                @Html.Raw( string.Join( "", 
+                    from rp in Model.Base.ReportSelections
+                    join id in (Model.Base.Report??"").Split(',') on rp.Value.ToString() equals id
+                    let stratId = rp.Name.StartsWith("Age") ? Model.Base.AgeStratification :
+                                    rp.Name.StartsWith("Period") ? Model.Base.PeriodStratification :
+                                        rp.Name.StartsWith("ICD9") ? Model.Base.ICD9Stratification :
+                                    null
+                    let strat = rp.SelectionList.EmptyIfNull()
+                                    .Where( s => s.StratificationCategoryId == stratId )
+                                    .Select( s => " (" + s.CategoryText + ")" )
+                                    .FirstOrDefault()
+                    select "<li>" + rp.Display + strat + "</li>") )
+            </ul></div>
+        </div>
+    </div>
+
+    <br class="clear" />
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

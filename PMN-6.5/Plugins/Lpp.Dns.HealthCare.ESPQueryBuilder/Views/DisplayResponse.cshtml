@@ -1,0 +1,108 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPResponseModel
+
+
+<div id="ResponseContainer">
+@if (Model.Projected)
+{<text>
+    <div class="left">
+        <p>
+            Projection data are available for requests with stratifications for any of the following options:
+            No stratifications selected, 10-year age group, sex, and/or race-ethnicity.
+            These strata correspond to the US Census data used for the calculations.
+            For additional information and calculations used, please see <a href="https://popmednet.atlassian.net/wiki/display/DOC/ESP+Query+Composer+Projections">https://popmednet.atlassian.net/wiki/display/DOC/ESP+Query+Composer+Projections</a>
+        </p>
+    </div></text>
+   if (Model.StratificationIncludesLocations) { <text>
+    <div data-bind="kendoTabStrip:{ select: onProjectionTypeSelect }" id="projectionViews">
+        <ul id="projectionTypes">
+            <li class="k-state-active" id="RequestedLocations">Projected to Requested Locations</li>
+            <li id="OtherLocations">Other Locations</li>
+        </ul>
+
+        <div id="PopulationProjection" style="min-height:350px;" data-bind="with:ProjectedOnLocationsVM">
+            <div id="display_populationprojection" class="metricview" data-bind="foreach: { data: Tables, as: 'table' }">
+                <table class="table table-striped">
+                    <thead>
+                        <tr data-bind="foreach: $parent.Headers">
+                            <th data-bind="html: $data.text, attr: { title: $data.tooltip }, style: { textAlign: $data.align, verticalAlign: 'bottom' }"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: table, as: 'rows' }">
+                        <tr data-bind="foreach: { data: rows, as: 'col' }">
+                            <td data-bind="text: col, style: { textAlign: ESPQueryBuilder.IsNumber(col) == true ? 'right' : 'left' }"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+</text>
+   }<text>
+        <div id="GeographicProjection" style="min-height:350px;" data-bind="with:OtherLocationsVM">
+
+            <div class="right" style="margin-top:8px;">
+                State:&nbsp;
+                <select id="cboState" data-bind="value: State">
+                    <option value="" selected></option>
+                    <option value="MA">Mass</option>
+                </select>
+                &nbsp;Location:&nbsp;
+                <select id="cboLocation" style="width: 150px;" data-bind="value: Location, event: {change: LocationChanged.bind($root.OtherLocationsVM, $data)}">
+                    <option value="" selected></option>
+                    <optgroup label="Regions" data-bind="foreach: Regions">
+                        <option data-bind="text: $data, attr: { value: $data }"></option>
+                    </optgroup>
+                    <optgroup label="Towns" data-bind="foreach: Towns">
+                        <option data-bind="text: $data, attr: { value: $data }"></option>
+                    </optgroup>
+                </select>
+            </div>
+            <div id="esp_displayresponse" class="metricview" data-bind="foreach: { data: Tables, as: 'table' }">
+                <table class="table table-striped">
+                    <thead>
+                        <tr data-bind="foreach: $parent.Headers">
+                            <th data-bind="html: $data.text, attr: { title: $data.tooltip }, style: { textAlign: $data.align, verticalAlign: 'bottom' }"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: table, as: 'rows' }">
+                        <tr data-bind="foreach: { data: rows, as: 'col' }">
+                            <td data-bind="text: col, style: { textAlign: ESPQueryBuilder.IsNumber(col) == true ? 'right' : 'left' }"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div></text>
+    if(Model.StratificationIncludesLocations){       
+    </div>
+    }
+}
+else
+{
+    <!-- ko with: SimpleResultVM -->
+    <div id="esp_displayresponse" class="metricview" data-bind="foreach: { data: Tables, as: 'table' }">
+        <table class="table table-striped">
+            <thead>
+                <tr data-bind="foreach: $parent.Headers">
+                    <th data-bind="html: $data.text, attr: { title: $data.tooltip }, style: { textAlign: $data.align, verticalAlign: 'bottom' }"></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: { data: table, as: 'rows' }">
+                <tr data-bind="foreach: { data: rows, as: 'col' }">
+                    <td data-bind="text: col, style: { textAlign: ESPQueryBuilder.IsNumber(col) == true ? 'right' : 'left' }"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- /ko -->
+}
+
+</div>
+@*<script src="/scripts/esp/espquerybuilder/DisplayResponse.js" async></script>*@
+<script type="text/javascript" src="@this.Resource("espquerybuilder/DisplayResponse.js")"></script>
+<script>
+    $(function () {
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ESPQueryBuilder.init(model, $('#ResponseContainer'));
+    });
+</script>

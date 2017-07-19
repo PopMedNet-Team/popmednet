@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<request_builder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <header>
+    <request_type>ADHD Module 1</request_type>
+    <request_name>Bruce's query</request_name>
+    <request_description>My request description</request_description>
+    <submitter_email>bswan@lincolnpeak.com</submitter_email>
+    <options>
+      <option name="enroll_cont" value="y"/>
+      <option name="enroll_prior" value="3"/>
+      <option name="enroll_post" value="4"/>
+    </options>      
+  </header>
+  <request>
+    <period_start>2012-03-12</period_start>
+    <period_end>2012-03-31</period_end>
+    <variables>
+      <operation operator="Or">      
+        <variable name="dx_var" value="001"/>
+        <variable name="dx_var" value="001.0"/>
+        <variable name="dx_var" value="001.1"/>
+      </operation>
+      <options>
+        <option name="index_code" value="dx"/>
+      </options>
+    </variables>
+    <inclusion_criteria>
+      <operation operator="And">
+	      <operation operator="Or">
+	        <variable name="dx_var" value="140"/>
+	        <variable name="dx_var" value="140.0"/>
+	        <variable name="dx_var" value="140.1"/>
+	      </operation>
+	      <operation operator="And">
+	        <variable name="px_var" value="10040"/>
+	        <variable name="px_var" value="10060"/>
+	        <variable name="px_var" value="10061"/>
+	      </operation>
+	      <operation operator="Or">
+	        <variable name="rx_var" value="A LIPOIC ACID/UBIDECAR/DL-E"/>
+	        <variable name="rx_var" value="A-ACETYLMANDELIC ACID"/>
+	        <variable name="rx_var" value="A-CYST/AA COMB.NO5/FA/MV-MN"/>
+	      </operation>
+      </operation>
+    </inclusion_criteria>
+    <exclusion_criteria>
+      <operation operator="And">
+	      <variable name="dx_var" value="002"/>
+	      <operation operator="&lt;=">
+	          <variable name="age_var" value="55"/>
+	          <options>
+	            <option name="as_of" value="NA"/>
+	          </options>
+	      </operation>    
+      </operation>
+    </exclusion_criteria>
+  </request>
+  <response>
+    <report name="Report 0" row="Year" column="Age" group="Race">
+      <options>
+        <option name="option" value="5"/>
+      </options>
+    </report>
+  </response>  
+  <datamarts>
+  	<datamart name="LPP Test" organization="Lincoln Peak Partners"/>
+  </datamarts>
+</request_builder>

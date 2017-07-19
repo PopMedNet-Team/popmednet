@@ -1,0 +1,100 @@
+﻿
+.MedicalRequest .RequestSubtype, .MedicalRequest 
+{
+    display: inline-block;
+    width: 200px;
+    margin-bottom: 20px;
+    margin-right: 30px;
+}
+
+.FileSelector select.Category { width: 670px }
+.FileSelector .Instruction { margin-bottom: 20px; }
+
+.FileSelector .SearchResultBox,
+.FileSelector .SelectedFilesBox {
+    display: inline-block;
+    width: 425px;
+    vertical-align: top;
+}
+
+.FileSelector .SearchResultBox {
+    margin-right: 20px;
+}
+
+.FileSelector .SearchBlock .Field  
+{
+    display: inline-block;
+    width: 200px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+}
+
+.FileSelector table.Grid > tbody > tr > td
+{
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.FileSelector .Grid .Add, .CodeSelector .Grid .Remove { min-width: 55px; }
+.FileSelector .Grid .Code { width: 55px; font-weight: bold; }
+.FileSelector .Grid .Description { width: 300px; max-width: 300px; overflow: hidden; }
+
+.FileSelector .EmptySelectionMessage * { text-align: center; background: transparent; color: #464646; }
+.FileSelector .SearchResult { text-align: center; }
+
+
+label.Selector
+{
+    font-weight:bold;
+    font-size: small;
+}
+
+label.Selections
+{
+    font-size: 12px;
+}    
+    
+#ReportComboBoxes
+{
+    width: 70%;
+}    
+
+.clear
+{
+    clear: both;
+}    
+        
+div.Selector
+{
+    border: 1px solid #678FC0;
+    padding: 10px 15px;
+}    
+
+div.Selections
+{
+    border: 2px solid #678FC0;
+    padding: 0px 0px;
+    background-color: White;
+} 
+
+div.Selections .Grid
+{
+    width: 100%;
+}    
+
+p.Exception      
+{
+    color: red;
+}    
+
+div.LeftParamBlock
+{
+    width: 50%;
+}        
+
+div.RightParamBlock
+{
+    width: 40%;
+    
+    
+}    

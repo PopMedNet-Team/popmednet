@@ -1,0 +1,727 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{7A0CE541-DDFA-44AD-8D53-32AE5B306978}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.General.Metadata</RootNamespace>
+    <AssemblyName>Lpp.Dns.General.Metadata</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>ace076e8</NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <Import Project="..\..\Build\Lpp.Dns.targets" />
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.3.1, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\LinqKit.1.1.3.1\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Code\CodeTranslator.cs" />
+    <Compile Include="Code\Exceptions\Exception.cs" />
+    <Compile Include="Code\LegacyActivityMap.cs" />
+    <Compile Include="Code\MetadataSearchPlugin.cs" />
+    <Compile Include="Code\RequestBuilder.cs" />
+    <Compile Include="Code\RequestMetadataCollection\DataMartMetadata.cs" />
+    <Compile Include="Code\RequestMetadataCollection\OrganizationMetadata.cs" />
+    <Compile Include="Code\RequestMetadataCollection\RequestMetadata.cs" />
+    <Compile Include="Code\RequestTypes.cs" />
+    <Compile Include="Models\ExportedRequestSearchResult.cs" />
+    <Compile Include="Models\ExportedRequestSearchRoutingResult.cs" />
+    <Compile Include="Models\LegacyMetadataRequest.cs" />
+    <Compile Include="Models\MetadataRegSearchModel.cs" />
+    <Compile Include="Models\MetaDataRegResponseModel.cs" />
+    <Compile Include="Models\MetadataDataMartResponseModel.cs" />
+    <Compile Include="Models\MetadataDataMartSearchModel.cs" />
+    <Compile Include="Models\MetadataOrgResponseModel.cs" />
+    <Compile Include="Models\MetadataOrgSearchModel.cs" />
+    <Compile Include="Models\MetadataRequestHelper.cs" />
+    <Compile Include="Models\MetaDataResponseModel.cs" />
+    <Compile Include="Models\LegacyMetadataSearchModel.cs" />
+    <Compile Include="Models\MetadataSearchModel.cs" />
+    <Compile Include="Models\MetadataRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Views\Create.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Create.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateDataMartSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateDataMartSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateOrgSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateOrgSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateRegSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateRegSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayDataMartSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayDataMartSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayDataMartSearchResponse.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayDataMartSearchResponse.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayOrgSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayOrgSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayOrgSearchResponse.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayOrgSearchResponse.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayRegSearch.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayRegSearch.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayRegSearchResponse.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayRegSearchResponse.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayRequest.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayRequest.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DisplayRequestResponse.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayRequestResponse.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Error.cs">
+      <DependentUpon>Error.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Dns.Data\Lpp.Dns.Data.csproj">
+      <Project>{4b69bf41-5231-417b-9841-f2092c24b1d1}</Project>
+      <Name>Lpp.Dns.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.HealthCare.Helpers\Lpp.Dns.General.Helpers.csproj">
+      <Project>{f202438b-27ab-4e58-b137-856363d29b16}</Project>
+      <Name>Lpp.Dns.General.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.Mvc.Interfaces\Lpp.Dns.Mvc.Interfaces.csproj">
+      <Project>{45dcb2b5-186d-4b7d-917c-e3780a9b8a19}</Project>
+      <Name>Lpp.Dns.Mvc.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.Portal.Interfaces\Lpp.Dns.Portal.Interfaces.csproj">
+      <Project>{b43a1f32-8301-4b0b-877d-1570c6a06674}</Project>
+      <Name>Lpp.Dns.Portal.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{a51b3e7c-4c5e-4120-bbfc-5667736d7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Composition\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Controls.Interfaces\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895dfa-14a7-4113-817a-e2aef16aac63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Controls\Lpp.Mvc.Controls.csproj">
+      <Project>{39a1b5d5-583a-4735-b897-9b5352c20e7e}</Project>
+      <Name>Lpp.Mvc.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Security\Lpp.Security.csproj">
+      <Project>{fccb5726-d818-4816-9714-d323834cebc9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Utilities.Legacy\Lpp.Utilities.Legacy.csproj">
+      <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
+      <Name>Lpp.Utilities.Legacy</Name>
+    </ProjectReference>
+    
+    
+    
+    <ProjectReference Include="..\Lpp.Dns.General.CriteriaGroupCommon\Lpp.Dns.General.CriteriaGroupCommon.csproj">
+      <Project>{a7557304-001b-4cae-a05f-196bff7dbaeb}</Project>
+      <Name>Lpp.Dns.General.CriteriaGroupCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.General.CriteriaGroup\Lpp.Dns.General.CriteriaGroup.csproj">
+      <Project>{e383f358-c6e0-44cb-bae2-14454e4d8d18}</Project>
+      <Name>Lpp.Dns.General.CriteriaGroup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.HealthCare.Controls\Lpp.Dns.HealthCare.Controls.csproj">
+      <Project>{96239d23-8094-4649-8b29-edc7c04dafba}</Project>
+      <Name>Lpp.Dns.HealthCare.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ViewModels\Terms\CodesTerm.js">
+      <DependentUpon>CodesTerm.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Views\razorgenerator.directives" />
+    <None Include="Web.config" />
+    <TypeScriptCompile Include="Content\CreateRegSearch.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\EncounterType.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\MetaDataTable.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\PDX.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\Race.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\Race.js">
+      <DependentUpon>Race.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\Models\Terms\Ethnicity.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\Ethnicity.js">
+      <DependentUpon>Ethnicity.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\Models\Terms\Metric.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\Metric.js">
+      <DependentUpon>Metric.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\Models\Terms\DataPartner.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\DataPartner.js">
+      <DependentUpon>DataPartner.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\CreateOrgSearch.ts" />
+    <EmbeddedResource Include="Content\CreateOrgSearch.js">
+      <DependentUpon>CreateOrgSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\CreateDataMartSearch.ts" />
+    <EmbeddedResource Include="Content\CreateDataMartSearch.js">
+      <DependentUpon>CreateDataMartSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\DisplayResponse.ts" />
+    <EmbeddedResource Include="Content\DisplayResponse.js">
+      <DependentUpon>DisplayResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\DisplayRegistryResponse.ts" />
+    <EmbeddedResource Include="Content\CreateRegSearch.js">
+      <DependentUpon>CreateRegSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\DisplayRegistryResponse.js">
+      <DependentUpon>DisplayRegistryResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\RequesterCenter.js">
+      <DependentUpon>RequesterCenter.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\Models\Terms\ReportAggregationLevel.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\RxAmt.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\rxSup.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\WorkplanType.ts" />
+    <TypeScriptCompile Include="Content\Models\Terms\RequesterCenter.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\EncounterType.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\MetaDataTable.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\PDX.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\Race.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\Race.js">
+      <DependentUpon>Race.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\Ethnicity.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\Ethnicity.js">
+      <DependentUpon>Ethnicity.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\Metric.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\Metric.js">
+      <DependentUpon>Metric.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\DataPartner.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\DataPartner.js">
+      <DependentUpon>DataPartner.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\WorkplanType.js">
+      <DependentUpon>WorkplanType.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\RequesterCenter.js">
+      <DependentUpon>RequesterCenter.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\WorkplanType.js">
+      <DependentUpon>WorkplanType.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\ReportAggregationLevel.js">
+      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\PDX.js">
+      <DependentUpon>PDX.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\PDX.js">
+      <DependentUpon>PDX.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\RxAmt.js">
+      <DependentUpon>RxAmt.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\EncounterType.js">
+      <DependentUpon>EncounterType.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\MetaDataTable.js">
+      <DependentUpon>MetaDataTable.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Models\Terms\rxSup.js">
+      <DependentUpon>rxSup.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\MetaDataTable.js">
+      <DependentUpon>MetaDataTable.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\EncounterType.js">
+      <DependentUpon>EncounterType.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\RxAmt.js">
+      <DependentUpon>RxAmt.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\RxSup.js">
+      <DependentUpon>RxSup.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Views\Error.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Error.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="Content\MetadataSearch.css" />
+    <TypeScriptCompile Include="Content\Create.ts" />
+    <EmbeddedResource Include="Content\Create.js">
+      <DependentUpon>Create.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Create.js.map">
+      <DependentUpon>Create.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\RequestCriteria.ts" />
+    <EmbeddedResource Include="Content\Models\RequestCriteria.js">
+      <DependentUpon>RequestCriteria.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\CreateOrgSearch.js.map">
+      <DependentUpon>CreateOrgSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\CreateDataMartSearch.js.map">
+      <DependentUpon>CreateDataMartSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\DisplayRegistryResponse.js.map">
+      <DependentUpon>DisplayRegistryResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\DisplayResponse.js.map">
+      <DependentUpon>DisplayResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\CreateRegSearch.js.map">
+      <DependentUpon>CreateRegSearch.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\RequestCriteria.js.map">
+      <DependentUpon>RequestCriteria.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\RequestCriteria.ts" />
+    <EmbeddedResource Include="Content\ViewModels\RequestCriteria.js" />
+    <None Include="Content\Models\Terms\DataPartner.js.map">
+      <DependentUpon>DataPartner.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\EncounterType.js.map">
+      <DependentUpon>EncounterType.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\Ethnicity.js.map">
+      <DependentUpon>Ethnicity.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\MetaDataTable.js.map">
+      <DependentUpon>MetaDataTable.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\Metric.js.map">
+      <DependentUpon>Metric.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\PDX.js.map">
+      <DependentUpon>PDX.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\Race.js.map">
+      <DependentUpon>Race.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\RequesterCenter.js.map">
+      <DependentUpon>RequesterCenter.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\RxAmt.js.map">
+      <DependentUpon>RxAmt.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\rxSup.js.map">
+      <DependentUpon>rxSup.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\WorkplanType.js.map">
+      <DependentUpon>WorkplanType.ts</DependentUpon>
+    </None>
+    <None Include="Content\Models\Terms\ReportAggregationLevel.js.map">
+      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\RequestCriteria.js.map" />
+    <TypeScriptCompile Include="Content\Models\Criteria.ts" />
+    <EmbeddedResource Include="Content\Models\Criteria.js">
+      <DependentUpon>Criteria.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Criteria.js.map">
+      <DependentUpon>Criteria.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Criteria.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Criteria.js" />
+    <None Include="Content\ViewModels\Criteria.js.map" />
+    <TypeScriptCompile Include="Content\Models\Terms.ts" />
+    <EmbeddedResource Include="Content\Models\Terms.js">
+      <DependentUpon>Terms.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms.js.map">
+      <DependentUpon>Terms.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms.js">
+      <DependentUpon>Terms.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms.js.map">
+      <DependentUpon>Terms.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\Terms\AgeRange.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\AgeRange.js">
+      <DependentUpon>AgeRange.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\AgeRange.js.map">
+      <DependentUpon>AgeRange.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\AgeRange.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\AgeRange.js">
+      <DependentUpon>AgeRange.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\AgeRange.js.map">
+      <DependentUpon>AgeRange.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\Terms\AgeStratifier.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\AgeStratifier.js">
+      <DependentUpon>AgeStratifier.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\AgeStratifier.js.map">
+      <DependentUpon>AgeStratifier.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\AgeStratifier.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\AgeStratifier.js">
+      <DependentUpon>AgeStratifier.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\AgeStratifier.js.map">
+      <DependentUpon>AgeStratifier.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\Terms\ClinicalSetting.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\ClinicalSetting.js">
+      <DependentUpon>ClinicalSetting.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\ClinicalSetting.js.map">
+      <DependentUpon>ClinicalSetting.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\ClinicalSetting.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\ClinicalSetting.js">
+      <DependentUpon>ClinicalSetting.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\ClinicalSetting.js.map">
+      <DependentUpon>ClinicalSetting.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\CodesTerm.ts" />
+    <None Include="Content\ViewModels\Terms\CodesTerm.js.map">
+      <DependentUpon>CodesTerm.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\DateRange.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\DateRange.js">
+      <DependentUpon>DateRange.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\DataPartner.js.map">
+      <DependentUpon>DataPartner.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\DateRange.js.map">
+      <DependentUpon>DateRange.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\Terms\Project.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\Project.js">
+      <DependentUpon>Project.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\Project.js.map">
+      <DependentUpon>Project.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\Project.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\Project.js">
+      <DependentUpon>Project.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\Project.js.map">
+      <DependentUpon>Project.ts</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\Models\Terms\RequestStatus.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\RequestStatus.js">
+      <DependentUpon>RequestStatus.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\RequestStatus.js.map">
+      <DependentUpon>RequestStatus.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\ReportAggregationLevel.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\ReportAggregationLevel.js">
+      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\ReportAggregationLevel.js.map">
+      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\RequestStatus.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\RequestStatus.js">
+      <DependentUpon>RequestStatus.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\EncounterType.js.map">
+      <DependentUpon>EncounterType.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\Ethnicity.js.map">
+      <DependentUpon>Ethnicity.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\MetaDataTable.js.map">
+      <DependentUpon>MetaDataTable.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\Metric.js.map">
+      <DependentUpon>Metric.ts</DependentUpon>
+    </None>
+    <EmbeddedResource Include="Content\ViewModels\Terms\PDX.js.map">
+      <DependentUpon>PDX.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\ViewModels\Terms\Race.js.map">
+      <DependentUpon>Race.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\RequesterCenter.js.map">
+      <DependentUpon>RequesterCenter.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\RequestStatus.js.map">
+      <DependentUpon>RequestStatus.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\Models\Terms\Sex.ts" />
+    <EmbeddedResource Include="Content\Models\Terms\Sex.js">
+      <DependentUpon>Sex.ts</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Content\Models\Terms\Sex.js.map">
+      <DependentUpon>Sex.ts</DependentUpon>
+    </None>
+    <TypeScriptCompile Include="Content\ViewModels\Terms\RequesterCenter.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\RxAmt.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\RxSup.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\WorkplanType.ts" />
+    <TypeScriptCompile Include="Content\ViewModels\Terms\Sex.ts" />
+    <EmbeddedResource Include="Content\ViewModels\Terms\Sex.js">
+      <DependentUpon>Sex.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Terms\Sex.js.map">
+      <DependentUpon>Sex.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Views\Create.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Create.generated.cs</LastGenOutput>
+    </Content>
+    <None Include="App.config" />
+    <None Include="Content\ViewModels\Terms\RxAmt.js.map">
+      <DependentUpon>RxAmt.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\RxSup.js.map">
+      <DependentUpon>RxSup.ts</DependentUpon>
+    </None>
+    <None Include="Content\ViewModels\Terms\WorkplanType.js.map">
+      <DependentUpon>WorkplanType.ts</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <Content Include="Views\DisplayRequest.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayRequest.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayRequestResponse.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayRequestResponse.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\CreateDataMartSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>CreateDataMartSearch.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\CreateOrgSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>CreateOrgSearch.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayOrgSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayOrgSearch.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayOrgSearchResponse.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayOrgSearchResponse.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayDataMartSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayDataMartSearch.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayDataMartSearchResponse.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayDataMartSearchResponse.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayRegSearchResponse.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayRegSearchResponse.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\CreateRegSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>CreateRegSearch.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayRegSearch.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayRegSearch.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+</Project>

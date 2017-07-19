@@ -1,0 +1,55 @@
+﻿@* GeneratePrettyNames : true *@
+@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+    var btnID = string.Format("btnSelectLocations{0}", id);
+    var selectedID = string.Format("selectedLocations_{0}", id);
+}
+<div class="PredefinedLocationTerm Term panel panel-default"> 
+    <input name="TermName" value="PredefinedLocation" hidden="hidden" style="display:none" />   
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Locations
+    </div>
+    <div id="@string.Format("binding-container{0}", id)" class="PredefinedLocation panel-body">
+        <input type="hidden" id="@selectedID" name="PredefinedLocations" data-bind="value:SerializedLocations" />
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label style="display:block;">Selected Locations</label>
+                <ul style="list-style:none;width:470px;float:left;" data-bind="foreach:LocationNames">
+                    <li style="float:left;margin-right:12px;width:220px;" data-bind="text:$data"></li>
+                </ul>
+                <div class="Clearfix"></div>
+            </div>
+            <div class="col-md-6">
+                <br/>
+                <button type="button" class="btn btn-default" id="@btnID" data-bind="click:onSelectLocations">Select Locations</button>
+            </div>
+        </div>
+    </div>
+<script>
+
+    $(function ()
+    {
+        function ViewModel() {
+            var self = this;
+            this.SelectedLocations = ko.observableArray(@Html.Raw(Model.LocationCodes));
+            this.LocationNames = ko.pureComputed(function () { return ko.utils.arrayMap(self.SelectedLocations(), function (item) { return item.Location + ', ' + item.StateAbbrev; }) }, this),
+            this.SerializedLocations = ko.pureComputed(function () { return JSON.stringify(self.SelectedLocations()); }, this)
+            this.onSelectLocations = function(){
+                Global.Helpers.ShowDialog('Select one or more locations', '/Dialogs/PredefinedLocationSelector', ['Close'], 960, 620, self.SelectedLocations())
+                    .done(function (results){
+                        if(!results)
+                            return;
+                        self.SelectedLocations(results);
+                        $("form").formChanged(true);
+                    });
+            };
+        };
+
+        var vm = new ViewModel();
+        ko.applyBindings(vm, $('#@string.Format("binding-container{0}", id)')[0]);
+    });
+</script>
+</div>

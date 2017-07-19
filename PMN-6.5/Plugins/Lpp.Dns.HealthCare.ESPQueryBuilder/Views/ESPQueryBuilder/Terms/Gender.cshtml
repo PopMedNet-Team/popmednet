@@ -1,0 +1,32 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+    var viewModel = new
+    {
+        Selected = Model.Sex,
+        Options = Model.SexSelections.Select(s => new { Display = s.CategoryText, Value = s.StratificationCategoryId })
+    };
+    
+}
+<div class="GenderTerm Term panel panel-default">
+    <input name="TermName" value="Gender" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Sex
+    </div>
+    <div id="@id" class="Gender panel-body">
+        <input name="Sex" data-bind="kendoDropDownList:{ dataTextField:'Display', dataValueField:'Value', value:Selected, data:Options }" style="width:300px;" />
+        <script>
+            $(function () {
+                var bindingContainer = $('#@id');
+                var m = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel));
+                ko.applyBindings({
+                    Selected: ko.observable(m.Selected),
+                    Options: ko.observableArray(m.Options)
+                }, bindingContainer[0]);
+
+            })
+        </script>
+    </div>
+</div>

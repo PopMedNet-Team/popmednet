@@ -1,0 +1,37 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+}
+<div class="RaceSelectorTerm Term panel panel-default">
+    <input name="TermName" value="EthnicitySelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Race-Ethnicity
+    </div>
+    <div id="@string.Format("binding-container{0}", id)" class=" panel-body EthnicitySelector">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20px;"></th>
+                    <th>Race-Ethnicity</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: Ethnicities">
+                <tr>
+                    <td><input type="checkbox" data-bind="value:StratificationCategoryId, checked: $root.SelectedEthnicity" /></td>
+                    <td data-bind="text:CategoryText"></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="Ethnicity" id="@string.Format("Ethnicity{0}", id)" data-bind="value: SelectedEthnicity" />
+    </div>
+    <script>
+        $(function () {
+            ko.applyBindings({
+                Ethnicities : @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.EthnicitySelections)),
+                SelectedEthnicity: ko.observableArray(('@Model.Ethnicity' || '').split(','))
+            }, $('#@string.Format("binding-container{0}", id)')[0]);
+        });
+</script>
+</div>

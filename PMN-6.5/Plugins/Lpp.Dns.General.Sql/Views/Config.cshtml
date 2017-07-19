@@ -1,0 +1,77 @@
+﻿@using Lpp.Dns
+@model ConfigModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+
+<div class="Value ModelConfigForm" id="@id">
+    <a href="#" class="Link">[configure]</a>
+    <script type="text/javascript">
+        $(function () {
+            var dlg = $("#@(id) > .ModelConfig");
+            var link = $("#@(id) > a.Link");
+            link.click(function () {
+                dlg.dialog({
+                    modal: true, title: "@Model.Model.Name",
+                    width: 540, buttons: {
+                        OK: function () {
+                            dlg.dialog("close");
+                        },
+                        Cancel: function () { dlg.dialog("close"); }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+    <div id="@Model.Model.ID" class="ModelConfig" style="display: none;">
+        <div class="ui-groupbox">
+            <div class="ui-dialog-groupbox-header"><span>Data Source</span></div>
+            <div class="ui-form">
+                <div class="Field">
+                    <label>Server</label>
+                    <input id="Server" name="Server" type="text" value="@(Model.Properties.ContainsKey("Server") ? Model.Properties["Server"] : "")" />
+                </div>
+                <div class="Field">
+                    <label>Port</label>
+                    <input id="Port" name="Port" type="text" value="@(Model.Properties.ContainsKey("Port") ? Model.Properties["Port"] : "")" />
+                </div>
+
+                <div class="Field">
+                    <label>User ID</label>
+                    <input id="UserId" name="UserId" type="text" value="@(Model.Properties.ContainsKey("UserId") ? Model.Properties["UserId"] : "")" />
+                </div>
+                <br />
+
+                <div class="Field">
+                    <label>Password</label>
+                    <input id="Password" name="Password" type="password" value="@(Model.Properties.ContainsKey("Password") ? Model.Properties["Password"] : "")" />
+                </div>
+
+                <div class="Field">
+                    <label>Confirm Password</label>
+                    <input id="ConfirmPassword" name="ConfirmPassword" type="password" value="@(Model.Properties.ContainsKey("ConfirmPassword") ? Model.Properties["ConfirmPassword"] : "")" />
+                </div>
+
+                <div class="Field">
+                    <label>Database</label>
+                    <input id="Database" name="Database" type="text" value="@(Model.Properties.ContainsKey("Database") ? Model.Properties["Database"] : "")" />
+                </div>
+                <br />
+
+                <div class="Field">
+                    <label>Connection Timeout</label>
+                    <input id="ConnectionTimeout" name="ConnectionTimeout" type="text" value="@(Model.Properties.ContainsKey("ConnectionTimeout") ? Model.Properties["ConnectionTimeout"] : "15")" />
+                </div>
+
+                <div class="Field">
+                    <label>Command Timeout</label>
+                    <input id="CommandTimeout" name="CommandTimeout" type="text" value="@(Model.Properties.ContainsKey("CommandTimeout") ? Model.Properties["CommandTimeout"] : "120")" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

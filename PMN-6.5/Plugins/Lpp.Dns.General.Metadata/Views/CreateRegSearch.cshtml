@@ -1,0 +1,297 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetadataRegSearchModel
+<input type="hidden" id="hData" name="Data" /> <!--The entire model is stored in here as json-->
+<div class="ui-groupbox" id="registrySearch">
+    <div class="ui-groupbox-header"><span>Search Criteria</span></div>
+
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Registry Items</span></div>
+        <ol>
+            <li>
+                <label for="txtName">Name</label>
+                <input type="text" id="txtName" data-bind="value: Name" style="width: 100%;" />
+            </li>
+            <li><span>Classification</span></li>
+            <li class="col3">
+                <label for="chkClassificationDiseaseDisorderCondition">
+                    <input type="checkbox" id="chkClassificationDiseaseDisorderCondition" data-bind="checked: ClassificationDiseaseDisorderCondition" />
+                    Disease/Disorder/Condition
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationRareDiseaseDisorderCondition">
+                    <input type="checkbox" id="chkRareClassificationDiseaseDisorderCondition" data-bind="checked: ClassificationRareDiseaseDisorderCondition" />
+                    Rare Disease/Disorder/Condition
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationPregnancy">
+                    <input type="checkbox" id="chkClassificationPregnancy" data-bind="checked: ClassificationPregnancy" />
+                    Pregnancy
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationProductBiologic">
+                    <input type="checkbox" id="chkClassificationProductBiologic" data-bind="checked: ClassificationProductBiologic" />
+                    Product,Biologic
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationProductDevice">
+                    <input type="checkbox" id="chkClassificationProductDevice" data-bind="checked: ClassificationProductDevice" />
+                    Product,Device
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationProductDrug">
+                    <input type="checkbox" id="chkClassificationProductDrug" data-bind="checked: ClassificationProductDrug" />
+                    Product,Drug
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationServiceEncounter">
+                    <input type="checkbox" id="chkClassificationServiceEncounter" data-bind="checked: ClassificationServiceEncounter" />
+                    Service,Encounter
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationServiceHospitalization">
+                    <input type="checkbox" id="chkClassificationServiceHospitalization" data-bind="checked: ClassificationServiceHospitalization" />
+                    Service,Hospitalization
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationServiceProcedure">
+                    <input type="checkbox" id="chkClassificationServiceProcedure" data-bind="checked: ClassificationServiceProcedure" />
+                    Service,Procedure
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationTransplant">
+                    <input type="checkbox" id="chkClassificationTransplant" data-bind="checked: ClassificationTransplant" />
+                    Transplant
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationTumor">
+                    <input type="checkbox" id="chkClassificationTumor" data-bind="checked: ClassificationTumor" />
+                    Tumor
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClassificationVaccine">
+                    <input type="checkbox" id="chkClassificationVaccine" data-bind="checked: ClassificationVaccine" />
+                    Vaccine
+                </label>
+            </li>
+        </ol>
+        <br style="clear:both" />
+        <ol>
+            <li><span>Purpose</span></li>
+            <li class="col3">
+                <label for="chkPurposeClinicalPracticeAssessment">
+                    <input type="checkbox" id="chkPurposeClinicalPracticeAssessment" data-bind="checked: PurposeClinicalPracticeAssessment" />
+                    Clinical Practice Assessment
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposeEffectiveness">
+                    <input type="checkbox" id="chkPurposeEffectiveness" data-bind="checked: PurposeEffectiveness" />
+                    Effectiveness
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposeNaturalHistoryofDisease">
+                    <input type="checkbox" id="chkPurposeNaturalHistoryofDisease" data-bind="checked: PurposeNaturalHistoryofDisease" />
+                    Natural History of Disease
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposePaymentCertification">
+                    <input type="checkbox" id="chkPurposePaymentCertification" data-bind="checked: PurposePaymentCertification" />
+                    Payment/Certification
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposePostMarketingCommitment">
+                    <input type="checkbox" id="chkPurposePostMarketingCommitment" data-bind="checked: PurposePostMarketingCommitment" />
+                    Post Marketing Commitment
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposePublicHealthSurveillance">
+                    <input type="checkbox" id="chkPurposePublicHealthSurveillance" data-bind="checked: PurposePublicHealthSurveillance" />
+                    Public Health Surveillance
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposeQualityImprovement">
+                    <input type="checkbox" id="chkPurposeQualityImprovement" data-bind="checked: PurposeQualityImprovement" />
+                    Quality Improvement
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPurposeSafetyOrHarm">
+                    <input type="checkbox" id="chkPurposeSafetyOrHarm" data-bind="checked: PurposeSafetyOrHarm" />
+                    Safety Or Harm
+                </label>
+            </li>
+        </ol>
+        <br style="clear:both" />
+        <ol>
+            <li><span>Condition of Interest</span></li>
+            <li class="col3">
+                <label for="chkConditionOfInterestBacterialandFungalDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestBacterialandFungalDiseases" data-bind="checked: ConditionOfInterestBacterialandFungalDiseases" />
+                    Bacterial and Fungal Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestBehaviorsandMentalDisorders">
+                    <input type="checkbox" id="chkConditionOfInterestBehaviorsandMentalDisorders" data-bind="checked: ConditionOfInterestBehaviorsandMentalDisorders" />
+                    Behaviors and Mental Disorders
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestBloodandLymphConditions">
+                    <input type="checkbox" id="chkConditionOfInterestBloodandLymphConditions" data-bind="checked: ConditionOfInterestBloodandLymphConditions" />
+                    Blood and Lymph Conditions
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestCancersAndOtherNeoplasms">
+                    <input type="checkbox" id="chkConditionOfInterestCancersAndOtherNeoplasms" data-bind="checked: ConditionOfInterestCancersAndOtherNeoplasms" />
+                    Cancers And Other Neoplasms
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestDigestiveSystemDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestDigestiveSystemDiseases" data-bind="checked: ConditionOfInterestDigestiveSystemDiseases" />
+                    Digestive System Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestDiseasesOrAbnormalitiesAtOrBeforeBirth">
+                    <input type="checkbox" id="chkConditionOfInterestDiseasesOrAbnormalitiesAtOrBeforeBirth" data-bind="checked: ConditionOfInterestDiseasesOrAbnormalitiesAtOrBeforeBirth" />
+                    Diseases Or Abnormalities At Or Before Birth
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestearNoseAndThroatDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestearNoseAndThroatDiseases" data-bind="checked: ConditionOfInterestearNoseAndThroatDiseases" />
+                    Ear, Nose, And Throat Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestEyeDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestEyeDiseases" data-bind="checked: ConditionOfInterestEyeDiseases" />
+                    Eye Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestGlandAndHormoneRelatedDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestGlandAndHormoneRelatedDiseases" data-bind="checked: ConditionOfInterestGlandAndHormoneRelatedDiseases" />
+                    Gland And Hormone Related Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestHeartAndBloodDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestHeartAndBloodDiseases" data-bind="checked: ConditionOfInterestHeartAndBloodDiseases" />
+                    Heart And Blood Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestImmuneSystemDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestImmuneSystemDiseases" data-bind="checked: ConditionOfInterestImmuneSystemDiseases" />
+                    Immune System Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestMouthAndToothDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestMouthAndToothDiseases" data-bind="checked: ConditionOfInterestMouthAndToothDiseases" />
+                    Mouth And Tooth Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestNervousSystemDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestNervousSystemDiseases" data-bind="checked: ConditionOfInterestNervousSystemDiseases" />
+                    Nervous System Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestNutritionalAndMetabolicDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestNutritionalAndMetabolicDiseases" data-bind="checked: ConditionOfInterestNutritionalAndMetabolicDiseases" />
+                    Nutritional And Metabolic Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestMuscleBoneCartilageDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestMuscleBoneCartilageDiseases" data-bind="checked: ConditionOfInterestMuscleBoneCartilageDiseases" />
+                    Muscle, Bone, and Cartilage Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestOccupationalDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestOccupationalDiseases" data-bind="checked: ConditionOfInterestOccupationalDiseases" />
+                    Occupational Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestParasiticalDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestParasiticalDiseases" data-bind="checked: ConditionOfInterestParasiticalDiseases" />
+                    Parasitical Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestRespiratoryTractDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestRespiratoryTractDiseases" data-bind="checked: ConditionOfInterestRespiratoryTractDiseases" />
+                    Respiratory Tract Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestSkinAndConnectiveTissueDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestSkinAndConnectiveTissueDiseases" data-bind="checked: ConditionOfInterestSkinAndConnectiveTissueDiseases" />
+                    Skin And Connective Tissue Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestSubstanceRelatedDisorders">
+                    <input type="checkbox" id="chkConditionOfInterestSubstanceRelatedDisorders" data-bind="checked: ConditionOfInterestSubstanceRelatedDisorders" />
+                    Substance Related Disorders
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestSymptomsAndGeneralPathology">
+                    <input type="checkbox" id="chkConditionOfInterestSymptomsAndGeneralPathology" data-bind="checked: ConditionOfInterestSymptomsAndGeneralPathology" />
+                    Symptoms And General Pathology
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions">
+                    <input type="checkbox" id="chkConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions" data-bind="checked: ConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions" />
+                    Urinary Tract, SexualOrgans, And Pregnancy Conditions
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestViralDiseases">
+                    <input type="checkbox" id="chkConditionOfInterestViralDiseases" data-bind="checked: ConditionOfInterestViralDiseases" />
+                    Viral Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkConditionOfInterestWoundsAndInjuries">
+                    <input type="checkbox" id="chkConditionOfInterestWoundsAndInjuries" data-bind="checked: ConditionOfInterestWoundsAndInjuries" />
+                    Wounds And Injuries
+                </label>
+            </li>
+        </ol>
+
+    </fieldset>
+</div>
+
+<script src="@this.Resource("CreateRegSearch.js")"></script>
+<script>
+    //Load the data here from the json that is serialized in from the model.
+    var data = JSON.parse('@Html.Raw(Model.Data ?? "{}")');
+    MetadataQuery.CreateRegistrySearch.init(data, $("#hData"), $("#registrySearch"));
+</script>

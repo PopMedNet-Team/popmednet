@@ -1,0 +1,44 @@
+﻿@* GeneratePrettyNames : true *@
+@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+    var btnID = string.Format("btnSelectCode{0}", id);
+    var displaySelectedID = string.Format("displayCodes{0}", id);
+    var codesID = string.Format("Codes{0}", id);
+}
+
+<div class="ICD9CodeSelectorTerm Term panel panel-default">
+    <input name="TermName" value= "ICD9CodeSelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        ICD 9 Codes
+    </div>
+    <div class="ICD9CodeSelector panel-body">
+        <button type="button" class="btn btn-default" id="@btnID">Select...</button>
+        <label style="margin-left:24px;">Selected Codes:&nbsp;</label>
+        <span id="@displaySelectedID">@Model.Codes</span>
+        <input type="hidden" name="Codes" id="@codesID" value="@Model.Codes" />
+
+    <script>
+    $(function () {
+        $('#@btnID').click(function () {
+            var split = ($('#@codesID').val() || '').split(',');
+            Global.Helpers.ShowDialog('Select one or more code(s)', "/Dialogs/CodeSelector", ["Close"], 960, 620, {
+                ListID: Dns.Enums.Lists.SPANDiagnosis,
+                Codes: split
+            }).done(function (results) {
+                if (!results)
+                    return;
+
+                var selectedCodes = results.map(function(i){ return i.Code; });
+                $('#@codesID').val(selectedCodes);
+                $('#@displaySelectedID').text(selectedCodes);
+                $("form").formChanged(true);
+            });
+        });
+    });
+   </script>
+    </div>
+</div> 

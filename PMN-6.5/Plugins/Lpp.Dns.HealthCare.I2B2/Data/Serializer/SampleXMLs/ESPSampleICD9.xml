@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<request_builder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <header>
+    <request_type>ICD-9 Diagnosis</request_type>
+    <request_name>Bruce's query</request_name>
+    <request_description>My request description</request_description>
+    <submitter_email>bswan@lincolnpeak.com</submitter_email>
+  </header>
+  <request>
+    <period_start>2012-03-01</period_start>
+    <period_end>2012-03-31</period_end>    
+    <variables>
+      <operation operator="And">
+	      <variable name="sex" value="Male and Female"/>
+	      <operation operator="And">
+	        <variable name="age" value="18" operator=">="/>
+	        <variable name="age" value="65" operator="&lt;="/>
+	      </operation>
+	      <operation operator="Or">
+	        <variable name="race" value="White"/>
+	        <variable name="race" value="Black"/>
+	      </operation>
+	      <operation operator="Or">
+	          <variable name="code" value="140"/>
+	          <variable name="code" value="144"/>
+	          <variable name="code" value="145"/>
+	      </operation>
+      </operation>
+    </variables>
+  </request>
+  <response>
+    <report name="Report">
+      <options>
+        <option name="age" value="5 Year Age Groups"/>
+        <option name="period" value="Monthly"/>
+      </options>
+    </report>
+  </response>  
+  <datamarts>
+  	<datamart name="LPP Test" organization="Lincoln Peak Partners"/>
+  </datamarts>
+</request_builder>

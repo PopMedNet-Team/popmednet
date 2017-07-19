@@ -1,0 +1,178 @@
+﻿@model Lpp.Dns.HealthCare.Conditions.Models.ConditionsModel
+@{ 
+    //this.Stylesheet("ESPQueryBuilder.css");
+    
+    //System.Reflection.Assembly mvcControlsAssembly = typeof(Lpp.Mvc.Controls.UtilityExtensions).Assembly;
+    //Html.Stylesheet(this.Url.Resource(mvcControlsAssembly, "ellipsisEditor.css"));
+
+    Html.ScriptReference(
+        this.ResourceUrl("/scripts/jquery-ui-1.10.4.min.js"), 
+        this.ResourceUrl("/scripts/rx.lite.js"), 
+        "/scripts/ellipsisEditor.js", 
+        "/scripts/codeSelector.js");
+
+
+    var viewModel = new { 
+        Model.StartPeriodDate,
+        Model.EndPeriodDate,
+        Model.MinAge,
+        Model.MaxAge,
+        Model.Sex,
+        Model.SexSelections,
+        Model.Report,
+        Model.ReportSelections,
+        Model.Race,
+        Model.RaceSelections,
+        Model.AgeStratification,
+        Model.PeriodStratification
+    };
+}
+
+<script src="@this.Resource("Create.js")"></script>
+<script>
+    Conditions.Create.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel));
+    Conditions.Create.init();
+</script>
+
+<div id="ESPRequestContainer" class="MedicalRequest ui-form">
+    <div class="ui-form">
+        <div class="ReportType">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Condition</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-3 form-group">
+                        <label>Condition</label>
+                        @Html.DropDownListFor(m => m.Disease, Model.DiseaseSelections.Select(s => new SelectListItem { Text = s.Display, Value = s.Name }))
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Observation Period</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3 form-group">
+                    <label for="StartPeriod">Start Period</label>
+                    <input id="StartPeriod" name="StartPeriod" data-bind="kendoDatePicker:{value:StartPeriodDate }" />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="EndPeriod">End Period</label>
+                    <input id="EndPeriod" name="EndPeriod" data-bind="kendoDatePicker:{value:EndPeriodDate }" />
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Age Range</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3 form-group">
+                    <label for="MinAge">Min</label>
+                    <input id="MinAge" name="MinAge" data-bind="kendoNumericTextBox:{ value:MinAge, decimals:0, spinners:false, min:0, max:999  }">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="MaxAge">Max</label>
+                    <input id="MaxAge" name="MaxAge" data-bind="kendoNumericTextBox:{ value:MaxAge, decimals:0, spinners:false, min:0, max:999  }">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Gender</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3 form-group">
+                    <label for="Sex">Sex</label>
+                    <input id="Sex" name="Sex" data-bind="kendoDropDownList:{ data:Genders, dataValueField:'StratificationCategoryId', dataTextField:'CategoryText', value:Sex }" />
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Race Selector</h3>
+            </div>
+            <div class="panel-body">
+                <div data-bind="kendoGrid:{
+                    data: RaceSelections,
+                    rowTemplate: 'race-row-template',
+                    altRowTemplate: 'race-altrow-template',
+                    useKOTemplates: true,
+                    columns:[
+                        {title: '', width:35},
+                        {title: 'Race' }
+                        ]
+                }"></div>
+                <input type="hidden" id="Race" name="Race" data-bind="value:SelectedRaces"/>
+            </div>
+        </div>
+        <script id="race-row-template" type="text/html">
+            <tr role="row">
+                <td><input type="checkbox" data-bind="value: StratificationCategoryId, checked: $root.SelectedRaces" /></td>
+                <td data-bind="text:CategoryText"></td>
+            </tr>
+        </script>
+        <script id="race-altrow-template" type="text/html">
+            <tr role="row" class="k-alt">
+                <td><input type="checkbox" data-bind="value: StratificationCategoryId, checked: $root.SelectedRaces" /></td>
+                <td data-bind="text:CategoryText"></td>
+            </tr>
+        </script>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Report Selector</h3>
+            </div>
+            <div class="panel-body">
+
+                <div data-bind="kendoGrid:{
+                    data:ReportSelections,
+                    rowTemplate: 'report-row-template',
+                    altRowTemplate: 'report-altrow-template',
+                    useKOTemplates: true,
+                    columns:[
+                        {title:'', width:35},
+                        {title:'Variable'},
+                        {title:'Setting'}
+                        ]
+                }"></div>
+
+                <input type="hidden" name="Report" data-bind="value:Report"/>
+                <input type="hidden" name="AgeStratification" data-bind="value:AgeStratification" />
+                <input type="hidden" name="PeriodStratification" data-bind="value:PeriodStratification" />
+                <input type="hidden" name="ICD9Stratification" data-bind="value:ICD9Stratification" />
+
+            </div>
+        </div>
+
+        <script id="report-row-template" type="text/html">
+            <tr role="row">
+                <td><input type="checkbox" data-bind="value: Value, checked: $root.Report" /></td>
+                <td data-bind="text:Display"></td>
+                <td>
+                    <!-- ko if:SelectionList != null && SelectionList.length > 0 -->
+                    <input data-bind="kendoDropDownList:{data:SelectionList, dataTextField:'CategoryText', dataValueField:'StratificationCategoryId', value:$root.GetReportSettingProperty(Name)}" />
+                    <!-- /ko -->
+                </td>
+            </tr>
+        </script>
+        <script id="report-altrow-template" type="text/html">
+            <tr role="row" class="k-alt">
+                <td><input type="checkbox" data-bind="value: Value, checked: $root.Report" /></td>
+                <td data-bind="text:Display"></td>
+                <td>
+                    <!-- ko if:SelectionList != null && SelectionList.length > 0 -->
+                    <input data-bind="kendoDropDownList:{data:SelectionList, dataTextField:'CategoryText', dataValueField:'StratificationCategoryId', value:$root.GetReportSettingProperty(Name)}" />
+                    <!-- /ko -->
+                </td>
+            </tr>
+        </script>
+    </div>
+</div>
+
+

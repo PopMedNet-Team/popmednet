@@ -1,0 +1,36 @@
+    @model RedirectPromptModel
+           
+<div class="RedirectPrompt">
+    <label>
+        This request type uses an external web site for gathering request data.<br />
+        Please click the button below to be redirected to the external web site.
+    </label>
+    <button id="RedirectButton">Redirect</button>
+    <div class="RedirectTargetUrl">@(new Uri( Model.RequestType.CreateRequestUrl ).Host )</div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#RedirectButton").click(function () {
+
+            var allFormValues = {};
+            $("form input, form select, form textarea").each(function () {
+                var name = $(this).attr("name");
+                if (name) allFormValues[name] = $(this).val();
+            });
+
+            $(this).text("Redirecting...");
+            $(this).unbind("click");
+
+            $.ajax({
+                data: allFormValues,
+                type: "POST",
+                processData: false,
+                url: '@Html.Raw( Url.Action<RequestController>( c => c.CreateSessionAndGetRedirectUrlForRequest( Model.Context.RequestID, Request.Url.ToString() ) ) )',
+                success: function (redirectUrl) { if (redirectUrl) location.href = redirectUrl; }
+            });
+
+            return false;
+        });
+    });
+</script>

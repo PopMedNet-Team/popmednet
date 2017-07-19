@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CATEGORIES" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="CATEGORIES" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="CATEGORIES" msprop:Generator_UserDSName="CATEGORIES">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="CATEGORY" msprop:Generator_TableClassName="CATEGORYDataTable" msprop:Generator_TableVarName="tableCATEGORY" msprop:Generator_TablePropName="CATEGORY" msprop:Generator_RowDeletingName="CATEGORYRowDeleting" msprop:Generator_UserTableName="CATEGORY" msprop:Generator_RowChangingName="CATEGORYRowChanging" msprop:Generator_RowEvHandlerName="CATEGORYRowChangeEventHandler" msprop:Generator_RowDeletedName="CATEGORYRowDeleted" msprop:Generator_RowEvArgName="CATEGORYRowChangeEvent" msprop:Generator_RowChangedName="CATEGORYRowChanged" msprop:Generator_RowClassName="CATEGORYRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LISTID" msprop:Generator_ColumnVarNameInTable="columnLISTID" msprop:Generator_ColumnPropNameInRow="LISTID" msprop:Generator_ColumnPropNameInTable="LISTIDColumn" msprop:Generator_UserColumnName="LISTID" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY_NAME" msprop:Generator_ColumnVarNameInTable="columnCATEGORY_NAME" msprop:Generator_ColumnPropNameInRow="CATEGORY_NAME" msprop:Generator_ColumnPropNameInTable="CATEGORY_NAMEColumn" msprop:Generator_UserColumnName="CATEGORY_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY_START_CODE" msprop:Generator_ColumnVarNameInTable="columnCATEGORY_START_CODE" msprop:Generator_ColumnPropNameInRow="CATEGORY_START_CODE" msprop:Generator_ColumnPropNameInTable="CATEGORY_START_CODEColumn" msprop:Generator_UserColumnName="CATEGORY_START_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY_END_CODE" msprop:Generator_ColumnVarNameInTable="columnCATEGORY_END_CODE" msprop:Generator_ColumnPropNameInRow="CATEGORY_END_CODE" msprop:Generator_ColumnPropNameInTable="CATEGORY_END_CODEColumn" msprop:Generator_UserColumnName="CATEGORY_END_CODE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

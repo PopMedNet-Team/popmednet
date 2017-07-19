@@ -1,0 +1,142 @@
+﻿@using Lpp.Mvc;
+@model Lpp.Dns.HealthCare.DataChecker.Models.ResponseModel
+
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+<script src="@this.Resource("datachecker.charting.js")"></script>
+@*<script src="/scripts/datachecker/datachecker.charting.js"></script>*@
+<script src="@this.Resource("responses.common.js")"></script>
+<script src="@this.Resource("ViewModels/DispensingRxAmtResponse.js")"></script>
+@*<script src="/scripts/DataChecker/ViewModels/DispensingRxAmtResponse.js"></script>*@
+
+@{
+    Html.Stylesheet("/scripts/jqplot/jquery.jqplot.css");
+    this.Stylesheet("datachecker.responses.css");
+    if (Model.IsExternalView)
+    {
+        this.Stylesheet(CssMediaType.screen | CssMediaType.print, "datachecker.responses.external.css");
+    }
+}
+
+<div @Html.Section( title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer" ) id="ResponseContainer">
+    <div id="ResponseViewHeader">
+        @if (Model.IsExternalView == false)
+        {
+            <a href="#" role="button" data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" id="btnOpenExternal" class="open-external btn btn-default"><img data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+        }
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    
+    <div id="rxamt_overall" class="metricview" data-bind="visible: (SelectedMetric().value == 0)">
+        <div data-bind="visible:HasResults">
+            <table style="width:35%">
+                <thead>
+                    <tr>
+                        <th style="text-align:right;">RXAmt</th>
+                        <th style="text-align:right;">n</th>
+                        <th style="text-align:right;">%</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: OverallMetrics">
+                    <tr>
+                        <td style="text-align:right;" data-bind="text: RxAmt_Display"></td>
+                        <td style="text-align:right;" data-bind="text: n" class="number"></td>
+                        <td style="text-align:right;" data-bind="text: Percent" class="percent"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="OverallMetricsChart" class="overallmetric_barchart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+            <br />
+            <div id="OverallMetricsPieChart" class="overallmetric_piechart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+        </div> 
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>      
+    </div>
+
+    <div id="rxamt_countbydp" class="metricview" data-bind="visible: (SelectedMetric().value == 1)">
+        <div data-bind="visible:HasResults">
+            <table style="width:100%;">
+                <thead>
+                    <tr>
+                        <th style="text-align:right;">RxAmt</th>
+                        <!-- ko foreach: DataPartners -->
+                        <th data-bind="text: $data" colspan="2" style="text-align:right;"></th>
+                        <!-- /ko -->
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <!-- ko foreach: DataPartners -->
+                        <th style="text-align:right;">N</th>
+                        <th style="text-align:right;">%</th>
+                        <!-- /ko -->
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: PartnersByCode">
+                    <tr>
+                        <td style="text-align:right;" data-bind="text: RxAmt_Display"></td>
+                        <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                        <td data-bind="text: partner.Count" class="numbers"></td>
+                        <td data-bind="text: $root.toPercent(partner.Count, partner.Total)" class="percent"></td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="DataPartnerMetricsPercent"></div>
+            <div id="DataPartnersMetricsPie"></div>
+        </div> 
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p> 
+    </div>
+
+    <div id="rxamt_percentcontribution" class="metricview" data-bind="visible: (SelectedMetric().value == 2)">
+        <div data-bind="visible:HasResults">
+            <table style="width:100%;">
+                <thead>
+                    <tr>
+                        <th style="text-align:right;">RxAmt</th>
+                        <!-- ko foreach: DataPartners -->
+                        <th data-bind="text: $data" colspan="2" style="text-align:right;"></th>
+                        <!-- /ko -->
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <!-- ko foreach: DataPartners -->
+                        <th style="text-align:right;">N</th>
+                        <th style="text-align:right;">%</th>
+                        <!-- /ko -->
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: { data: PartnersByCode, as: 'item' }">
+                    <tr>
+                        <td style="text-align:right;" data-bind="text: item.RxAmt_Display"></td>
+                        <!-- ko foreach: { data: item.Partners, as: 'partner'} -->
+                        <td data-bind="text: partner.Count" class="numbers"></td>
+                        <td data-bind="text: $root.toPercent(partner.Count, item.Total)" class="percent"></td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+            <div id="PercentDataPartnerContribution"></div>
+            <div id="PercentDataPartnerContribution_Pie"></div>
+        </div> 
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p> 
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        DataChecker.RxAmt.init(model, $('#ResponseContainer'));
+    });
+</script>

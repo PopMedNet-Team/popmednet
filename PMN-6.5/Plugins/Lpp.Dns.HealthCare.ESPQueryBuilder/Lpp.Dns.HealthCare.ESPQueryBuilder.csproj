@@ -1,0 +1,546 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\Build\Lpp.Dns.targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1F1F4A79-265A-4FB1-8A9D-19CCAFB48B2C}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.HealthCare.ESPQueryBuilder</RootNamespace>
+    <AssemblyName>Lpp.Dns.HealthCare.ESPQueryBuilder</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>09332cb9</NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Interactive, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ix-Main.1.2.5\lib\net45\System.Interactive.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Code\ESPQueryBuilderModelPlugin.cs" />
+    <Compile Include="Code\HQMFBuilder.cs" />
+    <Compile Include="Code\LegacyUtilitiesShim.cs" />
+    <Compile Include="Code\Package.cs" />
+    <Compile Include="Code\PopulationProjectionTransformer.cs" />
+    <Compile Include="Code\Terms.cs" />
+    <Compile Include="Controllers\ESPQueryController.cs" />
+    <Compile Include="Data\AgeStratificationSelectionList.cs" />
+    <Compile Include="Data\ESPCensusDataSelection.cs" />
+    <Compile Include="Data\SmokingSelectionList.cs" />
+    <Compile Include="Data\ZipCodeSelectionList.cs" />
+    <Compile Include="Data\ICD9StratificationSelectionList.cs" />
+    <Compile Include="Data\ReportSelectionList.cs" />
+    <Compile Include="Data\PeriodStratificationSelectionList.cs" />
+    <Compile Include="Data\DiseaseSelectionList.cs" />
+    <Compile Include="Data\SexSelectionList.cs" />
+    <Compile Include="Data\ReportSelection.cs" />
+    <Compile Include="Data\RaceSelectionList.cs" />
+    <Compile Include="Data\Entities\StratificationCategoryLookUp.cs" />
+    <Compile Include="Data\ESPRequestBuilderSelection.cs" />
+    <Compile Include="Data\ESPDomain.cs" />
+    <Compile Include="Data\ESPPersistence.cs" />
+    <Compile Include="Data\Serializer\RequestBuilder.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Models\ESPQueryViewModel.cs" />
+    <Compile Include="Models\ESPResponseModel.cs" />
+    <Compile Include="Views\DisplayResponse.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayResponse.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Compose.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Compose.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Config.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Config.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\DisplayComposed.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayComposed.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Error.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Error.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\CustomLocation.generated.cs">
+      <DependentUpon>CustomLocation.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\AgeRange.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AgeRange.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DiseaseSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiseaseSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayAgeRange.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayAgeRange.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayPredefinedLocation.generated.cs">
+      <DependentUpon>DisplayPredefinedLocation.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayCustomLocation.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayCustomLocation.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayDiseaseSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayDiseaseSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayEthnicitySelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayEthnicitySelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayGender.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayGender.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayICD9CodeSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayICD9CodeSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayRaceSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayRaceSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplaySmokingSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplaySmokingSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayVisits.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayVisits.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\DisplayZipCodeSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayZipCodeSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\Dummy.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Dummy.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\EthnicitySelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EthnicitySelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\Gender.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Gender.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\ICD9CodeSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ICD9CodeSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\PredefinedLocation.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PredefinedLocation.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\RaceSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RaceSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Code\RequestTypes.cs" />
+    <Compile Include="Models\ESPQueryBuilderModel.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ESPQueryBuilder\Terms\SmokingSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SmokingSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\Visits.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Visits.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ESPQueryBuilder\Terms\ZipCodeSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ZipCodeSelector.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Code\ESPToHTML.xsl">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\ESPQueryHQMFBoilerplate.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\ViewModels\Create.js">
+      <DependentUpon>Create.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Compose.js" />
+    <Content Include="Content\ESPQueryBuilder.css" />
+    <TypeScriptCompile Include="Content\ViewModels\Create.ts" />
+    <TypeScriptCompile Include="Content\espquerybuilder\DisplayResponse.ts" />
+    <EmbeddedResource Include="Content\espquerybuilder\DisplayResponse.js">
+      <DependentUpon>DisplayResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Content\ESPQueryComposition.css">
+      <DependentUpon>ESPQueryComposition.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\ESPQueryComposition.min.css">
+      <DependentUpon>ESPQueryComposition.less</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\img\add.png" />
+    <TypeScriptCompile Include="Content\responses.common.ts" />
+    <EmbeddedResource Include="Content\responses.common.js">
+      <DependentUpon>responses.common.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Data\Serializer\SampleXMLs\ESPSampleDisease.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Data\Serializer\SampleXMLs\ESPSampleICD9.xml" />
+    <Content Include="Data\Serializer\SampleXMLs\SampleSPAN.xml" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Dns.Data\Lpp.Dns.Data.csproj">
+      <Project>{4b69bf41-5231-417b-9841-f2092c24b1d1}</Project>
+      <Name>Lpp.Dns.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.DocumentVisualizers\Lpp.Dns.DocumentVisualizers.csproj">
+      <Project>{434313E6-7140-41B5-98CE-CDECCAA6D455}</Project>
+      <Name>Lpp.Dns.DocumentVisualizers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.HealthCare.Helpers\Lpp.Dns.General.Helpers.csproj">
+      <Project>{F202438B-27AB-4E58-B137-856363D29B16}</Project>
+      <Name>Lpp.Dns.HealthCare.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.Mvc.Interfaces\Lpp.Dns.Mvc.Interfaces.csproj">
+      <Project>{45DCB2B5-186D-4B7D-917C-E3780A9B8A19}</Project>
+      <Name>Lpp.Dns.Mvc.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.Portal.Interfaces\Lpp.Dns.Portal.Interfaces.csproj">
+      <Project>{B43A1F32-8301-4B0B-877D-1570C6A06674}</Project>
+      <Name>Lpp.Dns.Portal.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{a51b3e7c-4c5e-4120-bbfc-5667736d7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Boilerplate\Lpp.Mvc.Boilerplate.csproj">
+      <Project>{4ffe4c8f-f9f5-44be-a21f-c44f6087dfb1}</Project>
+      <Name>Lpp.Mvc.Boilerplate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Composition\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849F-D962-4034-94E5-5A4A727C2B01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc.Controls.Interfaces\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Mvc\Lpp.Mvc.csproj">
+      <Project>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\Lpp.Security\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    
+    
+    
+    <ProjectReference Include="..\Lpp.Dns.General.CriteriaGroup\Lpp.Dns.General.CriteriaGroup.csproj">
+      <Project>{e383f358-c6e0-44cb-bae2-14454e4d8d18}</Project>
+      <Name>Lpp.Dns.General.CriteriaGroup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.HealthCare.Controls\Lpp.Dns.HealthCare.Controls.csproj">
+      <Project>{96239D23-8094-4649-8B29-EDC7C04DAFBA}</Project>
+      <Name>Lpp.Dns.HealthCare.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EmbeddedResource Include="Content\ESPQueryComposition.less" />
+    <None Include="Content\ESPQueryComposition.css.map">
+      <DependentUpon>ESPQueryComposition.css</DependentUpon>
+    </None>
+    <None Include="Data\Serializer\Schema\RequestBuilder.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Data\Serializer\Scripts\GenerateBindings.bat" />
+    <None Include="packages.config" />
+    <Content Include="Views\ESPQueryBuilder\Error.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Error.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Config.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Config.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\Gender.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Gender.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\DisplayComposed.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayComposed.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DiseaseSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DiseaseSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\ICD9CodeSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ICD9CodeSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\AgeRange.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>AgeRange.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Compose.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Compose.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayAgeRange.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayAgeRange.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayDiseaseSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayDiseaseSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayGender.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayGender.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayICD9CodeSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayICD9CodeSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\ZipCodeSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ZipCodeSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\RaceSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>RaceSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayRaceSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayRaceSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\Visits.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Visits.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayVisits.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayVisits.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayZipCodeSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayZipCodeSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\DisplayResponse.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayResponse.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplayEthnicitySelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayEthnicitySelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\EthnicitySelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EthnicitySelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\SmokingSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>SmokingSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\DisplaySmokingSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplaySmokingSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ESPQueryBuilder\Terms\CustomLocation.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>CustomLocation.generated.cs</LastGenOutput>
+    </Content>
+    <None Include="Views\ESPQueryBuilder\Terms\DisplayPredefinedLocation.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayPredefinedLocation.generated.cs</LastGenOutput>
+    </None>
+    <None Include="Views\ESPQueryBuilder\Terms\DisplayCustomLocation.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DisplayCustomLocation.generated.cs</LastGenOutput>
+    </None>
+    <None Include="Views\ESPQueryBuilder\Terms\Dummy.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Dummy.generated.cs</LastGenOutput>
+    </None>
+    <Content Include="Views\ESPQueryBuilder\Terms\PredefinedLocation.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>PredefinedLocation.generated.cs</LastGenOutput>
+    </Content>
+    <None Include="Views\razorgenerator.directives" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+</Project>

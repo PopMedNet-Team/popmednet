@@ -1,0 +1,14 @@
+﻿@model Lpp.Dns.HealthCare.FileDistribution.Models.FileDistributionModel
+@{ 
+    this.Stylesheet("FileDistribution.css");
+    var id = Html.UniqueId();
+}
+ 
+<div class=" FileSelector ui-form">
+    <div class="ui-form">
+        <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+        
+        @(Html.Render<Lpp.Dns.HealthCare.FileUpload>().With(Model.RequestId, Model.RequestFileList, "UploadedFileList", "RemovedFilesList"))
+    </div>        
+</div>
+ 

@@ -1,0 +1,19 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+@{
+    Layout = null;
+}
+<div class="AgeRangeTerm Term panel panel-default">
+    <div class="panel-heading">Age Range</div>
+    <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+            <tr>
+                <td>@Model.Base.MinAge</td>
+                <td>@Model.Base.MaxAge</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@model Lpp.Dns.HealthCare.FileDistribution.Models.FileDistributionResponseModel
+@{ 
+    this.Stylesheet("FileDistribution.css");
+    var kilobyte = 1024;
+    var megabyte = kilobyte * 1024;
+    var gigabyte = megabyte * 1024;
+    var div = new Func<int, int, string, string>((what, by, unit) => ((double)what / by).ToString("0.00") + " " + unit);
+    var id = Html.UniqueId();
+    
+    
+}
+ 
+<section id="fileDisplay">
+    <div id="responseFiles" class="DocumentGrid"></div>
+</section>
+
+<script>
+    $(function () {
+        var dataSource = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ResponseFileList)) || "{}";
+        
+        $('#responseFiles').kendoGrid({
+            columns: [
+                { field: 'DataMartName', title: 'Data Mart' },
+                { field: 'ResponseFile.Name', title: 'Name' },
+                { field: 'ResponseFile.MimeType', title: 'Type', width:200 },
+                { field: 'ResponseFile.Length', title: 'Size', width: 150 },
+                { field: 'ResponseFile.ID', title: ' ', width: 110, attributes: { style: 'text-align:center;' }, template: function (item) { return '<a href="/document/' + item.ResponseFile.ID + '/download">[download]</a>'; } }
+            ],
+            dataSource: dataSource
+        });
+    });
+</script>

@@ -1,0 +1,26 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+  @{
+    Layout = null;
+}
+<div class="ICD9CodeSelectorTerm Term panel panel-default">
+    <div class="panel-heading">ICD 9 Codes</div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Codes)
+                {
+                    <tr>
+                        <td>@item.ItemCode</td>
+                        <td>@item.ItemName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+@model UploadConfirmModel
+
+<div class="ui-section ui-has-header" title-text="Error">
+    <div class="ConfigurationError">
+        There was an error during configuration upload.<br />
+        Please make sure you are uploading the correct file and the file is not malformed.<br />
+        <br />
+        @Html.ValidationSummary()
+
+        @if ( Model.Configuration != null )
+        {
+            @(Html.Partial<ModelConfigurationView>().WithModel( Model.Configuration ))
+        }
+
+        <br />
+        <button class="ui-standard-button" onclick="window.nav.navigate( '@(Url.Action<PluginsController>( c => c.List( new ListGetModel() ) ))' );">Back</button>
+    </div>
+</div>

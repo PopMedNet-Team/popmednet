@@ -1,0 +1,6 @@
+@model ModelConfiguration
+
+<div class="ui-section ui-has-header" title-text="@Model.Name">
+    @(Html.Partial<ModelConfigurationView>())
+    <a href="@(Url.Action<PluginsController>( c => c.List( new ListGetModel() ) ) )">Back to list of models</a>
+</div>

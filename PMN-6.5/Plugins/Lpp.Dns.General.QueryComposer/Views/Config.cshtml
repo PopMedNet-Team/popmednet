@@ -1,0 +1,117 @@
+﻿@using Lpp.Dns
+@model ConfigModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+
+<div class="Value ModelConfigForm" id="@id">
+    <a href="#" class="Link">[configure]</a>
+    <script type="text/javascript">
+        $(function () {
+            var dlg = $("#@(id) > .ModelConfig");
+            var link = $("#@(id) > a.Link");
+            link.click(function () {
+                dlg.dialog({
+                    modal: true, title: "@Model.Model.Name",
+                    width: 540, buttons: {
+                        OK: function () {
+                            dlg.dialog("close");
+                        },
+                        Cancel: function () { dlg.dialog("close"); }
+                    }
+                });
+                return false;
+            });
+            var initialDataProvider = $("#@(Model.Model.ID)_DataProvider").val();
+            showParameters_@(Model.Model.ID.ToString("N"))(initialDataProvider);
+        });
+
+        function showParameters_@(Model.Model.ID.ToString("N"))(value) {
+            $("#@(Model.Model.ID)_DataProvider").val(value);
+            switch (value) {
+                case "ODBC":
+                    $("#@(Model.Model.ID)_divODBC").show();
+                    $("#@(Model.Model.ID)_divSQLServer").hide();
+                    break;
+
+                case "SQLServer":
+                    $("#@(Model.Model.ID)_divODBC").hide();
+                    $("#@(Model.Model.ID)_divSQLServer").show();
+                    break;
+
+                case "PostgreSQL":
+                    $("#@(Model.Model.ID)_divODBC").hide();
+                    $("#@(Model.Model.ID)_divSQLServer").show();
+                    break;
+            }
+        }
+    </script>
+
+    <div id="@Model.Model.ID" class="ModelConfig" style="display: none;">
+        <div class="ui-groupbox" style="height: 305px;">
+            <div class="ui-dialog-groupbox-header"><span>Data Source</span></div>
+            <div class="ui-form">
+                <div class="Field">
+                    <label>Data Provider</label>
+                    <select id="@(Model.Model.ID)_DataProviderSelect" name="DataProviderSelect" onchange="showParameters_@(Model.Model.ID.ToString("N"))($(this).val());">
+                        <option value="SQLServer" @(Model.Properties.ContainsKey("DataProvider") && Model.Properties["DataProvider"] == "SQLServer" ? "selected=\"selected\"" : "")>SQL Server</option>
+                        <option value="PostgreSQL" @(Model.Properties.ContainsKey("DataProvider") && Model.Properties["DataProvider"] == "PostgreSQL" ? "selected=\"selected\"" : "")>PostgreSQL</option>
+                        <option value="ODBC" @(Model.Properties.ContainsKey("DataProvider") && Model.Properties["DataProvider"] == "ODBC" ? "selected=\"selected\"" : "")>ODBC</option>
+                    </select>
+                    <input id="@(Model.Model.ID)_DataProvider" name="DataProvider" type="hidden" value="@(Model.Properties.ContainsKey("DataProvider") ? Model.Properties["DataProvider"] : "SQLServer")" />
+                </div>
+                <br />
+            </div>
+            <div id="@(Model.Model.ID)_divODBC" class="ui-form">
+                <div class="Field">
+                    <label>DataMart ODBC Data Source Name</label>
+                    <input id="DataSourceName" name="DataSourceName" type="text" value="@(Model.Properties.ContainsKey("DataSourceName") ? Model.Properties["DataSourceName"] : "")" />
+                </div>
+            </div>
+            <div id="@(Model.Model.ID)_divSQLServer" class="ui-form">
+                <div class="Field">
+                    <label>Server</label>
+                    <input id="Server" name="Server" type="text" value="@(Model.Properties.ContainsKey("Server") ? Model.Properties["Server"] : "")" />
+                </div>
+                <div class="Field">
+                    <label>Port</label>
+                    <input id="Port" name="Port" type="text" value="@(Model.Properties.ContainsKey("Port") ? Model.Properties["Port"] : "")" />
+                </div>
+
+                <div class="Field">
+                    <label>User ID</label>
+                    <input id="UserId" name="UserId" type="text" value="@(Model.Properties.ContainsKey("UserId") ? Model.Properties["UserId"] : "")" />
+                </div>
+                <br />
+
+                <div class="Field">
+                    <label>Password</label>
+                    <input id="Password" name="Password" type="password" value="@(Model.Properties.ContainsKey("Password") ? Model.Properties["Password"] : "")" />
+                </div>
+                <div class="Field">
+                    <label>Confirm Password</label>
+                    <input id="ConfirmPassword" name="ConfirmPassword" type="password" value="@(Model.Properties.ContainsKey("ConfirmPassword") ? Model.Properties["ConfirmPassword"] : "")" />
+                </div>
+
+                <div class="Field">
+                    <label>Database</label>
+                    <input id="Database" name="Database" type="text" value="@(Model.Properties.ContainsKey("Database") ? Model.Properties["Database"] : "")" />
+                </div>
+            </div>
+            <div class="ui-form">
+                <br />
+
+                <div class="Field">
+                    <label>Connection Timeout</label>
+                    <input id="ConnectionTimeout" name="ConnectionTimeout" type="text" value="@(Model.Properties.ContainsKey("ConnectionTimeout") ? Model.Properties["ConnectionTimeout"] : "15")" />
+                </div>
+
+                <div class="Field">
+                    <label>Command Timeout</label>
+                    <input id="CommandTimeout" name="CommandTimeout" type="text" value="@(Model.Properties.ContainsKey("CommandTimeout") ? Model.Properties["CommandTimeout"] : "120")" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

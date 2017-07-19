@@ -1,0 +1,261 @@
+﻿@* GeneratePrettyNames: true *@
+@using Lpp.Mvc
+@using Lpp.Dns.Portal
+@model Lpp.Dns.General.Metadata.Models.MetadataSearchModel
+@{ 
+    this.Stylesheet("MetadataSearch.css");
+    var id = Html.UniqueId();
+    System.Reflection.Assembly mvcControlsAssembly = typeof(Lpp.Mvc.Controls.UtilityExtensions).Assembly;
+    Html.Stylesheet(this.Url.Resource(mvcControlsAssembly, "ellipsisEditor.css"));
+}
+<script type="text/javascript">
+    var KOViewModel = true;     // indicates this page is built with KO templates
+</script>
+
+<div id="AgeRangeTerm"  style="display: none">
+    <span>Age Range</span>
+    <div class="ui-form">
+        <div class="Field">
+            <label>Minimum Age</label>
+            <input data-bind="kendoNumericTextBox: {value:MinAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;"/>
+        </div>
+        <div class="Field">
+            <label>Maximum Age</label>
+            <input data-bind="kendoNumericTextBox: {value:MaxAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;"/>
+        </div>
+    </div>
+</div>
+
+<div id="AgeStratifierTerm" style="display: none">
+    <label>Age Stratifier</label>
+    <select data-bind="kendoDropDownList: { data:RequestCriteriaViewModels.AgeStratifierTerm.AgeStratifiersList, dataTextField:'Key', dataValueField:'Value', value:AgeStratifier}"></select>
+</div>
+
+<div id="ClinicalSettingTerm" style="display: none">
+    <label>Clinical Setting</label>
+    <select data-bind="kendoDropDownList: { value:ClinicalSetting, data:RequestCriteriaViewModels.ClinicalSettingTerm.ClinicalSettingsList, dataTextField:'Key', dataValueField:'Value'}"></select>
+</div>
+
+<script id="CodesTerm" type="text/html"> 
+     
+    <input type="hidden" name="CodesTerm_Codes" data-bind="value: Codes" />
+    <label>Code Set</label>
+    <select data-bind="kendoDropDownList: { value:CodesTermType, data:MetadataQuery.Create.ViewModel.MDQCodeSetList, dataTextField:'Key', dataValueField:'Value'}" style="width: 100%;"></select>
+
+    @*<div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term, codeSelector:{popup: true, selector:'CodeSelector_Diagnosis_ICD9Term'}" style="width: 100%;"></div>
+    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.DrugClassTerm, codeSelector:{popup: true, selector:'CodeSelector_DrugClassTerm'}" style="width: 100%;"></div>
+    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.GenericDrugTerm, codeSelector:{popup: true, selector:'CodeSelector_GenericDrugTerm'}" style="width: 100%;"></div>
+    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.HCPCSTerm, codeSelector:{popup: true, selector:'CodeSelector_HCPCSTerm'}" style="width: 100%;"></div>
+    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term, codeSelector:{popup: true, selector:'CodeSelector_Procedure_ICD9Term'}" style="width: 100%;"></div>*@
+    
+    <div class="form-group">
+        <button type="button" class="btn btn-default" id="btnSelectCode" data-bind="click: SelectCode">Select...</button>
+        <label>Selected Codes:&nbsp;</label>
+        <span data-bind="text: Codes"></span>
+    </div> 
+    
+</script>
+
+<div id="CodeSelector_Diagnosis_ICD9Term" style="display:none;">
+    
+</div>
+<div id="CodeSelector_GenericDrugTerm" style="display:none;">
+    </div>
+<div id="CodeSelector_DrugClassTerm" style="display:none;">
+    
+</div>
+<div id="CodeSelector_HCPCSTerm" style="display:none;">
+    
+</div>
+<div id="CodeSelector_Procedure_ICD9Term" style="display:none;">
+    
+</div>
+
+
+<div id="DateRangeTerm" style="display: none">
+    <div class="form-group">
+        <label data-bind="text: Title"></label>
+        <input data-bind="kendoDatePicker: {value:StartDate, max:new Date(2299,12,31), min: new Date(1900, 01, 01)}" style="width:140px;" class="DatePicker" />&nbsp;-&nbsp;
+        <input data-bind="kendoDatePicker: {value:EndDate, max:new Date(2299,12,31), min: new Date(1900, 01, 01)}" style="width:140px;" class="DatePicker" />
+    </div>
+</div>
+
+<div id="ProjectTerm" style="display: none">
+    <div class="form-group">
+        <label>Project</label>
+        <select data-bind="kendoDropDownList: { value:Project, data:MetadataQuery.Create.ProjectsList, dataTextField:'Key', dataValueField:'Value'}"></select>
+    </div>
+</div>
+
+<div id="RequestStatusTerm" style="display: none">
+    <div class="form-group">
+        <label>Request Status</label>
+        <select data-bind="kendoDropDownList: { value:RequestStatus, data:Dns.Enums.RequestStatusesTranslation, dataTextField:'text', dataValueField:'value', optionLabel: { text: 'Not Selected', value: '' }}" style="width:85%;"></select>
+    </div>
+</div>
+
+<div id="SexTerm" style="display: none">
+    <div class="form-group">
+        <label>Sex</label>
+        <select data-bind="kendoDropDownList: { value:Sex, data:RequestCriteriaViewModels.SexTerm.SexesList, dataTextField:'Key', dataValueField:'Value'}"></select>
+    </div>
+</div>
+
+<div id="RequesterCenterTerm" style="display: none">
+    <div class="form-group">
+        <label>Requester Center</label>
+        <select data-bind="kendoDropDownList: { value:RequesterCenter, data:RequestCriteriaViewModels.RequestCriteria.RequesterCenterList, dataTextField:'Value', dataValueField:'Key'}"></select>
+    </div>
+</div>
+
+<div id="WorkplanTypeTerm" style="display: none">
+    <div class="form-group">
+        <label>Workplan Type</label>
+        <select data-bind="kendoDropDownList: { value:WorkplanType, data:RequestCriteriaViewModels.RequestCriteria.WorkplanTypeList, dataTextField:'Value', dataValueField:'Key'}" style="width:85%;"></select>
+    </div>
+</div>
+
+<div id="ReportAggregationLevelTerm" style="display: none">
+    <div class="form-group">
+        <label>Level of Report Aggregation</label>
+        <select data-bind="kendoDropDownList: {value:ReportAggregationLevel, data:RequestCriteriaViewModels.RequestCriteria.ReportAggregationLevelList, dataTextField: 'Value', dataValueField:'Key'}"></select>
+    </div>
+</div>
+
+<div class="MetadataSearch ui-form">
+    <div class="form-group">
+        <fieldset id="fsCriteria">
+            <legend style="display: none;"></legend>
+            @Html.HiddenFor(m => m.CriteriaGroupsJSON)
+            <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+            <div class="ui-groupbox">
+                <div class="ui-groupbox-header">
+                    <span>Search Criteria</span>
+                </div>
+                <ol data-bind="foreach: RequestCriteria.Criterias">
+                    <li>
+                        <ul data-bind="foreach: HeaderTerms">
+                            <!-- The clear: both is necessary because without it, the last item in a row isn't the tallest  -->
+                            <!-- (even by just a pixel), then the next item won't wrap all the way back to the left margin, -->
+                            <!-- it will instead appear just to the right of the last item in the row that is taller than   -->
+                            <!-- the last item in the row. -->
+                            <li class="col3" data-bind="style: { clear: ($index() % 3 == 0) ? 'both' : 'none' }">
+                                <div data-bind="template: { name: TemplateName }"></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <br style="clear: both;" />
+                <ol>
+                    <li>
+                        <ul>
+                            <li class="col-xs-4" id="SourceTaskOrderSearchTerm">
+                                <label>Source Task Order</label>
+                                <input id="cboSearchSourceTask" data-bind="kendoDropDownList: { value:SearchSourceTaskOrderID, data:SourceTaskActivities.dsTaskOrders, dataTextField:'ActivityName', dataValueField:'ActivityID', optionLabel:{ ActivityName:'Not Selected', ActivityID:'' }, autoBind:true}" style="width:100%;" />
+                            </li>
+                            <li class="col-xs-4" id="SourceActivitySearchTerm">
+                                <label>Source Activity</label>
+                                <input id="cboSearchSourceActivity" data-bind="kendoDropDownList: {value: SearchSourceActivityID,  data:SourceTaskActivities.dsActivities, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchSourceTask', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}" style="width:100%;" />
+                            </li>
+                            <li class="col-xs-4" id="SourceActivityProjectSearchTerm">
+                                <label>Source Activity Project</label>
+                                <input id="cboSearchSourceActivityProject" data-bind="kendoDropDownList: {value: SearchSourceActivityProjectID, data:SourceTaskActivities.dsActivityProjects, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchSourceActivity', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false} " style="width:100%;" />
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <br style="clear: both;" />
+                <ol>
+                    <li>
+                        <ul>
+                            <li class="col-xs-4" id="TaskOrderSearchTerm">
+                                <label>Budget Task Order</label>
+                                <input id="cboSearchTask" data-bind="kendoDropDownList: { value:SearchTaskOrderID, data:TaskActivities.dsTaskOrders, dataTextField:'ActivityName', dataValueField:'ActivityID', optionLabel:{ ActivityName:'Not Selected', ActivityID:'' }, autoBind:true}" style="width:100%;" />
+                            </li>
+                            <li class="col-xs-4" id="ActivitySearchTerm">
+                                <label>Budget Activity</label>
+                                <input id="cboSearchActivity" data-bind=" kendoDropDownList: {enable: false, data:TaskActivities.dsActivities, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchTask', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}, value: SearchActivityID" style="width:100%;" />
+                            </li>
+                            <li class="col-xs-4" id="ActivityProjectSearchTerm">
+                                <label>Budget Activity Project</label>
+                                <input id="cboSearchActivityProject" data-bind=" kendoDropDownList: {enable: false, data:TaskActivities.dsActivityProjects, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchActivity', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}, value: SearchActivityProjectID" style="width:100%;"/>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <br style="clear: both;" />
+                <hr style="color: #FFFFFF; background-color: #FFFFFF;">
+                <ol data-bind="foreach: RequestCriteria.Criterias">
+                    <li>
+                        <ul data-bind="foreach: {data: RequestTerms, as: 'term'}">
+                            <li class="col3">
+                                <div data-bind="template: { name: TemplateName, data: term }"></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <br style="clear: both;" />
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+@*bootstrap the RequestCriteria support*@
+<script src="@this.Resource("Models/RequestCriteria.js")"></script>
+<script src="@this.Resource("ViewModels/RequestCriteria.js")"></script>
+<script src="@this.Resource("Models/Criteria.js")"></script>
+<script src="@this.Resource("ViewModels/Criteria.js")"></script>
+
+
+<script src="@this.Resource("Models/Terms.js")"></script>
+<script src="@this.Resource("ViewModels/Terms.js")"></script>
+@*bootstrap the terms*@
+<script src="@this.Resource("Models/Terms/AgeRange.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/AgeRange.js")"></script>
+<script src="@this.Resource("Models/Terms/AgeStratifier.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/AgeStratifier.js")"></script>
+<script src="@this.Resource("Models/Terms/ClinicalSetting.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/ClinicalSetting.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/CodesTerm.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/DateRange.js")"></script>
+<script src="@this.Resource("Models/Terms/Project.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/Project.js")"></script>
+<script src="@this.Resource("Models/Terms/RequestStatus.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/RequestStatus.js")"></script>
+<script src="@this.Resource("Models/Terms/Sex.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/Sex.js")"></script>
+<script src="@this.Resource("Models/Terms/WorkplanType.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/WorkplanType.js")"></script>
+<script src="@this.Resource("Models/Terms/RequesterCenter.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/RequesterCenter.js")"></script>
+<script src="@this.Resource("Models/Terms/ReportAggregationLevel.js")"></script>
+<script src="@this.Resource("ViewModels/Terms/ReportAggregationLevel.js")"></script>
+
+@*bootstrap the page*@
+<script src="@this.Resource("Create.js")"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        MetadataQuery.Create.ProjectsList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Projects));
+        var json = @Html.Raw(Model.CriteriaGroupsJSON);
+        var activityjson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.AllActivities));
+        var workplanTypeJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.WorkplanTypeList));
+        var requesterCenterJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RequesterCenterList));
+        var reportAggregationLevelJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReportAggregationLevelList));
+        var taskOrder = '@Model.TaskOrder';
+        var activity = '@Model.Activity';
+        var activityProject = '@Model.ActivityProject';
+        var sourceTaskOrder = '@Model.SourceTaskOrder';
+        var sourceActivity = '@Model.SourceActivity';
+        var sourceActivityProject = '@Model.SourceActivityProject';
+
+        MetadataQuery.Create.init(json, $("#fsCriteria"), $("#CriteriaGroupsJSON"), activityjson, workplanTypeJson, requesterCenterJson, reportAggregationLevelJson, taskOrder, activity, activityProject, sourceTaskOrder, sourceActivity, sourceActivityProject);
+        var dropdownlist = $("#cboSearchActivity").data("kendoDropDownList");
+        dropdownlist.open();
+        dropdownlist.close();
+        var sourcedropdownlist = $("#cboSearchSourceActivity").data("kendoDropDownList");
+        sourcedropdownlist.open();
+        sourcedropdownlist.close();
+    });
+</script>

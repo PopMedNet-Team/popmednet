@@ -1,0 +1,40 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+}
+<div class="RaceSelectorTerm Term panel panel-default">
+    <input name="TermName" value= "RaceSelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Race
+    </div>
+    <div id="@string.Format("binding-container{0}", id)" class="panel-body RaceSelector">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20px;"></th>
+                    <th>Race</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach:Races">
+                <tr>
+                    <td><input type="checkbox" data-bind="value:StratificationCategoryId, checked: $root.SelectedRaces" /></td>
+                    <td data-bind="text:CategoryText"></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="Race" id="@string.Format("Race{0}", id)" data-bind="value: SelectedRaces" />
+    </div>
+
+    <script>
+        $(function () {
+            ko.applyBindings({
+                Races: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RaceSelections)),
+                SelectedRaces: ko.observableArray(('@Model.Race' || '').split(','))
+            }, $('#@string.Format("binding-container{0}", id)')[0]);
+        });
+
+</script>
+
+</div>

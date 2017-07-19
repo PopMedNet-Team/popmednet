@@ -1,0 +1,88 @@
+.MedicalRequest .RequestSubtype, .MedicalRequest .AgeStratification
+{
+    display: inline-block;
+    width: 200px;
+    margin-bottom: 20px;
+    margin-right: 30px;
+}
+
+label.Selector
+{
+    font-weight:bold;
+    font-size: small;
+}
+
+#label.Selections
+#{
+#    font-size: 12px;
+#}    
+
+div.PeriodBlock
+{
+    width: 100%;    
+}
+
+div.SettingBlock
+{
+    width: 100%;
+}
+
+div.CoverageBlock
+{
+    width: 100%;
+}
+
+div.AgeBlock
+{
+    width: 100%;
+}
+
+div.SexBlock
+{
+    width: 100%;
+} 
+
+.clear
+{
+    clear: both;
+}  
+
+div.Selector
+{
+    border: 1px solid #678FC0;
+    padding: 10px 15px;
+}    
+
+div.Selections
+{
+    border: 2px solid #678FC0;
+    padding: 10px 15px;
+    background-color: White;
+} 
+
+.LeftParamBlock
+{
+    width: 49%;
+    float: left;
+}        
+
+.RightParamBlock
+{
+    width: 49%;
+    float: right;
+}   
+
+div.Parameters
+{
+    width: 100%;
+}
+
+input#StartPeriod, input#EndPeriod
+{
+    width: 100%
+}
+
+select#StartQuarter, select#EndQuarter
+{
+    width: 60px
+}

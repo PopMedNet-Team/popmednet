@@ -1,0 +1,796 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetadataDataMartSearchModel
+
+<div class="ui-groupbox" id="datamartSearch">
+    <div class="ui-groupbox-header"><span>Search Criteria</span></div>
+    <input type="hidden" id="hData" name="Data" /> <!--The entire model is stored in here as json-->
+    <fieldset>
+        <legend>DataMart Details</legend>
+        <ol>
+            <li>
+                <label for="txtName">Name</label>
+                <input type="text" id="txtName" data-bind="value: Name" style="width: 100%;" />
+            </li>
+            @*keyword search on the new description field here*@
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Data Domains Available in this DataMart</span></div>
+        <div style="float: left; width: 30%">
+            <ul class="list" >
+                <li>
+                    <div class="treeNode">
+                        <h3>
+                            <label for="chkInpatientEncountersAll">
+                                <input type="checkbox" id="chkInpatientEncountersAll" data-bind="checked: InpatientEncountersAll" />
+                                Inpatient Encounters
+                            </label>
+                        </h3>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersEncounterID">
+                                    <input type="checkbox" id="chkInpatientEncountersEncounterID" data-bind="checked: InpatientEncountersEncounterID" />
+                                    Encounter ID
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersDatesofService">
+                                    <input type="checkbox" id="chkInpatientEncountersDatesofService" data-bind="checked: InpatientEncountersDatesofService" />
+                                    Dates of Service
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersProviderIdentifier">
+                                    <input type="checkbox" id="chkInpatientEncountersProviderIdentifier" data-bind="checked: InpatientEncountersProviderIdentifier" />
+                                    Provider/Facility Identifier
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersICD9Procedures">
+                                    <input type="checkbox" id="chkInpatientEncountersICD9Procedures" data-bind="checked: InpatientEncountersICD9Procedures" />
+                                    ICD-9 Procedures
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersICD10Procedures">
+                                    <input type="checkbox" id="chkInpatientEncountersICD10Procedures" data-bind="checked: InpatientEncountersICD10Procedures" />
+                                    ICD-10 Procedures
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersICD9Diagnosis">
+                                    <input type="checkbox" id="chkInpatientEncountersICD9Diagnosis" data-bind="checked: InpatientEncountersICD9Diagnosis" />
+                                    ICD-9 Diagnosis
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersICD10Diagnosis">
+                                    <input type="checkbox" id="chkInpatientEncountersICD10Diagnosis" data-bind="checked: InpatientEncountersICD10Diagnosis" />
+                                    ICD-10 Diagnosis
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersSnowMed">
+                                    <input type="checkbox" id="chkInpatientEncountersSnowMed" data-bind="checked: InpatientEncountersSnowMed" />
+                                    SNOMED
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersHPHCS">
+                                    <input type="checkbox" id="chkInpatientEncountersHPHCS" data-bind="checked: InpatientEncountersHPHCS" />
+                                    HCPCS (including CPT)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersDisposition">
+                                    <input type="checkbox" id="chkInpatientEncountersDisposition" data-bind="checked: InpatientEncountersDisposition" />
+                                    Disposition
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersDischargeStatus">
+                                    <input type="checkbox" id="chkInpatientEncountersDischargeStatus" data-bind="checked: InpatientEncountersDischargeStatus" />
+                                    Discharge Status
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkInpatientEncountersOther">
+                                    <input type="checkbox" id="chkInpatientEncountersOther" data-bind="checked: InpatientEncountersOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtInpatientEncountersOtherValue" data-bind="visible: InpatientEncountersOther, value: InpatientEncountersOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkIOutpatientEncountersAll">
+                                <input type="checkbox" id="chkIOutpatientEncountersAll" data-bind="checked: OutpatientEncountersAll" />
+                                Outpatient Encounters
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersEncounterID">
+                                    <input type="checkbox" id="chkOutpatientEncountersEncounterID" data-bind="checked: OutpatientEncountersEncounterID" />
+                                    Encounter ID
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersDatesofService">
+                                    <input type="checkbox" id="chkOutpatientEncountersDatesofService" data-bind="checked: OutpatientEncountersDatesofService" />
+                                    Dates of Service
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersProviderIdentifier">
+                                    <input type="checkbox" id="chkOutpatientEncountersProviderIdentifier" data-bind="checked: OutpatientEncountersProviderIdentifier" />
+                                    Provider/Facility Identifier
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersICD9Procedures">
+                                    <input type="checkbox" id="chkOutpatientEncountersICD9Procedures" data-bind="checked: OutpatientEncountersICD9Procedures" />
+                                    ICD-9 Procedures
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersICD10Procedures">
+                                    <input type="checkbox" id="chkOutpatientEncountersICD10Procedures" data-bind="checked: OutpatientEncountersICD10Procedures" />
+                                    ICD-10 Procedures
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersICD9Diagnosis">
+                                    <input type="checkbox" id="chkOutpatientEncountersICD9Diagnosis" data-bind="checked: OutpatientEncountersICD9Diagnosis" />
+                                    ICD-9 Diagnosis
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersICD10Diagnosis">
+                                    <input type="checkbox" id="chkOutpatientEncountersICD10Diagnosis" data-bind="checked: OutpatientEncountersICD10Diagnosis" />
+                                    ICD-10 Diagnosis
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersSnowMed">
+                                    <input type="checkbox" id="chkOutpatientEncountersSnowMed" data-bind="checked: OutpatientEncountersSnowMed" />
+                                    SNOMED
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersHPHCS">
+                                    <input type="checkbox" id="chkOutpatientEncountersHPHCS" data-bind="checked: OutpatientEncountersHPHCS" />
+                                    HCPCS (including CPT)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkOutpatientEncountersOther">
+                                    <input type="checkbox" id="chkOutpatientEncountersOther" data-bind="checked: OutpatientEncountersOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtOutpatientEncountersOtherValue" data-bind="visible: OutpatientEncountersOther, value: OutpatientEncountersOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkPrescriptionOrdersAll">
+                                <input type="checkbox" id="chkPrescriptionOrdersAll" data-bind="checked: PrescriptionOrdersAll" />
+                                Prescription Orders
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPrescriptionOrdersDates">
+                                    <input type="checkbox" id="chkPrescriptionOrdersDates" data-bind="checked: PrescriptionOrdersDates" />
+                                    Perscription Order Dates
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPrescriptionOrdersRxNorm">
+                                    <input type="checkbox" id="chkPrescriptionOrdersRxNorm" data-bind="checked: PrescriptionOrdersRxNorm" />
+                                    RxNorm
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPrescriptionOrdersNDC">
+                                    <input type="checkbox" id="chkPrescriptionOrdersNDC" data-bind="checked: PrescriptionOrdersNDC" />
+                                    NDC (National Drug Codes)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPrescriptionOrdersOther">
+                                    <input type="checkbox" id="chkPrescriptionOrdersOther" data-bind="checked: PrescriptionOrdersOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtPrescriptionOrdersOtherValue" data-bind="visible: PrescriptionOrdersOther, value: PrescriptionOrdersOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="float: left; width: 30%">
+            <ul class="list">
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkLongitudinalCaptureAll">
+                                <input type="checkbox" id="chkLongitudinalCaptureAll" data-bind="checked: LongitudinalCaptureAll" />
+                                Longitudinal Capture
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLongitudinalCapturePatientID">
+                                    <input type="checkbox" id="chkLongitudinalCapturePatientID" data-bind="checked: LongitudinalCapturePatientID" />
+                                    Patient ID
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLongitudinalCaptureStart">
+                                    <input type="checkbox" id="chkLongitudinalCaptureStart" data-bind="checked: LongitudinalCaptureStart" />
+                                    Capture Start
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLongitudinalCaptureStop">
+                                    <input type="checkbox" id="chkLongitudinalCaptureStop" data-bind="checked: LongitudinalCaptureStop" />
+                                    Capture Stop
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLongitudinalOther">
+                                    <input type="checkbox" id="chkLongitudinalCaptureOther" data-bind="checked: LongitudinalCaptureOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtLongitudinalCaptureOtherValue" data-bind="visible: LongitudinalCaptureOther, value: LongitudinalCaptureOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkLaboratoryTestResultsAll">
+                                <input type="checkbox" id="chkLaboratoryTestResultsAll" data-bind="checked: LaboratoryTestResultsAll" />
+                                Laboratory Test Results
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsOrderDates">
+                                    <input type="checkbox" id="chkLaboratoryTestsOrderDates" data-bind="checked: LaboratoryTestsOrderDates" />
+                                    Order Dates
+                                </label>
+                            </li>
+
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsResultDates">
+                                    <input type="checkbox" id="chkLaboratoryTestsResultDates" data-bind="checked: LaboratoryTestsResultDates" />
+                                    Result Dates
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsName">
+                                    <input type="checkbox" id="chkLaboratoryTestsName" data-bind="checked: LaboratoryTestsName" />
+                                    Test Name
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsTestDescription">
+                                    <input type="checkbox" id="chkLaboratoryTestsTestDescription" data-bind="checked: LaboratoryTestsTestDescription" />
+                                    Test Descriptions
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsLOINC">
+                                    <input type="checkbox" id="chkLaboratoryTestsLOINC" data-bind="checked: LaboratoryTestsLOINC" />
+                                    LOINC
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsSNOMED">
+                                    <input type="checkbox" id="chkLaboratoryTestsSNOMED" data-bind="checked: LaboratoryTestsSNOMED" />
+                                    SNOMED
+                                </label>
+                            </li>                                                        
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsRESULT">
+                                    <input type="checkbox" id="chkLaboratoryTestsRESULT" data-bind="checked: LaboratoryTestsRESULT" />
+                                    Result Interpretations
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkLaboratoryTestsOther">
+                                    <input type="checkbox" id="chkLaboratoryTestsOther" data-bind="checked: LaboratoryTestsOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtLaboratoryTestsOtherValue" data-bind="visible: LaboratoryTestsOther, value: LaboratoryTestsOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkPharmacyDispensingAll">
+                                <input type="checkbox" id="chkPharmacyDispensingAll" data-bind="checked: PharmacyDispensingAll" />
+                                Outpatient Pharmacy Dispensing
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPatientPharmacyDispensingDates">
+                                    <input type="checkbox" id="chkPatientPharmacyDispensingDates" data-bind="checked: PharmacyDispensingDates" />
+                                    Pharmacy Dispensing Dates
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPharmacyDispensingNDC">
+                                    <input type="checkbox" id="chkPharmacyDispensingNDC" data-bind="checked: PharmacyDispensingNDC" />
+                                    NDC (National Drug Codes)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPharmacyDispensingRxNorm">
+                                    <input type="checkbox" id="chkPharmacyDispensingRxNorm" data-bind="checked: PharmacyDispensingRxNorm" />
+                                    RxNorm
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPharmacyDispensingSupply">
+                                    <input type="checkbox" id="chkPharmacyDispensingSupply" data-bind="checked: PharmacyDispensingSupply" />
+                                    Days Supply
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPharmacyDispensingAmount">
+                                    <input type="checkbox" id="chkPharmacyDispensingAmount" data-bind="checked: PharmacyDispensingAmount" />
+                                    Amount Dispensed
+                                </label>
+                            </li>
+                            
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPharmacyDispensingOther">
+                                    <input type="checkbox" id="chkPharmacyDispensingOther" data-bind="checked: PharmacyDispensingOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtPharmacyDispensingOtherValue" data-bind="visible: PharmacyDispensingOther, value: PharmacyDispensingOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="float: left; width: 30%">
+            <ul class="list">
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkDemographicsAll">
+                                <input type="checkbox" id="chkDemographicsAll" data-bind="checked: DemographicsAll" />
+                                Demographics
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsSex">
+                                    <input type="checkbox" id="chkDemographicsSex" data-bind="checked: DemographicsSex" />
+                                    Sex
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsDOB">
+                                    <input type="checkbox" id="chkDemographicsDOB" data-bind="checked: DemographicsDOB" />
+                                    Date of Birth
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsDateofDeath">
+                                    <input type="checkbox" id="chkDemographicsDateofDeath" data-bind="checked: DemographicsDateofDeath" />
+                                    Date of Death
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsAddress">
+                                    <input type="checkbox" id="chkDemographicsAddress" data-bind="checked: DemographicsAddress" />
+                                    Zip Code
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsRace">
+                                    <input type="checkbox" id="chkDemographicsRace" data-bind="checked: DemographicsRace" />
+                                    Race
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsEthnicity">
+                                    <input type="checkbox" id="chkDemographicsEthnicity" data-bind="checked: DemographicsEthnicity" />
+                                    Ethnicity
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkDemographicsOther">
+                                    <input type="checkbox" id="chkDemographicsOther" data-bind="checked: DemographicsOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtDemographicsOtherValue" data-bind="visible: DemographicsOther, value: DemographicsOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkVitalSignsAll">
+                                <input type="checkbox" id="chkVitalSignsAll" data-bind="checked: VitalSignsAll" />
+                                Vital Signs
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsTemp">
+                                    <input type="checkbox" id="chkVitalSignsTemp" data-bind="checked: VitalSignsTemp" />
+                                    Temperature
+                                </label>
+                            </li>
+
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsHeight">
+                                    <input type="checkbox" id="chkVitalSignsHeight" data-bind="checked: VitalSignsHeight" />
+                                    Height
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsWeight">
+                                    <input type="checkbox" id="chkVitalSignsWeight" data-bind="checked: VitalSignsWeight" />
+                                    Weight
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsLength">
+                                    <input type="checkbox" id="chkVitalSignsLength" data-bind="checked: VitalSignsLength" />
+                                    Length
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsBMI">
+                                    <input type="checkbox" id="chkVitalSignsBMI" data-bind="checked: VitalSignsBMI" />
+                                    BMI
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsBloodPressure">
+                                    <input type="checkbox" id="chkVitalSignsBloodPressure" data-bind="checked: VitalSignsBloodPressure" />
+                                    Blood Pressure
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkVitalSignsOther">
+                                    <input type="checkbox" id="chkVitalSignsOther" data-bind="checked: VitalSignsOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtVitalSignsOtherValue" data-bind="visible: VitalSignsOther, value: VitalSignsOtherValue" />
+                            </li>
+                            <br style="clear:both;">
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkPatientReportedOutcomesAll">
+                                <input type="checkbox" id="chkPatientReportedOutcomesAll" data-bind="checked: PatientReportedOutcomesAll" />
+                                Patient Reported Information
+                            </label>
+                        </h5>
+                        <ul>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPatientReportedOutcomesHealthBehavior">
+                                    <input type="checkbox" id="chkPatientReportedOutcomesHealthBehavior" data-bind="checked: PatientReportedOutcomesHealthBehavior" />
+                                    Health Behaviors
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPatientReportedOutcomesHRQOL">
+                                    <input type="checkbox" id="chkPatientReportedOutcomesHRQOL" data-bind="checked: PatientReportedOutcomesHRQOL" />
+                                    Health Related Quality of Life (HRQoL)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPatientReportedOutcomesPRO">
+                                    <input type="checkbox" id="chkPatientReportedOutcomesPRO" data-bind="checked: PatientReportedOutcomesPRO" />
+                                    Patient Reported Outcomes (PRO)
+                                </label>
+                            </li>
+                            <li class="col-sm-12 checkbox">
+                                <label for="chkPatientReportedOutcomesOther">
+                                    <input type="checkbox" id="chkPatientReportedOutcomesOther" data-bind="checked: PatientReportedOutcomesOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtPatientReportedOutcomesOtherValue" data-bind="visible: PatientReportedOutcomesOther, value: PatientReportedOutcomesOtherValue" />
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="treeNode">
+                        <h5>
+                            <label for="chkBiorepositories">
+                                <input type="checkbox" id="chkBiorepositories" data-bind="checked: BiorepositoriesAny" />
+                                Biorepositories
+                            </label>
+                            </h5>
+                        @*<ul>
+                            <li>
+                                <label for="chkBiorepositoriesName">
+                                    <input type="checkbox" id="chkBiorepositoriesName" data-bind="checked: BiorepositoriesName" />
+                                    Name
+                                </label>
+                            </li>
+
+                            <li>
+                                <label for="chkBiorepositoriesDescription">
+                                    <input type="checkbox" id="chkBiorepositoriesDescription" data-bind="checked: BiorepositoriesDescription" />
+                                    Description
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesDisease">
+                                    <input type="checkbox" id="chkBiorepositoriesDisease" data-bind="checked: BiorepositoriesDisease" />
+                                    Disease Name or Name Designation
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesSpecimenSource">
+                                    <input type="checkbox" id="chkBiorepositoriesSpecimenSource" data-bind="checked: BiorepositoriesSpecimenSource" />
+                                    Specimen Source
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesSpecimanType">
+                                    <input type="checkbox" id="chkBiorepositoriesSpecimanType" data-bind="checked: BiorepositoriesSpecimanType" />
+                                    Specimen Type
+                                </label>
+                            </li>
+
+                            <li>
+                                <label for="chkBiorepositoriesProcessing">
+                                    <input type="checkbox" id="chkBiorepositoriesProcessing" data-bind="checked: BiorepositoriesProcessing" />
+                                    Processing Method
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesSNOMED">
+                                    <input type="checkbox" id="chkBiorepositoriesSNOMED" data-bind="checked: BiorepositoriesSNOMED" />
+                                    SNOMED
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesStorage">
+                                    <input type="checkbox" id="chkBiorepositoriesStorage" data-bind="checked: BiorepositoriesStorage" />
+                                    Storage Method
+                                </label>
+                            </li>
+                            <li>
+                                <label for="chkBiorepositoriesOther">
+                                    <input type="checkbox" id="chkBiorepositoriesOther" data-bind="checked: BiorepositoriesOther" />
+                                    Other
+                                </label>
+                                <input type="text" id="txtBiorepositoriesOtherValue" data-bind="visible: BiorepositoriesOther, value: BiorepositoriesOtherValue" />
+                            </li>
+                        </ul>*@
+                    </div>
+                </li>                
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Installed Model</span></div>
+        <ol>
+            <li class="col3">
+                <label for="chkInstallModelSql">
+                    <input type="checkbox" id="chkInstallModelSql" data-bind="checked: InstallModelSql" />
+                    SQL Distribution
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelDataChecker">
+                    <input type="checkbox" id="chkInstallModelDataChecker" data-bind="checked: InstallModelDataChecker" />
+                    Data Checker
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelESP">
+                    <input type="checkbox" id="chkInstallModelESP" data-bind="checked: InstallModelESP" />
+                    ESP Request
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSAS">
+                    <input type="checkbox" id="chkInstallModelSAS" data-bind="checked: InstallModelSAS" />
+                    SAS Distribution
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelModular">
+                    <input type="checkbox" id="chkInstallModelModular" data-bind="checked: InstallModelModular" />
+                    Modular Program
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSPAN">
+                    <input type="checkbox" id="chkInstallModelSPAN" data-bind="checked: InstallModelSPAN" />
+                    SPAN Query Builder
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSummaryPrev">
+                    <input type="checkbox" id="chkInstallModelSummaryPrev" data-bind="checked: InstallModelSummaryPrev" />
+                    Summary: Prevalence Query
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSummaryInci">
+                    <input type="checkbox" id="chkInstallModelSummaryInci" data-bind="checked: InstallModelSummaryInci" />
+                    Summary: Incidence Query
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSummaryMFU">
+                    <input type="checkbox" id="chkInstallModelSummaryMFU" data-bind="checked: InstallModelSummaryMFU" />
+                    Summary: Most Frequently Used Query
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelMetaData">
+                    <input type="checkbox" id="chkInstallModelMetaData" data-bind="checked: InstallModelMetaData" />
+                    MetaData Search
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelQueryComposer">
+                    <input type="checkbox" id="chkInstallModelQueryComposer" data-bind="checked: InstallModelQueryComposer" />
+                    Query Composer
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInstallModelSqlSample">
+                    <input type="checkbox" id="chkInstallModelSqlSample" data-bind="checked: InstallModelSqlSample" />
+                    Sample
+                </label>
+            </li>
+
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Data Period Range</span></div>
+        <ol>
+            <li style="width:48%; float:left">
+                <label>Start Date:</label>
+                <input data-bind="value: StartDate" />
+            </li>
+            <li style="width:48%; float:left">
+                <label>End Date:</label>
+                <input data-bind="value: EndDate" />
+            </li>
+            <li class="col3" >
+                <label for="chkUpdateNone">
+                    <input type="checkbox" id="chkUpdateNone" data-bind="checked: UpdateNone" />
+                    None
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateDaily">
+                    <input type="checkbox" id="chkUpdateDaily" data-bind="checked: UpdateDaily" />
+                    Daily
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateWeekly">
+                    <input type="checkbox" id="chkUpdateWeekly" data-bind="checked: UpdateWeekly" />
+                    Weekly
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateMonthly">
+                    <input type="checkbox" id="chkUpdateMonthly" data-bind="checked: UpdateMonthly" />
+                    Monthly
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateQuarterly">
+                    <input type="checkbox" id="chkUpdateQuarterly" data-bind="checked: UpdateQuarterly" />
+                    Quarterly
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateSemiAnnually">
+                    <input type="checkbox" id="chkUpdateSemiAnnually" data-bind="checked: UpdateSemiAnnually" />
+                  Semi-Annually
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateAnnually">
+                    <input type="checkbox" id="chkUpdateAnnually" data-bind="checked: UpdateAnnually" />
+                    Annually
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkUpdateOther" style="display:inline;">
+                    <input type="checkbox" id="chkUpdateOther" data-bind="checked: UpdateOther" />
+                    Other
+                </label>
+                <input type="text" id="txtUpdateOtherValue" data-bind="visible: UpdateOther, value: UpdateOtherValue" />
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Data Models</span></div>
+        <ol>
+            <li class="col3">
+                <label for="chkDataModelMSCDM">
+                    <input type="checkbox" id="chkDataModelMSCDM" data-bind="checked: DataModelMSCDM" />
+                    MSCDM
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelESP">
+                    <input type="checkbox" id="chkDataModelESP" data-bind="checked: DataModelESP" />
+                    ESP
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelOMOP">
+                    <input type="checkbox" id="chkDataModelOMOP" data-bind="checked: DataModelOMOP" />
+                    OMOP
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelHMRON">
+                    <input type="checkbox" id="chkDataModelHMRON" data-bind="checked: DataModelHMRON" />
+                    HMORN VDW
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModeli2b2">
+                    <input type="checkbox" id="chkDataModeli2b2" data-bind="checked: DataModeli2b2" />
+                    i2b2
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelPCORI">
+                    <input type="checkbox" id="chkDataModelPCORI" data-bind="checked: DataModelPCORI" />
+                    PCORnet CDM
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelOther" style="display:inline;">
+                    <input type="checkbox" id="chkDataModelOther" data-bind="checked: DataModelOther" />
+                    Other
+                </label>
+                <input type="text" id="txtDataModelOtherValue" data-bind="visible: DataModelOther, value: DataModelOtherValue" />
+            </li>
+        </ol>
+    </fieldset>
+
+    <!--More field sets for each area per the screen shot-->
+    <!--update the CreateOrgSearch.ts to have the new knockout and update the IOrgSerach interface to have the value, in the constructor set the observable and in the save set the interface data for the new field.
+        In the models/MetadataDataMartSearchModel update the data class to have the new field of the valid format. You're done.-->
+</div>
+
+<script src="@this.Resource("CreateDataMartSearch.js")"></script>
+<script>
+    //Load the data here from the json that is serialized in from the model.
+    var data = JSON.parse('@Html.Raw(Model.Data ?? "{}")');
+    MetadataQuery.CreateDataMartSearch.init(data, $("#hData"), $("#datamartSearch"));
+</script>

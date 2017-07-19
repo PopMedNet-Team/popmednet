@@ -1,0 +1,44 @@
+﻿@* GeneratePrettyNames : true *@
+@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+    var btnID = string.Format("btnSelectCode{0}", id);
+    var displaySelectedID = string.Format("displayCodes{0}", id);
+    var codesID = string.Format("Codes{0}", id);
+}
+
+<div class="ZipCodeSelectorTerm Term panel panel-default">
+    <input name="TermName" value= "ZipCodeSelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Zip Codes
+    </div>
+    <div class="ZipCodeSelector panel-body">
+        <button type="button" class="btn btn-default" id="@btnID">Select...</button>
+        <label style="margin-left:24px;">Selected Codes:&nbsp;</label>
+        <span id="@displaySelectedID">@Model.ZipCodes</span>
+        <input type="hidden" name="Codes" id="@codesID" value="@Model.ZipCodes" />
+
+    <script>
+    $(function () {
+        $('#@btnID').click(function () {
+            var split = ($('#@codesID').val() || '').split(',');
+            Global.Helpers.ShowDialog(Global.Helpers.GetEnumString(Dns.Enums.ListsTranslation, 13 /* Zip Codes */), "/Dialogs/CodeSelector", ["Close"], 960, 620, {
+                ListID: 13 /* Zip Codes */,
+                Codes: split
+            }).done(function (results) {
+                if (!results)
+                    return;
+
+                var selectedCodes = results.map(function (i) { return i.Code; });
+                $('#@codesID').val(selectedCodes);
+                $('#@displaySelectedID').text(selectedCodes);
+                $("form").formChanged(true);
+            });
+        });
+    });
+    </script>
+    </div>
+</div>

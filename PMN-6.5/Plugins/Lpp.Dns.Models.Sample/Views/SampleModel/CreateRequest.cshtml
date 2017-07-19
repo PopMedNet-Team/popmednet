@@ -1,0 +1,12 @@
+﻿@model Lpp.Dns.Models.Sample.Models.PluginCallModel
+@{ ViewBag.Title = "Create Request"; }
+
+<h2>Create Request</h2>
+
+@using ( Html.BeginForm() )
+{
+    <text>Enter the Request text:</text>
+    <input type="hidden" name="SessionToken" value="@Model.SessionToken" /> 
+    <input type="text" name="RequestText" />
+    <input type="submit" value="Create!" />
+}

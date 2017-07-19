@@ -1,0 +1,67 @@
+﻿@model Lpp.Dns.HealthCare.Models.BMISelectorPluginModel
+@{
+    string fldBMI = string.Format("{0}_{1}", Model.ParentContext, "BMI");
+    string fldBMIOption = string.Format("{0}_{1}", Model.ParentContext, "BMIOption");
+}
+
+<style>
+    .BMIOption1 {
+        display: none;
+    }
+
+    .BMIOption2 {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var showBMIOption = function () {
+            // shows one of the lists based on the chosen option
+            var opts = $('input[name=@fldBMIOption]');
+
+            $('#@fldBMI .BMIOption1').css('display', opts[0].checked ? 'block' : 'none');
+            $('#@fldBMI .BMIOption2').css('display', opts[1].checked ? 'block' : 'none');            
+        };
+
+        var changeBMIOption = function () {
+            showBMIOption();
+            // reset the value, since we changed lists
+            $('#@fldBMI').val('');
+        };
+
+        // hook the onchange for the "Option" radio buttons
+        $('input[name=@fldBMIOption]').change(changeBMIOption);
+
+        // initialize which option list is visible
+        showBMIOption();
+    });
+</script>
+
+<div class="ui-groupbox">
+    <div class="ui-groupbox-header"><span>BMI Selector</span></div>
+    <div class="ui-form">
+        <div>
+            @Html.LabelFor(bsm => bsm.BMI)
+            <select name="@fldBMI" id="@fldBMI">
+                <option value="">Choose a BMI value</option>
+                <option value="25" class="BMIOption1" @if (Model.BMI == "25") { <text>selected = "selected"</text> }>&gt;= 25</option>
+                <option value="30" class="BMIOption1" @if (Model.BMI == "30") { <text>selected = "selected"</text> }>&gt;= 30</option>
+                <option value="35" class="BMIOption1" @if (Model.BMI == "35") { <text>selected = "selected"</text> }>&gt;= 35</option>
+                <option value="40" class="BMIOption1" @if (Model.BMI == "40") { <text>selected = "selected"</text> }>&gt;= 40</option>
+                <option value="45" class="BMIOption1" @if (Model.BMI == "45") { <text>selected = "selected"</text> }>&gt;= 45</option>
+                <option value="50" class="BMIOption1" @if (Model.BMI == "50") { <text>selected = "selected"</text> }>&gt;= 50</option>
+                <option value="0-19" class="BMIOption2" @if (Model.BMI == "0-19") { <text>selected = "selected"</text> }>&lt; 20</option>
+                <option value="20-25" class="BMIOption2" @if (Model.BMI == "20-25") { <text>selected = "selected"</text> }>20-25</option>
+                <option value="26-30" class="BMIOption2" @if (Model.BMI == "26-30") { <text>selected = "selected"</text> }>26-30</option>
+                <option value="31-35" class="BMIOption2" @if (Model.BMI == "31-35") { <text>selected = "selected"</text> }>31-35</option>
+                <option value="36-40" class="BMIOption2" @if (Model.BMI == "36-40") { <text>selected = "selected"</text> }>36-40</option>
+                <option value="41-45" class="BMIOption2" @if (Model.BMI == "41-45") { <text>selected = "selected"</text> }>41-45</option>
+                <option value="46-50" class="BMIOption2" @if (Model.BMI == "46-50") { <text>selected = "selected"</text> }>46-50</option>
+                <option value="51-100" class="BMIOption2" @if (Model.BMI == "51-100") { <text>selected = "selected"</text> }>&gt; 50</option>
+            </select>
+
+            @Html.RadioButton(fldBMIOption, "1", Model.BMIOption.Equals("1")) Option 1
+            @Html.RadioButton(fldBMIOption, "2", Model.BMIOption.Equals("2")) Option 2
+        </div>
+    </div>
+</div>

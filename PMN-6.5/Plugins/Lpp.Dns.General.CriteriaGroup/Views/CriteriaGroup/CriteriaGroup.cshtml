@@ -1,0 +1,106 @@
+﻿@using System.Linq;
+@model Lpp.Dns.General.CriteriaGroup.Models.CriteriaGroupModel
+@{ 
+    this.Stylesheet("CriteriaGroup.min.css");
+    string termMenuID = string.Format("terms{0}", Model.CriteriaGroupId);
+   } 
+
+<div id="@string.Format("cg{0}", Model.CriteriaGroupId)" class="CriteriaGroup" @if (Model.Hidden) { <text>style="display: none;"</text> }>
+    <div class="DivCriteriaGroupAnd" style="text-align: center; font-weight: bold; @if(Model.CriteriaGroupId <= 1) { <text>display: none;</text>}">AND</div>
+    <input type="hidden" name="CriteriaGroupId" class="CriteriaGroupId" value="@Model.CriteriaGroupId"/>
+    <div class="panel panel-default">
+        <div class="panel-heading criteriagroup-heading">
+            <div class="ui-button-remove"></div>
+            @Html.Raw(Model.CriteriaGroupName.NullOrEmpty() ? "Criteria Group" : "Criteria Group: " + Model.CriteriaGroupName)
+            <img src="/Content/img/icons/help16.gif" class="helptip" title="Each additional criteria group reduces the overall patient cohort. Multiple criteria groups are AND-ed together." />
+        </div>
+        <div class="panel-body">
+        <div class="row" style="width:100%;">
+            <div class="col-md-3 form-group">
+                <label for="@string.Format("CriteriaGroupName_{0}", Model.CriteriaGroupId)">Group Name</label>
+                <input type="text" id="@string.Format("CriteriaGroupName_{0}", Model.CriteriaGroupId)" name="CriteriaGroupName" class="form-control CriteriaGroupName" value="@Model.CriteriaGroupName" />
+            </div>
+            <div class="col-md-7">&nbsp;</div> 
+            <div class="col-md-2">
+                <br/>
+                <div class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown" class="btn btn-primary">Add Terms... <span class="caret"></span></a>
+                    <ul class="dropdown-menu multi-level Terms" id="Terms" role="menu">
+                        @foreach (var term in Model.TermSelections.Terms)
+                        {    
+                            <li @Html.Raw((term.Terms != null && term.Terms.Count() > 0 ? "class=\"dropdown-submenu TermMenuItem \"" : "class=\"TermMenuItem \""))>
+                                <a href="#" data-term="@term.Name">@term.Label</a>
+                                @if (term.Terms != null)
+                                {
+                                    @DisplayTerms(term.Terms);
+                                }
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+             </div>            
+        </div>
+    <hr />
+    <div class="InputParameters">
+    </div>
+    <fieldset class="OrInputParameters" style="display: none;">
+        <legend style="display: block; text-align: center;">OR<img src="/Content/img/icons/help16.gif" class="helptip" title="Terms in this section are OR-ed within this Criteria Group." /></legend>
+    </fieldset>
+    <fieldset class="AddInputParameters" style="display: none;">
+        <legend style="display: block; text-align: center;">AND<img src="/Content/img/icons/help16.gif" class="helptip" title="Terms in this section are AND-ed within this Criteria Group." /></legend>
+    </fieldset>
+    <hr />
+    <div class="CriteriaGroupFooter">
+        <table>
+            <tr>
+                <td class="CriteriaGroupOptionsCell">
+                    <div class="CriteriaGroupOptions">
+                        <div id="ExcludeCriteriaGroup_@Model.CriteriaGroupId">
+                            <label>@Html.CheckBoxFor(m => m.ExcludeCriteriaGroup, new { @class = "ExcludeCriteriaGroup" }) Exclude Criteria Group</label>
+                            <img alt="Help" src="/Content/img/icons/help16.gif" class="helptip" title="Excluding this Criteria Group will subtract it from the final patient cohort." />
+                        </div>
+                        @*this needs to be here, but hidden, so we can round-trip the flag*@
+                        <div id="SaveCriteriaGroup_@Model.CriteriaGroupId">
+                            @Html.CheckBoxFor(m => m.SaveCriteriaGroup, new { @class = "SaveCriteriaGroup", style = "visibility:hidden;" })
+                        </div>
+                    </div>
+                </td>
+                <td class="CriteriaGroupObservationPeriodCell">
+                    <div class="CriteriaGroupObservationPeriod">
+                        @{
+                            TermModel tm = !Model.Terms.NullOrEmpty() ? Model.Terms.Where(t => t.TermName == "ObservationPeriod").FirstOrDefault() : null;
+                        }
+                        @(Html.Partial<Lpp.Dns.General.CriteriaGroup.Views.CriteriaGroup.Terms.ObservationPeriod>().WithModel(
+                                    new ObservationPeriodModel
+                                    {
+                                        StartPeriod = tm != null && !string.IsNullOrEmpty(tm.Args["StartPeriod"]) ? Lpp.Utilities.Legacy.ConvertEx.ToNullableDateTime(tm.Args["StartPeriod"]) : (DateTime?)null,
+                                        EndPeriod = tm != null && !string.IsNullOrEmpty(tm.Args["EndPeriod"]) ? Lpp.Utilities.Legacy.ConvertEx.ToNullableDateTime(tm.Args["EndPeriod"]) : (DateTime?)null,
+                                    }
+                                )
+                            )
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
+</div>
+
+@helper DisplayTerms(IEnumerable<TermSelectionModel> terms)
+{
+    <ul class="dropdown-menu">
+        @foreach (var t in terms)
+       {
+           var term = t;
+        <li @(term.Terms != null ? "class=\"dropdown-submenu TermMenuItem\"" : "class=\"TermMenuItem\"")>
+            <a href="#" data-term="@term.Name">@term.Label</a>
+            @if (term.Terms != null)
+            {
+                @DisplayTerms(term.Terms)
+            }
+        </li>
+       }
+    </ul>
+}

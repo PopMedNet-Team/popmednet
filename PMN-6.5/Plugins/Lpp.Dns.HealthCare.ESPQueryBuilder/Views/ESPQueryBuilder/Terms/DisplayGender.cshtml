@@ -1,0 +1,10 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+@{
+    Layout = null;
+}
+<div class="GenderTerm Term panel panel-default">
+    <div class="panel-heading">Sex</div>
+    <div class="panel-body">
+        @Model.Base.SexSelections.Where(v => v.StratificationCategoryId == Model.Base.Sex).Select(s => s.CategoryText).FirstOrDefault()
+    </div>    
+</div>

@@ -1,0 +1,517 @@
+﻿@using System.Reflection;
+@using Newtonsoft.Json;
+@using Lpp.Mvc
+@using Lpp.Dns.Portal
+@model Lpp.Dns.HealthCare.DataChecker.Models.DataCheckerModel
+@{
+    Assembly assembly = typeof(Lpp.Dns.General.Metadata.MetadataSearchRequestType).Assembly;
+}
+
+<script type="text/javascript">
+    var KOViewModel = true;     // indicates this page is built with KO templates
+</script>
+
+<div id="CodesTerm" style="display: none;">
+    <div class="label-groupbox">
+        <table>
+            <thead>
+                <tr>
+                    <th data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term">Diagnosis Codes</th>
+                    <th data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term">Procedure Codes</th>
+                    <th data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.NDCTerm">NDC Codes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term">
+                        <select data-bind="value: CodeType" disabled>
+                            <option value="">(Any)</option>
+                            <option value="09">ICD-9-CM</option>
+                            <option value="10">ICD-10-CM</option>
+                            <option value="11">ICD-11-CM</option>
+                            <option value="SM">SNOMED CT</option>
+                            <option value="OT">Other</option>
+                        </select>
+                    </td>
+                    <td data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term">
+                        <select data-bind="value: CodeType" disabled>
+                            <option value="">(Any)</option>
+                            <option value="09">ICD-9-CM</option>
+                            <option value="10">ICD-10-CM</option>
+                            <option value="11">ICD-11-CM</option>
+                            <option value="C2">CPT Category II</option>
+                            <option value="C3">CPT Category III</option>
+                            <option value="C4">CPT-4 (i.e., HCPCS Level I)</option>
+                            <option value="HC">HCPCS (i.e., HCPCS Level II)</option>
+                            <option value="H3">HCPCS Level III</option>
+                            <option value="LC">LOINC</option>
+                            <option value="LO">Local Homegrown</option>
+                            <option value="ND">NDC</option>
+                            <option value="RE">Revenue</option>
+                            <option value="OT">Other</option>
+                        </select>
+                    </td>
+                    <td data-bind="visible: CodesTermType() == RequestCriteriaModels.CodesTermTypes.NDCTerm">
+                        &nbsp;
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <textarea style="height: 70px; width: 95%;" data-bind="value: Codes" disabled="disabled"></textarea><br />
+                        <input type="radio" name="SearchTermMethod" data-bind="value: RequestCriteriaModels.SearchMethodTypes.ExactMatch, checked: SearchMethodType" disabled="disabled" /><span>Exact Match</span><br />
+                        <input type="radio" name="SearchTermMethod" data-bind="value: RequestCriteriaModels.SearchMethodTypes.StartsWith, checked: SearchMethodType" disabled="disabled" /><span>Starts With</span><br />
+                    </td>
+                </tr>
+             </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="DataPartnerTerm" style="display: none">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 24px;">
+                    
+                </th>
+                <th>Data Partner</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+        <tbody id="DataPartnersTable" data-bind="foreach: @(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DataPartners))">
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="value: Value, checked: $parent.DataPartners" disabled="disabled" />
+                </td>
+                <td>
+                    <span data-bind="text: Key" ></span>&nbsp;(<span data-bind="text: Value" > </span>)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="EthnicityTerm" style="display: none">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 24px;">
+                    
+                </th>
+                <th>Ethnicity</th>
+            </tr>
+        </thead>
+        <tbody id="EthnicityTable" data-bind="foreach: DataCheckerViewModels.EthnicityTerm.EthnicitiesList">
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="value: Value, checked: $parent.Ethnicities" disabled="disabled" />
+                </td>
+                <td>
+                    <span data-bind="text: Key" ></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="MetricTerm" style="display: none">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 24px;">
+                    
+                </th>
+                <th>Metric</th>
+            </tr>
+        </thead>
+        <tbody id="MetricsTable" data-bind="foreach: MetricsList">
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="value: Value, checked: $parent.Metrics" disabled="disabled" />
+                </td>
+                <td>
+                    <span data-bind="text: Key" ></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="RaceTerm" style="display: none">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 24px;">
+                    
+                </th>
+                <th>Race</th>
+            </tr>
+        </thead>
+        <tbody id="RaceTable" data-bind="foreach: DataCheckerViewModels.RaceTerm.RacesList">
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="value: Value, checked: $parent.Races" disabled="disabled" />
+                </td>
+                <td>
+                    <span data-bind="text: Key" ></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="RxSupTerm" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>RxSup</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="0" id="rxLessThanZero" disabled="disabled" />
+                    <label for="rxLessThanZero">&lt;0</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="1" id="rxSupZero" disabled="disabled" />
+                    <label for="rxSupZero">0-1</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="2" id="rxSupTwo" disabled="disabled" />
+                    <label for="rxSupTwo">2-30</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="3" id="rxSupThirty" disabled="disabled" />
+                    <label for="rxSupThirty">31-60</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="4" id="rxSupSixty" disabled="disabled" />
+                    <label for="rxSupSixty">61-90</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="5" id="rxSupNinety" disabled="disabled" />
+                    <label for="rxSupNinety">&gt;90</label>
+                </td>
+            </tr>
+            @*<tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="6" id="rxSupOther" disabled="disabled" />
+                    <label for="rxSupOther">Other RxSup</label>
+                </td>
+            </tr>*@
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxSups" value="7" id="rxSupMissing" disabled="disabled" />
+                    <label for="rxSupMissing">Missing</label>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="RxAmtTerm" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>RxAmt</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="0" id="rxAmtLessThanZero" disabled="disabled" />
+                    <label for="rxAmtLessThanZero">&lt;0</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="1" id="rxAmtZero" disabled="disabled" />
+                    <label for="rxAmtZero">0-1</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="2" id="rxAmtTwoThrough30" disabled="disabled" />
+                    <label for="rxAmtTwoThrough30">2-30</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="3" id="rxAmtThirty" disabled="disabled" />
+                    <label for="rxAmtThirty">31-60</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="4" id="rxAmtSixty" disabled="disabled" />
+                    <label for="rxAmtSixty">61-90</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="5" id="rxAmtNinety" disabled="disabled" />
+                    <label for="rxAmtNinety">91-120</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="6" id="rxAmtOneTwenty" disabled="disabled" />
+                    <label for="rxAmtOneTwenty">121-180</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="7" id="rxAmtOne180" disabled="disabled" />
+                    <label for="rxAmtOne180">&gt;180</label>
+                </td>
+            </tr>
+
+            @*<tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="8" id="rxAmtOther" disabled="disabled" />
+                    <label for="rxAmtOther">Other RxAmt</label>
+                </td>
+            </tr>*@
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: RxAmounts" value="9" id="rxAmtMissing" disabled="disabled" />
+                    <label for="rxAmtMissing">Missing</label>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="PDXTerm" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>PDX</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: PDXes" value="0" id="pdxPrinciple" disabled="disabled" />
+                    <label for="pdxPrinciple">Principle</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: PDXes" value="1" id="pdxSecondary" disabled="disabled" />
+                    <label for="pdxSecondary">Secondary</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: PDXes" value="2" id="pdxOther" disabled="disabled" />
+                    <label for="pdxOther">Other PDX</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: PDXes" value="3" id="pdxMissing" disabled="disabled" />
+                    <label for="pdxMissing">Missing</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="EncounterTypeTerm" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>Encounter Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="0" id="encounterAll" disabled="disabled" />
+                    <label for="encounterAll">All</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="1" id="encounterAmbulatoryVisit" disabled="disabled" />
+                    <label for="encounterAmbulatoryVisit">Ambulatory Visit (AV)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="2" id="encounterEmergencyDepartment" disabled="disabled" />
+                    <label for="encounterEmergencyDepartment">Emergency Department (ED)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="3" id="encounterInpatientHospitalStay" disabled="disabled" />
+                    <label for="encounterInpatientHospitalStay">Inpatient Hospital Stay (IP)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="4" id="encounterNonAcuteInstitutionalStay" disabled="disabled" />
+                    <label for="encounterNonAcuteInstitutionalStay">Non-Acute Institutional Stay (IS)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="5" id="encounterOther" disabled="disabled" />
+                    <label for="encounterOther">Other Ambulatory Visit (OA)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Encounters" value="6" id="encounterMissing" disabled="disabled" />
+                    <label for="encounterMissing">Missing</label>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+<div id="MetaDataTableTerm" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>Table</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Tables" value="0" id="tableDiagnosis" disabled="disabled" />
+                    <label for="tableDiagnosis">Diagnosis</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Tables" value="1" id="tableDispensing" disabled="disabled" />
+                    <label for="tableDispensing">Dispensing</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Tables" value="2" id="tableEncounter" disabled="disabled" />
+                    <label for="tableEncounter">Encounter</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Tables" value="3" id="tableEnrollment" disabled="disabled" />
+                    <label for="tableEnrollment">Enrollment</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" data-bind="checked: Tables" value="4" id="tabelProcedure" disabled="disabled" />
+                    <label for="tabelProcedure">Procedure</label>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+<div class="DataChecker ui-form">
+    <div class="ui-form">
+        <fieldset id="fsCriteria">
+            <legend style="display: none;"></legend>
+            @Html.HiddenFor(m => m.CriteriaGroupsJSON)
+            <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+            <div class="ui-groupbox">
+                <div class="ui-groupbox-header">
+                    <span>Data Checker Criteria</span>
+                </div>
+                <ol data-bind="foreach: RequestCriteria.Criterias">
+                    <li>
+                        <ul data-bind="foreach: RequestTerms">
+                            <li class="col3">
+                                <div data-bind="template: { name: TemplateName }"></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <br style="clear: both;" />
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+@*bootstrap the RequestCriteria support*@
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/RequestCriteria.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Criteria.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/RequestCriteria.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Criteria.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms.js")"></script>
+@*bootstrap the terms*@
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/CodesTerm.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/DataPartner.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/DataPartner.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Ethnicity.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Ethnicity.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Metric.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Metric.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Race.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Race.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Project.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Project.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/RequestStatus.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/RequestStatus.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/DateRange.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/WorkplanType.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/WorkplanType.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/RequesterCenter.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/RequesterCenter.js")"></script>
+
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/pdx.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/pdx.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/rxamt.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/rxamt.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/rxsup.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/rxsup.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/metadatatable.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/metadatatable.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/encountertype.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/encountertype.js")"></script>
+
+
+@*bootstrap the page*@
+<script type="text/javascript" src="@this.Resource("ViewModels/Create.js")"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        // initialize the viewmodel
+        //displayrequest.cshtml
+        var json = @(Html.Raw(HttpUtility.HtmlDecode(Model.CriteriaGroupsJSON) + ";"))
+        DataChecker.Create.init(json, $("#fsCriteria"), $("#CriteriaGroupsJSON"));
+    });
+</script>

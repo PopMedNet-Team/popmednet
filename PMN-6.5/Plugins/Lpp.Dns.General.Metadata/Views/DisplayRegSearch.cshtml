@@ -1,0 +1,228 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetadataRegSearchModel
+<div class="ui-groupbox" id="RegSearch">
+    <div class="ui-groupbox-header"><span>Search Criteria</span></div>
+    <input type="hidden" id="hData" name="Data" /> <!--The entire model is stored in here as json-->
+    <fieldset>
+        <legend>Registry Items</legend>
+        <ol>
+            <li><span>Classification</span></li>
+            <li class="col3">
+                <label id="chkClassificationDiseaseDisorderCondition" data-bind="visible: ClassificationDiseaseDisorderCondition()">Disease/Disorder/Condition</label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationRareDiseaseDisorderCondition" data-bind="visible: ClassificationRareDiseaseDisorderCondition()">Rare Disease/Disorder/Condition</label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationPregnancy" data-bind="visible: ClassificationPregnancy()">Pregnancy</label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationPregnancy" data-bind="visible: ClassificationPregnancy()"> Pregnancy</label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationProductBiologic" data-bind="visible: ClassificationProductBiologic()">
+                    Product,Biologic
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationProductDevice" data-bind="visible: ClassificationProductDevice()">
+                    Product,Device
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationProductDrug" data-bind="visible: ClassificationProductDrug()">
+                    Product,Drug
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationServiceEncounter" data-bind="visible: ClassificationServiceEncounter()">
+                    Service,Encounter
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationServiceHospitalization" data-bind="visible: ClassificationServiceHospitalization()">
+                    Service,Hospitalization
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationServiceProcedure" data-bind="visible: ClassificationServiceProcedure()">
+                    Service,Procedure
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationTransplant" data-bind="visible: ClassificationTransplant()">
+                    Transplant
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationTumor" data-bind="visible: ClassificationTumor()">
+                    Tumor
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkClassificationVaccine" data-bind="visible: ClassificationVaccine()">
+                    Vaccine
+                </label>
+            </li>
+        </ol>
+        <br style="clear:both" />
+        <ol>
+            <li><span>Purpose</span></li>
+            <li class="col3">
+                <label id="chkPurposeClinicalPracticeAssessment" data-bind="visible: PurposeClinicalPracticeAssessment()">
+                    Clinical Practice Assessment
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposeEffectiveness" data-bind="visible: PurposeEffectiveness()">
+                    Effectiveness
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposeNaturalHistoryofDisease" data-bind="visible: PurposeNaturalHistoryofDisease()">
+                    Natural History of Disease
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposePaymentCertification" data-bind="visible: PurposePaymentCertification()">
+                    Payment/Certification
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposePostMarketingCommitment" data-bind="visible: PurposePostMarketingCommitment()">
+                    Post Marketing Commitment
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposePublicHealthSurveillance" data-bind="visible: PurposePublicHealthSurveillance()">
+                    Public Health Surveillance
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposeQualityImprovement" data-bind="visible: PurposeQualityImprovement()">
+                    Quality Improvement
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkPurposeSafetyOrHarm" data-bind="visible: PurposeSafetyOrHarm()">
+                    Safety Or Harm
+                </label>
+            </li>
+        </ol>
+        <br style="clear:both" />
+        <ol>
+            <li><span>Condition of Interest</span></li>
+            <li class="col3">
+                <label id="chkConditionOfInterestBacterialandFungalDiseases" data-bind="visible: ConditionOfInterestBacterialandFungalDiseases()">
+                    Bacterial and Fungal Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestBehaviorsandMentalDisorders" data-bind="visible: ConditionOfInterestBehaviorsandMentalDisorders()">
+                    Behaviors and Mental Disorders
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestBloodandLymphConditions" data-bind="visible: ConditionOfInterestBloodandLymphConditions()">
+                    Blood and Lymph Conditions
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestCancersAndOtherNeoplasms" data-bind="visible: ConditionOfInterestCancersAndOtherNeoplasms()">
+                    Cancers And Other Neoplasms
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestDigestiveSystemDiseases" data-bind="visible: ConditionOfInterestDigestiveSystemDiseases()">
+                    Digestive System Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestDiseasesOrAbnormalitiesAtOrBeforeBirth" data-bind="visible: ConditionOfInterestDiseasesOrAbnormalitiesAtOrBeforeBirth()">
+                    Diseases Or Abnormalities At Or Before Birth
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestearNoseAndThroatDiseases" data-bind="visible: ConditionOfInterestearNoseAndThroatDiseases()">
+                    Ear, Nose, And Throat Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestEyeDiseases" data-bind="visible: ConditionOfInterestGlandAndHormoneRelatedDiseases()">
+                    Gland And Hormone Related Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestHeartAndBloodDiseases" data-bind="visible: ConditionOfInterestHeartAndBloodDiseases()">
+                    Heart And Blood Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestImmuneSystemDiseases" data-bind="visible: ConditionOfInterestImmuneSystemDiseases()">
+                    Immune System Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestMouthAndToothDiseases" data-bind="visible: ConditionOfInterestMouthAndToothDiseases()">
+                    Mouth And Tooth Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestMuscleBoneCartilageDiseases" data-bind="visible: ConditionOfInterestMuscleBoneCartilageDiseases()">
+                    Muscle, Bone, and Cartilage Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestOccupationalDiseases" data-bind="visible: ConditionOfInterestOccupationalDiseases()">
+                    Occupational Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestParasiticalDiseases" data-bind="visible: ConditionOfInterestParasiticalDiseases()">
+                    Parasitical Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestRespiratoryTractDiseases" data-bind="visible: ConditionOfInterestRespiratoryTractDiseases()">
+                    Respiratory Tract Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestSkinAndConnectiveTissueDiseases" data-bind="visible: ConditionOfInterestSkinAndConnectiveTissueDiseases()">
+                    Skin And Connective Tissue Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestSubstanceRelatedDisorders" data-bind="visible: ConditionOfInterestSubstanceRelatedDisorders()">
+                    Substance Related Disorders
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestSymptomsAndGeneralPathology" data-bind="visible: ConditionOfInterestSymptomsAndGeneralPathology()">
+                    Symptoms And General Pathology
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions" data-bind="visible: ConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions()">
+                    Urinary Tract, SexualOrgans, And Pregnancy Conditions
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestViralDiseases" data-bind="visible: ConditionOfInterestViralDiseases()">
+                    Viral Diseases
+                </label>
+            </li>
+            <li class="col3">
+                <label id="chkConditionOfInterestWoundsAndInjuries" data-bind="visible: ConditionOfInterestWoundsAndInjuries()">
+                    Wounds And Injuries
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    </div>
+    <script src="@this.Resource("CreateRegSearch.js")"></script>
+    <script>
+        //Load the data here from the json that is serialized in from the model.
+        //Reuses the code from the edit and just changes the bindings
+        var data = JSON.parse('@Html.Raw(Model.Data ?? "{}")');
+        MetadataQuery.CreateRegistrySearch.init(data, $("#hData"), $("#RegSearch"));
+    </script>

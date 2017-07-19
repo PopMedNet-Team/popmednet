@@ -1,0 +1,87 @@
+.UploadModelConfigurationForm { display: none; }
+
+.ModelConfiguration
+{
+    text-align: left;
+    padding-top: 20px;
+}
+
+.ModelConfiguration .Common, .ModelConfiguration .Requests
+{
+    float: left;
+    width: 440px;
+    background: #E8E8E8;
+    padding: 0 10px;
+    margin: 0 10px;
+    white-space: nowrap;
+	overflow: hidden;
+}
+
+.ModelConfiguration h1
+{
+    font-size: medium;
+    display: block;
+    background: white;
+    padding: 5px;
+    margin: 0 -10px;
+}
+
+.ModelConfiguration h2
+{
+    font-size: small;
+    display: block;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0 -10px;
+    background: #D0D0D0;
+    clear: both;
+}
+
+.ModelConfiguration .Field > h3
+{
+    display: inline-block;
+    width: 130px;
+    font-weight: normal;
+    font-size: small;
+    margin: 5px 0;
+    float: left;
+}
+
+.ModelConfiguration .Field > h3.NewLine
+{
+    display: block;
+    margin-bottom: 0;
+    margin-top: 7px;
+    width: auto;
+    font-size: smaller;
+    width: 300px;
+}
+
+.ModelConfiguration .Field > div.Multiline {
+	white-space: normal;
+}
+
+.ModelConfiguration .Field > div
+{
+    float: left;
+    width: 250px;
+    margin: 5px 0;
+}
+
+.ModelConfiguration .Field
+{
+    display: block;
+    font-weight: bold;
+    clear: both;
+}
+
+.ConfigurationError, .ConfirmUpload
+{
+    text-align: left;
+}
+
+.ConfigurationError .validation-summary-errors
+{
+    color: Red;
+    font-weight: bold;
+}

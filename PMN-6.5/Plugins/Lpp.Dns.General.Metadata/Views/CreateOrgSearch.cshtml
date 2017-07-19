@@ -1,0 +1,375 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetadataOrgSearchModel
+ 
+<div class="ui-groupbox" id="orgSearch">
+    <div class="ui-groupbox-header"><span>Search Criteria</span></div>
+    <input type="hidden" id="hData" name="Data" />
+    <fieldset>
+        <legend>Organization Details</legend>
+        <ol>
+            <li>
+                <label for="txtName">Name</label>
+                <input type="text" id="txtName" data-bind="value: Name" style="width: 100%;" />
+            </li>
+            <li>
+                <label for="txtHealthPlanSystemDescription">Organization Description (Contains Keyword or Phrase)</label>
+                <input type="text" id="txtHealthPlanSystemDescription" data-bind="value: HealthPlanSystemDescription" style="width: 100%;" />
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Willing to Participate In:</span></div>
+        <ol>
+            <li class="col3">
+                <label for="chkObservationalResearch">
+                    <input type="checkbox" id="chkObservationalResearch" data-bind="checked: ObservationalResearch" />
+                    Observational Research
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkClinicalTrials">
+                    <input type="checkbox" id="chkClinicalTrials" data-bind="checked: ClinicalTrials" />
+                    Clinical Trials
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPragamaticClincialTrials">
+                    <input type="checkbox" id="chkPragamaticClincialTrials" data-bind="checked: PragamaticClincialTrials" />
+                    Pragmatic Clinical Trials
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Types of Data Collected By Organization</span></div>
+        <ol>
+            <li class="col3">
+                <label for="chkNone">
+                    <input type="checkbox" id="chkNone" data-bind="checked: None" />
+                    None
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatient">
+                    <input type="checkbox" id="chkInpatient" data-bind="checked: Inpatient" />
+                    Inpatient
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatient">
+                    <input type="checkbox" id="chkOutpatient" data-bind="checked: Outpatient" />
+                    Outpatient
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPharmacyDispensings">
+                    <input type="checkbox" id="chkPharmacyDispensings" data-bind="checked: PharmacyDispensings" />
+                    Pharmacy Dispensings
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkEnrollment">
+                    <input type="checkbox" id="chkEnrollment" data-bind="checked: Enrollment" />
+                    Enrollment
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDemographics">
+                    <input type="checkbox" id="chkDemographics" data-bind="checked: Demographics" />
+                    Demographics
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkLaboratoryResults">
+                    <input type="checkbox" id="chkLaboratoryResults" data-bind="checked: LaboratoryResults" />
+                    Laboratory Results
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkVitalSigns">
+                    <input type="checkbox" id="chkVitalSigns" data-bind="checked: VitalSigns" />
+                    Vital Signs
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkBiorepositories">
+                    <input type="checkbox" id="chkBiorepositories" data-bind="checked: Biorepositories" />
+                    Biorepositories
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPatientReportedOutcomes">
+                    <input type="checkbox" id="chkPatientReportedOutcomes" data-bind="checked: PatientReportedOutcomes" />
+                    Patient Reported Outcomes/Health Status
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPatientReportedBehaviors">
+                    <input type="checkbox" id="chkPatientReportedBehaviors" data-bind="checked: PatientReportedBehaviors" />
+                    Patient Reported Behaviors
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkPrescriptionOrders">
+                    <input type="checkbox" id="chkPrescriptionOrders" data-bind="checked: PrescriptionOrders" />
+                    Prescription Orders
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOther">
+                    <input type="checkbox" id="chkOther" data-bind="checked: DataCollectedOther" />
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Electronic Health Record System</span></div>
+        <ol style="width:46%; float:left; border-right: solid 1px black;">
+            <li class="">
+                <div style="float: left">Inpatient</div>
+                <label for="chkInpatientActive" style="float: left">
+                    <input type="checkbox" id="chkInpatientActive" data-bind="checked: InpatientActive" />
+                    Active
+                </label>
+                <div style="clear: both;"></div>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientNone">
+                    <input type="checkbox" id="chkInpatientNone" data-bind="checked: InpatientNone" />
+                    None
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientEpic">
+                    <input type="checkbox" id="chkInpatientEpic" data-bind="checked: InpatientEpic" />
+                    Epic
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientNextGenHealthCare">
+                    <input type="checkbox" id="chkInpatientNextGenHealthCare" data-bind="checked: InpatientNextGenHealthCare" />
+                    NextGen HealthCare
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientGEHealthCare">
+                    <input type="checkbox" id="chkInpatientGEHealthCare" data-bind="checked: InpatientGEHealthcare" />
+                    GE HealthCare
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientAllScripts">
+                    <input type="checkbox" id="chkInpatientAllScripts" data-bind="checked: InpatientAllScripts" />
+                    AllScripts
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientClinicalWorks">
+                    <input type="checkbox" id="chkInpatientClinicalWorks" data-bind="checked: InpatienteClinicalWorks" />
+                    eClinicalWorks
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientMckesson">
+                    <input type="checkbox" id="chkInpatientMckesson" data-bind="checked: InpatientMckesson" />
+                    Mckesson
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientCare360">
+                    <input type="checkbox" id="chkInpatientCare360" data-bind="checked: InpatientCare360" />
+                    Care 360
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientMeditech">
+                    <input type="checkbox" id="chkInpatientMeditech" data-bind="checked: InpatientMeditech" />
+                    Meditech
+                </label>
+            </li>
+            
+            <li class="col3">
+                <label for="chkInpatientCerner">
+                    <input type="checkbox" id="chkInpatientCerner" data-bind="checked: InpatientCerner" />
+                    Cerner
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientCPSI">
+                    <input type="checkbox" id="chkInpatientCPSI" data-bind="checked: InpatientCPSI" />
+                    CPSI
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientSiemens">
+                    <input type="checkbox" id="chkInpatientSiemens" data-bind="checked: InpatientSiemens" />
+                    Siemens
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientVistA">
+                    <input type="checkbox" id="chkInpatientVistA" data-bind="checked: InpatientVistA" />
+                    VistA
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkInpatientOther">
+                    <input type="checkbox" id="chkInpatientOther" data-bind="checked: InpatientOther" />
+                    Other
+                </label>
+            </li>
+        </ol>
+        <ol style="width:46%; float:left; padding-left:20px;">
+            <li>
+                <div style="float: left;">Outpatient</div>
+                <label for="chkOutpatientActive" style="float: left;">
+                    <input type="checkbox" id="chkOutpatientActive" data-bind="checked: OutpatientActive" />
+                    Active
+                </label>
+                <div style="clear: both;"></div>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientNone">
+                    <input type="checkbox" id="chkOutpatientNone" data-bind="checked: OutpatientNone" />
+                    None
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientEpic">
+                    <input type="checkbox" id="chkOutpatientEpic" data-bind="checked: OutpatientEpic" />
+                    Epic
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientNextGenHealthCare">
+                    <input type="checkbox" id="chkOutpatientNextGenHealthCare" data-bind="checked: OutpatientNextGenHealthCare" />
+                    NextGen HealthCare
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientGEHealthCare">
+                    <input type="checkbox" id="chkOutpatientGEHealthCare" data-bind="checked: OutpatientGEHealthcare" />
+                    GE HealthCare
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientAllScripts">
+                    <input type="checkbox" id="chkOutpatientAllScripts" data-bind="checked: OutpatientAllScripts" />
+                    AllScripts
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientClinicalWorks">
+                    <input type="checkbox" id="chkOutpatientClinicalWorks" data-bind="checked: OutpatienteClinicalWorks" />
+                    eClinicalWorks
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientMckesson">
+                    <input type="checkbox" id="chkOutpatientMckesson" data-bind="checked: OutpatientMckesson" />
+                    Mckesson
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientCare360">
+                    <input type="checkbox" id="chkOutpatientCare360" data-bind="checked: OutpatientCare360" />
+                    Care 360
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientMeditech">
+                    <input type="checkbox" id="chkOutpatientMeditech" data-bind="checked: OutpatientMeditech" />
+                    Meditech
+                </label>
+            </li>
+            
+            <li class="col3">
+                <label for="chkOutpatientCerner">
+                    <input type="checkbox" id="chkOutpatientCerner" data-bind="checked: OutpatientCerner" />
+                    Cerner
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientCPSI">
+                    <input type="checkbox" id="chkOutpatientCPSI" data-bind="checked: OutpatientCPSI" />
+                    CPSI
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientSiemens">
+                    <input type="checkbox" id="chkOutpatientSiemens" data-bind="checked: OutpatientSiemens" />
+                    Siemens
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientVistA">
+                    <input type="checkbox" id="chkOutpatientVistA" data-bind="checked: OutpatientVistA" />
+                    VistA
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkOutpatientOther">
+                    <input type="checkbox" id="chkOutpatientOther" data-bind="checked: OutpatientOther" />
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset class="ui-groupbox">
+        <legend></legend>
+        <div class="ui-groupbox-header"><span>Data Models</span></div>
+        <ol>
+            <li class="col3">
+                <label for="chkDataModelMSCDM">
+                    <input type="checkbox" id="chkDataModelMSCDM" data-bind="checked: DataModelMSCDM" />
+                    MSCDM
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelESP">
+                    <input type="checkbox" id="chkDataModelESP" data-bind="checked: DataModelESP" />
+                    ESP
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelOMOP">
+                    <input type="checkbox" id="chkDataModelOMOP" data-bind="checked: DataModelOMOP" />
+                    OMOP
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelHMRON">
+                    <input type="checkbox" id="chkDataModelHMRON" data-bind="checked: DataModelHMRON" />
+                    HMORN VDW
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModeli2b2">
+                    <input type="checkbox" id="chkDataModeli2b2" data-bind="checked: DataModeli2b2" />
+                    i2b2
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelPcori">
+                    <input type="checkbox" id="chkDataModelPcori" data-bind="checked: DataModelPCORI" />
+                    PCORnet CDM
+                </label>
+            </li>
+            <li class="col3">
+                <label for="chkDataModelOther">
+                    <input type="checkbox" id="chkDataModelOther" data-bind="checked: DataModelOther" />
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+</div>
+
+<script src="@this.Resource("CreateOrgSearch.js")"></script>
+<script>
+    var data = JSON.parse('@Html.Raw(Model.Data ?? "{}")');
+    MetadataQuery.CreateOrgSearch.init(data, $("#hData"), $("#orgSearch"));
+</script>

@@ -1,0 +1,31 @@
+﻿@model string
+<div class="ui-groupbox" id="datamartResults">
+    <table class="table table-bordered table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Acronym</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Results">
+            <tr>
+                <td><a href="#" data-bind="text: Name, attr: { href: '/datamarts/details?ID=' + ID }"></a></td>
+                <td data-bind="text: Acronym"></td>
+                <td data-bind="text: Description"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    $(function () {
+        //Load the data here from the json that is serialized in from the model.
+        //Reuses the code from the edit and just changes the bindings
+        var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model == null ? "{}" : Model));
+        data = { Results: JSON.parse(data) };
+        ko.applyBindings(data, $("#datamartResults")[0]);
+    });
+</script>
