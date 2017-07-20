@@ -1,0 +1,681 @@
+{
+	"ID" : null,
+	"ResponseDateTime" : "2014-12-24T14:41:55.7845298+00:00",
+	"RequestID" : "00000000-0000-0000-0000-000000000000",
+	"Errors" : [],
+	"Results" : [[{
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 83.0,
+				"Days Covered" : 10067.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 94.0,
+				"Days Covered" : 17486.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 218.0,
+				"Days Covered" : 37469.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 68.0,
+				"Days Covered" : 11223.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 641.0,
+				"Days Covered" : 113688.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 643.0,
+				"Days Covered" : 123396.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 42.0,
+				"Days Covered" : 9090.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 82.0,
+				"Days Covered" : 8618.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 132.0,
+				"Days Covered" : 25991.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 245.0,
+				"Days Covered" : 48806.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 51.0,
+				"Days Covered" : 9994.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 570.0,
+				"Days Covered" : 112008.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 566.0,
+				"Days Covered" : 115762.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2009",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 62.0,
+				"Days Covered" : 14894.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 65.0,
+				"Days Covered" : 3326.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 109.0,
+				"Days Covered" : 6179.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 214.0,
+				"Days Covered" : 13153.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 68.0,
+				"Days Covered" : 4139.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 686.0,
+				"Days Covered" : 40144.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 623.0,
+				"Days Covered" : 44143.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 78.0,
+				"Days Covered" : 4200.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 70.0,
+				"Days Covered" : 2570.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 122.0,
+				"Days Covered" : 7383.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 253.0,
+				"Days Covered" : 15669.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 75.0,
+				"Days Covered" : 3604.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 570.0,
+				"Days Covered" : 37345.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 624.0,
+				"Days Covered" : 42180.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2010",
+				"MedCov" : "Y",
+				"DrugCov" : "N",
+				"Total Enrollment in Strata(Members)" : 76.0,
+				"Days Covered" : 5012.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2011",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2012",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2013",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "F",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 0-4",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : " 5-9",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "10-18",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "19-21",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "22-44",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "45-64",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}, {
+				"AgeGroup" : "65+",
+				"Sex" : "M",
+				"Year" : "2014",
+				"MedCov" : null,
+				"DrugCov" : null,
+				"Total Enrollment in Strata(Members)" : 0.0,
+				"Days Covered" : 0.0
+			}
+		]],
+	"LowCellThrehold" : null
+}

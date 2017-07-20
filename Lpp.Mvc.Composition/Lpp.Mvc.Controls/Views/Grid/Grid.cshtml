@@ -1,0 +1,138 @@
+﻿@using Lpp.Utilities.Legacy
+@model GridDefinition
+@{
+    Layout = null;
+    var attributes = ObjectDictionary.From( new
+    {
+        id = "Grid_" + Guid.NewGuid().ToString().Substring( 0, 6 ).Replace( "-", "" ),
+        @class = "Grid",
+        cellspacing = "0",
+        cellpadding = "0"
+    } )
+    .ToDictionary( k => k.Key, k => Convert.ToString( k.Value ) )
+    .Merge( Model.Options.Attributes );
+
+    var id = attributes["id"];
+    this.Stylesheet( "grid.css" );
+}
+
+<table @(Attributes( attributes ))>
+    <thead>
+        <tr>
+            @foreach ( var c in Model.Columns )
+            {
+                var headerClass = c.HeaderAttributes == null ? null : c.HeaderAttributes.ValueOrDefault( "class" );
+                if ( !string.IsNullOrEmpty( headerClass ) ) { headerClass += " "; }
+                if ( c.Sortable )
+                {
+                    headerClass += "Sortable";
+                    if ( c.SortProperty == Model.Options.CurrentSort )
+                    {
+                        headerClass += Model.Options.CurrentSortIsAscending ? " SortedAsc" : " SortedDesc";
+                    }
+                }
+                
+                <th @Attribute( "class", headerClass )@Attribute( "sortby", c.Sortable ? c.SortProperty : null )
+                   @Attributes( c.HeaderAttributes, "class" )>
+                   @if ( c.Sortable && c.SortProperty == Model.Options.CurrentSort ) { <div class="SortIcon">&nbsp;</div> } 
+                   @c.Title
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{ 
+            var altClasses = Model.Options.AlternatingRowCssClasses.EmptyIfNull().DefaultIfEmpty();
+            var pageFilled = Model.Options.PageSize;
+            var totalColumns = Model.Columns.Count();
+        }
+        @foreach ( var r in Model.Rows.Zip( altClasses.Repeat(), ( row, cls ) => new { row, cls } ) )
+        {
+            pageFilled--;
+            <tr @Attribute( "class", r.cls )@Attribute( "id", r.row.Id )>
+                @foreach ( var c in r.row.Cells )
+                {
+                    <td @Attributes( c.Attributes )>@c.Content</td>
+                }
+            </tr>
+        }
+        @while ( Model.Options.TotalPages > 1 && pageFilled-- > 0 )
+        {
+            <tr><td colspan="@totalColumns">&nbsp;</td></tr>
+        }
+        @if ( !Model.Rows.Any() )
+        { 
+            <tr><td colspan="@totalColumns" class="NoData">@Model.Options.NoDataMessage( null )</td></tr>
+        }
+    </tbody>
+    @if ( (Model.Options.IsPaged && Model.Options.TotalPages > 1) || Model.Options.FooterPrefix != null || Model.Options.FooterSuffix != null )
+    {
+        <tfoot>
+            <tr><td colspan="@totalColumns">
+                @(Model.Options.FooterPrefix)
+                @if ( Model.Options.IsPaged && Model.Options.TotalPages > 1 )
+                {
+                    <div class="Pager">
+                        @{
+                    var abbreviate = Model.Options.TotalPages > Model.Options.MaxPageButtonsBeforeAbbreviating;
+                    var minPage = abbreviate ? Math.Max( 0, Model.Options.CurrentPage - Model.Options.PageButtonsWhenAbbreviated/2 ) : 0;
+                    var maxPage = abbreviate ? Math.Min( Model.Options.TotalPages-1, minPage + Model.Options.PageButtonsWhenAbbreviated-1 ) : Model.Options.TotalPages-1;
+
+                    if ( abbreviate )
+                    { 
+                        @PageArrow( "<<", 0 )
+                        @PageArrow( "<", Model.Options.CurrentPage-1 )
+                        if ( minPage > 0 )
+                        { <div class="AbbreviationEllipsis">...</div> }
+                    }
+                    else
+                    { <text>Page:</text> }
+
+                    for ( int page = minPage; page <= maxPage; page++ )
+                    {
+                        <a href="#" page="@page" class="Page@( page == Model.Options.CurrentPage ? " Selected" : "")">@(page+1)</a>
+                    }
+
+                    if ( abbreviate )
+                    {
+                        if ( maxPage < Model.Options.TotalPages-1 )
+                        { <div class="AbbreviationEllipsis">...</div> }
+                                @PageArrow( ">", Model.Options.CurrentPage+1 )
+                                @PageArrow( ">>", Model.Options.TotalPages-1 )
+                    }
+                        }
+                    </div>
+                }
+                @(Model.Options.FooterSuffix)
+            </td></tr>
+        </tfoot>
+    }    
+    <script>
+        //@@ sourceURL=http://lpp/Grid.cshtml
+        $(function () {
+            $("#@id").grid("@Html.Raw( Model.Options.ReloadUrl )");
+        });
+    </script>
+    @Model.Options.Appendix
+</table>
+
+@helper Attributes( IEnumerable<KeyValuePair<string, string>> attrs, params string[] except )
+    {
+        foreach ( var a in attrs.EmptyIfNull() )
+        {
+            if ( except == null || except.Length == 0 || !except.Contains( a.Key ) )
+            {
+                <text> @a.Key="@a.Value"</text> 
+            }
+        }
+}
+@helper Attribute( string name, string value )
+    {
+        if ( string.IsNullOrEmpty( value ) ) { return; }
+    <text> @name="@value"</text>
+}
+@helper PageArrow( string text, int targetPage )
+    {
+        var validPage = targetPage >= 0 && targetPage < Model.Options.TotalPages && targetPage != Model.Options.CurrentPage;
+    <a href="#" @( validPage ? ("page=" + targetPage) : "") class="PageArrow @( validPage ? "" : " Disabled")">@text</a> 
+}

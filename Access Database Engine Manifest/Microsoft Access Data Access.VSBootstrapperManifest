@@ -1,0 +1,51 @@
+<VSBootstrapperManifest>
+  <ProjectProperties ProjectName="Microsoft Access Data Access" BuildLocation="SpecifiedDir" BuildDirectory="d:\Documents\New Project" DefaultLanguage="en" />
+  <UIPackage ProductCode="Microsoft.Access.Data.Access">
+    <UIChecks />
+    <Relationships />
+    <CustomSchedules />
+  </UIPackage>
+  <UIInstallFile FileName="D:\Lincoln Peak\PMN\Code\Access Database Engine Manifest\AccessDatabaseEngine.exe" DisplayName="Access Database Engine" Arguments="/passive /quiet" Reboot="Defer" InstallTime="60" InstallingSize="100000" InstalledSize="100000" PublicKey="3082010A0282010100E8AF5CA2200DF8287CBC057B7FADEEEB76AC28533F3ADB407DB38E33E6573FA551153454A5CFB48BA93FA837E12D50ED35164EEF4D7ADB137688B02CF0595CA9EBE1D72975E41B85279BF3F82D9E41362B0B40FBBE3BBAB95C759316524BCA33C537B0F3EB7EA8F541155C08651D2137F02CBA220B10B1109D772285847C4FB91B90B0F5A3FE8BF40C9A4EA0F5C90A21E2AAE3013647FD2F826A8103F5A935DC94579DFB4BD40E82DB388F12FEE3D67A748864E162C4252E2AAE9D181F0E1EB6C2AF24B40E50BCDE1C935C49A679B5B6DBCEF9707B280184B82A29CFBFA90505E1E00F714DFDAD5C238329EBC7C54AC8E82784D37EC6430B950005B14F6571C50203010001" IncludePublicKey="True" FileHash="0E32A424413E07BAD97424BE5EBD216407F1E2DC" Locale="neutral">
+    <UIChecks>
+      <MsiProductCheck MsiProductCode="{90140000-00D1-0409-0000-0000000FF1CE}" Property="Access Database Engine Installed" />
+    </UIChecks>
+    <UIInstallConditions>
+      <UIInstallCondition Type="ByPassIf" Property="Access Database Engine Installed" Operator="&gt;" Value="0" Message="" />
+    </UIInstallConditions>
+    <UIExitCodes>
+      <UIExitCode ExitCode="0" Result="Success" Message="" />
+      <UIExitCode ExitCode="3010" Result="Success, Reboot Needed" Message="" />
+      <DefaultExitCode Result="Fail" FormatMessageFromSystem="True" Message="An unexpected exit code was returned from the installer. The installation failed." />
+    </UIExitCodes>
+    <LooseFiles />
+  </UIInstallFile>
+  <UIInstallFile FileName="D:\Lincoln Peak\PMN\Code\Access Database Engine Manifest\AccessDatabaseEngine_x64.exe" DisplayName="Access Database Engine x64" Arguments="/passive /quiet" Reboot="Defer" InstallTime="60" InstallingSize="10000" InstalledSize="10000" PublicKey="3082010A0282010100E8AF5CA2200DF8287CBC057B7FADEEEB76AC28533F3ADB407DB38E33E6573FA551153454A5CFB48BA93FA837E12D50ED35164EEF4D7ADB137688B02CF0595CA9EBE1D72975E41B85279BF3F82D9E41362B0B40FBBE3BBAB95C759316524BCA33C537B0F3EB7EA8F541155C08651D2137F02CBA220B10B1109D772285847C4FB91B90B0F5A3FE8BF40C9A4EA0F5C90A21E2AAE3013647FD2F826A8103F5A935DC94579DFB4BD40E82DB388F12FEE3D67A748864E162C4252E2AAE9D181F0E1EB6C2AF24B40E50BCDE1C935C49A679B5B6DBCEF9707B280184B82A29CFBFA90505E1E00F714DFDAD5C238329EBC7C54AC8E82784D37EC6430B950005B14F6571C50203010001" IncludePublicKey="True" FileHash="07025D0D2D5844B742C0ABBD14B76C46802CD66B" Locale="neutral">
+    <UIChecks>
+      <MsiProductCheck MsiProductCode="{90140000-00D1-0409-1000-0000000FF1CE}" Property="Access X64 Installed" />
+      <RegistryCheck RegKey="HKLM\SOFTWARE\Microsoft\Office\14.0\Common\FilesPaths" RegValue="mso.dll" Property="Officex64" />
+    </UIChecks>
+    <UIInstallConditions>
+      <UIInstallCondition Type="ByPassIf" Property="VersionNT64" Operator="Doesn't Exist" Value="N/A for ValueExists and ValueNotExists" Message="" />
+      <UIInstallCondition Type="ByPassIf" Property="Access X64 Installed" Operator="&gt;" Value="0" Message="" />
+    </UIInstallConditions>
+    <UIExitCodes>
+      <UIExitCode ExitCode="0" Result="Success" Message="" />
+      <UIExitCode ExitCode="3010" Result="Success, Reboot Needed" Message="" />
+      <DefaultExitCode Result="Fail" FormatMessageFromSystem="True" Message="An unexpected exit code was returned from the installer. The installation failed." />
+    </UIExitCodes>
+    <LooseFiles />
+  </UIInstallFile>
+  <UIInstallFile FileName="D:\Lincoln Peak\PMN\Code\Lpp.Dns.DataMart.ClientInstallCleanUp\bin\Debug\Lpp.Dns.DataMart.ClientInstallCleanUp.exe" DisplayName="" Arguments="" Reboot="" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" FileHash="EFB503B06ED035884B79F9C4F0A424DF46F70195" IncludeHash="True" Locale="neutral">
+    <UIChecks>
+      <RegistryCheck RegKey="HKLM\Software\Microsoft\Office\14.0\Common\FilesPaths" RegValue="mso.dll" Property="Office32On64" />
+    </UIChecks>
+    <UIInstallConditions>
+      <UIInstallCondition Type="ByPassIf" Property="VersionNT" Operator="Exists" Value="N/A for ValueExists and ValueNotExists" Message="" />
+      <UIInstallCondition Type="ByPassIf" Property="Office32On64" Operator="Exists" Value="N/A for ValueExists and ValueNotExists" Message="" />
+    </UIInstallConditions>
+    <UIExitCodes>
+      <DefaultExitCode Result="Fail" FormatMessageFromSystem="True" Message="An unexpected exit code was returned from the installer. The installation failed." />
+    </UIExitCodes>
+    <LooseFiles />
+  </UIInstallFile>
+</VSBootstrapperManifest>

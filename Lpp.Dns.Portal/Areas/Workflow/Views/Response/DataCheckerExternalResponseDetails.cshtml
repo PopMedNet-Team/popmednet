@@ -1,0 +1,89 @@
+﻿
+@{
+    Layout = "~/Views/_RootLayout.cshtml";
+}
+
+@section Head{
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+
+<script src="/Areas/DataChecker/js/datachecker.charting.js"></script>
+
+<script src="/Areas/DataChecker/js/Common.js"></script>
+<script src="/Areas/DataChecker/js/RxAmtResponse.js"></script>
+<script src="/Areas/DataChecker/js/RxSupResponse.js"></script>
+<script src="/Areas/DataChecker/js/DiagnosisPDXResponse.js"></script>
+<script src="/Areas/DataChecker/js/MetadataResponse.js"></script>
+<script src="/Areas/DataChecker/js/RaceResponse.js"></script>
+<script src="/Areas/DataChecker/js/EthnicityResponse.js"></script>
+<script src="/Areas/DataChecker/js/NDCResponse.js"></script>
+<script src="/Areas/DataChecker/js/SexResponse.js"></script>
+<script src="/Areas/DataChecker/js/AgeDistributionResponse.js"></script>
+<script src="/Areas/DataChecker/js/WeightResponse.js"></script>
+<script src="/Areas/DataChecker/js/HeightResponse.js"></script>
+<script src="/Areas/DataChecker/js/ProcedureResponse.js"></script>
+<script src="/Areas/DataChecker/js/DiagnosisResponse.js"></script>
+<script src="~/Areas/DataChecker/js/SqlResponse.js"></script>
+<script src="~/areas/workflow/js/response/datachecker/responsedetailsexternal.js"></script>
+
+<link rel="stylesheet" href="/scripts/jqplot/jquery.jqplot.css" />
+<link rel="stylesheet" href="/Content/DataChecker/Responses.css" />
+}
+
+<style>
+    .Highlight {
+        /*background-color: yellow;*/
+        display: none;
+    }
+
+    /*Hack cause Bootstrap tabs/panel and Kendo grid dont play well.*/
+    /*Make sure this is always 20px below what is set in the grid markup in the TS...*/
+    .k-grid-content {
+        height: 500px;
+    }
+</style>
+
+<!-- ko stopBinding:true -->
+<section id="DataCheckerExternalResponseDetails" style="margin-top:15px">
+    <article class="alert alert-info" data-bind="hidden:ResponseContentComplete" style="width:600px;margin:24px auto;text-align:center;">
+        <p>Loading...</p>
+    </article>
+
+    <section style="display:none" data-bind="visible:true">
+        <article class="panel panel-default" data-bind="visible: IsResponseVisible() != null && IsResponseVisible() == false">
+            <div class="panel-heading">
+                <h4 class="panel-title">Response Pending Approval</h4>
+            </div>
+            <div class="panel-body">
+                <span>
+                    The response is pending approval and can't be viewed as you don't have permission to view unapproved responses.
+                </span>
+            </div>
+        </article>
+
+        <article class="panel panel-default" data-bind="visible:IsResponseVisible">
+            <div class="panel-heading">
+                <h4 class="panel-title">Response</h4>
+            </div>
+
+            <div class="panel-body">
+                <div data-bind="component: { name: DataCheckerResponseBinding, params: { ResponseID: CurrentResponseID, RequestID: RequestID }}"></div>
+            </div>
+
+        </article>
+
+        <br style="clear:both;" />
+
+        <article id="gResults" class="panel panel-default"></article>
+    </section>
+</section>
+<!-- /ko -->
+

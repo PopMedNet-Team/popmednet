@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+    <script src="~/js/Security/AclViewModel.js"></script>
+    <script src="~/js/Registries/Details.js"></script>
+    <style>
+        .tab-body {
+            min-height: 500px;
+        }
+
+        #gItems .k-grid-header
+        {
+            display: none;
+        }
+    </style>
+
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <!-- forcing visible as MainMenu appear to create a problem -->
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/registries">Registries</a></li>
+            <li class="active" data-bind="text: Registry.Name"></li>
+        </ol>
+    </div>
+
+    <div class="panel-body">
+        <form class="form" role="form">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtName">Registry Name<em>*</em></label>
+                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: Registry.Name" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="cboType">Type<em>*</em></label>
+                    <input type="text" id="cboType" required title="Please select a Type" data-bind="kendoDropDownList: {value: Registry.Type, data: Dns.Enums.RegistryTypesTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="txtRoPRUrl">RoPR URL</label>
+                    <input type="text" id="txtRoPRUrl" class="form-control" data-bind="value: Registry.RoPRUrl" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="txtDescription">Description</label>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: Registry.Description" rows="4"></textarea>
+                </div>
+            </div>
+        </form>
+        <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height: 500px;">
+            <ul>
+                <li class="k-state-active">Items</li>
+                <li>Organizations</li>
+                <li data-bind="visible: HasPermission(Permissions.Registry.ManageSecurity)">Permissions</li>
+            </ul>
+            <div class="tab-body">
+                <!-- Items -->
+                <input type="hidden" name="SelectedRegistryItemDefinitions" id="SelectedRegistryItemDefinitions" data-bind="value: SelectedRegistryItemDefinitions" />
+                <div id="gItems" data-bind="kendoGrid: {
+                     data: dsAllRegistryItemDefinitions,
+                     rowTemplate: 'item-row-template',
+                     altRowTemplate: 'item-altrow-template',
+                     useKOTemplates: true,
+                     columns:[
+                     {title: '', width:35 },
+                     {field: 'Title' , title: 'Title' },
+                     {field: 'Category' , hidden: true, groupHeaderTemplate: '#= value #*' }
+                     ]
+                     }">
+                </div>
+                <span>*Categories from the Registry of Patient Registries (RoPR): patientregistry.ahrq.gov</span>
+            </div>
+            <div class="tab-body">
+                <!-- Organizations -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 100%; vertical-align: middle;" />
+                            <col style="width: 80px;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="bold">Name</th>
+                                <th class="bold">Acronym</th>
+                                <th class="bold">Parent</th>
+                                <th class="bold center">X</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: OrganizationRegistries">
+                            <tr>
+                                <td style="white-space: nowrap;"> <a href="#" data-bind="text: Organization, attr: {href: '/organizations/details?ID=' + OrganizationID()}"></a></td>
+                                <td data-bind="text: Acronym"></td>
+                                <td data-bind="text: OrganizationParent"></td>
+                                <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveOrganization">Remove</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="4">
+                                    <div class="pull-right">
+                                        <div class="dropdown">
+                                            <a href="#" id="btnAddOrganization" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" data-bind="disable: $root.AddableOrganizationList().length == 0"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Organzation" />&nbsp;Add Organization to Registry <strong class="caret"></strong></a>
+                                            <ul class="dropdown-menu" data-bind="foreach: $root.AddableOrganizationList">
+                                                <li>
+                                                    <a href="#" data-bind="click: $root.AddOrganization, attr: {id: ID}">
+                                                        <span data-bind="text: Name"></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-body">
+                <!-- Permissions -->
+                <div data-bind="with: RegistrySecurity">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.Registry.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Registry.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>
+
+<script id="item-row-template" type="text/html">
+    <tr role="row">
+        <td>&nbsp;</td>
+        <td><input type="checkbox" data-bind="value: ID, checked: $root.SelectedRegistryItemDefinitions" /></td>
+        <td data-bind="text: Title"></td>
+    </tr>
+</script>
+<script id="item-altrow-template" type="text/html">
+    <tr role="row" class="k-alt">
+        <td>&nbsp;</td>
+        <td><input type="checkbox" data-bind="value: ID, checked: $root.SelectedRegistryItemDefinitions" /></td>
+        <td data-bind="text: Title"></td>
+    </tr>
+</script>

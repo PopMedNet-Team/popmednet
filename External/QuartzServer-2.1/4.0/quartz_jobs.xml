@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file contains job definitions in schema version 2.0 format -->
+
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <schedule>
+
+    <job>
+        <name>HeartbeatJob</name>
+        <group>DNS</group>
+        <description>DNS heartbeat job for Quartz Server</description>
+        <job-type>Lpp.Dns.Scheduler.Jobs.HeartbeatJob, Lpp.Dns.Scheduler.Jobs</job-type>
+        <durable>true</durable>
+        <recover>false</recover>
+    </job>
+
+    <trigger>
+      <simple>
+        <name>HeartbeatSimpleTrigger</name>
+        <group>DNS</group>
+        <description>Simple trigger to simply fire HeartbeatJob</description>
+        <job-name>HeartbeatJob</job-name>
+        <job-group>DNS</job-group>
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>10000</repeat-interval>
+      </simple>
+    </trigger>
+
+    <job>
+      <name>NotificationsJob</name>
+      <group>DNS</group>
+      <description>DNS Notifications Processing Job</description>
+      <job-type>Lpp.Dns.Notiofications.NotificationsJob, Lpp.Dns.Notifications</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+
+    <trigger>
+      <simple>
+        <name>NotificationsTrigger</name>
+        <group>DNS</group>
+        <description></description>
+        <job-name>NotificationsJob</job-name>
+        <job-group>DNS</job-group>
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>10000</repeat-interval>
+      </simple>
+    </trigger>
+
+      <job>
+        <name>GarbageCollectionJob</name>
+        <group>DNS</group>
+        <description>DNS Garbage Collection Processing Job</description>
+        <job-type>Lpp.Dns.Portal.GarbageCollection.GarbageCollectionJob, Lpp.Dns.Portal.GarbageCollection</job-type>
+        <durable>true</durable>
+        <recover>false</recover>
+      </job>
+
+      <trigger>
+        <simple>
+          <name>GarbageCollectionTrigger</name>
+          <group>DNS</group>
+          <description></description>
+          <job-name>GarbageCollectionJob</job-name>
+          <job-group>DNS</job-group>
+          <misfire-instruction>SmartPolicy</misfire-instruction>
+          <repeat-count>-1</repeat-count>
+          <repeat-interval>30000</repeat-interval>
+        </simple>
+      </trigger>
+
+  </schedule>
+</job-scheduling-data>

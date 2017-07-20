@@ -1,0 +1,25 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.VitalsMeasureDateID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row row-noborder">
+        <div class="col-sm-2 bold"><h4 class="TermHeader bold">Vital Measure Observation Period<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-3 form-group">
+            <label for="dtVitalMeasureDateStart" id="lblVitalMeasureDateStart">Start Period</label>
+            <input id="dtVitalMeasureDateStart" class="form-control k-invalid" name="vital_observation_startname" type="date" pattern="\d{2}/\d{1,2}/\d{4}" maxlength="10" minlength="9" validationmessage="Invalid date, use (MM/DD/YYYY)" data-bind="attr: {placeholder: Values().Start() == null ? '(MM/dd/yyyy)' : moment(Values().Start()).format('L')}, kendoDatePicker: {value: Values().Start, format: 'MM/d/yyyy'}" style="width: 100%;" />
+            <span class="k-invalid-msg" data-for="vital_observation_startname"></span>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label for="dtVitalMeasureDateEnd" id="lblVitalMeasureDateEnd">End Period</label>
+            <input id="dtVitalMeasureDateEnd" class="form-control k-invalid" name="vital_observation_endname" type="date" pattern="\d{2}/\d{1,2}/\d{4}" maxlength="10" minlength="9" validationmessage="Invalid date, use (MM/DD/YYYY)" data-bind="attr: {placeholder: Values().End() == null ? '(MM/dd/yyyy)' : moment(Values().End()).format('L')}, kendoDatePicker: {value: Values().End, format: 'MM/d/yyyy'}" style="width: 100%;" />
+            <span class="k-invalid-msg" data-for="vital_observation_endname"></span>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteVitalMeasureDate" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

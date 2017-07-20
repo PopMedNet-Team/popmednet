@@ -1,0 +1,15 @@
+@model CrudListFooterModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+
+<div class="ActionButtons">
+    <button id="@id" class="ui-standard-button">@Model.CreateNewButtonText</button>
+    <script>
+        $("#@(id)").click(
+            function ()
+            { document.location.href = '@Html.Raw( Model.CreateNewUrl )'; return false; }
+            )
+    </script>
+</div>

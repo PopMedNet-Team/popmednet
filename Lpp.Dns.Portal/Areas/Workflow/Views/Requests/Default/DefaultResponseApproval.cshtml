@@ -1,0 +1,84 @@
+﻿<br />
+<!-- ko stopBinding: true -->
+<div id="DefaultViewResponse">
+    <h3>Completed Routings</h3>
+    <table class="table table-stripped table-bordered table-hover">
+        <colgroup>
+            <col style="width: 30px;" />
+            <col style="width: 250px;" />
+            <col style="width: 100px;" />
+            <col />
+            <col style="width: 80px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;" data-bind="click: $root.DataMartSelectAll"></a></td>
+                <td>DataMart</td>
+                <td>Status</td>
+                <td>Message</td>
+                <td>History</td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: CompletedRoutings">
+            <tr>
+                <td><input type="checkbox" id="chkRoutingSelect" data-bind="value: ResponseID, checked: $root.SelectedCompleteRoutings" /></td>
+                <td><a href="#" data-bind="text: DataMart"></a></td>
+                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                <td data-bind="text: ErrorMessage"></td>
+                <td><a href="#">[History]</a></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right: 15px;">Ungroup</button>
+                    <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right: 15px;">Group</button>
+                    <button class="btn btn-warning pull-right" data-bind="click: ApproveResponses, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right: 15px;">Approve</button>
+                    <button class="btn btn-primary pull-right" data-bind="click: RejectResponses, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right: 15px;">Reject</button>
+                    <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="click: ViewResponses,visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">View Results</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+
+
+    </div>
+    <br />
+    <h3>Incomplete Routings</h3>
+    <table class="table table-stripped table-bordered table-hover">
+        <colgroup>
+            @*<col style="width: 30px;" />*@
+            <col style="width: 250px;" />
+            <col style="width: 100px;" />
+            <col />
+            <col style="width: 80px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                @*<td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;" data-bind="click: $root.DataMartSelectAll"></a></td>*@
+                <td>DataMart</td>
+                <td>Status</td>
+                <td>Message</td>
+                <td>History</td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: IncompleteRoutings">
+            <tr>
+                @*<td><input type="checkbox" id="chkRoutingSelect" /></td>*@
+                <td><a href="#" data-bind="text: DataMart"></a></td>
+                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                <td data-bind="text: ErrorMessage"></td>
+                <td><a href="#">[History]</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+        <button class="btn btn-warning pull-right" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Approve</button>
+        <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)" style="margin-right: 15px;">Reject</button>
+    </div>
+    <div class="clearfix"></div>    
+</div>
+<!-- /ko-->
+<script src="~/Areas/Workflow/js/Requests/Default/ResponseApproval.js"></script>

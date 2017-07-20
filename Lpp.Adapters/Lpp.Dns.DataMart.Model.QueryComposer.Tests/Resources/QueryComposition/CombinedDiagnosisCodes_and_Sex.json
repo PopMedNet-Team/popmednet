@@ -1,0 +1,52 @@
+{
+	"Header" : {
+		"Name" : "Multi 1-2; Codes 249 & 250",
+		"ViewUrl" : "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=85951b40-881c-4ef8-bacd-a4c800e5fe39"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "287ea67e-224f-422a-a7d4-5cfd7e882537",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 3,
+									"CodeValues" : "249;250",
+									"SearchMethodType" : 1
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : []
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : "3",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex_Count",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

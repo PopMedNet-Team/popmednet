@@ -1,0 +1,9 @@
+﻿-- MFU_RefreshDates
+SELECT Distinct(Period), 29 as QueryTypeId, 'MFU: Pharmacy Dispensings by Generic Name' as "Query Type" FROM Generic_Name;;
+SELECT Distinct(Period), 30 as QueryTypeId, 'MFU: Pharmacy Dispensings by Drug Class' as "Query Type" FROM Drug_Class;;
+SELECT Distinct(Period), 31 as QueryTypeId, 'MFU: ICD-9 Diagnoses (3 digit codes)' as "Query Type" FROM ICD9_diagnosis;;
+SELECT Distinct(Period), 32 as QueryTypeId, 'MFU: ICD-9 Procedures (3 digit codes)' as "Query Type" FROM ICD9_procedure;;
+SELECT Distinct(Period), 36 as QueryTypeId, 'MFU: ICD-9 Procedures (4 digit codes)' as "Query Type" FROM ICD9_procedure_4_digit;;
+SELECT Distinct(Period), 34 as QueryTypeId, 'MFU: ICD-9 Diagnoses (4 digit codes)' as "Query Type" FROM ICD9_diagnosis_4_digit;;
+SELECT Distinct(Period), 35 as QueryTypeId, 'MFU: ICD-9 Diagnoses (5 digit codes)' as "Query Type" FROM ICD9_diagnosis_5_digit;;
+SELECT Distinct(Period), 33 as QueryTypeId, 'MFU: HCPCS Procedures' as "Query Type" FROM HCPCS;;

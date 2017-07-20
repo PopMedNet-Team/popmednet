@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+
+    <script src="~/areas/workflow/js/requests/common/adddatamartdialog.js"></script>
+
+}
+
+<section style="height:auto;" id="AddDataMartDialog">
+    <div class="panel-heading">
+        <h3>Unselected DataMarts: </h3>
+    </div>
+    <div style="height:auto;" class="panel-body">
+        <article style="height:auto;" id="RequestDataMarts">
+            <input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />
+            <div id="gDataMarts" style="padding: 0; overflow-y: auto; max-height: 50vh;" data-bind="kendoGrid: {
+                data: $root.AllUnfilteredDataMarts,
+                sortable: false,
+                filterable: false,
+                reorderable: false,
+                columnMenu: false,
+                pageable: false,
+                scrollable: false,
+                rowTemplate: 'dataMartsRowTmpl',
+                altRowTemplate: 'dataMartsAltRowTmpl',
+                useKOTemplates: true,
+                columns:[
+                    {field: 'Selected', title: ' ', width:35 },
+                    {field: 'Name', title: 'Name'},
+                    {field: 'Organization', title:'Organization'}
+                    ]
+            }">
+            </div>
+            @*<div style="margin-top: 5px;">
+                    <a role="button" id="btnDataMartsSelectAll" data-bind="click: $root.DataMartsSelectAll" class="btn btn-primary">Select All</a>
+                    <a role="button" id="btnDataMartsClearAll" data-bind="click: $root.DataMartsClearAll" class="btn btn-primary">Clear All</a>
+            </div>*@
+
+        </article>
+    </div>
+    <nav>
+        <button type="button" id="btnContinue" class="btn btn-primary action-btns" data-bind="click: $root.onContinue, enable: SelectedDataMartIDs().length > 0">Continue</button>
+        <button type="button" id="btnCancel" class="btn btn-default action-btns" data-bind="click: $root.onCancel">Cancel</button>
+    </nav>
+
+    <script id="dataMartsRowTmpl" type="text/html">
+        <tr role="row">
+            <td><input type="checkbox" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Organization"></td>
+        </tr>
+    </script>
+    <script id="dataMartsAltRowTmpl" type="text/html">
+        <tr role="row" class="k-alt">
+            <td><input type="checkbox" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Organization"></td>
+        </tr>
+    </script>
+
+</section>
+
+

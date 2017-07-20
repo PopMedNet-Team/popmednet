@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{DCED1EA8-6345-461C-A986-BE44318E99ED}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Security.UI</RootNamespace>
+    <AssemblyName>Lpp.Security.UI</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Interactive, Version=1.1.10823.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849F-D962-4034-94E5-5A4A727C2B01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Controls.Interfaces\net45\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Security\net45\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Controls\SecurityUIService.cs">
+      <Link>Controls\SecurityUIService.cs</Link>
+    </Compile>
+    <Compile Include="..\Controls\AccessControlList.cs">
+      <Link>Controls\AccessControlList.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IDefaultPrivilegesEditor.cs">
+      <Link>Interfaces\IDefaultPrivilegesEditor.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ISecurityUIService.cs">
+      <Link>Interfaces\ISecurityUIService.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ISubjectSelector.cs">
+      <Link>Interfaces\ISubjectSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IAccessControlList.cs">
+      <Link>Interfaces\IAccessControlList.cs</Link>
+    </Compile>
+    <Compile Include="..\Models\AccessControlListModel.cs">
+      <Link>Models\AccessControlListModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Models\PrivilegesListModel.cs">
+      <Link>Models\PrivilegesListModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Routes.cs">
+      <Link>Routes.cs</Link>
+    </Compile>
+    <Compile Include="..\Views\AccessControlList\Acl.cs">
+      <Link>Views\AccessControlList\Acl.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Acl.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="..\Views\AccessControlList\DefaultPrivilegesEditor.cs">
+      <Link>Views\AccessControlList\DefaultPrivilegesEditor.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaultPrivilegesEditor.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="..\Views\AccessControlList\InheritedResetPopup.cs">
+      <Link>Views\AccessControlList\InheritedResetPopup.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InheritedResetPopup.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="..\Views\SubjectGroupsSelector\Selector.cs">
+      <Link>Views\SubjectGroupsSelector\Selector.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Selector.cshtml</DependentUpon>
+    </Compile>
+    <None Include="..\Content\security.less">
+      <Link>Content\security.less</Link>
+    </None>
+    <Compile Include="..\Controls\SubjectGroupsList.cs">
+      <Link>Controls\SubjectGroupsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Models\SubjectGroupsListModel.cs">
+      <Link>Models\SubjectGroupsListModel.cs</Link>
+    </Compile>
+    <Compile Include="..\SecurityUI.cs">
+      <Link>SecurityUI.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ISubjectGroupsList.cs">
+      <Link>Interfaces\ISubjectGroupsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Content Include="..\Content\acl.d.ts">
+      <Link>Content\acl.d.ts</Link>
+    </Content>
+    <EmbeddedResource Include="..\Content\acl.min.js">
+      <Link>Content\acl.min.js</Link>
+      <DependentUpon>acl.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\defaultPrivilegesEditor.min.js">
+      <Link>Content\defaultPrivilegesEditor.min.js</Link>
+      <DependentUpon>defaultPrivilegesEditor.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="..\Content\defaultPrivilegesEditor.ts">
+      <Link>Content\defaultPrivilegesEditor.ts</Link>
+    </Content>
+    <Content Include="..\Views\AccessControlList\DefaultPrivilegesEditor.cshtml">
+      <Link>Views\AccessControlList\DefaultPrivilegesEditor.cshtml</Link>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DefaultPrivilegesEditor.cs</LastGenOutput>
+    </Content>
+    <Content Include="..\Views\AccessControlList\InheritedResetPopup.cshtml">
+      <Link>Views\AccessControlList\InheritedResetPopup.cshtml</Link>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>InheritedResetPopup.cs</LastGenOutput>
+    </Content>
+    <Content Include="..\Content\acl.ts">
+      <Link>Content\acl.ts</Link>
+    </Content>
+    <Content Include="..\Content\security.css">
+      <Link>Content\security.css</Link>
+      <DependentUpon>security.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="..\Content\security.min.css">
+      <Link>Content\security.min.css</Link>
+      <DependentUpon>security.less</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="..\web.config">
+      <Link>web.config</Link>
+    </Content>
+    <Content Include="..\Views\SubjectGroupsSelector\Selector.cshtml">
+      <Link>Views\SubjectGroupsSelector\Selector.cshtml</Link>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Selector.cs</LastGenOutput>
+    </Content>
+    <Content Include="..\Views\AccessControlList\Acl.cshtml">
+      <Link>Views\AccessControlList\Acl.cshtml</Link>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Acl.cs</LastGenOutput>
+    </Content>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>..\CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

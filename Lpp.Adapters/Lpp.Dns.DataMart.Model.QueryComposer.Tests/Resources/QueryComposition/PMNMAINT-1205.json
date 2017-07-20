@@ -1,0 +1,192 @@
+﻿{
+  "Header": {
+    "Name": "Request 2 troubleshooting take 2",
+    "ViewUrl": "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=089620dc-6051-4c29-888f-a6f600e9dc49"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "1e5514a9-4060-4b1a-b013-af112a6bc3b9",
+        "Name": "Parkinson's Disease",
+        "Criteria": [
+          {
+            "ID": "9902d3d8-d655-4ee7-9bcc-e4d4f784bd12",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "332; 3320; 332.0",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "04022858-0278-4329-8585-c30aa16e43fb",
+            "Name": "i_Age_Ranges",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "Values": {
+                  "MinAge": 65,
+                  "MaxAge": null,
+                  "CalculationType": "7",
+                  "CalculateAsOf": "2014-10-14T04:00:00.000Z",
+                  "CalculateAsOfRequired": false
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [
+          {
+            "Operator": 0,
+            "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+            "Values": {
+              "Start": "2013-10-15T04:00:00.000Z",
+              "End": "2014-10-14T04:00:00.000Z"
+            },
+            "Criteria": [ ]
+          }
+        ]
+      },
+      {
+        "ID": "e2d3dced-206d-4d9e-9d4e-5c632069d225",
+        "Name": "Any Fracture",
+        "Criteria": [
+          {
+            "ID": "897fe1d5-5d32-45c7-8c03-468905e5c851",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "800; 801; 802; 803; 804; 805; 806; 807; 808; 809; 810; 811; 812; 813; 814; 815; 816; 817; 818; 819; 820; 821; 822; 823; 824; 825; 826; 827; 828; 829",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ]
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "905.0; 905.2; 905.3; 905.4; 905.1; 905.5; V13.52; V54.0; V54.01; V54.02; V54.09; V54.1; V54.10; V54.11; V54.12; V54.13; V54.14; V54.15; V54.16; V54.17; V54.19; V54.2; V54.20; V54.21; V54.22; V54.23; V54.24; V54.25; V54.26; V54.27; V54.29; V66.4; V67.4; 9050; 9052; 9053; 9054; 9051; 9055; V1352; V540; V5401; V5402; V5409; V541; V5410; V5411; V5412; V5413; V5414; V5415; V5416; V5417; V5419; V542; V5420; V5421; V5422; V5423; V5424; V5425; V5426; V5427; V5429; V664; V674",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "5829ba32-fa1e-4805-96a3-a8944d51edf0",
+            "Name": "i_Age_Ranges",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "Values": {
+                  "MinAge": 65,
+                  "MaxAge": null,
+                  "CalculationType": "7",
+                  "CalculateAsOf": "2014-10-14T04:00:00.000Z",
+                  "CalculateAsOfRequired": false
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [
+          {
+            "Operator": 0,
+            "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+            "Values": {
+              "Start": "2014-10-15T04:00:00.000Z",
+              "End": "2015-10-14T04:00:00.000Z"
+            },
+            "Criteria": [ ]
+          }
+        ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Hispanic",
+        "Type": "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Hispanic_Count",
+        "Type": "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Race",
+        "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Race_Count",
+        "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

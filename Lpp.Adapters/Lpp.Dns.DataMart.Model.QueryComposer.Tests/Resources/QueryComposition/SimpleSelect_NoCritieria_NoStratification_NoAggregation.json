@@ -1,0 +1,36 @@
+﻿{
+    "Header":
+    {
+        "Description": "Select Sex, and Hispanic Demographics"
+        /*
+            Sql:
+                SELECT SEX, HISPANIC FROM Demographics
+            Linq:
+                db.Patients.Select(p => new { p.Sex, p.Hispanic })
+        */
+    },
+    "Where": { },
+    "Select":
+    {
+        "Fields":
+        [
+            //Will be a straight select because there are no stratifications or aggregates specified
+            {
+                "FieldName": "Sex",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Hispanic",
+                "Type": "D26FE166-49A2-47F8-87E2-4F42A945D4D5",
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

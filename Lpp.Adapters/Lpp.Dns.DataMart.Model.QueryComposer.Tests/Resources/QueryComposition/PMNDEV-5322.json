@@ -1,0 +1,35 @@
+{
+	"Header" : {
+		"Name" : "HT Term_Case 1",
+		"ViewUrl" : "https://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=979a8eeb-219f-4b25-8776-a56a01106713"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "a637bb1f-451b-438c-bbb5-e9e4b79eb088",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+						"Values" : {
+							"HeightMin" : null,
+							"HeightMax" : null
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : "2005-03-04T05:00:00.000Z",
+							"End" : "2011-04-14T04:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

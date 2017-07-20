@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{FCCB5726-D818-4816-9714-D323834CEBC9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Security</RootNamespace>
+    <AssemblyName>Lpp.Security</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\DAG_Cleanup.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAG_Cleanup.sql</LastGenOutput>
+    </None>
+    <None Include="Data\DAG.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAG.sql</LastGenOutput>
+    </None>
+    <None Include="Data\_DropTupleViews.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>_DropTupleViews.sql</LastGenOutput>
+    </None>
+    <None Include="Data\TupleEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TupleEntities.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Composition\net45\Lpp.Data.Composition.csproj">
+      <Project>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</Project>
+      <Name>Lpp.Data.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\TupleViews.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TupleViews.sql</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+<ItemGroup>
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+
+
+
+
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+
+
+
+
+
+  
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\Data\InheritanceEdge.cs"><Link>Data\InheritanceEdge.cs</Link></Compile>
+    
+<Compile Include="..\Data\MembershipEdge.cs"><Link>Data\MembershipEdge.cs</Link></Compile>
+    
+<Compile Include="..\Data\TupleEntities.cs"><Link>Data\TupleEntities.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TupleEntities.tt</DependentUpon>
+    </Compile>
+<Compile Include="..\GenericImplementations\ExplicitSecObjectProvider.cs"><Link>GenericImplementations\ExplicitSecObjectProvider.cs</Link></Compile>
+    
+<Compile Include="..\GenericImplementations\RepositorySecObjectProvider.cs"><Link>GenericImplementations\RepositorySecObjectProvider.cs</Link></Compile>
+    
+<Compile Include="..\GenericImplementations\RepositorySecSubjectProvider.cs"><Link>GenericImplementations\RepositorySecSubjectProvider.cs</Link></Compile>
+    
+<Compile Include="..\Internals\BigTuple.cs"><Link>Internals\BigTuple.cs</Link></Compile>
+    
+<Compile Include="..\Internals\TargetWithAclEntry.cs"><Link>Internals\TargetWithAclEntry.cs</Link></Compile>
+    
+<Compile Include="..\Properties\Resources.Designer.cs"><Link>Properties\Resources.Designer.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+<Compile Include="..\SecurityExtensions.cs"><Link>SecurityExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Data\SecurityTarget.cs"><Link>Data\SecurityTarget.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ISecuritySubjectProvider.cs"><Link>Interfaces\ISecuritySubjectProvider.cs</Link></Compile>
+    
+<Compile Include="..\Sec.cs"><Link>Sec.cs</Link></Compile>
+    
+<Compile Include="..\Data\AclEntry.cs"><Link>Data\AclEntry.cs</Link></Compile>
+    
+<Compile Include="..\Data\Persistence.cs"><Link>Data\Persistence.cs</Link></Compile>
+    
+<Compile Include="..\Service\DagService.cs"><Link>Service\DagService.cs</Link></Compile>
+    
+<Compile Include="..\Service\SecurityMembershipService.cs"><Link>Service\SecurityMembershipService.cs</Link></Compile>
+    
+<Compile Include="..\Service\ISecurityMembershipService.cs"><Link>Service\ISecurityMembershipService.cs</Link></Compile>
+    
+<Compile Include="..\Service\SecurityObjectHierarchyService.cs"><Link>Service\SecurityObjectHierarchyService.cs</Link></Compile>
+    
+<Compile Include="..\Service\ISecurityObjectHierarchyService.cs"><Link>Service\ISecurityObjectHierarchyService.cs</Link></Compile>
+    
+<Compile Include="..\Service\SecurityServiceExtensions.cs"><Link>Service\SecurityServiceExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Service\SecurityService.cs"><Link>Service\SecurityService.cs</Link></Compile>
+    
+<Compile Include="..\Types\AclEntry.cs"><Link>Types\AclEntry.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ISecurityObjectProvider.cs"><Link>Interfaces\ISecurityObjectProvider.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ISecuritySubject.cs"><Link>Interfaces\ISecuritySubject.cs</Link></Compile>
+    
+<Compile Include="..\Types\SecurityTargetKind.cs"><Link>Types\SecurityTargetKind.cs</Link></Compile>
+    
+<Compile Include="..\Types\SecurityPrivilege.cs"><Link>Types\SecurityPrivilege.cs</Link></Compile>
+    
+<Compile Include="..\Types\SecurityObjectKind.cs"><Link>Types\SecurityObjectKind.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ISecurityObject.cs"><Link>Interfaces\ISecurityObject.cs</Link></Compile>
+    
+<Compile Include="..\Service\ISecurityService.cs"><Link>Service\ISecurityService.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+    
+<Compile Include="..\Types\SecurityPrivilegeSet.cs"><Link>Types\SecurityPrivilegeSet.cs</Link></Compile>
+    
+<Compile Include="..\Types\DynamicTuple.cs"><Link>Types\DynamicTuple.cs</Link></Compile>
+    
+<Compile Include="..\Types\SecurityTarget.cs"><Link>Types\SecurityTarget.cs</Link></Compile>
+  
+<Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Content Include="..\Data\DAG_Cleanup.sql"><Link>Data\DAG_Cleanup.sql</Link><DependentUpon>DAG_Cleanup.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+<Content Include="..\Data\DAG.sql"><Link>Data\DAG.sql</Link><DependentUpon>DAG.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+<Content Include="..\Data\TupleViews.sql"><Link>Data\TupleViews.sql</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TupleViews.tt</DependentUpon>
+    </Content>
+<Content Include="..\Data\_DropTupleViews.sql"><Link>Data\_DropTupleViews.sql</Link><DependentUpon>_DropTupleViews.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+<Content Include="..\Data\DDL.sql"><Link>Data\DDL.sql</Link></Content>
+  
+<EmbeddedResource Include="..\Properties\Resources.resx"><Link>Properties\Resources.resx</Link><Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+</ItemGroup>
+</Project>

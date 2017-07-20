@@ -1,0 +1,248 @@
+{
+    "Header":
+    {
+        "Name": "WF - PCORI: PMNDEV-4551",
+        "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=622c9314-5d41-470a-954e-a50000e802bf"
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "Name": "Group 1",
+                "Criteria":
+                [
+                    {
+                        "ID": "6d37e886-7058-4f1d-88e5-1355810f3703",
+                        "Name": "i_Age_Range",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                                "Values":
+                                {
+                                    "MinAge": 45,
+                                    "MaxAge": null,
+                                    "CalculationType": "3",
+                                    "CalculateAsOf": null,
+                                    "CalculateAsOfRequired": false
+                                },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    },
+                    {
+                        "ID": "19d41a29-3d3e-4cc2-8e68-7dc6e91d3fb9",
+                        "Name": "i_codeterms",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values":
+                                {
+                                    "CodeType": 3,
+                                    "CodeValues": "250;401.9",
+                                    "SearchMethodType": 0
+                                },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    }
+                ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "f9920001-aeb1-425c-a929-a4bb01515850",
+                        "Values":
+                        {
+                            "Start": "2005-01-01T05:00:00.000Z",
+                            "End": null
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            },
+            {
+                "Name": "Group 2",
+                "Criteria":
+                [
+                    {
+                        "ID": "5f25e7a7-17f8-4d15-9a83-1d5177131e1c",
+                        "Name": "i_codeterms",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values":
+                                {
+                                    "CodeType": 3,
+                                    "CodeValues": "410",
+                                    "SearchMethodType": 0
+                                },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    }
+                ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                        "Values":
+                        {
+                            "Start": "2005-01-01T05:00:00.000Z",
+                            "End": null
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            {
+                "FieldName": "Age Range_Count",
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Age Range",
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "GroupBy": null,
+                "StratifyBy": "1",
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Observation Period_Count",
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Observation Period",
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Race",
+                "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Race_Count",
+                "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Sex",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Sex_Count",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Hispanic",
+                "Type": "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Hispanic_Count",
+                "Type": "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Height",
+                "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018",
+                "GroupBy": null,
+                "StratifyBy": "4",
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Height_Count",
+                "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Weight",
+                "Type": "3b0ed310-dde9-4836-9857-0000a45a0018",
+                "GroupBy": null,
+                "StratifyBy": "20",
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Weight_Count",
+                "Type": "3b0ed310-dde9-4836-9857-0000a45a0018",
+                "GroupBy": null,
+                "StratifyBy": null,
+                "Aggregate": 1,
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

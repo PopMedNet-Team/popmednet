@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="/areas/controls/js/wfcomments/simplecomment.js"></script>
+}
+
+<p class="alert alert-info">Add a comment for the next step (optional). </p>
+<textarea name="txtComments" rows="8" class="form-control" data-bind="value:Comment" required oninvalid="this.setCustomValidity('A comment is required.')"></textarea>
+
+<nav class="footer">
+    <button class="btn btn-default pull-left" type="button" style="width:120px;margin-left:10px;" data-bind="click:onCancel">No Comment</button>
+    <button class="btn btn-default pull-right" type="button" style="width:120px;" data-bind="click:onSave">Save Comment</button>    
+    <div class="clear"></div>
+</nav>

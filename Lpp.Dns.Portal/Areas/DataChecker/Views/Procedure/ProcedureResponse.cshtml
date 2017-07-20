@@ -1,0 +1,242 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    <div id="ResponseViewHeader">
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    <div id="procedure_overall" class="metricview" data-bind="visible: (SelectedMetric().value == 0)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="overallmetric-header">Code</th>
+                            <th class="overallmetric-header">Code Type</th>
+                            <th class="overallmetric-header">n</th>
+                            <th class="overallmetric-header">%</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: OverallMetrics">
+                        <tr>
+                            <td class="overallmetric-body" data-bind="text: Procedure_Display"></td>
+                            <!-- ko if: (Code_Type == '09')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-9-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '10')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-10-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '11')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-11-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C2')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category II'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C3')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C4')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT-4 (i.e., HCPCS Level I)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'HC')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS (i.e., HCPCS Level II)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'H3')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS Level III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LC')-->
+                            <td class="overallmetric-body" data-bind="text: 'LOINC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LO')-->
+                            <td class="overallmetric-body" data-bind="text: 'Local homegrown'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'ND')-->
+                            <td class="overallmetric-body" data-bind="text: 'NDC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'RE')-->
+                            <td class="overallmetric-body" data-bind="text: 'Revenue'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: 'Other'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type != '09' && Code_Type != '10' && Code_Type != '11' && Code_Type != 'C2' && Code_Type != 'C3' && Code_Type != 'C4' && Code_Type != 'HC' && Code_Type != 'H3' && Code_Type != 'LC' && Code_Type != 'LO' && Code_Type != 'ND' && Code_Type != 'RE' && Code_Type != 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: '-'"></td>
+                            <!-- /ko -->
+                            <td class="overallmetric-body numbers" data-bind="text: n"></td>
+                            <td class="overallmetric-body percent" data-bind="text: Percent.toFixed(2)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="OverallMetricsCountChart" class="overallmetric_barchart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+            <div id="OverallMetricsChart" class="overallmetric_barchart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+            <br />
+            <div id="OverallMetricsPieChart" class="overallmetric_piechart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+
+    <div id="procedure_percentindp" class="metricview" data-bind="visible: (SelectedMetric().value == 1)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="overallmetric-header" style="vertical-align:bottom;" rowspan="2">Code</th>
+                            <th class="overallmetric-header" style="vertical-align:bottom;" rowspan="2">Code Type</th>
+                            <!-- ko foreach: DataPartners -->
+                            <th class="overallmetric-header" data-bind="text: $data" colspan="2" style="padding-left:3px;text-align:center;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+
+                            <!-- ko foreach: DataPartners -->
+                            <th class="overallmetric-header" style="text-align:center;">N</th>
+                            <th class="overallmetric-header" style="text-align:center;">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: PartnersByCode">
+                        <tr>
+                            <td class="overallmetric-body" data-bind="text:Procedure_Display"></td>
+                            <!-- ko if: (Code_Type == '09')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-9-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '10')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-10-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '11')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-11-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C2')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category II'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C3')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C4')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT-4 (i.e., HCPCS Level I)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'HC')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS (i.e., HCPCS Level II)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'H3')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS Level III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LC')-->
+                            <td class="overallmetric-body" data-bind="text: 'LOINC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LO')-->
+                            <td class="overallmetric-body" data-bind="text: 'Local homegrown'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'ND')-->
+                            <td class="overallmetric-body" data-bind="text: 'NDC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'RE')-->
+                            <td class="overallmetric-body" data-bind="text: 'Revenue'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: 'Other'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type != '09' && Code_Type != '10' && Code_Type != '11' && Code_Type != 'C2' && Code_Type != 'C3' && Code_Type != 'C4' && Code_Type != 'HC' && Code_Type != 'H3' && Code_Type != 'LC' && Code_Type != 'LO' && Code_Type != 'ND' && Code_Type != 'RE' && Code_Type != 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: '-'"></td>
+                            <!-- /ko -->
+                            <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                            <td data-bind="text: partner.Count" class="numbers"></td>
+                            <td data-bind="text: Global.Helpers.ToPercent(partner.Count, partner.Total)" class="percent"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="DataPartnerMetrics"></div>
+            <div id="DataPartnerMetricsPercent"></div>
+            <div id="DataPartnersMetricsPie"></div>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+
+    <div id="procedure_percentdpcontribution" class="metricview" data-bind="visible: (SelectedMetric().value == 2)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="overallmetric-header" style="vertical-align:bottom;" rowspan="2">Code</th>
+                            <th class="overallmetric-header" style="vertical-align:bottom;" rowspan="2">Code Type</th>
+                            <!-- ko foreach: DataPartners -->
+                            <th class="overallmetric-header" data-bind="text: $data" colspan="2" style="padding-left:3px;text-align:center;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+                            <!-- ko foreach: DataPartners -->
+                            <th class="overallmetric-header" style="text-align:right;">N</th>
+                            <th class="overallmetric-header" style="text-align:right;">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: PartnersByCode, as: 'item' }">
+                        <tr>
+                            <td class="overallmetric-body" data-bind="text: item.Procedure_Display"></td>
+                            <!-- ko if: (Code_Type == '09')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-9-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '10')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-10-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == '11')-->
+                            <td class="overallmetric-body" data-bind="text: 'ICD-11-CM'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C2')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category II'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C3')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT Category III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'C4')-->
+                            <td class="overallmetric-body" data-bind="text: 'CPT-4 (i.e., HCPCS Level I)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'HC')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS (i.e., HCPCS Level II)'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'H3')-->
+                            <td class="overallmetric-body" data-bind="text: 'HCPCS Level III'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LC')-->
+                            <td class="overallmetric-body" data-bind="text: 'LOINC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'LO')-->
+                            <td class="overallmetric-body" data-bind="text: 'Local homegrown'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'ND')-->
+                            <td class="overallmetric-body" data-bind="text: 'NDC'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'RE')-->
+                            <td class="overallmetric-body" data-bind="text: 'Revenue'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type == 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: 'Other'"></td>
+                            <!-- /ko -->
+                            <!-- ko if: (Code_Type != '09' && Code_Type != '10' && Code_Type != '11' && Code_Type != 'C2' && Code_Type != 'C3' && Code_Type != 'C4' && Code_Type != 'HC' && Code_Type != 'H3' && Code_Type != 'LC' && Code_Type != 'LO' && Code_Type != 'ND' && Code_Type != 'RE' && Code_Type != 'OT')-->
+                            <td class="overallmetric-body" data-bind="text: '-'"></td>
+                            <!-- /ko -->
+                            <!-- ko foreach: { data: item.Partners, as: 'partner'} -->
+                            <td data-bind="text: partner.Count" class="numbers"></td>
+                            <td data-bind="text: Global.Helpers.ToPercent(partner.Count, item.Total)" class="percent"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="PercentDataPartnerContribution"></div>
+            <div id="PercentDataPartnerContribution_Pie"></div>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <!-- /ko -->
+</div>
+

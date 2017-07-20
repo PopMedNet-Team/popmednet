@@ -1,0 +1,85 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Age Range - age at last encounter system wide",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=16f74c57-1d80-40ef-ab87-a4e201158ed6"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "68bbf1f6-0264-4505-8e51-7df98e7f4692",
+						"Name" : "i_Age_Range",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+								"Values" : {
+									"MinAge" : 5,
+									"MaxAge" : 25,
+									"CalculationType" : "3",
+									"CalculateAsOf" : null,
+									"CalculateAsOfRequired" : false
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}, {
+						"ID" : "4fa7de11-ba83-4bac-8d60-e0cd094ac610",
+						"Name" : "i_Sex",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+								"Values" : {
+									"Sex" : "1"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : []
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Age Range_Count",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Age Range",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : "2",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex_Count",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

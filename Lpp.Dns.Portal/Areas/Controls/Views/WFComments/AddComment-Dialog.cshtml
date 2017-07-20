@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="/areas/controls/js/wfcomments/addcomment.js"></script>
+}
+
+<textarea name="txtComments" rows="16" class="form-control" data-bind="value:Comment" required></textarea>
+
+@*<div class="panel panel-default" style="margin-top:15px;">
+    <div class="panel-heading">
+        Priority Notification <small>(optional)</small>
+    </div>
+    <div class="panel-body">
+        <p class="alert alert-info">Users selected here will receive notification emails with a special subject header to draw their attention.</p>
+        <p>TODO: implement kendo multi-select to chose users.</p>
+    </div>
+</div>*@
+<nav class="footer">
+    <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:120px;" data-bind="click:onCancel">Cancel</button>
+    <button class="btn btn-default pull-right" type="button" style="width:120px;" data-bind="click:onSave">Save</button>    
+    <div class="clear"></div>
+</nav>

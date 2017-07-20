@@ -1,0 +1,24 @@
+﻿.Tree .Node .Expand, .Tree .Node .Text { display: inline-block; }
+.Tree .Node .Children { margin-left: 1em; }
+.Tree .Node .Expand { background-image: url('img/plus.png'); width: 11px; height: 11px; min-width: 11px; min-height: 11px; cursor: pointer; background-repeat: no-repeat }
+.Tree .Node.Expanded > .Expand { background-image: url('img/minus.png'); }
+
+.TreeLoading.ErrorMessage
+{
+    font-size: 12px;
+    position: absolute;
+    padding: 1em 3em;
+    background: white;
+    border: 1px solid black;
+    box-shadow: 2px 5px 2px silver;
+    z-index: 10000;
+}
+.TreeLoading.ErrorMessage > .Message {
+    color: red;
+}
+
+
+.TreeLoading.LoadingSign {
+    position: relative;
+    display: block;
+}

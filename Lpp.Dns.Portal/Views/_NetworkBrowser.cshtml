@@ -1,0 +1,70 @@
+﻿<style>
+    .collapsed {
+        left: -25px;
+        position: absolute;
+        transform: rotate(270deg);
+    }
+
+    .expanded {
+        left: -25px;
+        position: absolute;
+        transform: rotate(90deg);
+    }
+</style>
+<script src="~/js/_NetworkBrowser.js"></script>
+<section id="efNetworkBrowser" class="noprint">
+    <img style="z-index:2000; height:18px;" src="@this.ResourceUrl("/images/maximize16.png")" data-bind="css:{collapsed: valNetworkBrowser() == false, expanded: valNetworkBrowser() == true }, toggle: valNetworkBrowser" />
+    <div data-bind="visible:valNetworkBrowser()" style=" border: solid 1px #678fc0; border-right:none; position:absolute; left: -300px; width: 300px; overflow-y: visible; min-height: 80vh;">
+        <ul data-bind="kendoTreeView: {loadOnDemand: true}" style="position: absolute; min-height:400px; width: 300px; height:auto;">
+            <li data-bind="kendoTreeItem: { expanded: true}">
+                <span>Network</span>
+                <ul>
+                    <li id="Requesttreeview" data-bind="kendoTreeItem: {  }">
+                        <span>Requests</span>
+                        <ul>
+                            <li data-bind="kendoTreeItem: { expanded: colNetworkDraftRequest, loadOnDemand: true,  }">
+                                <span>Drafts</span>
+                                <ul>
+                                    <li id="RequestDrafttreeview" data-bind="kendoTreeView: { dataSource: dsNetworkDraftRequest,  dataTextField: ['Name'], dataValueField: ['Identifier'], select: SelectedRequestsDrafts}"></li>
+                                </ul>
+                            </li>
+                            <li data-bind="kendoTreeItem: { expanded: colNetworkRecentRequest, loadOnDemand: true,  }">
+                                <span>Recent</span>
+                                <ul>
+                                    <li id="RequestRecenttreeview" data-bind="kendoTreeView: { dataSource: dsNetworkRecentRequest,  dataTextField: ['Name'], dataValueField: ['Identifier'], select: SelectedRequestsRecent}"></li>
+                                </ul>
+                            </li>
+                            <li data-bind="kendoTreeItem: { expanded: colNetworkSubmittedRequest, loadOnDemand: true, }">
+                                <span>Submitted</span>
+                                <ul>
+                                    <li id="RequestSubmittedtreeview" data-bind="kendoTreeView: { dataSource: dsNetworkSubmittedRequest,  dataTextField: ['Name'], dataValueField: ['Identifier'], select: SelectedRequestsSubmittd}"></li>
+                                </ul>
+                            </li>
+                            <li data-bind="kendoTreeItem: {  expanded: colNetworkCompletedRequest, loadOnDemand: true, }">
+                                <span>Completed</span>
+                                <ul>
+                                    <li id="RequestCompletedtreeview" data-bind="kendoTreeView: { dataSource: dsNetworkCompletedRequest,  dataTextField: ['Name'], dataValueField: ['Identifier'], select: SelectedRequestsCompleted}"></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li data-bind="kendoTreeItem: { }">
+                        <span>Groups</span>
+                        <ul>
+                            <li id="Grouptreeview" data-bind="kendoTreeView:{dataSource: dsNetworkGroups,  dataTextField: ['Name', 'Name', 'Name'], dataValueField:['ID','ID','ID'], select: SelectedGroup, loadOnDemand: true}">
+
+                            </li>
+                        </ul>
+                    </li>
+                    <li data-bind="kendoTreeItem: {}">
+                        <span>Organizations</span>
+                        <ul>
+                            <li id="Organizationtreeview" data-bind="kendoTreeView:{dataSource: dsNetworkOrganizations,  dataTextField: ['Name', 'UserName'],dataValueField:['ID','ID'], select: SelectedOrganization}"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>
+

@@ -1,0 +1,4 @@
+﻿.PropertyFilter .Row > div, .PropertyFilter .Row > select { display: inline-block; }
+.PropertyFilter .Row { white-space: nowrap }
+.PropertyFilter { min-width: 600px; }
+.PropertyFilter .Row .Remove { color: Blue; text-decoration: underline; cursor: pointer; }

@@ -1,0 +1,75 @@
+{
+	"Header":
+	{
+		"Name": "WF - PCORI",
+		"ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=27aa9ea0-7ec7-4777-9bf1-a4ad0127c1f8"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "7ab88700-e6c9-4a72-a924-be1b3feecac1",
+						"Name" : "i_Sex",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+								"Values" : {
+									"Sex" : "3"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+						"Values" : {
+							"Race" : [3]
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Race_Count",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex_Count",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

@@ -1,0 +1,56 @@
+﻿@using Lpp.QueryComposer
+
+@*Select ALL*@
+<script type="text/javascript">
+    function SelectAll(checker, container) {
+
+        $("#" + container + " div input[type=checkbox]").each(function () {
+            if (this.checked != checker.checked)
+                $(this).click();
+        });
+    }
+
+</script>
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_Ethnicity">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-4 bold"><h4 class="TermHeader bold">Ethnicity<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-4 form-group">
+
+            <div class="checkbox">
+                <input type="checkbox" onchange="SelectAll(this, 'EthnicityGrid')" />
+                <label for="ethnicityAll">Select All</label>
+            </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div id="EthnicityGrid">
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().EthnicityValue" value="0" id="ethnicityUnknown" />
+                    <label for="ethnicityUnknown">Unknown</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().EthnicityValue" value="1" id="ethnicityHispanic" />
+                    <label for="ethnicityHispanic">Hispanic</label>
+                </div>
+
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().EthnicityValue" value="2" id="ethnicityNotHispanic" />
+                    <label for="ethnicityNotHispanic">Not Hispanic</label>
+                </div>
+
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().EthnicityValue" value="3" id="ethnicityMissing" />
+                    <label for="ethnicityMissing">Missing</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteDC_EthnicityTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="..\Build\Lpp.Dns.targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{01A0EE18-42E5-4349-8842-E10C43949CDE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.Portal.Root</RootNamespace>
+    <AssemblyName>Lpp.Dns.Portal.Root</AssemblyName>
+    <UseIISExpress>true</UseIISExpress>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <OutputPath>bin\</OutputPath>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.2.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Element-IT.PowUpload">
+      <HintPath>..\External\Element-IT.PowUpload.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqKit">
+      <HintPath>..\packages\LinqKit.1.1.1\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\wpa81\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Extensions.Design" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Content Include="Aspose.Cells.lic" />
+    <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\GlobalNetwork-Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\MDPH-Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\Mini-Sentinel-Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\NIH-Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\PCORI-Prod.pubxml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Dns.Data\Lpp.Dns.Data.csproj">
+      <Project>{4b69bf41-5231-417b-9841-f2092c24b1d1}</Project>
+      <Name>Lpp.Dns.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Documentation\Lpp.Dns.Documentation.csproj">
+      <Project>{7d2330b2-96ad-440e-8dae-eee1d7c6eee2}</Project>
+      <Name>Lpp.Dns.Documentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DocumentVisualizers\Lpp.Dns.DocumentVisualizers.csproj">
+      <Project>{434313e6-7140-41b5-98ce-cdeccaa6d455}</Project>
+      <Name>Lpp.Dns.DocumentVisualizers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Mvc.Interfaces\Lpp.Dns.Mvc.Interfaces.csproj">
+      <Project>{45DCB2B5-186D-4B7D-917C-E3780A9B8A19}</Project>
+      <Name>Lpp.Dns.Mvc.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Portal.Interfaces\Lpp.Dns.Portal.Interfaces.csproj">
+      <Project>{b43a1f32-8301-4b0b-877d-1570c6a06674}</Project>
+      <Name>Lpp.Dns.Portal.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Portal\Lpp.Dns.Portal.csproj">
+      <Project>{e59faf38-4394-4d29-837f-bae706488021}</Project>
+      <Name>Lpp.Dns.Portal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Audit\Lpp.Audit.csproj">
+      <Project>{76b912c7-386a-4579-8ad6-62ed2e658a78}</Project>
+      <Name>Lpp.Audit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Composition\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849F-D962-4034-94E5-5A4A727C2B01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Controls.Interfaces\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Controls\Lpp.Mvc.Controls.csproj">
+      <Project>{39a1b5d5-583a-4735-b897-9b5352c20e7e}</Project>
+      <Name>Lpp.Mvc.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc\Lpp.Mvc.csproj">
+      <Project>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Security\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Utilities.Legacy\Lpp.Utilities.Legacy.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities.Legacy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.Metadata\Lpp.Dns.General.Metadata.csproj">
+      <Project>{7a0ce541-ddfa-44ad-8d53-32ae5b306978}</Project>
+      <Name>Lpp.Dns.General.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.Sample\Lpp.Dns.General.Sample.csproj">
+      <Project>{90e6bc44-e594-4b35-8850-c6542086c1f7}</Project>
+      <Name>Lpp.Dns.General.Sample</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.Sql\Lpp.Dns.General.SqDistribution.csproj">
+      <Project>{3de91b41-16c5-4fc3-87cd-363f9bb10d96}</Project>
+      <Name>Lpp.Dns.General.SqDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Conditions\Lpp.Dns.HealthCare.Conditions.csproj">
+      <Project>{b8de912f-6691-4d6f-aa52-595d7ba31274}</Project>
+      <Name>Lpp.Dns.HealthCare.Conditions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.DataChecker\Lpp.Dns.HealthCare.DataChecker.csproj">
+      <Project>{f89a0460-73a4-4e0a-9367-d554bfbec0b9}</Project>
+      <Name>Lpp.Dns.HealthCare.DataChecker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.ESPQueryBuilder\Lpp.Dns.HealthCare.ESPQueryBuilder.csproj">
+      <Project>{1f1f4a79-265a-4fb1-8a9d-19ccafb48b2c}</Project>
+      <Name>Lpp.Dns.HealthCare.ESPQueryBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.FileDistribution\Lpp.Dns.HealthCare.FileDistribution.csproj">
+      <Project>{6e789e66-e658-44ec-9431-6fbc6b8d99f0}</Project>
+      <Name>Lpp.Dns.HealthCare.FileDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.I2B2\Lpp.Dns.HealthCare.I2B2.csproj">
+      <Project>{953d2d42-a8e5-4059-a80f-891dd38b22d9}</Project>
+      <Name>Lpp.Dns.HealthCare.I2B2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.ModularProgram\Lpp.Dns.HealthCare.ModularProgram.csproj">
+      <Project>{4F40CE06-1468-48AD-B1C4-76D3008E8A44}</Project>
+      <Name>Lpp.Dns.HealthCare.ModularProgram</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.SASDistribution\Lpp.Dns.HealthCare.SASDistribution.csproj">
+      <Project>{BFA89FC0-784B-4EB9-9162-CC818A5F8605}</Project>
+      <Name>Lpp.Dns.HealthCare.SASDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.SPANQueryBuilder\Lpp.Dns.HealthCare.SPANQueryBuilder.csproj">
+      <Project>{e2c06a29-e40a-4675-a166-1165f3ff4347}</Project>
+      <Name>Lpp.Dns.HealthCare.SPANQueryBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Summary\Lpp.Dns.HealthCare.Summary.csproj">
+      <Project>{af5d4930-bb9a-4232-bf15-f7a798ba73c0}</Project>
+      <Name>Lpp.Dns.HealthCare.Summary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RedirectBridge\Lpp.Dns.RedirectBridge\Lpp.Dns.RedirectBridge.csproj">
+      <Project>{04a1cd2e-08df-4d45-aa77-d924dd7aceb7}</Project>
+      <Name>Lpp.Dns.RedirectBridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemotePlugin\Lpp.Dns.RemotePlugin\Lpp.Dns.RemotePlugin.csproj">
+      <Project>{d197af32-d438-4010-8157-25390a21a07a}</Project>
+      <Name>Lpp.Dns.RemotePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\CHORDS\Lpp.Dns.Portal.CHORDS\Lpp.Dns.Portal.CHORDS.csproj">
+      <Project>{e59aa400-693b-4a32-b759-837ecccaa453}</Project>
+      <Name>Lpp.Dns.Portal.CHORDS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\FDAMiniSentinel\Lpp.Dns.Portal.FDAMiniSentinel\Lpp.Dns.Portal.FDAMiniSentinel.csproj">
+      <Project>{079B49AB-B318-495A-85D1-AA7B060D1A4F}</Project>
+      <Name>Lpp.Dns.Portal.FDAMiniSentinel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\FDAPilot\Lpp.Dns.Portal.FDAPilot\Lpp.Dns.Portal.FDAPilot.csproj">
+      <Project>{84499b0a-0ad6-489e-9898-26a0f733704a}</Project>
+      <Name>Lpp.Dns.Portal.FDAPilot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\GlobalNetwork\Lpp.Dns.Portal.GlobalNetwork\Lpp.Dns.Portal.GlobalNetwork.csproj">
+      <Project>{01503eba-93b3-49f1-b549-e90f3449ba95}</Project>
+      <Name>Lpp.Dns.Portal.GlobalNetwork</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\MDPHNet\Lpp.Dns.Portal.MDPHNet\Lpp.Dns.Portal.MDPHNet.csproj">
+      <Project>{2c7daa72-b7cd-4545-b281-560ea7bb22e1}</Project>
+      <Name>Lpp.Dns.Portal.MDPHNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\NIH\Lpp.Dns.Portal.NIH\Lpp.Dns.Portal.NIH.csproj">
+      <Project>{4CC3ABC5-7364-4180-9F3B-0A305C8F1892}</Project>
+      <Name>Lpp.Dns.Portal.NIH</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\NYCPilot\NYCPilot\Lpp.Dns.Portal.NYCPilot.csproj">
+      <Project>{bd3fe8c5-afc9-4bec-ac61-3eda0d372fe8}</Project>
+      <Name>Lpp.Dns.Portal.NYCPilot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Themes\PCORI\Lpp.Dns.Portal.Pcori\Lpp.Dns.Portal.Pcori.csproj">
+      <Project>{c3afe0e9-a988-4616-880c-3692a343a615}</Project>
+      <Name>Lpp.Dns.Portal.Pcori</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\Dev73.pubxml" />
+    <None Include="Properties\PublishProfiles\Dev79.pubxml" />
+    <None Include="Properties\PublishProfiles\EDGE74.pubxml" />
+    <None Include="Properties\PublishProfiles\EDGE80.pubxml" />
+    <None Include="Properties\PublishProfiles\QA74.pubxml" />
+    <None Include="Properties\PublishProfiles\QA80.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Dev.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.EDGE.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.GlobalNetwork.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.MDPH.Net.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.MiniSentinel.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.NIH.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.PCORI.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55381</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55381/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+</Project>

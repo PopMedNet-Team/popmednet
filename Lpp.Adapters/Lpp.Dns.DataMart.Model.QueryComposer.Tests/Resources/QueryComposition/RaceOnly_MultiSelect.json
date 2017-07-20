@@ -1,0 +1,25 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Race only Count",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=86932753-26dc-41cb-8e83-a4c001242d9c"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+						"Values" : {
+							"Race" : [1, 2]
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

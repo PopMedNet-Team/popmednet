@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License>
+  <Data>
+    <LicensedTo>Lincoln Peak Partners</LicensedTo>
+    <LicenseType>Developer OEM</LicenseType>
+    <LicenseNote>Limited to 1 developer.</LicenseNote>
+    <OrderID>130613085951</OrderID>
+    <OEM>This is a redistributable license</OEM>
+    <Products>
+      <Product>Aspose.Cells for .NET</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SerialNumber>f2993fbd-7867-466c-81c3-d3dcf7d7b83e</SerialNumber>
+    <SubscriptionExpiry>20140613</SubscriptionExpiry>
+    <LicenseVersion>2.2</LicenseVersion>
+  </Data>
+  <Signature>g5CDl8iIbZ5gU+NfrgK94ZJ38UKud9mFFTIvVh+JRxwfyZv/TFEynVvlWo8KEma7wBgjG3uHxIx51Vfu8RlsROeHZTy/nCThby2koAcYy1uJBDTSYxCxZLJ4drmw+/TAgWghRhvB7uugs+c7bfvaNCZ8PjaSQYjnfxziKyO7FjY=</Signature>
+</License>

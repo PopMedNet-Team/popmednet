@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+<script src="~/js/SecurityGroups/Details.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/organizations/details?ID=" data-bind="text: SecurityGroup.Owner, attr: {href: OwnerLink()}">Organization</a></li>
+            <li class="active"><span data-bind="text: SecurityGroup.Name"></span></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <form class="form" role="form">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="txtName">Name<em>*</em></label>
+                    <input id="txtName" class="form-control" type="text" required maxlength="100" data-bind="value: SecurityGroup.Name" />
+                </div>
+                <div class="col-sm-6 form-group" data-bind="visible: !IsOwnerOrganization()">
+                    <label for="cboProjectOwner">Project</label>
+                    <input id="cboProjectOwner" required data-bind="kendoDropDownList: {value: SecurityGroup.OwnerID, data:ProjectList, dataValueField: 'ID', dataTextField: 'Name', optionLabel:'<Not Selected>', enable: SecurityGroup.ID() == null}" style="width: 100%;" />
+                </div>
+                <div class="col-sm-6 form-group" data-bind="visible: IsOwnerOrganization">
+                    <label for="cboOrganizationOwner">Organization</label>
+                    <input id="cboOrganizationOwner" required data-bind="kendoDropDownList: {value: SecurityGroup.OwnerID, data: OrganizationList, dataValueField: 'ID', dataTextField: 'Name', enable: SecurityGroup.ID() == null, visible: IsOwnerOrganization}" style="width: 100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="cboParent">Parent Security Group</label>
+                    <input id="cboParent" data-bind="kendoDropDownList: {value: SecurityGroup.ParentSecurityGroupID, data: SecurityGroupList, dataValueField: 'ID', dataTextField: 'Path', optionLabel:'<Not Selected>', enabled: SecurityGroup.ID() == null}" style="width: 100%;" />
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="cboKind">Type</label>
+                    <input id="cboKind" data-bind="kendoDropDownList: {value: SecurityGroup.Kind, data: Dns.Enums.SecurityGroupKindsTranslation, dataValueField: 'value', dataTextField: 'text'}" style="width: 100%;" />
+                </div>
+            </div>
+        </form>
+        @* Improvement would be to allow membership add on this screen. *@
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity) && SecurityGroup.ID() != null" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>

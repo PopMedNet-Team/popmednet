@@ -1,0 +1,42 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=undefined"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+						"Values" : {
+							"Hispanic" : "2"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Hispanic_Count",
+				"Type" : "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Hispanic",
+				"Type" : "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

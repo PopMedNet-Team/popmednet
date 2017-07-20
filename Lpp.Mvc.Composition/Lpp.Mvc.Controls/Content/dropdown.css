@@ -1,0 +1,14 @@
+.ui-dropdown
+{
+    position: absolute;
+    display: none;
+    border: 1px solid black;
+    background: white;
+    padding: 10px;
+}
+
+.ui-dropdown.ui-scrolling {
+    max-height:150px;
+    overflow-y: scroll;
+    overflow-x: none;
+}

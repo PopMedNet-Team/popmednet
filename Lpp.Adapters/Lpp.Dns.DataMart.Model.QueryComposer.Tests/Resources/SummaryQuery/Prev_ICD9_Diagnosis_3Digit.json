@@ -1,0 +1,143 @@
+﻿{
+  "Header": { "QueryType": "40" },
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "ff7084db-aa57-4454-ac58-7e002562a405",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
+                "Values": {
+                  "Codes": [ ],
+                  "CodeValues": [
+                    {
+                      "Code": "250",
+                      "Name": "DIABETES MELLITUS",
+                      "ExpireDate": null
+                    }
+                  ]
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "15ede821-8435-478b-a2ea-8fa76875e8a5",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "74313e1d-c612-4217-af0a-27e16e8998cb",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "4" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "6663a7b2-f998-4027-a5b5-13c612f0a6bd",
+            "Name": "i_Year_Observation Period",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
+                "Values": {
+                  "StartYear": 2000,
+                  "EndYear": 2010
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "ICD-9 Diagnosis (3 digit)_Count",
+        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "ICD-9 Diagnosis (3 digit)",
+        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": "1",
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range_Count",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

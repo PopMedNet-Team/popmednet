@@ -1,0 +1,11 @@
+@using Lpp.Audit.UI
+@model VisualizedAuditEvent
+@{ Layout = null; }
+
+Event: <b>@Model.Kind.Name</b><br />
+Time: <b>@Model.Event.Time.ToString( "MM/dd/yyyy hh:mm:ss tt" )</b><br />
+@foreach ( var p in Model.VisualizedProperties )
+{
+    <text>@p.Key.Name:<b>@( p.Value == null ? null : p.Value( Html ))</b><br /></text>
+}
+<hr /><br />

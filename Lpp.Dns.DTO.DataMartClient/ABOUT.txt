@@ -1,0 +1,5 @@
+﻿This project is strictly DTO's for communication between the DMC and DNS.Api. 
+Lpp.Dns.DTO is framework 4.5, the DMC needs to stay at 4.0 hence the separate library.
+The enums should match the same named enums in the main Dns.DTO project.
+
+TODO: now that the DMC has been updated, realignment should be done to the dmc to remove the need for this project. Jul 2015

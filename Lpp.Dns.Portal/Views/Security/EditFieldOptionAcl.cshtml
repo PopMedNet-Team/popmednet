@@ -1,0 +1,56 @@
+﻿<form class="form" role="form" data-bind="visible: !IsGlobalEdit">
+    <div class="dropdown pull-right">
+        <button class="btn btn-default btn-sm" style="margin-top: 3px;" id="btnAddSecurityGroup" data-bind="click:SelectSecurityGroup"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" /> Add Security Group</button>
+    </div>
+    <div class="form-group">
+        <label for="cboFieldOptionsSecurityGroups" class="control-label" data-bind="attr: {id: 'lblSecurityGroups' + Identifier(), for: 'cboFieldOptionsSecurityGroups' + Identifier()}">Select Existing Security Group</label><br />
+        <input id="cboFieldOptionSecurityGroups" style="width: 450px;" data-bind="kendoDropDownList:
+        {
+            data: dsSecurityGroups,
+            value: SelectedSecurityGroupID,
+            dataTextField: 'Name',
+            dataValueField: 'ID',
+        }, attr: {id: 'cboFieldOptionsSecurityGroups' + Identifier()}" />
+        <button class="btn btn-danger btn-sm" data-bind="click: RemoveSecurityGroup, visible: SelectedSecurityGroupID() != null">Remove</button>
+    </div>
+
+</form>
+<br class="clear" />
+
+<table id="dsSecurityGroupTable" class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;" data-bind="visible: SelectedSecurityGroupID() != null" >
+    <colgroup>
+        <col style=" white-space: nowrap;" />
+        <col style="width: 90px;"  data-bind="visible:!IsGlobalEdit" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th class="bold">Field</th>
+            <th class="bold center" data-bind="visible:!IsGlobalEdit" title="Inherit from Global field option.">Inherit</th>
+            <th class="bold center">Optional</th>
+            <th class="bold center">Required</th>
+            <th class="bold center">Hidden</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: FieldOptions">
+        <tr>
+            <td><span class="bold" data-bind="text: Name"></span><span data-bind="visible: Description() != null && Description() != ''" style="font-size: small;"><br /><small data-bind="text: Description"></small></span></td>
+            <td class="center" data-bind="visible:!$parent.IsGlobalEdit"><input type="radio" data-bind="attr:{name: 'RequestMetaData' + FieldIdentifier()}, checked: Allowed, value:'-1', visible:!$parent.IsGlobalEdit" /></td>
+            <td class="center"><input type="radio" data-bind="attr:{name: 'RequestMetaData' + FieldIdentifier()}, checked: Allowed, value:'0'" /></td>
+            <td class="center"><input type="radio" data-bind="attr:{name: 'RequestMetaData' + FieldIdentifier()},checked: Allowed, value:'1'" /></td>
+            <td class="center"><input type="radio" data-bind="attr:{name: 'RequestMetaData' + FieldIdentifier()},checked: Allowed, value:'2'" /></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp;</td>
+            <td class="center" data-bind="visible:!IsGlobalEdit"><a href="#" data-bind="click: InheritSelectAll, visible:!IsGlobalEdit">Select All</a></td>
+            <td class="center"><a href="#" data-bind="click: OptionalSelectAll">Select All</a></td>
+            <td class="center"><a href="#" data-bind="click: RequiredSelectAll">Select All</a></td>
+            <td class="center"><a href="#" data-bind="click: HiddenSelectAll">Select All</a></td>
+        </tr>
+    </tfoot>
+</table>
+

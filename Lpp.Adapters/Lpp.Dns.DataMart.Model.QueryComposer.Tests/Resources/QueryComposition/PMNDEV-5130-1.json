@@ -1,0 +1,31 @@
+﻿{
+    "Header": { "Name": "Height baseline", "ViewUrl": "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=25af155a-f8b4-486e-9aa6-a53d00e4b341" },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "de14083b-81e3-4a26-bb21-8ec479fe224f",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018",
+                        "Values": { "HeightMin": 1, "HeightMax": 99 },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            { "FieldName": "Height_Count", "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018", "GroupBy": null, "StratifyBy": null, "Aggregate": 1, "Select": [ ], "OrderBy": 0 },
+            { "FieldName": "Height", "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018", "GroupBy": null, "StratifyBy": "4", "Aggregate": null, "Select": [ ], "OrderBy": 0 }
+        ]
+    }
+}

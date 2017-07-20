@@ -1,0 +1,29 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_HeightDistribution">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Height Distribution:</div>
+        <div class="col-sm-10">
+            <span data-bind="foreach:Values().HeightDistributions()">
+                <span data-bind="visible: $index() > 0">or</span>
+                <span data-bind="visible: $data == 0, text: '0-10 in'"></span>
+                <span data-bind="visible: $data == 1, text: '11-20 in'"></span>
+                <span data-bind="visible: $data == 2, text: '21-45 in'"></span>
+                <span data-bind="visible: $data == 3, text: '46-52 in'"></span>
+                <span data-bind="visible: $data == 4, text: '53-58 in'"></span>
+                <span data-bind="visible: $data == 5, text: '59-64 in'"></span>
+                <span data-bind="visible: $data == 6, text: '65-70 in'"></span>
+                <span data-bind="visible: $data == 7, text: '71-76 in'"></span>
+                <span data-bind="visible: $data == 8, text: '77-82 in'"></span>
+                <span data-bind="visible: $data == 9, text: '83-88 in'"></span>
+                <span data-bind="visible: $data == 10, text: '89-94 in'"></span>
+                <span data-bind="visible: $data == 11, text: '95+ in'"></span>
+                <span data-bind="visible: $data == 12, text: '<0 in'"></span>
+                <span data-bind="visible: $data == 13, text: 'NULL or Missing'"></span>
+            </span>
+            <span data-bind="visible: Values().HeightDistributions().length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

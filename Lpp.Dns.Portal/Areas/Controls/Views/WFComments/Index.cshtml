@@ -1,0 +1,44 @@
+﻿<section id="WFComments" class="panel panel-default tabPanel">
+    <style>
+        .comment-documents {
+            border-top:1px dotted #999;
+        }
+            .comment-documents span {
+                color:#999;
+            }
+            .comment-documents a{
+                margin-left:8px;
+            }
+        span.deleted-docref {
+            margin-left:8px;
+            text-decoration:line-through;
+        }
+    </style>
+    <div class="panel-heading" data-bind="visible:WorkflowActivityID != null">
+        <p class="panel-title">Comments for task: <span data-bind="text:WorkflowActivity"></span></p>
+    </div>
+    <div class="panel-body" style="padding:1px;">
+        <div data-bind="kendoGrid: {
+            data: DataSource,
+            sortable: true,
+            filterable: false,
+            resizable: true,
+            reorderable: false,
+            scrollable: true,
+            pageable: false,
+            groupable: false,
+            columnMenu: { columns: true },
+            columns: [
+                {field: 'Comment', title: 'Comment', template: $root.onFormatComment, encoded:false },
+                {field: 'WorkflowActivity', title:'Task', hidden:HideTaskColumn(), width:200 },
+                {field: 'CreatedOn', title: 'Date', format: Constants.DateTimeFormatter, width:155 },
+                {field: 'CreatedBy', title: 'User', width:160 }
+            ]
+        }">
+        </div>
+    </div>
+    <nav class="panel-footer" data-bind="visible:RequestID != null">
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:150px;" data-bind="click:onNewComment, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.AddComments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Comment</button>
+        <div class="clear"></div>
+    </nav>
+</section>

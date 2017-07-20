@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "LocationSelector";
+    Layout = "~/Areas/Tests/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Location Selector Test</h2>
+
+<div id="container">
+    State:&nbsp;
+    <select id="cboState" data-bind="value: State">
+        <option value="" selected></option>
+        <option value="MA">Mass</option>
+        <option value="NH">New Hampshire</option>
+    </select>
+    &nbsp;
+    Location:&nbsp;
+    <select id="cboLocation" data-bind="value: Location, event: { change: LocationChanged }">
+        <option value="" selected></option>
+        <optgroup label="Regions" data-bind="foreach: Regions">
+            <option data-bind="text: $data, attr: { value: $data }"></option>
+        </optgroup>
+        <optgroup label="Towns" data-bind="foreach: Towns">
+            <option data-bind="text: $data, attr: { value: $data }"></option>
+        </optgroup>
+    </select>
+</div>
+
+<script src="/areas/tests/Scripts/LocationSelector.js"></script>

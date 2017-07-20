@@ -1,0 +1,117 @@
+@model Lpp.Dns.Portal.Models.RequestHeaderViewModel
+@{
+    bool showONCFields = string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["HideONCFields"]) || System.Configuration.ConfigurationManager.AppSettings["HideONCFields"].ToLower() != "true";
+    string taskOrder = Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 1 ? Model.Request.Activity.Name : Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 2 && Model.Request.Activity.ParentActivityID != null ? Model.Request.Activity.ParentActivity.Name : Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 3 && Model.Request.Activity.ParentActivityID != null && Model.Request.Activity.ParentActivity.ParentActivityID != null ? Model.Request.Activity.ParentActivity.ParentActivity.Name : "Not Selected";
+    string activity = Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 2 ? Model.Request.Activity.Name : Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 3 && Model.Request.Activity.ParentActivityID != null ? Model.Request.Activity.ParentActivity.Name : "Not Selected";
+    string activityProject = Model.Request.Activity != null && Model.Request.Activity.TaskLevel == 3 ? Model.Request.Activity.Name : "Not Selected";
+}
+
+        <div class="RequestType">
+            <h2>@Model.Type.Name <small>@( string.IsNullOrEmpty(Model.Type.ShortDescription) ? Model.Type.Description : Model.Type.ShortDescription)</small></h2>
+        </div> 
+
+        <div class="row">
+            <div data-bind="visible: $root.IsFieldVisible('Request-Name')" class="col-md-3 form-group">
+                <label for="Request.Name">Name<em data-bind="visible: $root.IsFieldRequired('Request-Name')" style="color:red;">* </em></label>
+                <input type="text" id="Request_Name" name="Request.Name" class="form-control" value="@Model.Request.Name" readonly />
+            </div>
+
+            <div data-bind="visible: $root.IsFieldVisible('Request-Priority')" class="col-md-3 form-group">
+                <label for="Request.Priority">Priority</label><em data-bind="visible: $root.IsFieldRequired('Request-Priority')" , style="color:red;">*</em>
+                <input type="text" id="Request_Priority" data-bind="attr:{required: $root.IsFieldRequired('Request-Priority')}" name=" request.priority" class="form-control" value="@Model.Request.Priority" readonly />
+            </div>
+
+            <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="col-md-3 form-group">
+                <label for="Request.DueDate">Due Date</label><em data-bind="visible: $root.IsFieldRequired('Request-Due-Date')" , style="color:red;">*</em>
+                <input type="text" id="Request_DueDate" name="Request.DueDate" class="form-control" value="@(Model.Request.DueDate.HasValue ? Model.Request.DueDate.Value.ToString( "MM/dd/yyyy " ) : "N/A")" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Requester-Center')" class="col-md-3 form-group">
+                <label for="Request.RequestCenter">Requester Center</label><em data-bind="visible: $root.IsFieldRequired('Request-Requester-Center')" , style="color:red;">*</em>
+                <input type="text" id="Request_RequestCenter" name="Request.RequestCenter" class="form-control" value="@Model.RequesterCenterName" readonly />
+            </div>
+        </div>
+        <div class="row">
+            @if (showONCFields)
+            {
+                <div data-bind="visible: $root.IsFieldVisible('Request-Purpose-Of-Use')" class="col-md-3 form-group">
+                    <label for="Request.PurposeOfUse">Purpose of Use</label><em data-bind="visible: $root.IsFieldRequired('Request-Purpose-Of-Use')" , style="color:red;">*</em>
+                    <input type="text" id="Request_PurposeOfUse" name="Request.PurposeOfUse" class="form-control" data-bind="value: $root.PurposeOfUse_Display('@Model.Request.PurposeOfUse')" readonly />
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Level-Of-PHI-Disclosure')" class="col-md-3 form-group">
+                    <label for="Request.PhiDisclosureLevel">Level of PHI Disclosure</label><em data-bind="visible: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')" , style="color:red;">*</em>
+                    <input type="text" id="Request_PhiDisclosureLevel" name="Request.PhiDisclosureLevel" class="form-control" value="@Model.Request.PhiDisclosureLevel" readonly />
+                </div> }
+            <div data-bind="visible: $root.IsFieldVisible('Request-Report-Aggregation-Level')" class="col-md-3 form-group">
+                <label for="Request.ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Report-Aggregation-Level')" , style="color:red;">*</em></label>
+                <input type="text" id="Request_ReportAggregationLevelID" name="Request.ReportAggregationLevelID" class="form-control" value="@Model.ReportAggregationLevelName" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-RequestID')" class="col-md-3 form-group">
+                <label for="Request.RequestCenter">Request ID</label><em data-bind="visible: $root.IsFieldRequired('Request-RequestID')" , style="color:red;">*</em>
+                <input type="text" id="Request_RequestID" name="Request.RequestID" class="form-control" value="@Model.Request.MSRequestID" readonly />
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-3 form-group">
+                <label>Project</label>
+                <p class="request-project">
+                    @if (Model.Request.Project != null)
+                    {
+                        <a href="/projects/details?ID=@Model.Request.ProjectID">@Model.Request.Project.Name</a>
+                    }
+                </p>
+            </div>
+        </div>
+        @if (showONCFields)
+        {
+            <div class="row">
+                <div class="col-md-12 form-group">@*  *@
+                    <label for="Project.Description">Project Description</label>
+                    <textarea id="Project_Description" name="Project.Description" class="form-control" readonly>@(Model.Request.Project != null ? Model.Request.Project.Description : "")</textarea>
+                </div>
+            </div>
+        }
+        <div data-bind="visible: $root.IsFieldVisible('Request-Description')" class="row">
+            <div class="col-md-12 form-group">
+                <label for="Request.Description">Description</label><em data-bind="visible: $root.IsFieldRequired('Request-Description')" , style="color:red;">*</em>
+                <textarea id="Request_Description" name="Request.Description" class="form-control" readonly>@(Model.Request.Description)</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <label for="Request.AdditionalInstructions">Additional Instructions</label>
+                <textarea id="Request_AdditionalInstructions" name="Request.AdditionalInstructions" class="form-control" readonly>@(Model.Request.AdditionalInstructions)</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order-Originating-Group')" class=" col-md-3 form-group">
+                <label for="">Source Task Order</label><em data-bind="visible: $root.IsFieldRequired('Request-Task-Order-Originating-Group')" , style="color:red;">*</em>
+                <input type="text" id="Source_Task_Order" name="" class="form-control" value="@(Model.Request.SourceTaskOrder != null ? Model.Request.SourceTaskOrder.Name : "Not Selected")" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Originating-Group')" class="col-md-3 form-group">
+                <label for="">Source Activity</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Originating-Group')" , style="color:red;">*</em>
+                <input type="text" id="Source_Task_Activity" name="" class="form-control" value="@(Model.Request.SourceActivity != null ? Model.Request.SourceActivity.Name : "Not Selected")" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project-Originating-Group')" class="col-md-3 form-group">
+                <label for="">Source Activity Project</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')" , style="color:red;">*</em>
+                <input type="text" id="Source_Task_Activity_Project" name="" class="form-control" value="@(Model.Request.SourceActivityProject != null ? Model.Request.SourceActivityProject.Name : "Not Selected")" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Workplan-Type')" class="col-md-3 form-group">
+                <label for="Request.WorkplanType">Workplan Type</label><em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" , style="color:red;">*</em>
+                <input type="text" id="Request_WorkplanType" name="Request.WorkplanType" class="form-control" value="@Model.WorkplanTypeName" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order')" class="col-md-3 form-group">
+                <label for="">Budget Task Order</label><em data-bind="visible: $root.IsFieldRequired('Request-Task-Order')" , style="color:red;">*</em>
+                <input type="text" id="Task_Order" name="" class="form-control" value="@(taskOrder)" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Activity')" class="col-md-3 form-group">
+                <label for="">Budget Activity</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity')" , style="color:red;">*</em>
+                <input type="text" id="Task_Activity" name="" class="form-control" value="@(activity)" readonly />
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project')" class="col-md-3 form-group">
+                <label for="">Budget Activity Project</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project')" , style="color:red;">*</em>
+                <input type="text" id="Task_Activity_Project" name="" class="form-control" value="@(activityProject)" readonly />
+            </div>
+
+        </div>

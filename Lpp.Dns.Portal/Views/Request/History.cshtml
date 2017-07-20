@@ -1,0 +1,49 @@
+@using Lpp.Utilities.Legacy
+@model IEnumerable<RequestDataMart>
+@{ 
+    Layout = null;
+    var moreThanOne = Model.Skip( 1 ).Any();
+} 
+
+@* TODO: going to need a way to determine if the response is the current one or not *@
+@*<div class="RequestRoutingHistory has-controller" data-controller="app/routingHistory.min">
+@foreach ( var r in Model )
+{
+    if ( moreThanOne ) { <div class="Routing">@r.DataMart.Name</div> }
+    <div class="History@( moreThanOne ? " Hidden" : "" )">
+        @{
+            var first = true;
+            foreach ( var i in r.Responses.OrderBy( i => i.SubmittedOn ) )
+            {
+                @:@Row( first ? "Submitted" : "Resubmitted", i.SubmittedOn, i.SubmittedBy, i.SubmitMessage, null )
+                first = false;
+                if ( i.ResponseTime != null )
+                {
+                    @:@Row( "Responded", i.ResponseTime.Value, i.RespondedBy, i.ResponseMessage, 
+												i.IsCurrent ? null // PMN-671: the "current" routing may not be approved yet
+												: Url.Action( (ResponseController c) => c.History( r.RequestId, i.Id ) ) )
+                }
+            }
+        }
+    </div>
+}
+</div>*@
+
+@helper Row( string action, DateTime time, User user, string message, string url )
+{
+    <div class="Row">
+        <div class="Time">@time.ToString( "dd/MM/yyyy hh:mm tt" )</div>
+        <div class="Action">@action</div>
+        <div class="Text">by</div>
+        <div class="User">@user.UserName</div>
+        @if ( !message.NullOrEmpty() )
+        {
+            <div class="Text">, </div>
+            <div class="Message">@message</div>
+        }
+        @if ( !url.NullOrEmpty() )
+        {
+            <a href="@url" class="Link">[view response]</a>
+        }
+    </div>
+}

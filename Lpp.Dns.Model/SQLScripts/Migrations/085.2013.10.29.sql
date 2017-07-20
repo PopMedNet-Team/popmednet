@@ -1,0 +1,1 @@
+ALTER TABLE Subscriptions ADD ScheduleKind int NOT NULL DEFAULT 0

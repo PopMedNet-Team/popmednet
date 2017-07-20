@@ -1,0 +1,23 @@
+@model SharedFolderEditModel
+@using Lpp.Security
+
+@*@(Html.Render<Breadcrumbs>().For( Model.TreeNode ))
+@using ( Html.BeginForm() )
+{
+    <div class="CrudEditor">
+        @Lpp.Dns.Portal.UI.FormChangeWarning()
+        @Lpp.Dns.Portal.UI.ValidationSection( Html )
+        <div @Html.Section( title: "Shared Folder Information", cssClass: "ui-form", settingsKey: "SharedFolder.Info" )>
+            @(Html.Fields( Model.Folder )
+                .TextBox( m => m.Name )
+            )
+        </div>
+        @if ( Model.ShowAcl ) 
+        {
+            <div @Html.Section( title: "Access Control", settingsKey: "SharedFolder.Acl" )>
+                @Html.DnsAclUIFor( Sec.Target( Model.Folder ), "Acl" )
+            </div>
+        }
+        @Crud.Buttons( Model )
+    </div>
+}*@ 

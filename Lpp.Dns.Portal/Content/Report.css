@@ -1,0 +1,13 @@
+table.Report  
+{
+    margin: 0 auto; 
+    border: 2px solid black;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+table.Report td, table.Report th { padding: 3px 7px;
+                                   border-bottom: 1px solid silver;
+                                   border-right: 1px solid silver;
+                                 }
+table.Report th { background: #EEEEEE; border-bottom: 2px solid silver; }
+table.Report td.Num { text-align: right }

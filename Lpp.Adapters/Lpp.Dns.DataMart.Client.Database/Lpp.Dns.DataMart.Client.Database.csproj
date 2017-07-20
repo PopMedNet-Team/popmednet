@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BA4D9E91-641A-4080-9A92-5E3DE53C8360}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.DataMart.Client.Database</RootNamespace>
+    <AssemblyName>Lpp.Dns.DataMart.Client.Database</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <Import Project="..\..\Build\Lpp.Dns.Base.targets" />
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.1.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Npgsql.3.1.8\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.1.24160419\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ConnectionTester.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj">
+      <Project>{325d9b27-88f8-49d3-a347-40a22881624c}</Project>
+      <Name>Lpp.Dns.DataMart.Model.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>  -->
+  <!--<Target Name="AfterBuild">
+    <ItemGroup>
+      <Artifacts Include="$(OutputPath)\Lpp.Dns.DataMart.Client.Database.dll;$(OutputPath)\Lpp.Dns.DataMart.Client.Database.pdb;$(OutputPath)\Npgsql.dll;$(OutputPath)\Oracle.ManagedDataAccess.dll;">
+        <InProject>false</InProject>
+      </Artifacts>
+    </ItemGroup>
+    <Copy SkipUnchangedFiles="true" OverwriteReadonlyFiles="true" SourceFiles="@(Artifacts)" DestinationFolder="$(SolutionDir)Lpp.Adapters\Lpp.Dns.DataMart.Client\bin" />
+  </Target>-->
+</Project>

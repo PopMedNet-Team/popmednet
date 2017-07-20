@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Data.Composition</RootNamespace>
+    <AssemblyName>Lpp.Data.Composition</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EFProviderWrapperToolkit">
+      <HintPath>..\..\packages\CommunityEFProviderWrappers.EFProviderWrapperToolkit.1.0.0\lib\net40-Client\EFProviderWrapperToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="EFTracingProvider">
+      <HintPath>..\..\packages\CommunityEFProviderWrappers.EFTracingProvider.1.0.0\lib\net40-Client\EFTracingProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Bootstrap\IDatabaseBootstrapSegment.cs" />
+    <Compile Include="Bootstrap\DatabaseBootstrap.cs" />
+    <Compile Include="ComposableDbContext.cs" />
+    <Compile Include="DatabaseConfiguration.cs" />
+    <Compile Include="DataExtensions.cs" />
+    <Compile Include="PersistenceConfig.cs" />
+    <Compile Include="PersistenceDefinition.cs" />
+    <Compile Include="IPersistenceDefinition.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{a51b3e7c-4c5e-4120-bbfc-5667736d7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities.Legacy\Lpp.Utilities.Legacy.csproj">
+      <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
+      <Name>Lpp.Utilities.Legacy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+</Project>

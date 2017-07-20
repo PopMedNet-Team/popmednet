@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30219.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcPartProjectTemplate", "MvcPartProjectTemplate\MvcPartProjectTemplate.csproj", "{A24AF8AD-FF9A-4C91-A40C-6EF86DEB0760}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Mvc.VSExtensions", "Lpp.Mvc.VSExtensions\Lpp.Mvc.VSExtensions.csproj", "{8D3ECA2A-2D7E-4113-98AC-5080CC1A58CB}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Lpp.Ccss", "Lpp.Ccss\Lpp.Ccss.fsproj", "{5B3265AF-CB95-43AE-B675-CDBA0266F7B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A24AF8AD-FF9A-4C91-A40C-6EF86DEB0760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24AF8AD-FF9A-4C91-A40C-6EF86DEB0760}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24AF8AD-FF9A-4C91-A40C-6EF86DEB0760}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24AF8AD-FF9A-4C91-A40C-6EF86DEB0760}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3ECA2A-2D7E-4113-98AC-5080CC1A58CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3ECA2A-2D7E-4113-98AC-5080CC1A58CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3ECA2A-2D7E-4113-98AC-5080CC1A58CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3ECA2A-2D7E-4113-98AC-5080CC1A58CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3265AF-CB95-43AE-B675-CDBA0266F7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3265AF-CB95-43AE-B675-CDBA0266F7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3265AF-CB95-43AE-B675-CDBA0266F7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3265AF-CB95-43AE-B675-CDBA0266F7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

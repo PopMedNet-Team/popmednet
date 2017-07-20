@@ -1,0 +1,122 @@
+﻿@using Lpp.Dns.Portal.Areas.QueryComposer
+@using Lpp.QueryComposer
+@using System.Linq;
+<script src="~/Areas/QueryComposer/js/View.js"></script>
+<style>
+    .criteria-block {
+        margin:8px -8px;
+        padding:8px;
+        background-color:#E0EEFF;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+    .single-subcriteria-term {
+        margin-left: -15px;
+        margin-right: -15px;        
+        border-bottom:1px solid silver;
+    }
+    p.operator {
+        margin-top:14px;
+    }
+</style>
+<section id="viewQueryComposer">
+    <!-- ko if: Request.Header.Grammar() == null || Request.Header.Grammar().length == 0 -->
+    <h2>
+        Criteria Groups
+    </h2>
+    <ol class="cleanlist" data-bind="foreach: Request.Where.Criteria">
+        <h3 class="center" data-bind="visible:$index() > 0, text: Exclusion() ? 'And Not' : 'And'"></h3>
+        <li>
+            <article class="panel panel-default" data-bind="css: {visible: true}">
+                <div class="panel-heading">
+                    Criteria Group: <span data-bind="text: Name"></span>
+                </div>
+
+                <div class="panel-body">
+                    <fieldset>
+                        <legend style="display: none;">Criteria Group Details</legend>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label id="lblGroupName" for="txtGroupName">Group Name<em>*</em></label>
+                                <input type="text" id="txtGroupName" disabled maxlength="150" required validationmessage="Criteria Group Name is Required" name="GroupName" class="form-control" data-bind="value: Name" style="width: 98%;" />
+                            </div>
+                          </div>  
+                        <div class="row">
+                            <div class="col-sm-12 checkbox" data-bind="visible: $index() > 0">
+                                <label for="chkExclusion" id="lblExclusion"><input id="chkExclusion" disabled type="checkbox" aria-labelledby="lblExclusion" data-bind="checked: Exclusion" /> Exclusion Criteria</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br class="clear" />
+                    <section style="min-height: 225px;">
+                        <fieldset style="margin-left: 180px;">
+                            <legend style="display: none;">Selected Terms</legend>
+
+                            @* Show the terms that are being OR'd together here *@
+
+                            <div data-bind="foreach:{ data: Criteria, as: 'crit' }">
+                                <div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
+                            </div>
+
+                            <div data-bind="visible:Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                            <div data-bind="template: {name: $root.TemplateSelector, foreach: Terms}"></div>
+
+                        </fieldset>
+                        <br class="clear" />
+                    </section>
+                </div>
+            </article>
+        </li>
+    </ol>
+    <h2>Report Selector</h2>
+    <ol class="cleanlist">
+        <li>
+            <article class="panel panel-default" data-bind="css: {visible: true}">
+                <div class="panel-heading">
+                    Selected Stratification Fields:
+                </div>
+                <div class="panel-body" data-bind="with: Request.Select">                    
+                    <section style="min-height: 225px;">
+                        <fieldset style="margin-left: 180px;">
+                            <legend style="display: none;">Selected Fields</legend>
+                            <div data-bind="template: {name: $root.StratifierTemplateSelector, foreach: $root.NonAggregateFields }">
+                            </div>
+                        </fieldset>
+                        <br class="clear" />
+                    </section>
+                </div>
+            </article>
+        </li>
+    </ol>
+    <!-- /ko -->
+
+    <!-- ko if: Request.Header.Grammar() != null && Request.Header.Grammar().length > 0 -->
+    <ol class="cleanlist">
+        <li>
+            <span style="white-space: pre-wrap;" data-bind="text: Request.Header.Grammar"></span>
+        </li>
+    </ol>
+    <!-- /ko -->
+</section>
+
+
+
+@foreach (var term in Lpp.Dns.Portal.Areas.QueryComposer.QueryComposerAreaRegistration.Terms)
+{
+    if (term.CriteriaViewRelativePath != null)
+    {
+        @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.CriteriaViewRelativePath)
+    }
+    if (term.StratifierViewRelativePath != null)
+    {
+        @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.StratifierViewRelativePath)
+    }
+    if (term.ProjectionViewRelativePath != null)
+    {
+        @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.ProjectionViewRelativePath)
+    }
+}

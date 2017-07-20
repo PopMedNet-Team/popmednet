@@ -1,0 +1,13 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_DataPartners">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Data Partners:</div>
+        <div class="col-sm-10">
+            <span data-bind="text: (Values().DataPartnersValue() || []).join(', ')"></span>
+            <span data-bind="visible: (Values().DataPartnersValue() || []).length == 0" style="display:none;">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

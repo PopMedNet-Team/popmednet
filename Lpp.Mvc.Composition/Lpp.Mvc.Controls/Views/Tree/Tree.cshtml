@@ -1,0 +1,56 @@
+﻿@using Lpp.Utilities.Legacy
+@model TreeModel
+
+@if ( Model.Options.RenderMode == TreeRenderMode.NodesOnly )
+{
+    <text>@Nodes( Model.TopLevelNodes )</text>
+}
+else
+{
+    var attrs = Model.Options.TreeAttributes ?? new int[0].ToDictionary( _ => "", _ => "" );
+    var id = attrs.ValueOrDefault( "id" ) ?? Html.UniqueId();
+    var clss = attrs.ValueOrDefault( "class" ) ?? "Tree";
+    this.Stylesheet( "tree.css" );
+    
+    <div class="@clss" id="@id"@Attributes( attrs, "class", "id" )>@Nodes( Model.TopLevelNodes )</div>
+    <script type="text/javascript">
+        //@@ sourceURL=http://lpp/Tree.cshtml
+        @if ( Model.Options.JsModuleHandle.NullOrEmpty() )
+        { <text>require(</text> }
+        else
+        { <text>define('@Model.Options.JsModuleHandle',</text> }
+        ['jQuery', 'lpp.mvc.controls/tree'], function($) { $(function(){
+            $("#@(id)").treeView( 
+                @if ( Model.Options.LoadHive == null )
+                { <text>null</text> }
+                else
+                { <text>function (id) { return "@Html.Raw( Url.Action<TreeController>( c => c.Children( id, Model.Options.LoadHive ) ) )".replace("@id", id); }</text> }
+            );
+        });});
+    </script>
+}
+
+@helper Nodes( IEnumerable<TreeNodeModel> nodes )
+{
+    foreach ( var n in nodes )
+    {
+        var nodeClass = (n.Attributes == null ? null : n.Attributes.ValueOrDefault( "class" )) ?? "Node";
+        <div class="@(nodeClass)@( n.Expanded && n.PreloadedChildren != null ? " Expanded" : "")" id="@n.Id"@Attributes( n.Attributes, "id", "class" )>
+            <div class="Expand">&nbsp;</div>
+            <div class="Text">@n.Text</div>
+            @{ if ( n.PreloadedChildren != null )
+               { <div class="Children">@Nodes( n.PreloadedChildren )</div> } }
+        </div>
+    }
+}
+
+@helper Attributes( IEnumerable<KeyValuePair<string, string>> attrs, params string[] except )
+{
+    foreach ( var a in attrs.EmptyIfNull() )
+    {
+        if ( except == null || except.Length == 0 || !except.Contains( a.Key ) )
+        {
+            <text> @a.Key="@a.Value"</text>
+        }
+    }
+}

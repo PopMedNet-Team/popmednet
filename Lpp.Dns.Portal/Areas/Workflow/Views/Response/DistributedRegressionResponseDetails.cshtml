@@ -1,0 +1,62 @@
+﻿<script src="~/Areas/Workflow/js/Response/DistributedRegression/ResponseDetails.js"></script>
+<!-- ko stopBinding: true -->
+
+<section id="ModularProgramResponseDetail">
+    <article class="alert alert-info" data-bind="hidden:true" style="width:600px;margin:24px auto;text-align:center;">
+        <p>Loading Response Documents...</p>
+    </article>
+    <section style="margin-top:15px;display:none;" data-bind="visible:true;">
+        <article class="panel panel-default" data-bind="visible: IsResponseVisible() != null && IsResponseVisible() == false">
+            <div class="panel-heading">
+                <h4 class="panel-title">Response Pending Approval</h4>
+            </div>
+            <div class="panel-body">
+                <span>
+                    The response can't be viewed as you don't have permission to view unapproved responses.
+                </span>
+            </div>
+        </article>
+
+        <div data-bind="visible: IsResponseVisible">
+            <article class="panel panel-default" data-bind="visible:ResponseView() != 'AggregateResponse'">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Response Documents</h4>
+                </div>
+
+                <table class="panel-body table table-striped table-bordered">
+                    <colgroup>
+                        <col style="width:30%; vertical-align:middle;" />
+                        <col style="vertical-align: middle;" />
+                        <col style="width: 110px; vertical-align: middle;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="bold">Source</th>
+                            <th class="bold">File Name</th>
+                            <th class="bold" style="text-align:center;">Size</th>
+                            <th class="bold">Document Type</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data:Documents, as:'file'}">
+                        <tr>
+                            <td data-bind="text:file.ItemTitle"></td>
+                            <td data-bind="html:Workflow.DistributedRegression.ResponseDetail.Utils.buildDownloadLink(file.ID, file.FileName, file.Name)"></td>
+                            <td data-bind="text:Global.Helpers.formatFileSize(file.Length)" style="text-align:right;"></td>
+                            <td>
+                                <!--ko if: file.DocumentType == 0-->
+                                <i class="glyphicon glyphicon-arrow-left"></i>
+                                <!--/ko-->
+                                <!--ko ifnot: file.DocumentType == 0-->
+                                <i class="glyphicon glyphicon-arrow-right"></i>
+                                <!--/ko-->
+                                <span data-bind="text: file.DocumentType == null? 'Output' : Global.Helpers.GetEnumString(Dns.Enums.RequestDocumentTypeTranslation, file.DocumentType)"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+        </div>
+    </section>
+</section>
+
+<!-- /ko -->

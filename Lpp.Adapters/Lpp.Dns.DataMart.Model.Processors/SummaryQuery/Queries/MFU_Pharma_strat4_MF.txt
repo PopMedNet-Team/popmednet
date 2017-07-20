@@ -1,0 +1,40 @@
+﻿-- MFU_Strat4
+SELECT TOP %OUTPUT_CRITERIA% %NAME_FIELD%, ' 0-21' AS age_group,  period, SUM(Members) AS mb, SUM(dayssupply) AS ds, SUM(dispensings) AS dp
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND  sex in ('M','F') and age_group in ('0-1','2-4','5-9','10-14','15-18','19-21') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and drugcov = 'Y') > 0)
+GROUP BY %NAME_FIELD%,   period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %NAME_FIELD%, '22-44' AS age_group,  period, SUM(Members) AS mb, SUM(dayssupply) AS ds, SUM(dispensings) AS dp
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND   sex in ('M','F') and age_group in ('22-44') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and drugcov = 'Y') > 0)
+GROUP BY %NAME_FIELD%,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %NAME_FIELD%, '45-64' AS age_group,  period, SUM(Members) AS mb, SUM(dayssupply) AS ds, SUM(dispensings) AS dp
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND  sex in ('M','F') and age_group in ('45-64') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and drugcov = 'Y') > 0)
+GROUP BY %NAME_FIELD%,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %NAME_FIELD%, '65+' AS age_group,  period, SUM(Members) AS mb, SUM(dayssupply) AS ds, SUM(dispensings) AS dp
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND  sex in ('M','F') and age_group in ('65-74','75+') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and drugcov = 'Y') > 0)
+GROUP BY %NAME_FIELD%,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)

@@ -1,0 +1,10 @@
+@model EntitiesForSelectionModel
+@using Lpp.Utilities.Legacy
+@{ Layout = null;  }
+@(Html.Render<IGrid>()
+        .From( Model.Entities )
+        .Id( g => g.ID )
+        .ReloadUrl(Model.ReloadUrl(Url))
+        .Column( @<a href="#" class="ChooseLink" data-id="@item.ID" @Html.Raw( item.Attributes.EmptyIfNull().Any() ? ("data-props='" + Json.Encode(item.Attributes) + "'") : "")>@item.Name</a>, 
+            c => c.Title("Choose").Class("ChooseLink"))
+)

@@ -1,0 +1,13 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.WeightID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold">Weight Range:</div>
+        <div class="col-sm-4">
+            Min:&nbsp;<span data-bind="text: Values().WeightMin()"></span>
+        </div>
+        <div class="col-sm-4">
+            Max:&nbsp;<span data-bind="text: Values().WeightMax()"></span>
+        </div>
+    </div>
+</script>

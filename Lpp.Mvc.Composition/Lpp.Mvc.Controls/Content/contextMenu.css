@@ -1,0 +1,11 @@
+.ContextMenu
+{
+    border: 1px solid black;
+    border-bottom: 0;
+}
+
+.ContextMenu .Item
+{
+    border-bottom: 1px solid black;
+    padding: 0.2em 0.5em;
+}

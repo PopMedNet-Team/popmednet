@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{39A1B5D5-583A-4735-B897-9B5352C20E7E}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc.Controls</RootNamespace>
+    <AssemblyName>Lpp.Mvc.Controls</AssemblyName>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    </ItemGroup>
+  <ItemGroup>
+    
+    
+    </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{d4f2cad5-58ec-4783-ba3e-6bb5b92d262a}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Controls.Interfaces\net45\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51906</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+  
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+  
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+  
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+  
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+  
+
+
+
+
+
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\ClientSettings\ClientSettingsService.cs"><Link>ClientSettings\ClientSettingsService.cs</Link></Compile>
+    
+<Compile Include="..\ClientSettings\ClientSettingsController.cs"><Link>ClientSettings\ClientSettingsController.cs</Link></Compile>
+    
+<Compile Include="..\Package.cs"><Link>Package.cs</Link></Compile>
+    
+<Compile Include="..\Grid\DataTableGrid.cs"><Link>Grid\DataTableGrid.cs</Link></Compile>
+    
+<Compile Include="..\Grid\GridClientSortColumn.cs"><Link>Grid\GridClientSortColumn.cs</Link></Compile>
+    
+<Compile Include="..\Grid\GridCheckboxColumn.cs"><Link>Grid\GridCheckboxColumn.cs</Link></Compile>
+    
+<Compile Include="..\Field.cs"><Link>Field.cs</Link></Compile>
+    
+<Compile Include="..\Menu\Menu.cs"><Link>Menu\Menu.cs</Link></Compile>
+    
+<Compile Include="..\Models\GridClientSortColumnModel.cs"><Link>Models\GridClientSortColumnModel.cs</Link></Compile>
+    
+<Compile Include="..\Models\GridCheckboxColumnModel.cs"><Link>Models\GridCheckboxColumnModel.cs</Link></Compile>
+    
+<Compile Include="..\Tree\TreeChildrenModel.cs"><Link>Tree\TreeChildrenModel.cs</Link></Compile>
+    
+<Compile Include="..\Tree\TreeController.cs"><Link>Tree\TreeController.cs</Link></Compile>
+    
+<Compile Include="..\Tree\TreeModel.cs"><Link>Tree\TreeModel.cs</Link></Compile>
+    
+<Compile Include="..\Tree\Tree.cs"><Link>Tree\Tree.cs</Link></Compile>
+    
+<Compile Include="..\Utilities.cs"><Link>Utilities.cs</Link></Compile>
+    
+<Compile Include="..\Views\ClientSettings.cs"><Link>Views\ClientSettings.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientSettings.cshtml</DependentUpon>
+    </Compile>
+<Compile Include="..\Views\Field.cs"><Link>Views\Field.cs</Link><DependentUpon>Field.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+<Compile Include="..\Views\Grid\GridClientSortColumnTitle.cs"><Link>Views\Grid\GridClientSortColumnTitle.cs</Link><DependentUpon>GridClientSortColumnTitle.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+<Compile Include="..\Views\Grid\Grid.cs"><Link>Views\Grid\Grid.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Grid.cshtml</DependentUpon>
+    </Compile>
+<Compile Include="..\Views\Grid\GridCheckboxColumnTitle.cs"><Link>Views\Grid\GridCheckboxColumnTitle.cs</Link><DependentUpon>GridCheckboxColumnTitle.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+<Compile Include="..\Views\Menu.cs"><Link>Views\Menu.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menu.cshtml</DependentUpon>
+    </Compile>
+<Compile Include="..\Views\Tree\Tree.cs"><Link>Views\Tree\Tree.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tree.cshtml</DependentUpon>
+    </Compile>
+<EmbeddedResource Include="..\Content\grid.min.js"><Link>Content\grid.min.js</Link><DependentUpon>grid.ts</DependentUpon>
+    </EmbeddedResource>
+<Content Include="..\Content\grid.ts"><Link>Content\grid.ts</Link></Content>
+    
+<Compile Include="..\Routes.cs"><Link>Routes.cs</Link></Compile>
+    
+<Compile Include="..\Grid\Grid.cs"><Link>Grid\Grid.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+  
+<Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<EmbeddedResource Include="..\Content\grid.css"><Link>Content\grid.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\arrow-down.png"><Link>Content\img\arrow-down.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\arrow-up.png"><Link>Content\img\arrow-up.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\gridCheckboxColumn.js"><Link>Content\gridCheckboxColumn.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\filter.png"><Link>Content\img\filter.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\filter-active.png"><Link>Content\img\filter-active.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\sections.css"><Link>Content\sections.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\sections.js"><Link>Content\sections.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\dropdown.js"><Link>Content\dropdown.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\dropdown.css"><Link>Content\dropdown.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\bigbox_bg.png"><Link>Content\img\bigbox_bg.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\maximize.png"><Link>Content\img\maximize.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\minimize.png"><Link>Content\img\minimize.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\hint.css"><Link>Content\hint.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\hint.js"><Link>Content\hint.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\menu.js"><Link>Content\menu.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\gridClientSortColumn.js"><Link>Content\gridClientSortColumn.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\utilities.js"><Link>Content\utilities.js</Link><DependentUpon>utilities.ts</DependentUpon>
+    </EmbeddedResource>
+<EmbeddedResource Include="..\Content\img\grid-loading.gif"><Link>Content\img\grid-loading.gif</Link></EmbeddedResource>
+    
+<Content Include="..\Content\utilities.ts"><Link>Content\utilities.ts</Link></Content>
+    
+<EmbeddedResource Include="..\Content\img\help.png"><Link>Content\img\help.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\ellipsisEditor.js"><Link>Content\ellipsisEditor.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\ellipsisEditor.css"><Link>Content\ellipsisEditor.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\tree.js"><Link>Content\tree.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\tree.css"><Link>Content\tree.css</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\minus.png"><Link>Content\img\minus.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\img\plus.png"><Link>Content\img\plus.png</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\contextMenu.js"><Link>Content\contextMenu.js</Link></EmbeddedResource>
+    
+<EmbeddedResource Include="..\Content\contextMenu.css"><Link>Content\contextMenu.css</Link></EmbeddedResource>
+    
+<Content Include="..\Views\Grid\Grid.cshtml"><Link>Views\Grid\Grid.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>Grid.cs</LastGenOutput>
+    </Content>
+<Content Include="..\web.config"><Link>web.config</Link></Content>
+  
+<Content Include="..\Views\Grid\GridCheckboxColumnTitle.cshtml"><Link>Views\Grid\GridCheckboxColumnTitle.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>GridCheckboxColumnTitle.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\Menu.cshtml"><Link>Views\Menu.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>Menu.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\Grid\GridClientSortColumnTitle.cshtml"><Link>Views\Grid\GridClientSortColumnTitle.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>GridClientSortColumnTitle.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\Field.cshtml"><Link>Views\Field.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>Field.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\Tree\Tree.cshtml"><Link>Views\Tree\Tree.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>Tree.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\ClientSettings.cshtml"><Link>Views\ClientSettings.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>ClientSettings.cs</LastGenOutput>
+    </Content>
+</ItemGroup>
+</Project>

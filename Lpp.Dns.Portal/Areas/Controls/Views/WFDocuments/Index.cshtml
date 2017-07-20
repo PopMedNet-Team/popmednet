@@ -1,0 +1,43 @@
+﻿<section class="panel panel-default tabPanel">
+    <style>
+        .k-state-selected a {
+            color:#fff;
+        }
+    </style>
+    <div class="panel-body" style="padding:1px;">
+        <div id="gDocuments" data-bind="kendoGrid: {
+            data: DataSource,
+            sortable: true,
+            filterable: false,
+            resizable: true,
+            reorderable: false,
+            selectable:'row',
+            scrollable: true,
+            pageable: false,
+            groupable: false,
+            change: $root.onRowSelectionChange,
+            columnMenu: { columns: true },
+            detailInit: $root.onDetailInit,
+            columns: [
+                {field: 'FormattedDocumentName()', title: 'Name', encoded:false },
+                {field: 'Description()', title: 'Description', hidden:false },
+                {field: 'FormattedLength()', title: 'Size', attributes: { style: 'text-align:right;' }, width:95, headerAttributes: { style: 'text-align:center;' } },
+                {field: 'FormattedCreatedOn()', title: 'Date', width:155 },
+                {field: 'FormattedUploadedBy()', title: 'UploadedBy', hidden:false },
+                {field: 'Version()', title: 'Version', hidden:true, width:95 },
+                {field: 'ID', title: 'Revision Set', hidden:true },
+                {field: 'FormattedTaskTitle()', title:'Task', hidden:true, encoded:false },
+                {field: 'TaskID', title: 'TaskID', hidden: true, groupHeaderTemplate: $root.formatGroupHeader }
+            ]
+        }">
+        </div>
+    </div>
+    <nav class="panel-footer" style="display:none;" data-bind="visible:true">
+        <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteDocument, visible: SelectedRevisionSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"><span class="glyphicon glyphicon-refresh"></span></button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewDocument, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.AddDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewRevision, visible:SelectedRevisionSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
+        <button class="btn btn-default pull-right" type="button" data-bind="click: onDownload, visible: SelectedRevisionSet() != null"><span class="glyphicon glyphicon-download-alt"></span> Download Current Revision</button>
+        <div class="clear"></div>
+    </nav>
+</section>

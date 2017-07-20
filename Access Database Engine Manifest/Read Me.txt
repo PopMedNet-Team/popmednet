@@ -1,0 +1,8 @@
+To allow deploy of the DMC you'll need to copy the contents of the Bootstrapper/Packages folder under the SVN trunk's Access Database Engine Manifest into the following paths:
+
+C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\Bootstrapper\Packages
+C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\Bootstrapper\Packages
+
+Currently, you will be copying AccessX64, AccessX64Cleanup and AccessX86 folders and their contents into the above locations.?
+
+?This is required or Visual Studio will fail on publish becasue it cannot find the bootstrapper.? If you do this with Visual studio open, ensure that you restart visual studio and check the pre-requesits under the publish tab on the project to make sure that it recognizes the access runtimes.

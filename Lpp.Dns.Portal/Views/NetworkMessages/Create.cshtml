@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Create Network Message";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+    <script src="~/js/NetworkMessages/Create.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/networkmessages/create">Create Network Message</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <fieldset>
+            <div class="form-group">
+                <label for="txtSubject">Subject</label>
+                <input type="text" class="form-control" required maxlength="255" title="Please enter a subject" data-bind="value: Message.Subject" autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <label for="txtMessage">Message Text</label>
+                <textarea id="txtMessage" required title="Please enter the message" data-bind="kendoEditor: {value: Message.MessageText}" style="display: block; width: 100%; height: 500px;"></textarea>
+            </div>
+            <div class="form-group">
+                <h3>Destination</h3>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionSend" id="optAll" value="0" data-bind="checked: Target" /> All
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionSend" id="optLimited" value="1" data-bind="checked: Target" /> Specific Users and Groups
+                </label>
+            </div>
+            <div class="form-group" data-bind="visible: Target() == '1'">
+                <select id="targets" data-bind="kendoMultiSelect: {value: Targets, data: dsTargets, dataTextField: 'Name', dataValueField: 'ID', placeHolder: 'Select Users and Groups...', autoBind: false, highlightFirst: true, filter: 'contains'}"></select>
+            </div>
+        </fieldset>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-success" id="btnSendMessage" data-bind="click: btnSendMessage_Click"><img src="@this.ResourceUrl("/images/Email24.png")" alt="Save" />Send Message</button>
+    </nav>
+</article>

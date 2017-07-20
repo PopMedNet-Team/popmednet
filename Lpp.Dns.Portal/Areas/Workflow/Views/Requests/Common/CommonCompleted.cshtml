@@ -1,0 +1,51 @@
+﻿
+<!-- ko stopBinding: true -->
+<section id="CompletedTaskView" style="margin-top:15px;display:none;" data-bind="visible:true;">
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Completed Routings</h4>
+        </div>
+        <table class="panel-body table table-stripped table-bordered table-hover">
+            <colgroup>
+                <col style="width: 30px;" />
+                <col style="width: 250px;" />
+                <col style="width: 100px;" />
+                <col />
+                <col style="width: 80px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;"></a></td>
+                    <td>DataMart</td>
+                    <td>Status</td>
+                    <td>Message</td>
+                    <td>History</td>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: VirtualRoutings">
+                <tr>
+                    <td><input type="checkbox" id="chkRoutingSelect" data-bind="value: ID, checked:$root.SelectedCompleteResponses" /></td>
+                    <td><a href="#" data-bind="text: Name"></a></td>
+                    <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                    <td data-bind="html: Messages "></td>
+                    <td><a data-bind="click: $root.onShowRoutingHistory">[History]</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <nav style="margin:15px 0px;">
+            <div class="btn-group pull-right">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings, visible:AllowViewResults">View Results <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a data-bind="click:onViewAggregatedResults" data-resultid="354A8015-5C1D-42F7-BE31-B9FCEF4A8798">Aggregate View</a></li>
+                    <li><a data-bind="click:onViewIndividualResults" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8">Individual View</a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </nav>
+    </article>
+
+</section>
+
+<script src="/areas/workflow/js/requests/common/completed.js"></script>
+<!-- /ko -->
+

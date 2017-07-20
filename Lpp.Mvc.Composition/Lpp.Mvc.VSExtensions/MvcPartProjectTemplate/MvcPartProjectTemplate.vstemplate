@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>LPP MVC Composable Part</Name>
+    <Description></Description>
+    <Icon>MvcPartProjectTemplate.ico</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <SortOrder>100</SortOrder>
+    <TemplateID>C792CDE2-19F3-48E7-98BE-530E9BBC1DD4</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>MyMvcPart</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="ProjectTemplate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Controllers\$PartName$Controller.cs">MyPartController.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Models\$PartName$Model.cs">MyPartModel.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Routes.cs">Routes.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Views\$PartName$\Index.cshtml">Index.cshtml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Views\$PartName$\Index.cs">Index.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="web.config">web.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ReadMe.txt" OpenInEditor="true">ReadMe.txt</ProjectItem>
+    </Project>
+    <CustomParameters>
+      <CustomParameter Name="$PartName$" Value="MyPlugin"/>
+    </CustomParameters>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>NuGet.VisualStudio.TemplateWizard</FullClassName>
+  </WizardExtension>
+</VSTemplate>

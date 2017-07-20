@@ -1,0 +1,5 @@
+@using Lpp.Dns.Portal.Views.Errors
+@model string
+<div class="ui-section ui-has-header" title-text="Access Denied">
+    @(Html.Partial<AccessDeniedEmbedded>().WithModel(Model))
+</div>

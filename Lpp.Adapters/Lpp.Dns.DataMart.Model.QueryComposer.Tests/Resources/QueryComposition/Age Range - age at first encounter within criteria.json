@@ -1,0 +1,89 @@
+{
+    "Header":
+    {
+        "Name": "WF - PCORI: Age Range - age at first encounter within criteria",
+        "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=c1864afc-9add-4795-bcfe-a4e20114d784"
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "20eb3bf9-f357-46a3-a669-68cd4e342375",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                        "Values":
+                        {
+                            "MinAge": 5,
+                            "MaxAge": 25,
+                            "CalculationType": "1",
+                            "CalculateAsOf": null,
+                            "CalculateAsOfRequired": false
+                        },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                        "Values":
+                        {
+                            "Sex": "2"
+                        },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018",
+                        "Values":
+                        {
+                            "HeightMin": 36,
+                            "HeightMax": 66
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select" : {
+        "Fields" : [{
+                "FieldName" : "Age Ranges_Count",
+                "Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "GroupBy" : null,
+                "StratifyBy" : null,
+                "Aggregate" : 1,
+                "Select" : [],
+                "OrderBy" : 0
+            }, {
+                "FieldName" : "Age Ranges",
+                "Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "GroupBy" : null,
+                "StratifyBy" : "2",
+                "Aggregate" : null,
+                "Select" : [],
+                "OrderBy" : 0
+            }, {
+                "FieldName" : "Sex_Count",
+                "Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "GroupBy" : null,
+                "StratifyBy" : null,
+                "Aggregate" : 1,
+                "Select" : [],
+                "OrderBy" : 0
+            }, {
+                "FieldName" : "Sex",
+                "Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "GroupBy" : null,
+                "StratifyBy" : null,
+                "Aggregate" : null,
+                "Select" : [],
+                "OrderBy" : 0
+            }
+        ]
+    }
+}

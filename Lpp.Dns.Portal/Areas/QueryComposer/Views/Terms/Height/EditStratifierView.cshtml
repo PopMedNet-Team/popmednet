@@ -1,0 +1,15 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.HeightID">
+    <div class="row">
+        <div class="col-sm-2"><h4 class="TermHeader" style="font-weight:bold;">Height</h4></div>
+        <div class="col-sm-4 form-group">
+            <input type="text" id="cboHightGroupBy" name="cboHightGroupBy" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: Dns.Enums.HeightStratificationTranslation, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'}, attr:{ required: $root.IsTemplateEdit == false }" validationmessage="Height stratification is required" style="width: 250px;" />
+            <span class="k-invalid-msg" data-for="cboHightGroupBy"></span>
+        </div>
+        <div class="col-sm-4 form-group">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteAgeRangeField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

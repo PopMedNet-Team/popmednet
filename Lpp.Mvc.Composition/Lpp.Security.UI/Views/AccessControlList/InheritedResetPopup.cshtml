@@ -1,0 +1,14 @@
+﻿@{
+    var key = "{C7A904EA-E816-44F7-93D9-9D2C21C564D4}";
+    var rendered = (bool?)Context.Items[key] ?? false;
+    Context.Items[key] = true;
+}
+
+@if ( !rendered ) {
+    <div class="Acl-InheritedResetPopup">
+        This privilege is not set on this object, but is inherited from up the hierarchy.<br />
+        <div class="InheritedFromBox">Specifically, from: <div class="InheritedFromName"></div></div>
+        You can override this inheritance and set the privilege for this object individually.<br /><br />
+        In order to override the inheritance, please click <a href="#" class="Override">[override]</a>
+    </div>
+}

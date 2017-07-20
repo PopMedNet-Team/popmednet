@@ -1,0 +1,113 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_WeightDistribution">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold"><h4 id="WeightDistribution" class="TermHeader bold">Weight Distribution<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-6 form-group">
+            <div class="checkbox">
+                <input type="checkbox" onchange="SelectAll(this, 'WeightDistributionsGrid')" />
+                <label class="hover-ibeam" for="SelectAll">Select All</label>
+            </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 440px; padding-left:0px; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div id="WeightDistributionsGrid">
+                <div style="float:left; margin-right: 50px;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="0" id="weight0" />
+                        <label class="hover-ibeam" for="weight0">&lt;0 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="1" id="weight1" />
+                        <label class="hover-ibeam" for="weight1">0-1 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="2" id="weight2-6" />
+                        <label class="hover-ibeam" for="weight2-6">2-6 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="3" id="weight7-12" />
+                        <label class="hover-ibeam" for="weight7-12">7-12 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="4" id="weight13-20" />
+                        <label class="hover-ibeam" for="weight13-20">13-20 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="5" id="weight21-35" />
+                        <label class="hover-ibeam" for="weight21-35">21-35 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="6" id="weight36-50" />
+                        <label class="hover-ibeam" for="weight36-50">36-50 lbs</label>
+                    </div>
+                </div>
+
+                <div style="float:left;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="7" id="weight51-75" />
+                        <label class="hover-ibeam" for="weight51-75">51-75 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="8" id="weight76-100" />
+                        <label class="hover-ibeam" for="weight76-100">76-100 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="9" id="weight101-125" />
+                        <label class="hover-ibeam" for="weight101-125">101-125 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="10" id="weight126-150" />
+                        <label class="hover-ibeam" for="weight126-150">126-150 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="11" id="weight151-175" />
+                        <label class="hover-ibeam" for="weight151-175">151-175 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="12" id="weight176-200" />
+                        <label class="hover-ibeam" for="weight176-200">176-200 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="13" id="weight201-225" />
+                        <label class="hover-ibeam" for="weight201-225">201-225 lbs</label>
+                    </div>
+                </div>
+            
+            
+                <div style="float:right;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="14" id="weight226-250" />
+                        <label class="hover-ibeam" for="weight226-250">226-250 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="15" id="weight251-275" />
+                        <label class="hover-ibeam" for="weight251-275">251-275 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="16" id="weight276-300" />
+                        <label class="hover-ibeam" for="weight276-300">276-300 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="17" id="weight301-350" />
+                        <label class="hover-ibeam" for="weight301-350">301-350 lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="18" id="weight350" />
+                        <label class="hover-ibeam" for="weight350">350+ lbs</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().WeightDistributions" value="19" id="weightNullOrMissing" />
+                        <label class="hover-ibeam" for="weightNullOrMissing">NULL or Missing</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteWeightDistributionTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

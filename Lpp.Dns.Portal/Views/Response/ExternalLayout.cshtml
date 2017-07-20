@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "~/Views/_RootLayout.cshtml";
+}
+
+@section Head {
+    @RenderSection("Head", false)
+}
+
+@RenderBody()
+
+@RenderSection("scripts", false)

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>mpost.slmfu.examples</id>
+    <title>Silverlight Multi File Uploader Examples</title>
+    <version>5.0</version>
+    <authors>Michiel Post</authors>
+    <owners>Michiel Post</owners>
+    <projectUrl>http://slfileupload.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Example usage of the Silverlight Multi File Uploader. The Silverlight Multi File Uploader is a free Silverlight 5 application. It can be used to upload multiple files simultaneously to your website. It can be integrated on any HTML page.</description>
+    <tags>Multi File Uploader, Silverlight, Uploader</tags>  
+    <dependencies>      
+      <dependency id="mpost.slmfu" />    
+    </dependencies>  
+  </metadata>
+</package>

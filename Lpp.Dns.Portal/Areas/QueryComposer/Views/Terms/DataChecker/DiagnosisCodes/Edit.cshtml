@@ -1,0 +1,52 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_DiagnosisCodes">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold"><h4 id="lblICD9Diagnosis" class="TermHeader bold">Diagnosis Codes<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-6 form-group">
+            <div class="row">
+                <label class="col-sm-2">Code Set:</label>
+                <div class="col-sm-5">
+                    <div style="width:100%"
+                         data-bind="kendoDropDownList: { value: Values().CodeType,
+                                                         dataSource: Plugins.Requests.QueryBuilder.MDQ.ViewModel.DataCheckerDiagnosisCodeTypes,
+                                                         dataTextField: 'Name',
+                                                         dataValueField: 'Value'},
+                                    attr:{
+                                        required: $root.IsTemplateEdit == false,
+                                        name: 'CodeSet_' + $index()
+                                    }"
+                         validationmessage="Code set is required.">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="border-top:none;">
+                <label class="col-sm-2">Selected Codes:</label>
+                <div class="col-sm-10">
+                    
+                    <textarea name="txtDC_DiagnosisCodes" class="form-control" rows="3" data-bind="value:Values().CodeValues, attr:{ required: $root.IsTemplateEdit == false }" validationmessage="Code values are required" title="&bull; separate multiple codes using a comma." />
+
+                    <div>
+                        <label class="radio-online">
+                            <input type="radio" data-bind="value: Dns.Enums.TextSearchMethodType.ExactMatch, checked:Values().SearchMethodType, attr:{ required: $root.IsTemplateEdit == false, name: $parents[0].ID() + 'diagnosiscodes_searchtype_' + $index() }" validationmessage="Select a search method type." /> Exact Match
+                        </label>
+                        &nbsp;
+                        <label class="radio-online">
+                            <input type="radio" data-bind="value: Dns.Enums.TextSearchMethodType.StartsWith, checked:Values().SearchMethodType, attr:{ name: $parents[0].ID() + 'diagnosiscodes_searchtype_' + $index() }" /> Starts With
+                        </label>
+                        <span class="help-block">&bull; separate multiple codes using a comma.</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteDC_DiagnosisCodesTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

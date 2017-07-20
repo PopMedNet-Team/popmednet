@@ -1,0 +1,43 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker NDC",
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=1872d78f-0788-442d-8421-a4f4010dce31"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "1a7c7f0c-5033-4ef4-abc1-1aff1ff19a88",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "02a7fd90-aad2-4986-9c5d-1d22e27ab960",
+                        "Values": {
+                            "CodeType": 0,
+                            "CodeValues": "132456",
+                            "SearchMethodType": 0
+                        },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "0F1EA011-B588-4775-9E16-CB6DBE12F8BE" },
+                        "Criteria": [ ]
+                    
+                    }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+
+}

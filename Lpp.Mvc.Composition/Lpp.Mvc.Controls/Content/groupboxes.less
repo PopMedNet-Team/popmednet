@@ -1,0 +1,135 @@
+._section() {
+    border: 2px solid #678FC0;
+    background-color: white;
+    background-position: left top;
+    background-repeat: repeat-x;
+    margin: 10px 20px 0 20px;
+    width: 820px;
+}
+
+.ui-section-outside, .ui-section {
+    ._section();
+}
+
+.ui-section-outside {
+    > .ui-section {
+        padding: 10px 15px;
+        width: 790px;
+        text-align: left;
+
+        &.ui-no-padding {
+            padding: 0;
+        }
+
+        &.ui-has-header {
+            background: #E3E6EB;
+            margin: 0 10px 10px 10px;
+            width: auto;
+        }
+    }
+}
+
+.ui-section-break {
+    border: 2px solid #678FC0;
+    border-left: none;
+    border-right: none;
+    background: white;
+    height: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    margin: 10px -17px;
+}
+
+.ui-section-header {
+    height: 18px;
+    max-height: 18px;
+    overflow: hidden;
+    clear: both;
+    padding: 10px 15px;
+
+    .ui-section-title {
+        color: #890303;
+        font-family: Arial;
+        font-size: 13px;
+        font-weight: 600;
+        float: left;
+        display: inline-block;
+    }
+
+    .ui-button-minimize, .ui-button-maximize, .ui-button-help {
+        width: 16px;
+        height: 16px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .ui-button-minimize {
+        float: left;
+        background: url("img/minimize.png");
+    }
+
+    .ui-button-maximize {
+        float: right;
+        background: url("img/maximize.png");
+
+        .ui-section-outside.ui-maximized & {
+            background: url("img/demaximize.png");
+        }
+    }
+
+    .ui-button-help {
+        float: right;
+        background: url("img/help.png");
+    }
+
+}
+
+.ui-form > div {
+    > label {
+        font-size: small;
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        padding-left: 5px;
+        color: #888;
+    }
+
+    input[type=text], input[type=password], select, textarea {
+        height: 18px;
+        width: 200px;
+        font-size: 14px;
+        font-family: inherit;
+        border: 1px solid #678FC0;
+        border-radius: 3px;
+    }
+
+    select {
+        height: 19px;
+    }
+
+    textarea {
+        height: 40px;
+    }
+}
+
+.ui-groupbox {
+    border: 1px solid gray;
+    padding: 7px;
+    border-radius: 3px;
+    margin-top: 1em;
+
+    .ui-groupbox-header { .header(#E3E6EB); }
+    .ui-dialog-groupbox-header { .header(white); }
+
+	.header(@bg){
+	    position: relative;
+        top: -1em;
+        margin-bottom: -0.7em;
+
+        > * {
+            background: @bg;
+            padding: 0 5px;
+            font-weight: bold;
+        }
+	}
+}

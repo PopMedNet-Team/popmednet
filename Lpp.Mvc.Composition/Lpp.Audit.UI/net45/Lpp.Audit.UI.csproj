@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{4EC1AE43-C7F6-445C-9A33-2A9D19B7F3E0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Audit.UI</RootNamespace>
+    <AssemblyName>Lpp.Audit.UI</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Interactive, Version=1.1.10823.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Audit\net45\Lpp.Audit.csproj">
+      <Project>{76B912C7-386A-4579-8AD6-62ED2E658A78}</Project>
+      <Name>Lpp.Audit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Composition\net45\Lpp.Data.Composition.csproj">
+      <Project>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</Project>
+      <Name>Lpp.Data.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849F-D962-4034-94E5-5A4A727C2B01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+    
+
+    
+
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+    
+
+    
+
+
+
+
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<EmbeddedResource Include="..\Content\PropertyFilter.css"><Link>Content\PropertyFilter.css</Link></EmbeddedResource>
+    
+<Compile Include="..\Controllers\PropertyValueSelectorsController.cs"><Link>Controllers\PropertyValueSelectorsController.cs</Link></Compile>
+    
+<Compile Include="..\AuditUI.cs"><Link>AuditUI.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\AuditEventFiltersUI.cs"><Link>Implementations\AuditEventFiltersUI.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\AuditUIService.cs"><Link>Implementations\AuditUIService.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\AuditUIExtensions.cs"><Link>Implementations\AuditUIExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\DefaultEventVisualizer.cs"><Link>Implementations\DefaultEventVisualizer.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\FormatEventVisualizer.cs"><Link>Implementations\FormatEventVisualizer.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\DateValueSelector.cs"><Link>Implementations\DateValueSelector.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\EntityReferencePropertyVisualizer.cs"><Link>Implementations\EntityReferencePropertyVisualizer.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\PrimitiveValueSelector.cs"><Link>Implementations\PrimitiveValueSelector.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\PropertyFilterUIFactory.cs"><Link>Implementations\PropertyFilterUIFactory.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ClientControlDisplay.cs"><Link>Interfaces\ClientControlDisplay.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditEventVisualizer.cs"><Link>Interfaces\IAuditEventVisualizer.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditPropertyValueVisualizer.cs"><Link>Interfaces\IAuditPropertyValueVisualizer.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditUIService.cs"><Link>Interfaces\IAuditUIService.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditPropertyValueSelector.cs"><Link>Interfaces\IAuditPropertyValueSelector.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditEventFilterUIFactory.cs"><Link>Interfaces\IAuditEventFilterUIFactory.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditEventFiltersUI.cs"><Link>Interfaces\IAuditEventFiltersUI.cs</Link></Compile>
+    
+<Compile Include="..\Models\AuditEventFiltersUIModel.cs"><Link>Models\AuditEventFiltersUIModel.cs</Link></Compile>
+    
+<Compile Include="..\Models\DateValueModel.cs"><Link>Models\DateValueModel.cs</Link></Compile>
+    
+<Compile Include="..\Models\PrimitiveValueModel.cs"><Link>Models\PrimitiveValueModel.cs</Link></Compile>
+    
+<Compile Include="..\Models\PropertyFilterUIModel.cs"><Link>Models\PropertyFilterUIModel.cs</Link></Compile>
+    
+<Compile Include="..\Views\AuditEventFiltersUI.cs"><Link>Views\AuditEventFiltersUI.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AuditEventFiltersUI.cshtml</DependentUpon>
+    </Compile>
+<Compile Include="..\Views\DateValueSelector.cs"><Link>Views\DateValueSelector.cs</Link><DependentUpon>DateValueSelector.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+<Compile Include="..\Views\PrimitiveValueSelector.cs"><Link>Views\PrimitiveValueSelector.cs</Link><DependentUpon>PrimitiveValueSelector.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+<Compile Include="..\Views\PropertyFilterUI.cs"><Link>Views\PropertyFilterUI.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PropertyFilterUI.cshtml</DependentUpon>
+    </Compile>
+<Compile Include="..\Views\PropertyValueSelector.cs"><Link>Views\PropertyValueSelector.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PropertyValueSelector.cshtml</DependentUpon>
+    </Compile>
+<EmbeddedResource Include="..\Content\FiltersUI.css"><Link>Content\FiltersUI.css</Link></EmbeddedResource>
+    
+<Content Include="..\web.config"><Link>web.config</Link></Content>
+    
+<Content Include="..\Views\AuditEventFiltersUI.cshtml"><Link>Views\AuditEventFiltersUI.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>AuditEventFiltersUI.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\PropertyFilterUI.cshtml"><Link>Views\PropertyFilterUI.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>PropertyFilterUI.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\PropertyValueSelector.cshtml"><Link>Views\PropertyValueSelector.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>PropertyValueSelector.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\PrimitiveValueSelector.cshtml"><Link>Views\PrimitiveValueSelector.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>PrimitiveValueSelector.cs</LastGenOutput>
+    </Content>
+<Content Include="..\Views\DateValueSelector.cshtml"><Link>Views\DateValueSelector.cshtml</Link><Generator>RazorGenerator</Generator>
+      <LastGenOutput>DateValueSelector.cs</LastGenOutput>
+    </Content>
+</ItemGroup>
+</Project>

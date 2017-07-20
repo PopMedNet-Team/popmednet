@@ -1,0 +1,17 @@
+﻿@using System.Security.Policy
+@Layout = null
+
+function clientSetttings(){
+    return {
+        set: function( key, value )
+        {
+            $.post( '@Html.Raw( 
+                Url.Action( (ClientSettingsController c) => c.SetSetting( "__key__", "__value__" ) )
+                    .Replace( "__key__", "' + key +'" )
+                    .Replace( "__value__", "' + value +'" )
+                )' )
+                .success( function() {} )
+                .error( function() { console.log( "Thare was a problem trying to set setting " + key ); } );
+        }
+    };
+}

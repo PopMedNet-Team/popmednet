@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+
+@section Head{
+<script src="~/areas/workflow/js/requests/common/msrequestideditdialog.js"></script>
+}
+<section id="EditMSRequestIDDialog">
+    <fieldset>
+        <section class="row">
+            <div class="col-sm-12 form-group">
+                <label for="MSRequestID">Request ID</label>
+                <input class="form-control" id="MSRequestID" type=text maxlength="100" data-bind="value: MSRequestID" />
+            </div>
+        </section>
+
+    </fieldset>
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+                <button class="btn btn-default pull-right" style="margin-left:8px;" data-bind="click:onCancel">Cancel</button>
+                <button class="btn btn-default pull-right" data-bind="click:onSave">Save</button>
+    </div>
+</section>

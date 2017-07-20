@@ -1,0 +1,249 @@
+@section Head {
+    <script src="~/js/Home/index.js"></script>
+    @* These styles allow you to apply a max-height to the grid, but have it scale to that max height and then start scrolling after that *@
+    <style>
+        #gTasks .k-grid-content {
+            max-height: 400px;
+        }
+        #gMessages .k-grid-content {
+            max-height: 400px;
+        }
+        #requests-panel-title {
+            float:left;
+            padding-top:10px;
+        }
+        .k-grid .k-state-selected {
+            background-color: skyblue;
+        }
+    </style>
+}
+
+<article id="pNotifications" class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <h4 class="panel-title">Notifications</h4>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gNotificationsHeight}" style="padding: 0; overflow: hidden;">
+        <div id="gNotifications" data-bind="kendoGrid: {
+            data: dsNotifications,
+            sortable: true,
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            height: '100%',
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Timestamp', title: 'Date', width: 100, format: Constants.DateTimeFormatter},
+                {field: 'Event', title: 'Event', encoded: false, width: 125 },
+                {field: 'Message', title: 'Message', encoded: false, height: 20},
+            ]
+        }">
+        </div>
+        @*<p data-bind="visible: ShowNotificationNone" class="center">No Notifications</p>*@
+    </div>
+</article>
+
+<article id="pMessages" class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <h4 class="panel-title">Messages</h4>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gMessagesHeight}" style="padding: 0; overflow: hidden;">
+        <div id="gMessages" data-bind="kendoGrid: {
+            data: dsMessages,
+            sortable: true,
+            height: '100%',
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            scrollable: true,
+            pageable: false,
+            columns: [
+                {field: 'CreatedOn', title: 'Date', width: 100, format: Constants.DateTimeFormatter},
+                {field: 'MessageText', title: 'Message', encoded: false, height: 20 },
+            ]
+        }">
+        </div>
+    </div>
+</article>
+
+<article id="pTasks" class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <h4 class="panel-title">Tasks</h4>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gTasksHeight}" style="padding: 0; overflow: hidden;">
+        <div id="gTasks" data-bind="kendoGrid: {
+            data: dsTasks,
+            height: '100%',
+            sortable: true,
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'TaskID', title: 'TaskID', width:150, hidden:true, menu: false},
+                {field: 'TaskName', title: 'Task', template: $root.FormatTaskName, width:150 },
+                {field: 'Name', title: 'Name', width: 180 },
+                {field: 'TaskStatusText', title: 'Task Status', width:150 },
+                {field: 'CreatedOn', title: 'Created', format: Constants.DateTimeFormatter, width: 160 },
+                {field: 'StartOn', title: 'Start Date', format: Constants.DateTimeFormatter, width: 160 },
+                {field: 'EndOn', title: 'End Date', format: Constants.DateTimeFormatter, width: 160 },
+                {field: 'AssignedResources', title: 'Assignees', width:300, template: $root.FormatAssignedResources },
+                {field: 'Type', title: 'Type', width:160 },
+                {field: 'MSRequestID', title: 'Request ID', width:120 },
+                {field: 'Identifier', title: 'System Number', width:150 },
+                {field: 'RequestStatusText', title: 'Request Status', width:150 },
+                {field: 'NewUserID', title: 'New User ID', width:150, hidden: true, menu: false }
+            ]
+        }">
+        </div>
+    </div>
+</article>
+<article id="pRequests" class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <h4 class="panel-title" id="requests-panel-title" >Requests</h4>        
+        <div class="dropdown right">
+            <button id="ddNewRequest" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                New Request <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="ddNewRequest" data-bind="foreach: Projects">
+                <li><a role="menuitem" data-bind="text:Name,click:$root.CreateRequest"></a></li>
+            </ul>
+        </div>        
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gRequestsHeight}" style="padding: 0; overflow: hidden;">
+        <div id="gRequests" data-bind="kendoGrid: {
+            data: dsRequest,
+            sortable: true,
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            autoBind: true,
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            height: '100%',
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            selectable: $root.gRequestsRowSelector,
+            change: $root.onRequestRowSelectionChange,
+            columns: [
+                {field: 'Name', title: 'Name', template: Home.Index.NameAnchor, width: 200},
+                {field: 'Identifier', title: 'System Number', width: 90, filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: '####',
+                            decimals: 0
+                        });
+                    }
+                }  },
+                {field: 'SubmittedOn', title: 'Date Submitted', format: Constants.DateTimeFormatter, width: 165},
+                {field: 'SubmittedByName', title: 'Submitter', width: 100},
+                {field: 'StatusText', title: 'Status', width: 125},
+                {field: 'RequestType', title: 'Type', width: 175},
+                {field: 'Project', title: 'Project', width: 125},
+                {field: 'Priority', title: 'Priority', values: Dns.Enums.PrioritiesTranslation, width: 100 },
+                {field: 'DueDate', title: 'Due Date', format: Constants.DateFormatter, width: 120 },
+                {field: 'MSRequestID', title: 'Request ID', width:120 }
+            ]
+        }">
+        </div>
+    </div>
+    <div class="panel-footer" data-bind="visible:Home.Index.ViewModel.editMetadataPermissions.CanEditRequestMetadata,click:onClickRequestsFooter">
+        <div class="row">
+            <div class="col-xs-2">
+                <button disabled="" class="btn btn-default" data-bind="enable:EnableRequestBulkEdit,click:onRequestBulkEdit">Edit Requests</button>
+            </div>
+            <div class="col-xs-10">
+                <div class="alert alert-warning" data-bind="visible:InvalidSelectedRequests().length > 0">
+                    <p>One or more requests were selected that you do not have permission to edit the metadata for:</p>
+                    <ul data-bind="foreach:{data: InvalidSelectedRequests, as: 'req' }">
+                        <li><span data-bind="text:Identifier"></span> - <span data-bind="text:Name"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="pDataMarts" class="panel panel-default" data-bind="css:{visible: true}">
+    <div class="panel-heading">
+        <h4 class="panel-title" id="datamarts-panel-title">DataMarts</h4>
+    </div>
+    <div class="panel-body" style="padding:0;">
+        <div id="gDataMarts" data-bind="kendoGrid:{
+            data: dsDataMarts,
+            sortable: true,
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            autoBind: true,
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns:true },
+            columnMenuInit: $root.onColumnMenuInit,
+            scrollable: false,
+            pageable: false,
+            selectable: false,
+            detailInit:onDataMartsDetailInit,
+            columns: [
+                {field: 'Name', title: 'Name', width:200 },
+                {field: 'Organization', title: 'Organization', width:200 },
+                {field: 'ParentOrganization', title: 'Parent Organization', width:200 }
+            ]
+        }"></div>
+    </div>
+</article>
+
+<script type="text/html" id="invalid-requests-template">
+<div class="alert alert-warning" data-bind="visible:InvalidSelectedRequests.length > 0">
+    <p>One or more requests were selected that you do not have permission to edit the metadata for:</p>
+    <ul data-bind="foreach:{data: InvalidSelectedRequests, as: 'req' }">
+        <li><span data-bind="text:Identifier"></span> - <span data-bind="text:Name"></span></li>
+    </ul>
+</div>
+</script>

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D63EE3BE-E5D7-4BB0-8E0E-747C1C17CB95}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>mpost.SilverlightMultiFileUpload.SampleWeb</RootNamespace>
+    <AssemblyName>mpost.SilverlightMultiFileUpload.SampleWeb</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SilverlightApplicationList>{3B32FB59-A762-4E76-880F-3BD4721A4D27}|..\mpost.SilverlightMultiFileUpload\mpost.SilverlightMultiFileUpload.csproj|ClientBin|False,{3447C4D5-B1BB-4A06-93C2-C724BFC3A50A}|..\mpost.SilverlightMultiFileUpload.Lite\mpost.SilverlightMultiFileUpload.Lite.csproj|ClientBin|False,{ACD7D8A6-2FBE-4F12-BF25-FEE0736A1933}|..\mpost.SilverlightMultiFileUpload.Progress\mpost.SilverlightMultiFileUpload.Progress.csproj|ClientBin|False,{2F950C39-8B58-4537-BB2D-66A6F1EADE34}|..\mpost.SilverlightSingleFileUpload\mpost.SilverlightSingleFileUpload.csproj|ClientBin|False</SilverlightApplicationList>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\NuGet\mpost.slmfu.examples\content\slmfu.lite.default.html">
+      <Link>NuGet\slmfu.lite.default.html</Link>
+    </Content>
+    <Content Include="..\NuGet\mpost.slmfu.examples\content\slmfu.multi.default.html">
+      <Link>NuGet\slmfu.multi.default.html</Link>
+    </Content>
+    <Content Include="..\NuGet\mpost.slmfu.examples\content\slmfu.multi.JavascriptIntegration.html">
+      <Link>NuGet\slmfu.multi.JavascriptIntegration.html</Link>
+    </Content>
+    <Content Include="..\NuGet\mpost.slmfu.examples\content\slmfu.single.default.html">
+      <Link>NuGet\slmfu.single.default.html</Link>
+    </Content>
+    <Content Include="ClientBin\mpost.SilverlightMultiFileUpload.Lite.xap" />
+    <Content Include="ClientBin\mpost.SilverlightMultiFileUpload.Progress.xap" />
+    <Content Include="ClientBin\mpost.SilverlightMultiFileUpload.xap" />
+    <Content Include="ClientBin\mpost.SilverlightSingleFileUpload.xap" />
+    <Content Include="Silverlight.js" />
+    <Content Include="slmfu.lite.default.aspx" />
+    <Content Include="slmfu.multi.default.aspx" />
+    <Content Include="slmfu.multi.JavascriptIntegration.aspx" />
+    <None Include="slmfu.multi.php_test.php" />
+    <Content Include="slmfu.single.default.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Upload\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HttpUploadHandler.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PHPUpload.php" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>65178</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

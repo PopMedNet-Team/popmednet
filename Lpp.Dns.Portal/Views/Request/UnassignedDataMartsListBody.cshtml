@@ -1,0 +1,10 @@
+@using Lpp.Dns.DTO
+@model ListModel<DataMartListDTO, RequestChildrenGetModel>
+@{ Layout = null; } 
+
+@(Html.Partial<DataMartsListBody>().WithModel( new DataMartsListModel
+{
+    DataMarts = Model,
+    HiddenFieldName = "AddDataMarts",
+    ReloadUrl = Url.Action<RequestController>( c => c.UnassignedDataMartsListBody( Model.ModelForReload() ) )
+} ))

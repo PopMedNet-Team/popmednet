@@ -1,0 +1,5 @@
+td { padding: 5px 0 }
+table { margin: 10px 0 }
+#ForgotPassword { display: none; text-align: center; }	
+input[type=submit] { margin: 10px 0 }
+.ui-standard-textbox { width: 144px;}

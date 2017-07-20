@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns="urn://popmednet/requests/metadata" targetNamespace="urn://popmednet/requests/metadata">
+  <xs:simpleType name="phiDisclosureLevel_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Aggregated" />
+      <xs:enumeration value="Limited" />
+      <xs:enumeration value="De-identified" />
+      <xs:enumeration value="PHI" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="purposeOfUse_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TREAT" />
+      <xs:enumeration value="HPAYMT" />
+      <xs:enumeration value="HOPERAT" />
+      <xs:enumeration value="HRESCH" />
+      <xs:enumeration value="HMARKT" />
+      <xs:enumeration value="PATRQT" /> 
+      <xs:enumeration value="PUBHLTH" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="routingStatus_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Draft" />
+      <xs:enumeration value="Submitted" />
+      <xs:enumeration value="Completed" />
+      <xs:enumeration value="AwaitingRequestApproval" />
+      <xs:enumeration value="RequestRejected" />
+      <xs:enumeration value="Canceled" />
+      <xs:enumeration value="Resubmitted" />
+      <xs:enumeration value="PendingUpload" />
+      <xs:enumeration value="AwaitingResponseApproval" />
+      <xs:enumeration value="Hold" />
+      <xs:enumeration value="ResponseRejectedBeforeUpload" />
+      <xs:enumeration value="ResponseRejectedAfterUpload" />
+      <xs:enumeration value="Failed" />
+      <xs:enumeration value="ExaminedByInvestigator" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="priority_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Low" />
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="High" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="user_type">
+    <xs:sequence>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="organization" type="xs:string"/>
+      <xs:element name="email" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:element name="requests">
+      <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="request">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="header">
+                <xs:complexType>
+                  <xs:all minOccurs="0" maxOccurs="1">
+                    <xs:element name="requestType">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name" type="xs:string" />
+                          <xs:element name="id" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="id" type="xs:string" />
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="description" type="xs:string" nillable="true"/>
+                    <xs:element name="priority" type="priority_type"/>
+                    <xs:element name="dueDate" type="xs:dateTime" nillable="true"/>
+                    <xs:element name="submittedOn" type="xs:dateTime" />
+                    <xs:element name="createdBy" type="user_type" />
+                    <xs:element name="createdOn" type="xs:dateTime" />
+                    <xs:element name="updatedBy" type="user_type" />
+                    <xs:element name="updatedOn" type="xs:dateTime" />
+                    <xs:element name="activity">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="id" type="xs:string"  nillable="true"/>
+                          <xs:element name="description" type="xs:string"  nillable="true"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="purposeOfUse" type="purposeOfUse_type" nillable="true"/>
+                    <xs:element name="group">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name" type="xs:string" />
+                          <xs:element name="description" type="xs:string" nillable="true"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="project">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name" type="xs:string" />
+                          <xs:element name="description" nillable="true"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="phiDisclosureLevel" type="phiDisclosureLevel_type" nillable="true"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <!--
+              <xs:element name="body">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="criteria" nillable="true">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="codes" nillable="true">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="idc9Diagnosis">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="code" type="xs:decimal" />
+                                      <xs:element name="description" type="xs:string" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="observationRange">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="startDate" type="xs:dateTime" />
+                                      <xs:element name="endDate" type="xs:dateTime" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="report">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="ageRange" type="xs:string" />
+                                <xs:element name="race" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              -->
+              <xs:element name="routing">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0"  maxOccurs="unbounded" name="dataMart">
+                      <xs:complexType>
+                        <xs:sequence >
+                          <xs:element name="id" type="xs:unsignedByte" />
+                          <xs:element name="name" type="xs:string" />
+                          <xs:element name="organization" type="xs:string" />
+                          <xs:element name="status" type="routingStatus_type" />
+                          <xs:element name="instance" minOccurs="0" maxOccurs="unbounded" >
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="submittedBy" type="user_type" />
+                                <xs:element name="submittedOn" type="xs:dateTime" />
+                                <xs:element name="respondedBy" type="user_type" minOccurs="0" maxOccurs="1"/>
+                                <xs:element name="respondedOn" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+                                <xs:element name="isCurrent" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

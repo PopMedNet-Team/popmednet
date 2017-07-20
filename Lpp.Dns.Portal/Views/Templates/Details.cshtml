@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Criteria Group Template Details";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head{
+    <script src="~/js/Security/AclViewModel.js"></script>
+    <script src="~/js/Templates/Details.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/templates">Criteria Group Templates</a></li>
+            <li class="active" data-bind="text: Template.Name"></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <form class="form" role="form">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtName">Template Name<em>*</em></label>
+                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: Template.Name, enable: HasPermission(Permissions.Templates.Edit)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="txtDescription">Description</label>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: Template.Description, enable: HasPermission(Permissions.Templates.Edit)" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtType">Type</label>
+                    <input id="txtType" disabled name="Type" class="form-control" data-bind="value: Global.Helpers.GetEnumString(Dns.Enums.TemplateTypesTranslation, Template.Type())"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtDataAdapterDetail">Data Adapter Detail</label>
+                    <input id="txtDataAdapterDetail" name="DataAdapterDetail" class="form-control" data-bind="kendoDropDownList: {value: Template.QueryType, data: Dns.Enums.QueryComposerQueryTypesTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:'<None>'}" style="width:100%" />
+                </div>
+            </div>
+        </form>
+        
+        <ul id="tabs2" class="nav nav-tabs" role="tablist" style="margin-bottom:8px;clear:both">
+            <li class="active"><a href="#tbDesign" role="tab" data-toggle="tab">Design</a></li>
+            <li><a href="#tbPermissions" role="tab" data-toggle="tab">Permissions</a></li>
+            @*<li><a href="#tbNotes" role="tab" data-toggle="tab">Notes</a></li>*@
+        </ul>
+        <div class="tab-content" style="min-height:500px;">
+            <div class="tab-pane fade in active" id="tbDesign">
+                <div style="margin:0px;padding:8px;">
+                <!-- ko stopBinding: true -->
+                @Html.Partial("~/areas/QueryComposer/Views/edit.cshtml")
+                <!-- /ko -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tbPermissions">
+                <p class="alert alert-info">Please ensure that you have added at least one security group to the Permissions tab to administer this template.</p>
+                <div data-bind="with: TemplateSecurity">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+            </div>
+            @*<div class="tab-pane fade" id="tbNotes">
+                <p class="alert alert-info">Specify any template specific useage notes you wish to be displayed to the user in a workflow step using this template.</p>
+                <textarea id="txtNotes" data-bind="kendoEditor:{value: Template.Notes}" style="height: 500px;"></textarea>
+            </div>*@
+        </div>
+
+    </div>
+
+    
+
+    <nav class="panel-footer right">
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: Template.ID() != null && HasPermission(Permissions.Templates.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Templates.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>

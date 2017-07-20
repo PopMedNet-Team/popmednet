@@ -1,0 +1,169 @@
+﻿
+@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+<script src="/areas/controls/js/wffileupload/common.js"></script>
+<script src="/areas/controls/js/wffileupload/ResponseForDataPartner.js"></script>
+<style>
+    #fsFTPCredentials legend {
+        font-size: 1em;
+    }
+
+    #sftpSelector {
+        padding: 0px 4px;
+    }
+
+    .sFtpTree {
+        list-style: none;
+        margin: 0px;
+        margin-left: 12px;
+        padding: 0px;
+    }
+</style>
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="alert alert-info">
+                Select the response files to upload for "<span data-bind="text:DataMart"></span>". Clicking on Upload with upload the files, and complete the routing.<br/><br/>                 
+                If this is the last routing to complete, the workflow will automatically submit to the Analysis Center and progress to the Complete Analysis step. 
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <!--Direct File Upload-->
+        <div class="col-sm-6">
+            <article id="Normal_FileUpload" class="panel panel-default">
+                
+                <div class="panel-heading">
+                    <h4 class="panel-title">Upload Local Files<img src='/Content/img/icons/help16.gif' class="helptip" title="Upload one or more files. Each file must be less than 2GB." /></h4>
+                </div>
+                <div class="panel-body">
+                    <input name="files" id="files" type="file" data-bind="kendoUpload: {
+                        async: {
+                            autoUpload: false,
+                            saveUrl: '/controls/wffileupload/UploadResponseDocuments'},
+                        success: onFileUploadCompleted,
+                        upload: onFileUpload,
+                        error: onFileUploadError,
+                        select: onFileSelect,
+                        template: kendo.template($('#fileTemplate').html())
+                    }" />
+                </div>
+            </article>
+        </div>
+        <!--SFTP Upload-->
+        <div class="col-sm-6">
+            <article id='SFTP_FileUpload' class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Upload from FTP<img src='../../Content/img/icons/help16.gif' class="helptip" title="Transfer one or more files from an FTP Server. Each file must be less than 2GB. The FTP server must have an open port and you must have valid user credentials to connect to the FTP server." /></h4>
+                </div>
+                <div class="panel-body">
+
+                    <div id="sftpCredentialsDialog" data-bind="visible: !sFtpConnected()">
+                        <fieldset id="fsFTPCredentials">
+                            <legend>Please enter your FTP credentials below:</legend>
+                            <div class="row">
+                                <div class="col-sm-8 form-group">
+                                    <label for="sftpAddress">Address<em>*</em></label>
+                                    <input id="sftpAddress" type="text" class="form-control" maxlength="255" placeholder="i.e. sftp.example.com" data-bind="value: sFtpAddress" />
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label for="sftpPort">Port<em>*</em></label>
+                                    <input id="sftpPort" type="text" data-bind="kendoNumericTextBox: {value: sFtpPort, min: 0, max:64000, format: '#####'}" style="width: 100px;" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="sftpLogin">Login<em>*</em></label>
+                                    <input id="sftpLogin" type="text" maxlength="255" class="form-control" data-bind="value: sFtpLogin" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="sftpPassword">Password<em>*</em></label>
+                                    <input id="sftpPassword" type="password" maxlength="255" class="form-control" data-bind="value: sFtpPassword" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <br />
+                                    <button class="btn btn-default" id="btnSftpConnect" data-bind="click: sFTPConnect">Connect</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div id="sftpSelector" class="row" style="display: none;" data-bind="visible: sFtpConnected">
+                        <p class="alert alert-info">Please navigate the folders on the left and choose one or more files on the right.</p>
+                        <div class="row">
+                            <div id="divFtpFolderWrapper" class="col-sm-6">
+                                <ul id="sftpFolders" class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: sFtpFolders }"></ul>
+                            </div>
+                            <div id="divFtpFileWrapper" class="col-sm-6">
+                                <table class="table table-striped">
+                                    <tbody data-bind="foreach: sFtpCurrentPath().Files">
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" data-bind="attr: { id: Path }, value: Path, checked: $root.sFtpSelectedFiles" />
+                                                <label data-bind="text: Name, attr: { id: 'lbl' + Path(), 'for': Path, 'title': LengthFormatted }"></label>
+                                                <select class="sftpUploadType" name="sftpUploadType" data-bind="attr: {id: 'ddl' + HTMLID}">
+                                                    <option value="Default">Default</option>
+                                                    <option value="OutputManifest">Output Manifest</option>
+                                                    <option value="TrackingTable">Tracking Table</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer" data-bind="visible: sFtpSelectedFiles().length > 0">
+                    <div class="col-sm-12" style="text-align: right;">
+                        <button class="btn btn-default" id="btnSftpUpload" data-bind="click: sFtpAddFiles">Upload Selected Files</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </article>
+        </div>
+    </div>
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Response Comment</h4>
+        </div>
+        <div class="panel-body">
+            <textarea rows="3" data-bind="value:Comments" class="form-control"></textarea>
+        </div>
+    </article>
+</section>
+<nav class="footer">
+    <button class="btn btn-primary pull-right" style="width:120px;" data-bind="click: onCancel">Cancel</button>
+    <button class="btn btn-primary pull-right" style="margin-right:15px;width:150px;" data-bind="click: onUpload">Upload</button>
+</nav>
+<script id="treeNode" type="text/html">
+    <li>
+        <a href="#" data-bind="click: $root.sFtpSelect">
+            <span class="glyphicon" data-bind="css: {'glyphicon-folder-open': Selected(), 'glyphicon-folder-close': !Selected() }"></span>
+            &nbsp;<span data-bind="text: Name, attr: { id: Path }"></span>
+        </a>
+        <!-- ko if: Selected() -->
+        <ul class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: Folders }, visible: Selected"></ul>
+        <!-- /ko -->
+    </li>
+</script>
+
+<script id="fileTemplate" type="text/x-kendo-template">
+    <span class='k-progress'></span>
+    <div class='file-wrapper'>
+        <span class='k-filename'>#=name#</span>
+        <label></label>
+        <select id="uploadType" class="uploadType" name="uploadType">
+            <option value="Default">Default</option>
+            <option value="OutputManifest">Output Manifest</option>
+            <option value="TrackingTable">Tracking Table</option>
+        </select>
+    </div>
+</script>
+

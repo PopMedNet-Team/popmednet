@@ -1,0 +1,43 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Patients between 36 and 66\" with Observation Period",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=8b6ba828-3fd0-40cb-88a8-a4b801018466"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : "1981-01-01T05:00:00.000Z",
+							"End" : "2005-12-31T05:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Observation Period_Count",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Observation Period",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : "2",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

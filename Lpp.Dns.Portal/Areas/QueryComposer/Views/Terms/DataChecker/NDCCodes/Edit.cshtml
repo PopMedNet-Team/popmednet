@@ -1,0 +1,37 @@
+﻿@using Lpp.QueryComposer
+@using Lpp.Dns.Portal.App_Code.Terms
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_NDCCodes">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold"><h4 class="TermHeader bold">NDC Codes<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-6 form-group" >
+            <div class="row">
+                <label class="col-sm-2">Selected Codes:</label>
+                <div class="col-sm-10">
+
+                    <textarea name="txtDC_NDCCodes" class="form-control" rows="3" data-bind="value:Values().CodeValues, attr:{ required: $root.IsTemplateEdit == false }" validationmessage="Code values are required" title="&bull; separate multiple codes using a comma." />
+
+                    <div>
+                        <label class="radio-online">
+                            <input type="radio" data-bind="value: Dns.Enums.TextSearchMethodType.ExactMatch, checked:Values().SearchMethodType, attr:{ required: $root.IsTemplateEdit == false, name: 'ndccodes_searchtype_' + $index() }" validationmessage="Select a search method type." /> Exact Match
+                        </label>
+                        &nbsp;
+                        <label class="radio-online">
+                            <input type="radio" data-bind="value: Dns.Enums.TextSearchMethodType.StartsWith, checked:Values().SearchMethodType, attr:{ name: 'ndccodes_searchtype_' + $index() }" /> Starts With
+                        </label>
+                        <span class="help-block">&bull; separate multiple codes using a comma.</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteNDCCodesTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

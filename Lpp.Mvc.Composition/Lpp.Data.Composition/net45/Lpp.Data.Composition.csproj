@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Data.Composition</RootNamespace>
+    <AssemblyName>Lpp.Data.Composition</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Reflection.Context.CodePlex">
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{d4f2cad5-58ec-4783-ba3e-6bb5b92d262a}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Compile Include="..\Bootstrap\IDatabaseBootstrapSegment.cs"><Link>Bootstrap\IDatabaseBootstrapSegment.cs</Link></Compile>
+    
+<Compile Include="..\Bootstrap\DatabaseBootstrap.cs"><Link>Bootstrap\DatabaseBootstrap.cs</Link></Compile>
+    
+<Compile Include="..\ComposableDbContext.cs"><Link>ComposableDbContext.cs</Link></Compile>
+    
+<Compile Include="..\DataExtensions.cs"><Link>DataExtensions.cs</Link></Compile>
+    
+<Compile Include="..\PersistenceConfig.cs"><Link>PersistenceConfig.cs</Link></Compile>
+    
+<Compile Include="..\PersistenceDefinition.cs"><Link>PersistenceDefinition.cs</Link></Compile>
+    
+<Compile Include="..\IPersistenceDefinition.cs"><Link>IPersistenceDefinition.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+    
+<Compile Include="..\Repository.cs"><Link>Repository.cs</Link></Compile>
+  
+</ItemGroup>
+</Project>

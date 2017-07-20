@@ -1,0 +1,111 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    <div id="ResponseViewHeader">
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    <div id="height_overall" class="metricview" data-bind="visible: (SelectedMetric().value == 0)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="overallmetric-header">Height</th>
+                            <th class="overallmetric-header">n</th>
+                            <th class="overallmetric-header">%</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: OverallMetrics">
+                        <tr>
+                            <td class="overallmetric-body" style="text-align:right;" data-bind="text: Height_Display"></td>
+                            <td class="overallmetric-body numbers" style="text-align:right;" data-bind="text: n"></td>
+                            <td class="overallmetric-body percent" style="text-align:right;" data-bind="text: Percent.toFixed(2)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="OverallMetricsChart" class="overallmetric_barchart"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+            <br />
+            <!--div id="OverallMetricsPieChart" class="overallmetric_piechart"></div-->
+            <!--p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p-->
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <div id="height_percentindp" class="metricview" data-bind="visible: (SelectedMetric().value == 1)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:right;">Height</th>
+                            <!-- ko foreach: DataPartners -->
+                            <th data-bind="text: $data" colspan="2" style="text-align:right;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <!-- ko foreach: DataPartners -->
+                            <th style="text-align:right;">N</th>
+                            <th style="text-align:right;">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: PartnersByCode">
+                        <tr>
+                            <td style="text-align:right;" data-bind="text:Height_Display"></td>
+                            <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                            <td data-bind="text: partner.Count" class="numbers"></td>
+                            <td data-bind="text: Global.Helpers.ToPercent(partner.Count, partner.Total)" class="percent"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="DataPartnerMetricsPercent"></div>
+            <!--div id="DataPartnersMetricsPie"></div-->
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <div id="height_percentdpcontribution" class="metricview" data-bind="visible: (SelectedMetric().value == 2)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:right;">Height</th>
+                            <!-- ko foreach: DataPartners -->
+                            <th data-bind="text: $data" colspan="2" style="text-align:right;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <!-- ko foreach: DataPartners -->
+                            <th style="text-align:right;">N</th>
+                            <th style="text-align:right;">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: PartnersByCode, as: 'item' }">
+                        <tr>
+                            <td style="text-align:right;" data-bind="text: item.Height_Display"></td>
+                            <!-- ko foreach: { data: item.Partners, as: 'partner'} -->
+                            <td data-bind="text: partner.Count" class="numbers"></td>
+                            <td data-bind="text: Global.Helpers.ToPercent(partner.Count, item.Total)" class="percent"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="PercentDataPartnerContribution"></div>
+            <!--div id="PercentDataPartnerContribution_Pie"></div-->
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <!-- /ko -->
+</div>
+
+

@@ -1,0 +1,26 @@
+@using Lpp.Audit.UI
+@using Lpp.Utilities.Legacy
+@{
+    this.Stylesheet( "OrgTree.css" );
+    var includeTree = Html.Render<ITree>().Nodes( new int[] { } ).ToHtmlString();
+    var includeGrid = Html.Render<IGrid>().From( new int[] { } ).ToHtmlString();
+}
+
+@using ( Html.BeginForm<ReportsController>( c => c.Create(), FormMethod.Post, new { target = "_new" } ) )
+{
+<div class="Report">
+    <div class="ui-section ui-has-header" title-text="Period">
+        @Html.Field( "From", @<input type="text" name="from" class="DateTime" /> )
+        @Html.Field( "To", @<input type="`text" name="to" class="DateTime" /> )
+        <script type="text/javascript">
+            $(function () { $("input.DateTime").datepicker(); });
+        </script>
+    </div>
+    <div class="ui-section ui-has-header" title-text="Events">
+        @(Html.Render<IAuditEventFiltersUI>().ForAllKinds( "Filters" ))
+    </div>
+    <div class="Buttons">
+        <input type="submit" value="Run Report" class="ui-standard-button" />
+    </div>
+</div>
+}

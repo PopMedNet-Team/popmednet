@@ -1,0 +1,328 @@
+﻿[
+    //Select Age, COUNT(SEX) AS Sex from X GROUP BY Age
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                //grouped by Age value because no aggregate and no stratifier
+                {
+                    "FieldName": "Sex",
+                    "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                    "StratifyBy": null,
+                    "Aggregate": 1, //aggregate by Count
+                    "Select": [ ],
+                    "OrderBy": 0
+                },
+                {
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": null,
+                    "Aggregate": null,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+
+            ]
+        }
+    },
+
+    //SELECT AgeGroup, COUNT(*) FROM (
+    //  SELECT ROUND(DATEDIFF(YEAR, BIRTH_DATE, SysDateTime()) / 10, 0) as AgeGroup FROM Demographic
+    //) cohort
+    //GROUP BY AgeGroup
+
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                {
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": null,
+                    "Aggregate": 1,
+                    "Select": [ ],
+                    "OrderBy": 0
+                },
+                {
+                    //automatically group by this field because it doesn't have an aggregate specified
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": 10,
+                    "Aggregate": null,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+
+
+            ]
+        }
+    },
+
+    //  SELECT ROUND(DATEDIFF(YEAR, BIRTH_DATE, SysDateTime()) / 10, 0) as AgeGroup FROM Demographic
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                {
+                    //automatically group by this field because it doesn't have an aggregate specified
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": 10,
+                    "Aggregate": null,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+            ]
+        }
+    },
+
+    //SELECT COUNT(*) as Age FROM Demographics {criteria}
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                {
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": null,
+                    "Aggregate": 1,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+            ]
+        }
+    },
+
+    //SELECT AgeGroup, COUNT(*) FROM (
+    //  SELECT ROUND(DATEDIFF(YEAR, BIRTH_DATE, SysDateTime()) / 10, 0) as AgeGroup FROM Demographic
+    //) cohort
+    //GROUP BY AgeGroup
+
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                {
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": null,
+                    "Aggregate": 1,
+                    "Select": [ ],
+                    "OrderBy": 0
+                },
+                {
+                    //automatically group by this field because it doesn't have an aggregate specified
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": 10,
+                    "Aggregate": null,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+
+
+            ]
+        }
+    },
+
+    //SELECT AgeGroup, COUNT(*) FROM (
+    //  SELECT ROUND(DATEDIFF(YEAR, BIRTH_DATE, SysDateTime()) / 10, 0) as AgeGroup FROM Demographic
+    //) cohort
+    //GROUP BY AgeGroup
+
+    {
+        "Header":
+        {
+            "Name": "28 and Younger Stratified by Sex"
+        },
+        "Where":
+        {
+            "Criteria":
+            [
+                {
+                    "Name": "Group 1",
+                    "Criteria": [ ],
+                    "Terms":
+                    [
+                        {
+                            "Operator": 0,
+                            "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                            "Values":
+                            {
+                                "MinAge": null,
+                                "MaxAge": 28
+                            },
+                            "Criteria": [ ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "Select":
+        {
+            "Fields":
+            [
+                {
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": null,
+                    "Aggregate": 1,
+                    "Select": [ ],
+                    "OrderBy": 0
+                },
+                {
+                    //automatically group by this field because it doesn't have an aggregate specified
+                    "FieldName": "Age",
+                    "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                    "StratifyBy": 10,
+                    "Aggregate": null,
+                    "Select": [ ],
+                    "OrderBy": 0
+                }
+
+
+            ]
+        }
+    },
+
+]

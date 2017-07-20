@@ -1,0 +1,27 @@
+.Response .RequestHeader #ExportButton  
+{
+    width: 250px;
+    vertical-align: top;
+}
+
+#ExportFormats {
+	display: none;
+	position: absolute;
+	border: 1px solid black;
+	background: white;
+	padding: 10px;
+	text-align: left;
+}
+
+#ExportFormats a:link, #ExportFormats a:visited {
+	display: block;
+	text-decoration: none;
+	color: Black;
+	width: 150px;
+	min-width: 150px;
+}
+
+#ExportFormats a:hover {
+	color: white;
+	background: navy;
+}

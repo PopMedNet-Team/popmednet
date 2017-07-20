@@ -1,0 +1,14 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.YearID">
+    <div class="row">
+        <div class="col-sm-2"><h4 id="lblVisits" class="TermHeader" style="font-weight:bold;">Year</h4></div>
+        <div class="col-sm-4 form-group">
+            <input type="text" id="cboGenderGroupBy" name="cboGenderGroupBy" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: Dns.Enums.PeriodStratificationTranslation, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'}" style="width: 250px;" />
+        </div>
+        <div class="col-sm-4 form-group">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteVisitField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

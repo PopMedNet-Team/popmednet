@@ -1,0 +1,35 @@
+.OpenIdExplicitUsername
+{
+    display: none;
+    position: absolute;
+}
+
+a.OpenIdLogin
+{
+    height: 40px;
+    width: 110px;
+    display: inline-block;
+}
+
+a.OpenIdLogin > img
+{
+    height: 37px;
+    width: 90px;
+    border: 1px solid gray;
+    padding: 5px 10px;
+    -webkit-box-shadow: 2px 2px 4px #ddd;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+}
+
+a:hover.OpenIdLogin > img
+{
+    -webkit-box-shadow: none;
+    margin-left: 2px;
+    margin-top: 2px;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+.OpenIdLogins  { text-align: left; margin: 20px 0; }

@@ -1,0 +1,41 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker Race",
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=8c09f3e3-a4c1-436c-a159-a4f401094987"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "fdb608a8-dd63-47e5-b38e-6fda28046fa8",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "010414ac-1f22-488f-b948-be0c673cfee2",
+                        "Values": { "Races": [ "1","5" ] },
+                        "Criteria": [ ]
+
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "5CA5940A-CF8B-48CC-836C-66B2EB97AFB3" },
+                        "Criteria": [ ]
+                    
+                    }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+
+}

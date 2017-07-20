@@ -1,0 +1,80 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    <div id="ResponseViewHeader">
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    <div id="pdx_overall" class="metricview" data-bind="visible: (SelectedMetric().value === 0)">
+        <div data-bind="visible:HasResults">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <!-- ko foreach: EncounterTypes -->
+                            <th class="overallmetric-header" data-bind="text: EncType_Display" colspan="2" style="white-space:nowrap;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+                            <th>PDX</th>
+                            <!-- ko foreach: EncounterTypes -->
+                            <th class="overallmetric-header">N</th>
+                            <th class="overallmetric-header">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: OverallMetrics, as: 'item' }">
+                        <tr>
+                            <td class="overallmetric-body" data-bind="text: item.PDX_Display"></td>
+                            <!-- ko foreach: { data: item.Encounters, as: 'encounter'} -->
+                            <td class="overallmetric-body numbers" data-bind="text: encounter.Count"></td>
+                            <td class="overallmetric-body percent" data-bind="text: Global.Helpers.ToPercent(encounter.Count, encounter.Total)"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="OverallMetricsChart" data-bind="pdxPercentChart: { data: OverallMetrics, encounterTypes: EncounterTypes, overallSeriesLabels: OverallSeriesLabels, overallTicks: OverallTicks, jqCharts: JQCharts, title: 'PDX Distribution by Encounter Type among Selected Data Partners*' }" class="overallmetric_barchart" style="width:100%;"></div>
+            <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <div id="pdx_percentwithindp" class="metricview" data-bind="visible: (SelectedMetric().value === 1)">
+        <div data-bind="visible:HasResults">
+            <!-- ko foreach: { data: PercentWithinDataPartner, as: 'dp' }-->
+            <div class="table-container">
+                <table>
+                    <caption data-bind="text: dp.DP" style="text-align:right;font-weight:bold;"></caption>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <!-- ko foreach: $parent.EncounterTypes -->
+                            <th data-bind="text: EncType_Display" colspan="2" style="text-align:right;white-space:nowrap;"></th>
+                            <!-- /ko -->
+                        </tr>
+                        <tr>
+                            <th>PDX</th>
+                            <!-- ko foreach: $parent.EncounterTypes -->
+                            <th style="text-align:right;">N</th>
+                            <th style="text-align:right;">%</th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: { data: dp.PDX, as: 'item' }">
+                        <tr>
+                            <td style="text-align:right;" data-bind="text: item.PDX_Display"></td>
+                            <!-- ko foreach: { data: item.Encounters, as: 'encounter'} -->
+                            <td data-bind="text: encounter.Count" class="numbers"></td>
+                            <td data-bind="text: Global.Helpers.ToPercent(encounter.Count, encounter.Total)" class="percent"></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-bind="attr: { id: 'pdx_percent_' + dp.DP }, pdxPercentChart: { data: dp.PDX, encounterTypes: $parent.EncounterTypes, overallSeriesLabels: $parent.OverallSeriesLabels, overallTicks: $parent.OverallTicks, jqCharts: $parent.JQCharts, title: 'PDX Distribution by Encounter Type within ' + dp.DP }" class="overallmetric_barchart" style="width:100%;"></div>
+            <!-- /ko -->
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <!-- /ko -->
+</div>
