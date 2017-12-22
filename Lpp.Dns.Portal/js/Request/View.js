@@ -63,6 +63,42 @@ var Request;
                     });
                 });
                 self.CanOverrideRoutingStatus = ko.computed(function () { return self.OverrideableRoutings().length > 0; });
+                //this.AggregationModes = [{ ID: 'proj', Name: 'Projected View' }, { ID: 'dont', Name: 'Individual View' }, { ID: 'do', Name: 'Aggregate View' }]; 
+                self.incompleteRoutesSelectAll = ko.pureComputed({
+                    read: function () {
+                        return self.IncompleteRoutings().length > 0 && self.SelectedRoutings().length === self.IncompleteRoutings().length;
+                    },
+                    write: function (value) {
+                        if (value) {
+                            var allID = ko.utils.arrayMap(self.IncompleteRoutings(), function (i) { return i.ID; });
+                            self.SelectedRoutings(allID);
+                        }
+                        else {
+                            self.SelectedRoutings([]);
+                        }
+                    }
+                });
+                self.onIncompleteRoutingsDataBound = function (e) {
+                    var header = e.sender.thead[0];
+                    ko.cleanNode(header);
+                    ko.applyBindings(self, header);
+                };
+                self.IncompleteRoutingGridConfig = {
+                    data: self.Routings,
+                    rowTemplate: 'routings-row-template',
+                    altRowTemplate: 'routings-altrow-template',
+                    useKOTemplates: true,
+                    dataBound: self.onIncompleteRoutingsDataBound,
+                    columns: [
+                        { title: ' ', width: 35, headerTemplate: '<input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedRoutings().length > 0 && SelectedRoutings().length < IncompleteRoutings().length" />' },
+                        { field: 'DataMartName', title: 'DataMart' },
+                        { field: 'Status', title: 'Status' },
+                        { field: 'Priority', title: 'Priority' },
+                        { field: 'DueDate', title: 'Due Date' },
+                        { field: 'Message', title: 'Message' },
+                        { title: ' ', width: 80 }
+                    ]
+                };
             }
             RoutingsViewModel.prototype.onAddDataMart = function () {
                 var _this = this;
@@ -74,20 +110,41 @@ var Request;
                 });
             };
             RoutingsViewModel.prototype.onEditRoutingStatus = function () {
-                Global.Helpers.ShowDialog("Edit Routing Status", "/dialogs/editroutingstatus", ["Close"], 750, 310, { IncompleteDataMartRoutings: this.OverrideableRoutings() })
+                var _this = this;
+                var invalidRoutes = [];
+                var validRoutes = [];
+                ko.utils.arrayForEach(this.SelectedRoutings(), function (id) {
+                    var route = ko.utils.arrayFirst(_this.IncompleteRoutings(), function (r) { return r.ID == id; });
+                    if (route) {
+                        if (ko.utils.arrayFirst(_this.OverrideableRoutingIDs, function (or) { return route.ID == or.ID; }) == null) {
+                            invalidRoutes.push(route);
+                        }
+                        else {
+                            validRoutes.push(route);
+                        }
+                    }
+                });
+                if (invalidRoutes.length > 0) {
+                    //show warning message that invalid routes have been selected.
+                    var msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
+                    msg = msg + invalidRoutes.map(function (ir) { return ir.DataMart; }).join();
+                    msg = msg + "</p></div>";
+                    Global.Helpers.ShowErrorAlert("Invalid DataMarts Selected", msg);
+                    return;
+                }
+                Global.Helpers.ShowDialog("Edit Routing Status", "/dialogs/editroutingstatus", ["Close"], 950, 475, { IncompleteDataMartRoutings: validRoutes })
                     .done(function (result) {
                     for (var dm in result) {
-                        if (result[dm].NewStatus == null) {
+                        if (result[dm].NewStatus == null || result[dm].NewStatus <= 0) {
                             Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.");
                             return;
                         }
                     }
-                    var dataMarts = result;
                     if (dm == undefined) {
                         return;
                     }
                     else {
-                        Dns.WebApi.Requests.UpdateRequestDataMarts(dataMarts).done(function () {
+                        Dns.WebApi.Requests.UpdateRequestDataMarts(result).done(function () {
                             window.location.reload();
                         });
                     }
@@ -107,6 +164,7 @@ var Request;
                         if (result.UpdateDueDate) {
                             newDueDate = result.DueDateValue;
                         }
+                        // update selected datamarts here
                         _this.Routings().forEach(function (dm) {
                             if (_this.SelectedRoutings().indexOf(dm.RequestDataMartID) != -1) {
                                 if (newPriority != null) {
@@ -133,6 +191,10 @@ var Request;
             };
             RoutingsViewModel.prototype.ConvertDateToLocal = function (date) {
                 return moment(moment(date).format("M/D/YYYY h:mm:ss A UTC")).local().format('M/D/YYYY h:mm:ss A');
+                // Moment and Javascript appears to treat ASP.net Date as localtime as it has no TZ embedded.
+                //var b = moment(date);
+                //b.local();
+                //return b.format('M/D/YYYY h:mm:ss A');
             };
             RoutingsViewModel.prototype.onView = function () {
                 View.vmRoutings.DisplayResultsClicked('true');
@@ -144,6 +206,7 @@ var Request;
                 $('#frmRoutings').submit();
             };
             RoutingsViewModel.prototype.onReject = function () {
+                //capture reject message and submit form
                 var message = prompt('Please enter rejection message', '');
                 if (message == null || message == '')
                     return false;
@@ -152,6 +215,7 @@ var Request;
                 return true;
             };
             RoutingsViewModel.prototype.onResubmit = function () {
+                //capture message and submit form
                 var message = prompt('Please enter resubmit message', '');
                 if (message == null || message == '')
                     return false;
@@ -159,6 +223,7 @@ var Request;
                 return true;
             };
             RoutingsViewModel.prototype.onGroup = function () {
+                //capture group name and submit
                 var message = prompt('Please specify a name for this group', '');
                 if (message == null || message == '')
                     return false;
@@ -292,3 +357,4 @@ var Request;
         View.VirtualResponseViewModel = VirtualResponseViewModel;
     })(View = Request.View || (Request.View = {}));
 })(Request || (Request = {}));
+//# sourceMappingURL=View.js.map

@@ -1,3 +1,5 @@
+/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var NDC;
@@ -35,6 +37,7 @@ var DataChecker;
                     }); }).ToArray();
                     self.HasResults = self.CountByDataPartner.length > 0;
                     self.isLoaded(true);
+                    //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
                 }).fail(function (error) {
                     alert(error);
@@ -46,3 +49,4 @@ var DataChecker;
         NDC.ViewModel = ViewModel;
     })(NDC = DataChecker.NDC || (DataChecker.NDC = {}));
 })(DataChecker || (DataChecker = {}));
+//# sourceMappingURL=NDCResponse.js.map

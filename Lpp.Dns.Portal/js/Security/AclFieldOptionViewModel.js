@@ -1,3 +1,4 @@
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Security;
 (function (Security) {
     var Acl;
@@ -105,6 +106,7 @@ var Security;
                         Global.Helpers.ShowConfirm("Confirmation", "<p>Are you sure that you want to remove the selected security group?</p>").done(function () {
                             self.Acls().forEach(function (a) {
                                 if (a.SecurityGroupID().toLowerCase() == self.SelectedSecurityGroupID().toLowerCase()) {
+                                    //set the permission to Inherit - this will delete the permission and not re-add with an explicit value.
                                     a.Permission(Dns.Enums.FieldOptionPermissions.Inherit);
                                 }
                             });
@@ -185,7 +187,14 @@ var Security;
                         });
                     }
                     this.Allowed.subscribe(function (value) {
+                        //This is hackery because of a bug in computeds in knockout where they're not firing updates unless the observable is inside this class.               
+                        //var acls = self.VM.Acls().filter((a) => {
+                        //return a.Permission() == self.Permission() && a.SecurityGroupID() == self.VM.SelectedSecurityGroup();
+                        //});
                         var acl = null;
+                        //if (acls.length > 0) {
+                        //    acl = acls[0];
+                        //}
                         if (self.VM.IsGlobalEdit) {
                             var acl = ko.utils.arrayFirst(self.VM.Acls(), function (a) { return a.FieldIdentifier().toLowerCase() == self.FieldIdentifier().toLowerCase(); });
                         }
@@ -211,6 +220,7 @@ var Security;
                         }
                     });
                     this.Permission.subscribe(function (value) {
+                        //This is hackery because of a bug in computeds in knockout where they're not firing updates unless the observable is inside this class.               
                         var acls = self.VM.Acls().filter(function (a) {
                             return a.FieldIdentifier().toLowerCase() == self.FieldIdentifier().toLowerCase() && a.SecurityGroupID().toLowerCase() == self.VM.SelectedSecurityGroupID().toLowerCase();
                         });
@@ -237,6 +247,7 @@ var Security;
                         acl.SecurityGroup("");
                         acl.SecurityGroupID(securityGroupID || vm.SelectedSecurityGroupID());
                     }
+                    //Add the other properties to it from the target so that filtering will continue to work.
                     vm.Targets.forEach(function (t) {
                         acl[t.Field] = ko.observable(t.Value);
                     });
@@ -249,3 +260,4 @@ var Security;
         })(FieldOption = Acl.FieldOption || (Acl.FieldOption = {}));
     })(Acl = Security.Acl || (Security.Acl = {}));
 })(Security || (Security = {}));
+//# sourceMappingURL=AclFieldOptionViewModel.js.map

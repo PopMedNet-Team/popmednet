@@ -1,3 +1,4 @@
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Events;
 (function (Events) {
     var Acl;
@@ -92,10 +93,12 @@ var Events;
                         }
                     });
                     if (!hasGroup) {
+                        //Do the add of the group here with an empty Acl
                         self.SecurityGroups.push({
                             ID: node.id,
                             Name: node["Path"]
                         });
+                        //Likely have to force the combo to get new data here.
                         var cboSecurityGroups = $('#cboEventSecurityGroups' + self.Identifier()).data("kendoDropDownList");
                         _this.dsSecurityGroups.data(_this.SecurityGroups);
                         _this.dsSecurityGroups.fetch();
@@ -103,6 +106,7 @@ var Events;
                     }
                     cboSecurityGroups.value(node.id);
                     _this.SelectedSecurityGroup(node.id);
+                    //Close the drop down.
                     $('#btnEventAddSecurityGroup' + self.Identifier()).dropdown('toggle');
                     return false;
                 };
@@ -121,14 +125,17 @@ var Events;
                 });
                 this.RemoveSecurityGroup = function (data) {
                     Global.Helpers.ShowConfirm("Confirmation", "<p>Are you sure that you want to remove the selected security group?</p>").done(function () {
+                        //Remove all of the acls by setting the allowed to null
                         self.Acls().forEach(function (a) {
                             if (a.SecurityGroupID() == self.SelectedSecurityGroup()) {
                                 a.Allowed(null);
                             }
                         });
+                        //Remove the security group by id.
                         self.SecurityGroups.forEach(function (sg, index) {
                             if (sg.ID == self.SelectedSecurityGroup()) {
                                 self.SecurityGroups.splice(index, 1);
+                                //Now refresh the combo etc.
                                 var cboSecurityGroups = $('#cboEventSecurityGroups' + self.Identifier()).data("kendoDropDownList");
                                 _this.dsSecurityGroups.data(_this.SecurityGroups);
                                 _this.dsSecurityGroups.fetch();
@@ -187,6 +194,7 @@ var Events;
                     self.Allowed(!acls || acls.length == 0 || acls[0].Allowed() == null ? "inherit" : acls[0].Allowed() ? "allow" : "deny");
                 });
                 this.Allowed.subscribe(function (value) {
+                    //This is hackery because of a bug in computeds in knockout where they're not firing updates unless the observable is inside this class.               
                     var acls = self.VM.Acls().filter(function (a) {
                         return a.EventID() == self.ID() && a.SecurityGroupID() == self.VM.SelectedSecurityGroup();
                     });
@@ -220,6 +228,7 @@ var Events;
                 acl.Overridden(true);
                 acl.SecurityGroup("");
                 acl.SecurityGroupID(securityGroupID || vm.SelectedSecurityGroup());
+                //Add the other properties to it from the target so that filtering will continue to work.
                 vm.Targets.forEach(function (t) {
                     acl[t.Field] = ko.observable(t.Value);
                 });
@@ -231,3 +240,4 @@ var Events;
         Acl.EventListViewModel = EventListViewModel;
     })(Acl = Events.Acl || (Events.Acl = {}));
 })(Events || (Events = {}));
+//# sourceMappingURL=EditEventPermissions.js.map

@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
     var WFDocuments;
@@ -69,6 +70,8 @@ var Controls;
                         });
                     };
                     self.onNewDocument = function () {
+                        //if request ID is null, show prompt that explains the request needs to be saved first
+                        //if user approves trigger a save, this will cause the page to get reloaded
                         if (self.RequestID == null && self.CurrentTask == null) {
                             Requests.Details.rovm.DefaultResultSave('<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The request needs to be saved before being able to upload a document.</p> <p style="font-size:larger;">Would you like to save the Request now?</p><p><small>(This will cause the page to be reloaded, and you will need to initiate the upload again.)</small></p></div>');
                         }
@@ -95,12 +98,15 @@ var Controls;
                         var revisionSet = vm.SelectedRevisionSet();
                         var document = revisionSet.Current();
                         var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the document</p>' + '<p><strong>' + document.Name + '</strong>?</p></div>';
+                        //if (confirm('Are you sure you want to delete ' + document.FileName + '?')) {
                         Global.Helpers.ShowConfirm("Delete document", message).done(function () {
                             Dns.WebApi.Documents.Delete([document.ID])
                                 .done(function () {
                                 vm.SelectedRevisionSet(null);
+                                //remove the document from the revision set
                                 revisionSet.removeCurrent();
                                 if (revisionSet.Current() == null) {
+                                    //the set has no documents remove from the main grid
                                     var index = vm.DataSource.indexOf(revisionSet);
                                     if (index > -1) {
                                         vm.DataSource.remove(revisionSet);
@@ -113,12 +119,15 @@ var Controls;
                         var revisionSet = self.SelectedRevisionSet();
                         var document = revisionSet.Current();
                         var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the document</p>' + '<p><strong>' + document.Name + '</strong>?</p></div>';
+                        //if (confirm('Are you sure you want to delete ' + document.FileName + '?')) {
                         Global.Helpers.ShowConfirm("Delete document", message).done(function () {
                             Dns.WebApi.Documents.Delete([document.ID])
                                 .done(function () {
                                 self.SelectedRevisionSet(null);
+                                //remove the document from the revision set
                                 revisionSet.removeCurrent();
                                 if (revisionSet.Current() == null) {
+                                    //the set has no documents remove from the main grid
                                     var index = self.DataSource.indexOf(revisionSet);
                                     if (index > -1) {
                                         self.DataSource.remove(revisionSet);
@@ -273,6 +282,7 @@ var Controls;
                     this.add = function (document) {
                         self.Revisions.unshift(document);
                         self.Revisions.sort(function (a, b) {
+                            //sort by version number - highest to lowest, and then date created - newest to oldest
                             if (a.MajorVersion === b.MajorVersion) {
                                 if (a.MinorVersion === b.MinorVersion) {
                                     if (a.BuildVersion === b.BuildVersion) {
@@ -287,6 +297,7 @@ var Controls;
                             }
                             return b.MajorVersion - a.MajorVersion;
                         });
+                        //set the first revision after the sort
                         self.Current(self.Revisions()[0]);
                         self.TaskID = self.Current().ItemID;
                         self.TaskName = self.Current().ItemTitle;
@@ -300,6 +311,7 @@ var Controls;
                     };
                     this.refreshGridDataSource = function () {
                         if (self.gridData) {
+                            //TODO: also need to update the main grid for the current revision name stuff
                             self.gridData.setDataSource(new kendo.data.DataSource({ data: self.Revisions() }));
                         }
                     };
@@ -342,3 +354,4 @@ var Controls;
         })(List = WFDocuments.List || (WFDocuments.List = {}));
     })(WFDocuments = Controls.WFDocuments || (Controls.WFDocuments = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Index.js.map

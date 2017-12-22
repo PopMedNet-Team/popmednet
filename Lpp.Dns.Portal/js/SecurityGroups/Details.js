@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -39,6 +40,7 @@ var SecurityGroups;
                 Global.Helpers.ShowConfirm("Delete Confirmation", "<p>Are you sure you wish to delete this security group?</p>").done(function () {
                     var ownerLink = vm.OwnerLink();
                     Dns.WebApi.SecurityGroups.Delete([vm.SecurityGroup.ID()]).done(function () {
+                        //not using history.back() so that firefox bfcache does not kick in - forcing page to reload.
                         window.location.href = ownerLink;
                     });
                 });
@@ -99,3 +101,4 @@ var SecurityGroups;
         init();
     })(Details = SecurityGroups.Details || (SecurityGroups.Details = {}));
 })(SecurityGroups || (SecurityGroups = {}));
+//# sourceMappingURL=Details.js.map

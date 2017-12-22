@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -37,6 +38,7 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
+                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -48,6 +50,7 @@ var Workflow;
             }(Global.WorkflowActivityViewModel));
             ApproveResponse.ViewModel = ViewModel;
             $(function () {
+                //Override the save function on the page that is already there and inject what's needed.
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 Requests.Details.rovm.RegisterRequestSaveFunction(function (request) {
                     request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
@@ -77,6 +80,7 @@ var Workflow;
                         ko.applyBindings(vm, bindingControl[0]);
                     });
                 });
+                //Bind the view model for the activity
             });
             var RequestDataMartViewModel = (function (_super) {
                 __extends(RequestDataMartViewModel, _super);
@@ -91,3 +95,4 @@ var Workflow;
         })(ApproveResponse = Default.ApproveResponse || (Default.ApproveResponse = {}));
     })(Default = Workflow.Default || (Workflow.Default = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ApproveResonse.js.map

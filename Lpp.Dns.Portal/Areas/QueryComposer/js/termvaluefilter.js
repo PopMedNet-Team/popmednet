@@ -310,11 +310,14 @@ var Plugins;
                         }
                         return selected;
                     };
+                    /*Indicates if the models set for the helper contain the specified model.*/
                     TermValueFilter.prototype.HasModel = function (modelID) {
                         return TermValueFilter.ContainsModel(this._models, modelID);
                     };
+                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.SexValues = function () {
                         var sexTranslations = [];
+                        //Dont include MaleAndFemaleAggregated in the list of Sex Values
                         Dns.Enums.SexStratificationsTranslation.forEach(function (s) {
                             if (s.value != Dns.Enums.SexStratifications.MaleAndFemaleAggregated)
                                 sexTranslations.push(s);
@@ -324,10 +327,12 @@ var Plugins;
                         if (this._containsSummaryTables() == true)
                             return TermValueFilter.GetTranslations(Dns.Enums.SexStratificationsTranslation, [Dns.Enums.SexStratifications.FemaleOnly, Dns.Enums.SexStratifications.MaleOnly, Dns.Enums.SexStratifications.MaleAndFemale, Dns.Enums.SexStratifications.MaleAndFemaleAggregated, Dns.Enums.SexStratifications.Unknown]);
                         if (this._containsPCORnet() == false) {
+                            //models collection does not contain PCORnet, return subset of values. They are the same for Summary Tables and ESP
                             return TermValueFilter.GetTranslations(Dns.Enums.SexStratificationsTranslation, [Dns.Enums.SexStratifications.FemaleOnly, Dns.Enums.SexStratifications.MaleOnly, Dns.Enums.SexStratifications.MaleAndFemale]);
                         }
                         return sexTranslations;
                     };
+                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.SettingsValues = function () {
                         if (this._models.length == 0)
                             return Dns.Enums.SettingsTranslation;
@@ -339,10 +344,11 @@ var Plugins;
                             TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.AN]).forEach(function (i) { return translations.push(i); });
                         }
                         if (this._containsPCORnet()) {
-                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach(function (i) { return translations.push(i); });
+                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach(function (i) { return translations.push(i); });
                         }
                         return translations;
                     };
+                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.RaceValues = function () {
                         if (this._models.length == 0 || this._containsPCORnet())
                             return Dns.Enums.RaceTranslation;
@@ -351,6 +357,7 @@ var Plugins;
                         }
                         return [];
                     };
+                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.RaceEthnicityValues = function () {
                         if (this._models.length == 0)
                             return Dns.Enums.EthnicitiesTranslation;
@@ -359,6 +366,7 @@ var Plugins;
                         }
                         return [];
                     };
+                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.AgeRangeStratifications = function () {
                         if (this._models.length == 0)
                             return Dns.Enums.AgeStratificationsTranslation;
@@ -374,8 +382,10 @@ var Plugins;
                         }
                         return translations;
                     };
+                    /* Confirm all properties exist that have been addd to a template that may not exist on the request json*/
                     TermValueFilter.prototype.ConfirmTemplateProperties = function (request, termTemplates) {
                         var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
+                        //loop through all the terms on all the criteria and make sure each term is up to date
                         for (var i = 0; i < request.Where.Criteria.length; i++) {
                             var criteria = request.Where.Criteria[i];
                             this.ConfirmCriteria(criteria, flattenedTerms);
@@ -433,3 +443,4 @@ var Plugins;
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
+//# sourceMappingURL=termvaluefilter.js.map

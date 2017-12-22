@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../js/_layout.ts" />
 var Tests;
 (function (Tests) {
     var KendoGridFilteringTest;
@@ -66,3 +67,4 @@ var Tests;
         init();
     })(KendoGridFilteringTest = Tests.KendoGridFilteringTest || (Tests.KendoGridFilteringTest = {}));
 })(Tests || (Tests = {}));
+//# sourceMappingURL=KendoGridFilteringTest.js.map

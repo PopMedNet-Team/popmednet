@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -58,6 +59,7 @@ var Workflow;
                                 if (!result.UpdateDueDate) {
                                     newDueDate = null;
                                 }
+                                // update selected datamarts here
                                 self.DataMarts().forEach(function (dm) {
                                     if (self.SelectedDataMartIDs().indexOf(dm.DataMartID) != -1) {
                                         if (result.UpdatePriority) {
@@ -183,6 +185,7 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
+                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -207,6 +210,7 @@ var Workflow;
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                 var uploadViewModel = Requests.Details.rovm.Request.ID() != null ? Controls.WFFileUpload.Index.init($('#DRUpload'), query, modularProgramTermID) : null;
+                //Bind the view model for the activity
                 var bindingControl = $("#DRDistribution");
                 vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
                 $(function () {
@@ -216,3 +220,4 @@ var Workflow;
         })(Distribution = DistributedRegression.Distribution || (DistributedRegression.Distribution = {}));
     })(DistributedRegression = Workflow.DistributedRegression || (Workflow.DistributedRegression = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=Distribution.js.map

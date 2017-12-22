@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../_rootlayout.ts" />
 var RequestType;
 (function (RequestType) {
     var Details;
@@ -16,6 +17,7 @@ var RequestType;
                 self.Templates = templates;
                 self.RequestType = new Dns.ViewModels.RequestTypeViewModel(requestType);
                 self.Template = new Dns.ViewModels.TemplateViewModel(template);
+                //set default template
                 if (self.Template.ComposerInterface() == null)
                     self.Template.ComposerInterface(Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery);
                 self.SelectedModels = ko.observableArray(ko.utils.arrayFilter(requestTypeModels, function (rtm) {
@@ -25,7 +27,7 @@ var RequestType;
                         modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' ||
                         modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' ||
                         modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' ||
-                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154';
+                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154'; //Modular Program
                 }).map(function (item) {
                     return item.DataModelID.toLowerCase();
                 }));
@@ -172,6 +174,7 @@ var RequestType;
                         });
                         $('#tabs').kendoTabStrip().data('kendoTabStrip').bind('show', function (e) {
                             if ($(e.contentElement).has('#txtNotes')) {
+                                //to make the kendo editor initialize correctly it needs to be refreshed when the tab is show
                                 var editor = $('#txtNotes').data('kendoEditor');
                                 editor.refresh();
                             }
@@ -184,3 +187,4 @@ var RequestType;
         init();
     })(Details = RequestType.Details || (RequestType.Details = {}));
 })(RequestType || (RequestType = {}));
+//# sourceMappingURL=Details.js.map

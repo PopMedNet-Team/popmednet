@@ -13,10 +13,10 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
     {
         ZipFile archive = null;
 
-        public void InitializeLogging(Logging.CrossDomainParentAppender parentAppender)
+        public void InitializeLogging(Logging.CrossDomainParentAppender parentAppender, log4net.Core.Level level)
         {
             Logging.CrossDomainChildLoggingSetup loggingSetup = (Logging.CrossDomainChildLoggingSetup)Activator.CreateInstance(typeof(Logging.CrossDomainChildLoggingSetup));
-            loggingSetup.ConfigureAppender(parentAppender);
+            loggingSetup.ConfigureAppender(parentAppender, level);
         }
 
         static log4net.Core.Level TranslateLogLevel(string level)

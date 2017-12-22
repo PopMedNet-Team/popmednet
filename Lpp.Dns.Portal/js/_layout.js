@@ -1,3 +1,4 @@
+/// <reference path="../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Layout;
 (function (Layout) {
     var FooterViewModel = (function () {
@@ -23,13 +24,14 @@ var Layout;
             if (User != null) {
                 if (User.AuthInfo != null) {
                     User.AuthInfo.ID = null;
-                    User.AuthInfo.Password = null;
+                    User.AuthInfo.Authorization = null;
                     User.AuthInfo.UserName = null;
                     User.AuthToken = null;
                     User.AuthInfo = null;
                 }
                 User.ID = null;
                 User.EmployerID = null;
+                User.AuthToken = null;
             }
             Global.Session("MainMenu", null);
             $.removeCookie("Authorization");
@@ -78,3 +80,4 @@ var Layout;
     }
     init();
 })(Layout || (Layout = {}));
+//# sourceMappingURL=_layout.js.map

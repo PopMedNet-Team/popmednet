@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-
+using Lpp.Utilities;
 
 namespace Lpp.Dns.DataMart.Client.Controls
 {
@@ -226,7 +226,15 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     MessageBox.Show("Unable to connect, please verify settings.", "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-            }catch(Exception ex)
+            }
+            catch (TargetInvocationException ex)
+            {
+                if (!ex.InnerException.IsNull() && !ex.InnerException.Message.IsNullOrWhiteSpace())
+                    MessageBox.Show(ex.InnerException.Message, "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                    MessageBox.Show(ex.Message, "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

@@ -137,7 +137,7 @@ module Global {
     export interface ILoginResponse {
         ID: any;
         UserName: string;
-        Password: string;
+        Authorization: string;
         EmployerID?: any;
         Employers: IEmployer[];
         PasswordExpiration: any;
@@ -179,7 +179,7 @@ module Global {
             this.ID = this.AuthInfo.ID;
 
             if (this.AuthInfo.UserName) {
-                this.AuthToken = this.AuthInfo.UserName + ":" + this.AuthInfo.Password;                
+                this.AuthToken = this.AuthInfo.Authorization;
                 this.Employers = this.AuthInfo.Employers || [];
                 //See if there is an employerID. If not and there is only one employer, set it.
                 if (!this.AuthInfo.EmployerID && this.Employers.length > 0)
@@ -199,7 +199,7 @@ module Global {
 
             if (this.AuthToken) {
                 $.ajaxSetup({
-                    headers: { "Authorization": "Basic " + this.AuthToken }
+                    headers: { "Authorization": "PopMedNet " + this.AuthToken }
                 });
             }            
             if (this.SessionExpireMinutes && this.SessionExpireMinutes > 0) {
@@ -232,15 +232,6 @@ module Global {
             });
         }
 
-        public SetLogin(login: string, password: string, userID: any, passwordExpiration: any, employerID?: any) {
-            this.AuthInfo.UserName = login;
-            this.AuthInfo.Password = password;
-            this.AuthInfo.ID = userID;
-            this.AuthInfo.EmployerID = employerID;
-            this.AuthInfo.PasswordExpiration = passwordExpiration;
-            this.Update();
-        }
-
         public Logout() {
             $.ajax({
                 type: "GET",
@@ -248,7 +239,7 @@ module Global {
                 dataType: "json",
             }).done((result) => {
                 this.AuthInfo.ID = null;
-                this.AuthInfo.Password = null;
+                this.AuthInfo.Authorization = null;
                 this.AuthInfo.UserName = null;
                 this.AuthToken = null;
                 this.ID = null;

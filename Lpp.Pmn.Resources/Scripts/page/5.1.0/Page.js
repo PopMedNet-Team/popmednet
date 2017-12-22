@@ -136,7 +136,7 @@ var Global;
             //}
             this.ID = this.AuthInfo.ID;
             if (this.AuthInfo.UserName) {
-                this.AuthToken = this.AuthInfo.UserName + ":" + this.AuthInfo.Password;
+                this.AuthToken = this.AuthInfo.Authorization;
                 this.Employers = this.AuthInfo.Employers || [];
                 //See if there is an employerID. If not and there is only one employer, set it.
                 if (!this.AuthInfo.EmployerID && this.Employers.length > 0)
@@ -154,7 +154,7 @@ var Global;
             this.SessionExpireMinutes = this.AuthInfo.SessionExpireMinutes;
             if (this.AuthToken) {
                 $.ajaxSetup({
-                    headers: { "Authorization": "Basic " + this.AuthToken }
+                    headers: { "Authorization": "PopMedNet " + this.AuthToken }
                 });
             }
             if (this.SessionExpireMinutes && this.SessionExpireMinutes > 0) {
@@ -182,14 +182,6 @@ var Global;
                 window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.");
             });
         };
-        UserInfo.prototype.SetLogin = function (login, password, userID, passwordExpiration, employerID) {
-            this.AuthInfo.UserName = login;
-            this.AuthInfo.Password = password;
-            this.AuthInfo.ID = userID;
-            this.AuthInfo.EmployerID = employerID;
-            this.AuthInfo.PasswordExpiration = passwordExpiration;
-            this.Update();
-        };
         UserInfo.prototype.Logout = function () {
             var _this = this;
             $.ajax({
@@ -198,7 +190,7 @@ var Global;
                 dataType: "json",
             }).done(function (result) {
                 _this.AuthInfo.ID = null;
-                _this.AuthInfo.Password = null;
+                _this.AuthInfo.Authorization = null;
                 _this.AuthInfo.UserName = null;
                 _this.AuthToken = null;
                 _this.ID = null;

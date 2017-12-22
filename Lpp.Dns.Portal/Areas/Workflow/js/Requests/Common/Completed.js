@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -77,6 +78,7 @@ var Workflow;
                         return self.SelectedCompleteResponses().length > 0;
                     });
                     self.VirtualRoutings = [];
+                    //create the virtual routings, do the groups first
                     if (responseGroups.length > 0) {
                         ko.utils.arrayForEach(responseGroups, function (group) {
                             var routing = ko.utils.arrayFirst(self.Routings, function (r) { return r.ResponseGroupID == group.ID; });
@@ -144,6 +146,26 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
+                //Dns.WebApi.Response.CanViewResponses(id)
+                //    .done((canViewResponses: boolean[]) => {
+                //        var viewResponses = canViewResponses[0];
+                //        debugger;
+                //        $.when<any>(
+                //            Dns.WebApi.Requests.RequestDataMarts(id),
+                //            Dns.WebApi.Response.GetResponseGroupsByRequestID(id)
+                //        ).done((
+                //            routings: Dns.Interfaces.IRequestDataMartDTO[],
+                //            responseGroups: Dns.Interfaces.IResponseGroupDTO[]
+                //        ) => {
+                //            console.log('done in completed init called');
+                //            Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+                //            var bindingControl = $('#CompletedTaskView');
+                //            vm = new ViewModel(bindingControl, routings, responseGroups || [], viewResponses);
+                //            ko.applyBindings(vm, bindingControl[0]);
+                //        });
+                //    });
+                //TODO: should be able to pull request datamarts from the root viewmodel
+                //TODO: look at moving canviewresponse
                 $.when(Dns.WebApi.Requests.RequestDataMarts(id).promise(), Dns.WebApi.Response.CanViewResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise()).done(function (routings, canViewResponses, responseGroups) {
                     $(function () {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
@@ -163,3 +185,4 @@ var Workflow;
         })(Completed = Common.Completed || (Common.Completed = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=Completed.js.map

@@ -82,30 +82,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      
-      <PluginFiles Include="$(OutputPath)*.dll;$(OutputPath)*.pdb;$(OutputPath)*.xml">
-        <InProject>false</InProject>
-      </PluginFiles>
-    </ItemGroup>
-    
-    
-    
-  </Target>
-  <Target Name="CreateVersionedZip" AfterTargets="AfterBuild">
-    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(OutputPath)$(AssemblyName).dll">
-      <Output TaskParameter="OutputItems" ItemName="Info" />
-    </MSBuild.ExtensionPack.Framework.Assembly>
-    <PropertyGroup>
-      <PackageIdentifier>Lpp.Dns.DataMart.Model.Sample</PackageIdentifier>
-      <PackageFileName>$(PackageIdentifier).%(Info.FileVersion).zip</PackageFileName>
-      <PackageDeployPath Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">$(SolutionDir)Lpp.Dns.Api\App_Data\</PackageDeployPath>
-      
-      <PackageDeployPath Condition=" '$(Configuration)' == 'Adapters'">C:\Checkouts\Plugins\</PackageDeployPath>
-    </PropertyGroup>
-    <MSBuild.ExtensionPack.Compression.Zip Condition=" ('$(PackageDeployPath)' != '' And $(PackageDeployPath) != '*Undefined*') " TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
-  </Target>
   <Import Project="..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

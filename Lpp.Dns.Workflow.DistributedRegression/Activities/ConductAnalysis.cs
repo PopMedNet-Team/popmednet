@@ -159,7 +159,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     //use the existing response to submit to the analysis center
                     analysisCenterResponse = analysisCenterRouting.Responses.First();
                 }
-                else if (analysisCenterRouting.Status != RoutingStatus.Draft) ;
+                else if (analysisCenterRouting.Status != RoutingStatus.Draft)
                 {
                     analysisCenterRouting.Status = RoutingStatus.Draft;
                 }

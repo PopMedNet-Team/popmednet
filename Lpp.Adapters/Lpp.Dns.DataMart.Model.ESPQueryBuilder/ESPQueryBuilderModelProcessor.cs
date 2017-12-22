@@ -122,6 +122,7 @@ namespace Lpp.Dns.DataMart.Model
         private RequestStatus status = new RequestStatus();
         private DataSet resultDataset;
         private DataSet resultDemoDataset;
+        private DataSet sqlResultDataset;
         private Document[] desiredDocuments;
         private string translatorJARProcessError;
         private string translatorJARProcessOutput;
@@ -159,8 +160,6 @@ namespace Lpp.Dns.DataMart.Model
             requestProperties = null;
             desiredDocuments = requestDocuments;
             this.desiredDocuments = requestDocuments;
-            resultDataset = new DataSet();
-            resultDemoDataset = new DataSet();
             status.Code = RequestStatus.StatusCode.InProgress;
             status.Message = "";
         }
@@ -383,11 +382,21 @@ namespace Lpp.Dns.DataMart.Model
                     DataTable dtSQL = new DataTable();
                     dtSQL.Columns.Add("SQL");
                     dtSQL.Rows.Add(query);
-                    resultDataset.Reset();
-                    resultDataset.Tables.Add(dtSQL);
+                    
+                    sqlResultDataset = new DataSet();
+                    sqlResultDataset.Tables.Add(dtSQL);
+
+                    status.Code = RequestStatus.StatusCode.Complete;
+                    status.Message = "";
+
+                    return;
                 }
                 else
-                { 
+                {
+                    resultDataset = new DataSet();
+                    resultDemoDataset = new DataSet();
+                    sqlResultDataset = null;
+
                     if (Settings == null || Settings.Count == 0)
                         throw new Exception(CommonMessages.Exception_MissingSettings);
 
@@ -492,6 +501,13 @@ namespace Lpp.Dns.DataMart.Model
 
         public Document[] Response(string requestId)
         {
+            if(sqlResultDataset != null)
+            {
+                var documents = new List<Document>();
+                documents.Add(BuildDocument("-1", sqlResultDataset, "ESPResponse.xml", true, true));
+                return documents.ToArray();
+            }
+
             BuildResponseDocuments();
             return responseDocument;
         }
@@ -523,7 +539,18 @@ namespace Lpp.Dns.DataMart.Model
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             // Embed the schema. The schema contains column header information in case no rows are returned.
-            if (documentId == "0" || documentId == "2")
+            if(documentId == "-1")
+            {
+                //View SQL
+                var stream = new MemoryStream();
+                sqlResultDataset.WriteXml(stream, XmlWriteMode.WriteSchema);
+                stream.Seek(0, SeekOrigin.Begin);
+                contentStream = stream;
+
+                sqlResultDataset = null;
+                return;
+            }
+            else if (documentId == "0" || documentId == "2")
             {
                 // XML file format
                 var stream = new MemoryStream();

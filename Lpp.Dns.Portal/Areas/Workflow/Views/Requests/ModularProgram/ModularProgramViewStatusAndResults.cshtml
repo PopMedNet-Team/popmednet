@@ -63,7 +63,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;"></a></th>
+                    <th>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:completedRoutesSelectAll, indeterminateValue:SelectedCompleteRoutings().length > 0 && SelectedCompleteRoutings().length < VirtualRoutings.length" />
+                    </th>
                     <th>DataMart</th>
                     <th>Status</th>
                     <th>Message</th>
@@ -78,7 +80,7 @@
             <tbody data-bind="foreach: VirtualRoutings">
                 <tr>
                     <td><input type="checkbox" data-bind="value: ID, checked:$root.SelectedCompleteRoutings" /></td>
-                    <td><i class="k-icon k-plus" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                    <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
                     <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
                     <td data-bind="html: Messages "></td>
                     <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
@@ -136,7 +138,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;" ></a></th>
+                    <th>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedIncompleteRoutings().length > 0 && SelectedIncompleteRoutings().length < IncompleteRoutings().length" />
+                    </th>
                     <th>DataMart</th>
                     <th>Status</th>
                     <th>Priority</th>

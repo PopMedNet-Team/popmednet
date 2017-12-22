@@ -3,6 +3,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/requests/details.ts" />
+/// <reference path="../../../../js/_layout.ts" />
+/// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -58,7 +61,9 @@ var Controls;
                             return false;
                         }
                         item.Selected(true);
+                        //See if we have any with this path. If not, load it
                         if (!item.Loaded()) {
+                            //Load data for the given path.                
                             self.sFtpLoadPath(item, self.Credentials);
                         }
                         else {
@@ -155,6 +160,7 @@ var Controls;
                         Password: data.sFtpPassword(),
                         Port: data.sFtpPort()
                     };
+                    //Do an ajax call to validate the server credentials
                     $.ajax({
                         url: "/controls/wffileupload/VerifyFTPCredentials",
                         type: "POST",
@@ -209,3 +215,4 @@ var Controls;
         })(ForTask = WFFileUpload.ForTask || (WFFileUpload.ForTask = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=ForTask.js.map

@@ -14,7 +14,6 @@ using System.Web;
 using Lpp.Dns.Data;
 using System.Threading.Tasks;
 using Lpp.Utilities.WebSites.Models;
-using Lpp.Dns.WebSites;
 using Lpp.Dns.DTO;
 using Lpp.Utilities;
 
@@ -125,12 +124,6 @@ namespace Lpp.Dns.Portal.Controllers
                     user.FailedLoginCount = 0;
                 }
 
-                //TODO: check the security privilege
-                //if (!Security.HasPrivilege(VirtualSecObjects.Portal, user, SecPrivileges.Portal.Login))
-                //{
-                //    errors += "Your account has been locked. Please contact your administrator.";
-                //}
-
                 if (!user.Active)
                 {
                     errors += "Account not active. Please contact your administrator";
@@ -144,18 +137,9 @@ namespace Lpp.Dns.Portal.Controllers
             }
 
             Auth.SetCurrentUser(user, AuthenticationScope.WebSession);
+
             var expireMinutes = WebConfigurationManager.AppSettings["SessionExpireMinutes"];
-            var cookie = new LoginResponseModel
-            {
-                UserName = user.UserName,
-                Password = password,
-                ID = user.ID,
-                EmployerID = user.OrganizationID,
-                Token = Lpp.Utilities.Crypto.EncryptStringAES(DateTime.UtcNow.AddMinutes(Convert.ToInt32(expireMinutes)).ToString("s"), System.Web.HttpContext.Current.Request.Url.DnsSafeHost, LppDnsAuthorize.Salt),
-                PasswordExpiration = user.PasswordExpiration,
-                SessionExpireMinutes = expireMinutes.ToInt32()
-            };
-            var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(cookie);
+            var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(new LoginResponseModel(user, password, user.OrganizationID, user.PasswordExpiration, expireMinutes.ToInt32()));
             var authCookie = new HttpCookie("Authorization", sModel)
             {
                 Shareable = false,
@@ -163,8 +147,6 @@ namespace Lpp.Dns.Portal.Controllers
             };
 
             Response.Cookies.Add(authCookie);
-
-            Response.Cookies.Add(new HttpCookie("BasicAuth", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userName + ":" + password))));
 
             return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? "~/" : returnUrl);
 
@@ -176,6 +158,7 @@ namespace Lpp.Dns.Portal.Controllers
         {
             if (Auth.CurrentUser != null) 
                 return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? "~/" : returnUrl);
+
             using (var client = new Lpp.Dns.ApiClient.DnsClient(WebConfigurationManager.AppSettings["ServiceUrl"]))
             {
                 UserDTO contact = null;
@@ -203,29 +186,21 @@ namespace Lpp.Dns.Portal.Controllers
 
                     ModelState.AddModelError("Error", msg);
                 }
+
                 if (!ModelState.IsValid)
                     return View("~/Views/Home/Login.cshtml", new LoginModel { ReturnUrl = returnUrl });
+
                 User user = await DataContext.Users.FindAsync(contact.ID);
                 Auth.SetCurrentUser(user, AuthenticationScope.WebSession);
 
                 var expireMinutes = WebConfigurationManager.AppSettings["SessionExpireMinutes"];
                 if (string.IsNullOrWhiteSpace(expireMinutes))
                     expireMinutes = "30";
+                
 
-                var cookie = new LoginResponseModel
-                {
-                    UserName = user.UserName,
-                    Password = password,
-                    ID = user.ID,
-                    EmployerID = user.OrganizationID,
-                    Token = Crypto.EncryptStringAES(DateTime.UtcNow.AddMinutes(Convert.ToInt32(expireMinutes)).ToString("s"), System.Web.HttpContext.Current.Request.Url.DnsSafeHost, LppDnsAuthorize.Salt),
-                    PasswordExpiration = user.PasswordExpiration,
-                    SessionExpireMinutes = expireMinutes.ToInt32()
-                };
-
-                var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(cookie);
+                var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(new LoginResponseModel(user, password, user.OrganizationID, user.PasswordExpiration, Convert.ToInt32(expireMinutes)));
                 var authCookie = new HttpCookie("Authorization", sModel)
-                {
+                {                    
                     Shareable = false,
                     Expires = DateTime.MinValue,
                 };
@@ -297,19 +272,9 @@ namespace Lpp.Dns.Portal.Controllers
             var expireMinutes = WebConfigurationManager.AppSettings["SessionExpireMinutes"];
             if (string.IsNullOrWhiteSpace(expireMinutes))
                 expireMinutes = "30";
+            
 
-            var cookie = new LoginResponseModel
-            {
-                UserName = user.UserName,
-                Password = newPassword,
-                ID = user.ID,
-                EmployerID = user.OrganizationID,
-                Token = Crypto.EncryptStringAES(DateTime.UtcNow.AddMinutes(Convert.ToInt32(expireMinutes)).ToString("s"), System.Web.HttpContext.Current.Request.Url.DnsSafeHost, LppDnsAuthorize.Salt),
-                PasswordExpiration = user.PasswordExpiration,
-                SessionExpireMinutes = expireMinutes.ToInt32()
-            };
-
-            var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(cookie);
+            var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(new LoginResponseModel(user, newPassword, user.OrganizationID, user.PasswordExpiration, expireMinutes.ToInt32()));
             var authCookie = new HttpCookie("Authorization", sModel)
             {
                 Shareable = false,

@@ -121,6 +121,7 @@ var Workflow;
                         _this.Section6Visible(!_this.Section6Visible());
                     };
                     _this.AbortRejectMessage = ko.observable("");
+                    //this.ScreenPermissions = this.Parameters.screenPermissions;
                     _this.ScreenPermissions = null;
                     _this.MPFormData = new Dns.ViewModels.RequestFormViewModel();
                     $.when(Dns.WebApi.Tasks.GetWorkflowActivityDataForRequest(_this.Parameters.Requestid, "A96FBAD0-8FD8-4D10-8891-D749A71912F8").done(function (results) {
@@ -146,10 +147,12 @@ var Workflow;
                             _this.Section5Visible(!_this.Section5Visible());
                         }
                     }));
+                    //Section 1
                     _this.Section1Visible = ko.observable(true);
                     _this.FDACenter = new kendo.data.DataSource({
                         data: [{ FDACenterName: "CBER", FDACenterValue: "CBER" }, { FDACenterName: "CDER", FDACenterValue: "CDER" }, { FDACenterName: "CDRH", FDACenterValue: "CDRH" }, { FDACenterName: "OMP", FDACenterValue: "OMP" }]
                     });
+                    //Section 2
                     _this.Section2Visible = ko.observable(true);
                     _this.QueryLevel = new kendo.data.DataSource({
                         data: [{ QueryLevelName: "Level 1 MP", QueryLevelValue: "Level 1 MP Request" }, { QueryLevelName: "Level 2 MP", QueryLevelValue: "Level 2 MP Request" }, { QueryLevelName: "Level 3 PROMPT", QueryLevelValue: "Level 3 PROMPT Request" }]
@@ -169,16 +172,20 @@ var Workflow;
                     _this.CoverageType = new kendo.data.DataSource({
                         data: [{ CoverageName: "Medical coverage", CoverageValue: "Medical coverage" }, { CoverageName: "Drug coverage", CoverageValue: "Drug coverage" }, { CoverageName: "Medical and drug coverage", CoverageValue: "Medical and drug coverage" }]
                     });
+                    //Section 3
                     _this.Section3AVisible = ko.observable(false);
                     _this.Section3BVisible = ko.observable(false);
                     _this.Section3CVisible = ko.observable(false);
+                    //Section 4
                     _this.Section4Visible = ko.observable(false);
                     _this.Section4NextButton = ko.observable(false);
                     _this.Section4FinishButton = ko.observable(false);
+                    //Section 5
                     _this.Section5Visible = ko.observable(false);
                     _this.MasterYesNo = new kendo.data.DataSource({
                         data: [{ MasterYesNoName: "Yes", MasterYesNoValue: "Yes" }, { MasterYesNoName: "NO", MasterYesNoValue: "NO" }]
                     });
+                    //Section 6
                     _this.Section6Visible = ko.observable(false);
                     _this.hdPSAnalysis = new kendo.data.DataSource({
                         data: [{ hdPSAnalysisName: "Yes", hdPSAnalysisValue: "Yes" }, { hdPSAnalysisName: "NO", hdPSAnalysisValue: "NO" }]
@@ -214,9 +221,12 @@ var Workflow;
                 $('select').attr('disabled', '');
                 $('div').attr('disabled', '');
                 $('textarea').attr('disabled', '');
+                //$('*').attr('readonly', '');
+                //bindingControl.attr('disabled');
             }
             RequestForm.init = init;
             init();
         })(RequestForm = ModularProgram.RequestForm || (ModularProgram.RequestForm = {}));
     })(ModularProgram = Workflow.ModularProgram || (Workflow.ModularProgram = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=RequestFormDialog.js.map

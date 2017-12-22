@@ -58,6 +58,7 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
 
             try
             {
+                log4net.Repository.Hierarchy.Hierarchy hierachy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository(); 
                 log.Debug("Creating domain proxy for AppDomain: " + _appDomainName);
                 //create the domain proxy
                 Type proxyType = typeof(AssemblyLoadProxy);
@@ -75,7 +76,7 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
                 _loadProxy.LoadPackage(_packagePath);
 
                 log.Debug("Initializing cross-domain logging for AppDomain: " + _appDomainName);
-                _loadProxy.InitializeLogging(new Logging.CrossDomainParentAppender());
+                _loadProxy.InitializeLogging(new Logging.CrossDomainParentAppender(), hierachy.Threshold);
             }
             catch (Exception ex)
             {

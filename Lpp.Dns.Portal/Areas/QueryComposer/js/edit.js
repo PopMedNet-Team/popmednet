@@ -1,8 +1,15 @@
+/// <reference path="../../../js/_rootlayout.ts" />
+/// <reference path="termvaluefilter.ts" />
+/// <reference path="../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+//ko.components.register('MDQ', {
+//    viewModel: { require: Plugins.Requests.QueryBuilder.MDQ.vm },
+//        template: { require: '<span>...</span>' }
+//});
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -56,6 +63,7 @@ var Plugins;
                                     Edit.vm.fileUpload(true);
                                     var fileUploadID = "2F60504D-9B2F-4DB1-A961-6390117D3CAC";
                                     Edit.vm.UploadViewModel = Controls.WFFileUpload.Index.init($('#FileUploadControl'), rawRequestData, fileUploadID);
+                                    //vm.UploadViewModel = Controls.WFFileUpload.ForTask.init($("#FileUploadControl"), tasks);
                                     Edit.vm.fileUploadDMLoad();
                                     promise.resolve();
                                 }
@@ -76,3 +84,4 @@ var Plugins;
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
+//# sourceMappingURL=edit.js.map

@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -150,14 +151,14 @@ var Workflow;
                 ViewModel.prototype.OpenChildDetail = function (id) {
                     var img = $('#img-' + id);
                     var child = $('#response-' + id);
-                    if (img.hasClass('k-plus')) {
-                        img.removeClass('k-plus');
-                        img.addClass('k-minus');
+                    if (img.hasClass('k-i-plus-sm')) {
+                        img.removeClass('k-i-plus-sm');
+                        img.addClass('k-i-minus-sm');
                         child.show();
                     }
                     else {
-                        img.addClass('k-plus');
-                        img.removeClass('k-minus');
+                        img.addClass('k-i-plus-sm');
+                        img.removeClass('k-i-minus-sm');
                         child.hide();
                     }
                 };
@@ -212,3 +213,4 @@ var Workflow;
         })(ConductAnalysis = DistributedRegression.ConductAnalysis || (DistributedRegression.ConductAnalysis = {}));
     })(DistributedRegression = Workflow.DistributedRegression || (Workflow.DistributedRegression = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ConductAnalysis.js.map

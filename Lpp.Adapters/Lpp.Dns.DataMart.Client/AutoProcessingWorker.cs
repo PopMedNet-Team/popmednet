@@ -45,7 +45,7 @@ namespace Lpp.Dns.DataMart.Client
             _log.Info("Automated processing worker started.");
             while (true)
             {
-                _log.Info("Checking Master Request Queue for requests requiring automated processing.");
+                _log.Debug("Checking Master Request Queue for requests requiring automated processing.");
                 SystemTray.UpdateNotificationIcon(IconType.IconBusy, "Processing Requests");
 
                var reqs = from ns in Configuration.Instance.NetworkSettingCollection.NetWorkSettings.Cast<NetWorkSetting>().ToObservable()
@@ -304,8 +304,10 @@ namespace Lpp.Dns.DataMart.Client
                 foreach (Lpp.Dns.DataMart.Model.Document requestDocument in desiredDocuments)
                 {
                     _log.Info("About to post desired document id: " + requestDocument.DocumentID);
+                    _log.Debug("Downloading document" + requestDocument.Filename);
                     DocumentChunkStream requestDocumentStream = new DocumentChunkStream(Guid.Parse(requestDocument.DocumentID), networkSetting);
                     processor.RequestDocument(requestId, requestDocument.DocumentID, requestDocumentStream);
+                    _log.Debug("Successfully Downloaded document" + requestDocument.Filename);
                     _log.Info("Posted desired document id: " + requestDocument.DocumentID);
                 }
 

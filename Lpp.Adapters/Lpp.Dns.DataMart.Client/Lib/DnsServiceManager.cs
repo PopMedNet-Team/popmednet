@@ -285,6 +285,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to get Datamarts for Network: {0}.", ns.NetworkName), ex);
                 throw new GetDataMartsFailed(ex);
             }
         }
@@ -310,6 +311,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to get Models for DatamartID {1} for Network: {0}.", ns.NetworkName, dataMartID), ex);
                 throw new GetModelsFailed(ex);
             }
         }
@@ -341,6 +343,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to get Datamart Models for Network: {0}.", ns.NetworkName), ex);
                 throw new GetModelsFailed(ex);
             }
         }
@@ -358,6 +361,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to get Document Chunk for Document: {0}.", documentID), ex);
                 throw new GetDocumentChunkFailed(ex);
             }
         }
@@ -368,12 +372,15 @@ namespace Lpp.Dns.DataMart.Lib
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
+                    _log.Debug("Uploading the following documents to Portal : " + String.Join(" ,", documents.Select(x => String.Format("'{0}'", x.Filename))).Remove(0,1));
                     var result = AsyncHelpers.RunSync<IEnumerable<Guid>>(() => web.PostResponseDocuments(new Guid(requestId), dataMartId, documents.Select(d => new Lpp.Dns.DTO.DataMartClient.Document { Name = d.Filename, MimeType = d.MimeType, Size = d.Size, IsViewable = d.IsViewable, Kind = d.Kind })));
+                    _log.Debug("Upload Complete");
                     return result.ToArray();
                 }
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to post Response for Request: {0}.", requestId), ex);
                 throw new PostResponseDocumentsFailed(ex);
             }
         }
@@ -409,6 +416,7 @@ namespace Lpp.Dns.DataMart.Lib
                     }
                     catch (Exception ex)
                     {
+                        _log.Error(string.Format("Unable to post Repsonse Doucument Content for Document: {0}.",documentId), ex);
                         throw new PostResponseDocumentContentFailed(ex);
                     }
 
@@ -435,6 +443,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to set request status for requestID: {0}.", request.Source.ID), ex);
                 throw new SetRequestStatusFailed(ex);
             }
         }
@@ -455,6 +464,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to get requests identifier for Network: {0}.", ns.NetworkName), ex);
                 throw new GetRequestTypeIdentifierException(ex);
             }
         }
@@ -477,6 +487,7 @@ namespace Lpp.Dns.DataMart.Lib
             }
             catch (Exception ex)
             {
+                _log.Error(string.Format("Unable to download package {1} for Network: {0}.", ns.NetworkName, packageIdentifier), ex);
                 throw ex;
             }
         }
@@ -558,7 +569,8 @@ namespace Lpp.Dns.DataMart.Lib
         Run        =   0x01,
         Hold       =   0x02,
         Reject     =   0x04,
-        All        =   Run | Hold | Reject
+        ModifyResults = 0x08,
+        All        =   Run | Hold | Reject | ModifyResults
     }
 
     public class HubRequestStatus

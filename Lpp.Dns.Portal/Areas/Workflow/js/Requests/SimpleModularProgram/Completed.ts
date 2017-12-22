@@ -116,6 +116,7 @@ module Workflow.SimpleModularProgram.Completed{
         public RoutingHistory: KnockoutObservableArray<IHistoryResponseData> = ko.observableArray([]);
         private onShowRoutingHistory: (item: VirtualRoutingViewModel) => void;
         private onShowIncompleteRoutingHistory: (item: Dns.Interfaces.IRequestDataMartDTO) => void;
+        private completedRoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], responses: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], responseSearchTerms: Dns.Interfaces.IRequestSearchTermDTO[], viewResponseDetailPermissions: any[], requestPermissions: any[]) {
             super(bindingControl)
@@ -207,19 +208,33 @@ module Workflow.SimpleModularProgram.Completed{
             self.onShowIncompleteRoutingHistory = (item: Dns.Interfaces.IRequestDataMartDTO) => {
                 showRoutingHistory(item.ID, item.RequestID);
             };
+
+            self.completedRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.CompletedRoutings().length > 0 && self.SelectedCompleteRoutings().length === self.CompletedRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.VirtualRoutings, (i) => { return i.ID; });
+                        self.SelectedCompleteRoutings(allID);
+                    } else {
+                        self.SelectedCompleteRoutings([]);
+                    }
+                }
+            });  
         }
 
         public OpenChildDetail(id: string) {
             var img = $('#img-' + id);
             var child = $('#response-' + id);
-            if (img.hasClass('k-plus')) {
-                img.removeClass('k-plus');
-                img.addClass('k-minus');
+            if (img.hasClass('k-i-plus-sm')) {
+                img.removeClass('k-i-plus-sm');
+                img.addClass('k-i-minus-sm');
                 child.show();
             }
             else {
-                img.addClass('k-plus');
-                img.removeClass('k-minus');
+                img.addClass('k-i-plus-sm');
+                img.removeClass('k-i-minus-sm');
                 child.hide();
             }
         }

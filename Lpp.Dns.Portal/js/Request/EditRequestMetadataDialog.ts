@@ -79,7 +79,7 @@
             //this.DueDate = ko.observable(moment(self.Request.DueDate).toDate());
             this.DueDate = ko.observable(self.Request.DueDate);//
             this.Priority = ko.observable(self.Request.Priority);
-            this.Priorities = new Array({ Name: 'Low', Value: 0 }, { Name: 'Normal', Value: 1 }, { Name: 'High', Value: 2 }, { Name: 'Urgent', Value: 3 });
+            this.Priorities = new Array({ Name: 'Low', Value: 0 }, { Name: 'Medium', Value: 1 }, { Name: 'High', Value: 2 }, { Name: 'Urgent', Value: 3 });
 
             this.ProjectID = ko.observable(self.Request.ProjectID);
             this.PurposeOfUse = ko.observable(self.Request.PurposeOfUse);

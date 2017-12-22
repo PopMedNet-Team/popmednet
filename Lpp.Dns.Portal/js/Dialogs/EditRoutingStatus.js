@@ -18,7 +18,6 @@ var Dialog;
                 self.OriginalStatus = routing.Status;
                 self.NewStatus = ko.observable(null);
                 self.Message = ko.observable(null);
-                self.Selected = ko.observable(false);
             }
             return DataMartsViewModel;
         }());
@@ -31,27 +30,45 @@ var Dialog;
                 self.IncompleteRoutings = incompleteRoutings;
                 self.RoutingsToChange = ko.utils.arrayMap(self.IncompleteRoutings, function (item) { return new DataMartsViewModel(item); });
                 self.ChangeStatusList = new Array({ Status: "Hold", ID: "11" }, { Status: "Completed", ID: "3" }, { Status: "Rejected", ID: "12" }, { Status: "Submitted", ID: "2" });
+                self.bulkChangeMessage = ko.observable(null);
+                self.bulkChangeStatus = ko.observable(null);
+                self.allowBulkChange = ko.pureComputed(function () {
+                    return self.bulkChangeStatus() != null && self.bulkChangeStatus() > 0;
+                });
+                self.canContinue = ko.pureComputed(function () {
+                    for (var i = 0; i < self.RoutingsToChange.length; i++) {
+                        if (self.RoutingsToChange[i].NewStatus() == null || self.RoutingsToChange[i].NewStatus() <= 0) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
                 self.onContinue = function () {
-                    var results = ko.utils.arrayMap(ko.utils.arrayFilter(self.RoutingsToChange, function (item) { return item.Selected(); }), function (item) {
-                        var i = {
+                    var results = ko.utils.arrayMap(self.RoutingsToChange, function (item) {
+                        return {
                             RequestDataMartID: item.RequestDataMartID,
                             DataMartID: item.DataMartID,
                             NewStatus: item.NewStatus(),
                             Message: item.Message()
                         };
-                        return i;
                     });
-                    for (var dm in results) {
-                        if (results[dm].NewStatus == null || results[dm].NewStatus.toString() == "") {
-                            Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.", 500);
-                            return;
-                        }
-                    }
                     self.Close(results);
                 };
                 self.onCancel = function () {
                     self.Close(null);
                 };
+                self.onBulkChange = function () {
+                    ko.utils.arrayForEach(self.RoutingsToChange, function (r) {
+                        r.NewStatus(self.bulkChangeStatus());
+                        r.Message(self.bulkChangeMessage());
+                    });
+                    $('#diaBulkChange').modal('hide');
+                };
+                $('#diaBulkChange').on('show.bs.modal', function (e) {
+                    //reset the bulk change status and message values on open of bulk editor.
+                    self.bulkChangeMessage(null);
+                    self.bulkChangeStatus(null);
+                });
                 return _this;
             }
             return EditRoutingStatusViewModel;
@@ -70,3 +87,4 @@ var Dialog;
         init();
     })(EditRoutingStatus = Dialog.EditRoutingStatus || (Dialog.EditRoutingStatus = {}));
 })(Dialog || (Dialog = {}));
+//# sourceMappingURL=EditRoutingStatus.js.map

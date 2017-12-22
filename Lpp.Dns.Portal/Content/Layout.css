@@ -1,5 +1,4 @@
-﻿html,
-body {
+﻿body {
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -175,4 +174,6 @@ article.tab-body {
   display: block;
   font-size: 1.2em;
 }
-/*# sourceMappingURL=Layout.css.map */
+.overflow-visible {
+  overflow: visible !important;
+}

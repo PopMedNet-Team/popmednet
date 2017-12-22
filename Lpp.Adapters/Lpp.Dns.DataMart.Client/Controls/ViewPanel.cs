@@ -120,12 +120,19 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        public object FileListDataSource
+        public IEnumerable<Document> FileListDataSource
         {
             set
             {
-                FILELIST.DataSource = value;
-                FILELIST.Columns["IsViewable"].ReadOnly = true;
+                bsDocumentList.DataSource = value;
+            }
+        }
+
+        public bool HasDocuments
+        {
+            get
+            {
+                return bsDocumentList.Count > 0;
             }
         }
 
@@ -138,20 +145,26 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 {
                     case "PLAIN":
                         ((RichTextBox) View).Text = (string) value;
+                        lblNoResults.Visible = false;
                         break;
                     case "HTML":
                         html = ((WebBrowser)View).Document.OpenNew(true);
                         html.Write((string)value);
+                        lblNoResults.Visible = false;
                         break;
                     case "URL":
                         URL.Navigate(value.ToString());
+                        lblNoResults.Visible = false;
                         break;
                     case "DATASET":
-                        ((DataGridView)View).DataSource = (DataTable)value;
+                        DataTable data = (DataTable)value;
+                        ((DataGridView)View).DataSource = data;
+                        lblNoResults.Visible = data == null || data.Rows.Count == 0;
                         break;
                     case "XSLXML":
                         html = ((WebBrowser)View).Document.OpenNew(true);
-                        html.Write(TransformToHTML((string)value));                      
+                        html.Write(TransformToHTML((string)value));
+                        lblNoResults.Visible = false;                   
                         break;
                     case "XML":
                         TransformToTreeView((string) value, (TreeView)View);
@@ -162,14 +175,16 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         DataTable dt = (DataTable)TransformJSONToDataTable((string)value);
                         ((DataGridView)View).DataSource = dt;
                         if (dt.Rows.Count <= 0)
+                        {
                             value = null;
+                        }
+                        lblNoResults.Visible = dt == null || dt.Rows.Count <= 0;
                         break;     
                     default:
+                        lblNoResults.Visible = false;
                         break;
                 }
-
-                lblNoResults.Visible = value == null || (value is string && string.IsNullOrEmpty((string) value)) || 
-                                                        (value is DataTable && ((DataTable)value).Rows.Count <= 0);
+                
             }
         }
 
@@ -181,6 +196,8 @@ namespace Lpp.Dns.DataMart.Client.Controls
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlString);
             ConvertXmlNodeToTreeNode(doc, treeXml.Nodes);
+
+            lblNoResults.Visible = treeXml.Nodes.Count == 0;
         }
 
         private void Expand(TreeNode treeNode)
@@ -248,6 +265,8 @@ namespace Lpp.Dns.DataMart.Client.Controls
             {
                 ConvertXmlNodeToTreeNode(childNode, newTreeNode.Nodes);
             }
+
+            
         }
 
         #endregion // XML TreeView
@@ -356,6 +375,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     //PMN-623-DMC: Results View Scrolling laterally. Set the column-width to fit the content of all cells including header cells.
                     ((DataGridView)View).AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                     ((DataGridView)View).DataSource = dataSet.Tables.Count > 0 ? dataSet.Tables[0] : null;
+
                     lblNoResults.Visible = dataSet.Tables.Count <= 0 || dataSet.Tables[0].Rows.Count <= 0;
                     lblNoResults.BringToFront();
 
@@ -438,24 +458,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
         {
             if (View != FILELIST)
             {
-                foreach (DataGridViewColumn column in FILELIST.Columns)
-                {
-                    switch (column.DataPropertyName.ToLower())
-                    {
-                        case "documentid":
-                            column.HeaderText = "Document ID";
-                            break;
-                        case "mimetype":
-                            column.HeaderText = "File Type";
-                            break;
-                        case "isviewable":
-                            column.HeaderText = "Select";
-                            break;
-                    }
-                }
-
                 LastView = View;
                 ShowView = DisplayType.FILELIST;
+                FILELIST.BringToFront();
             }
             else
             {
@@ -480,5 +485,10 @@ namespace Lpp.Dns.DataMart.Client.Controls
             
         }
 
+        protected void RemoveSelectColumn()
+        {
+            FILELIST.Columns.Remove(colDocumentSelected);
+        }
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using log4net;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Lpp.Dns.DataMart.Client.Lib
 
     internal class DnsApiClient : HttpClientEx
     {
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         const string Path = "/DMC";
         const string AdaptersPath = "/Adapters";
 
@@ -32,13 +34,17 @@ namespace Lpp.Dns.DataMart.Client.Lib
 
         public async Task<Lpp.Dns.DTO.DataMartClient.Profile> GetProfile()
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetProfile");
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.Profile>(Path + "/GetProfile");
+            _log.Debug("API Call successfull");
             return result.ReturnSingleItem();
         }
 
         public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartClient.DataMart>> GetDataMarts(string oDataQuery = null)
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetDataMarts");
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.DataMart>(Path + "/GetDataMarts", oDataQuery);
+            _log.Debug("API Call successfull");
             return result.ReturnList();
         }
 
@@ -55,24 +61,29 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 StartIndex = startIndex,
                 MaxCount = maxCount
             };
-
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetRequestList");
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.RequestListCriteria, Lpp.Dns.DTO.DataMartClient.RequestList>(Path + "/GetRequestList", criteria);
             var s = result.ReturnSingleItem();
+            _log.Debug("API Call successfull");
             return s;
         }
 
         public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartClient.Request>> GetRequests(System.Collections.Generic.IEnumerable<System.Guid> ID, Guid? dataMartID, string oDataQuery = null)
         {
             Lpp.Dns.DTO.DataMartClient.Criteria.RequestCriteria criteria = new DTO.DataMartClient.Criteria.RequestCriteria { ID = ID , DatamartID = dataMartID };
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetRequests");
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.RequestCriteria, Lpp.Dns.DTO.DataMartClient.Request>(Path + "/GetRequests", criteria);
+            _log.Debug("API Call successfull");
             return result.ReturnList();
         }
 
         public async Task<System.Collections.Generic.IEnumerable<byte>> GetDocumentChunk(Guid ID, int offset, int size)
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetDocumentChunk?ID=" + (ID == null ? "" : System.Web.HttpUtility.UrlEncode(ID.ToString())) + "&offset=" + (offset == null ? "" : System.Web.HttpUtility.UrlEncode(offset.ToString())) + "&size=" + (size == null ? "" : System.Web.HttpUtility.UrlEncode(size.ToString())));
             var result = await this._Client.GetAsync(this._Host + Path + "/GetDocumentChunk?ID=" + (ID == null ? "" : System.Web.HttpUtility.UrlEncode(ID.ToString())) + "&offset=" + (offset == null ? "" : System.Web.HttpUtility.UrlEncode(offset.ToString())) + "&size=" + (size == null ? "" : System.Web.HttpUtility.UrlEncode(size.ToString())));
             if (result.IsSuccessStatusCode)
             {
+                _log.Debug("API Call successfull");
                 return await result.Content.ReadAsByteArrayAsync();
             }
 
@@ -82,17 +93,21 @@ namespace Lpp.Dns.DataMart.Client.Lib
         public async Task<IEnumerable<Guid>> PostResponseDocuments(Guid requestID, Guid datamartID, IEnumerable<Lpp.Dns.DTO.DataMartClient.Document> documents)
         {
             Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData data = new DTO.DataMartClient.Criteria.PostResponseDocumentsData { DataMartID = datamartID, RequestID = requestID, Documents = documents };
+            _log.Debug("Executing API Call to " + this._Host + Path + "/PostResponseDocuments");
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData, Guid>(Path + "/PostResponseDocuments", data);
+            _log.Debug("API Call Successfull");
             return result.results ?? Enumerable.Empty<Guid>();
         }
 
         public async Task PostResponseDocumentChunk(Guid documentID, IEnumerable<byte> data)
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/PostResponseDocumentChunk?documentID=" + documentID.ToString("D"));
             var result = await this._Client.PutAsync(this._Host + Path + "/PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), new ByteArrayContent(data.ToArray()));
             if (!result.IsSuccessStatusCode)
             {
                 throw new Exception("An error occured during upload of document data: " + result.GetMessage());
             }
+            _log.Debug("API Call Successfull");
         }
 
         public async Task SetRequestStatus(Guid requestID, Guid datamartID, Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus status, string statusMessage, IEnumerable<Lpp.Dns.DTO.DataMartClient.RoutingProperty> properties)
@@ -104,34 +119,41 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 Message = statusMessage,
                 Properties = properties
             };
+            _log.Debug("Executing API Call to " + this._Host + Path + "/SetRequestStatus");
             var result = await this.Put<Lpp.Dns.DTO.DataMartClient.Criteria.SetRequestStatusData>(Path + "/SetRequestStatus", data);
             if (!result.IsSuccessStatusCode)
             {
                 throw new Exception("An error occured while updating the request status: " + result.GetMessage());
             }
+            _log.Debug("API Call successfull");
             
         }
 
         public async Task<string> GetCurrentVersion(string identifier)
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier));
             var result = await this.Get<string>(AdaptersPath + "/GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier));
+            _log.Debug("API Call successfull");
             return result.ReturnSingleItem();
         }
 
         public async Task<Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier> GetRequestTypeIdentifier(Guid modelID, Guid processorID)
         {
+            _log.Debug("Executing API Call to " + this._Host + AdaptersPath + "/GetRequestTypeIdentifier?modelID=" + modelID.ToString("D") + "&processorID=" + processorID.ToString("D"));
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier>(AdaptersPath + "/GetRequestTypeIdentifier?modelID=" + modelID.ToString("D") + "&processorID=" + processorID.ToString("D"));
+            _log.Debug("API Call successfull");
             return result.ReturnSingleItem();
         }
 
         public async Task<System.IO.Stream> GetPackage(Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier packageIdentifier)
         {
+            _log.Debug("Executing API Call to " + this._Host + Path + "/GetPackage?identifier=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Identifier) + "&version=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Version));
             var response = await this._Client.GetAsync(this._Host + AdaptersPath + "/GetPackage?identifier=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Identifier) + "&version=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Version));
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception("An error occurred while trying to download the package:" + packageIdentifier.PackageName() + "/n" + response.ReasonPhrase + "/nStatusCode:" + response.StatusCode.ToString());
             }
-
+            _log.Debug("API Call successfull");
             return await response.Content.ReadAsStreamAsync();
         }
 
@@ -171,7 +193,7 @@ namespace Lpp.Dns.DataMart.Client.Lib
                     Timeout = new TimeSpan(0, 10, 0)
                 };
             }
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11;
             this._Credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + password));
             this._Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _Credentials);
             this._Host = host.TrimEnd("/".ToCharArray());

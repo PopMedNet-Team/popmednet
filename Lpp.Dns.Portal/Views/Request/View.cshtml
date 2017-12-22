@@ -250,22 +250,8 @@
                 <div class="panel-heading">Incomplete Routings</div>
                 <div class="panel-body">
                     <input type="hidden" name="SelectedDataMarts" id="SelectedDataMarts" data-bind="value: SelectedRoutings" />
-                    <div id="gIncompleteRoutings" data-bind="kendoGrid: {
-                                            data: Routings,
-                                                rowTemplate: 'routings-row-template',
-                                                altRowTemplate: 'routings-altrow-template',
-                                                useKOTemplates: true,
-                                            columns:[
-                                                {title: ' ', width: 35 },
-                                                {field: 'DataMartName', title: 'DataMart' },
-                                                {field: 'Status', title: 'Status' },
-                                                {field: 'Priority', title: 'Priority'},
-                                                {field: 'DueDate', title: 'Due Date'},
-                                                {field: 'Message', title: 'Message' },
-                                                {title: ' ', width: 80}
-                                            ]
-                                        }">
-                    </div>
+                    @*Knockout binding configuration is done in ts to support adding bound element to the grid header.*@
+                    <div id="gIncompleteRoutings" data-bind="kendoGrid: IncompleteRoutingGridConfig"></div>
                     <p style="text-align:center;background:#fff;line-height:2em;" data-bind="visible: Routings().length == 0">No Routings</p>
                 </div>
 
@@ -276,7 +262,7 @@
                         <button type="submit" name="RemoveDataMarts" id="RemoveDataMarts" class="btn btn-default" @( Model.Routings.List.Entities.Any(r => r.RequestDataMart.Status != Lpp.Dns.DTO.Enums.RoutingStatus.Canceled) ? "" : "disabled") value="Remove DataMarts">Remove DataMarts</button>
                     }
 
-                        <button style="display: none;" type="button" id="btnEditRoutingStatus" class="btn btn-default" data-bind="visible: CanOverrideRoutingStatus, click: onEditRoutingStatus">Edit Routing Status</button>
+                        <button style="display: none;" type="button" id="btnEditRoutingStatus" class="btn btn-default" data-bind="visible: CanOverrideRoutingStatus, enable:SelectedRoutings().length > 0, click: onEditRoutingStatus">Edit Routing Status</button>
                     @if (Model.AllowMetadataEdit){
                     <button class="btn btn-default pull-right" type="button" id="btnBulkEdit" data-bind="click: onBulkEdit, enable: SelectedRoutings().length > 0">Bulk Edit</button>
                     }

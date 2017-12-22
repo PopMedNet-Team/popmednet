@@ -13,6 +13,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Mail;
 using System.Deployment.Application;
 using System.Reflection;
+using System.IO;
 
 namespace Lpp.Dns.DataMart.Client
 {
@@ -37,7 +38,7 @@ namespace Lpp.Dns.DataMart.Client
 
                 log4net.GlobalContext.Properties["LogFilePath"] = Properties.Settings.Default.LogFilePath;
 
-                XmlConfigurator.Configure();
+                XmlConfigurator.ConfigureAndWatch(new FileInfo(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
                 logWatcher = new LogWatcher(Properties.Settings.Default.LogLevel, Properties.Settings.Default.LogFilePath, dataMartClientId);
                 log.Info("Started DataMart Client Application");
                 SystemInfo.LogUserMachineInfo();

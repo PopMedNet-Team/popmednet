@@ -1,3 +1,4 @@
+/// <reference path="_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -226,6 +227,7 @@ var NetworkBrowser;
             });
             _this.SelectedGroup = function (e) {
                 var data = $('#Grouptreeview').data('kendoTreeView').dataItem(e.node);
+                //console.log(data.id);
                 var url = (data.treenodeurl + data.id);
                 location.href = url;
                 return true;
@@ -282,6 +284,7 @@ var NetworkBrowser;
             });
             _this.SelectedOrganization = function (e) {
                 var data = $('#Organizationtreeview').data('kendoTreeView').dataItem(e.node);
+                //console.log(data.id);
                 var url = (data.treenodeurl + data.id);
                 location.href = url;
                 return true;
@@ -303,3 +306,4 @@ var NetworkBrowser;
     }
     init();
 })(NetworkBrowser || (NetworkBrowser = {}));
+//# sourceMappingURL=_NetworkBrowser.js.map

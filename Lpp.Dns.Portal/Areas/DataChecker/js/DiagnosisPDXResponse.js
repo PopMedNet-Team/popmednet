@@ -1,3 +1,5 @@
+/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var DiagnosesPDX;
@@ -42,6 +44,7 @@ var DataChecker;
                         }, 100);
                     });
                     self.isLoaded(true);
+                    //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
                 }).fail(function (error) {
                     alert(error);
@@ -80,3 +83,4 @@ var DataChecker;
         };
     })(DiagnosesPDX = DataChecker.DiagnosesPDX || (DataChecker.DiagnosesPDX = {}));
 })(DataChecker || (DataChecker = {}));
+//# sourceMappingURL=DiagnosisPDXResponse.js.map

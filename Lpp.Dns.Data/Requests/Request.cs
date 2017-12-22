@@ -498,8 +498,11 @@ namespace Lpp.Dns.Data
                 db.LogsSubmittedrequestNeedsApproval.Add(logItem);
                 logs.Add(logItem);
             }
-
-            if (((RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.Submitted || (RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.Resubmitted) && (obj.State == System.Data.Entity.EntityState.Added || !obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"])))
+            
+            //only send the new request submitted notification at this level when it is the initial submit and it doesn't have to be to specific datamarts.
+            if (((RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.Submitted) && 
+                (obj.State == System.Data.Entity.EntityState.Added || !obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"]))
+               )
             {
 
                 //Submitted Request Awaiting Response
@@ -508,8 +511,8 @@ namespace Lpp.Dns.Data
                     var userID = identity == null ? Guid.Empty : identity.ID;
                     if (dataMart.Status == RoutingStatus.Submitted && !db.LogsSubmittedRequestAwaitsResponse.Any(l => l.UserID == userID && l.RequestID == request.ID))
                     {
-                        if (dataMart.DataMart == null)
-                            dataMart.DataMart = db.DataMarts.Find(dataMart.DataMartID);
+                        if (db.Entry(dataMart).Reference(r => r.DataMart).IsLoaded == false)
+                            db.Entry(dataMart).Reference(r => r.DataMart).Load();
 
                         var logItem = new Audit.SubmittedRequestAwaitsResponseLog
                         {
@@ -526,9 +529,9 @@ namespace Lpp.Dns.Data
                 }
 
                 var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
-
-                if (request.RequestType == null)
-                    request.RequestType = db.RequestTypes.First(rt => rt.ID == request.RequestTypeID);
+                
+                if (db.Entry(request).Reference(r => r.RequestType).IsLoaded == false)
+                    db.Entry(request).Reference(r => r.RequestType).Load();
 
                 //New Request Submitted
                 var newRequestSubmittedLogItem = new Audit.NewRequestSubmittedLog
@@ -1693,7 +1696,8 @@ namespace Lpp.Dns.Data
             }
 
 
-            var logs = await FilterAuditLog(from l in db.LogsNewRequestSubmitted.Include(x => x.Request) select l, db.UserEventSubscriptions, EventIdentifiers.Request.NewRequestSubmitted.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
+            //get only the new request submitted logs for ones generated at the request level (ie datamart not specified on the log item)
+            var logs = await FilterAuditLog(from l in db.LogsNewRequestSubmitted.Include(x => x.Request).Where(l => l.RequestDataMartID == null) select l, db.UserEventSubscriptions, EventIdentifiers.Request.NewRequestSubmitted.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
 
             foreach (var log in logs)
             {

@@ -1,3 +1,5 @@
+/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var DCProcedure;
@@ -56,6 +58,7 @@ var DataChecker;
                     var plotArr = [];
                     $('#OverallMetricsCountChart').addClass(self.OverallMetrics.length > 11 ? "overallmetric_barchart_fullwidth" : "overallmetric_barchart");
                     $('#OverallMetricsCountChart').width(Math.max($('#OverallMetricsChart').width(), self.OverallMetrics.length * 55));
+                    //overall metrics charts
                     var overallCountBarSrc = new DataChecker.ChartSource($.Enumerable.From(self.OverallMetrics).Select(function (x) { return [x.Procedure_Display + ' (' + x.Code_Type + ') ', x.n]; }).ToArray());
                     overallCountBarSrc.title = ' Procedure Code Distribution among Selected Data Partners*';
                     overallCountBarSrc.yaxis_label = 'n';
@@ -73,15 +76,18 @@ var DataChecker;
                     overallPercentPieSrc.title = 'Procedure Code Distribution among Selected Data Partners*';
                     plotArr.push(DataChecker.Charting.plotPieChart($('#OverallMetricsPieChart'), overallPercentPieSrc));
                     var index = 1;
+                    //percent within data partners charts
                     var chartContainer = $('#DataPartnerMetrics');
                     var percentByDataPartnerContainer = $('#DataPartnerMetricsPercent');
                     var percentByDataPartnerContainerPie = $('#DataPartnersMetricsPie');
                     self.CodesByPartner.forEach(function (item) {
                         var id = 'procedures_' + index++;
                         var d = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
+                        //$(d).width(Math.max($(d).width(), codes.length * 55));
                         $(chartContainer).append(d);
                         var id = 'procedures_' + index++;
                         var d2 = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
+                        //$(d2).width(Math.max($(d2).width(), codes.length * 55));
                         $(percentByDataPartnerContainer).append(d2);
                         id = 'procedures_' + index++;
                         var p = $('<div class="halfwidth-piechart-dpp">').attr('id', id);
@@ -103,11 +109,13 @@ var DataChecker;
                         s3.title = 'Procedure Code Distribution within ' + item.Partner;
                         plotArr.push(DataChecker.Charting.plotPieChart(p, s3));
                     });
+                    //percent data partner contribution charts
                     var contributionContainerBar = $('#PercentDataPartnerContribution');
                     var contributionContainerPie = $('#PercentDataPartnerContribution_Pie');
                     self.PartnersByCode.forEach(function (item) {
                         var id = 'contrib_percent_' + index++;
                         var d = $('<div>').attr('id', id).addClass("fullwidth-barchart-dpc");
+                        //$(d).width(Math.max((self.DataPartners.length * 80), 450));
                         $(contributionContainerBar).append(d);
                         id = 'contrib_percent_' + index++;
                         var p = $('<div>').attr('id', id).addClass(self.DataPartners.length > 11 ? "fullwidth-piechart-dpc" : "halfwidth-piechart-dpc");
@@ -142,10 +150,12 @@ var DataChecker;
                         self.chartPlots.forEach(function (chart) {
                             chart.replot({ resetAxes: true });
                         });
+                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     });
                     if (self.HasResults) {
                         self.chartPlots = self.buildCharts(rxProcedurees);
+                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     }
                 }).fail(function (error) {
@@ -158,3 +168,4 @@ var DataChecker;
         DCProcedure.ViewModel = ViewModel;
     })(DCProcedure = DataChecker.DCProcedure || (DataChecker.DCProcedure = {}));
 })(DataChecker || (DataChecker = {}));
+//# sourceMappingURL=ProcedureResponse.js.map

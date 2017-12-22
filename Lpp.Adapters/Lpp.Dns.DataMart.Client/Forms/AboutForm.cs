@@ -11,6 +11,7 @@ namespace Lpp.Dns.DataMart.Client
 {
     public partial class AboutForm : Form
     {
+        RequestListForm _form;
         public bool IsOKVisible
         {
             set
@@ -37,15 +38,20 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
 
-        public AboutForm()
+        public AboutForm(RequestListForm form)
         {
+            _form = form;
             InitializeComponent();
         }
 
         private void AboutForm_Load(object sender, EventArgs e)
         {
-            lblVersion.Text = Application.ProductVersion;
-            lblArch.Text = GetArchitecture();
+            lblVersion.Text = "Version: " + Application.ProductVersion;
+            lblArch.Text = GetArchitecture() + " version";
+
+            //recenter labels
+            lblArch.Left = (this.ClientSize.Width - lblArch.Size.Width) / 2;
+            lblVersion.Left = (this.ClientSize.Width - lblVersion.Size.Width) / 2;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -84,11 +90,6 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://www.popmednet.org");
-        }
-
         private void btnManagePackages_Click(object sender, EventArgs e)
         {
             using (var frm = new DeletePackagesForm())
@@ -96,6 +97,14 @@ namespace Lpp.Dns.DataMart.Client
                 frm.ShowDialog(this);
             }
         }
- 
+
+        private void btnUpdateRefreshRate_Click(object sender, EventArgs e)
+        {
+            using (var frm = new UpdateRefreshRateForm())
+            {
+                frm.ShowDialog(this);
+                _form.RefreshAutoResponse();
+            }
+        }
     }
 }

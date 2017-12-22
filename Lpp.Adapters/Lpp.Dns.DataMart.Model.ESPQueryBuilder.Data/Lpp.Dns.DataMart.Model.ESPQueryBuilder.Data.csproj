@@ -84,16 +84,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      
-      <PluginFiles Include="$(OutputPath)*.dll;$(OutputPath)*.pdb;$(OutputPath)*.xml">
-        <InProject>false</InProject>
-      </PluginFiles>
-    </ItemGroup>
-    
-    <Copy SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="$(SolutionDir)Lpp.Adapters\Lpp.Wbd.AdapterService\$(OutputPath)Plugins" />
-  </Target>
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

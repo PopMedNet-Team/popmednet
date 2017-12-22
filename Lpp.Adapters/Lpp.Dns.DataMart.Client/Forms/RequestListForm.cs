@@ -128,6 +128,19 @@ namespace Lpp.Dns.DataMart.Client
 
         #region Event Handlers
 
+        public void RefreshAutoResponse()
+        {
+            _autoRefresh.CallDispose();
+            
+            var refreshRate = TimeSpan.FromMilliseconds(Properties.Settings.Default.RefreshRate);
+            _autoRefresh = Observable
+                .Timer(DateTimeOffset.Now.Add(refreshRate), refreshRate, new ControlScheduler(this))
+                .Do(_ => { if (cbAutoRefresh.Checked) ReloadAllLists(); })
+                .LogExceptions(log.Error)
+                .Retry()
+                .Subscribe();
+        }
+
         private void RequestListForm_Load(object sender, EventArgs e)
         {
             try
@@ -608,7 +621,7 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                AboutForm aboutDialog = new AboutForm();
+                AboutForm aboutDialog = new AboutForm(this);
 
                 aboutDialog.LogFilePath = (Properties.Settings.Default.LogFilePath == null ? string.Empty : Properties.Settings.Default.LogFilePath);
                 aboutDialog.LogLevel = (Properties.Settings.Default.LogLevel == null ? string.Empty : Properties.Settings.Default.LogLevel);

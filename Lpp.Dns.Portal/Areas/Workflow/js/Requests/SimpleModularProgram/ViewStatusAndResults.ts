@@ -141,6 +141,8 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
         public RoutingHistory: KnockoutObservableArray<IHistoryResponseData> = ko.observableArray([]);
         private onShowRoutingHistory: (item: VirtualRoutingViewModel) => void;
         private onShowIncompleteRoutingHistory: (item: Dns.Interfaces.IRequestDataMartDTO) => void;
+        private completedRoutesSelectAll: KnockoutComputed<boolean>;
+        private incompleteRoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], responses: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], responseSearchTerms: Dns.Interfaces.IRequestSearchTermDTO[], viewResponseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) {
             super(bindingControl, screenPermissions);
@@ -170,7 +172,18 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
                         routing.Status == Dns.Enums.RoutingStatus.RequestRejected || 
                         routing.Status == Dns.Enums.RoutingStatus.ResponseRejectedBeforeUpload ||
                         routing.Status == Dns.Enums.RoutingStatus.ResponseRejectedAfterUpload
-                });
+                }).sort(function (a, b) {
+                        if (a.DataMart > b.DataMart) {
+                            return 1;
+                        }
+                        if (a.DataMart < b.DataMart) {
+                            return -1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                );
             });
 
             self.IncompleteRoutings = ko.observable(
@@ -181,7 +194,18 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
                         routing.Status != Dns.Enums.RoutingStatus.RequestRejected &&
                         routing.Status != Dns.Enums.RoutingStatus.ResponseRejectedBeforeUpload &&
                         routing.Status != Dns.Enums.RoutingStatus.ResponseRejectedAfterUpload
-                })
+                }).sort(function (a, b) {
+                        if (a.DataMart > b.DataMart) {
+                            return 1;
+                        }
+                        if (a.DataMart < b.DataMart) {
+                            return -1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                )
             );
 
             self.HasSelectedCompleteRoutings = ko.computed(() => {
@@ -241,20 +265,50 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
             };
 
             self.onEditRoutingStatusDialog = () => {
-                Global.Helpers.ShowDialog("Select DataMarts to Edit", "/Dialogs/EditRoutingStatus", ["Close"], 750, 310, { IncompleteDataMartRoutings: self.OverrideableRoutings() })
+                let invalidRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+                let validRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+
+                ko.utils.arrayForEach(self.SelectedIncompleteRoutings(), (r) => {
+                    let route = ko.utils.arrayFirst(self.IncompleteRoutings(), (ir) => ir.ID == r);
+                    if (route) {
+                        if (ko.utils.arrayFirst(self.OverrideableRoutingIDs, (or) => route.ID == or.ID) == null) {
+                            invalidRoutes.push(route);
+                        } else {
+                            validRoutes.push(route);
+                        }
+                    }
+                });
+
+                if (invalidRoutes.length > 0) {
+                    //show warning message that invalid routes have been selected.
+                    let msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
+                    msg = msg + invalidRoutes.map(ir => ir.DataMart).join();
+                    msg = msg + "</p></div>";
+                    Global.Helpers.ShowErrorAlert("Invalid DataMarts Selected", msg);
+                    return;
+                }
+
+                Global.Helpers.ShowDialog("Edit DataMart Routing Status", "/Dialogs/EditRoutingStatus", ["Close"], 950, 475, { IncompleteDataMartRoutings: validRoutes })
                     .done((result: any) => {
+
                         for (var dm in result) {
-                            if (result[dm].NewStatus == null) {
+                            //code in this loop should never be hit, handled in EditRoutingStatus.
+                            if (result[dm].NewStatus == null || result[dm].NewStatus == "") {
                                 Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.");
                                 return;
                             }
                         }
-                        if (dm == undefined) { return; } else {
+
+                        if (dm == undefined) {
+                            return;
+                        } else {
                             self.DataMartsToChange(result);
                             self.strDataMartsToChange = JSON.stringify(self.DataMartsToChange());
                             self.PostComplete('3CF0FEA0-26B9-4042-91F3-7192D44F6F7C');
                         }
-                });
+
+
+                    });
             };
 
             self.onDataMartsBulkEdit = () => {
@@ -386,6 +440,33 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
                 //call function on the composer to update routing info
                 this.UpdateRoutings(info);
 
+            });
+
+            self.completedRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.CompletedRoutings().length > 0 &&  self.SelectedCompleteRoutings().length === self.CompletedRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.VirtualRoutings, (i) => { return i.ID; });
+                        self.SelectedCompleteRoutings(allID);
+                    } else {
+                        self.SelectedCompleteRoutings([]);
+                    }
+                }
+            });
+            self.incompleteRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.IncompleteRoutings().length > 0 && self.SelectedIncompleteRoutings().length === self.IncompleteRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.IncompleteRoutings(), (i) => { return i.ID; });
+                        self.SelectedIncompleteRoutings(allID);
+                    } else {
+                        self.SelectedIncompleteRoutings([]);
+                    }
+                }
             });
 
         }
@@ -522,14 +603,14 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
         public OpenChildDetail(id: string) {
             var img = $('#img-' + id);
             var child = $('#response-' + id);
-            if (img.hasClass('k-plus')) {
-                img.removeClass('k-plus');
-                img.addClass('k-minus');
+            if (img.hasClass('k-i-plus-sm')) {
+                img.removeClass('k-i-plus-sm');
+                img.addClass('k-i-minus-sm');
                 child.show();
             }
             else {
-                img.addClass('k-plus');
-                img.removeClass('k-minus');
+                img.addClass('k-i-plus-sm');
+                img.removeClass('k-i-minus-sm');
                 child.hide();
             }
         }

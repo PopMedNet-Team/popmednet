@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -204,14 +205,14 @@ var Workflow;
                 ViewModel.prototype.OpenChildDetail = function (id) {
                     var img = $('#img-' + id);
                     var child = $('#response-' + id);
-                    if (img.hasClass('k-plus')) {
-                        img.removeClass('k-plus');
-                        img.addClass('k-minus');
+                    if (img.hasClass('k-i-plus-sm')) {
+                        img.removeClass('k-i-plus-sm');
+                        img.addClass('k-i-minus-sm');
                         child.show();
                     }
                     else {
-                        img.addClass('k-plus');
-                        img.removeClass('k-minus');
+                        img.addClass('k-i-plus-sm');
+                        img.removeClass('k-i-minus-sm');
                         child.hide();
                     }
                 };
@@ -272,3 +273,4 @@ var Workflow;
         })(Completed = DistributedRegression.Completed || (DistributedRegression.Completed = {}));
     })(DistributedRegression = Workflow.DistributedRegression || (Workflow.DistributedRegression = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=Completed.js.map

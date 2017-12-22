@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../js/_rootlayout.ts" />
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -23,9 +24,11 @@ var Plugins;
                         }
                         var self = _this;
                         _this.NonAggregateFields = ko.computed(function () {
+                            //hide the aggregate fields from view since they are not editable anyhow
                             var filtered = ko.utils.arrayFilter(self.Request.Select.Fields(), function (item) { return item.Aggregate() == null; });
                             return filtered;
                         });
+                        //Load the Concept's TermValues as observables.
                         if (_this.Request == null || _this.Request.Where.Criteria().length == 0) {
                         }
                         else {
@@ -98,15 +101,25 @@ var Plugins;
                     return ViewModel;
                 }(Global.PageViewModel));
                 ViewModel.CodeTerms = [
+                    //drug class
                     "75290001-0E78-490C-9635-A3CA01550704",
+                    //drug name
                     "0E1F0001-CA0C-42D2-A9CC-A3CA01550E84",
+                    //HCPCS Procedure Codes
                     "096A0001-73B4-405D-B45F-A3CA014C6E7D",
+                    //ICD9 Diagnosis Codes 3 digit
                     "5E5020DC-C0E4-487F-ADF2-45431C2B7695",
+                    //ICD9 Diagnosis Codes 4 digit
                     "D0800001-2810-48ED-96B9-A3D40146BAAE",
+                    //ICD9 Diagnosis Codes 5 digit
                     "80750001-6C3B-4C2D-90EC-A3D40146C26D",
+                    //ICD9 Procedure Codes 3 digit
                     "E1CC0001-1D9A-442A-94C4-A3CA014C7B94",
+                    //ICD9 Procedure Codes 4 digit
                     "9E870001-1D48-4AA3-8889-A3D40146CCB3",
+                    //Zip Code
                     "8B5FAA77-4A4B-4AC7-B817-69F1297E24C5",
+                    //Combinded Diagnosis Codes
                     "86110001-4BAB-4183-B0EA-A4BC0125A6A7"
                 ];
                 ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
@@ -130,6 +143,8 @@ var Plugins;
                 View.init = init;
                 ko.bindingHandlers.DocumentsByRevision = {
                     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                        //element is the html element the binding is on
+                        //valueAccessor is[{RevisionSetID:''}]
                         var val = ko.utils.unwrapObservable(valueAccessor());
                         var revisions = ko.utils.arrayMap(val, function (d) { return d.RevisionSetID; });
                         Dns.WebApi.Documents.ByRevisionID(revisions)
@@ -147,3 +162,4 @@ var Plugins;
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
+//# sourceMappingURL=View.js.map

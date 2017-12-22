@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -24,6 +25,8 @@ var Users;
                             url: Global.Helpers.GetServiceUrl("/users/list"),
                         },
                         parameterMap: function (options, transportType) {
+                            //override the parameterMap implementation to update the odata filter value for the enum type RegistryTypes. 
+                            //By default the webapi paramter mapper does not know to include the enum typename in the filter value.
                             var opt = Global.Helpers.UpdateKendoGridFilterOptions(options, [{ field: 'Active', format: "{0}" }]);
                             var map = new kendo.data.transports.webapi.parameterMap(opt);
                             return map;
@@ -90,3 +93,4 @@ var Users;
         init();
     })(Index = Users.Index || (Users.Index = {}));
 })(Users || (Users = {}));
+//# sourceMappingURL=Index.js.map

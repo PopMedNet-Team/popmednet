@@ -1,3 +1,4 @@
+/// <reference path="../../../../js/requests/details.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -63,3 +64,4 @@ var Controls;
         WFFileUpload.sFtpItem = sFtpItem;
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Common.js.map

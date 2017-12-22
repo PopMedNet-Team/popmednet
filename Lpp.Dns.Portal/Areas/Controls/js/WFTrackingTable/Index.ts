@@ -23,7 +23,18 @@
                     if (result != null && result.Data != null && result.Data.length > 0) {
                         self.DisplayAnalysisCenterTrackingTable(true);
 
-                        let columns = ko.utils.arrayMap(result.Properties, (p) => { return { field: p, title: p, width: 150 }; });
+                        let columns = ko.utils.arrayMap(result.Properties, (p) => { return { field: p.replace(/ /g, "_"), title: p.replace(/ /g, "_"), width: 150 }; });
+
+                        var columnsWithWhiteSpaces = result.Properties.filter(function (p) { if (p.indexOf(" ") >= 0) return p; });
+                        if (columnsWithWhiteSpaces.length > 0) {
+                            var rawJSON = JSON.stringify(result.Data);
+                            columnsWithWhiteSpaces.forEach((colName) => {
+                                var truncated = colName.replace(/ /g, "_");
+                                rawJSON = rawJSON.replace(colName, truncated);
+                            });
+                            result.Data = JSON.parse(rawJSON);
+                        }
+
                         let datasource = new kendo.data.DataSource({ data: result.Data });
                         let grid = $('#gAnalysisCenterTrackingTable').kendoGrid({
                             autoBind: false,
@@ -52,7 +63,18 @@
                     if (result != null && result.Data != null && result.Data.length > 0) {
                         self.DisplayDataPartnerTrackingTable(true);
 
-                        let columns = ko.utils.arrayMap(result.Properties, (p) => { return { field: p, title: p, width: 150 }; });
+                        let columns = ko.utils.arrayMap(result.Properties, (p) => { return { field: p.replace(/ /g, "_"), title: p.replace(/ /g, "_"), width: 150 }; });
+
+                        var columnsWithWhiteSpaces = result.Properties.filter(function (p) { if (p.indexOf(" ") >= 0) return p; });
+                        if (columnsWithWhiteSpaces.length > 0) {
+                            var rawJSON = JSON.stringify(result.Data);
+                            columnsWithWhiteSpaces.forEach((colName) => {
+                                var truncated = colName.replace(/ /g, "_");
+                                rawJSON = rawJSON.replace(colName, truncated);
+                            });
+                            result.Data = JSON.parse(rawJSON);
+                        }
+
                         let datasource = new kendo.data.DataSource({ data: result.Data });
                         let grid = $('#gDataPartnersTrackingTable').kendoGrid({
                             autoBind: false,

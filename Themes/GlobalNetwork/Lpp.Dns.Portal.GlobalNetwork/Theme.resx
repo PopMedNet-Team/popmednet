@@ -132,10 +132,7 @@
   </data>
   <data name="Resources" xml:space="preserve">
     <value>&lt;div class="row"&gt;
-                &lt;div class="col-sm-12 form-group"&gt;&lt;b&gt;Mini-Sentinel Operations Center Contact:&lt;/b&gt;&amp;nbsp;&lt;a href="mailto:support@popmednet.org"&gt;support@popmednet.org&lt;/a&gt;&lt;/div&gt;                
-            &lt;/div&gt;
-            &lt;div class="row"&gt;
-                &lt;div class="col-sm-12 form-group"&gt;&lt;b&gt;Lincoln Peak Partners Contact:&lt;/b&gt;&amp;nbsp;&lt;a href="mailto:support@lincolnpeak.com"&gt;support@lincolnpeak.com&lt;/a&gt;&lt;/div&gt;
+                &lt;div class="col-sm-12 form-group"&gt;&lt;b&gt;PopMedNet Support Contact:&lt;/b&gt;&amp;nbsp;&lt;a target="_blank" href="https://popmednet.atlassian.net/servicedesk/customer/portal/1/group/8"&gt;PopMedNet Support Service Desk&lt;/a&gt;&lt;/div&gt;                
             &lt;/div&gt;</value>
     <comment>This is the Resources Header in the Lpp.Dns.Portal/Views/Home/Resources.cshtml</comment>
   </data>

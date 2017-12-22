@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -23,6 +24,7 @@ var Workflow;
                     self.toRequestDataMartDTO = function () {
                         var route = null;
                         if (self._existingRequestDataMart != null) {
+                            //do a deep copy clone of the existing routing information;
                             route = jQuery.extend(true, {}, self._existingRequestDataMart);
                         }
                         else {
@@ -135,6 +137,7 @@ var Workflow;
                                         Global.Helpers.RedirectTo(result.Uri);
                                     }
                                     else {
+                                        //Update the request etc. here 
                                         Requests.Details.rovm.Request.ID(result.Entity.ID);
                                         Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                         Requests.Details.rovm.UpdateUrl();
@@ -167,6 +170,7 @@ var Workflow;
                                     Global.Helpers.RedirectTo(result.Uri);
                                 }
                                 else {
+                                    //Update the request etc. here 
                                     Requests.Details.rovm.Request.ID(result.Entity.ID);
                                     Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                     Requests.Details.rovm.UpdateUrl();
@@ -201,6 +205,7 @@ var Workflow;
                         DistributeRequest.vm = new ViewModel(queryData, routes, Requests.Details.rovm.FieldOptions, Requests.Details.rovm.Request.AdditionalInstructions(), bindingControl);
                         ko.applyBindings(DistributeRequest.vm, bindingControl[0]);
                         var visualTerms = Requests.Details.rovm.VisualTerms;
+                        //Hook up the Query Composer readonly view
                         Plugins.Requests.QueryBuilder.View.init(queryData, visualTerms, $('#QCreadonly'));
                     });
                 });
@@ -209,3 +214,4 @@ var Workflow;
         })(DistributeRequest = SummaryQuery.DistributeRequest || (SummaryQuery.DistributeRequest = {}));
     })(SummaryQuery = Workflow.SummaryQuery || (Workflow.SummaryQuery = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=DistributeRequest.js.map

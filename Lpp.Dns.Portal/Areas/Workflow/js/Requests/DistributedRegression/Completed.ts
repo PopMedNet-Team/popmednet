@@ -226,14 +226,14 @@ module Workflow.DistributedRegression.Completed {
         public OpenChildDetail(id: string) {
             var img = $('#img-' + id);
             var child = $('#response-' + id);
-            if (img.hasClass('k-plus')) {
-                img.removeClass('k-plus');
-                img.addClass('k-minus');
+            if (img.hasClass('k-i-plus-sm')) {
+                img.removeClass('k-i-plus-sm');
+                img.addClass('k-i-minus-sm');
                 child.show();
             }
             else {
-                img.addClass('k-plus');
-                img.removeClass('k-minus');
+                img.addClass('k-i-plus-sm');
+                img.removeClass('k-i-minus-sm');
                 child.hide();
             }
         }

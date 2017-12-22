@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -82,10 +83,17 @@ var Registries;
                 var _this = this;
                 if (!_super.prototype.Validate.call(this))
                     return;
+                // Remove SG check per PMNDEV-3110
+                //if (this.RegistryAcls().length == 0) {
+                //    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have added at least one security group to be able to administer this registry.</p>");
+                //    return;
+                //}
                 Dns.WebApi.Registries.InsertOrUpdate([this.Registry.toData()]).done(function (registry) {
+                    //Update the values for the ID and timestamp as necessary.
                     _this.Registry.ID(registry[0].ID);
                     _this.Registry.Timestamp(registry[0].Timestamp);
                     window.history.replaceState(null, window.document.title, "/registries/details?ID=" + registry[0].ID);
+                    // Save everything else
                     var organizations = _this.OrganizationRegistries().map(function (o) {
                         o.RegistryID(_this.Registry.ID());
                         return o.toData();
@@ -161,3 +169,4 @@ var Registries;
         init();
     })(Details = Registries.Details || (Registries.Details = {}));
 })(Registries || (Registries = {}));
+//# sourceMappingURL=Details.js.map

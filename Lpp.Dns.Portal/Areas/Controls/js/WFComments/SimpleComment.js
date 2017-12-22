@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
     var WFComments;
@@ -41,3 +42,4 @@ var Controls;
         })(SimpleComment = WFComments.SimpleComment || (WFComments.SimpleComment = {}));
     })(WFComments = Controls.WFComments || (Controls.WFComments = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=SimpleComment.js.map

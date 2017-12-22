@@ -1,3 +1,4 @@
+/// <reference path="../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -19,8 +20,10 @@ var Workflow;
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
                         _this.hasResponseResultsContent = false;
                         var self = _this;
+                        debugger;
                         _this.IsResponseVisible = ko.observable(null);
                         _this.ResponseContentComplete = ko.observable(false);
+                        _this.IsResponseLoadFailed = ko.observable(false);
                         _this.Routings = routings;
                         _this.Responses = responses;
                         _this.Documents = documents;
@@ -30,7 +33,7 @@ var Workflow;
                         _this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
                         _this.ExportExcelUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&view=' + responseView + '&format=xlsx&authToken=' + User.AuthToken;
                         _this.ExportDownloadAllUrl = '/workflow/WorkflowRequests/ExportAllResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&authToken=' + User.AuthToken;
-                        _this.isDownloadAllVisible = exportForFileDistribution;
+                        _this.isDownloadAllVisible = exportForFileDistribution && (ko.utils.arrayFirst(documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null);
                         _this.showApproveReject = ko.observable(false);
                         canViewPendingApprovalResponses = canViewPendingApprovalResponses && responses.length > 0;
                         routings.forEach(function (r) {
@@ -39,11 +42,12 @@ var Workflow;
                             }
                         });
                         self.IsResponseVisible(canViewPendingApprovalResponses);
-                        self.hasResponseResultsContent = ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null;
+                        self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
                         if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                             Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done(function (responses) {
                                 if (responses == null || responses == null)
                                     return;
+                                //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var bucket = $('<div class="panel panel-default"></div>');
                                 responses.forEach(function (resp) {
                                     var datamartName = (resp.Aggregation == null || resp.Aggregation.Name == null) ? 'Aggregated or Grouped Results' : resp.Aggregation.Name;
@@ -57,6 +61,7 @@ var Workflow;
                                         }
                                     }
                                     for (var i = 0; i < resp.Results.length; i++) {
+                                        //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
                                         var resultID = (resp.ID || 'aggregate') + '-' + i;
                                         var suppressedValues = false;
                                         bucket.append($('<div class="panel-heading" style="margin-bottom:0px;"><h4 class="panel-title" > ' + datamartName + ' </h4 ></div>'));
@@ -95,6 +100,7 @@ var Workflow;
                                         }
                                         var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
                                         var datasource = kendo.data.DataSource.create({ data: newTable });
+                                        //var grid = $('#grid' + resultID + '').kendoGrid({
                                         grid.kendoGrid({
                                             dataSource: datasource,
                                             height: 520,
@@ -116,8 +122,14 @@ var Workflow;
                                     }
                                 });
                                 self.ResponseContentComplete(true);
+                                //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 $('#gResults').append(bucket);
+                                //resize the iframe to the contents plus padding for the export dropdown menu
                                 $(window.frameElement).height($('html').height() + 70);
+                            }).fail(function () {
+                                self.IsResponseLoadFailed(true);
+                                self.ResponseContentComplete(true);
+                                $(window.frameElement).height($('html').height());
                             });
                         }
                         else {
@@ -129,7 +141,9 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
+                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
+                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 })
                                     .fail(function (err) {
@@ -144,7 +158,9 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
+                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
+                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 }).fail(function (err) {
                                     var errorMessage = err.responseJSON.errors[0].Description;
@@ -161,7 +177,9 @@ var Workflow;
                     rootVM = parent.Requests.Details.rovm;
                     var id = Global.GetQueryParam("ID");
                     var responseIDs = id.split(',');
+                    debugger;
                     Dns.WebApi.Response.GetDetails(responseIDs).done(function (details) {
+                        debugger;
                         var ss = details[0];
                         var bindingControl = $('#DefaultResponseDetail');
                         vm = new ViewModel(bindingControl, ss.RequestDataMarts, ss.Responses, ss.Documents, ss.CanViewPendingApprovalResponses, ss.ExportForFileDistribution);
@@ -183,3 +201,4 @@ var Workflow;
         })(Common = Response.Common || (Response.Common = {}));
     })(Response = Workflow.Response || (Workflow.Response = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ResponseDetail.js.map

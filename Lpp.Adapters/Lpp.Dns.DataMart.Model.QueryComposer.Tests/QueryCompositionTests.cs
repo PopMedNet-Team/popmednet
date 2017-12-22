@@ -37,6 +37,222 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         }
 
         /// <summary>
+        /// Looks for Patients with Diagnosis 250% or Procedure 100% with Encounter Observation Period 2008-01-01 to 2010-12-31 AND Outpatient.
+        /// </summary>
+        [TestMethod]
+        public void PMNMAINT_579_001()
+        {
+            string filename = "PMNMAINT-579_001.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            var table = response.Results.First();
+            var row = table.First();
+
+            Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(
+                table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        /// <summary>
+        /// Diagnosis is ICD9 Starts with 250
+        /// OR Procedure is Any Starts with 100
+        /// OR Diagnosis is ICD9 Starts with 401
+        /// OR Procedure is Any Starts with 992
+        /// AND Observation Period year 2008 or 2010
+        /// AND Setting is AV, IP, or ED.
+        /// </summary>
+        [TestMethod]
+        public void PMNMAINT_579_002()
+        {
+            string filename = "PMNMAINT-579_002.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            var table = response.Results.First();
+            var row = table.First();
+
+            Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(
+                table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        /// <summary>
+        /// Setting is Outpatient (Ambulatory) OR Inpatient Hospital Stay
+        /// AND Observation Period: 2008/1/1 to 2010/12/31
+        /// </summary>
+        [TestMethod]
+        public void PMNMAINT_579_003()
+        {
+            string filename = "PMNMAINT-579_003.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            var table = response.Results.First();
+            var row = table.First();
+
+            Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(
+                table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        /// <summary>
+        /// Diagnosis Starts with 250 (ICD-9)
+        /// OR Diagnosis Starts with 401 (ICD-9)
+        /// OR Procedure Starts with 100
+        /// OR Procedure Starts with 200
+        /// </summary>
+        [TestMethod]
+        public void PMNMAINT_579_004()
+        {
+            string filename = "PMNMAINT-579_004.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            var table = response.Results.First();
+            var row = table.First();
+
+            Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(
+                table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        /// <summary>
+        /// Criteria Group 1:
+        /// Setting = Emergency Department AND
+        /// Observation Period: 2008/1/1 to 2008/12/31
+        /// AND (Diagnosis is ICD-9 Starts With 250 "OR" Procedure is CPT or HCPCS Starts With 40)
+        /// 
+        /// Criteria Group 2:
+        /// Observation Period: 2010/1/1 to 2010/12/31
+        /// AND Procedure Starts with 80.
+        /// </summary>
+        [TestMethod]
+        public void PMNMAINT_579_005()
+        {
+            string filename = "PMNMAINT-579_005.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            var table = response.Results.First();
+            var row = table.First();
+
+            Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(
+                table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        /// <summary>
         /// Simple query that returns the fields included in the critieria; no stratification, no aggregation
         /// </summary>
         [TestMethod]
@@ -439,6 +655,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 //Assert.IsNull(mysqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
+        }
+
+        [TestMethod]
+        public void PMNDEV_6163_AgeRangeForPostgres()
+        {
+            var npgsqlResponse = RunRequest("PMNDEV-6163.json", PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+            Assert.IsNull(npgsqlResponse.Errors);
+            Assert.IsTrue(npgsqlResponse.Results != null && npgsqlResponse.Results.Count() > 0);
         }
 
         [TestMethod]
@@ -2490,6 +2714,42 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             }
         }
 
+        [TestMethod]
+        public void PMNMAINT_1172()
+        {
+            string filename = "PMNMAINT-1172.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
 
         [TestMethod]
         public void ProcedureCodes_Cardiac_CT_Scan_PatCount()
@@ -2734,8 +2994,45 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             //}
         }
 
+		[TestMethod]
+		public void PMNSUPPORT_44()
+		{
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath)
+			string filename = "Request Criteria_fd0039_mdq_wp037_nsd1_v01.json";
+			var response = RunRequest(filename);
+			Logger.Debug(SerializeJsonToString(response));
+
+			Console.WriteLine("Response Count from MSSQL is " + (response.Results.Count()));
+			//Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+			//Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+			//var table = response.Results.First();
+			//var row = table.First();
+
+			//if (RunOracle)
+			//{
+			//    var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+			//    Assert.IsNull(oracleResponse.Errors);
+			//    Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+			//}
+
+			if (RunPostgreSQL)
+			{
+				var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+				Assert.IsNull(npgsqlResponse.Errors);
+				//Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+				Console.WriteLine("Response Count from Postgres is " + (response.Results.Count()));
+			}
+
+			//if (RunMySql)
+			//{
+			//    var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+			//    Assert.IsNull(mysqlResponse.Errors);
+			//    Assert.AreEqual(
+			//    table.Count(), mysqlResponse.Results.First().Count());
+			//}
+		}
+
+		Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath)
         {
             return RunRequest(requestJsonFilepath, MSSqlConnectionString, Settings.SQLProvider.SQLServer);
         }

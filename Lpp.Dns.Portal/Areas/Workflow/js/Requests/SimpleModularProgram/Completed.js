@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -133,6 +134,7 @@ var Workflow;
                         return self.SelectedCompleteRoutings().length > 0;
                     });
                     self.VirtualRoutings = [];
+                    //create the virtual routings, do the groups first
                     if (responseGroups.length > 0) {
                         ko.utils.arrayForEach(responseGroups, function (group) {
                             var routing = ko.utils.arrayFirst(self.Routings(), function (r) { return r.ResponseGroupID == group.ID; });
@@ -184,19 +186,33 @@ var Workflow;
                     self.onShowIncompleteRoutingHistory = function (item) {
                         showRoutingHistory(item.ID, item.RequestID);
                     };
+                    self.completedRoutesSelectAll = ko.pureComputed({
+                        read: function () {
+                            return self.CompletedRoutings().length > 0 && self.SelectedCompleteRoutings().length === self.CompletedRoutings().length;
+                        },
+                        write: function (value) {
+                            if (value) {
+                                var allID = ko.utils.arrayMap(self.VirtualRoutings, function (i) { return i.ID; });
+                                self.SelectedCompleteRoutings(allID);
+                            }
+                            else {
+                                self.SelectedCompleteRoutings([]);
+                            }
+                        }
+                    });
                     return _this;
                 }
                 ViewModel.prototype.OpenChildDetail = function (id) {
                     var img = $('#img-' + id);
                     var child = $('#response-' + id);
-                    if (img.hasClass('k-plus')) {
-                        img.removeClass('k-plus');
-                        img.addClass('k-minus');
+                    if (img.hasClass('k-i-plus-sm')) {
+                        img.removeClass('k-i-plus-sm');
+                        img.addClass('k-i-minus-sm');
                         child.show();
                     }
                     else {
-                        img.addClass('k-plus');
-                        img.removeClass('k-minus');
+                        img.addClass('k-i-plus-sm');
+                        img.removeClass('k-i-minus-sm');
                         child.hide();
                     }
                 };
@@ -238,6 +254,7 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
+                //get the permissions for the view response detail, use to control the dialog view showing the result files
                 var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
                 $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetRequestSearchTerms(id), getResponseDetailPermissions, Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])).done(function (responses, responseGroups, searchTerms, responseDetailPermissions, requestPermissions) {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
@@ -324,3 +341,4 @@ var Workflow;
         })(Completed = SimpleModularProgram.Completed || (SimpleModularProgram.Completed = {}));
     })(SimpleModularProgram = Workflow.SimpleModularProgram || (Workflow.SimpleModularProgram = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=Completed.js.map

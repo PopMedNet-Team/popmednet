@@ -115,7 +115,7 @@
                     @Html.Partial("~/Views/Security/EditAcl.cshtml")
                 </div>
             </div>
-            <div class="tab-body">
+            <div class="tab-body overflow-visible">
                 <!--Data Marts-->
                 <br />
                 <p class="alert alert-info">
@@ -197,7 +197,7 @@
                     </div>
                 </article>
             </div>
-            <div class="tab-body">
+            <div class="tab-body overflow-visible">
                 <!--Organizations-->
                 <br />
                 <p class="alert alert-info">
@@ -306,7 +306,7 @@
                     @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
                 </div>
             </div>
-            <div class="tab-body">
+            <div class="tab-body overflow-visible">
                 <p class="alert alert-info">
                     This allows you to control which Request Types are allowed to be created under the project. Note: Once Request Types are added to the project, you can then control them with the standard Request Type Permissions. This only applies to new request types based on Query Composer and not legacy request types.
                 </p>
@@ -365,7 +365,7 @@
                         <tr>
                             <td colspan="5">
                                 <div class="dropdown pull-right">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-toggle="dropdown">Add Request Type <span class="caret"></span></button>
+                                    <a href="#" class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add RequestType" />&nbsp;Add Request Type <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableRequestTypeList">
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: $root.AddProjectRequestType, text: Name"></a></li>
                                     </ul>

@@ -1,3 +1,7 @@
+/// <reference path="../../../../DataChecker/js/Common.ts" />
+/// <reference path="../../../../DataChecker/js/RxAmtResponse.ts" />
+/// <reference path="../../../../DataChecker/js/RxSupResponse.ts" />
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -6,16 +10,22 @@ var __extends = (this && this.__extends) || function (d, b) {
 var templateFromUrlLoader = {
     loadTemplate: function (name, templateConfig, callback) {
         if (templateConfig.fromUrl) {
+            // Uses jQuery's ajax facility to load the markup from a file
             var fullUrl = '/DataChecker/' + templateConfig.fromUrl;
             $.get(fullUrl, function (markupString) {
+                // We need an array of DOM nodes, not a string.
+                // We can use the default loader to convert to the
+                // required format.                
                 ko.components.defaultLoader.loadTemplate(name, markupString, callback);
             });
         }
         else {
+            // Unrecognized config format. Let another loader handle it.
             callback(null);
         }
     }
 };
+// Register the loaders
 ko.components.loaders.unshift(templateFromUrlLoader);
 ko.components.register('datachecker-default', {
     template: '<span>...</span>'
@@ -133,6 +143,7 @@ var Workflow;
                                             }
                                         }
                                     }
+                                    //Does the response contain suppressed cells? Check for LowThreshold column
                                     for (var i = 0; i < resp.Results.length; i++) {
                                         var table = resp.Results[i];
                                         var row = table[0];
@@ -145,6 +156,7 @@ var Workflow;
                                     }
                                 });
                                 var reqQuery = JSON.parse(req.Query);
+                                //NOTE:when the json is parsed the QueryType is a string representation of the enum numeric value, need to parse to a number for the switch statement to work.
                                 switch (parseInt((reqQuery.Header.QueryType || '-1').toString())) {
                                     case Dns.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_AgeRange:
                                         self.DataCheckerResponseBinding('datachecker-agedistribution');
@@ -200,7 +212,9 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
+                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
+                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 })
                                     .fail(function (err) {
@@ -215,7 +229,9 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
+                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
+                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 }).fail(function (err) {
                                     var errorMessage = err.responseJSON.errors[0].Description;
@@ -262,3 +278,4 @@ var Workflow;
         })(WFDataChecker = Response.WFDataChecker || (Response.WFDataChecker = {}));
     })(Response = Workflow.Response || (Workflow.Response = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ResponseDetails.js.map

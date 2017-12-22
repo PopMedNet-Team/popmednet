@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -25,6 +26,7 @@ var Workflow;
                         return self.SelectedCompleteRoutings().length > 1;
                     });
                     self.CanUnGroupCompletedRoutings = ko.computed(function () {
+                        //TODO: possible to know if the selecte routing is a group?
                         return self.SelectedCompleteRoutings().length > 1;
                     });
                     self.CompletedRoutings = ko.computed(function () {
@@ -84,6 +86,7 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
+                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -108,3 +111,4 @@ var Workflow;
         })(ResponseApproval = Default.ResponseApproval || (Default.ResponseApproval = {}));
     })(Default = Workflow.Default || (Workflow.Default = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ResponseApproval.js.map

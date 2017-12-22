@@ -1,3 +1,4 @@
+/// <reference path="../../Scripts/Common.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -25,6 +26,10 @@ var Organizations;
                 return _this;
             }
             ViewModel.prototype.AddRegistry = function (data, event) {
+                //$(".RegistriesForSelection").dialog({
+                //    title: "Choose Registry or Research Data Set To Add", width: 600, modal: true,
+                //    buttons: { Cancel: function () { $(".RegistriesForSelection").dialog("close"); } }
+                //});
             };
             ViewModel.prototype.AddEHR = function (data, event) {
                 this.EHRs.push(new EHRViewModel({
@@ -111,3 +116,4 @@ var Organizations;
         Edit.init = init;
     })(Edit = Organizations.Edit || (Organizations.Edit = {}));
 })(Organizations || (Organizations = {}));
+//# sourceMappingURL=edit.js.map

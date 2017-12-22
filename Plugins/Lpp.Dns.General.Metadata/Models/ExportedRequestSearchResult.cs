@@ -51,5 +51,5 @@ namespace Lpp.Dns.General.Metadata.Models
         public string UpdatedByEmail { get; set; }
         public string MSRequestID { get; set; }
 		public RequestStatuses Status { get; set; }
-	}
+    }
 }

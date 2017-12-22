@@ -1,0 +1,87 @@
+﻿{
+  "Header": {
+    "Name": "PCORnet",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=c662de46-c1e2-4433-ae7e-a73500e5d99a",
+    "QueryType": ""
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "b5a1c9ee-08f6-41ca-bf79-ce51a5e8c935",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7306dcd3-23a9-430c-98d5-6a221cdd6d0c",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "250",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ],
+                "Design": { }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      },
+      {
+        "ID": "87898062-7dd8-4d03-865f-e854ec3d964a",
+        "Name": "Group 2",
+        "Criteria": [
+          {
+            "ID": "3d41498f-ca01-41df-805a-612823b07415",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+                "Values": {
+                  "CodeType": 1,
+                  "CodeValues": "08",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ],
+                "Design": { }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

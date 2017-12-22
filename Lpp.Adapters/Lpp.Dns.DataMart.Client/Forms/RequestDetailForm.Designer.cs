@@ -51,6 +51,7 @@ namespace Lpp.Dns.DataMart.Client
             System.Windows.Forms.Label queryActivityPriorityLabel;
             System.Windows.Forms.Label label1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RequestDetailForm));
+            this.queryDataMartBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.queryIdTextBox = new System.Windows.Forms.TextBox();
             this.requestTimeDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.queryCreatedByUserNameTextBox = new System.Windows.Forms.TextBox();
@@ -108,7 +109,6 @@ namespace Lpp.Dns.DataMart.Client
             this.browserPanel = new System.Windows.Forms.Panel();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.queryDataMartBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.vpRequest = new Lpp.Dns.DataMart.Client.Controls.DataMartViewPanel();
             this.vpResponse = new Lpp.Dns.DataMart.Client.Controls.DataMartViewPanel();
             queryIdLabel = new System.Windows.Forms.Label();
@@ -128,9 +128,9 @@ namespace Lpp.Dns.DataMart.Client
             activityLabel = new System.Windows.Forms.Label();
             queryActivityPriorityLabel = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).BeginInit();
             this.browserPanel.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // queryIdLabel
@@ -270,6 +270,10 @@ namespace Lpp.Dns.DataMart.Client
             lblSubmittedByNote.Size = new System.Drawing.Size(0, 13);
             lblSubmittedByNote.TabIndex = 62;
             lblSubmittedByNote.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // queryDataMartBindingSource
+            // 
+            this.queryDataMartBindingSource.DataSource = typeof(Lpp.Dns.DataMart.Lib.Classes.HubRequest);
             // 
             // lblSubmittedTo
             // 
@@ -585,26 +589,25 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.cbRequestFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbRequestFileList.AutoSize = true;
-            this.cbRequestFileList.Location = new System.Drawing.Point(1000, 457);
+            this.cbRequestFileList.Location = new System.Drawing.Point(964, 457);
             this.cbRequestFileList.Margin = new System.Windows.Forms.Padding(4);
             this.cbRequestFileList.Name = "cbRequestFileList";
-            this.cbRequestFileList.Size = new System.Drawing.Size(68, 17);
+            this.cbRequestFileList.Size = new System.Drawing.Size(104, 17);
             this.cbRequestFileList.TabIndex = 24;
-            this.cbRequestFileList.Text = "File View";
+            this.cbRequestFileList.Text = "View Raw File(s)";
             this.cbRequestFileList.UseVisualStyleBackColor = true;
             // 
             // cbResponseFileList
             // 
             this.cbResponseFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbResponseFileList.AutoSize = true;
-            this.cbResponseFileList.Location = new System.Drawing.Point(992, 686);
+            this.cbResponseFileList.Location = new System.Drawing.Point(956, 686);
             this.cbResponseFileList.Margin = new System.Windows.Forms.Padding(4);
             this.cbResponseFileList.Name = "cbResponseFileList";
-            this.cbResponseFileList.Size = new System.Drawing.Size(68, 17);
+            this.cbResponseFileList.Size = new System.Drawing.Size(104, 17);
             this.cbResponseFileList.TabIndex = 26;
-            this.cbResponseFileList.Text = "File View";
+            this.cbResponseFileList.Text = "View Raw File(s)";
             this.cbResponseFileList.UseVisualStyleBackColor = true;
-            this.cbResponseFileList.CheckedChanged += new System.EventHandler(this.cbResponseFileList_CheckedChanged);
             // 
             // btnPostProcess
             // 
@@ -898,7 +901,6 @@ namespace Lpp.Dns.DataMart.Client
             this.lblReportAggregationLevel.Size = new System.Drawing.Size(82, 26);
             this.lblReportAggregationLevel.TabIndex = 112;
             this.lblReportAggregationLevel.Text = "Level of Report\r\n     Aggregation:";
-            this.lblReportAggregationLevel.Click += new System.EventHandler(this.label2_Click);
             // 
             // browserPanel
             // 
@@ -994,10 +996,6 @@ namespace Lpp.Dns.DataMart.Client
             this.panel1.Size = new System.Drawing.Size(1104, 602);
             this.panel1.TabIndex = 117;
             // 
-            // queryDataMartBindingSource
-            // 
-            this.queryDataMartBindingSource.DataSource = typeof(Lpp.Dns.DataMart.Lib.Classes.HubRequest);
-            // 
             // vpRequest
             // 
             this.vpRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1011,7 +1009,6 @@ namespace Lpp.Dns.DataMart.Client
             this.vpRequest.Size = new System.Drawing.Size(1056, 198);
             this.vpRequest.TabIndex = 23;
             this.vpRequest.ViewText = "";
-            this.vpRequest.Load += new System.EventHandler(this.vpRequest_Load);
             // 
             // vpResponse
             // 
@@ -1055,10 +1052,10 @@ namespace Lpp.Dns.DataMart.Client
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DataMart Client - Request Detail";
             this.Load += new System.EventHandler(this.RequestDetailForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).EndInit();
             this.browserPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

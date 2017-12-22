@@ -478,6 +478,8 @@ var Dns;
             Settings[Settings["AN"] = 4] = "AN";
             Settings[Settings["EI"] = 5] = "EI";
             Settings[Settings["IS"] = 6] = "IS";
+            Settings[Settings["OS"] = 11] = "OS";
+            Settings[Settings["IC"] = 12] = "IC";
             Settings[Settings["OA"] = 7] = "OA";
             Settings[Settings["NI"] = 8] = "NI";
             Settings[Settings["UN"] = 9] = "UN";
@@ -490,6 +492,8 @@ var Dns;
             { value: Settings.AN, text: 'Any Setting' },
             { value: Settings.EI, text: 'Emergency Department Admit to Inpatient Hospital Stay' },
             { value: Settings.IS, text: 'Non-Acute Institutional Stay' },
+            { value: Settings.OS, text: 'Observation Stay' },
+            { value: Settings.IC, text: 'Institutional Professional Consult' },
             { value: Settings.OA, text: 'Other Ambulatory Visit' },
             { value: Settings.NI, text: 'No information' },
             { value: Settings.UN, text: 'Unknown' },

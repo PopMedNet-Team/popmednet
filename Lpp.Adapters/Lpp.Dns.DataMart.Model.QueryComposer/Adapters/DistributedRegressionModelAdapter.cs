@@ -104,42 +104,48 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
         IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessForDataPartner(DocumentWithStream[] requestDocs)
         {
+            
             string outputfilesFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "msoc");
             string inputfilesFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
-
+            logger.Debug("Checking to see if input directory exists");
             if (!Directory.Exists(inputfilesFolderPath))
             {
+                logger.Debug("Creating Input Directory");
                 Directory.CreateDirectory(inputfilesFolderPath);
             }
-
+            logger.Debug("Checking to see if output directory exists");
             if (!Directory.Exists(outputfilesFolderPath))
             {
+                logger.Debug("Creating Output Directory");
                 Directory.CreateDirectory(outputfilesFolderPath);
             }
-
             if (requestDocs.Any(d => string.Equals(Path.GetExtension(d.Document.Filename), ".zip", StringComparison.OrdinalIgnoreCase)))
             {
                 //initial iteration with the setup package, extract if the "inputfiles" folder is empty
-                if(!Directory.EnumerateFileSystemEntries(inputfilesFolderPath).Any())
+                if (!Directory.EnumerateFileSystemEntries(inputfilesFolderPath).Any())
                 {
                     var initialSetupPackage = requestDocs.First(d => string.Equals(Path.GetExtension(d.Document.Filename), ".zip", StringComparison.OrdinalIgnoreCase));
-
+                    logger.Debug("Extracting ZIP file " + initialSetupPackage.Document.Filename + " for its contents");
                     using (ZipArchive archive = new ZipArchive(initialSetupPackage.Stream))
                     {
+                        logger.Debug("The following files were extracted from the ZIP Package: " + String.Join(" ,", archive.Entries.Select(x => x.Name)).Remove(0, 2));
                         archive.ExtractToDirectory(Path.Combine(RootMonitorFolder, RequestIdentifier));
                     }
                 }
             }
             else
             {
+                logger.Debug("Downloading Documents to input folder: " + inputfilesFolderPath);
                 foreach (var f in requestDocs)
                 {
+                    logger.Debug("Downloading Document: " + f.Document.Filename);
                     using(FileStream destination = File.Create(Path.Combine(inputfilesFolderPath, f.Document.Filename)))
                     {
                         f.Stream.CopyTo(destination);
                         destination.Flush();
                         destination.Close();
                     }
+                    logger.Debug("Successfully Downloaded Document: " + f.Document.Filename);
                 }
 
                 //Create the Execution Complete File only if files were transferred. (ASPE-497)
@@ -147,31 +153,43 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 //Furthermore, the ExecutionComplete file is only created for non-zip files.
                 if (requestDocs.Any())
                 {
+                    logger.Debug("Creating Execution Complete trigger file: " + ExecutionCompleteFilename);
                     using (var fs = File.CreateText(Path.Combine(inputfilesFolderPath, ExecutionCompleteFilename)))
                     {
                         fs.Close();
                     }
+                    logger.Debug("Successfully Created Execution Complete trigger file: " + ExecutionCompleteFilename);
                 }
             }
 
+            logger.Debug("Checking to see if the Start Job or Execution Complete Trigger files are there");
             //The triggers have been modified to remove the monitoring for Job Stop file. (ASPE-510)
             if (!TriggerFileExists(outputfilesFolderPath, new[] { JobStartFilename, ExecutionCompleteFilename }))
             {
+                logger.Debug("Creating Directory watcher");
                 FileSystemWatcher directoryWatcher = new FileSystemWatcher(outputfilesFolderPath, "*.*");
                 directoryWatcher.Created += (object sender, FileSystemEventArgs e) =>
                 {
 
                     //monitor for either the job started, execution successful, or job end trigger file
-                    if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, JobStartFilename, StringComparison.OrdinalIgnoreCase) || string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
+                    if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, JobStartFilename, StringComparison.OrdinalIgnoreCase)))
                     {
+                        logger.Debug(JobStartFilename + " Job Start Trigger File found");
+                        directoryWatcher.EnableRaisingEvents = false;
+                    }
+                    //monitor for either the job started, execution successful, or job end trigger file
+                    else if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        logger.Debug(ExecutionCompleteFilename + " Execution Complete Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
                     }
 
                 };
 
                 directoryWatcher.EnableRaisingEvents = true;
-
+                
                 DateTime maxEndTime = DateTime.UtcNow.AddHours(Convert.ToDouble(_settings.GetAsString("MaxMonitorTime", "12")));
+                logger.Debug("Watching Output folder for " + _settings.GetAsString("MaxMonitorTime", "12") + " Hours till " + maxEndTime.ToString());
                 while (directoryWatcher.EnableRaisingEvents)
                 {
                     //wait for the watcher to stop => trigger file exists or have run out of time
@@ -189,12 +207,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             //get all the files to upload that are listed in the filelist document
             outputDocuments = FilesToUpload(outputfilesFolderPath);
-
+			if (outputDocuments.Any())
+				logger.Debug("Manifest File list the following Files for upload: " + String.Join(" ,", outputDocuments.Select(x => String.Format("'{0}'", x.FileInfo.Name))).Remove(0, 1));
             //get the actual file bytes for the trigger files
-            foreach(var document in outputDocuments)
+            foreach (var document in outputDocuments)
             {
                 if (IsTriggerFile(document.FileInfo.Name))
                 {
+                    DateTime maxFileEndTime = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_settings.GetAsString("MaxReadWaitTime", "5")));
+                    while (IsFileLocked(document.FileInfo))
+                    {
+                        if (DateTime.UtcNow > maxFileEndTime)
+                        {
+                            throw new Exception("The maximum time to wait to read the trigger file has been exceeded and it is still locked.");
+                        }
+                    }
+
                     //copy the bytes of the trigger file now (likely always zero) since the physical file will be deleted prior to upload.
                     byte[] buffer = new byte[document.FileInfo.Length];
                     using (var fs = document.FileInfo.OpenRead())
@@ -213,7 +241,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             {
                 throw new Exception("More than one tracking table document is included in the output files: " + string.Join(", ", trackingTableDocuments));
             }
-
+            logger.Debug("Deleting Trigger Files");
             //delete the trigger file
             DeleteTriggerFiles(outputfilesFolderPath);
 
@@ -223,16 +251,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
         IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessForAnalysisCenter(DocumentWithStream[] requestDocs)
         {
             string outputFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
-            //if(Directory.Exists(outputFolderPath) == false)
-            //{
-            //    throw new Exception("The file path: \"" + outputFolderPath + "\" does not exist. Please make sure the output folder exists.");
-            //}
-
+            logger.Debug("Checking to see if output directory exists");
             if (!Directory.Exists(outputFolderPath))
             {
+                logger.Debug("Creating output directory");
                 Directory.CreateDirectory(outputFolderPath);
             }
-
+            logger.Debug("Inspecting manifest file");
             //look for the manifest.json file
             var manifestDocument = requestDocs.FirstOrDefault(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase) && d.Document.Kind == Lpp.Dns.DTO.Enums.DocumentKind.SystemGeneratedNoLog);
             if(manifestDocument == null)
@@ -249,8 +274,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             {
                 var serializer = new Newtonsoft.Json.JsonSerializer();
                 manifestDocuments = serializer.Deserialize<DistributedRegressionAnalysisCenterManifestItem[]>(jr);
-            } 
-
+            }
+            logger.Debug("Starting Download files to DataPartner Directories");
             //save the files to the specified folders based on the manifest file
             foreach(var document in manifestDocuments)
             {
@@ -270,6 +295,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 string partnerDirectory = Path.Combine(RootMonitorFolder, RequestIdentifier, document.DataPartnerIdentifier);
                 if (!Directory.Exists(partnerDirectory))
                 {
+                    logger.Debug("Creating directory for DataPartner" + document.DataPartnerIdentifier);
                     Directory.CreateDirectory(partnerDirectory);
                 }
 
@@ -277,6 +303,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 {
                     doc.Stream.CopyTo(writer);
                     writer.Flush();
+                    logger.Debug("Successfully downloaded file " + doc.Document.Filename + " to DataPartner " + document.DataPartnerIdentifier);
                 }
 
                 if(datapartnerFolders.ContainsKey(document.DataMartID) == false)
@@ -289,22 +316,33 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             //write the trigger files for each datapartner input folder
             foreach(var dpf in datapartnerFolders)
             {
+                logger.Debug("Creating Execution Complete trigger file: " + ExecutionCompleteFilename + " in DataPartner Folder " + dpf.Value);
                 using (var fs = File.CreateText(Path.Combine(dpf.Value, ExecutionCompleteFilename)))
                 {
                     fs.Close();
                 }
-            }            
-
+                logger.Debug("Successfully Created Execution Complete trigger file: " + ExecutionCompleteFilename + " in DataPartner Folder " + dpf.Value);
+            }
+            logger.Debug("Checking to see if the Start Job or Execution Complete Trigger files are there");
             if (!TriggerFileExists(outputFolderPath, TriggerFileNames))
             {
                 //wait for the trigger file in the "inputfiles" folder
+                logger.Debug("Creating File watcher");
                 FileSystemWatcher directoryWatcher = new FileSystemWatcher(outputFolderPath, "*.*");
                 directoryWatcher.Created += (object sender, FileSystemEventArgs e) =>
                 {
+
                     //monitor for either the job started, execution successful, or job end trigger file
                     //The triggers have been modified to remove the monitoring for Job Stop file. (ASPE-510)
-                    if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, JobStartFilename, StringComparison.OrdinalIgnoreCase) || string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
+                    if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, JobStartFilename, StringComparison.OrdinalIgnoreCase)))
                     {
+                        logger.Debug(JobStartFilename + " Job Start Trigger File found");
+                        directoryWatcher.EnableRaisingEvents = false;
+                    }
+                    //monitor for either the job started, execution successful, or job end trigger file
+                    else if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        logger.Debug(ExecutionCompleteFilename + " Execution Complete Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
                     }
                 };
@@ -325,12 +363,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             //get all the files to upload that are listed in the filelist document
             List<QueryComposerModelProcessor.DocumentEx> outputDocuments = FilesToUpload(outputFolderPath);
-
+            logger.Debug("Manifest File list the following Files for upload: " + String.Join(" ,", outputDocuments.Select(x => String.Format("'{0}'", x.FileInfo.Name))));
             //get the actual file bytes for the trigger files
             foreach (var document in outputDocuments)
             {
                 if (IsTriggerFile(document.FileInfo.Name))
                 {
+                    DateTime maxFileEndTime = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_settings.GetAsString("MaxReadWaitTime", "5")));
+                    while (IsFileLocked(document.FileInfo))
+                    {
+                        if (DateTime.UtcNow > maxFileEndTime)
+                        {
+                            throw new Exception("The maximum time to wait to read the trigger file has been exceeded and it is still locked.");
+                        }
+                    }
+
+                    logger.Debug("Attempting to read " +  document.FileInfo.Name);
                     //copy the bytes of the trigger file now (likely always zero) since the physical file will be deleted prior to upload.
                     byte[] buffer = new byte[document.FileInfo.Length];
                     using (var fs = document.FileInfo.OpenRead())
@@ -349,7 +397,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             {
                 throw new Exception("More than one tracking table document is included in the output files: " + string.Join(", ", trackingTableDocuments));
             }
-
+            logger.Debug("Attempting to Delete Trigger Files");
             DeleteTriggerFiles(outputFolderPath);
 
             return outputDocuments;
@@ -379,8 +427,35 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 if (File.Exists(triggerFilepath))
                 {
                     File.Delete(triggerFilepath);
+                    logger.Debug("Deleted trigger file: " + filename);
                 }
             }
+        }
+
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
 
         List<QueryComposerModelProcessor.DocumentEx> FilesToUpload(string directory)
@@ -390,21 +465,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             Guid documentID;
 
             string manifestFilepath = Path.Combine(directory, OutputManifestFilename);
+            logger.Debug("Starting read of manifest file of " + OutputManifestFilename);
             if (!File.Exists(manifestFilepath))
             {
-                //If the manifest file is not present, then we're not going to return any files. (ASPE-497)
-
-                //foreach(string filename in Directory.GetFiles(directory))
-                //{
-                //    fi = new FileInfo(filename);
-                //    documentID = QueryComposerModelProcessor.NewGuid();
-                //    documents.Add(new QueryComposerModelProcessor.DocumentEx {
-                //        ID = documentID,
-                //        Document = new Document(documentID, QueryComposerModelProcessor.GetMimeType(fi.Name), fi.Name, false, Convert.ToInt32(fi.Length), TranslateTriggerFilenameToDocumentKind(fi.Name)),
-                //        FileInfo = fi                        
-                //    });
-                //}
-
+                logger.Debug("Manifest file cannot be read or file doesn't exists.");
                 return documents;
             }
 
@@ -416,9 +480,16 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 ID = documentID,
                 Document =  new Document(documentID, QueryComposerModelProcessor.GetMimeType(fi.Name), fi.Name, false, Convert.ToInt32(fi.Length), TranslateTriggerFilenameToDocumentKind(fi.Name)),
                 FileInfo = fi
-            });            
-            
+            });
 
+            DateTime maxEndTime = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_settings.GetAsString("MaxReadWaitTime", "5")));
+            while (IsFileLocked(fi))
+            {
+                if (DateTime.UtcNow > maxEndTime)
+                {
+                    throw new Exception("The maximum time to wait to read the manifest file has been exceeded and it is still locked.");
+                }
+            }
             using (var stream = File.OpenText(manifestFilepath))
             {
                 //read the header line

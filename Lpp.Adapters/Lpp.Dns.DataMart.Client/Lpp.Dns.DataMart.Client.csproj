@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <RestorePackages>true</RestorePackages>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <NuGetPackageImportStamp>bce64356</NuGetPackageImportStamp>
@@ -81,7 +81,7 @@
   <PropertyGroup>
     <StartupObject>Lpp.Dns.DataMart.Client.Program</StartupObject>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -200,6 +200,9 @@
     <Compile Include="Controls\DataSourceEditor.Designer.cs">
       <DependentUpon>DataSourceEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransparentLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,6 +226,12 @@
     </Compile>
     <Compile Include="Forms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateRefreshRateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateRefreshRateForm.Designer.cs">
+      <DependentUpon>UpdateRefreshRateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ViewSQL.cs">
       <SubType>Form</SubType>
@@ -402,6 +411,9 @@
       <DependentUpon>RequestDetailForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateRefreshRateForm.resx">
+      <DependentUpon>UpdateRefreshRateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ViewSQL.resx">
       <DependentUpon>ViewSQL.cs</DependentUpon>
     </EmbeddedResource>
@@ -424,8 +436,8 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\Configuration.datasource" />
+    <None Include="Properties\DataSources\Lpp.Dns.DataMart.Model.Document.datasource" />
     <None Include="Properties\DataSources\MasterRequestQueue.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -443,6 +455,7 @@
       <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
       <Name>Lpp.Dns.DTO</Name>
     </ProjectReference>
+    
     <ProjectReference Include="..\Lpp.Dns.DataMart.Client.DomainManger\Lpp.Dns.DataMart.Client.DomainManger.csproj">
       <Project>{36193b7d-3223-42bf-8eb0-e6eaeb0097b4}</Project>
       <Name>Lpp.Dns.DataMart.Client.DomainManger</Name>
@@ -513,22 +526,22 @@
   <ItemGroup>
     <PublishFile Include="System.Net.Http">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
     <PublishFile Include="System.Net.Http.Primitives">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>

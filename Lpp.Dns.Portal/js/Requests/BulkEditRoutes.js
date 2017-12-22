@@ -139,3 +139,4 @@ var Requests;
         init();
     })(BulkEditRoutes = Requests.BulkEditRoutes || (Requests.BulkEditRoutes = {}));
 })(Requests || (Requests = {}));
+//# sourceMappingURL=BulkEditRoutes.js.map

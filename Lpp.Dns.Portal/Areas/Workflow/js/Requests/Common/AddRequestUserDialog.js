@@ -3,6 +3,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var Common;
@@ -84,3 +86,4 @@ var Workflow;
         })(AddRequestUserDialog = Common.AddRequestUserDialog || (Common.AddRequestUserDialog = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=AddRequestUserDialog.js.map

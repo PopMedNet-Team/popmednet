@@ -13,19 +13,20 @@ var Controls;
         var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestFileList, requestID, bindingControl) {
-                _super.call(this, bindingControl);
-                this.sFtpRoot = new sFtpItem("/", "/", ItemTypes.Folder);
-                this.RequestID = requestID;
-                this.RequestFileList = ko.observableArray($.map(requestFileList, function (item) { return new Existingfile(item); }));
-                this.RemovedFilesList = ko.observableArray();
-                this.sFtpAddress = ko.observable(Global.Session(User.ID + "sftpHost") || "");
-                this.sFtpPort = ko.observable(Global.Session(User.ID + "sftpPort") || 22);
-                this.sFtpLogin = ko.observable(Global.Session(User.ID + "sftpLogin") || "");
-                this.sFtpPassword = ko.observable(Global.Session(User.ID + "sftpPassword") || "");
-                this.sFtpConnected = ko.observable(false);
-                this.sFtpSelectedFiles = ko.observableArray();
-                this.sFtpCurrentPath = ko.observable(this.sFtpRoot);
-                this.sFtpFolders = ko.observableArray([this.sFtpRoot]);
+                var _this = _super.call(this, bindingControl) || this;
+                _this.sFtpRoot = new sFtpItem("/", "/", ItemTypes.Folder);
+                _this.RequestID = requestID;
+                _this.RequestFileList = ko.observableArray($.map(requestFileList, function (item) { return new Existingfile(item); }));
+                _this.RemovedFilesList = ko.observableArray();
+                _this.sFtpAddress = ko.observable(Global.Session(User.ID + "sftpHost") || "");
+                _this.sFtpPort = ko.observable(Global.Session(User.ID + "sftpPort") || 22);
+                _this.sFtpLogin = ko.observable(Global.Session(User.ID + "sftpLogin") || "");
+                _this.sFtpPassword = ko.observable(Global.Session(User.ID + "sftpPassword") || "");
+                _this.sFtpConnected = ko.observable(false);
+                _this.sFtpSelectedFiles = ko.observableArray();
+                _this.sFtpCurrentPath = ko.observable(_this.sFtpRoot);
+                _this.sFtpFolders = ko.observableArray([_this.sFtpRoot]);
+                return _this;
             }
             ViewModel.prototype.RemoveFile = function (uploadedFileModel) {
                 vm.RequestFileList.remove(uploadedFileModel);
@@ -153,11 +154,11 @@ var Controls;
             ko.applyBindings(vm, bindingControl[0]);
         }
         MultifileUploader.init = init;
+        var ItemTypes;
         (function (ItemTypes) {
             ItemTypes[ItemTypes["Folder"] = 0] = "Folder";
             ItemTypes[ItemTypes["File"] = 1] = "File";
-        })(MultifileUploader.ItemTypes || (MultifileUploader.ItemTypes = {}));
-        var ItemTypes = MultifileUploader.ItemTypes;
+        })(ItemTypes = MultifileUploader.ItemTypes || (MultifileUploader.ItemTypes = {}));
         var sFtpFileResults = (function () {
             function sFtpFileResults() {
                 this.Results = ko.observableArray();

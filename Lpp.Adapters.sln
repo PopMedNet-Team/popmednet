@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Interfaces", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj", "{325D9B27-88F8-49D3-A347-40A22881624C}"
 EndProject
@@ -220,5 +220,8 @@ Global
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{1BCE7532-35EF-4875-A26D-FE690516983E} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14476E95-1871-4452-BFFE-C0E67687681B}
 	EndGlobalSection
 EndGlobal

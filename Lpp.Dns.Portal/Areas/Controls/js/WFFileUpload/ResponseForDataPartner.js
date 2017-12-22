@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -50,7 +51,9 @@ var Controls;
                             return false;
                         }
                         item.Selected(true);
+                        //See if we have any with this path. If not, load it
                         if (!item.Loaded()) {
+                            //Load data for the given path.                
                             self.sFtpLoadPath(item, self.Credentials);
                         }
                         else {
@@ -157,6 +160,7 @@ var Controls;
                         Password: data.sFtpPassword(),
                         Port: data.sFtpPort()
                     };
+                    //Do an ajax call to validate the server credentials
                     $.ajax({
                         url: "/controls/wffileupload/VerifyFTPCredentials",
                         type: "POST",
@@ -201,6 +205,7 @@ var Controls;
             }(Global.DialogViewModel));
             ResposnseForDataPartner.ViewModel = ViewModel;
             function init() {
+                //In this case we do all of the data stuff in the view model because it has the parameters.
                 $(function () {
                     var bindingControl = $("body");
                     vm = new ViewModel(bindingControl);
@@ -249,3 +254,4 @@ var Controls;
         })(ResposnseForDataPartner = WFFileUpload.ResposnseForDataPartner || (WFFileUpload.ResposnseForDataPartner = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=ResponseForDataPartner.js.map

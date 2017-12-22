@@ -3,6 +3,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/requests/details.ts" />
+/// <reference path="../../../../js/_layout.ts" />
+/// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -29,6 +32,7 @@ var Controls;
                             ID: Constants.Guid.newGuid()
                         }));
                     }
+                    //Get the modular program term
                     _this.Term = ko.utils.arrayFirst(_this.Request.Where.Criteria()[0].Terms(), function (term) { return term.Type().toUpperCase() === _this.TermID.toUpperCase(); });
                     if (!_this.Term) {
                         _this.Term = new Dns.ViewModels.QueryComposerTermViewModel({
@@ -40,6 +44,7 @@ var Controls;
                         });
                         _this.Request.Where.Criteria()[0].Terms.push(_this.Term);
                     }
+                    //NOTE: this.Term.Values.Documents is not an observable but this.Term.Values is
                     if (!_this.Term.Values().Documents || _this.Term.Values().Documents == null) {
                         _this.Term.Values().Documents = [];
                     }
@@ -81,7 +86,9 @@ var Controls;
                             return false;
                         }
                         item.Selected(true);
+                        //See if we have any with this path. If not, load it
                         if (!item.Loaded()) {
+                            //Load data for the given path.                
                             self.sFtpLoadPath(item, self.Credentials);
                         }
                         else {
@@ -167,6 +174,7 @@ var Controls;
                         Password: data.sFtpPassword(),
                         Port: data.sFtpPort()
                     };
+                    //Do an ajax call to validate the server credentials
                     $.ajax({
                         url: "/controls/wffileupload/VerifyFTPCredentials",
                         type: "POST",
@@ -221,3 +229,4 @@ var Controls;
         })(Index = WFFileUpload.Index || (WFFileUpload.Index = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Index.js.map

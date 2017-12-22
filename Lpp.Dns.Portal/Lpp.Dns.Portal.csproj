@@ -21,7 +21,7 @@
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
@@ -1030,6 +1030,10 @@
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\EditStratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\StratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\View.cshtml" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Content\ChildSelectDialog.css.map">
       <DependentUpon>ChildSelectDialog.css</DependentUpon>
     </None>
@@ -1134,6 +1138,7 @@
     <Content Include="Views\DataMarts\Details.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Groups\Index.cshtml" />
+    <Content Include="tsconfig.json" />
     <None Include="Views\QlikTest\DivIntegration.cshtml" />
     <None Include="Views\QlikTest\Index.cshtml" />
     <None Include="Views\QlikTest\Qlik ReadMe.txt" />
@@ -1692,10 +1697,6 @@
       <Project>{a6b520b9-e5a9-40a0-ad89-46c387480644}</Project>
       <Name>Lpp.Dns.Scheduler.Jobs</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lpp.Dns.WebSites\Lpp.Dns.WebSites.csproj">
-      <Project>{bc2d0954-5a4c-4c7a-828c-cfab4920e155}</Project>
-      <Name>Lpp.Dns.WebSites</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Audit.UI\Lpp.Audit.UI.csproj">
       <Project>{4EC1AE43-C7F6-445C-9A33-2A9D19B7F3E0}</Project>
       <Name>Lpp.Audit.UI</Name>
@@ -1769,10 +1770,6 @@
       <Project>{b8de912f-6691-4d6f-aa52-595d7ba31274}</Project>
       <Name>Lpp.Dns.HealthCare.Conditions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Controls.Codes\Lpp.Dns.HealthCare.Controls.Codes.csproj">
-      <Project>{ec8dc49f-bc5d-4c2c-adad-cfe70cd90d1a}</Project>
-      <Name>Lpp.Dns.HealthCare.Controls.Codes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Controls\Lpp.Dns.HealthCare.Controls.csproj">
       <Project>{96239d23-8094-4649-8b29-edc7c04dafba}</Project>
       <Name>Lpp.Dns.HealthCare.Controls</Name>
@@ -1827,11 +1824,11 @@
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
     <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
     <TypeScriptOutFile />
     <TypeScriptOutDir />
-    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />

@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>3d345ed0</NuGetPackageImportStamp>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="CodeFirstStoreFunctions, Version=0.1.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.0.0\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
@@ -2883,6 +2883,14 @@
     <Compile Include="Migrations\201611222102296_AddViewTrackingTablePermission.Designer.cs">
       <DependentUpon>201611222102296_AddViewTrackingTablePermission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708091535478_AddModifyResultsPermission.cs" />
+    <Compile Include="Migrations\201708091535478_AddModifyResultsPermission.Designer.cs">
+      <DependentUpon>201708091535478_AddModifyResultsPermission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708091615040_ModifyAclDataMartRightsTVF.cs" />
+    <Compile Include="Migrations\201708091615040_ModifyAclDataMartRightsTVF.Designer.cs">
+      <DependentUpon>201708091615040_ModifyAclDataMartRightsTVF.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3594,6 +3602,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611222102296_AddViewTrackingTablePermission.resx">
       <DependentUpon>201611222102296_AddViewTrackingTablePermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708091535478_AddModifyResultsPermission.resx">
+      <DependentUpon>201708091535478_AddModifyResultsPermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708091615040_ModifyAclDataMartRightsTVF.resx">
+      <DependentUpon>201708091615040_ModifyAclDataMartRightsTVF.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

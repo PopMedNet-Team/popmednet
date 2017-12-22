@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
     var WFNotifications;
@@ -36,7 +37,11 @@ var Controls;
                     _this.cboObserversTemplate = ko.observable("<span><p>#: data.DisplayName #</p></span>");
                     _this.ObserverEvents = ko.observableArray([]);
                     _this.RequestObserversSelected = ko.observableArray(null);
+                    //These are the request observers that already exist on the request.
                     _this.OriginalRequestObservers = ko.observableArray([]);
+                    //The observers being added
+                    //private RequestObservers: KnockoutObservableArray<Dns.Interfaces.IRequestObserverDTO> = ko.observableArray([]);
+                    //This collection is used to display all observers within the KendoMultiSelect control.
                     _this.CurrentObserver = ko.observable(null);
                     _this.SelectedObserverEvents = ko.observableArray([]);
                     _this.SelectedObserver = ko.observable(null);
@@ -48,6 +53,7 @@ var Controls;
                     var self = _this;
                     self.RequestID = requestID;
                     self.OriginalRequestObservers.push.apply(self.OriginalRequestObservers, requestObservers);
+                    //self.RequestObservers.push.apply(self.RequestObservers, requestObservers);
                     self.ObserverEvents.push.apply(self.ObserverEvents, observerEvents);
                     self.RequestObservers().forEach(function (item) {
                         self.RequestObserversSelected().push(item.getID.toString());
@@ -65,6 +71,7 @@ var Controls;
                     };
                     self.onSave = function () {
                         if (self.RequestObservers().length == 0) {
+                            //if (self.NewRequestObservers().length == 0) {
                             Global.Helpers.ShowAlert("Required", "No observers have been added.", 500);
                             return;
                         }
@@ -76,6 +83,7 @@ var Controls;
                         self.RequestObservers().forEach(function (item) {
                             var newObserver = new Dns.ViewModels.RequestObserverViewModel();
                             var reqObserver = item.getObserver();
+                            // jtedit could be bad
                             newObserver.DisplayName(reqObserver.DisplayName);
                             newObserver.Email(reqObserver.Email);
                             newObserver.ID(reqObserver.ID);
@@ -123,6 +131,10 @@ var Controls;
                             Global.Helpers.ShowAlert("Required", "E-Mail Address is required.", 500);
                             return;
                         }
+                        //if (self.EmailObserverName() == null || self.EmailObserverName() == "") {
+                        //    Global.Helpers.ShowAlert("Required", "Display Name is required.", 500);
+                        //    return;
+                        //}
                         if (self.RequestObservers().some(function (item) { return (item.getEmail.toString() == self.EmailObserverAddress()); })) {
                             Global.Helpers.ShowAlert("Duplicate", "The selected email observer already exists on the request.", 500);
                             return;
@@ -131,6 +143,7 @@ var Controls;
                             Global.Helpers.ShowAlert("Duplicate", "The selected email observer already exists on the request.", 500);
                             return;
                         }
+                        //Validate the email address.
                         var regexp = new RegExp("^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$");
                         var isValidEmail = regexp.test(self.EmailObserverAddress());
                         if (isValidEmail == false) {
@@ -142,12 +155,18 @@ var Controls;
                         observer.Email(self.EmailObserverAddress());
                         observer.RequestID(self.RequestID);
                         observer.ID(Constants.Guid.newGuid());
+                        //Push the observer to the requestobservers
                         var iObserver = observer.toData();
+                        // jtedit could be bad
                         self.RequestObservers.push(new ViewModel.ObserverObj(iObserver));
+                        //Simply adding the new ID to the Selected observers list was not updating the multiselect.
+                        //So we remove all and then re-add everythign.
+                        //self.RequestObserversSelected().push(iObserver.ID.toString());
                         self.RequestObserversSelected.removeAll();
                         self.RequestObservers().forEach(function (item) {
                             self.RequestObserversSelected().push(item.getID.toString());
                         });
+                        //Clear the text-boxes/observables
                         self.EmailObserverAddress("");
                         self.EmailObserverName("");
                     };
@@ -157,6 +176,7 @@ var Controls;
                             return;
                         }
                         if (self.RequestObservers().some(function (item) { return (item.getUserID() == self.SelectedObserver().ID || item.getSecurityGroupID() == self.SelectedObserver().ID); })) {
+                            //if (self.RequestObservers().some((item) => { return (item.UserID == self.SelectedObserver().ID || item.SecurityGroupID == self.SelectedObserver().ID) })) {
                             Global.Helpers.ShowAlert("Duplicate", "The selected observer already exists on the request.", 500);
                             return;
                         }
@@ -175,16 +195,23 @@ var Controls;
                         else {
                             observer.SecurityGroupID(self.SelectedObserver().ID);
                         }
+                        //Push the observer to the list
                         var iObserver = observer.toData();
+                        // jtedit could be bad
                         self.RequestObservers.push(new ViewModel.ObserverObj(iObserver));
+                        //Simply adding the new ID to the Selected observers list was not updating the multiselect.
+                        //So we remove all and then re-add everythign.
+                        //self.RequestObserversSelected().push(iObserver.ID.toString());
                         self.RequestObserversSelected.removeAll();
                         self.RequestObservers().forEach(function (item) {
                             self.RequestObserversSelected().push(item.getID.toString());
                         });
+                        //Clear the observable + autocomplete textbox
                         self.requestObserverWidget().value("");
                         self.SelectedObserver(null);
                     };
                     self.onSelectObserver = function (e) {
+                        //Check if the widget is initialized
                         if (self.requestObserverWidget() == null) {
                             self.SelectedObserver(null);
                             return;
@@ -197,6 +224,7 @@ var Controls;
                         var found = false;
                         var value = self.requestObserverWidget().value();
                         var data = self.requestObserverWidget().dataSource.view();
+                        //Only find a match if the text value is a match for the selected value.
                         if (self.SelectedObserver() != null && value == self.SelectedObserver().DisplayName) {
                             for (var idx = 0, length = data.length; idx < length; idx++) {
                                 if (data[idx].ID === self.SelectedObserver().ID) {
@@ -206,8 +234,11 @@ var Controls;
                             }
                         }
                         if (!found) {
+                            //Clear the KendoAutoComplete's textbox value
                             self.requestObserverWidget().value("");
+                            //Clear the Selected Observer
                             self.SelectedObserver(null);
+                            //Show a warning to the user
                             $("#lblCustomValue").show();
                         }
                     };
@@ -265,3 +296,4 @@ var Controls;
         })(AddUsers = WFNotifications.AddUsers || (WFNotifications.AddUsers = {}));
     })(WFNotifications = Controls.WFNotifications || (Controls.WFNotifications = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=AddUsers.js.map

@@ -108,51 +108,8 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
 
             if (activityResultID.Value == EditRoutingStatusResultID)
             {
-
-                //To Do: Update Routing Status with new data
-                var dataMarts = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<RequestDataMartModel>>(data);
-
-                //load up request datamart objects 
-                var requestDataMartIDs = dataMarts.Select(i => i.RequestDataMartID).ToArray();
-                var requestDataMarts = db.RequestDataMarts.Include(rdm => rdm.Responses).Where(dm => requestDataMartIDs.Contains(dm.ID)).ToArray();
-
-
-                foreach (var requestDataMart in requestDataMarts)
-                {
-                    var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, requestDataMart.RequestID, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
-
-                    if (!permissions.Any())
-                    {
-                        throw new SecurityException("You do not have permission to override the status of a routing for one or more of the specified DataMarts.");
-                    }
-
-
-                    foreach (var dataMart in dataMarts)
-                    {
-                        if (dataMart.RequestDataMartID == requestDataMart.ID)
-                        {
-                            requestDataMart.Status = dataMart.NewStatus;
-                            var currentResponse = requestDataMart.Responses.OrderBy(r => r.Count).FirstOrDefault();
-                            currentResponse.ResponseMessage = dataMart.Message;
-                            if (dataMart.NewStatus == DTO.Enums.RoutingStatus.Completed)
-                            {
-                                currentResponse.ResponseTime = DateTime.UtcNow;
-                                currentResponse.RespondedByID = _workflow.Identity.ID;
-                            }
-
-                        }
-                    }
-
-                }
-
-                await LogTaskModified("One or more routings had their status modified.");
-                var originalStatus = _entity.Status;
-                await db.SaveChangesAsync();
-                await db.Entry(_entity).ReloadAsync();
-                if (originalStatus != DTO.Enums.RequestStatuses.Complete && _entity.Status == DTO.Enums.RequestStatuses.Complete)
-                {
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Complete);
-                }
+                var dataMarts = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<RoutingChangeRequestModel>>(data);
+                await UpdateDataMartRoutingStatus(dataMarts);
 
                 return new CompletionResult
                 {
@@ -410,17 +367,6 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             };
         }
 
-        public async Task LogTaskModified(string message = "")
-        {
-            var task = await PmnTask.GetActiveTaskForRequestActivityAsync(_entity.ID, ID, db);
-            if (task == null)
-            {
-                task = db.Actions.Add(PmnTask.CreateForWorkflowActivity(_entity.ID, ID, _workflow.ID, db));
-                return;
-            }
-
-            await task.LogAsModifiedAsync(_workflow.Identity, db, message);
-        }
     }
 
     public class GroupingRequestModel
@@ -428,17 +374,6 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
         public string GroupName { get; set; }
 
         public IEnumerable<Guid> Responses { get; set; }
-    }
-
-    public class RequestDataMartModel
-    {
-        public Guid RequestDataMartID { get; set; }
-
-        public Guid DataMartID { get; set; }
-
-        public DTO.Enums.RoutingStatus NewStatus { get; set; }
-
-        public string Message { get; set; }
     }
 
     public class ResubmitRoutingsModel

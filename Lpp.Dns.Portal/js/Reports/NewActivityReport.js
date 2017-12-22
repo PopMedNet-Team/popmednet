@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../Scripts/Common.ts" />
 var Reports;
 (function (Reports) {
     var NewActivityReport;
@@ -49,9 +50,11 @@ var Reports;
                 this.SelectedProjects().forEach(function (projectID) {
                     url += "&Projects=" + projectID;
                 });
+                //Execute and display the data retrieved
                 $.getJSON(url).done(function (data) {
                     var model = JSON.parse(data);
                     _this.Results(model.Results);
+                    //Calculate the summary data here
                     _this.Summary(model.Summary);
                     _this.Total(model.Results.length);
                     _this.HeaderStartDate(dStartDate);
@@ -80,3 +83,4 @@ var Reports;
         init();
     })(NewActivityReport = Reports.NewActivityReport || (Reports.NewActivityReport = {}));
 })(Reports || (Reports = {}));
+//# sourceMappingURL=NewActivityReport.js.map

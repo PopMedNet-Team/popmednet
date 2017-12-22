@@ -227,7 +227,7 @@ namespace Lpp.Dns.Data
             }
 
             db.Entry(rdm).Reference(r => r.Request).Load();
-            var details = db.RequestDataMarts.Where(dm => dm.ID == rdm.ID).Select(r => new { DataMartName = r.DataMart.Name, RequestName = r.Request.Name }).Single();
+            var details = db.RequestDataMarts.Where(dm => dm.ID == rdm.ID).Select(r => new { DataMartName = r.DataMart.Name, RequestName = r.Request.Name, RequestTypeName = r.Request.RequestType.Name }).Single();
             var currentTaskID = PmnTask.GetActiveTaskIDForRequestActivity(rdm.RequestID, rdm.Request.WorkFlowActivityID, db);
 
             var request = db.Requests.Find(rdm.RequestID);
@@ -306,6 +306,34 @@ namespace Lpp.Dns.Data
 
                 db.LogsRoutingStatusChange.Add(logRoutingStatusChanged);
                 logs.Add(logRoutingStatusChanged);
+            }
+
+            if(originalStatus != currentStatus && currentStatus == RoutingStatus.Resubmitted)
+            {
+
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+
+                var dmNumber = 0;
+                foreach (var dm in rdm.Request.DataMarts.OrderBy(d => d.ID))
+                {
+                    if (dm.ID == rdm.ID)
+                        break;
+                    dmNumber++;
+                }
+
+                //this is where the new request submitted log item should get created on a resubmit, not in the request
+                var newRequestResubmittedLogItem = new Audit.NewRequestSubmittedLog {
+                    Description = string.Format("New request of type '{0}' has been submitted by {1} ** from REQUESTDATAMART CLASS **", details.RequestTypeName, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                    UserID = identity == null ? Guid.Empty : identity.ID,
+                    RequestID = request.ID,
+                    RequestDataMartID = rdm.ID,
+                    TaskID = currentTaskID
+                };
+
+                newRequestResubmittedLogItem.TimeStamp = DateTimeOffset.Now.AddMilliseconds(dmNumber);
+
+                db.LogsNewRequestSubmitted.Add(newRequestResubmittedLogItem);
+                logs.Add(newRequestResubmittedLogItem);
             }
 
             return logs.AsEnumerable();
@@ -448,7 +476,7 @@ namespace Lpp.Dns.Data
                     db.Entry(request).Reference(r => r.RequestType).Load();
 
                 var dmNumber = 0;
-                foreach (var dm in rdm.Request.DataMarts)
+                foreach (var dm in rdm.Request.DataMarts.OrderBy(d => d.ID))
                 {
                     if (dm.ID == rdm.ID)
                         break;
@@ -466,6 +494,7 @@ namespace Lpp.Dns.Data
                     RequestDataMart = rdm,
                     TaskID = currentTaskID
                 };
+
                 newRequestSubmittedLogItem.TimeStamp = DateTimeOffset.Now.AddMilliseconds(dmNumber);
 
                 db.LogsNewRequestSubmitted.Add(newRequestSubmittedLogItem);

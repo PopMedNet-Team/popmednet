@@ -47,6 +47,61 @@ namespace Lpp.Dns.Data.Documents
             
         }
 
+        /// <summary>
+        /// Copy data from a stream using a specified buffer size if the source allows seeking
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="bufferSize"></param>
+        /// <returns></returns>
+        public async Task CopyFromStreamAsync(Stream source, int bufferSize)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            if (this == null)
+                throw new ArgumentNullException("destination");
+
+            if (bufferSize <= 0)
+                throw new ArgumentOutOfRangeException("bufferSize", "bufferSize must be greater than zero");
+
+            //The source stream may not support seeking; e.g. a stream returned by ZipArchiveEntry.Open() or a network stream.
+            var size = bufferSize;
+            var canSeek = source.CanSeek;
+
+            if (canSeek)
+            {
+                try
+                {
+                    size = Convert.ToInt32(Math.Min(bufferSize, source.Length));
+                }
+                catch (NotSupportedException) { canSeek = false; }
+            }
+
+            var buffer = new byte[size];
+            var remaining = canSeek ? source.Length : 0;
+
+            //If the stream is seekable, seek through it until all bytes are read.
+            //If we read less than the expected number of bytes, it indicates an error, so throw the appropriate exception.
+            //If the stream is not seekable, loop until we read 0 bytes. (It’s not an error in this case.)
+            while (!canSeek || remaining > 0)
+            {
+                var read = await source.ReadAsync(buffer, 0, size);
+
+                if (read <= 0)
+                {
+                    if (canSeek)
+                        throw new EndOfStreamException(
+                            string.Format("End of stream reached, but { 0 } remained to be read.",
+                              remaining));
+                    else
+                        break;
+                }
+
+                await this.WriteAsync(buffer, 0, read);
+                remaining -= canSeek ? read : 0;
+            }
+        }
+
         public override long Length
         {
             get

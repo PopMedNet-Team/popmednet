@@ -147,3 +147,4 @@ var Requests;
         init();
     })(BulkEdit = Requests.BulkEdit || (Requests.BulkEdit = {}));
 })(Requests || (Requests = {}));
+//# sourceMappingURL=BulkEdit.js.map

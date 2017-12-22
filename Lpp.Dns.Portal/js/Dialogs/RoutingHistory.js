@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Dialog;
 (function (Dialog) {
     var RoutingHistory;
@@ -32,3 +33,4 @@ var Dialog;
         init();
     })(RoutingHistory = Dialog.RoutingHistory || (Dialog.RoutingHistory = {}));
 })(Dialog || (Dialog = {}));
+//# sourceMappingURL=RoutingHistory.js.map

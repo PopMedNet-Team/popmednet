@@ -11,10 +11,10 @@ using System.ServiceModel;
 #pragma warning disable 618 //XmlDataDocument is obsolete
 namespace Lpp.Dns.DataMart.Lib
 {
-    public class Util
+    public static class Util
     {
 
-        #region Constants        
+        //Constants        
 
         public const string LoggedInStatus = "LoggedIn";
         public const string LoggedOutStatus = "LoggedOut";
@@ -24,13 +24,18 @@ namespace Lpp.Dns.DataMart.Lib
         public const string ConnectionFailedStatus = "Connection Failed";
 
 
-        static string passPhrase = "688F021D-2F3B-465b-BB90-2F4056D79340";
-        static string saltValue = "10A450C7-C15A-4f12-842B-1861131EA0E5";//MacAddress;
-        static string hashAlgorithm = "SHA1";
-        static int passwordIterations = 2;
-        static string initVector = "20EB643D-2EFA-4e";
-        static int keySize = 256;
-        #endregion
+        static readonly string passPhrase = "688F021D-2F3B-465b-BB90-2F4056D79340";
+        static readonly byte[] SaltValueBytes;
+        const string HashAlgorithm = "SHA1";
+        const int PasswordIterations = 2;
+        static readonly byte[] InitVectorBytes;
+        const int KeySize = 256;
+
+        static Util()
+        {
+            InitVectorBytes = Encoding.ASCII.GetBytes("20EB643D-2EFA-4e");
+            SaltValueBytes = Encoding.ASCII.GetBytes("10A450C7-C15A-4f12-842B-1861131EA0E5");
+        }
 
         #region "QueryTypeConstants"
 
@@ -154,63 +159,67 @@ namespace Lpp.Dns.DataMart.Lib
             // Let us assume that strings only contain ASCII codes.
             // If strings include Unicode characters, use Unicode, UTF7, or UTF8 
             // encoding.
-            byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
-            byte[] saltValueBytes = Encoding.ASCII.GetBytes(saltValue);
+            //byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+            //byte[] saltValueBytes = Encoding.ASCII.GetBytes(saltValue);            
 
-            // Convert our plaintext into a byte array.
-            // Let us assume that plaintext contains UTF8-encoded characters.
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(inputText);
+            string cipherText = null;
 
             // First, we must create a password, from which the key will be derived.
             // This password will be generated from the specified passphrase and 
             // salt value. The password will be created using the specified hash 
             // algorithm. Password creation can be done in several iterations.
-            PasswordDeriveBytes password = new PasswordDeriveBytes(
+            using (PasswordDeriveBytes password = new PasswordDeriveBytes(
                                                             passPhrase,
-                                                            saltValueBytes,
-                                                            hashAlgorithm,
-                                                            passwordIterations);
-
-            // Use the password to generate pseudo-random bytes for the encryption
-            // key. Specify the size of the key in bytes (instead of bits).
-            byte[] keyBytes = password.GetBytes(keySize / 8);
-
+                                                            SaltValueBytes,
+                                                            HashAlgorithm,
+                                                            PasswordIterations))
             // Create uninitialized Rijndael encryption object.
-            RijndaelManaged symmetricKey = new RijndaelManaged();
+            using (RijndaelManaged symmetricKey = new RijndaelManaged())
+            {
 
-            // It is reasonable to set encryption mode to Cipher Block Chaining
-            // (CBC). Use default options for other symmetric key parameters.
-            symmetricKey.Mode = CipherMode.CBC;
 
-            // Generate encryptor from the existing key bytes and initialization 
-            // vector. Key size will be defined based on the number of the key 
-            // bytes.
-            ICryptoTransform encryptor = symmetricKey.CreateEncryptor(
-                                                             keyBytes,
-                                                             initVectorBytes);
+                // It is reasonable to set encryption mode to Cipher Block Chaining
+                // (CBC). Use default options for other symmetric key parameters.
+                symmetricKey.Mode = CipherMode.CBC;
 
-            // Define memory stream which will be used to hold encrypted data.
-            MemoryStream memoryStream = new MemoryStream();
+                // Generate encryptor from the existing key bytes and initialization 
+                // vector. Key size will be defined based on the number of the key 
+                // bytes.
+                // Use the password to generate pseudo-random bytes for the encryption
+                // key. Specify the size of the key in bytes (instead of bits).
+                using (ICryptoTransform encryptor = symmetricKey.CreateEncryptor(password.GetBytes(KeySize / 8), InitVectorBytes))
+                {
 
-            // Define cryptographic stream (always use Write mode for encryption).
-            CryptoStream cryptoStream = new CryptoStream(memoryStream,
-                                                         encryptor,
-                                                         CryptoStreamMode.Write);
-            // Start encrypting.
-            cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
+                    // Define memory stream which will be used to hold encrypted data.
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        // Define cryptographic stream (always use Write mode for encryption).
+                        using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                        {
+                            // Convert our plaintext into a byte array.
+                            // Assume that plaintext contains UTF8-encoded characters.
+                            byte[] plainTextBytes = Encoding.UTF8.GetBytes(inputText);
 
-            // Finish encrypting.
-            cryptoStream.FlushFinalBlock();
+                            // Start encrypting.
+                            cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
 
-            // Convert our encrypted data from a memory stream into a byte array.
-            byte[] cipherTextBytes = memoryStream.ToArray();
+                            // Finish encrypting.
+                            cryptoStream.FlushFinalBlock();
 
-            // Close both streams.
-            memoryStream.Close();
-            cryptoStream.Close();
+                            // Convert our encrypted data from a memory stream into a byte array.
+                            byte[] cipherTextBytes = memoryStream.ToArray();
 
-            // Convert encrypted data into a base64-encoded string.
-            string cipherText = Convert.ToBase64String(cipherTextBytes);
+                            // Close both streams.
+                            memoryStream.Close();
+                            cryptoStream.Close();
+
+                            // Convert encrypted data into a base64-encoded string.
+                            cipherText = Convert.ToBase64String(cipherTextBytes);
+                        }
+                    }
+
+                }
+            }
 
             // Return encrypted string.
             return cipherText;
@@ -222,70 +231,61 @@ namespace Lpp.Dns.DataMart.Lib
             // arrays. Let us assume that strings only contain ASCII codes.
             // If strings include Unicode characters, use Unicode, UTF7, or UTF8
             // encoding.
-            byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
-            byte[] saltValueBytes = Encoding.ASCII.GetBytes(saltValue);
+            //byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+            //byte[] saltValueBytes = Encoding.ASCII.GetBytes(saltValue);
 
-            // Convert our ciphertext into a byte array.
-            byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
+            string plainText = null;
 
             // First, we must create a password, from which the key will be 
             // derived. This password will be generated from the specified 
             // passphrase and salt value. The password will be created using
             // the specified hash algorithm. Password creation can be done in
             // several iterations.
-            PasswordDeriveBytes password = new PasswordDeriveBytes(
+            using (PasswordDeriveBytes password = new PasswordDeriveBytes(
                                                             passPhrase,
-                                                            saltValueBytes,
-                                                            hashAlgorithm,
-                                                            passwordIterations);
-
-            // Use the password to generate pseudo-random bytes for the encryption
-            // key. Specify the size of the key in bytes (instead of bits).
-            byte[] keyBytes = password.GetBytes(keySize / 8);
-
+                                                            SaltValueBytes,
+                                                            HashAlgorithm,
+                                                            PasswordIterations))
             // Create uninitialized Rijndael encryption object.
-            RijndaelManaged symmetricKey = new RijndaelManaged();
+            using (RijndaelManaged symmetricKey = new RijndaelManaged())
+            {
+                // It is reasonable to set encryption mode to Cipher Block Chaining
+                // (CBC). Use default options for other symmetric key parameters.
+                symmetricKey.Mode = CipherMode.CBC;
 
-            // It is reasonable to set encryption mode to Cipher Block Chaining
-            // (CBC). Use default options for other symmetric key parameters.
-            symmetricKey.Mode = CipherMode.CBC;
+                // Generate decryptor from the existing key bytes and initialization 
+                // vector. Key size will be defined based on the number of the key 
+                // bytes.
+                // Use the password to generate pseudo-random bytes for the encryption
+                // key. Specify the size of the key in bytes (instead of bits).
+                using (ICryptoTransform decryptor = symmetricKey.CreateDecryptor(password.GetBytes(KeySize / 8), InitVectorBytes))
+                {
 
-            // Generate decryptor from the existing key bytes and initialization 
-            // vector. Key size will be defined based on the number of the key 
-            // bytes.
-            ICryptoTransform decryptor = symmetricKey.CreateDecryptor(
-                                                             keyBytes,
-                                                             initVectorBytes);
+                    // Convert our ciphertext into a byte array.
+                    byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
 
-            // Define memory stream which will be used to hold encrypted data.
-            MemoryStream memoryStream = new MemoryStream(cipherTextBytes);
+                    // Define cryptographic stream (always use Read mode for encryption).
+                    using (CryptoStream cryptoStream = new CryptoStream(new MemoryStream(cipherTextBytes), decryptor, CryptoStreamMode.Read))
+                    {
 
-            // Define cryptographic stream (always use Read mode for encryption).
-            CryptoStream cryptoStream = new CryptoStream(memoryStream,
-                                                          decryptor,
-                                                          CryptoStreamMode.Read);
+                        // Since at this point we don't know what the size of decrypted data
+                        // will be, allocate the buffer long enough to hold ciphertext;
+                        // plaintext is never longer than ciphertext.
+                        byte[] plainTextBytes = new byte[cipherTextBytes.Length];
 
-            // Since at this point we don't know what the size of decrypted data
-            // will be, allocate the buffer long enough to hold ciphertext;
-            // plaintext is never longer than ciphertext.
-            byte[] plainTextBytes = new byte[cipherTextBytes.Length];
+                        // Start decrypting.
+                        int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
 
-            // Start decrypting.
-            int decryptedByteCount = cryptoStream.Read(plainTextBytes,
-                                                       0,
-                                                       plainTextBytes.Length);
+                        cryptoStream.Close();
 
-            // Close both streams.
-            memoryStream.Close();
-            cryptoStream.Close();
-
-            // Convert decrypted data into a string. 
-            // Let us assume that the original plaintext string was UTF8-encoded.
-            string plainText = Encoding.UTF8.GetString(plainTextBytes,
-                                                       0,
-                                                       decryptedByteCount);
-
-            // Return decrypted string.   
+                        // Convert decrypted data into a string. 
+                        // Let us assume that the original plaintext string was UTF8-encoded.
+                        plainText = Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+                    }
+                }
+                
+            }
+               
             return plainText;
         }
 

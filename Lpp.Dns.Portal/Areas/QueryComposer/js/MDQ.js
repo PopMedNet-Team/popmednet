@@ -1,3 +1,5 @@
+/// <reference path="../../../js/_rootlayout.ts" />
+/// <reference path="termvaluefilter.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,6 +13,7 @@ var Plugins;
         (function (QueryBuilder) {
             var MDQ;
             (function (MDQ) {
+                //this is the filtered list of terms for the request type
                 MDQ.RequestTypeTermIDs = [];
                 var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
@@ -28,6 +31,7 @@ var Plugins;
                         _this.IsCriteriaGroupEdit = options.TemplateType === Dns.Enums.TemplateTypes.CriteriaGroup;
                         _this.IsPresetQuery = options.TemplateComposerInterface === Dns.Enums.QueryComposerInterface.PresetQuery;
                         _this.SubscriptionsArray = ko.observableArray();
+                        //remove any traces fo the querytype term
                         ko.utils.arrayForEach(options.Request.Where.Criteria || [], function (croot) {
                             ko.utils.arrayForEach(croot.Terms || [], function (troot) {
                                 croot.Terms = ko.utils.arrayFilter(croot.Terms, function (tt) { return !MDQ.Terms.Compare(tt.Type, MDQ.Terms.DataCheckerQueryTypeID); });
@@ -36,6 +40,7 @@ var Plugins;
                                 csub.Terms = ko.utils.arrayFilter(csub.Terms, function (tt) { return !MDQ.Terms.Compare(tt.Type, MDQ.Terms.DataCheckerQueryTypeID); });
                             });
                         });
+                        //check out options.Models
                         var termValueFilter = new Plugins.Requests.QueryBuilder.MDQ.TermValueFilter(ko.utils.arrayMap(options.Models, function (m) { return m.DataModelID; }));
                         _this.SexForCritieria = ko.observableArray(termValueFilter.SexValues());
                         _this.SettingForCritieria = ko.observableArray(termValueFilter.SettingsValues());
@@ -44,10 +49,12 @@ var Plugins;
                         _this.ShowAgeRangeCalculationSelections = ko.observable(termValueFilter.HasModel(MDQ.TermValueFilter.PCORnetModelID));
                         _this.TermList = options.VisualTerms;
                         _this.FilteredTermList = ko.observableArray([]);
+                        //make sure any new template properties exist on the request query json terms
                         termValueFilter.ConfirmTemplateProperties(options.Request, options.VisualTerms);
                         _this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(options.Request);
                         _this.AvailableOrganizations = ko.observableArray([]);
                         if (!_this.IsTemplateEdit) {
+                            //make sure all the criteria have an ID set
                             var confirmCritieriaID = function (criteria) {
                                 if (criteria.ID() == null)
                                     criteria.ID(Constants.Guid.newGuid());
@@ -68,6 +75,7 @@ var Plugins;
                             var list = [];
                             self.TermList.forEach(function (term) {
                                 if (Plugins.Requests.QueryBuilder.MDQ.RequestTypeTermIDs.length == 0) {
+                                    //Allow all terms.
                                     list.push(term);
                                 }
                                 if (term.Terms == null || term.Terms.length == 0) {
@@ -80,8 +88,11 @@ var Plugins;
                                     var termCategory = { Name: term.Name, Description: term.Description, TermID: term.TermID, Terms: [], ValueTemplate: term.ValueTemplate, IncludeInCriteria: term.IncludeInCriteria, IncludeInStratifiers: term.IncludeInStratifiers, IncludeInProjectors: term.IncludeInProjectors };
                                     term.Terms.forEach(function (childTerm) {
                                         if (childTerm.TermID != null) {
+                                            //if the specified models is only summary tables, age range should not be available as a criteria, only stratifier
                                             if (MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.AgeRangeID))
                                                 childTerm.IncludeInCriteria = options.IsTemplateEdit ? !(hasSummaryModel && RequestType.Details.vm.SelectedModels().length == 1) : !hasSummaryModel;
+                                            //for Coverage, Drug Class, Drug Name, HCPCS, and all the ICD-9 code terms, stratification is only applicable for Summary Tables Model
+                                            //They are key indicator terms that are required by the adapter to indicate the type of summary query.
                                             if (MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.CoverageID) ||
                                                 MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.DrugClassID) ||
                                                 MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.DrugNameID) ||
@@ -106,6 +117,7 @@ var Plugins;
                             self.FilteredTermList(list);
                         };
                         self.RefreshFilteredTermList();
+                        //load up the templateTerms that aren't allowed under the requestType/template
                         if (options.TemplateID) {
                             Dns.WebApi.Terms.ListTemplateTerms(options.TemplateID).done(function (templateTerms) {
                                 self.TemplateTerms = templateTerms;
@@ -122,6 +134,7 @@ var Plugins;
                                 var templateTerm;
                                 var outerAllowed = false;
                                 if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
                                     t.Terms.forEach(function (it) {
                                         templateTerm = ko.utils.arrayFirst(self.TemplateTerms, function (tt) { return tt.Section == Dns.Enums.QueryComposerSections.Criteria && tt.TermID == it.TermID; });
                                         childTermVM.push(new TermVm(it, [], templateTerm == null ? true : templateTerm.Allowed));
@@ -155,6 +168,7 @@ var Plugins;
                                 var templateTerm;
                                 var outerAllowed = false;
                                 if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
                                     t.Terms.forEach(function (it) {
                                         templateTerm = ko.utils.arrayFirst(self.TemplateTerms, function (tt) { return tt.Section == Dns.Enums.QueryComposerSections.Stratification && tt.TermID == it.TermID; });
                                         childTermVM.push(new TermVm(it, [], templateTerm == null ? true : templateTerm.Allowed));
@@ -178,10 +192,14 @@ var Plugins;
                             $('#FieldsSelector').kendoMenu({ orientation: 'vertical' });
                             return resultArr;
                         });
+                        //holds all of the terms that aren't allowed by the request type. 
+                        //updates when toggling checkboxes next to terms in template edit mode
                         _this.NotAllowedTerms = ko.computed(function () {
+                            //The first two arrays filter out the allowed terms (default). Which section the term came from is preserved by keeping the two arrays seperate.
                             var criteriaTerms = [];
                             ko.utils.arrayForEach(self.CriteriaTermList(), function (t) {
                                 if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
                                     t.Terms.forEach(function (it) {
                                         if (!it.Allowed()) {
                                             criteriaTerms.push(it);
@@ -196,6 +214,7 @@ var Plugins;
                             var stratTerms = [];
                             ko.utils.arrayForEach(self.StratifiersTermList(), function (t) {
                                 if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
                                     t.Terms.forEach(function (it) {
                                         if (!it.Allowed()) {
                                             stratTerms.push(it);
@@ -207,6 +226,7 @@ var Plugins;
                                         stratTerms.push(t);
                                 }
                             });
+                            //the last two arrays hold the terms as ISectionSpecificDTOs, a form that can be saved. 
                             var notAllowedCritTerms = criteriaTerms.map(function (t) {
                                 var sectionTerm = {
                                     Section: Dns.Enums.QueryComposerSections.Criteria,
@@ -221,6 +241,7 @@ var Plugins;
                                 };
                                 return sectionTerm;
                             });
+                            //Since the section the terms came from is now preserved by a property in the DTO, the arrays can be concated
                             return notAllowedCritTerms.concat(notAllowedStratTerms);
                         }, _this, { deferEvaluation: true });
                         _this.UpdateTermList = function (modelID, adapterDetail, restrictToTermsID) {
@@ -234,6 +255,7 @@ var Plugins;
                             if (restrictToTermsID != null) {
                                 ko.utils.arrayForEach(ko.utils.arrayMap(restrictToTermsID, function (id) { return 'termID=' + id; }), function (i) { return values.push(i); });
                             }
+                            //ko.utils.arrayForEach(ko.utils.arrayMap(restrictToTermsID, (id) => 'termID=' + id), (i) => values.push(i));
                             var termValueFilter = new Plugins.Requests.QueryBuilder.MDQ.TermValueFilter(modelID);
                             self.SexForCritieria(termValueFilter.SexValues());
                             self.SettingForCritieria = ko.observableArray(termValueFilter.SettingsValues());
@@ -242,6 +264,7 @@ var Plugins;
                             self.ShowAgeRangeCalculationSelections = ko.observable(termValueFilter.HasModel(MDQ.TermValueFilter.PCORnetModelID));
                             var query = values.join('&');
                             Dns.WebApi.Helpers.GetAPIResult('RequestTypes/GetTermsFilteredBy?' + query, true).done(function (terms) {
+                                //When the observable collection changes it voids the kendoMenu, need to re-initialize the menu after changes.
                                 var criteriaMenu = $('#TermSelector').data('kendoMenu');
                                 criteriaMenu.destroy();
                                 var selectMenu = $('#FieldsSelector').data('kendoMenu');
@@ -254,11 +277,21 @@ var Plugins;
                         };
                         MDQ.GetDataMartTimer = options.IsTemplateEdit ? null : 0;
                         _this.AgeRangeCalculationSelections = function (criteria, editViewModel) {
+                            ////make a shallow clone of the translations array, and then add the placeholder default item
+                            //var calculationTypes = ko.utils.arrayGetDistinctValues(Dns.Enums.AgeRangeCalculationTypeTranslation);                
+                            //if (criteria.ID() != editViewModel.Request.Where.Criteria()[0].ID()) {
+                            //    //for any criteria other than the first one only the first two calculation types are valid
+                            //    //1) At first encounter that meets the criteria in this criteria group
+                            //    //2) At the last encounter that meets the criteria in this criteria group
+                            //    calculationTypes.splice(2, calculationTypes.length - 2);
+                            //}
+                            //until calculation within criteria groups is fully implemented remove those options from the availabe calculation types - PMNDEV-5698
                             var calculationTypes = ko.utils.arrayGetDistinctValues(Dns.Enums.AgeRangeCalculationTypeTranslation);
                             calculationTypes.splice(0, 2);
                             return calculationTypes;
                         };
                         _this.NonAggregateFields = ko.computed(function () {
+                            //hide the aggregate fields from view since they are not editable anyhow
                             var filtered = ko.utils.arrayFilter(self.Request.Select.Fields(), function (item) { return item.Aggregate() == null; });
                             return filtered;
                         });
@@ -295,7 +328,7 @@ var Plugins;
                                 MDQ.Terms.ZipCodeID,
                                 MDQ.Terms.CombinedDiagnosisCodesID,
                                 MDQ.Terms.ESPCombinedDiagnosisCodesID,
-                                MDQ.Terms.ProcedureCodesID
+                                MDQ.Terms.ProcedureCodesID // Procedure Codes
                             ];
                             var convertTerms = function (terms) {
                                 terms.forEach(function (term) {
@@ -332,20 +365,24 @@ var Plugins;
                                     convertTerms(subCriteria.Terms());
                                 });
                             });
+                            //Add subscriptions here to listen for criteria changes
                             if (_this.IsTemplateEdit == false) {
                                 _this.Request.Where.Criteria().forEach(function (criteriaVM) {
+                                    //subscribe for the main terms
                                     self.SubscriptionsArray.push({
                                         CriteriaGroup: criteriaVM,
                                         Subscription: criteriaVM.Terms.subscribe(function () {
                                             MDQ.GetDataMartTimer = setInterval((function () { return self.GetCompatibleDataMarts(); }).bind(self), 2000);
                                         })
                                     });
+                                    //subscribe for the sub-criteria colletion change (ie, adding removing a sub-criteria)
                                     self.SubscriptionsArray.push({
                                         CriteriaGroup: criteriaVM,
                                         Subscription: criteriaVM.Criteria.subscribe(function () {
                                             MDQ.GetDataMartTimer = setInterval((function () { return self.GetCompatibleDataMarts(); }).bind(self), 2000);
                                         })
                                     });
+                                    //subscribe to the terms for each subcriteria
                                     ko.utils.arrayForEach(criteriaVM.Criteria(), function (subcrit) {
                                         self.SubscriptionsArray.push({
                                             CriteriaGroup: subcrit,
@@ -359,19 +396,23 @@ var Plugins;
                                 if (_this.Request != null) {
                                     strQuery = JSON.stringify(_this.Request.toData());
                                 }
+                                //Call the GetCompatibleDataMarts method.
                                 Plugins.Requests.QueryBuilder.DataMartRouting.vm.LoadDataMarts(options.ProjectID, strQuery);
                             }
                         }
                         _this.GetCompatibleDataMarts = function () {
                             clearInterval(MDQ.GetDataMartTimer);
+                            //Do not attempt to get datamarts in the template editor
                             if (self.IsTemplateEdit)
                                 return;
                             var strQuery = "";
                             if (self.Request != null) {
                                 strQuery = JSON.stringify(self.Request.toData());
                             }
+                            //Call the GetCompatibleDataMarts method.
                             Plugins.Requests.QueryBuilder.DataMartRouting.vm.LoadDataMarts(options.ProjectID, strQuery);
                         };
+                        //Add subscription for the Stratification Fields...
                         if (!_this.IsTemplateEdit) {
                             _this.Request.Select.Fields.subscribe(function () {
                                 MDQ.GetDataMartTimer = setInterval((function () { return self.GetCompatibleDataMarts(); }).bind(self), 2000);
@@ -499,7 +540,7 @@ var Plugins;
                                 MDQ.Terms.ZipCodeID,
                                 MDQ.Terms.CombinedDiagnosisCodesID,
                                 MDQ.Terms.ESPCombinedDiagnosisCodesID,
-                                MDQ.Terms.ProcedureCodesID
+                                MDQ.Terms.ProcedureCodesID // Procedure Codes
                             ];
                             var convertTerms = function (terms) {
                                 terms.forEach(function (term) {
@@ -543,6 +584,14 @@ var Plugins;
                     ViewModel.prototype.AddTerm = function (root, data, parent, event) {
                         var self = root;
                         SuspendDataMartTimer();
+                        //Update 2014-12-04: Reverted to use CopyObject to create the Value Template to ensure properties are marked as oservables.
+                        //As observables, the values entered via Term Templates are saved properly.
+                        ////using Page.ObjectCopy was resulting in all the properties of termValues getting converted into observables.
+                        ////The the constructor of QueryComposerTermViewModel does not support this, doing plain copy to match what is happening in generated ViewModel.
+                        //var termValues = <any>{};
+                        //for (var prop in data.ValueTemplate) {
+                        //    termValues[prop] = data.ValueTemplate[prop];
+                        //}
                         var termValues = Global.Helpers.CopyObject(data.ValueTemplate);
                         var termViewModel = new Dns.ViewModels.QueryComposerTermViewModel({
                             Operator: Dns.Enums.QueryComposerOperators.And,
@@ -551,15 +600,21 @@ var Plugins;
                             Criteria: null,
                             Design: data.Design
                         });
+                        //add the term to the appropriate sub-criteria if same terms are to be OR'd within the same parent criteria.
                         if (ViewModel.GroupedTerms.indexOf(data.TermID.toUpperCase()) >= 0) {
+                            //the terms should be OR's together and the criteria AND'd to other sub-criteria and parent criteria terms.
                             termViewModel.Operator(Dns.Enums.QueryComposerOperators.Or);
+                            //find the first sub-criteria that contains a matching term (each sub-criteria should only contain terms of the same type at this time)
                             var criteria = ko.utils.arrayFirst(parent.Criteria(), function (c) {
                                 var t = ko.utils.arrayFirst(c.Terms(), function (tt) { return true; });
                                 if (t == null)
                                     return false;
+                                //if the term is a noncode term compare the first term in the subcriteria, for these all the terms should be the same.
                                 if (ViewModel.NonCodeGroupedTerms.indexOf(data.TermID.toUpperCase()) >= 0) {
                                     return ViewModel.NonCodeGroupedTerms.indexOf(t.Type().toUpperCase()) >= 0 && t.Type().toUpperCase() == data.TermID.toUpperCase();
                                 }
+                                //if it is a noncode term return if the first term of the sub-criteria is a noncode term or not.
+                                //if the term is a code term it should return true.
                                 return ViewModel.NonCodeGroupedTerms.indexOf(t.Type().toUpperCase()) < 0;
                             });
                             if (criteria == null) {
@@ -589,6 +644,7 @@ var Plugins;
                         SuspendDataMartTimer();
                         var fieldsToAdd = [];
                         var selectFields = self.Request.Select.Fields();
+                        //specify the field as group by and included in the select
                         var foundStratifyByField = ko.utils.arrayFirst(selectFields, function (item) { return item.Type().toUpperCase() == data.TermID.toUpperCase() && item.Aggregate() == null; });
                         if (foundStratifyByField == null) {
                             fieldsToAdd.push(new Dns.ViewModels.QueryComposerFieldViewModel({
@@ -601,6 +657,7 @@ var Plugins;
                                 GroupBy: null,
                             }));
                         }
+                        //any field included in the criteria is included as a count
                         var foundCountField = ko.utils.arrayFirst(selectFields, function (item) { return item.Type().toUpperCase() == data.TermID.toUpperCase() && item.Aggregate() != null; });
                         if (foundCountField == null) {
                             fieldsToAdd.push(new Dns.ViewModels.QueryComposerFieldViewModel({
@@ -637,6 +694,7 @@ var Plugins;
                                 Type: data.TermID
                             }));
                         }
+                        //any field included in the criteria is included as a count
                         if (!ko.utils.arrayFirst(selectFields, function (item) { return item.Type().toUpperCase() == data.TermID.toUpperCase() && item.Aggregate() != null; })) {
                             fieldsToAdd.push(new Dns.ViewModels.QueryComposerFieldViewModel({
                                 Type: data.TermID,
@@ -667,7 +725,7 @@ var Plugins;
                             ShowCategoryDropdown: showCategoryDropdown == null ? true : showCategoryDropdown
                         }).done(function (results) {
                             if (!results)
-                                return;
+                                return; //User clicked cancel
                             data.Values.valueWillMutate();
                             var codes = ko.utils.arrayMap(results, function (item) { return ({ Code: item.Code.trim(), Name: item.Name.trim(), ExpireDate: null }); });
                             if (data.Values().CodeValues == null)
@@ -706,10 +764,12 @@ var Plugins;
                         });
                     };
                     ViewModel.prototype.OpenCombinedCodeSelector = function (data, codeType) {
+                        //codeType will indicate the type of list to use in the selector
                         if (codeType != Dns.Enums.DiagnosisCodeTypes.ICD9) {
                             alert('Only ICD-9 diagnosis codes are supported by the code selector, please enter the codes manually into the text field separated by semi-colons.');
                             return;
                         }
+                        //need to get the current values and split by semi-colon, and add to code selector values
                         var existingValues = null;
                         if (data.Values != null && data.Values().CodeValues != null) {
                             existingValues = ko.utils.arrayFilter(ko.utils.arrayMap((data.Values().CodeValues() || '').split(';'), function (c) { return (c || '').trim(); }), function (c) { return c.length > 0; });
@@ -720,7 +780,8 @@ var Plugins;
                             ShowCategoryDropdown: true
                         }).done(function (results) {
                             if (!results)
-                                return;
+                                return; //User clicked cancel
+                            //combine the selected codes into a single string
                             var codes = ko.utils.arrayMap(results, function (item) { return item.Code; }).join('; ');
                             data.Values.valueWillMutate();
                             if (data.Values().CodeValues == null) {
@@ -746,10 +807,12 @@ var Plugins;
                         });
                     };
                     ViewModel.prototype.OpenESPCombinedCodeSelector = function (data, codeType) {
+                        //codeType will indicate the type of list to use in the selector
                         if (codeType != Dns.Enums.ESPCodes.ICD9 && codeType != Dns.Enums.ESPCodes.ICD10) {
                             alert('Only ICD-9 diagnosis codes are supported by the code selector, please enter the codes manually into the text field separated by semi-colons.');
                             return;
                         }
+                        //need to get the current values and split by semi-colon, and add to code selector values
                         var existingValues = null;
                         if (data.Values != null && data.Values().CodeValues != null) {
                             existingValues = ko.utils.arrayFilter(ko.utils.arrayMap((data.Values().CodeValues() || '').split(';'), function (c) { return (c || '').trim(); }), function (c) { return c.length > 0; });
@@ -761,7 +824,8 @@ var Plugins;
                                 ShowCategoryDropdown: true
                             }).done(function (results) {
                                 if (!results)
-                                    return;
+                                    return; //User clicked cancel
+                                //combine the selected codes into a single string
                                 var codes = ko.utils.arrayMap(results, function (item) { return item.Code; }).join('; ');
                                 data.Values.valueWillMutate();
                                 if (data.Values().CodeValues == null) {
@@ -780,7 +844,8 @@ var Plugins;
                                 ShowCategoryDropdown: true
                             }).done(function (results) {
                                 if (!results)
-                                    return;
+                                    return; //User clicked cancel
+                                //combine the selected codes into a single string
                                 var codes = ko.utils.arrayMap(results, function (item) { return item.Code; }).join('; ');
                                 data.Values.valueWillMutate();
                                 if (data.Values().CodeValues == null) {
@@ -795,10 +860,13 @@ var Plugins;
                     };
                     ViewModel.prototype.DeleteTerm = function (data, criteriaGroup) {
                         SuspendDataMartTimer();
+                        /** only removes from the criteria **/
                         criteriaGroup.Terms.remove(data);
+                        /** remove the criteria if it is a sub-criteria and is empty **/
                         ko.utils.arrayForEach(this.Request.Where.Criteria(), function (c) {
                             var subCriteriaToRemove = ko.utils.arrayFilter(c.Criteria(), function (sc) { return sc.Terms().length == 0; });
                             subCriteriaToRemove.forEach(function (sc) {
+                                //clean up the sub-criteria's terms collection subscription since the sub-criteria is getting removed.                    
                                 var subscriptionsToDispose = MDQ.vm.SubscriptionsArray.remove(function (cs) { return cs.CriteriaGroup == sc; });
                                 if (subscriptionsToDispose != null) {
                                     subscriptionsToDispose.forEach(function (item) {
@@ -813,6 +881,7 @@ var Plugins;
                     };
                     ViewModel.prototype.DeleteField = function (data, selectFields) {
                         SuspendDataMartTimer();
+                        /** removes the count as well **/
                         var fieldsToRemove = ko.utils.arrayFilter(selectFields.Fields(), function (field) {
                             return field.Type() == data.Type();
                         });
@@ -835,60 +904,116 @@ var Plugins;
                 ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
                 ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
                 ViewModel.YearlyQuarters = ko.observableArray(['Q1', 'Q2', 'Q3', 'Q4']);
+                /**
+                Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria.
+                */
                 ViewModel.GroupedTerms = [
+                    //Condition
                     MDQ.Terms.ConditionID,
+                    //HCPCS Procedure Codes
                     MDQ.Terms.HCPCSProcedureCodesID,
+                    //Combined Diagnosis Codes
                     MDQ.Terms.CombinedDiagnosisCodesID,
+                    //ICD9 Diagnosis Codes 3 digit
                     MDQ.Terms.ICD9Diagnosis3digitID,
+                    //ICD9 Diagnosis Codes 4 digit
                     MDQ.Terms.ICD9Diagnosis4digitID,
+                    //ICD9 Diagnosis Codes 5 digit
                     MDQ.Terms.ICD9Diagnosis5digitID,
+                    //ICD9 Procedure Codes 3 digit
                     MDQ.Terms.ICD9Procedure3digitID,
+                    //ICD9 Procedure Codes 4 digit
                     MDQ.Terms.ICD9Procedure4digitID,
+                    //ESP Combined Diagnosis Codes
                     MDQ.Terms.ESPCombinedDiagnosisCodesID,
+                    //Drug Class
                     MDQ.Terms.DrugClassID,
+                    //Drug Name
                     MDQ.Terms.DrugNameID,
+                    //Visits
                     MDQ.Terms.VisitsID,
+                    //Age Range
                     MDQ.Terms.AgeRangeID,
+                    //Sex
                     MDQ.Terms.SexID,
+                    //Code Metric
                     MDQ.Terms.CodeMetricID,
+                    //Coverage
                     MDQ.Terms.CoverageID,
+                    //Criteria
                     MDQ.Terms.CriteriaID,
+                    //Dispensing Metric
                     MDQ.Terms.DispensingMetricID,
+                    //Ethnicity
                     MDQ.Terms.EthnicityID,
+                    //Facility
                     MDQ.Terms.FacilityID,
+                    //Height
                     MDQ.Terms.HeightID,
+                    //Hispanic
                     MDQ.Terms.HispanicID,
+                    //Observation Period
                     MDQ.Terms.ObservationPeriodID,
+                    //Quarter Year
                     MDQ.Terms.QuarterYearID,
+                    //Race
                     MDQ.Terms.RaceID,
+                    //Setting
                     MDQ.Terms.SettingID,
+                    //Tobacco Use
                     MDQ.Terms.TobaccoUseID,
+                    //Weight
                     MDQ.Terms.WeightID,
+                    //Year
                     MDQ.Terms.YearID,
+                    //Zip Code
                     MDQ.Terms.ZipCodeID,
+                    //Vitals Measure Date
                     MDQ.Terms.VitalsMeasureDateID,
+                    // Procedure Codes
                     MDQ.Terms.ProcedureCodesID
                 ];
+                /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
                 ViewModel.NonCodeGroupedTerms = [
+                    //Visits
                     MDQ.Terms.VisitsID,
+                    //Age Range
                     MDQ.Terms.AgeRangeID,
+                    //Sex
                     MDQ.Terms.SexID,
+                    //Code Metric
                     MDQ.Terms.CodeMetricID,
+                    //Coverage
                     MDQ.Terms.CoverageID,
+                    //Criteria
                     MDQ.Terms.CriteriaID,
+                    //Dispensing Metric
                     MDQ.Terms.DispensingMetricID,
+                    //Ethnicity
                     MDQ.Terms.EthnicityID,
+                    //Facility
                     MDQ.Terms.FacilityID,
+                    //Height
                     MDQ.Terms.HeightID,
+                    //Hispanic
                     MDQ.Terms.HispanicID,
+                    //Observation Period
                     MDQ.Terms.ObservationPeriodID,
+                    //Quarter Year
                     MDQ.Terms.QuarterYearID,
+                    //Race
                     MDQ.Terms.RaceID,
+                    //Setting
                     MDQ.Terms.SettingID,
+                    //Tobacco Use
                     MDQ.Terms.TobaccoUseID,
+                    //Weight
                     MDQ.Terms.WeightID,
+                    //Year
                     MDQ.Terms.YearID,
+                    //Zip Code
                     MDQ.Terms.ZipCodeID,
+                    //Vitals Measure Date
                     MDQ.Terms.VitalsMeasureDateID,
                 ];
                 MDQ.ViewModel = ViewModel;
@@ -916,6 +1041,7 @@ var Plugins;
                     }
                     var promise = $.Deferred();
                     $.when(templateID == null ? null : Dns.WebApi.Templates.Get(templateID), requestTypeID == null ? ((templateID == null) ? null : Dns.WebApi.Helpers.GetAPIResult('RequestTypes/GetTermsFilteredBy?templateID=' + templateID)) : Dns.WebApi.RequestTypes.GetFilteredTerms(requestTypeID), requestTypeID == null ? null : Dns.WebApi.Templates.GetByRequestType(requestTypeID), Dns.WebApi.Templates.List("Type eq Lpp.Dns.DTO.Enums.TemplateTypes'" + Dns.Enums.TemplateTypes.CriteriaGroup + "'", "ID,Name", "Name"), visualTerms == null ? GetVisualTerms() : visualTerms, requestTypeID == null ? null : Dns.WebApi.RequestTypes.GetRequestTypeModels(requestTypeID)).done(function (queryTemplates, requestTypeTerms, requestTypeTemplates, criteriaGroupTemplates, visualTerms, models) {
+                        //Load the Template Terms
                         if (requestTypeTerms) {
                             requestTypeTerms.forEach(function (term) {
                                 Plugins.Requests.QueryBuilder.MDQ.RequestTypeTermIDs.push(term.TermID);
@@ -996,6 +1122,7 @@ var Plugins;
                 MDQ.SuspendDataMartTimer = SuspendDataMartTimer;
                 ko.bindingHandlers.AgeRangeCalculationTypeExtender = {
                     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                        // This will be called when the binding is first applied to an element
                         var value = valueAccessor();
                         var isTemplateEdit = bindingContext.$root.IsTemplateEdit;
                         var isRequired = bindingContext.$data.Values().CalculateAsOfRequired;
@@ -1017,10 +1144,14 @@ var Plugins;
                         }
                     },
                     update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                        // This will be called once when the binding is first applied to an element,
+                        // and again whenever any observables/computeds that are accessed change
+                        // Update the DOM element based on the supplied values here.    
                     }
                 };
                 ko.bindingHandlers.DataPartnerTypeExtender = {
                     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                        // This will be called when the binding is first applied to an element
                         var value = valueAccessor();
                         var root = bindingContext.$root;
                         var isTemplateEdit = bindingContext.$root.IsTemplateEdit;
@@ -1034,6 +1165,7 @@ var Plugins;
                         }
                     }
                 };
+                //end of module
             })(MDQ = QueryBuilder.MDQ || (QueryBuilder.MDQ = {}));
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
@@ -1057,3 +1189,4 @@ var TermVm = (function () {
     }
     return TermVm;
 }());
+//# sourceMappingURL=MDQ.js.map

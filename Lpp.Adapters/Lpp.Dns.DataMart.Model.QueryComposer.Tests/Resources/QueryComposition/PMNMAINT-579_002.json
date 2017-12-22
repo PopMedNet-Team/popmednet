@@ -1,0 +1,152 @@
+﻿{
+  "Header": {
+    "Name": "PCORnet (Copy)",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=cb32118a-2c5a-4173-bc13-a7ca0074b539",
+    "QueryType": ""
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "02a41959-f729-46df-b1c1-d03dc45fa3b2",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "19604132-2f94-4679-b475-fc93f37c3e27",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "250",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+                "Values": {
+                  "CodeType": 1,
+                  "CodeValues": "100",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "401",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+                "Values": {
+                  "CodeType": 1,
+                  "CodeValues": "992",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [ ],
+                "Design": { }
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "2ec0439f-eb6a-43ef-8419-6074e6a73d77",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2008-01-01T05:00:00.000Z",
+                  "End": "2008-12-31T05:00:00.000Z"
+                },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2010-01-01T05:00:00.000Z",
+                  "End": "2010-12-31T05:00:00.000Z"
+                },
+                "Criteria": [ ],
+                "Design": { }
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "60d0db7c-58ec-455f-8ac1-466530ea614c",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "2" },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "1" },
+                "Criteria": [ ],
+                "Design": { }
+              },
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "3" },
+                "Criteria": [ ],
+                "Design": { }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

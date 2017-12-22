@@ -52,6 +52,7 @@ var Controls;
                 return ViewModel;
             }(Global.PageViewModel));
             List.ViewModel = ViewModel;
+            /*subscribable event that notifies if the history collection has any items. */
             List.HistoryItemsChanged = new ko.subscribable();
             function setRequestID(requestID) {
                 vm.RequestID(requestID);
@@ -71,3 +72,4 @@ var Controls;
         })(List = WFHistory.List || (WFHistory.List = {}));
     })(WFHistory = Controls.WFHistory || (Controls.WFHistory = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Index.js.map

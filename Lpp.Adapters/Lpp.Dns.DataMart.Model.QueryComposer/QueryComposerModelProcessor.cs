@@ -328,6 +328,8 @@ namespace Lpp.Dns.DataMart.Model
                 modelMetadata.Capabilities["CanRunAndUpload"] = adapter.CanRunAndUpload;
                 modelMetadata.Capabilities["CanUploadWithoutRun"] = adapter.CanUploadWithoutRun;
                 modelMetadata.Capabilities["AddFiles"] = adapter.CanAddResponseFiles;
+                modelMetadata.Capabilities["IsFileDistributionRequest"] = IsFileDistributionRequest;
+                modelMetadata.Capabilities["IsDistributedRegressionRequest"] = IsDistributedRegressionRequest;
             }
         }
 
@@ -401,7 +403,7 @@ namespace Lpp.Dns.DataMart.Model
                 }
                 else
                 {
-					var _tempResponse = adapter.Execute(_request, viewSQL);
+                    var _tempResponse = adapter.Execute(_request, viewSQL);
 
                     Guid requestID;
                     if (Guid.TryParse(requestId, out requestID))
@@ -426,8 +428,8 @@ namespace Lpp.Dns.DataMart.Model
                         _responseDocuments.Clear();
                         _responseDocuments.Add(new DocumentEx { ID = documentID, Document = resultDocument, Content = resultContent });
 						_currentResponse = _tempResponse;
-					}
-					string message = string.Empty;
+                    }
+                    string message = string.Empty;
                     status.PostProcess = !viewSQL && adapter.CanPostProcess(_tempResponse, out message);
                     status.Message = message;
                     //May have to alter this cause _currentResponse May be empty
