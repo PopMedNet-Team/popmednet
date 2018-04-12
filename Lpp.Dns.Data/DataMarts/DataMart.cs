@@ -288,8 +288,16 @@ namespace Lpp.Dns.Data
         public virtual DataModel Adapter { get; set; }
 
         public Guid? ProcessorID { get; set; }
-
+        /// <summary>
+        /// Gets or sets the data partner identifier, used by distributed regression to specify the folder to download the partner output files to at the analysis center.
+        /// </summary>
+        [MaxLength(255)]
         public string DataPartnerIdentifier { get; set; }
+        /// <summary>
+        /// Gets or sets the data partner code, used by distributed regression to specify the partner code used to identify the partner in the tracking tables.
+        /// </summary>
+        [MaxLength(255)]
+        public string DataPartnerCode { get; set; }
 
         public virtual ICollection<RequestDataMart> Requests { get; set; }
         public virtual ICollection<ProjectDataMart> Projects { get; set; }
@@ -608,7 +616,8 @@ namespace Lpp.Dns.Data
                     AdapterID = dm.AdapterID,
                     Adapter = dm.Adapter.Name,
                     ProcessorID = dm.ProcessorID,
-                    DataPartnerIdentifier = dm.DataPartnerIdentifier
+                    DataPartnerIdentifier = dm.DataPartnerIdentifier,
+                    DataPartnerCode = dm.DataPartnerCode
                 };
             }
         }

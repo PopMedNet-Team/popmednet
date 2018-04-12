@@ -6,14 +6,18 @@ using Lpp.Utilities.Security;
 using Lpp.Utilities.WebSites.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace Lpp.Dns.Api.Documents
@@ -23,10 +27,12 @@ namespace Lpp.Dns.Api.Documents
     /// </summary>
     public class DocumentsController : LppApiController<Lpp.Dns.Data.DataContext>
     {
+        static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// Gets documents for the specified tasks.
         /// </summary>
         /// <param name="tasks">The tasks.</param>
+        /// <param name="filterByTaskItemType"></param>
         /// <returns></returns>
         [HttpGet]
         public IEnumerable<Lpp.Dns.DTO.ExtendedDocumentDTO> ByTask([FromUri]IEnumerable<Guid> tasks, [FromUri]IEnumerable<DTO.Enums.TaskItemTypes> filterByTaskItemType = null)
@@ -243,13 +249,13 @@ namespace Lpp.Dns.Api.Documents
         /// Upload a document.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, Obsolete]
         public async Task<HttpResponseMessage> Upload()
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
                 return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "Content must be mime multipart.");
-            }
+            }  
 
             Guid taskID = Guid.Empty;
             Guid requestID = Guid.Empty;
@@ -268,6 +274,7 @@ namespace Lpp.Dns.Api.Documents
 
             var provider = new MultipartFormDataStreamProvider(uploadPath);
             var o = await Request.Content.ReadAsMultipartAsync(provider);
+
             foreach (var c in o.Contents)
             {
                 string parameterName = c.Headers.ContentDisposition.Name.Replace("\"", "");
@@ -316,7 +323,7 @@ namespace Lpp.Dns.Api.Documents
 
             if (taskID == Guid.Empty && requestID == Guid.Empty && responseID == Guid.Empty)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unable to determine the documents owning object ID.");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unable to determine the documents owning object ID.");
             }
 
             if (string.IsNullOrEmpty(filename))
@@ -331,19 +338,18 @@ namespace Lpp.Dns.Api.Documents
             //TODO: check for upload permission
             var stream = new FileStream(o.FileData.First().LocalFileName, FileMode.Open);
 
-            var document = new Document
-            {
+            var document = new Document { 
                 Description = description,
                 Name = string.IsNullOrEmpty(documentName) ? filename : documentName,
                 FileName = filename,
                 MimeType = Lpp.Utilities.FileEx.GetMimeTypeByExtension(filename),
                 ItemID = responseID != Guid.Empty ? responseID : taskID == Guid.Empty ? requestID : taskID,
-                Length = stream.Length,
+                Length = stream.Length,               
                 RevisionDescription = comments,
                 UploadedByID = Identity.ID,
                 ParentDocumentID = parentDocumentID
             };
-            if (documentKind != string.Empty)
+            if(documentKind != string.Empty)
             {
                 if (documentKind == "OutputManifest")
                     document.Kind = "DistributedRegression.FileList";
@@ -356,20 +362,20 @@ namespace Lpp.Dns.Api.Documents
             if (document.ParentDocumentID.HasValue)
             {
                 var versionQuery = from d in DataContext.Documents
-                                   let revisionID = DataContext.Documents.Where(p => p.ID == parentDocumentID).Select(p => p.RevisionSetID).FirstOrDefault()
-                                   let taskReference = DataContext.ActionReferences.Where(tr => tr.ItemID == d.ID).DefaultIfEmpty()
-                                   where d.RevisionSetID == revisionID
-                                   orderby d.MajorVersion descending, d.MinorVersion descending, d.BuildVersion descending, d.RevisionVersion descending
-                                   select new
-                                   {
-                                       d.ItemID,
-                                       d.RevisionSetID,
-                                       d.MajorVersion,
-                                       d.MinorVersion,
-                                       d.BuildVersion,
-                                       d.RevisionVersion,
-                                       TaskItemType = taskReference.Select(tr => (DTO.Enums.TaskItemTypes?)tr.Type).FirstOrDefault()
-                                   };
+                               let revisionID = DataContext.Documents.Where(p => p.ID == parentDocumentID).Select(p => p.RevisionSetID).FirstOrDefault()
+                               let taskReference = DataContext.ActionReferences.Where(tr => tr.ItemID == d.ID).DefaultIfEmpty()
+                               where d.RevisionSetID == revisionID
+                               orderby d.MajorVersion descending, d.MinorVersion descending, d.BuildVersion descending, d.RevisionVersion descending
+                               select new
+                               {
+                                   d.ItemID,
+                                   d.RevisionSetID,
+                                   d.MajorVersion,
+                                   d.MinorVersion,
+                                   d.BuildVersion,
+                                   d.RevisionVersion,
+                                   TaskItemType = taskReference.Select(tr => (DTO.Enums.TaskItemTypes?)tr.Type).FirstOrDefault()
+                               };
                 var version = taskID != Guid.Empty ? await versionQuery.Where(d => d.ItemID == taskID).FirstOrDefaultAsync() : await versionQuery.Where(d => d.ItemID == requestID).FirstOrDefaultAsync();
 
                 if (version != null)
@@ -389,12 +395,12 @@ namespace Lpp.Dns.Api.Documents
 
             }
 
-            if (!document.RevisionSetID.HasValue)
+            if(!document.RevisionSetID.HasValue)
                 document.RevisionSetID = document.ID;
 
             DataContext.Documents.Add(document);
 
-            if (responseID != Guid.Empty)
+            if(responseID != Guid.Empty)
             {
                 var requestDoc = new RequestDocument
                 {
@@ -415,7 +421,7 @@ namespace Lpp.Dns.Api.Documents
                     Type = taskItemType.Value
                 });
             }
-
+            
             await DataContext.SaveChangesAsync();
 
             try
@@ -431,9 +437,11 @@ namespace Lpp.Dns.Api.Documents
                 stream.Close();
                 stream.Dispose();
                 stream = null;
-				
-				System.IO.File.Delete(o.FileData.First().LocalFileName);
+
+                System.IO.File.Delete(o.FileData.First().LocalFileName);
             }
+
+            await DataContext.Database.ExecuteSqlCommandAsync("UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = @ID", new System.Data.SqlClient.SqlParameter("@ID", document.ID));
 
             if (!string.IsNullOrWhiteSpace(comments))
             {
@@ -469,8 +477,7 @@ namespace Lpp.Dns.Api.Documents
                 await DataContext.SaveChangesAsync();
             }
 
-            return Request.CreateResponse(HttpStatusCode.Created, new DTO.ExtendedDocumentDTO
-            {
+            return Request.CreateResponse(HttpStatusCode.Created, new DTO.ExtendedDocumentDTO {
                 ID = document.ID,
                 Name = document.Name,
                 FileName = document.FileName,
@@ -491,8 +498,97 @@ namespace Lpp.Dns.Api.Documents
                 RevisionVersion = document.RevisionVersion,
                 Timestamp = document.Timestamp,
                 UploadedByID = document.UploadedByID,
-                UploadedBy = Identity.UserName
+                UploadedBy = Identity.UserName   
             });
+        }
+
+        /// <summary>
+        /// Upload a document.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> UploadChunked()
+        {
+            Logger.Info("Start of Uploading chunk");
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "Content must be mime multipart.");
+            }
+
+            string uploadPath = System.Web.Configuration.WebConfigurationManager.AppSettings["DocumentsUploadFolder"] ?? string.Empty;
+            if(string.IsNullOrEmpty(uploadPath))
+                uploadPath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Uploads/");
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            var provider = new ChunkedMultipartFormDataStreamProvider(uploadPath, HttpContext.Current.Request, DataContext, Identity);
+
+            var o = await Request.Content.ReadAsMultipartAsync(provider);
+
+            var result = o.GetResult();
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            Logger.Info("Chunk Finsihed uploading.  Time Taken was " + ts.ToString());
+            if (result.uploaded == false)
+            {
+                return Request.CreateResponse(HttpStatusCode.Created, result);
+            }
+
+            if (o.TaskID == Guid.Empty && o.RequestID == Guid.Empty && o.ResponseID == Guid.Empty)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unable to determine RequestID, ResponseID, and TaskID");
+            }
+
+            if (string.IsNullOrEmpty(o.FileName))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Filename is missing.");
+
+            if (o.RequestID == Guid.Empty && o.TaskID != Guid.Empty)
+            {
+                //Get the requestID based on the task.
+                o.RequestID = await DataContext.ActionReferences.Where(tr => tr.TaskID == o.TaskID && tr.Type == DTO.Enums.TaskItemTypes.Request).Select(tr => tr.ItemID).FirstOrDefaultAsync();
+            }
+
+
+            Logger.Info("Starting to chunk into DB");
+            var newStopwatch = new Stopwatch();
+            newStopwatch.Start();
+            await o.SetUpDocumentInDatabase();
+            
+            result.Document = new DTO.ExtendedDocumentDTO
+            {
+                ID = o.Doc.ID,
+                Name = o.Doc.Name,
+                FileName = o.Doc.FileName,
+                MimeType = o.Doc.MimeType,
+                Description = o.Doc.Description,
+                Viewable = o.Doc.Viewable,
+                ItemID = o.Doc.ItemID,
+                ItemTitle = DataContext.Actions.Where(t => t.ID == o.TaskID).Select(t => t.WorkflowActivityID.HasValue ? t.WorkflowActivity.Name : t.Subject).FirstOrDefault(),
+                Kind = o.Doc.Kind,
+                Length = o.Doc.Length,
+                CreatedOn = o.Doc.CreatedOn,
+                ParentDocumentID = o.Doc.ParentDocumentID,
+                RevisionDescription = o.Doc.RevisionDescription,
+                RevisionSetID = o.Doc.RevisionSetID,
+                MajorVersion = o.Doc.MajorVersion,
+                MinorVersion = o.Doc.MinorVersion,
+                BuildVersion = o.Doc.BuildVersion,
+                RevisionVersion = o.Doc.RevisionVersion,
+                Timestamp = o.Doc.Timestamp,
+                UploadedByID = o.Doc.UploadedByID,
+                UploadedBy = Identity.UserName
+            };
+            Logger.Info("Starting to stream to Database");
+
+            await o.StreamDocumentToDatabase();
+
+            newStopwatch.Stop();
+            TimeSpan newTs = stopWatch.Elapsed;
+            Logger.Info("Chunk into DB Finished.  Time Taken was " + newTs.ToString());
+
+            return Request.CreateResponse(HttpStatusCode.Created, result);
         }
 
 
@@ -547,6 +643,24 @@ namespace Lpp.Dns.Api.Documents
             catch (Exception e)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e));
+            }
+        }
+
+        private void AppendToFile(string fullPath, Stream content)
+        {
+            try
+            {
+                using (FileStream stream = new FileStream(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    using (content)
+                    {
+                        content.CopyTo(stream);
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                throw ex;
             }
         }
 

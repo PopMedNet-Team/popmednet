@@ -5,8 +5,6 @@ module Registries.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gRegistriesSettings: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);    
             var self = this;
@@ -35,15 +33,7 @@ module Registries.Index {
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gRegistriesSettings);  
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
+            Global.Helpers.SetDataSourceFromSettings(this.ds, gRegistriesSettings);
         }
 
         public btnNewRegistry_Click() {
@@ -52,10 +42,6 @@ module Registries.Index {
 
         public RegistriesGrid(): kendo.ui.Grid {
             return $("#gRegistries").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("Registries.Index.gRegistries.User:" + User.ID, Global.Helpers.GetGridSettings(this.RegistriesGrid()));
         }
     }
 
@@ -79,8 +65,10 @@ module Registries.Index {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRegistry] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.RegistriesGrid(), gRegistriesSetting);
+                vm.RegistriesGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Registries.Index.gRegistries.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RegistriesGrid()));
+                });
             });
         });
     }

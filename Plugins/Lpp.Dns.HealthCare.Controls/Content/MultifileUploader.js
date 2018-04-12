@@ -1,16 +1,21 @@
 /// <reference path="../../../lpp.dns.portal/js/_rootlayout.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Controls;
 (function (Controls) {
     var MultifileUploader;
     (function (MultifileUploader) {
         MultifileUploader.RequestFileList = null;
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestFileList, requestID, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -159,7 +164,7 @@ var Controls;
             ItemTypes[ItemTypes["Folder"] = 0] = "Folder";
             ItemTypes[ItemTypes["File"] = 1] = "File";
         })(ItemTypes = MultifileUploader.ItemTypes || (MultifileUploader.ItemTypes = {}));
-        var sFtpFileResults = (function () {
+        var sFtpFileResults = /** @class */ (function () {
             function sFtpFileResults() {
                 this.Results = ko.observableArray();
             }
@@ -171,7 +176,7 @@ var Controls;
             return sFtpFileResults;
         }());
         MultifileUploader.sFtpFileResults = sFtpFileResults;
-        var sFtpResult = (function () {
+        var sFtpResult = /** @class */ (function () {
             function sFtpResult(path, status) {
                 this.Path = ko.observable(path);
                 this.Status = ko.observable(status);
@@ -179,7 +184,7 @@ var Controls;
             return sFtpResult;
         }());
         MultifileUploader.sFtpResult = sFtpResult;
-        var sFtpItem = (function () {
+        var sFtpItem = /** @class */ (function () {
             function sFtpItem(name, path, type) {
                 var _this = this;
                 this.Name = ko.observable(name);
@@ -210,7 +215,7 @@ var Controls;
             return sFtpItem;
         }());
         MultifileUploader.sFtpItem = sFtpItem;
-        var Existingfile = (function () {
+        var Existingfile = /** @class */ (function () {
             function Existingfile(file) {
                 var _this = this;
                 this.kilobyte = 1024;
@@ -241,3 +246,4 @@ var Controls;
         MultifileUploader.Existingfile = Existingfile;
     })(MultifileUploader = Controls.MultifileUploader || (Controls.MultifileUploader = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=MultifileUploader.js.map

@@ -77,11 +77,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PostgreSQL1()
         {
             var settings = new Dictionary<string, object>(){
-                    {"Server", "10.28.119.205" },
-                    {"Port", "5432" },
-                    {"UserID", "postgres" },
-                    {"Password", "Lpp062315!#" },
-                    {"Database", "PCORNETV3" },
+                    {"Server", "10.28.119.215" },
+                    {"Port", "5434" },
+                    {"UserID", "pcornet" },
+                    {"Password", "HpHc082817@#" },
+                    {"Database", "PcorNetV3" },
                     {"ConnectionTimeout", "60" },
                     {"CommandTimeout", "60"},
                     {"DataProvider", Model.Settings.SQLProvider.PostgreSQL.ToString()}
@@ -96,14 +96,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             string connectionString = connBuilder.ToString();
 
-            using (var connection = new Npgsql.NpgsqlConnection(connBuilder))
+            using (var connection = new Npgsql.NpgsqlConnection(connBuilder.ToString()))
             {
                 /** Of the connection is opened prior to giving to the datacontext Npgsql error when trying to execute query **/
-                //connection.Open();
-                using (var db = new Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext(connection, "dbo"))
-                {
-                    var patient = db.Patients.Select(p => p.ID).FirstOrDefault();
-                }
+                connection.Open();
+                //using (var db = new Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext(connection, "dbo"))
+                //{
+                //    var patient = db.Patients.Select(p => p.ID).FirstOrDefault();
+                //}
             }
         }
 

@@ -164,7 +164,7 @@ module Templates.Details {
 
             if (template.Type == Dns.Enums.TemplateTypes.CriteriaGroup) {
                 jTemplate = {
-                    Header: { Name: null, Description: null, ViewUrl: null, Grammar: null },
+                    Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, SubmittedOn: null },
                     Where: { Criteria: [<Dns.Interfaces.IQueryComposerCriteriaDTO> json] },
                     Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO> json] }
                 };

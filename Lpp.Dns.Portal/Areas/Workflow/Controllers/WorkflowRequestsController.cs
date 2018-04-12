@@ -139,6 +139,10 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
                 web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authToken);
 
                 HttpResponseMessage stream = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
+				if(stream.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return new HttpStatusCodeResult(204, "No response documents were found to download.");
+                }
                 var cd = new ContentDisposition(stream.Content.Headers.ContentDisposition.ToString());
                 var contentDisposition = new System.Net.Mime.ContentDisposition
                 {

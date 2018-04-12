@@ -32,7 +32,7 @@
         }">
         </div>
     </div>
-    <nav class="panel-footer" style="display:none;" data-bind="visible:true">
+    <nav class="panel-footer" style="display:none;" data-bind="visible:CurrentTask == null || (CurrentTask != null && CurrentTask.ID != null)">
         <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteDocument, visible: SelectedRevisionSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
         <button class="btn btn-default pull-right" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"><span class="glyphicon glyphicon-refresh"></span></button>
         <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewDocument, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.AddDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>

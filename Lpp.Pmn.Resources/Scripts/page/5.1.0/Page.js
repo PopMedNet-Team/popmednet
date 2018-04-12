@@ -1,9 +1,14 @@
 /// <reference path="../../typings/bootstrap.dns.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //V5.1.0
 var Global;
 (function (Global) {
@@ -374,6 +379,7 @@ var Global;
                 });
                 for (var i = 0; i < s.columns.length; i++) {
                     if (grid.columns[i].field == s.columns[i].field) {
+                        //Do Nothing
                     }
                     if (grid.columns[i].field != s.columns[i].field) {
                         for (var j = 0; j < grid.columns.length; j++) {
@@ -520,7 +526,7 @@ var Global;
             }
             if (ds.filter()) {
                 ds.filter().filters.forEach(function (item) {
-                    params += "&filter=" + encodeURIComponent(item.field) + "|" + encodeURIComponent(item.operator) + "|" + encodeURIComponent(item.value);
+                    params += "&filter=" + encodeURIComponent(item.field) + "|" + encodeURIComponent(item.operator.toString()) + "|" + encodeURIComponent(item.value);
                 });
             }
             //Create the entire url
@@ -656,30 +662,16 @@ var Global;
                     if (loaded)
                         return;
                     loaded = true;
-                    var win = kendoWindow.data("kendoWindow");
-                    //win.setOptions({
-                    //    //Center to the view port
-                    //    position: {
-                    //        left: (window.innerWidth - kendoWindow.width()) / 2,
-                    //        top: (window.innerHeight - kendoWindow.height()) / 2 - window.pageYOffset
-                    //    }
-                    //});
                     kendoWindow.data("kendoWindow").center().open();
                 },
                 deactivate: function () {
                     this.destroy();
                 },
                 parameters: parameters,
-                //open: function () {
-                //    // Kendo window's center does not work correctly. This allows it to somewhat center it vertically.
-                //    //kendoWindow.parent().css("top", "50%").css("padding-top", "0px");
-                // 
-                //},
                 close: function () {
                     deferred.resolve(kendoWindow.data("kendoWindow").options.returnResults);
                 }
             });
-            //kendoWindow.data("kendoWindow").center().open();
             return deferred;
         };
         Helpers.ShowToast = function (message) {
@@ -864,10 +856,10 @@ var Global;
                 return url.slice(0, value.length).toLowerCase() == value.toLowerCase();
             };
             if (startsWith('http') || startsWith('https') || startsWith('/')) {
-                window.location.href = url;
+                window.top.location.href = url;
             }
             else {
-                window.location.href = '/' + url;
+                window.top.location.href = '/' + url;
             }
         };
         Helpers.StartsWith = function (content, value) {

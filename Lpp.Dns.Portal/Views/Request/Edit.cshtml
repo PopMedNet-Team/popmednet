@@ -321,9 +321,14 @@
             $("form.trackChanges").bind("formChanged", function () {
                 $('#btnSave').removeAttr('disabled');
             });
+        
+            $("#btnDelete").bind("click", function () {
+                $("#txStartPeriod").removeAttr("required");
+                $("#txEndPeriod").removeAttr("required");
+            });
         });
 
-        Request.Edit.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model, new Newtonsoft.Json.JsonSerializerSettings { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore }) + ';')
-        Request.Edit.init();
+        Requests.Edit.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model, new Newtonsoft.Json.JsonSerializerSettings { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore }) + ';')
+        Requests.Edit.init();
     </script>
 }

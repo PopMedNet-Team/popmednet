@@ -17,21 +17,18 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <NuGetPackageImportStamp>33ab7466</NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Cells, Version=7.4.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Aspose.Cells.dll</HintPath>
-    </Reference>
-    <Reference Include="C5, Version=1.1.0.0, Culture=neutral, PublicKeyToken=06a1b38866503b69, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.2.0.1\lib\net40\C5.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
@@ -53,9 +50,8 @@
       <HintPath>..\packages\LinqKit.1.1.3.1\lib\net45\LinqKit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -91,20 +87,15 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Quartz, Version=2.0.1.100, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.2.0.1\lib\net40\Quartz.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Renci.SshNet">
-      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
+    <Reference Include="Renci.SshNet, Version=2016.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.0.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -316,6 +307,7 @@
     <Compile Include="Areas\Api\Controllers\DemographicsController.cs" />
     <Compile Include="Areas\Controls\Controllers\WFCommentsController.cs" />
     <Compile Include="Areas\Controls\Controllers\WFDocumentsController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFEnhancedEventLogController.cs" />
     <Compile Include="Areas\Controls\Controllers\WFFileUploadController.cs" />
     <Compile Include="Areas\Controls\Controllers\WFHistoryController.cs" />
     <Compile Include="Areas\Controls\Controllers\WFNotificationsController.cs" />
@@ -405,7 +397,6 @@
     <Compile Include="Code\Sftp\SftpUploadService.cs" />
     <Compile Include="Code\RequestMetadataCollection\RequestMetadataCollection.cs" />
     <Compile Include="Code\RequestMetadataCollection\RequestMetadataCollectionService.cs" />
-    <Compile Include="Code\Requests\RequestSchedulerService.cs" />
     <Compile Include="Code\Tasks\TaskService.cs" />
     <Compile Include="Code\UsersService.cs" />
     <Compile Include="Code\ErrorHandler.cs" />
@@ -1030,6 +1021,7 @@
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\EditStratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\StratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\View.cshtml" />
+    <Content Include="Areas\Controls\Views\WFEnhancedEventLog\Index.cshtml" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1139,6 +1131,7 @@
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Groups\Index.cshtml" />
     <Content Include="tsconfig.json" />
+    <Content Include="Views\Home\Diagnostics.cshtml" />
     <None Include="Views\QlikTest\DivIntegration.cshtml" />
     <None Include="Views\QlikTest\Index.cshtml" />
     <None Include="Views\QlikTest\Qlik ReadMe.txt" />
@@ -1255,6 +1248,7 @@
     <TypeScriptCompile Include="Areas\Controls\js\WFComments\SimpleComment.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFDocuments\Index.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFDocuments\Upload.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFEnhancedEventLog\Index.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Common.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ForTask.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Index.ts" />
@@ -1693,10 +1687,6 @@
       <Project>{B43A1F32-8301-4B0B-877D-1570C6A06674}</Project>
       <Name>Lpp.Dns.Portal.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lpp.Dns.Scheduler.Jobs\Lpp.Dns.Scheduler.Jobs.csproj">
-      <Project>{a6b520b9-e5a9-40a0-ad89-46c387480644}</Project>
-      <Name>Lpp.Dns.Scheduler.Jobs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Audit.UI\Lpp.Audit.UI.csproj">
       <Project>{4EC1AE43-C7F6-445C-9A33-2A9D19B7F3E0}</Project>
       <Name>Lpp.Audit.UI</Name>
@@ -1805,10 +1795,6 @@
     <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Summary\Lpp.Dns.HealthCare.Summary.csproj">
       <Project>{af5d4930-bb9a-4232-bf15-f7a798ba73c0}</Project>
       <Name>Lpp.Dns.HealthCare.Summary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SchedulerRestService\Lpp.Dns.SchedulerService.Interfaces.csproj">
-      <Project>{F806249D-2AC8-473D-9F5B-2DC17C06BC3B}</Project>
-      <Name>Lpp.Dns.SchedulerService.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

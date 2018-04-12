@@ -1,4 +1,4 @@
-/// <reference path='../../Lpp.Pmn.Resources/Scripts/typings/knockout.mapping/knockout.mapping.d.ts' />
+/// <reference path='../../Lpp.Pmn.Resources/node_modules/@types/knockout.mapping/index.d.ts' />
 /// <reference path='Lpp.Dns.Interfaces.ts' />
 module Dns.ViewModels {
 	 export class ViewModel<D>{
@@ -455,6 +455,43 @@ module Dns.ViewModels {
 	 	 public toData(): Dns.Interfaces.IApproveRejectResponseDTO{
 	 	 	  return {
 	 	 	 	ResponseID: this.ResponseID(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class EnhancedEventLogItemViewModel extends ViewModel<Dns.Interfaces.IEnhancedEventLogItemDTO>{
+	 	 public Step: KnockoutObservable<number>;
+	 	 public Timestamp: KnockoutObservable<Date>;
+	 	 public Description: KnockoutObservable<string>;
+	 	 public Source: KnockoutObservable<string>;
+	 	 public EventType: KnockoutObservable<string>;
+	 	 constructor(EnhancedEventLogItemDTO?: Dns.Interfaces.IEnhancedEventLogItemDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (EnhancedEventLogItemDTO== null) {
+	 	 	 	 this.Step = ko.observable<any>();
+	 	 	 	 this.Timestamp = ko.observable<any>();
+	 	 	 	 this.Description = ko.observable<any>();
+	 	 	 	 this.Source = ko.observable<any>();
+	 	 	 	 this.EventType = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.Step = ko.observable(EnhancedEventLogItemDTO.Step);
+	 	 	 	 this.Timestamp = ko.observable(EnhancedEventLogItemDTO.Timestamp);
+	 	 	 	 this.Description = ko.observable(EnhancedEventLogItemDTO.Description);
+	 	 	 	 this.Source = ko.observable(EnhancedEventLogItemDTO.Source);
+	 	 	 	 this.EventType = ko.observable(EnhancedEventLogItemDTO.EventType);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IEnhancedEventLogItemDTO{
+	 	 	  return {
+	 	 	 	Step: this.Step(),
+	 	 	 	Timestamp: this.Timestamp(),
+	 	 	 	Description: this.Description(),
+	 	 	 	Source: this.Source(),
+	 	 	 	EventType: this.EventType(),
 	 	 	  };
 	 	  }
 
@@ -5935,6 +5972,35 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class LegacySchedulerRequestViewModel extends ViewModel<Dns.Interfaces.ILegacySchedulerRequestDTO>{
+	 	 public RequestID: KnockoutObservable<any>;
+	 	 public AdapterPackageVersion: KnockoutObservable<string>;
+	 	 public ScheduleJSON: KnockoutObservable<string>;
+	 	 constructor(LegacySchedulerRequestDTO?: Dns.Interfaces.ILegacySchedulerRequestDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (LegacySchedulerRequestDTO== null) {
+	 	 	 	 this.RequestID = ko.observable<any>();
+	 	 	 	 this.AdapterPackageVersion = ko.observable<any>();
+	 	 	 	 this.ScheduleJSON = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.RequestID = ko.observable(LegacySchedulerRequestDTO.RequestID);
+	 	 	 	 this.AdapterPackageVersion = ko.observable(LegacySchedulerRequestDTO.AdapterPackageVersion);
+	 	 	 	 this.ScheduleJSON = ko.observable(LegacySchedulerRequestDTO.ScheduleJSON);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.ILegacySchedulerRequestDTO{
+	 	 	  return {
+	 	 	 	RequestID: this.RequestID(),
+	 	 	 	AdapterPackageVersion: this.AdapterPackageVersion(),
+	 	 	 	ScheduleJSON: this.ScheduleJSON(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class DistributedRegressionAnalysisCenterManifestItem extends ViewModel<Dns.Interfaces.IDistributedRegressionAnalysisCenterManifestItem>{
 	 	 public DocumentID: KnockoutObservable<any>;
 	 	 public RevisionSetID: KnockoutObservable<any>;
@@ -6210,6 +6276,7 @@ module Dns.ViewModels {
 	 	 public Priority: KnockoutObservable<Dns.Enums.Priorities>;
 	 	 public DueDate: KnockoutObservable<Date>;
 	 	 public QueryType: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
+	 	 public SubmittedOn: KnockoutObservable<Date>;
 	 	 constructor(QueryComposerHeaderDTO?: Dns.Interfaces.IQueryComposerHeaderDTO)
 	 	  {
 	 	 	  super();
@@ -6221,6 +6288,7 @@ module Dns.ViewModels {
 	 	 	 	 this.Priority = ko.observable<any>();
 	 	 	 	 this.DueDate = ko.observable<any>();
 	 	 	 	 this.QueryType = ko.observable<any>();
+	 	 	 	 this.SubmittedOn = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.Name = ko.observable(QueryComposerHeaderDTO.Name);
 	 	 	 	 this.Description = ko.observable(QueryComposerHeaderDTO.Description);
@@ -6229,6 +6297,7 @@ module Dns.ViewModels {
 	 	 	 	 this.Priority = ko.observable(QueryComposerHeaderDTO.Priority);
 	 	 	 	 this.DueDate = ko.observable(QueryComposerHeaderDTO.DueDate);
 	 	 	 	 this.QueryType = ko.observable(QueryComposerHeaderDTO.QueryType);
+	 	 	 	 this.SubmittedOn = ko.observable(QueryComposerHeaderDTO.SubmittedOn);
 	 	 	 }
 	 	 }
 
@@ -6241,6 +6310,7 @@ module Dns.ViewModels {
 	 	 	 	Priority: this.Priority(),
 	 	 	 	DueDate: this.DueDate(),
 	 	 	 	QueryType: this.QueryType(),
+	 	 	 	SubmittedOn: this.SubmittedOn(),
 	 	 	  };
 	 	  }
 
@@ -6316,6 +6386,7 @@ module Dns.ViewModels {
 	 }
 	 export class QueryComposerResponseViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseDTO>{
 	 	 public ID: KnockoutObservable<any>;
+	 	 public DocumentID: KnockoutObservable<any>;
 	 	 public ResponseDateTime: KnockoutObservable<Date>;
 	 	 public RequestID: KnockoutObservable<any>;
 	 	 public Errors: KnockoutObservableArray<QueryComposerResponseErrorViewModel>;
@@ -6328,6 +6399,7 @@ module Dns.ViewModels {
 	 	 	  super();
 	 	 	 if (QueryComposerResponseDTO== null) {
 	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.DocumentID = ko.observable<any>();
 	 	 	 	 this.ResponseDateTime = ko.observable<any>();
 	 	 	 	 this.RequestID = ko.observable<any>();
 	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>();
@@ -6337,6 +6409,7 @@ module Dns.ViewModels {
 	 	 	 	 this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel();
 	 	 	  }else{
 	 	 	 	 this.ID = ko.observable(QueryComposerResponseDTO.ID);
+	 	 	 	 this.DocumentID = ko.observable(QueryComposerResponseDTO.DocumentID);
 	 	 	 	 this.ResponseDateTime = ko.observable(QueryComposerResponseDTO.ResponseDateTime);
 	 	 	 	 this.RequestID = ko.observable(QueryComposerResponseDTO.RequestID);
 	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>(QueryComposerResponseDTO.Errors == null ? null : QueryComposerResponseDTO.Errors.map((item) => {return new QueryComposerResponseErrorViewModel(item);}));
@@ -6350,6 +6423,7 @@ module Dns.ViewModels {
 	 	 public toData(): Dns.Interfaces.IQueryComposerResponseDTO{
 	 	 	  return {
 	 	 	 	ID: this.ID(),
+	 	 	 	DocumentID: this.DocumentID(),
 	 	 	 	ResponseDateTime: this.ResponseDateTime(),
 	 	 	 	RequestID: this.RequestID(),
 	 	 	 	Errors: this.Errors == null ? null : this.Errors().map((item) => {return item.toData();}),
@@ -9825,6 +9899,7 @@ module Dns.ViewModels {
 	 	 public Adapter: KnockoutObservable<string>;
 	 	 public ProcessorID: KnockoutObservable<any>;
 	 	 public DataPartnerIdentifier: KnockoutObservable<string>;
+	 	 public DataPartnerCode: KnockoutObservable<string>;
 	 	 constructor(DataMartDTO?: Dns.Interfaces.IDataMartDTO)
 	 	  {
 	 	 	  super();
@@ -9976,6 +10051,7 @@ module Dns.ViewModels {
 	 	 	 	 this.Adapter = ko.observable<any>();
 	 	 	 	 this.ProcessorID = ko.observable<any>();
 	 	 	 	 this.DataPartnerIdentifier = ko.observable<any>();
+	 	 	 	 this.DataPartnerCode = ko.observable<any>();
 	 	 	 	 this.Name = ko.observable<any>();
 	 	 	 	 this.Description = ko.observable<any>();
 	 	 	 	 this.Acronym = ko.observable<any>();
@@ -10137,6 +10213,7 @@ module Dns.ViewModels {
 	 	 	 	 this.Adapter = ko.observable(DataMartDTO.Adapter);
 	 	 	 	 this.ProcessorID = ko.observable(DataMartDTO.ProcessorID);
 	 	 	 	 this.DataPartnerIdentifier = ko.observable(DataMartDTO.DataPartnerIdentifier);
+	 	 	 	 this.DataPartnerCode = ko.observable(DataMartDTO.DataPartnerCode);
 	 	 	 	 this.Name = ko.observable(DataMartDTO.Name);
 	 	 	 	 this.Description = ko.observable(DataMartDTO.Description);
 	 	 	 	 this.Acronym = ko.observable(DataMartDTO.Acronym);
@@ -10302,6 +10379,7 @@ module Dns.ViewModels {
 	 	 	 	Adapter: this.Adapter(),
 	 	 	 	ProcessorID: this.ProcessorID(),
 	 	 	 	DataPartnerIdentifier: this.DataPartnerIdentifier(),
+	 	 	 	DataPartnerCode: this.DataPartnerCode(),
 	 	 	 	Name: this.Name(),
 	 	 	 	Description: this.Description(),
 	 	 	 	Acronym: this.Acronym(),

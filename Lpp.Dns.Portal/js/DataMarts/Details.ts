@@ -222,8 +222,14 @@ module DataMarts.Details {
                 return;
             }
 
+            if ((this.DataMart.AdapterID() || '').toUpperCase() == DistributedRegressionModelID && (this.DataMart.DataPartnerCode() || '').length == 0) {
+                Global.Helpers.ShowAlert('Data Partner Code Required', '<p>A Data Partner Code is required when the adapter is for Distributed Regression.</p><p>This identifier is used to map to the data partner in the tracking tables.</p><p>An code is required even if this datamart is going to be an analysis center.</p>', 650, ['Close']).always(() => { $('#txtDataPartnerCode').focus(); });
+                return;
+            }
+
             if (this.DataMart.AdapterID() == null || this.DataMart.AdapterID().toUpperCase() != DistributedRegressionModelID) {
                 this.DataMart.DataPartnerIdentifier('');
+                this.DataMart.DataPartnerCode('');
             }
 
             this.DataMart.StartDate((this.StartYear() == null || <any>this.StartYear() == "") ? null : new Date(this.StartYear(), 1));

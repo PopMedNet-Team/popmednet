@@ -20,6 +20,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
         const string JobFailTriggerFileKind = "DistributedRegression.Failed";
         const string OutputManifestFileKind = "DistributedRegression.FileList";
         const string TrackingTableFileKind = "DistributedRegression.TrackingTable";
+        const string EnhancedEventLogFileKind = "DistributedRegression.AdapterEventLog";
 
         public DistributedRegressionModelAdapter() : base(new Guid("4C8A25DC-6816-4202-88F4-6D17E72A43BC"))
         {
@@ -49,6 +50,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
         string[] TriggerFileNames = new string[0];
 
+        readonly List<EventLogItem> EventLog = new List<EventLogItem>(20);
+
         public override void Initialize(IDictionary<string, object> settings)
         {
             base.Initialize(settings);
@@ -68,6 +71,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             //The triggers have been modified to remove the monitoring for Job Stop file. (ASPE-510)
             TriggerFileNames = new[] { JobStartFilename, ExecutionCompleteFilename, JobFailFilename };
+
+            if (EventLog.Count > 0)
+                EventLog.Clear();
         }
 
         public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
@@ -107,34 +113,75 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             
             string outputfilesFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "msoc");
             string inputfilesFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
+
             logger.Debug("Checking to see if input directory exists");
             if (!Directory.Exists(inputfilesFolderPath))
             {
                 logger.Debug("Creating Input Directory");
                 Directory.CreateDirectory(inputfilesFolderPath);
             }
+
             logger.Debug("Checking to see if output directory exists");
             if (!Directory.Exists(outputfilesFolderPath))
             {
                 logger.Debug("Creating Output Directory");
                 Directory.CreateDirectory(outputfilesFolderPath);
             }
+
             if (requestDocs.Any(d => string.Equals(Path.GetExtension(d.Document.Filename), ".zip", StringComparison.OrdinalIgnoreCase)))
             {
                 //initial iteration with the setup package, extract if the "inputfiles" folder is empty
                 if (!Directory.EnumerateFileSystemEntries(inputfilesFolderPath).Any())
                 {
                     var initialSetupPackage = requestDocs.First(d => string.Equals(Path.GetExtension(d.Document.Filename), ".zip", StringComparison.OrdinalIgnoreCase));
-                    logger.Debug("Extracting ZIP file " + initialSetupPackage.Document.Filename + " for its contents");
-                    using (ZipArchive archive = new ZipArchive(initialSetupPackage.Stream))
+
+                    string zipPath = Path.Combine(RootMonitorFolder, RequestIdentifier, initialSetupPackage.Document.Filename);
+
+                    logger.Debug("Downloading initial payload zip file to: " + zipPath);
+
+                    EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Beginning download of initial payload zip file."));
+
+                    using(FileStream outStream = File.Create(zipPath))
                     {
-                        logger.Debug("The following files were extracted from the ZIP Package: " + String.Join(" ,", archive.Entries.Select(x => x.Name)).Remove(0, 2));
-                        archive.ExtractToDirectory(Path.Combine(RootMonitorFolder, RequestIdentifier));
+                        //do 4mb chunks
+                        byte[] buffer = new byte[4194304];
+                        int bytesReceived = 0;
+                        int bytesRead = 0;
+                        do
+                        {
+                            bytesReceived = initialSetupPackage.Stream.Read(buffer, 0, buffer.Length);
+                            bytesRead += bytesReceived;
+
+                            outStream.Write(buffer, 0, buffer.Length);
+
+                        } while (bytesReceived > 0);
+                        
+                        outStream.Flush();
+                        outStream.Close();
                     }
+
+                    logger.Debug("Extracting ZIP file " + initialSetupPackage.Document.Filename + " for its contents");
+                    EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Beginning of extracting initial payload from zip file."));
+
+                    using (FileStream inStream = File.OpenRead(zipPath))
+                    using (ZipArchive archive = new ZipArchive(inStream))
+                    {   
+                        archive.ExtractToDirectory(Path.Combine(RootMonitorFolder, RequestIdentifier));
+                        
+                        logger.Debug("The following files were extracted from the ZIP Package: " + string.Join(", ", archive.Entries.Where(x => !string.IsNullOrEmpty(x.Name)).Select(x => x.Name).ToArray()));
+                    }
+
+                    EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Zip file containing initial payload extracted."));
+
+                    logger.Debug("Deleting initial payload zip file: " + zipPath);
+                    File.Delete(zipPath);
+                    
                 }
             }
             else
             {
+                EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Beginning download of input files."));
+
                 logger.Debug("Downloading Documents to input folder: " + inputfilesFolderPath);
                 foreach (var f in requestDocs)
                 {
@@ -148,6 +195,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                     logger.Debug("Successfully Downloaded Document: " + f.Document.Filename);
                 }
 
+                EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Input files successfully downloaded."));
+
                 //Create the Execution Complete File only if files were transferred. (ASPE-497)
                 //Updated to create the file only if new/updated files are downloaded. (ASPE-535)
                 //Furthermore, the ExecutionComplete file is only created for non-zip files.
@@ -159,6 +208,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                         fs.Close();
                     }
                     logger.Debug("Successfully Created Execution Complete trigger file: " + ExecutionCompleteFilename);
+                    EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Execution Complete trigger file created by adapter in the input folder."));
                 }
             }
 
@@ -176,12 +226,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                     {
                         logger.Debug(JobStartFilename + " Job Start Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
+                        EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Job Start trigger file created."));
                     }
                     //monitor for either the job started, execution successful, or job end trigger file
                     else if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
                     {
                         logger.Debug(ExecutionCompleteFilename + " Execution Complete Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
+                        EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Execution Complete trigger file created."));
                     }
 
                 };
@@ -207,8 +259,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             //get all the files to upload that are listed in the filelist document
             outputDocuments = FilesToUpload(outputfilesFolderPath);
-			if (outputDocuments.Any())
-				logger.Debug("Manifest File list the following Files for upload: " + String.Join(" ,", outputDocuments.Select(x => String.Format("'{0}'", x.FileInfo.Name))).Remove(0, 1));
+
+            if (outputDocuments.Any())
+            {
+                logger.Debug("Manifest File list the following Files for upload: " + String.Join(" ,", outputDocuments.Select(x => String.Format("'{0}'", x.FileInfo.Name))).Remove(0, 1));
+            }
+
             //get the actual file bytes for the trigger files
             foreach (var document in outputDocuments)
             {
@@ -236,27 +292,45 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 }
             }
 
+            LogOutputFilesCreated(outputDocuments);
+
             var trackingTableDocuments = outputDocuments.Where(d => d.Document.Kind == TrackingTableFileKind).Select(d => d.Document.Filename).ToArray();
             if (trackingTableDocuments.Length > 1)
             {
                 throw new Exception("More than one tracking table document is included in the output files: " + string.Join(", ", trackingTableDocuments));
             }
+
             logger.Debug("Deleting Trigger Files");
-            //delete the trigger file
             DeleteTriggerFiles(outputfilesFolderPath);
 
             return outputDocuments;
         }
 
+        private void LogOutputFilesCreated(List<QueryComposerModelProcessor.DocumentEx> outputDocuments)
+        {
+            EventLog.Add(new EventLogItem(EventLogItemTypes.OutputFilesCreated, "Output files created; ready for upload."));
+
+            var content = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(EventLog, Newtonsoft.Json.Formatting.None));
+
+            Guid documentID = QueryComposerModelProcessor.NewGuid();
+            outputDocuments.Add(new QueryComposerModelProcessor.DocumentEx {
+                ID = documentID,
+                Document = new Document(documentID, "application/json", "AdapterEvents.log", false, content.Length, EnhancedEventLogFileKind),
+                Content = content
+            });
+        }
+
         IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessForAnalysisCenter(DocumentWithStream[] requestDocs)
         {
             string outputFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
+
             logger.Debug("Checking to see if output directory exists");
             if (!Directory.Exists(outputFolderPath))
             {
                 logger.Debug("Creating output directory");
                 Directory.CreateDirectory(outputFolderPath);
             }
+
             logger.Debug("Inspecting manifest file");
             //look for the manifest.json file
             var manifestDocument = requestDocs.FirstOrDefault(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase) && d.Document.Kind == Lpp.Dns.DTO.Enums.DocumentKind.SystemGeneratedNoLog);
@@ -275,9 +349,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 var serializer = new Newtonsoft.Json.JsonSerializer();
                 manifestDocuments = serializer.Deserialize<DistributedRegressionAnalysisCenterManifestItem[]>(jr);
             }
+
             logger.Debug("Starting Download files to DataPartner Directories");
+
+            EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Initiating DataPartner Input files download to Analysis Center."));
+
             //save the files to the specified folders based on the manifest file
-            foreach(var document in manifestDocuments)
+            foreach (var document in manifestDocuments)
             {
                 if (string.IsNullOrEmpty(document.DataPartnerIdentifier))
                 {
@@ -313,17 +391,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             }
 
+            EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "DataPartner Input files successfully downloaded to Analysis Center."));
+
             //write the trigger files for each datapartner input folder
-            foreach(var dpf in datapartnerFolders)
+            foreach (var dpf in datapartnerFolders)
             {
                 logger.Debug("Creating Execution Complete trigger file: " + ExecutionCompleteFilename + " in DataPartner Folder " + dpf.Value);
+
                 using (var fs = File.CreateText(Path.Combine(dpf.Value, ExecutionCompleteFilename)))
                 {
                     fs.Close();
                 }
+
                 logger.Debug("Successfully Created Execution Complete trigger file: " + ExecutionCompleteFilename + " in DataPartner Folder " + dpf.Value);
             }
+
+            EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Execution Complete trigger file created by adapter for each Data Partner in their input folder at the Analysis Center."));
+
+
             logger.Debug("Checking to see if the Start Job or Execution Complete Trigger files are there");
+
             if (!TriggerFileExists(outputFolderPath, TriggerFileNames))
             {
                 //wait for the trigger file in the "inputfiles" folder
@@ -338,12 +425,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                     {
                         logger.Debug(JobStartFilename + " Job Start Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
+                        EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Job Start trigger file created."));
                     }
                     //monitor for either the job started, execution successful, or job end trigger file
                     else if (e.ChangeType == WatcherChangeTypes.Created && (string.Equals(e.Name, ExecutionCompleteFilename, StringComparison.OrdinalIgnoreCase)))
                     {
                         logger.Debug(ExecutionCompleteFilename + " Execution Complete Trigger File found");
                         directoryWatcher.EnableRaisingEvents = false;
+                        EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Execution Complete trigger file created."));
                     }
                 };
 
@@ -363,7 +452,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
             //get all the files to upload that are listed in the filelist document
             List<QueryComposerModelProcessor.DocumentEx> outputDocuments = FilesToUpload(outputFolderPath);
-            logger.Debug("Manifest File list the following Files for upload: " + String.Join(" ,", outputDocuments.Select(x => String.Format("'{0}'", x.FileInfo.Name))));
+            logger.Debug("Manifest File list the following Files for upload: " + string.Join(", ", outputDocuments.Select(x => string.Format("'{0}'", x.FileInfo.Name)).ToArray()));
             //get the actual file bytes for the trigger files
             foreach (var document in outputDocuments)
             {
@@ -391,6 +480,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                     document.FileInfo = null;
                 }
             }
+
+            LogOutputFilesCreated(outputDocuments);
 
             var trackingTableDocuments = outputDocuments.Where(d => d.Document.Kind == TrackingTableFileKind).Select(d => d.Document.Filename).ToArray();
             if (trackingTableDocuments.Length > 1)
@@ -506,6 +597,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                         filename = split[0].Trim();
                         if (!string.IsNullOrEmpty(filename))
                         {
+                            if(documents.Any(d => d.Document.Filename == filename))
+                            {
+                                continue;
+                            }
+
                             fi = new FileInfo(Path.Combine(directory, filename));
                             documentID = QueryComposerModelProcessor.NewGuid();
                             var documentEx = new QueryComposerModelProcessor.DocumentEx {
@@ -569,5 +665,36 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             return sb.ToString();
         }
 
+    }
+
+    internal struct EventLogItem
+    {
+        public readonly DateTime Timestamp;
+        public readonly string Type;
+        public readonly string Description;
+
+        public EventLogItem(string type, string description) : this(DateTime.UtcNow, type, description)
+        {
+        }
+
+        [Newtonsoft.Json.JsonConstructor]
+        public EventLogItem(DateTime timestamp, string type, string description)
+        {
+            Timestamp = timestamp;
+            Type = type;
+            Description = description;
+        }
+
+        public override string ToString()
+        {
+            return Description;
+        }
+    }
+
+    internal static class EventLogItemTypes
+    {
+        public const string DownloadPayload = "Download Input Files";
+        public const string TriggerFileCreated = "Trigger File Created";
+        public const string OutputFilesCreated = "Output Files Created";
     }
 }

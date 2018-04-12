@@ -16,6 +16,9 @@ using Lpp.Dns.WebServices;
 using Lpp.Dns.DTO.Security;
 using System.Dynamic;
 using Lpp.Utilities.Logging;
+using System.IO;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace Lpp.Dns.Api.DataMartClient
 {
@@ -29,7 +32,6 @@ namespace Lpp.Dns.Api.DataMartClient
         static readonly Guid LegacyModularProcessorID = new Guid("C8BC0BD9-A50D-4B9C-9A25-472827C8640A");
         static readonly Guid ModularProgramTermID = new Guid("A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8");
         static readonly Guid ModularModelID = new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154");
-        static readonly Guid DistributedRegressionWorkflowID = new Guid("E9656288-33FF-4D1F-BA77-C82EB0BF0192");
         static readonly Guid DefaultQEAdapterProcessorID = new Guid("AE0DA7B0-0F73-4D06-B70B-922032B7F0EB");
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(DMCController));
 
@@ -485,14 +487,11 @@ namespace Lpp.Dns.Api.DataMartClient
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Document not found for the specified ID.");
             }
 
-            HttpResponseMessage response = this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) :  new HttpResponseMessage(HttpStatusCode.OK);
-            if (offset < document.Length)
+            HttpResponseMessage response = this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.OK);
+            if(offset < document.Length)
             {
-                byte[] buffer = new byte[Math.Min(size, Convert.ToInt32(document.Length) - offset)];
-                using (var stream = new Lpp.Dns.Data.Documents.DocumentStream(DataContext, ID))
-                {
-                    int result = await stream.ReadAsync(buffer, offset, buffer.Length);
-                }
+                byte[] buffer = await LocalDiskCache.Instance.ReadChunk(DataContext, document.ID, offset, size);
+
                 response.Content = new ByteArrayContent(buffer);
                 response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
                 response.Content.Headers.ContentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(offset, offset + buffer.Length);
@@ -719,40 +718,82 @@ namespace Lpp.Dns.Api.DataMartClient
                 return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not authorized to upload results.");
             }
 
-            using (var documentStream = new Lpp.Dns.Data.Documents.DocumentStream(DataContext, documentID))
+            string uploadPath = System.Web.Configuration.WebConfigurationManager.AppSettings["DocumentsUploadFolder"] ?? string.Empty;
+            if (string.IsNullOrEmpty(uploadPath))
+                uploadPath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Uploads/");
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            var res = data.ToArray();
+            using (var fs = new FileStream(Path.Combine(uploadPath, details.Document.ID.ToString("D") + ".part"), FileMode.Append, FileAccess.Write, FileShare.Write, res.Length, true))
             {
-                using (var ms = new System.IO.MemoryStream())
+                
+                fs.Write(res, 0, res.Length);
+                fs.Flush();
+                
+
+                if(fs.Length < details.Document.Length)
                 {
-                    if (documentStream.Length > 0)
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                fs.Close();
+            }
+
+            using (var fs = new FileStream(Path.Combine(uploadPath, details.Document.ID + ".part"), FileMode.Open, FileAccess.Read))
+            {
+                if (DataContext.Database.Connection.State != ConnectionState.Open)
+                    DataContext.Database.Connection.Open();
+
+                using (var conn = (SqlConnection)DataContext.Database.Connection)
+                {
+                    int chunkSize = 524288000;
+                    int bytesRead;
+                    byte[] buffer = fs.Length < chunkSize ? new byte[fs.Length] : new byte[chunkSize];
+                    while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        await documentStream.CopyToAsync(ms);
-                    }                    
-
-                    var b = data.ToArray();
-                    await ms.WriteAsync(b, 0, b.Length);
-
-                    ms.Position = 0;
-
-                    await documentStream.WriteStreamAsync(ms);
-
-                    if (details.ProcessModularProgramSearchTerms && ms.Length > 0)
-                    {
-                        try
+                        using (var cmd = new SqlCommand("UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @newData ELSE Data + @newData END, ContentModifiedOn = GETUTCDATE() WHERE ID = @ID", conn))
                         {
-                            ModularProgramResponsePostProcessor postProcessor = new ModularProgramResponsePostProcessor(DataContext);
-
-                            using (var contentStream = new System.IO.MemoryStream(ms.ToArray()))
+                            try
                             {
-                                await postProcessor.ExecuteAsync(details.RequestID, details.Document, contentStream);
+                                cmd.Parameters.Add("@ID", SqlDbType.UniqueIdentifier).Value = details.Document.ID;
+                                cmd.Parameters.Add("@newData", SqlDbType.VarBinary, bytesRead).Value = buffer;
+
+                                cmd.CommandType = CommandType.Text;
+                                cmd.CommandTimeout = 900;
+                                await cmd.ExecuteNonQueryAsync();
+                                bytesRead -= chunkSize;                               
+
+                            }
+                            catch (Exception ex)
+                            {
+                                throw;
                             }
                         }
-                        catch 
-                        { 
-                            //ignore if it fails, do not cause error to upload.
-                        }
-                    }                    
+
+                    }
+                    conn.Close();
+                    conn.Dispose();
                 }
+
+                if (details.ProcessModularProgramSearchTerms && fs.Length > 0)
+                {
+                    try
+                    {
+                        ModularProgramResponsePostProcessor postProcessor = new ModularProgramResponsePostProcessor(DataContext);
+
+                        await postProcessor.ExecuteAsync(details.RequestID, details.Document, fs);
+                    }
+                    catch
+                    {
+                        //ignore if it fails, do not cause error to upload.
+                    }
+                }
+
+                fs.Close();
+                fs.Dispose();
             }
+
+            File.Delete(Path.Combine(uploadPath, details.Document.ID + ".part"));
 
             return this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) :  new HttpResponseMessage(HttpStatusCode.OK);
         }
@@ -765,146 +806,15 @@ namespace Lpp.Dns.Api.DataMartClient
         [HttpPut]
         public async Task<HttpResponseMessage> SetRequestStatus(dmc.Criteria.SetRequestStatusData data)
         {
-            var permission = data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Hold ? PermissionIdentifiers.DataMartInProject.HoldRequest :
-                                data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected ? PermissionIdentifiers.DataMartInProject.RejectRequest :
-                                PermissionIdentifiers.DataMartInProject.UploadResults;
+            var processor = new DMCRoutingStatusProcessor(DataContext, Identity);
+            var result = await processor.UpdateStatusAsync(data);
 
-            bool hasPermission = await CheckPermission(data.RequestID, data.DataMartID, permission, GetCurrentIdentity());
-            if (hasPermission == false)
+            if(result.StatusCode == HttpStatusCode.Forbidden || result.StatusCode == HttpStatusCode.NotFound)
             {
-                string message = data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Hold ? "You do not have permission to change the status of this request to Hold" :
-                                data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected ? "You do not have permission to change the status of this request to Rejected" :
-                                "You do not have permission to upload results.";
-                return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, message);
+                return Request.CreateErrorResponse(result.StatusCode, result.Message);
             }
 
-            var routing = await DataContext.RequestDataMarts.Include("Request").SingleOrDefaultAsync(dm => dm.DataMartID == data.DataMartID && dm.RequestID == data.RequestID);
-            if (routing == null)
-            {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Unable to determine the routing information based on the specified Request ID and DataMart ID.");
-            }
-
-            var originalRequestStatus = routing.Request.Status;
-            var originalStatus = routing.Status;
-
-            //PMNDEV-4303 - Change status to ResultsModified is previously uploaded.
-            if (originalStatus == DTO.Enums.RoutingStatus.Completed)
-                routing.Status = DTO.Enums.RoutingStatus.ResultsModified;
-
-            //We should only update the routing status if it is not already complete or modified.
-            if(originalStatus != DTO.Enums.RoutingStatus.Completed && originalStatus != DTO.Enums.RoutingStatus.ResultsModified)
-                routing.Status = (Lpp.Dns.DTO.Enums.RoutingStatus)((int)data.Status);
-
-            //updating the UpdatedOn property of the routing so that logs will get processed and will allow for status change notification to go out if further uploads are done while status is ResultsModified.
-            routing.UpdatedOn = DateTime.UtcNow;
-
-            if (routing.Status == DTO.Enums.RoutingStatus.AwaitingResponseApproval)
-            {
-                //TODO: should be checking against the request creator identity no the the current identity
-                hasPermission = await CheckHasSkipApprovalPermission(data.RequestID, data.DataMartID);
-                if (hasPermission)
-                {
-                    routing.Status = DTO.Enums.RoutingStatus.Completed;
-                }
-            }
-
-            routing.Properties = data.Properties == null ? null :
-                "<P>" + string.Join("",
-                    from p in data.Properties
-                    where !string.IsNullOrEmpty(p.Name)
-                    select string.Format("<V Key=\"{0}\">{1}</V>", p.Name, p.Value)) +
-                "</P>";
-
-            var currentResponse = await DataContext.RequestDataMarts.Where(dm => dm.ID == routing.ID).SelectMany(dm => dm.Responses).OrderByDescending(r => r.Count).FirstOrDefaultAsync();
-
-            currentResponse.ResponseMessage =   data.Message;
-
-            //only set the response time and ID if the response is completed
-            var completeStatuses = new[] {
-                Lpp.Dns.DTO.Enums.RoutingStatus.Completed,
-                Lpp.Dns.DTO.Enums.RoutingStatus.ResultsModified,
-                Lpp.Dns.DTO.Enums.RoutingStatus.RequestRejected,
-                Lpp.Dns.DTO.Enums.RoutingStatus.ResponseRejectedBeforeUpload,
-                Lpp.Dns.DTO.Enums.RoutingStatus.ResponseRejectedAfterUpload,
-                Lpp.Dns.DTO.Enums.RoutingStatus.AwaitingResponseApproval
-            };
-
-            bool routingIsComplete = completeStatuses.Contains(routing.Status);
-
-            if (routingIsComplete)
-            {
-                currentResponse.ResponseTime = DateTime.UtcNow;
-                currentResponse.RespondedByID = GetCurrentIdentity().ID;
-            }
-
-            if ((routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified) && routing.Request.WorkflowID.HasValue)
-            {
-                try
-                {
-                    var trackingTableProcessor = new DistributedRegressionTrackingTableProcessor(DataContext);
-                    await trackingTableProcessor.Process(currentResponse);
-                }
-                catch (Exception ex)
-                {
-                    //should not block if fails
-                    Logger.Error(string.Format("Error processing tracking table for response ID: {0}\r\n{1}", currentResponse.ID, Lpp.Utilities.ExceptionHelpers.UnwindException(ex, true)), ex.InnerException ?? ex);
-                }
-            }
-
-            await DataContext.SaveChangesAsync();
-
-            await DataContext.Entry(routing.Request).ReloadAsync();            
-
-            if (routingIsComplete && routing.Request.Status == DTO.Enums.RequestStatuses.Complete && routing.Request.WorkflowID.HasValue)
-            {               
-
-                if (routing.Request.WorkflowID.Value == DistributedRegressionWorkflowID && (routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified))
-                {
-                    try
-                    {
-                        var routingProcessor = new DistributedRegressionRoutingProcessor(DataContext, Identity.ID);
-                        await routingProcessor.Process(routing);
-                    }catch(Exception ex)
-                    {
-                        Logger.Error(string.Format("Error processing distributed regression route transistion for request ID: {0}\r\n{1}", routing.RequestID, Lpp.Utilities.ExceptionHelpers.UnwindException(ex, true)), ex.InnerException ?? ex);
-                        throw;
-                    }
-                }
-
-                //reload the request to get the current request status.
-                await DataContext.Entry(routing.Request).ReloadAsync();
-
-                if(routing.Request.Status == DTO.Enums.RequestStatuses.Complete)
-                {
-                    //send the request status complete notification
-                    var request = routing.Request;
-                    var requestStatusLogger = new Dns.Data.RequestLogConfiguration();
-                    string[] emailText = await requestStatusLogger.GenerateRequestStatusChangedEmailContent(DataContext, request.ID, GetCurrentIdentity().ID, originalRequestStatus, request.Status);
-                    var logItems = requestStatusLogger.GenerateRequestStatusEvents(DataContext, GetCurrentIdentity(), false, originalRequestStatus, request.Status, request.ID, emailText[1], emailText[0], "Request Status Changed");
-
-                    await DataContext.SaveChangesAsync();
-
-                    await Task.Run(() =>
-                    {
-
-                        List<Utilities.Logging.Notification> notifications = new List<Utilities.Logging.Notification>();
-
-                        foreach (Lpp.Dns.Data.Audit.RequestStatusChangedLog logitem in logItems)
-                        {
-                            var items = requestStatusLogger.CreateNotifications(logitem, DataContext, true);
-                            if (items != null && items.Any())
-                                notifications.AddRange(items);
-                        }
-
-                        if (notifications.Any())
-                            requestStatusLogger.SendNotification(notifications);
-                    });
-                }
-
-
-            }
-
-            return this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.OK);
+            return Request.CreateResponse(result.StatusCode, result.Message);
         }
 
         IQueryable<DataMart> GetGrantedDataMarts()

@@ -1,7 +1,7 @@
 ﻿/// <reference path="../_rootlayout.ts" />
 
 module Home.Index {
-    var vm: ViewModel;
+	var vm: ViewModel;
 
     export class ViewModel extends Global.PageViewModel {
         public dsRequest: kendo.data.DataSource;
@@ -23,25 +23,19 @@ module Home.Index {
         public onColumnMenuInit: (e: any) => void;
         public onRequestRowSelectionChange: (e) => void;
         public onRequestBulkEdit: (data, evt) => void;
-        public onClickRequestsFooter: (data, evt) => void;
-
-        private gRequestsSetting: string = null;
-        private gDataMartsRoutesSetting: string = null;
+				public onClickRequestsFooter: (data, evt) => void;
 
         static editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO;
         private gRequestsRowSelector: any = 'multiple,row';
 
-        constructor(projects: Dns.Interfaces.IProjectDTO[], gRequestsSetting: string, gTasksSetting: string, gNotificationsSetting: string, gMessagesSetting: string, gDataMartsSetting: string, gDataMartsRoutesSetting: string, bindingControl: JQuery) {
+        constructor(projects: Dns.Interfaces.IProjectDTO[], settings: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery) {
             super(bindingControl);
             var self = this;
-
             this.gRequestsHeight = ko.observable<string>(null);
             this.gTasksHeight = ko.observable<string>(null);
             this.gMessagesHeight = ko.observable<string>(null);
             this.gNotificationsHeight = ko.observable<string>(null);
             this.gDataMartsHeight = ko.observable<number>(400);
-            this.gRequestsSetting = gRequestsSetting;
-            this.gDataMartsRoutesSetting = gDataMartsRoutesSetting;
             if (ViewModel.editMetadataPermissions.CanEditRequestMetadata == false) {
                 this.gRequestsRowSelector = false;
             }
@@ -66,22 +60,22 @@ module Home.Index {
                 pageSize: 100,
                 transport: {
                     read: {
-                        url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID /*+ "&$top=5"*/),
+                        url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID),
                     }
                 },
                 schema: {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelNotificationDTO)
                 },
-                sort: {
-                    field: "Timestamp", dir: "desc"
-                },
+								sort: {
+									field: "Timestamp", dir: "desc"
+								},
                 change: (e) => {
                     vm.gNotificationsVisible(e.items != null && e.items.length > 0);
                     vm.gNotificationsHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                 }
-            });    
-
-            Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, gNotificationsSetting, ["Timestamp"]); 
+            });
+            if (settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID })[0] !== null)
+              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID })[0].Setting, ["Timestamp"]); 
 
             this.dsRequest = new kendo.data.DataSource({
                 type: "webapi",
@@ -102,7 +96,8 @@ module Home.Index {
                     vm.gRequestsHeight(e.items != null && e.items.length > 0 ? "600px" : "34px");
                 }
             });
-            Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsRequest, gRequestsSetting, ["SubmittedOn", "DueDate"]);
+            if (settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID })[0] !== null)
+              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsRequest, settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID })[0].Setting, ["SubmittedOn", "DueDate"]);
 
             self.onRequestRowSelectionChange = (e) => {
                 var selectedRequests: Dns.Interfaces.IHomepageRequestDetailDTO[] = [];
@@ -155,10 +150,10 @@ module Home.Index {
                 change: (e) => {
                     
                     vm.gMessagesHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
-                    console.log(vm.gMessagesHeight());
                 }
             }); 
-            Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsMessages, gMessagesSetting, ["CreatedOn"]);           
+            if (settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })[0] !== null)
+              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsMessages, settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })[0].Setting, ["CreatedOn"]);
 
             this.dsTasks = new kendo.data.DataSource({
                 type: "webapi",
@@ -178,23 +173,16 @@ module Home.Index {
                     field: "CreatedOn", dir: "desc"
                 },
                 change: (e) => {
-                    vm.gTasksHeight(e.items != null && e.items.length > 0 ? "300px" : "34px");
+                  vm.gTasksHeight(e.items != null && e.items.length > 0 ? "300px" : "34px");
                 }
             });
-            Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsTasks, gTasksSetting, ["CreatedOn","StartOn","EndOn"]); 
+            if (settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID })[0] !== null)
+              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsTasks, settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID })[0].Setting, ["CreatedOn", "StartOn", "EndOn"]); 
 
             var now = moment().add(5, 'days');
             var userdate = moment(User.PasswordExpiration);
             if (userdate <= now)
-                Global.Helpers.ShowToast("Your Password is Expiring soon.  Please update your password.");        
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close", (e) => {
-
-                    self.Save();
-                }); 
-            };
+                Global.Helpers.ShowToast("Your Password is Expiring soon.  Please update your password.");
 
             this.dsDataMarts = new kendo.data.DataSource({
                 type: "webapi",
@@ -214,7 +202,8 @@ module Home.Index {
                     field: "Name", dir: "asc"
                 }
             });
-            Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, gDataMartsSetting);
+            if (settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID })[0] !== null)
+              Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID })[0].Setting);
 
         }
 
@@ -255,15 +244,6 @@ module Home.Index {
                 }
                 window.location.href = url;
             });
-        }
-
-        public Save() {
-            Users.SetSetting("Home.Index.gRequests.User:" + User.ID, Global.Helpers.GetGridSettings(this.RequestsGrid()));
-            Users.SetSetting("Home.Index.gTasks.User:" + User.ID, Global.Helpers.GetGridSettings(this.TasksGrid()));
-            Users.SetSetting("Home.Index.gNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(this.NotificationsGrid()));
-            Users.SetSetting("Home.Index.gMessages.User:" + User.ID, Global.Helpers.GetGridSettings(this.MessagesGrid()));
-            Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(this.DataMartsGrid()));
-            Users.SetSetting("Home.Index.gDataMartsRoutes.User:" + User.ID, this.gDataMartsRoutesSetting);
         }
 
         public FormatTaskName(e: Dns.Interfaces.IHomepageTaskSummaryDTO) {
@@ -314,9 +294,9 @@ module Home.Index {
                     menu.bind("close", (e) => {
 
                         //update the local grid settings
-                        vm.gDataMartsRoutesSetting = Global.Helpers.GetGridSettings(grid.data('kendoGrid'));
+                        //vm.gDataMartsRoutesSetting = Global.Helpers.GetGridSettings(grid.data('kendoGrid'));
                         //save the grid settings
-                        Users.SetSetting("Home.Index.gDataMartsRoutes.User:" + User.ID, this.gDataMartsRoutesSetting);
+                        //Users.SetSetting("Home.Index.gDataMartsRoutes.User:" + User.ID, this.gDataMartsRoutesSetting);
                     });
                 },
                 selectable: canEditAnyMetadata ? 'multiple,row' : false,
@@ -380,7 +360,6 @@ module Home.Index {
                 }
             });
 
-            Global.Helpers.SetGridFromSettings(grid.data('kendoGrid'), vm.gDataMartsRoutesSetting);
 
             var url = Global.Helpers.GetServiceUrl("requests/requestsbyroute?id=" + datamart.ID);
             var datasource = new kendo.data.DataSource({
@@ -399,7 +378,6 @@ module Home.Index {
                 },
                 sort: { field: "Identifier", dir: "desc" }
             });
-            Global.Helpers.SetDataSourceFromSettings(datasource, vm.gDataMartsRoutesSetting);
 
             var gd = grid.data('kendoGrid');
             gd.setDataSource(datasource);
@@ -486,27 +464,38 @@ module Home.Index {
     }
 
     function init() {
-        $.when<any>(
-            Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
-            Users.GetSetting("Home.Index.gRequests.User:" + User.ID),
-            Users.GetSetting("Home.Index.gTasks.User:" + User.ID),
-            Users.GetSetting("Home.Index.gNotifications.User:" + User.ID),
-            Users.GetSetting("Home.Index.gMessages.User:" + User.ID),
-            Users.GetSetting("Home.Index.gDataMarts.User:" + User.ID),
-            Users.GetSetting("Home.Index.gDataMartsRoutes.User:" + User.ID),
-            Dns.WebApi.Users.GetMetadataEditPermissionsSummary()
-        ).done((projects, gRequestsSetting, gTasksSetting, gNotificationsSetting, gMessagesSetting, gDataMartsSetting, gDataMartsRoutesSetting, editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]) => {
+	    $.when<any>(
+		    Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
+		    Users.GetSettings([
+					"Home.Index.gRequests.User:" + User.ID,
+			    "Home.Index.gTasks.User:" + User.ID,
+					"Home.Index.gNotifications.User:" + User.ID,
+			    "Home.Index.gMessages.User:" + User.ID,
+					"Home.Index.gDataMarts.User:" + User.ID,
+			    "Home.Index.gDataMartsRoutes.User:" + User.ID
+		    ]),
+        Dns.WebApi.Users.GetMetadataEditPermissionsSummary()
+      ).done((projects, settings, editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]) => {
             $(() => {
                 var bindingControl = $("#Content");
                 ViewModel.editMetadataPermissions = editMetadataPermissions.length > 0 ? editMetadataPermissions[0] : { CanEditRequestMetadata: false, EditableDataMarts: [] };
-                vm = new ViewModel(projects, gRequestsSetting, gTasksSetting, gNotificationsSetting, gMessagesSetting, gDataMartsSetting, gDataMartsRoutesSetting, bindingControl);
+                vm = new ViewModel(projects, settings, bindingControl);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
-                Global.Helpers.SetGridFromSettings(vm.RequestsGrid(), gRequestsSetting);
-                Global.Helpers.SetGridFromSettings(vm.TasksGrid(), gTasksSetting);
-                Global.Helpers.SetGridFromSettings(vm.NotificationsGrid(), gNotificationsSetting);
-                Global.Helpers.SetGridFromSettings(vm.MessagesGrid(), gMessagesSetting);
-                Global.Helpers.SetGridFromSettings(vm.DataMartsGrid(), gDataMartsSetting);
+                vm.TasksGrid().bind("dataBound", function (e) {
+                    Users.SetSetting("Home.Index.gTasks.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TasksGrid()));
+                });
+                vm.MessagesGrid().bind("dataBound", function (e) {
+                    Users.SetSetting("Home.Index.gMessages.User:" + User.ID, Global.Helpers.GetGridSettings(vm.MessagesGrid()));
+                });
+                vm.NotificationsGrid().bind("dataBound", function (e) {
+                    Users.SetSetting("Home.Index.gNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(vm.NotificationsGrid()));
+                });
+                vm.RequestsGrid().bind("dataBound", function (e) {
+                    Users.SetSetting("Home.Index.gRequests.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestsGrid()));
+                });
+                vm.DataMartsGrid().bind("dataBound", function (e) {
+                    Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
+                });
             });
         });
     }

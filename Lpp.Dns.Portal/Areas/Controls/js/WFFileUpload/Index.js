@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../../../../js/requests/details.ts" />
 /// <reference path="../../../../js/_layout.ts" />
 /// <reference path="./common.ts" />
@@ -67,8 +72,7 @@ var Controls;
                     _this.sFtpFolders = ko.observableArray([_this.sFtpRoot]);
                     self.onFileUploadCompleted = function (evt) {
                         try {
-                            var result = JSON.parse(evt.response.content);
-                            result.forEach(function (i) { return self.Documents.push(i); });
+                            self.Documents.push(evt.response.Document);
                             Requests.Details.rovm.Save(false).done(function () { Requests.Details.rovm.RefreshTaskDocuments(); });
                         }
                         catch (e) {
@@ -147,13 +151,25 @@ var Controls;
                     return _this;
                 }
                 ViewModel.prototype.onFileUpload = function (evt) {
+                    ko.utils.arrayForEach(evt.files, function (item) {
+                        if (item.size > 2147483648) {
+                            evt.preventDefault();
+                            Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(function () {
+                            });
+                        }
+                    });
                     evt.data = {
                         comments: 'Modular Program specification document added.',
                         requestID: Requests.Details.rovm.Request.ID(),
                         taskID: Requests.Details.rovm.CurrentTask.ID,
-                        taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument,
-                        authToken: User.AuthToken
+                        taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument
                     };
+                    var xhr = evt.XMLHttpRequest;
+                    xhr.addEventListener("readystatechange", function (e) {
+                        if (xhr.readyState == 1 /* OPENED */) {
+                            xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                        }
+                    });
                 };
                 ViewModel.prototype.onFileUploadError = function (evt) {
                     alert(evt.XMLHttpRequest.statusText + ' ' + evt.XMLHttpRequest.responseText);

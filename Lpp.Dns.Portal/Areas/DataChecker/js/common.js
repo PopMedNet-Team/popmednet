@@ -44,4 +44,4 @@ var DataChecker;
     }());
     DataChecker.ChartSource = ChartSource;
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=common.js.map
+//# sourceMappingURL=Common.js.map

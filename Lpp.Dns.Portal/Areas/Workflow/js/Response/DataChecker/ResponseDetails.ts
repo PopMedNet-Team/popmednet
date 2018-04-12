@@ -120,6 +120,7 @@ module Workflow.Response.WFDataChecker.ResponseDetails {
 
         public onApprove: () => void;
         public onReject: () => void;
+        public onResubmit: () => void;
 
         private ExportDownloadAllUrl: string;
         public isDownloadAllVisible: boolean;
@@ -287,6 +288,20 @@ module Workflow.Response.WFDataChecker.ResponseDetails {
                             }).fail((err: any) => {
                                 var errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Reject Responses', errorMessage);
+                            });
+                    });
+            };
+
+            self.onResubmit = () => {
+                Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
+                    .done(comment => {
+                        var responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                            .done(() => {
+                                Global.Helpers.RedirectTo(window.top.location.href);
+                            }).fail((err: any) => {
+                                var errorMessage = err.responseJSON.errors[0].Description;
+                                Global.Helpers.ShowErrorAlert('Access Denied to Reject and Resubmit Responses', errorMessage);
                             });
                     });
             };

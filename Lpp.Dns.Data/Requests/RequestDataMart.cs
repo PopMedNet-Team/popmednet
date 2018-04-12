@@ -291,7 +291,8 @@ namespace Lpp.Dns.Data
                 && originalStatus != RoutingStatus.AwaitingRequestApproval)
             {
                 //Routing Status Changed
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = identity == null ? new { UserName = "", Acronym = "" } : db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                Guid? responseID = db.Responses.Where(rsp => rsp.RequestDataMartID == rdm.ID).OrderByDescending(rsp => rsp.Count).Select(rsp => (Guid?)rsp.ID).FirstOrDefault();
 
                 var logRoutingStatusChanged = new Audit.RoutingStatusChangeLog
                 {
@@ -301,7 +302,8 @@ namespace Lpp.Dns.Data
                     RequestDataMart = rdm,
                     TaskID = currentTaskID,
                     OldStatus = originalStatus,
-                    NewStatus = currentStatus
+                    NewStatus = currentStatus,
+                    ResponseID = responseID
                 };
 
                 db.LogsRoutingStatusChange.Add(logRoutingStatusChanged);
@@ -323,7 +325,7 @@ namespace Lpp.Dns.Data
 
                 //this is where the new request submitted log item should get created on a resubmit, not in the request
                 var newRequestResubmittedLogItem = new Audit.NewRequestSubmittedLog {
-                    Description = string.Format("New request of type '{0}' has been submitted by {1} ** from REQUESTDATAMART CLASS **", details.RequestTypeName, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                    Description = string.Format("New request of type '{0}' has been submitted by {1}", details.RequestTypeName, (orgUser.Acronym + @"\" + orgUser.UserName)),
                     UserID = identity == null ? Guid.Empty : identity.ID,
                     RequestID = request.ID,
                     RequestDataMartID = rdm.ID,
@@ -626,6 +628,7 @@ namespace Lpp.Dns.Data
                 }
 
                 var details = (from rdm in db.RequestDataMarts
+                               let lastResponse = rdm.Responses.OrderByDescending(rsp => rsp.Count).FirstOrDefault()
                               where rdm.ID == log.RequestDataMartID
                               select new {
                                   RequestID = rdm.RequestID,
@@ -636,7 +639,9 @@ namespace Lpp.Dns.Data
                                   RequestName = rdm.Request.Name,
                                   ProjectID = rdm.Request.ProjectID,
                                   ProjectName = rdm.Request.Project.Name,
-                                  LastResponseMessage = rdm.Responses.Where(rsp => rsp.Count == rdm.Responses.Max(rr => rr.Count)).Select(rsp => rsp.ResponseMessage).FirstOrDefault()
+                                  RoutingStatus = rdm.Status,
+                                  LastResponseMessage = lastResponse.ResponseMessage,
+                                  SubmitMessage = lastResponse.SubmitMessage
                               }).FirstOrDefault();
 
                 var actingUser = db.Users.Find(log.UserID);
@@ -646,14 +651,14 @@ namespace Lpp.Dns.Data
                            "<p>The <b>" + details.DataMartName + "</b> routing status for <b>" + details.RequestTypeName +
                            "</b> request <b>" + details.RequestName + "</b> in project <b>" + details.ProjectName +
                            "</b> was changed from <b>" + oldStatus + "</b> to <b>" + newStatus + "</b> by <b>" + actingUser.FullName + "</b>.</p>";
-                body += "<h3>Message</h3><pre>" + details.LastResponseMessage + "</pre>";
+                body += "<h3>Message</h3><pre>" + ((details.RoutingStatus == RoutingStatus.Resubmitted || details.RoutingStatus == RoutingStatus.Submitted) ? details.SubmitMessage : details.LastResponseMessage) + "</pre>";
 
                 var myBody = GenerateTimestampText(log) +
                           "<p>Here are your most recent <b>My Request DataMart Routing Status Changed</b> notifications from <b>" + networkName + "</b>.</p>" +
                           "<p>The <b>" + details.DataMartName + "</b> routing status for <b>" + details.RequestTypeName +
                           "</b> request <b>" + details.RequestName + "</b> in project <b>" + details.ProjectName +
                           "</b> was changed from <b>" + oldStatus + "</b> to <b>" + newStatus + "</b> by <b>" + actingUser.FullName + "</b>.</p>";
-                myBody += "<h3>Message</h3><pre>" + details.LastResponseMessage + "</pre>";
+                myBody += "<h3>Message</h3><pre>" + ((details.RoutingStatus == RoutingStatus.Resubmitted || details.RoutingStatus == RoutingStatus.Submitted) ? details.SubmitMessage : details.LastResponseMessage) + "</pre>";
 
               //user is not a requestUser and has subscribed to the general notification
               var recipients = (from s in db.UserEventSubscriptions

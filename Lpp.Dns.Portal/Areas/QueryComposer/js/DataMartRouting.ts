@@ -53,8 +53,6 @@
         LoadDataMarts: (ProjectID: any, strQuery: string) => void;
         public DataMartsBulkEdit: () => void;
         public SelectedRoutings: () => Dns.Interfaces.IRequestDataMartDTO[];
-        public DataMartsSelectAll: () => void;
-        public DataMartsClearAll: () => void;
         public SelectedDataMartIDs: KnockoutObservableArray<any>;
         public FieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[];
         public IsFieldVisible: (id: string) => boolean;
@@ -63,7 +61,7 @@
         public DefaultPriority: KnockoutObservable<Dns.Enums.Priorities>;
         public DefaultDueDate: KnockoutObservable<Date>;
         public DataMartAdditionalInstructions: KnockoutObservable<string>;
-
+        private RoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(
             bindingControl: JQuery,
@@ -108,15 +106,6 @@
 
                 });
             }
-
-            this.DataMartsSelectAll = () => {
-                let datamartIDs = ko.utils.arrayMap(self.DataMarts(), (rt) => rt.DataMartID);
-                self.SelectedDataMartIDs(datamartIDs);
-            };
-
-            this.DataMartsClearAll = () => {
-                self.SelectedDataMartIDs.removeAll();
-            };
 
             this.SelectedRoutings = () => {
                 let dms: Dns.Interfaces.IRequestDataMartDTO[];
@@ -165,6 +154,20 @@
                 let options = ko.utils.arrayFirst(self.FieldOptions || [], (item) => { return item.FieldIdentifier == id; });
                 return options == null || (options.Permission != null && options.Permission != Dns.Enums.FieldOptionPermissions.Hidden);
             };
+
+            self.RoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.DataMarts().length > 0 && self.SelectedDataMartIDs().length === self.DataMarts().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.DataMarts(), (i) => { return i.DataMartID; });
+                        self.SelectedDataMartIDs(allID);
+                    } else {
+                        self.SelectedDataMartIDs([]);
+                    }
+                }
+            });  
         }
 
         public UpdateRoutings(updates) {

@@ -27,8 +27,7 @@ module Requests.Create {
         var projectID = (<any>(window.options)).parameters.ProjectID || null;
         if (projectID === undefined || projectID == '')
             projectID = Constants.GuidEmpty;
-
-        
+                
         Dns.WebApi.Projects.GetAvailableRequestTypeForNewRequest(projectID, null, null, "Name").done((results) => {
             var bindingControl = $('#Content');
             vm = new ViewModel(projectID, results, bindingControl);

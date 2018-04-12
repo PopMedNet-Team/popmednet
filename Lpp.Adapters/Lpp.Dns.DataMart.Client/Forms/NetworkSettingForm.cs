@@ -68,6 +68,7 @@ namespace Lpp.Dns.DataMart.Client
                     txtServiceUrl.Text = _NetworkSetting.HubWebServiceUrl;
                     txtUsername.Text = _NetworkSetting.Username;
                     txtPassword.Text = _NetworkSetting.DecryptedPassword;
+                    numBoxRefreshRate.Value = _NetworkSetting.RefreshRate;
                     cbCertificates.SelectedItem = certs.FirstOrDefault( c => c.Thumbprint == _NetworkSetting.X509CertThumbprint );
                     chkAutoLogin.Checked = _NetworkSetting.IsAutoLogin;
                     _isNewNetworksetting = false;
@@ -101,6 +102,7 @@ namespace Lpp.Dns.DataMart.Client
                     txtUsername.Text = string.Empty;
                     txtPassword.Text = string.Empty;
                     chkAutoLogin.Checked = true;
+                    numBoxRefreshRate.Value = 300;
                     _isNewNetworksetting = true;
                 }
 
@@ -118,6 +120,7 @@ namespace Lpp.Dns.DataMart.Client
                 tbHost.TextChanged += new EventHandler(OnNetworkSettingChanged);
                 tbPort.TextChanged += new EventHandler(OnNetworkSettingChanged);
                 tbReceiveTimeout.TextChanged += new EventHandler(OnNetworkSettingChanged);
+                numBoxRefreshRate.ValueChanged += new EventHandler(OnNetworkSettingChanged);
             }
             catch (Exception ex)
             {
@@ -229,6 +232,7 @@ namespace Lpp.Dns.DataMart.Client
                 txtUsername.TextChanged += new EventHandler(OnDefaultChanged);
                 txtPassword.TextChanged += new EventHandler(OnDefaultChanged);
                 tbReceiveTimeout.TextChanged += new EventHandler(OnDefaultChanged);
+                numBoxRefreshRate.ValueChanged += new EventHandler(OnDefaultChanged);
             }
             catch (Exception ex)
             {
@@ -360,6 +364,7 @@ namespace Lpp.Dns.DataMart.Client
             ns.HubWebServiceUrl = txtServiceUrl.Text;
             ns.Username = txtUsername.Text;
             ns.EncryptedPassword = txtPassword.Text;
+            ns.RefreshRate = Convert.ToInt32(numBoxRefreshRate.Value);
             ns.Host = tbHost.Text;
             int port;
             if (!int.TryParse(tbPort.Text, out port))
@@ -572,6 +577,7 @@ namespace Lpp.Dns.DataMart.Client
 
                         if (txtNetworkname.Text != _NetworkSetting.NetworkName ||
                             chkAutoLogin.Checked != _NetworkSetting.IsAutoLogin ||
+                            numBoxRefreshRate.Value != _NetworkSetting.RefreshRate ||
                             port != _NetworkSetting.Port ||
                             tbHost.Text != _NetworkSetting.Host)
                             btnOk.Enabled = btnApply.Enabled = true;
@@ -618,6 +624,12 @@ namespace Lpp.Dns.DataMart.Client
                 if (isValid && string.IsNullOrEmpty(txtPassword.Text))
                 {
                     MessageBox.Show("Please enter a password");
+                    isValid = false;
+                }
+
+                if(isValid && numBoxRefreshRate.Value <= 0)
+                {
+                    MessageBox.Show("Please enter a valid Refresh Rate");
                     isValid = false;
                 }
 
@@ -695,6 +707,7 @@ namespace Lpp.Dns.DataMart.Client
             tbHost.TextChanged -= new EventHandler(OnNetworkSettingChanged);
             tbPort.TextChanged -= new EventHandler(OnNetworkSettingChanged);
             tbReceiveTimeout.TextChanged -= new EventHandler(OnNetworkSettingChanged);
+            numBoxRefreshRate.ValueChanged -= new EventHandler(OnNetworkSettingChanged);
         }
 
         private void label6_Click(object sender, EventArgs e)

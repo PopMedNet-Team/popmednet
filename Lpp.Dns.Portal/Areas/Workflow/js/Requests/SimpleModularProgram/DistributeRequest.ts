@@ -33,11 +33,11 @@ module Workflow.SimpleModularProgram.DistributeRequest {
         private ExistingRequestDataMarts: Dns.Interfaces.IRequestDataMartDTO[];
         private UploadViewModel: Controls.WFFileUpload.Index.ViewModel;
         private CanSubmit: KnockoutComputed<boolean>;
-        private DataMartsSelectAll: () => boolean;
-        private DataMartsClearAll: () => boolean;
         public FieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[];
         public IsFieldVisible: (id: string) => boolean;
         public IsFieldRequired: (id: string) => boolean;
+
+        private RoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], fieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[], datamarts: Dns.Interfaces.IDataMartListDTO[], existingRequestDataMarts: Dns.Interfaces.IRequestDataMartDTO[], uploadViewModel: Controls.WFFileUpload.Index.ViewModel) {
             super(bindingControl, screenPermissions);
@@ -114,20 +114,6 @@ module Workflow.SimpleModularProgram.DistributeRequest {
 
             });
 
-            this.DataMartsSelectAll = () => {
-                self.DataMarts().forEach((dm) => {
-                    if (self.SelectedDataMartIDs.indexOf(dm.DataMartID) < 0)
-                        self.SelectedDataMartIDs.push(dm.DataMartID);
-                });
-
-                return false;
-            };
-
-            this.DataMartsClearAll = () => {
-                self.SelectedDataMartIDs.removeAll();
-                return false;
-            };
-
             this.CanSubmit = ko.computed(() => {
                 return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
             }); 
@@ -166,6 +152,20 @@ module Workflow.SimpleModularProgram.DistributeRequest {
                 });
 
             });
+
+            self.RoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.DataMarts().length > 0 && self.SelectedDataMartIDs().length === self.DataMarts().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.DataMarts(), (i) => { return i.DataMartID; });
+                        self.SelectedDataMartIDs(allID);
+                    } else {
+                        self.SelectedDataMartIDs([]);
+                    }
+                }
+            });  
         }
 
         public PostComplete(resultID: string) {

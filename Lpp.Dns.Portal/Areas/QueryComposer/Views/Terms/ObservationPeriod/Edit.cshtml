@@ -1,7 +1,7 @@
 ﻿@using Lpp.QueryComposer
 
 <script type="text/html" id="e_@ModelTermsFactory.ObservationPeriodID">
-    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p> 
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
     <div class="row row-noborder">
         <div class="col-sm-2 bold"><h4 class="TermHeader bold">Observation Period<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
         <div class="col-sm-3 form-group">
@@ -22,4 +22,5 @@
             <button id="btnDeleteObservationPeriod" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
         </div>
     </div>
+    <span style="font-weight: bold;font-size: 12pt !important;color: #a94442;" data-bind="dateRangeTermValidator: {values: Values(), termValidators: $root.TermValidators}"></span>
 </script>

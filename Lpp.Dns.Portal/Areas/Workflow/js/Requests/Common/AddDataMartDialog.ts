@@ -15,6 +15,7 @@ module Workflow.Common.AddDataMartDialog {
         //public DataMarts: KnockoutObservableArray<Dns.Interfaces.IDataMartListDTO[]>;
 
         public SelectedDataMartIDs: KnockoutObservableArray<string>;
+        private RoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(
             bindingControl: JQuery,
@@ -29,6 +30,21 @@ module Workflow.Common.AddDataMartDialog {
             this.AllUnfilteredDataMarts = allDataMarts;
 
             this.SelectedDataMartIDs = ko.observableArray([]);
+
+            self.RoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    //return self.AllUnfilteredDataMarts.length > 0 && self.SelectedDataMartIDs().length === self.AllUnfilteredDataMarts.length
+                    return self.AllUnfilteredDataMarts.length > 0 && self.SelectedDataMartIDs().length === self.AllUnfilteredDataMarts.length
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.AllUnfilteredDataMarts, (i) => { return i.ID; });
+                        self.SelectedDataMartIDs(allID);
+                    } else {
+                        self.SelectedDataMartIDs([]);
+                    }
+                }
+            }); 
 
         }
 

@@ -423,8 +423,10 @@ namespace Lpp.Dns.Api.Wbd
 
                 document.SetData(DataContext, data);
             }
-
-            document.SetData(DataContext, data);
+            else
+            {
+                document.SetData(DataContext, data);
+            }
             
 
             return Request.CreateResponse(HttpStatusCode.OK);

@@ -52,11 +52,11 @@
     <script src="~/Scripts/Common.js"></script>
     <script src="~/js/Request/View.js"></script>
     <script>
-        Request.View.ResponseHistoryUrlTemplate = '@Html.Raw(Url.Action( (ResponseController c) => c.History( Guid.NewGuid(), Guid.NewGuid() ) ) ).ToString().Split('?')[0]';
-        Request.View.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(model) + ';')
-        Request.View.RequestID = @Html.Raw("'" + Model.RequestID + "';")
-        Request.View.AllowEditRequestID = @Html.Raw(("'" + Model.AllowEditRequestID + "'"));
-        Request.View.init();
+        Requests.View.ResponseHistoryUrlTemplate = '@Html.Raw(Url.Action( (ResponseController c) => c.History( Guid.NewGuid(), Guid.NewGuid() ) ) ).ToString().Split('?')[0]';
+        Requests.View.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(model) + ';')
+        Requests.View.RequestID = @Html.Raw("'" + Model.RequestID + "';")
+        Requests.View.AllowEditRequestID = @Html.Raw(("'" + Model.AllowEditRequestID + "'"));
+        Requests.View.init();
     </script>
 
     <style>
@@ -144,7 +144,7 @@
                     <button type="submit" name="Copy" id="btnCopy" value="Copy" class="btn btn-primary" onclick="LoadSpinner()">Copy</button>
                 }
                 @if (Model.AllowMetadataEdit){
-                <button type="button" class=" btn btn-default pull-left" name="EditRequestMetadata" onclick="Request.View.onEditRequestMetadata()">Edit Metadata</button>
+                <button type="button" class=" btn btn-default pull-left" name="EditRequestMetadata" onclick="Requests.View.onEditRequestMetadata()">Edit Metadata</button>
                 }
             </div>
 
@@ -292,7 +292,7 @@
                                     <div data-bind="visible:$.trim(Message || '') != '', text:', ' + (Message || '')"></div>
                                 </td>
                                 <td data-bind="style:{width: !IsCurrent && IsResponseItem ? '122px' : ''}">
-                                    <a data-bind="visible:!IsCurrent && IsResponseItem, href:Request.View.ResponseHistoryUrlTemplate + '?requestID=' + RequestID + '&responseID=' + ResponseID">[view response]</a>
+                                    <a data-bind="visible:!IsCurrent && IsResponseItem, href:Requests.View.ResponseHistoryUrlTemplate + '?requestID=' + RequestID + '&responseID=' + ResponseID">[view response]</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -313,8 +313,8 @@
             }
         </td>
         <td data-bind="text: DataMartName"></td>
-        <td data-bind="text: Request.View.translateRoutingStatus(Status)"></td>
-        <td data-bind="text: Request.View.TranslatePriority(Priority)"></td>
+        <td data-bind="text: Requests.View.translateRoutingStatus(Status)"></td>
+        <td data-bind="text: Requests.View.TranslatePriority(Priority)"></td>
         <td data-bind="text: DueDate != null ? moment(DueDate).format('MM/D/YYYY') : null"></td>
         <td data-bind="text: Message"></td>
         <td>
@@ -334,8 +334,8 @@
             }
         </td>
         <td data-bind="text: DataMartName"></td>
-        <td data-bind="text: Request.View.translateRoutingStatus(Status)"></td>
-        <td data-bind="text: Request.View.TranslatePriority(Priority)"></td>
+        <td data-bind="text: Requests.View.translateRoutingStatus(Status)"></td>
+        <td data-bind="text: Requests.View.TranslatePriority(Priority)"></td>
         <td data-bind="text: DueDate != null ? moment(DueDate).format('MM/D/YYYY') : null"></td>
         <td data-bind="text: Message"></td>
         <td>

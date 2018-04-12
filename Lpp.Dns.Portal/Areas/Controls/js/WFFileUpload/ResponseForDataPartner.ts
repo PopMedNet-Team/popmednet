@@ -52,10 +52,11 @@ module Controls.WFFileUpload.ResposnseForDataPartner {
 
             self.onFileUploadCompleted = (evt) => {
                 try {
-                    var result = JSON.parse((<any>evt.response).content);
-                    result.forEach((i) => self.Documents.push(i));
 
-                    self.OnDocumentsUploaded.notifySubscribers(result);
+                    self.Documents.push((<any>evt.response).Document);
+
+                    Requests.Details.rovm.Save(false).done(() => { Requests.Details.rovm.RefreshTaskDocuments(); });
+
                 } catch (e) {
                     Global.Helpers.ShowAlert("Upload Error", Global.Helpers.ProcessAjaxError(e));
                 }
@@ -159,7 +160,7 @@ module Controls.WFFileUpload.ResposnseForDataPartner {
 
         public BatchFileUpload(): JQueryDeferred<boolean> {
             var self = this;
-            var deferred = $.Deferred();
+            var deferred = $.Deferred<boolean>();
 
             var kendoUploadButton = $(".k-upload-selected");
             kendoUploadButton.click();
@@ -172,12 +173,25 @@ module Controls.WFFileUpload.ResposnseForDataPartner {
         public onFileUpload(evt: any) {
             var upload: any = this;
             var dropdown = upload.wrapper.find(".k-file[data-uid='" + evt.files[0].uid + "'] select").data("kendoDropDownList");
+
+            ko.utils.arrayForEach(evt.files, (item: any) => {
+                if (item.size > 2147483648) {
+                    evt.preventDefault();
+                    Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(() => {
+                    });
+                }
+            });
             evt.data = {
                 requestID: vm.RequestID(),
                 responseID: vm.ResponseID,
-                authToken: User.AuthToken,
                 DocumentType: dropdown.value()
             };
+            var xhr = evt.XMLHttpRequest;
+            xhr.addEventListener("readystatechange", function (e) {
+                if (xhr.readyState == 1 /* OPENED */) {
+                    xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                }
+            });
         }
 
         public onFileUploadError(evt: any) {

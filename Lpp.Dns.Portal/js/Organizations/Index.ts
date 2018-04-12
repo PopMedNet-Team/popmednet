@@ -6,8 +6,6 @@ module Organizations.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gOrganizationsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -29,14 +27,6 @@ module Organizations.Index {
 
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gOrganizationsSetting); 
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
         }
             
         public btnNewOrganization_Click() {
@@ -45,10 +35,6 @@ module Organizations.Index {
 
         public OrganizationsGrid(): kendo.ui.Grid {
             return $("#gOrganizations").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("Organizations.Index.gOrganizations.User:" + User.ID, Global.Helpers.GetGridSettings(this.OrganizationsGrid()));
         }
     }
 
@@ -72,8 +58,10 @@ module Organizations.Index {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateOrganization] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.OrganizationsGrid(), gOrganizationsSetting);
+                vm.OrganizationsGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Organizations.Index.gOrganizations.User:" + User.ID, Global.Helpers.GetGridSettings(vm.OrganizationsGrid()));
+                });
             });
         });
     }

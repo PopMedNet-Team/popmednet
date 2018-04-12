@@ -18,6 +18,11 @@ namespace Lpp.Dns.DTO.QueryComposer
         [DataMember]
         public Guid? ID { get; set; }
         /// <summary>
+        /// The id of the document the response is serialized to.
+        /// </summary>
+        [DataMember]
+        public Guid? DocumentID { get; set; }
+        /// <summary>
         /// Gets or sets the response time
          /// </summary>
         [DataMember]

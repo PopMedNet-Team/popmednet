@@ -448,25 +448,21 @@ WriteLiteral(" for=\"txStartPeriod\"");
 
 WriteLiteral(">Start Period<em>*</em></label>\r\n                        <input");
 
-WriteLiteral(" type=\"text\"");
+WriteLiteral(" type=\"number\"");
 
-WriteLiteral(" id=\"txStartPeriod\"");
+WriteLiteral("\r\n                               id=\"txStartPeriod\"");
 
-WriteLiteral(" name=\"txStartPeriod\"");
+WriteLiteral("\r\n                               name=\"txStartPeriod\"");
 
-WriteLiteral(" class=\"form-control\"");
+WriteLiteral("\r\n                               maxlength=\"4\"");
 
-WriteLiteral(" pattern=\".{4,30}\"");
+WriteLiteral("\r\n                               validationmessage=\"Field is required\"");
 
-WriteLiteral(" maxlength=\"4\"");
+WriteLiteral("\r\n                               data-bind=\"kendoNumericTextBox: {value: StartPer" +
+"iod, min: 1800, max: 9999, decimals: 0, format: \'0000\'}, attr: { required: NotMe" +
+"tadataRequest }\"");
 
-WriteLiteral(" validationmessage=\"Field is required\"");
-
-WriteLiteral(" data-bind=\"event: { keypress: Keypress }, kendoAutoComplete: { data: DataAvailab" +
-"leYears, dataTextField: \'text\', dataValueField: \'value\', value: StartPeriod, min" +
-"Length: 4}, attr: { required: NotMetadataRequest }\"");
-
-WriteLiteral(" />\r\n                        <span");
+WriteLiteral("  />\r\n                        <span");
 
 WriteLiteral(" class=\"k-invalid-msg\"");
 
@@ -482,23 +478,19 @@ WriteLiteral(" for=\"txEndPeriod\"");
 
 WriteLiteral(">End Period<em>*</em></label>\r\n                        <input");
 
-WriteLiteral(" type=\"text\"");
+WriteLiteral(" type=\"number\"");
 
-WriteLiteral(" id=\"txEndPeriod\"");
+WriteLiteral("\r\n                               id=\"txEndPeriod\"");
 
-WriteLiteral(" name=\"txEndPeriod\"");
+WriteLiteral("\r\n                               name=\"txEndPeriod\"");
 
-WriteLiteral(" class=\"form-control\"");
+WriteLiteral("\r\n                               maxlength=\"4\"");
 
-WriteLiteral(" pattern=\".{4,30}\"");
+WriteLiteral("\r\n                               validationmessage=\"Field is required\"");
 
-WriteLiteral(" maxlength=\"4\"");
-
-WriteLiteral(" validationmessage=\"Field is required\"");
-
-WriteLiteral(" data-bind=\"event: { keypress: Keypress }, kendoAutoComplete: { data: DataAvailab" +
-"leYears, dataTextField: \'text\', dataValueField: \'value\', value: EndPeriod, minLe" +
-"ngth: 4}, attr: { required: NotMetadataRequest }\"");
+WriteLiteral("\r\n                               data-bind=\"kendoNumericTextBox: {value: EndPerio" +
+"d, min: 1800, max: 9999, decimals: 0, format: \'0000\'}, attr: { required: NotMeta" +
+"dataRequest }\"");
 
 WriteLiteral(" />\r\n                        <span");
 

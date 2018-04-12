@@ -6,8 +6,8 @@
     <script src="~/Scripts/Common.js"></script>
     <script src="~/js/Response/Detail.js"></script>
     <script>
-        Response.Detail.InitialGroupName = '@string.Join( ", ", Model.Responses.Select( r => r.DataMart.Name ) )';
-        Response.Detail.init('@Model.Request.ProjectID');
+        Responses.Detail.InitialGroupName = '@string.Join( ", ", Model.Responses.Select( r => r.DataMart.Name ) )';
+        Responses.Detail.init('@Model.Request.ProjectID');
     </script>
     <style>
         .Buttons {

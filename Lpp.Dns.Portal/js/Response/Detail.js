@@ -1,6 +1,6 @@
 /// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
-var Response;
-(function (Response) {
+var Responses;
+(function (Responses) {
     var Detail;
     (function (Detail) {
         Detail.InitialGroupName = '';
@@ -38,7 +38,7 @@ var Response;
         var ViewModel = (function () {
             function ViewModel() {
                 var self = this;
-                this.GroupName = ko.observable(Response.Detail.InitialGroupName || '');
+                this.GroupName = ko.observable(Responses.Detail.InitialGroupName || '');
                 this.RejectMessage = ko.observable('');
                 this.ShowGroupNamePrompt = ko.observable(false);
                 this.ShowMessagePrompt = ko.observable(false);
@@ -104,6 +104,6 @@ var Response;
             });
         }
         Detail.init = init;
-    })(Detail = Response.Detail || (Response.Detail = {}));
-})(Response || (Response = {}));
+    })(Detail = Responses.Detail || (Responses.Detail = {}));
+})(Responses || (Responses = {}));
 //# sourceMappingURL=Detail.js.map

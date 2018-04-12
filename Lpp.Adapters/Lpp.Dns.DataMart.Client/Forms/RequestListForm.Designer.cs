@@ -72,7 +72,7 @@ namespace Lpp.Dns.DataMart.Client
             label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             label1.Location = new System.Drawing.Point(119, 9);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(570, 29);
+            label1.Size = new System.Drawing.Size(439, 24);
             label1.TabIndex = 0;
             label1.Text = "Please stand by while DataMart Client is initializing...";
             // 
@@ -83,7 +83,7 @@ namespace Lpp.Dns.DataMart.Client
             openSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             openSettings.Location = new System.Drawing.Point(379, 84);
             openSettings.Name = "openSettings";
-            openSettings.Size = new System.Drawing.Size(179, 29);
+            openSettings.Size = new System.Drawing.Size(142, 24);
             openSettings.TabIndex = 4;
             openSettings.TabStop = true;
             openSettings.Text = "Open Settings";
@@ -96,7 +96,7 @@ namespace Lpp.Dns.DataMart.Client
             label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             label3.Location = new System.Drawing.Point(159, 46);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(633, 25);
+            label3.Size = new System.Drawing.Size(518, 20);
             label3.TabIndex = 2;
             label3.Text = "To get started, please open settings and set up your network connection";
             // 
@@ -108,7 +108,7 @@ namespace Lpp.Dns.DataMart.Client
             label2.ForeColor = System.Drawing.Color.Maroon;
             label2.Location = new System.Drawing.Point(345, 14);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(240, 29);
+            label2.Size = new System.Drawing.Size(186, 24);
             label2.TabIndex = 3;
             label2.Text = "No Networks defined";
             // 
@@ -176,10 +176,10 @@ namespace Lpp.Dns.DataMart.Client
             this.btnExit.AutoSize = true;
             this.btnExit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExit.Location = new System.Drawing.Point(905, 542);
+            this.btnExit.Location = new System.Drawing.Point(905, 546);
             this.btnExit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(47, 30);
+            this.btnExit.Size = new System.Drawing.Size(39, 26);
             this.btnExit.TabIndex = 24;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -191,10 +191,10 @@ namespace Lpp.Dns.DataMart.Client
             this.cbRunAtWindowsStartup.AutoSize = true;
             this.cbRunAtWindowsStartup.Checked = true;
             this.cbRunAtWindowsStartup.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbRunAtWindowsStartup.Location = new System.Drawing.Point(205, 547);
+            this.cbRunAtWindowsStartup.Location = new System.Drawing.Point(205, 551);
             this.cbRunAtWindowsStartup.Margin = new System.Windows.Forms.Padding(4);
             this.cbRunAtWindowsStartup.Name = "cbRunAtWindowsStartup";
-            this.cbRunAtWindowsStartup.Size = new System.Drawing.Size(148, 21);
+            this.cbRunAtWindowsStartup.Size = new System.Drawing.Size(117, 17);
             this.cbRunAtWindowsStartup.TabIndex = 28;
             this.cbRunAtWindowsStartup.Text = "Start with Windows";
             this.cbRunAtWindowsStartup.UseVisualStyleBackColor = true;
@@ -206,10 +206,10 @@ namespace Lpp.Dns.DataMart.Client
             this.btnNetworkSettings.AutoSize = true;
             this.btnNetworkSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnNetworkSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNetworkSettings.Location = new System.Drawing.Point(721, 542);
+            this.btnNetworkSettings.Location = new System.Drawing.Point(721, 546);
             this.btnNetworkSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnNetworkSettings.Name = "btnNetworkSettings";
-            this.btnNetworkSettings.Size = new System.Drawing.Size(80, 30);
+            this.btnNetworkSettings.Size = new System.Drawing.Size(66, 26);
             this.btnNetworkSettings.TabIndex = 27;
             this.btnNetworkSettings.Text = "Settings";
             this.btnNetworkSettings.UseVisualStyleBackColor = true;
@@ -221,10 +221,10 @@ namespace Lpp.Dns.DataMart.Client
             this.cbAutoRefresh.AutoSize = true;
             this.cbAutoRefresh.Checked = true;
             this.cbAutoRefresh.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAutoRefresh.Location = new System.Drawing.Point(363, 547);
+            this.cbAutoRefresh.Location = new System.Drawing.Point(363, 551);
             this.cbAutoRefresh.Margin = new System.Windows.Forms.Padding(4);
             this.cbAutoRefresh.Name = "cbAutoRefresh";
-            this.cbAutoRefresh.Size = new System.Drawing.Size(146, 21);
+            this.cbAutoRefresh.Size = new System.Drawing.Size(113, 17);
             this.cbAutoRefresh.TabIndex = 28;
             this.cbAutoRefresh.Text = "Automatic Refresh";
             this.cbAutoRefresh.UseVisualStyleBackColor = true;
@@ -236,10 +236,10 @@ namespace Lpp.Dns.DataMart.Client
             this.btnClose.AutoSize = true;
             this.btnClose.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(813, 542);
+            this.btnClose.Location = new System.Drawing.Point(813, 546);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(62, 30);
+            this.btnClose.Size = new System.Drawing.Size(53, 26);
             this.btnClose.TabIndex = 26;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -251,10 +251,10 @@ namespace Lpp.Dns.DataMart.Client
             this.btnRefresh.AutoSize = true;
             this.btnRefresh.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRefresh.Location = new System.Drawing.Point(537, 542);
+            this.btnRefresh.Location = new System.Drawing.Point(537, 546);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(78, 30);
+            this.btnRefresh.Size = new System.Drawing.Size(65, 26);
             this.btnRefresh.TabIndex = 22;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -267,10 +267,10 @@ namespace Lpp.Dns.DataMart.Client
             this.btnViewDetail.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnViewDetail.Enabled = false;
             this.btnViewDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnViewDetail.Location = new System.Drawing.Point(629, 542);
+            this.btnViewDetail.Location = new System.Drawing.Point(629, 546);
             this.btnViewDetail.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnViewDetail.Name = "btnViewDetail";
-            this.btnViewDetail.Size = new System.Drawing.Size(72, 30);
+            this.btnViewDetail.Size = new System.Drawing.Size(60, 26);
             this.btnViewDetail.TabIndex = 23;
             this.btnViewDetail.Text = "Details";
             this.btnViewDetail.UseVisualStyleBackColor = true;
@@ -299,7 +299,7 @@ namespace Lpp.Dns.DataMart.Client
             this.toolStripStatusNetworkConnectivityStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusNetworkConnectivityStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.toolStripStatusNetworkConnectivityStatus.Name = "toolStripStatusNetworkConnectivityStatus";
-            this.toolStripStatusNetworkConnectivityStatus.Size = new System.Drawing.Size(1231, 24);
+            this.toolStripStatusNetworkConnectivityStatus.Size = new System.Drawing.Size(1241, 24);
             this.toolStripStatusNetworkConnectivityStatus.Spring = true;
             this.toolStripStatusNetworkConnectivityStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -336,7 +336,7 @@ namespace Lpp.Dns.DataMart.Client
             this.lblAbout.IsLink = true;
             this.lblAbout.Name = "lblAbout";
             this.lblAbout.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblAbout.Size = new System.Drawing.Size(78, 24);
+            this.lblAbout.Size = new System.Drawing.Size(68, 24);
             this.lblAbout.Text = "About";
             this.lblAbout.Click += new System.EventHandler(this.lblAbout_Click);
             // 

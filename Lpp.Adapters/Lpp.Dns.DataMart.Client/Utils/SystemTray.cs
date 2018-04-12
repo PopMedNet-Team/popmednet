@@ -63,34 +63,34 @@ namespace Lpp.Dns.DataMart.Client.Utils
         /// <summary>
         /// display new query notification icon
         /// </summary>
-        /// <param name="Message">Notification tool tip message to be displayed</param>
-        internal static void DisplayNewQueryNotificationToolTip(string Message)
+        /// <param name="message">Notification tool tip message to be displayed</param>
+        internal static void DisplayNewQueryNotificationToolTip(string message)
         {
             EnsureIcon();
             notifyIcon.Icon = Properties.Resources.NotifyIconNewQuery;
-            notifyIcon.BalloonTipText = Message;
+            notifyIcon.BalloonTipText = message;
             notifyIcon.ShowBalloonTip(1000);
         }
 
         /// <summary>
         /// Update system tray notification icon/ message
         /// </summary>
-        /// <param name="IconType"></param>
-        /// <param name="Message"></param>
-        internal static void UpdateNotificationIcon(IconType IconType, string Message)
+        /// <param name="iconType"></param>
+        /// <param name="message"></param>
+        internal static void UpdateNotificationIcon(IconType iconType, string message)
         {
             EnsureIcon();
 
-            switch (IconType)
+            switch (iconType)
             {
                 case IconType.IconBusy:
                     notifyIcon.Icon = Properties.Resources.NotifyIconBusy;
-                    notifyIcon.Text = (string.IsNullOrEmpty(Message)) ? string.Format("{0} - Processing Queries", NotifyIconText) : Message;
+                    notifyIcon.Text = EnsureLength((string.IsNullOrEmpty(message)) ? string.Format("{0} - Processing Queries", NotifyIconText) : message);
                     break;
 
                 default:
                     notifyIcon.Icon = Properties.Resources.NotifyIconIdle;
-                    notifyIcon.Text = (string.IsNullOrEmpty( Message )) ? NotifyIconText : Message;
+                    notifyIcon.Text = EnsureLength((string.IsNullOrEmpty( message )) ? NotifyIconText : message);
                     break;
             }
         }
@@ -99,21 +99,29 @@ namespace Lpp.Dns.DataMart.Client.Utils
         /// Prepare notification and show through system tray icon
         /// </summary>
         /// <param name="hubRequest"></param>
-        internal static void generate_notification(HubRequest hubRequest, int NetworkId)
+        internal static void GenerateNotification(HubRequest hubRequest, int networkId)
         {
-            log.Info( String.Format( "BackgroundProcess:  Generating notification for query {0} from {1} (NetworkId: {2})", hubRequest.Source.ID, hubRequest.DataMartName, NetworkId ) );
+            log.Info( String.Format( "BackgroundProcess: Generating notification for query {0} from {1} (NetworkId: {2})", hubRequest.Source.ID, hubRequest.DataMartName, networkId ) );
 
-            string Message = string.Format("New query submitted by {0}.", hubRequest.Source.Author.Username);
-            DisplayNewQueryNotificationToolTip(Message);
+            string message = $"New query submitted in { hubRequest.ProjectName } Project: { hubRequest.Source.Name }";
+            DisplayNewQueryNotificationToolTip(message);
         }
 
         /// <summary>
         /// Update the tooltip of the NotifyIcon according to the current status
         /// </summary>
-        internal static void update_notify_text(int QueriesProcessedCount, string DataMartName, int NetworkId)
+        internal static void UpdateNotifyText(int queriesProcessedCount, string dataMartName, int networkId)
         {
-            string Text = String.Format("DataMart Client - Processed {0} queries ", QueriesProcessedCount, DataMartName, NetworkId);
-            UpdateNotificationIcon(IconType.IconBusy, Text);            
+            string text = string.Format("DataMart Client - Processed {0} queries", queriesProcessedCount);
+            UpdateNotificationIcon(IconType.IconBusy, text);            
+        }
+
+        static string EnsureLength(string message)
+        {
+            if (string.IsNullOrEmpty(message) || message.Length <= 64)
+                return message;
+
+            return message.Substring(0, 64);
         }
     }
 

@@ -97,14 +97,5 @@ namespace Lpp.Dns.DataMart.Client
                 frm.ShowDialog(this);
             }
         }
-
-        private void btnUpdateRefreshRate_Click(object sender, EventArgs e)
-        {
-            using (var frm = new UpdateRefreshRateForm())
-            {
-                frm.ShowDialog(this);
-                _form.RefreshAutoResponse();
-            }
-        }
     }
 }

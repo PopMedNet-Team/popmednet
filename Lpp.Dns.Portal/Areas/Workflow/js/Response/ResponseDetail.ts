@@ -16,27 +16,29 @@ module Workflow.Response.Common.ResponseDetail {
 
         public onApprove: () => void;
         public onReject: () => void;
+        public onResubmit: () => void;
 
         public isDownloadAllVisible: boolean;
 
         public showApproveReject: KnockoutObservable<boolean>;
 
         public IsResponseVisible: KnockoutObservable<boolean>;
-		public IsResponseLoadFailed: KnockoutObservable<boolean>;
+        public IsResponseLoadFailed: KnockoutObservable<boolean>;
 
         public hasResponseResultsContent: boolean = false;
 
         constructor(bindingControl: JQuery, routings: Dns.Interfaces.IRequestDataMartDTO[], responses: Dns.Interfaces.IResponseDTO[], documents: Dns.Interfaces.IExtendedDocumentDTO[], canViewPendingApprovalResponses: boolean, exportForFileDistribution: boolean) {
             super(bindingControl, rootVM.ScreenPermissions);
             var self = this;
-            debugger;
+            
             this.IsResponseVisible = ko.observable(null);
             this.ResponseContentComplete = ko.observable(false);
-			this.IsResponseLoadFailed = ko.observable(false);
+            this.IsResponseLoadFailed = ko.observable(false);
             this.Routings = routings;
             this.Responses = responses;
             this.Documents = documents;
             var currentResponseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+            
             var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes[$.url().param('view')];
             this.ResponseView = ko.observable(responseView);
  
@@ -62,7 +64,7 @@ module Workflow.Response.Common.ResponseDetail {
             if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                 Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done((responses: Dns.Interfaces.IQueryComposerResponseDTO[]) => {
 
-                    if (responses == null || responses == null)
+                    if (responses == null || responses.length == 0)
                         return;
 
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
@@ -86,7 +88,7 @@ module Workflow.Response.Common.ResponseDetail {
                             var resultID = (resp.ID || 'aggregate') + '-' + i;
                             var suppressedValues: boolean = false;
 
-                            bucket.append($('<div class="panel-heading" style="margin-bottom:0px;"><h4 class="panel-title" > ' + datamartName + ' </h4 ></div>'));
+                            bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
 
                             var kendoColumnNames = [];
                             var kendoColumnFields = [];
@@ -177,8 +179,8 @@ module Workflow.Response.Common.ResponseDetail {
 
                     //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
-				}).fail(() => {
-					self.IsResponseLoadFailed(true);
+                }).fail(() => {
+                    self.IsResponseLoadFailed(true);
                     self.ResponseContentComplete(true);
                     $(window.frameElement).height($('html').height());
                 });
@@ -225,6 +227,20 @@ module Workflow.Response.Common.ResponseDetail {
                             });
                     });
             };
+
+            self.onResubmit = () => {
+                Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
+                    .done(comment => {
+                        var responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                            .done(() => {
+                                Global.Helpers.RedirectTo(window.top.location.href);
+                            }).fail((err: any) => {
+                                var errorMessage = err.responseJSON.errors[0].Description;
+                                Global.Helpers.ShowErrorAlert('Access Denied to Reject and Resubmit Responses', errorMessage);
+                            });
+                    });
+            };
         }
 
     }
@@ -234,9 +250,8 @@ module Workflow.Response.Common.ResponseDetail {
         rootVM = (<any>parent).Requests.Details.rovm;
         var id: any = Global.GetQueryParam("ID");
         var responseIDs = id.split(',');
-        debugger;
+        
         Dns.WebApi.Response.GetDetails(responseIDs).done((details) => {
-            debugger;
             var ss = details[0];
             var bindingControl = $('#DefaultResponseDetail');
             vm = new ViewModel(bindingControl, ss.RequestDataMarts, ss.Responses, ss.Documents, ss.CanViewPendingApprovalResponses, ss.ExportForFileDistribution);

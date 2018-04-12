@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
@@ -28,6 +33,13 @@ var Controls;
                         }
                     };
                     _this.onUploadFile = function (e) {
+                        ko.utils.arrayForEach(e.files, function (item) {
+                            if (item.size > 2147483648) {
+                                e.preventDefault();
+                                Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(function () {
+                                });
+                            }
+                        });
                         e.data = {
                             requestID: self.RequestID,
                             taskID: self.TaskID,
@@ -35,15 +47,19 @@ var Controls;
                             documentName: self.DocumentName(),
                             description: self.Description(),
                             comments: self.Comments(),
-                            authToken: User.AuthToken,
                             parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null
                         };
+                        var xhr = e.XMLHttpRequest;
+                        xhr.addEventListener("readystatechange", function (e) {
+                            if (xhr.readyState == 1 /* OPENED */) {
+                                xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                            }
+                        });
                     };
                     _this.onSuccess = function (e) {
                         //fires when upload is complete with or without errors
                         //on success should close the dialog with the document information
-                        var result = JSON.parse(e.response.content);
-                        self.Close(result.results[0]);
+                        self.Close(e.response.Document);
                     };
                     _this.onCancel = function () { self.Close(); };
                     return _this;

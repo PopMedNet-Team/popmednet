@@ -1,9 +1,14 @@
 /// <reference path="../../Lpp.Mvc.Composition/Lpp.Mvc.Controls.Interfaces/utilities.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var submitHandlers = [];
 var Dns;
 (function (Dns) {
@@ -137,7 +142,8 @@ var Dns;
 })(Dns || (Dns = {}));
 //Fix Fyodor
 $.fn.alternateClasses = function jQuery$alternateClasses(arrayClasses) {
-    if (typeof arrayClasses != "Array")
+    //if (typeof arrayClasses != "Array") arrayClasses = arguments;
+    if ((arrayClasses instanceof Array) == false)
         arrayClasses = arguments;
     arrayClasses = $.makeArray(arrayClasses);
     this.removeClass(arrayClasses.join(" "));
@@ -163,4 +169,4 @@ $.fn.dataDisplay = function jQuery$dataDisplay(strDisplay) {
         this.data("{1863E2EF-AEF9-446E-B70D-DABACC8D9CAB}") :
         this.data("{1863E2EF-AEF9-446E-B70D-DABACC8D9CAB}", strDisplay);
 };
-//# sourceMappingURL=common.js.map
+//# sourceMappingURL=Common.js.map

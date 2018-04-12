@@ -19,6 +19,14 @@ using Lpp.Dns.DTO;
 using Lpp.Dns.DTO.Enums;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Web.Configuration;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.Xml.Serialization;
+using System.IO;
+using System.Xml;
+using Lpp.Utilities.WebSites.Models;
 
 namespace Lpp.Dns.Portal.Controllers
 {
@@ -51,8 +59,6 @@ namespace Lpp.Dns.Portal.Controllers
         public IPluginService Plugins { get; set; }
         [Import]
         public IAuthenticationService Auth { get; set; }
-        [Import]
-        public RequestSchedulerService Scheduler { get; set; }
         [Import]
         public IClientSettingsService Settings { get; set; }
         [Import]
@@ -316,7 +322,7 @@ namespace Lpp.Dns.Portal.Controllers
 
             if (ModelState.IsValid)
             {
-                Scheduler.SetSchedule(requestCtx, postModel.Schedule);
+                SetRequestScheduleModel(requestCtx, postModel.Schedule);
                 requestCtx.Request.Scheduled = !postModel.MakeScheduled.NullOrEmpty();
 
                 var res = RequestService.UpdateRequest(new RequestUpdateOperation
@@ -332,7 +338,78 @@ namespace Lpp.Dns.Portal.Controllers
                 {
                     if (requestCtx.Request.Scheduled)
                     {
-                        res = Scheduler.Schedule(requestCtx, postModel.Schedule);
+                        //Plugins.GetPluginRequestType(requestCtx.Request.RequestTypeID);
+                        //res = Scheduler.Schedule(requestCtx, postModel.Schedule);
+
+                        //using (var apiClient = new ApiClient.DnsClient(WebConfigurationManager.AppSettings["ServiceUrl"]))
+                        //{
+                        //    DTO.Schedule.LegacySchedulerRequestDTO requestContent = new DTO.Schedule.LegacySchedulerRequestDTO();
+                        //    requestContent.RequestID = requestCtx.RequestID;
+                        //    requestContent.ScheduleJSON = JsonConvert.SerializeObject(postModel.Schedule);
+
+                        //    var response = apiClient.LegacyRequests.ScheduleLegacyRequest(requestContent).Result;
+                        //    if (response.IsSuccessStatusCode)
+                        //        res = DnsResult.Success;
+                        //    else
+                        //    {
+                        //        res = new DnsResult();
+                        //        res.ErrorMessages = new string[] { response.Content.ReadAsStringAsync().Result };
+                        //    }
+                        //}
+
+                        res = RequestService.ValidateRequest(requestCtx);
+                        if (res.IsSuccess)
+                        {
+                            var cookie = Request.Cookies.Get("Authorization").Value;
+                            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoginResponseModel>(cookie);
+
+                            string username;
+                            string password;
+                            LoginResponseModel.DecryptCredentials(model.Authorization, out username, out password);
+
+                            using (var apiClient = new ApiClient.DnsClient(WebConfigurationManager.AppSettings["ServiceUrl"], username, password))
+                            {
+                                DTO.Schedule.LegacySchedulerRequestDTO requestContent = new DTO.Schedule.LegacySchedulerRequestDTO();
+                                requestContent.RequestID = requestCtx.RequestID;
+                                requestContent.ScheduleJSON = JsonConvert.SerializeObject(postModel.Schedule);
+
+                                HttpResponseMessage responseMessage = null;
+                                var task = Task.Run(async () => 
+                                {
+                                    responseMessage = await apiClient.LegacyRequests.ScheduleLegacyRequest(requestContent);
+                                });
+                                task.Wait();
+
+                                if (responseMessage.IsSuccessStatusCode)
+                                    res = DnsResult.Success;
+                                else
+                                {
+                                    res = new DnsResult();
+
+                                    string errorMessages = responseMessage.Content.ReadAsStringAsync().Result;
+                                    try
+                                    {
+                                        //Try and convert the string to a Base REsponse so we can get the errors
+                                        var settings = new JsonSerializerSettings();
+                                        settings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
+                                        settings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter
+                                        {
+                                            DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ"
+                                            //DateTimeStyles = System.Globalization.DateTimeStyles.AssumeUniversal
+                                        });
+                                        
+                                        var obj = JsonConvert.DeserializeObject<BaseResponse<string>>(errorMessages, settings);
+                                        res.ErrorMessages = obj.errors.Select(p => p.Description);
+                                    }
+                                    catch
+                                    {
+                                        res.ErrorMessages = new string[] { errorMessages };
+                                    }
+
+                                    //res.ErrorMessages = new string[] { responseMessage.ReadAsStringAsync().Result };
+                                }
+                            }
+                        }
                     }
                     else if (postModel.IsSubmit())
                     {
@@ -381,7 +458,32 @@ namespace Lpp.Dns.Portal.Controllers
             DnsResult res = DnsResult.Success;
 
             if (req.Scheduled)
-                res = Scheduler.DeleteSchedule(ctx);
+            {
+                var cookie = Request.Cookies.Get("Authorization").Value;
+                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoginResponseModel>(cookie);
+
+                string username;
+                string password;
+                LoginResponseModel.DecryptCredentials(model.Authorization, out username, out password);
+
+                using (var apiClient = new ApiClient.DnsClient(WebConfigurationManager.AppSettings["ServiceUrl"], username, password))
+                {
+                    var task = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await apiClient.LegacyRequests.DeleteRequestSchedules(ctx.RequestID);
+                        }
+                        catch
+                        {
+                            res = new DnsResult();
+                            res.ErrorMessages = new string[] { "The scheduled request could not be deleted." };
+                        }
+                        
+                    });
+                    task.Wait();
+                }
+            }
 
             if (res.IsSuccess)
                 res = RequestService.DeleteRequest(ctx);
@@ -714,7 +816,7 @@ namespace Lpp.Dns.Portal.Controllers
                 Activities = ctx.Request.Project == null ? DataContext.Activities.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Name).Map<Activity, ActivityDTO>().AsEnumerable() : DataContext.Activities.Where(a => a.ProjectID == ctx.Request.ProjectID).OrderBy(p => p.DisplayOrder).ThenBy(p => p.Name).Map<Activity, ActivityDTO>().AsEnumerable(),
                 AllowSubmit = allowSubmit,
                 AllowDelete = (ctx.Request.CreatedByID == Auth.ApiIdentity.ID && ctx.Request.SubmittedOn == null) || AsyncHelpers.RunSync<bool>(() => DataContext.HasPermissions<Request>(Auth.ApiIdentity, ctx.Request, PermissionIdentifiers.Request.Delete)),
-                Schedule = (post == null || post.Schedule == null) ? Scheduler.GetSchedule(ctx) : post.Schedule,
+                Schedule = (post == null || post.Schedule == null) ? GetReqeuestScheduleModel(ctx) : post.Schedule,
                 Projects = RequestService.GetGrantedProjects(ctx.RequestType.ID).OrderBy(p => p.Name).Map<Project,Lpp.Dns.DTO.ProjectDTO>().ToArray(),
                 RequesterCenters = requesterCenters,
                 WorkplanTypes = workplanTypes,
@@ -722,6 +824,70 @@ namespace Lpp.Dns.Portal.Controllers
                 AllowEditRequestID = allowEditRequestID
             };
             return x;
+        }
+
+        private RequestScheduleModel GetReqeuestScheduleModel(IRequestContext request)
+        {
+            try
+            {
+                string serializedModel = (from xml in Maybe.Value(request.Request.Schedule) select xml).Value;
+
+                XmlSerializer _modelSerializer = new XmlSerializer(typeof(RequestScheduleModel));
+                var res = _modelSerializer.Deserialize(new StringReader(serializedModel ?? "")) as RequestScheduleModel;
+                return res;
+            }
+            catch
+            {
+                //Return a default schedule
+                return new RequestScheduleModel()
+                {
+                    StartDate = DateTime.Now.Date,
+                    EndDate = DateTime.Now.Date,
+                    RunTime = DateTime.Now.Date,
+                    RecurrenceType = "Daily",
+                    DailyType = "EveryNDays",
+                    NDays = 1,
+                    NWeeks = 1,
+                    MonthlyType = "DayOfMonth",
+                    MonthDay = 1,
+                    NMonthsForWeekDay = 1,
+                    NMonthsForMonthDay = 1,
+                    YearlyType = "YearlyDayOfMonth",
+                    DayOfMonth = 1,
+                    NYears = 1,
+                    RecurrenceRangeType = "NoEndDate"
+                };
+            }
+        }
+
+        private void SetRequestScheduleModel(IRequestContext request, RequestScheduleModel model)
+        {
+            var modelToSerialize = model ?? new RequestScheduleModel()
+            {
+                StartDate = DateTime.Now.Date,
+                EndDate = DateTime.Now.Date,
+                RunTime = DateTime.Now.Date,
+                RecurrenceType = "Daily",
+                DailyType = "EveryNDays",
+                NDays = 1,
+                NWeeks = 1,
+                MonthlyType = "DayOfMonth",
+                MonthDay = 1,
+                NMonthsForWeekDay = 1,
+                NMonthsForMonthDay = 1,
+                YearlyType = "YearlyDayOfMonth",
+                DayOfMonth = 1,
+                NYears = 1,
+                RecurrenceRangeType = "NoEndDate"
+            };
+
+            XmlSerializer _modelSerializer = new XmlSerializer(typeof(RequestScheduleModel));
+            var sw = new StringWriter();
+            using (var xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings { OmitXmlDeclaration = true }))
+            {
+                _modelSerializer.Serialize(xmlWriter, model, null);
+                request.Request.Schedule = sw.ToString();
+            }
         }
 
         private EntitiesForSelectionModel GrantedProjectsListModel(Guid requestType)

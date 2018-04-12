@@ -5,8 +5,6 @@ module RequestType.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gRequestTypesSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -28,14 +26,6 @@ module RequestType.Index {
 
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gRequestTypesSetting);
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
         }
         
         public onNewRequestType() {
@@ -67,8 +57,10 @@ module RequestType.Index {
                 var bindingControl = $('#Content');
                 vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRequestType] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.RequestTypesGrid(), gRequestTypesSetting);
+                vm.RequestTypesGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("RequestType.Index.gRequestTypes.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestTypesGrid()));
+                });
             });
         });
     }

@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
@@ -55,6 +60,10 @@ var Controls;
                         window.location.href = Utils.buildDownloadUrl(self.SelectedRevisionSet().Current().ID, self.SelectedRevisionSet().Current().FileName);
                     };
                     self.onNewRevision = function () {
+                        if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                            //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                            return;
+                        }
                         var revisionSet = self.SelectedRevisionSet();
                         var options = {
                             RequestID: self.RequestID,
@@ -70,6 +79,10 @@ var Controls;
                         });
                     };
                     self.onNewDocument = function () {
+                        if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                            //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                            return;
+                        }
                         //if request ID is null, show prompt that explains the request needs to be saved first
                         //if user approves trigger a save, this will cause the page to get reloaded
                         if (self.RequestID == null && self.CurrentTask == null) {
@@ -95,6 +108,10 @@ var Controls;
                         }
                     };
                     self.onDeleteDocument = function () {
+                        if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                            //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                            return;
+                        }
                         var revisionSet = vm.SelectedRevisionSet();
                         var document = revisionSet.Current();
                         var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the document</p>' + '<p><strong>' + document.Name + '</strong>?</p></div>';
@@ -110,27 +127,6 @@ var Controls;
                                     var index = vm.DataSource.indexOf(revisionSet);
                                     if (index > -1) {
                                         vm.DataSource.remove(revisionSet);
-                                    }
-                                }
-                            });
-                        });
-                    };
-                    self.onDeleteDocument = function () {
-                        var revisionSet = self.SelectedRevisionSet();
-                        var document = revisionSet.Current();
-                        var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the document</p>' + '<p><strong>' + document.Name + '</strong>?</p></div>';
-                        //if (confirm('Are you sure you want to delete ' + document.FileName + '?')) {
-                        Global.Helpers.ShowConfirm("Delete document", message).done(function () {
-                            Dns.WebApi.Documents.Delete([document.ID])
-                                .done(function () {
-                                self.SelectedRevisionSet(null);
-                                //remove the document from the revision set
-                                revisionSet.removeCurrent();
-                                if (revisionSet.Current() == null) {
-                                    //the set has no documents remove from the main grid
-                                    var index = self.DataSource.indexOf(revisionSet);
-                                    if (index > -1) {
-                                        self.DataSource.remove(revisionSet);
                                     }
                                 }
                             });

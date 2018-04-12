@@ -18,18 +18,18 @@
         <div class="row">
             <div class="col-xs-10">
                 <ol class="breadcrumb">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="~/">Home</a></li>
                     <li class="active"><a href="/requests">Requests</a></li>
                 </ol>
             </div>
-            <div class="dropdown right" id="new-request-dropdown">
+            <div class="dropdown right" style="float:right" id="new-request-dropdown">
                 <button id="ddNewRequest" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     New Request <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="ddNewRequest" data-bind="foreach: RequestableProjects">
+                <ul class="dropdown-menu dropdown-menu-right clear" role="menu" aria-labelledby="ddNewRequest" data-bind="foreach: RequestableProjects">
                     <li><a role="menuitem" data-bind="text:Name,click:$root.onCreateRequest"></a></li>
                 </ul>
-            </div>  
+            </div>
         </div>        
     </div>
     <div class="panel-body">

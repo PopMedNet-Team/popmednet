@@ -5,6 +5,8 @@ using Microsoft.AspNet.SignalR;
 using Lpp.Utilities.WebSites.Hubs;
 using Lpp.Dns.Data;
 using Lpp.Dns.DTO.Security;
+using Hangfire;
+
 [assembly: OwinStartup(typeof(Lpp.Dns.Api.Startup))]
 namespace Lpp.Dns.Api
 {

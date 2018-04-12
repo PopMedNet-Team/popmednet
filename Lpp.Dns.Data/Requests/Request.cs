@@ -528,7 +528,7 @@ namespace Lpp.Dns.Data
                     }
                 }
 
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = identity == null ? new { UserName = "", Acronym = "" } : db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
                 
                 if (db.Entry(request).Reference(r => r.RequestType).IsLoaded == false)
                     db.Entry(request).Reference(r => r.RequestType).Load();
@@ -1155,13 +1155,18 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.NewRequestSubmittedLog;
 
                 var networkName = db.Networks.Select(n => n.Name).FirstOrDefault();
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
                 log.Request = db.Requests.Where(r => r.ID == log.RequestID).Include("RequestType").Include("Activity.ParentActivity.ParentActivity")
                     .Include("RequesterCenter").Include("WorkplanType").Include("ReportAggregationLevel").Include("Project").Include("SubmittedBy").FirstOrDefault();
 
+                string userName = string.Empty;
+                if (db.Users.Any(p => p.ID == log.UserID))
+                    userName = db.Users.First(p => p.ID == log.UserID).FullName;
+                else if (log.Request.SubmittedByID.HasValue && db.Users.Any(p => p.ID == log.Request.SubmittedByID))
+                    userName = db.Users.First(p => p.ID == log.Request.SubmittedByID).FullName;
+
                 var body = GenerateTimestampText(log) + 
                            "<p>Here are your most recent <b>New Request Submitted</b> notifications from " + networkName + ".</p>" +
-                           "<p>" + actingUser.FullName + " has submitted a new <b>" + log.Request.RequestType.Name + "</b> request " + log.Request.Name +
+                           "<p>" + userName + " has submitted a new <b>" + log.Request.RequestType.Name + "</b> request " + log.Request.Name +
                            " in project <b>" + log.Request.Project.Name + "</b>.";
 
                 //get source activities text for body of email

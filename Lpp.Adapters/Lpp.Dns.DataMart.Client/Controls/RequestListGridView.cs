@@ -19,6 +19,21 @@ namespace Lpp.Dns.DataMart.Client.Controls
 {
     public partial class RequestListGridView : UserControl
     {
+        private static readonly ILog _log = LogManager.GetLogger(typeof(RequestListGridView));
+
+        private static readonly IList<DateFilterItem> _dates = new[]
+        {
+            new DateFilterItem( "30 Days", 30 ),
+            new DateFilterItem( "90 Days", 90 ),
+            new DateFilterItem( "180 Days", 180 ),
+            new DateFilterItem( "1 Year", 365 ),
+            new DateFilterItem( "Custom" )
+        };
+
+        private static readonly object[] _pageSizes = new[] { "10", "25", "50" };
+
+        static readonly ConcurrentDictionary<string, Func<HubRequest, object>> _sortExpressionsCache = new ConcurrentDictionary<string, Func<HubRequest, object>>();
+
         public event EventHandler PageSizeChanged;
         public event EventHandler SortModeChanged;
         public event EventHandler<RequestDetailEventArgs> RequestRowDoubleClick;
@@ -34,23 +49,14 @@ namespace Lpp.Dns.DataMart.Client.Controls
             remove { dgvRequestList.SelectionChanged -= value; }
         }
 
-        private static readonly ILog _log = LogManager.GetLogger("RequestListGridView");
-
-        private static readonly IList<DateFilterItem> _dates = new[]
-        {
-            new DateFilterItem( "30 Days", 30 ),
-            new DateFilterItem( "90 Days", 90 ),
-            new DateFilterItem( "180 Days", 180 ),
-            new DateFilterItem( "1 Year", 365 ),
-            new DateFilterItem( "Custom" )
-        };
-
-        private static readonly object[] _pageSizes = new[] { "10", "25", "50" };
-
-        static readonly ConcurrentDictionary<string, Func<HubRequest, object>> _sortExpressionsCache = new ConcurrentDictionary<string, Func<HubRequest, object>>();
-
         public NetWorkSetting Network { get; private set; }
-        public bool IsReloading { get { return _currentReload != null; } }
+        public bool IsReloading
+        {
+            get
+            {
+                return _currentReload != null;
+            }
+        }
 
         private bool _freezeChangeFilter = false;
         private RequestFilter _filter;
@@ -186,15 +192,19 @@ namespace Lpp.Dns.DataMart.Client.Controls
             invisibleRequestsWarning.Visible = InvisibleRequestsAvailable;
         }
 
-        public RequestListGridView(NetWorkSetting ns)
-            : this()
+        readonly AutoProcessor AutoProcessor;
+
+        public RequestListGridView(NetWorkSetting ns) : this()
         {
             Network = ns;
+
+            AutoProcessor = new AutoProcessor(Network);
         }
 
         public RequestListGridView()
         {
             InitializeComponent();
+
             this.dgvRequestList.AutoGenerateColumns = false;
             this.colCreatedByUserName.Tag = RequestSortColumn.CreatedByUsername;
             this.colDataMartName.Tag = RequestSortColumn.DataMartName;
@@ -222,6 +232,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             // Same goes for "2" -> "25" and "1" -> "10".
             // I could not find a way to battle this (no event get raised, not clear why this happens), so I'm employing
             // this hack: just reset the text to its proper value periodically.
+
             this.HandleCreated += (___, __) =>
                 _pageSizeReset = Observable
                     .Interval(TimeSpan.FromSeconds(0.2))
@@ -237,9 +248,16 @@ namespace Lpp.Dns.DataMart.Client.Controls
             base.OnHandleDestroyed(e);
         }
 
-        public void OnConfigurationChanged()
+        public void OnConfigurationChanged(NetWorkSetting updatedNetworkSetting)
         {
+            Network = updatedNetworkSetting;
+            AutoProcessor.UpdateNetworkSetting(Network);
             ReloadDatamarts();
+        }
+
+        public void StopAutoprocessor()
+        {
+            AutoProcessor.Stop();
         }
 
         private void RequestListGridView_Load(object sender, EventArgs e)
@@ -266,7 +284,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 SetStatusText();
 
                 cmbDates.Items.Clear();
+
                 _dates.ForEach(d => cmbDates.Items.Add(d));
+
                 SetDateFilterSelectedItem(filter);
 
                 cmbStatus.Enabled = cmbDataMarts.Enabled = cmbDates.Enabled = true;
@@ -308,8 +328,14 @@ namespace Lpp.Dns.DataMart.Client.Controls
 
         void OnDataSourceChanged(object sender, EventArgs e)
         {
-            if (InvokeRequired) Invoke(new Action(Reload));
-            else Reload();
+            if (InvokeRequired)
+            {
+                Invoke(new Action(Reload));
+            }
+            else
+            {
+                Reload();
+            }
         }
 
         public void ReloadWithNetworkCheck()
@@ -380,6 +406,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 });
 
             _currentReload.CallDispose();
+
             _currentReload = Observable
                 .Merge(reload, newReqsLookup, invisibleReqsLookup)
                 .TakeLast(1)

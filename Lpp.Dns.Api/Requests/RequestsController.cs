@@ -13,8 +13,9 @@ using Lpp.Utilities;
 using System.Threading.Tasks;
 using Lpp.Dns.DTO.QueryComposer;
 using Lpp.Workflow.Engine;
-using LinqKit;
 using Lpp.Dns.DTO.Enums;
+using LinqKit;
+using Lpp.Dns.DTO.Schedule;
 
 namespace Lpp.Dns.Api.Requests
 {
@@ -933,15 +934,16 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public async Task<Guid[]> GetRequestTypeModels(Guid requestID)
         {
-            return await (from rtdm in DataContext.RequestTypeDataModels
-                    where DataContext.Requests.Where(r => r.ID == requestID && rtdm.RequestTypeID == r.RequestTypeID).Any()
-                    select rtdm.DataModelID).ToArrayAsync();
+            return await (from r in DataContext.RequestDataMarts
+                          where r.RequestID == requestID
+                          && r.DataMart.AdapterID.HasValue
+                          select r.DataMart.AdapterID.Value).ToArrayAsync();
         }
 
         /// <summary>
         /// Update the request metadata
         /// </summary>
-        /// <param name="req"></param>
+        /// <param name="reqMetadata"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<HttpResponseMessage> UpdateRequestMetadata(RequestMetadataDTO reqMetadata)

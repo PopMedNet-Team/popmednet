@@ -1,9 +1,14 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-/// <reference path='../../Lpp.Pmn.Resources/Scripts/typings/knockout.mapping/knockout.mapping.d.ts' />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+/// <reference path='../../Lpp.Pmn.Resources/node_modules/@types/knockout.mapping/index.d.ts' />
 /// <reference path='Lpp.Dns.Interfaces.ts' />
 var Dns;
 (function (Dns) {
@@ -431,6 +436,38 @@ var Dns;
             return ApproveRejectResponseViewModel;
         }(ViewModel));
         ViewModels.ApproveRejectResponseViewModel = ApproveRejectResponseViewModel;
+        var EnhancedEventLogItemViewModel = (function (_super) {
+            __extends(EnhancedEventLogItemViewModel, _super);
+            function EnhancedEventLogItemViewModel(EnhancedEventLogItemDTO) {
+                var _this = _super.call(this) || this;
+                if (EnhancedEventLogItemDTO == null) {
+                    _this.Step = ko.observable();
+                    _this.Timestamp = ko.observable();
+                    _this.Description = ko.observable();
+                    _this.Source = ko.observable();
+                    _this.EventType = ko.observable();
+                }
+                else {
+                    _this.Step = ko.observable(EnhancedEventLogItemDTO.Step);
+                    _this.Timestamp = ko.observable(EnhancedEventLogItemDTO.Timestamp);
+                    _this.Description = ko.observable(EnhancedEventLogItemDTO.Description);
+                    _this.Source = ko.observable(EnhancedEventLogItemDTO.Source);
+                    _this.EventType = ko.observable(EnhancedEventLogItemDTO.EventType);
+                }
+                return _this;
+            }
+            EnhancedEventLogItemViewModel.prototype.toData = function () {
+                return {
+                    Step: this.Step(),
+                    Timestamp: this.Timestamp(),
+                    Description: this.Description(),
+                    Source: this.Source(),
+                    EventType: this.EventType(),
+                };
+            };
+            return EnhancedEventLogItemViewModel;
+        }(ViewModel));
+        ViewModels.EnhancedEventLogItemViewModel = EnhancedEventLogItemViewModel;
         var HomepageRouteDetailViewModel = (function (_super) {
             __extends(HomepageRouteDetailViewModel, _super);
             function HomepageRouteDetailViewModel(HomepageRouteDetailDTO) {
@@ -4798,6 +4835,32 @@ var Dns;
             return WorkflowHistoryItemViewModel;
         }(ViewModel));
         ViewModels.WorkflowHistoryItemViewModel = WorkflowHistoryItemViewModel;
+        var LegacySchedulerRequestViewModel = (function (_super) {
+            __extends(LegacySchedulerRequestViewModel, _super);
+            function LegacySchedulerRequestViewModel(LegacySchedulerRequestDTO) {
+                var _this = _super.call(this) || this;
+                if (LegacySchedulerRequestDTO == null) {
+                    _this.RequestID = ko.observable();
+                    _this.AdapterPackageVersion = ko.observable();
+                    _this.ScheduleJSON = ko.observable();
+                }
+                else {
+                    _this.RequestID = ko.observable(LegacySchedulerRequestDTO.RequestID);
+                    _this.AdapterPackageVersion = ko.observable(LegacySchedulerRequestDTO.AdapterPackageVersion);
+                    _this.ScheduleJSON = ko.observable(LegacySchedulerRequestDTO.ScheduleJSON);
+                }
+                return _this;
+            }
+            LegacySchedulerRequestViewModel.prototype.toData = function () {
+                return {
+                    RequestID: this.RequestID(),
+                    AdapterPackageVersion: this.AdapterPackageVersion(),
+                    ScheduleJSON: this.ScheduleJSON(),
+                };
+            };
+            return LegacySchedulerRequestViewModel;
+        }(ViewModel));
+        ViewModels.LegacySchedulerRequestViewModel = LegacySchedulerRequestViewModel;
         var DistributedRegressionAnalysisCenterManifestItem = (function (_super) {
             __extends(DistributedRegressionAnalysisCenterManifestItem, _super);
             function DistributedRegressionAnalysisCenterManifestItem(DistributedRegressionAnalysisCenterManifestItem) {
@@ -5040,6 +5103,7 @@ var Dns;
                     _this.Priority = ko.observable();
                     _this.DueDate = ko.observable();
                     _this.QueryType = ko.observable();
+                    _this.SubmittedOn = ko.observable();
                 }
                 else {
                     _this.Name = ko.observable(QueryComposerHeaderDTO.Name);
@@ -5049,6 +5113,7 @@ var Dns;
                     _this.Priority = ko.observable(QueryComposerHeaderDTO.Priority);
                     _this.DueDate = ko.observable(QueryComposerHeaderDTO.DueDate);
                     _this.QueryType = ko.observable(QueryComposerHeaderDTO.QueryType);
+                    _this.SubmittedOn = ko.observable(QueryComposerHeaderDTO.SubmittedOn);
                 }
                 return _this;
             }
@@ -5061,6 +5126,7 @@ var Dns;
                     Priority: this.Priority(),
                     DueDate: this.DueDate(),
                     QueryType: this.QueryType(),
+                    SubmittedOn: this.SubmittedOn(),
                 };
             };
             return QueryComposerHeaderViewModel;
@@ -5135,6 +5201,7 @@ var Dns;
                 var _this = _super.call(this) || this;
                 if (QueryComposerResponseDTO == null) {
                     _this.ID = ko.observable();
+                    _this.DocumentID = ko.observable();
                     _this.ResponseDateTime = ko.observable();
                     _this.RequestID = ko.observable();
                     _this.Errors = ko.observableArray();
@@ -5145,6 +5212,7 @@ var Dns;
                 }
                 else {
                     _this.ID = ko.observable(QueryComposerResponseDTO.ID);
+                    _this.DocumentID = ko.observable(QueryComposerResponseDTO.DocumentID);
                     _this.ResponseDateTime = ko.observable(QueryComposerResponseDTO.ResponseDateTime);
                     _this.RequestID = ko.observable(QueryComposerResponseDTO.RequestID);
                     _this.Errors = ko.observableArray(QueryComposerResponseDTO.Errors == null ? null : QueryComposerResponseDTO.Errors.map(function (item) { return new QueryComposerResponseErrorViewModel(item); }));
@@ -5158,6 +5226,7 @@ var Dns;
             QueryComposerResponseViewModel.prototype.toData = function () {
                 return {
                     ID: this.ID(),
+                    DocumentID: this.DocumentID(),
                     ResponseDateTime: this.ResponseDateTime(),
                     RequestID: this.RequestID(),
                     Errors: this.Errors == null ? null : this.Errors().map(function (item) { return item.toData(); }),
@@ -8192,6 +8261,7 @@ var Dns;
                     _this.Adapter = ko.observable();
                     _this.ProcessorID = ko.observable();
                     _this.DataPartnerIdentifier = ko.observable();
+                    _this.DataPartnerCode = ko.observable();
                     _this.Name = ko.observable();
                     _this.Description = ko.observable();
                     _this.Acronym = ko.observable();
@@ -8354,6 +8424,7 @@ var Dns;
                     _this.Adapter = ko.observable(DataMartDTO.Adapter);
                     _this.ProcessorID = ko.observable(DataMartDTO.ProcessorID);
                     _this.DataPartnerIdentifier = ko.observable(DataMartDTO.DataPartnerIdentifier);
+                    _this.DataPartnerCode = ko.observable(DataMartDTO.DataPartnerCode);
                     _this.Name = ko.observable(DataMartDTO.Name);
                     _this.Description = ko.observable(DataMartDTO.Description);
                     _this.Acronym = ko.observable(DataMartDTO.Acronym);
@@ -8519,6 +8590,7 @@ var Dns;
                     Adapter: this.Adapter(),
                     ProcessorID: this.ProcessorID(),
                     DataPartnerIdentifier: this.DataPartnerIdentifier(),
+                    DataPartnerCode: this.DataPartnerCode(),
                     Name: this.Name(),
                     Description: this.Description(),
                     Acronym: this.Acronym(),

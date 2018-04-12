@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
@@ -33,9 +38,8 @@ var Controls;
                     _this.sFtpFolders = ko.observableArray([_this.sFtpRoot]);
                     self.onFileUploadCompleted = function (evt) {
                         try {
-                            var result = JSON.parse(evt.response.content);
-                            result.forEach(function (i) { return self.Documents.push(i); });
-                            self.OnDocumentsUploaded.notifySubscribers(result);
+                            self.Documents.push(evt.response.Document);
+                            Requests.Details.rovm.Save(false).done(function () { Requests.Details.rovm.RefreshTaskDocuments(); });
                         }
                         catch (e) {
                             Global.Helpers.ShowAlert("Upload Error", Global.Helpers.ProcessAjaxError(e));
@@ -134,12 +138,24 @@ var Controls;
                 ViewModel.prototype.onFileUpload = function (evt) {
                     var upload = this;
                     var dropdown = upload.wrapper.find(".k-file[data-uid='" + evt.files[0].uid + "'] select").data("kendoDropDownList");
+                    ko.utils.arrayForEach(evt.files, function (item) {
+                        if (item.size > 2147483648) {
+                            evt.preventDefault();
+                            Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(function () {
+                            });
+                        }
+                    });
                     evt.data = {
                         requestID: vm.RequestID(),
                         responseID: vm.ResponseID,
-                        authToken: User.AuthToken,
                         DocumentType: dropdown.value()
                     };
+                    var xhr = evt.XMLHttpRequest;
+                    xhr.addEventListener("readystatechange", function (e) {
+                        if (xhr.readyState == 1 /* OPENED */) {
+                            xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                        }
+                    });
                 };
                 ViewModel.prototype.onFileUploadError = function (evt) {
                     alert(evt.XMLHttpRequest.statusText + ' ' + evt.XMLHttpRequest.responseText);

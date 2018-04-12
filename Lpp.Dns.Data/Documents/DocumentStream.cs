@@ -79,7 +79,7 @@ namespace Lpp.Dns.Data.Documents
 
             var buffer = new byte[size];
             var remaining = canSeek ? source.Length : 0;
-
+            
             //If the stream is seekable, seek through it until all bytes are read.
             //If we read less than the expected number of bytes, it indicates an error, so throw the appropriate exception.
             //If the stream is not seekable, loop until we read 0 bytes. (It’s not an error in this case.)
@@ -217,7 +217,7 @@ namespace Lpp.Dns.Data.Documents
             (SqlConnection)context.Database.Connection))
             {
 
-                cmd.Parameters.Add("@data", SqlDbType.Binary, -1).Value = buffer.Skip(offset).Take(count).ToArray();
+                cmd.Parameters.Add("@data", SqlDbType.VarBinary, -1).Value = buffer.Skip(offset).Take(count).ToArray();
                 cmd.Parameters.AddWithValue("id", documentID);
 
                 try

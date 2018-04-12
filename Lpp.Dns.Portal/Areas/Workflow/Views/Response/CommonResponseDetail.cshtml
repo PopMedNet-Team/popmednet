@@ -17,6 +17,11 @@
         margin:-5px -8px;
         padding:5px 8px;
     }
+
+    .document-title {
+        text-decoration: none;
+        color: #333;
+    }
 </style>
 <!-- ko stopBinding: true -->
 
@@ -25,7 +30,7 @@
         <p>Loading Response Documents...</p>
     </article>
     <section style="margin-top:15px;display:none;" data-bind="visible:true;">
-	    <nav style="border-bottom:1px solid silver;padding-bottom:15px;">
+        <nav style="border-bottom:1px solid silver;padding-bottom:15px;">
             <div class="btn-group pull-right" data-bind="visible: IsResponseLoadFailed() == false && IsResponseVisible() && $root.hasResponseResultsContent">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="visible:Responses.length > 0">Dowload Results <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
@@ -36,6 +41,7 @@
             <a data-bind="visible: isDownloadAllVisible, href:ExportDownloadAllUrl" class="btn btn-default pull-right" style="margin-right:15px;width:120px">Download All</a>
             <div class="clearfix"></div>
         </nav>
+
         <article class="panel panel-default" data-bind="visible: IsResponseVisible() != null && IsResponseVisible() == false">
             <div class="panel-heading">
                 <h4 class="panel-title">Response Pending Approval</h4>
@@ -69,7 +75,7 @@
                     </thead>
                     <tbody data-bind="foreach: { data:Documents, as:'file'}">
                         <tr>
-                            <td data-bind="text:file.ItemTitle"></td>
+                            <td><a href="#" data-bind="text:file.ItemTitle, attr:{ href: '#' + file.ID}" class="document-title" title="Go to results"></a></td>
                             <td data-bind="html:Workflow.Response.Common.ResponseDetail.Utils.buildDownloadLink(file.ID, file.FileName, file.Name)"></td>
                             <td data-bind="text:Global.Helpers.formatFileSize(file.Length)" style="text-align:right;"></td>
                             <td>
@@ -94,9 +100,10 @@
             </div>
         </div>
 
-        <nav style="border-top:1px solid silver;padding-top:15px;">
+        <nav style="border-top:1px solid silver;padding-top:15px;" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject">
             <button class="btn btn-default pull-right" data-resultid="0FEE0001-ED08-48D8-8C0B-A3B600EEF30F" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onApprove">Approve</button>
             <button class="btn btn-default pull-right" data-resultid="F1B10001-B0B3-45A9-AAFF-A3B600EEFC49" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onReject">Reject</button>
+            <button class="btn btn-default pull-right" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onResubmit">Resubmit</button>
             <div class="clearfix"></div>
         </nav>
     </section>

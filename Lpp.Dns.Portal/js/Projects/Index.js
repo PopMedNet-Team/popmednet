@@ -1,9 +1,14 @@
 /// <reference path="../_rootlayout.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Projects;
 (function (Projects) {
     var Index;
@@ -30,12 +35,6 @@ var Projects;
                     sort: { field: "Name", dir: "asc" },
                 });
                 Global.Helpers.SetDataSourceFromSettings(_this.ds, gProjectsSetting);
-                _this.onColumnMenuInit = function (e) {
-                    var menu = e.container.find(".k-menu").data("kendoMenu");
-                    menu.bind("close", function (e) {
-                        self.Save();
-                    });
-                };
                 return _this;
             }
             ViewModel.prototype.btnNewProject_Click = function () {
@@ -45,7 +44,6 @@ var Projects;
                 return $("#gProjects").data("kendoGrid");
             };
             ViewModel.prototype.Save = function () {
-                Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(this.ProjectsGrid()));
             };
             return ViewModel;
         }(Global.PageViewModel));
@@ -64,8 +62,10 @@ var Projects;
                     var bindingControl = $("#Content");
                     vm = new ViewModel(gProjectsSetting, bindingControl, canAdd[0] ? [Permissions.Group.CreateProject] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    $(window).unload(function () { return vm.Save(); });
                     Global.Helpers.SetGridFromSettings(vm.ProjectsGrid(), gProjectsSetting);
+                    vm.ProjectsGrid().bind("dataBound", function (e) {
+                        Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ProjectsGrid()));
+                    });
                 });
             });
         }

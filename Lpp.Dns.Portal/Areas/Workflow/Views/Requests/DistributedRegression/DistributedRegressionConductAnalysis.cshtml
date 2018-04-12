@@ -8,13 +8,15 @@
         </div>
         <table class="panel-body table table-striped table-bordered table-hover">
             <colgroup>
-                <col style="width: 50%;" />
-                <col style="width: 50%" />
+                <col style="width: 33%;" />
+                <col style="width: 33%;" />
+                <col style="width: 33%;" />
             </colgroup>
             <thead>
                 <tr>
                     <th>DataMart</th>
                     <th>Status</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody data-bind="visible:AnalysisCenters.length == 0">
@@ -26,10 +28,10 @@
                 <tr>
                     <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
                     <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                    <td data-bind="html: Messages "></td>
                 </tr>
                 <tr data-bind="attr: {ID: 'response-' + ID}, visible:false">
-                    <td colspan="1">&nbsp;</td>
-                    <td colspan="4">
+                    <td colspan="3">
                         <div>
                             <table class="panel-body table table-stripped table-bordered table-hover">
                                 <thead>

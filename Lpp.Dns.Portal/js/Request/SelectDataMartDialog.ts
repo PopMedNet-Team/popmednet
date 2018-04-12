@@ -1,5 +1,5 @@
 ﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
-module Request.Utility.SelectDataMarts {
+module Requests.Utility.SelectDataMarts {
     var vm: ViewModel;
 
     export class ViewModel extends Global.DialogViewModel {

@@ -3,7 +3,6 @@ using System.Linq;
 using System.ComponentModel.Composition;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Lpp.Dns.Scheduler;
 using Lpp.Mvc;
 using System.ServiceModel;
 using System.ServiceModel.Security;
@@ -72,7 +71,6 @@ namespace Lpp.Dns.Portal
 
         public void RegisterCatchAllRoutes( RouteCollection routes )
         {
-            routes.MapSoapService<RequestSchedulerService, ISchedulerService>( "api/soap/scheduler" );
             routes.MapSoapService<LocalDataMartService, ILocalDataMartWcfService>("api/soap/localdm");
             routes.MapSoapService<RequestMetadataCollectionService, IRequestMetadataCollectionWcfService>("api/soap/requestmetadatacollection");
             routes.MapSoapService<SftpUploadService, ISftpUploadWcfService>("api/soap/sftpupload");

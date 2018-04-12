@@ -34,7 +34,7 @@
             <span>Locked</span>
         </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteDataPartnersTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteDataPartnersTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
         </div>
     </div>
 </script>

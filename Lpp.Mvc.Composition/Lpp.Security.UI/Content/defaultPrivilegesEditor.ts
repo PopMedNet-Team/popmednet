@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
 /// <reference path="../../Lpp.Mvc.Controls.Interfaces/utilities.d.ts" />
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/rx/rx.d.ts" />
 /// <reference path="acl.d.ts" />
 
 module Acl {
@@ -23,6 +24,15 @@ module Acl {
                 m.deny.prop("checked", allow == false).prop("disabled", !enableCheckboxes);
                 extra(m);
             }
+
+            let gate: Function = (act: Function, bind: Function) => {
+                //don't know if this is what the original did, cannot find the original function in any referenced library.
+                return bind;
+            };
+
+            let releaseGate: Function = (bind: Function) => {
+                //don't know what the original did, cannot find the original function in any referenced library.
+            };
 
             var bind = function (own: PrivilegeSet, inherited: InheritedPrivilegeSet) {
                 _view.find("input[type=checkbox]").prop("checked", false).prop("disabled", false);
@@ -106,7 +116,7 @@ module Acl {
                     return res;
                 },
 
-                onChange: (f: Function) => $(editor).bind("change", f)
+                onChange: (f: any) => $(editor).bind("change", f)
             };
 
             return editor;

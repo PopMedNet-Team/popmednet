@@ -53,7 +53,6 @@ namespace Lpp.Dns.DataMart.Client
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RequestDetailForm));
             this.queryDataMartBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.queryIdTextBox = new System.Windows.Forms.TextBox();
-            this.requestTimeDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.queryCreatedByUserNameTextBox = new System.Windows.Forms.TextBox();
             this.btnRun = new System.Windows.Forms.Button();
             this.btnUploadResults = new System.Windows.Forms.Button();
@@ -109,8 +108,18 @@ namespace Lpp.Dns.DataMart.Client
             this.browserPanel = new System.Windows.Forms.Panel();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.vpRequest = new Lpp.Dns.DataMart.Client.Controls.DataMartViewPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.vpResponse = new Lpp.Dns.DataMart.Client.Controls.DataMartViewPanel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtRequestTimeLocal = new System.Windows.Forms.TextBox();
+            this.pnlFooter = new System.Windows.Forms.Panel();
             queryIdLabel = new System.Windows.Forms.Label();
             requestTimeLabel = new System.Windows.Forms.Label();
             queryCreatedByUserNameLabel = new System.Windows.Forms.Label();
@@ -131,12 +140,31 @@ namespace Lpp.Dns.DataMart.Client
             ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).BeginInit();
             this.browserPanel.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.pnlFooter.SuspendLayout();
             this.SuspendLayout();
             // 
             // queryIdLabel
             // 
+            queryIdLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             queryIdLabel.AutoSize = true;
-            queryIdLabel.Location = new System.Drawing.Point(777, 44);
+            queryIdLabel.Location = new System.Drawing.Point(698, 29);
             queryIdLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryIdLabel.Name = "queryIdLabel";
             queryIdLabel.Size = new System.Drawing.Size(84, 13);
@@ -145,11 +173,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // requestTimeLabel
             // 
-            requestTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            requestTimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             requestTimeLabel.AutoSize = true;
-            requestTimeLabel.Location = new System.Drawing.Point(425, 104);
+            requestTimeLabel.Location = new System.Drawing.Point(344, 77);
             requestTimeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             requestTimeLabel.Name = "requestTimeLabel";
             requestTimeLabel.Size = new System.Drawing.Size(76, 13);
@@ -158,11 +184,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryCreatedByUserNameLabel
             // 
-            queryCreatedByUserNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            queryCreatedByUserNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             queryCreatedByUserNameLabel.AutoSize = true;
-            queryCreatedByUserNameLabel.Location = new System.Drawing.Point(82, 104);
+            queryCreatedByUserNameLabel.Location = new System.Drawing.Point(59, 77);
             queryCreatedByUserNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryCreatedByUserNameLabel.Name = "queryCreatedByUserNameLabel";
             queryCreatedByUserNameLabel.Size = new System.Drawing.Size(59, 13);
@@ -171,8 +195,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryStatusTypeIdLabel
             // 
+            queryStatusTypeIdLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             queryStatusTypeIdLabel.AutoSize = true;
-            queryStatusTypeIdLabel.Location = new System.Drawing.Point(821, 74);
+            queryStatusTypeIdLabel.Location = new System.Drawing.Point(742, 53);
             queryStatusTypeIdLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryStatusTypeIdLabel.Name = "queryStatusTypeIdLabel";
             queryStatusTypeIdLabel.Size = new System.Drawing.Size(40, 13);
@@ -181,8 +206,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryNameLabel
             // 
+            queryNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             queryNameLabel.AutoSize = true;
-            queryNameLabel.Location = new System.Drawing.Point(58, 44);
+            queryNameLabel.Location = new System.Drawing.Point(37, 29);
             queryNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryNameLabel.Name = "queryNameLabel";
             queryNameLabel.Size = new System.Drawing.Size(81, 13);
@@ -191,22 +217,20 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryDescriptionLabel
             // 
+            queryDescriptionLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             queryDescriptionLabel.AutoSize = true;
-            queryDescriptionLabel.Location = new System.Drawing.Point(19, 367);
+            queryDescriptionLabel.Location = new System.Drawing.Point(2, 3);
             queryDescriptionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryDescriptionLabel.Name = "queryDescriptionLabel";
             queryDescriptionLabel.Size = new System.Drawing.Size(63, 13);
             queryDescriptionLabel.TabIndex = 41;
             queryDescriptionLabel.Text = "Description:";
-            queryDescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // requestorEmailLabel
             // 
-            requestorEmailLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            requestorEmailLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             requestorEmailLabel.AutoSize = true;
-            requestorEmailLabel.Location = new System.Drawing.Point(826, 104);
+            requestorEmailLabel.Location = new System.Drawing.Point(747, 77);
             requestorEmailLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             requestorEmailLabel.Name = "requestorEmailLabel";
             requestorEmailLabel.Size = new System.Drawing.Size(35, 13);
@@ -215,8 +239,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblNetwork
             // 
+            lblNetwork.Anchor = System.Windows.Forms.AnchorStyles.Right;
             lblNetwork.AutoSize = true;
-            lblNetwork.Location = new System.Drawing.Point(91, 14);
+            lblNetwork.Location = new System.Drawing.Point(68, 5);
             lblNetwork.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblNetwork.Name = "lblNetwork";
             lblNetwork.Size = new System.Drawing.Size(50, 13);
@@ -225,11 +250,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblDataMart
             // 
-            lblDataMart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            lblDataMart.Anchor = System.Windows.Forms.AnchorStyles.Right;
             lblDataMart.AutoSize = true;
-            lblDataMart.Location = new System.Drawing.Point(807, 14);
+            lblDataMart.Location = new System.Drawing.Point(728, 5);
             lblDataMart.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblDataMart.Name = "lblDataMart";
             lblDataMart.Size = new System.Drawing.Size(54, 13);
@@ -240,7 +263,7 @@ namespace Lpp.Dns.DataMart.Client
             // 
             btn_Close.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             btn_Close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            btn_Close.Location = new System.Drawing.Point(952, 614);
+            btn_Close.Location = new System.Drawing.Point(903, 6);
             btn_Close.Margin = new System.Windows.Forms.Padding(2);
             btn_Close.Name = "btn_Close";
             btn_Close.Size = new System.Drawing.Size(80, 24);
@@ -251,14 +274,14 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblAdditionalInstructions
             // 
+            lblAdditionalInstructions.Anchor = System.Windows.Forms.AnchorStyles.Left;
             lblAdditionalInstructions.AutoSize = true;
-            lblAdditionalInstructions.Location = new System.Drawing.Point(21, 280);
-            lblAdditionalInstructions.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            lblAdditionalInstructions.Location = new System.Drawing.Point(4, 3);
+            lblAdditionalInstructions.Margin = new System.Windows.Forms.Padding(4, 0, 3, 0);
             lblAdditionalInstructions.Name = "lblAdditionalInstructions";
             lblAdditionalInstructions.Size = new System.Drawing.Size(113, 13);
             lblAdditionalInstructions.TabIndex = 61;
             lblAdditionalInstructions.Text = "Additional Instructions:";
-            lblAdditionalInstructions.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblSubmittedByNote
             // 
@@ -277,8 +300,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblSubmittedTo
             // 
+            lblSubmittedTo.Anchor = System.Windows.Forms.AnchorStyles.Right;
             lblSubmittedTo.AutoSize = true;
-            lblSubmittedTo.Location = new System.Drawing.Point(68, 254);
+            lblSubmittedTo.Location = new System.Drawing.Point(45, 198);
             lblSubmittedTo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblSubmittedTo.Name = "lblSubmittedTo";
             lblSubmittedTo.Size = new System.Drawing.Size(73, 13);
@@ -287,11 +311,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // activityDueDateLabel
             // 
-            activityDueDateLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            activityDueDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             activityDueDateLabel.AutoSize = true;
-            activityDueDateLabel.Location = new System.Drawing.Point(445, 74);
+            activityDueDateLabel.Location = new System.Drawing.Point(364, 53);
             activityDueDateLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             activityDueDateLabel.Name = "activityDueDateLabel";
             activityDueDateLabel.Size = new System.Drawing.Size(56, 13);
@@ -300,11 +322,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // activityLabel
             // 
-            activityLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            activityLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             activityLabel.AutoSize = true;
-            activityLabel.Location = new System.Drawing.Point(458, 14);
+            activityLabel.Location = new System.Drawing.Point(377, 5);
             activityLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             activityLabel.Name = "activityLabel";
             activityLabel.Size = new System.Drawing.Size(43, 13);
@@ -313,11 +333,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryActivityPriorityLabel
             // 
-            queryActivityPriorityLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            queryActivityPriorityLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             queryActivityPriorityLabel.AutoSize = true;
-            queryActivityPriorityLabel.Location = new System.Drawing.Point(100, 74);
+            queryActivityPriorityLabel.Location = new System.Drawing.Point(77, 53);
             queryActivityPriorityLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             queryActivityPriorityLabel.Name = "queryActivityPriorityLabel";
             queryActivityPriorityLabel.Size = new System.Drawing.Size(41, 13);
@@ -326,8 +344,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // label1
             // 
+            label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(424, 44);
+            label1.Location = new System.Drawing.Point(343, 29);
             label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(77, 13);
@@ -336,40 +355,28 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryIdTextBox
             // 
+            this.queryIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryIdTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Identifier", true));
-            this.queryIdTextBox.Location = new System.Drawing.Point(863, 41);
-            this.queryIdTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.queryIdTextBox.Location = new System.Drawing.Point(787, 27);
             this.queryIdTextBox.Name = "queryIdTextBox";
             this.queryIdTextBox.ReadOnly = true;
-            this.queryIdTextBox.Size = new System.Drawing.Size(178, 20);
+            this.queryIdTextBox.Size = new System.Drawing.Size(197, 20);
             this.queryIdTextBox.TabIndex = 5;
-            // 
-            // requestTimeDateTimePicker
-            // 
-            this.requestTimeDateTimePicker.CustomFormat = "MM/dd/yyyy hh:mm tt";
-            this.requestTimeDateTimePicker.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.queryDataMartBindingSource, "Source.CreatedOnLocal", true));
-            this.requestTimeDateTimePicker.Enabled = false;
-            this.requestTimeDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.requestTimeDateTimePicker.Location = new System.Drawing.Point(503, 101);
-            this.requestTimeDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
-            this.requestTimeDateTimePicker.Name = "requestTimeDateTimePicker";
-            this.requestTimeDateTimePicker.Size = new System.Drawing.Size(178, 20);
-            this.requestTimeDateTimePicker.TabIndex = 10;
             // 
             // queryCreatedByUserNameTextBox
             // 
+            this.queryCreatedByUserNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryCreatedByUserNameTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Author.Username", true));
-            this.queryCreatedByUserNameTextBox.Location = new System.Drawing.Point(143, 101);
-            this.queryCreatedByUserNameTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.queryCreatedByUserNameTextBox.Location = new System.Drawing.Point(123, 75);
             this.queryCreatedByUserNameTextBox.Name = "queryCreatedByUserNameTextBox";
             this.queryCreatedByUserNameTextBox.ReadOnly = true;
-            this.queryCreatedByUserNameTextBox.Size = new System.Drawing.Size(178, 20);
+            this.queryCreatedByUserNameTextBox.Size = new System.Drawing.Size(196, 20);
             this.queryCreatedByUserNameTextBox.TabIndex = 9;
             // 
             // btnRun
             // 
             this.btnRun.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnRun.Location = new System.Drawing.Point(71, 614);
+            this.btnRun.Location = new System.Drawing.Point(23, 6);
             this.btnRun.Margin = new System.Windows.Forms.Padding(2);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(80, 24);
@@ -381,7 +388,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnUploadResults
             // 
             this.btnUploadResults.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnUploadResults.Location = new System.Drawing.Point(842, 614);
+            this.btnUploadResults.Location = new System.Drawing.Point(793, 6);
             this.btnUploadResults.Margin = new System.Windows.Forms.Padding(2);
             this.btnUploadResults.Name = "btnUploadResults";
             this.btnUploadResults.Size = new System.Drawing.Size(100, 24);
@@ -393,7 +400,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnRejectQuery
             // 
             this.btnRejectQuery.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnRejectQuery.Location = new System.Drawing.Point(251, 614);
+            this.btnRejectQuery.Location = new System.Drawing.Point(203, 6);
             this.btnRejectQuery.Margin = new System.Windows.Forms.Padding(2);
             this.btnRejectQuery.Name = "btnRejectQuery";
             this.btnRejectQuery.Size = new System.Drawing.Size(80, 24);
@@ -404,38 +411,38 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryStatusTypeIdTextBox
             // 
+            this.queryStatusTypeIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryStatusTypeIdTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "RoutingStatus", true));
-            this.queryStatusTypeIdTextBox.Location = new System.Drawing.Point(863, 71);
-            this.queryStatusTypeIdTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.queryStatusTypeIdTextBox.Location = new System.Drawing.Point(787, 51);
             this.queryStatusTypeIdTextBox.Name = "queryStatusTypeIdTextBox";
             this.queryStatusTypeIdTextBox.ReadOnly = true;
-            this.queryStatusTypeIdTextBox.Size = new System.Drawing.Size(178, 20);
+            this.queryStatusTypeIdTextBox.Size = new System.Drawing.Size(197, 20);
             this.queryStatusTypeIdTextBox.TabIndex = 8;
             // 
             // queryNameTextBox
             // 
+            this.queryNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryNameTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Name", true));
-            this.queryNameTextBox.Location = new System.Drawing.Point(143, 41);
-            this.queryNameTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.queryNameTextBox.Location = new System.Drawing.Point(123, 27);
             this.queryNameTextBox.Name = "queryNameTextBox";
             this.queryNameTextBox.ReadOnly = true;
-            this.queryNameTextBox.Size = new System.Drawing.Size(178, 20);
+            this.queryNameTextBox.Size = new System.Drawing.Size(196, 20);
             this.queryNameTextBox.TabIndex = 3;
             // 
             // requestorEmailTextBox
             // 
+            this.requestorEmailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.requestorEmailTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Author.Email", true));
-            this.requestorEmailTextBox.Location = new System.Drawing.Point(863, 101);
-            this.requestorEmailTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.requestorEmailTextBox.Location = new System.Drawing.Point(787, 75);
             this.requestorEmailTextBox.Name = "requestorEmailTextBox";
             this.requestorEmailTextBox.ReadOnly = true;
-            this.requestorEmailTextBox.Size = new System.Drawing.Size(178, 20);
+            this.requestorEmailTextBox.Size = new System.Drawing.Size(197, 20);
             this.requestorEmailTextBox.TabIndex = 11;
             // 
             // btnHold
             // 
             this.btnHold.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnHold.Location = new System.Drawing.Point(161, 614);
+            this.btnHold.Location = new System.Drawing.Point(113, 6);
             this.btnHold.Margin = new System.Windows.Forms.Padding(2);
             this.btnHold.Name = "btnHold";
             this.btnHold.Size = new System.Drawing.Size(80, 24);
@@ -446,40 +453,39 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // txtNetwork
             // 
+            this.txtNetwork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtNetwork.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "NetworkName", true));
-            this.txtNetwork.Location = new System.Drawing.Point(143, 11);
-            this.txtNetwork.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNetwork.Location = new System.Drawing.Point(123, 3);
             this.txtNetwork.Name = "txtNetwork";
             this.txtNetwork.ReadOnly = true;
-            this.txtNetwork.Size = new System.Drawing.Size(178, 20);
+            this.txtNetwork.Size = new System.Drawing.Size(196, 20);
             this.txtNetwork.TabIndex = 0;
             // 
             // txtDataMart
             // 
+            this.txtDataMart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDataMart.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "DataMartName", true));
-            this.txtDataMart.Location = new System.Drawing.Point(863, 11);
-            this.txtDataMart.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDataMart.Location = new System.Drawing.Point(787, 3);
             this.txtDataMart.Name = "txtDataMart";
             this.txtDataMart.ReadOnly = true;
-            this.txtDataMart.Size = new System.Drawing.Size(178, 20);
+            this.txtDataMart.Size = new System.Drawing.Size(197, 20);
             this.txtDataMart.TabIndex = 2;
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.SetColumnSpan(this.textBox1, 5);
             this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "SubmittedDataMarts", true));
-            this.textBox1.Location = new System.Drawing.Point(143, 251);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Location = new System.Drawing.Point(123, 195);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(927, 20);
+            this.textBox1.Size = new System.Drawing.Size(861, 20);
             this.textBox1.TabIndex = 20;
             // 
             // btnExportResults
             // 
             this.btnExportResults.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnExportResults.Location = new System.Drawing.Point(731, 614);
+            this.btnExportResults.Location = new System.Drawing.Point(683, 6);
             this.btnExportResults.Margin = new System.Windows.Forms.Padding(2);
             this.btnExportResults.Name = "btnExportResults";
             this.btnExportResults.Size = new System.Drawing.Size(100, 24);
@@ -490,38 +496,38 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // activityDueDateTextbox
             // 
+            this.activityDueDateTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.activityDueDateTextbox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.DueDateNoTime", true));
-            this.activityDueDateTextbox.Location = new System.Drawing.Point(503, 71);
-            this.activityDueDateTextbox.Margin = new System.Windows.Forms.Padding(2);
+            this.activityDueDateTextbox.Location = new System.Drawing.Point(425, 51);
             this.activityDueDateTextbox.Name = "activityDueDateTextbox";
             this.activityDueDateTextbox.ReadOnly = true;
-            this.activityDueDateTextbox.Size = new System.Drawing.Size(178, 20);
+            this.activityDueDateTextbox.Size = new System.Drawing.Size(196, 20);
             this.activityDueDateTextbox.TabIndex = 7;
             // 
             // activityTextbox
             // 
+            this.activityTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.activityTextbox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "ProjectName", true));
-            this.activityTextbox.Location = new System.Drawing.Point(503, 11);
-            this.activityTextbox.Margin = new System.Windows.Forms.Padding(2);
+            this.activityTextbox.Location = new System.Drawing.Point(425, 3);
             this.activityTextbox.Name = "activityTextbox";
             this.activityTextbox.ReadOnly = true;
-            this.activityTextbox.Size = new System.Drawing.Size(178, 20);
+            this.activityTextbox.Size = new System.Drawing.Size(196, 20);
             this.activityTextbox.TabIndex = 1;
             // 
             // queryActivityPriorityTextbox
             // 
+            this.queryActivityPriorityTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryActivityPriorityTextbox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Priority", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.queryActivityPriorityTextbox.Location = new System.Drawing.Point(143, 71);
-            this.queryActivityPriorityTextbox.Margin = new System.Windows.Forms.Padding(2);
+            this.queryActivityPriorityTextbox.Location = new System.Drawing.Point(123, 51);
             this.queryActivityPriorityTextbox.Name = "queryActivityPriorityTextbox";
             this.queryActivityPriorityTextbox.ReadOnly = true;
-            this.queryActivityPriorityTextbox.Size = new System.Drawing.Size(178, 20);
+            this.queryActivityPriorityTextbox.Size = new System.Drawing.Size(196, 20);
             this.queryActivityPriorityTextbox.TabIndex = 6;
             // 
             // btnDeleteFile
             // 
             this.btnDeleteFile.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnDeleteFile.Location = new System.Drawing.Point(521, 614);
+            this.btnDeleteFile.Location = new System.Drawing.Point(473, 6);
             this.btnDeleteFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnDeleteFile.Name = "btnDeleteFile";
             this.btnDeleteFile.Size = new System.Drawing.Size(80, 24);
@@ -533,7 +539,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnAddFile
             // 
             this.btnAddFile.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnAddFile.Location = new System.Drawing.Point(431, 614);
+            this.btnAddFile.Location = new System.Drawing.Point(383, 6);
             this.btnAddFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnAddFile.Name = "btnAddFile";
             this.btnAddFile.Size = new System.Drawing.Size(80, 24);
@@ -555,18 +561,19 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // textBox2
             // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.RequestTypeName", true));
-            this.textBox2.Location = new System.Drawing.Point(503, 41);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox2.Location = new System.Drawing.Point(425, 27);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(178, 20);
+            this.textBox2.Size = new System.Drawing.Size(196, 20);
             this.textBox2.TabIndex = 4;
             // 
             // lblRequest
             // 
+            this.lblRequest.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRequest.AutoSize = true;
-            this.lblRequest.Location = new System.Drawing.Point(17, 454);
+            this.lblRequest.Location = new System.Drawing.Point(4, 6);
             this.lblRequest.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRequest.Name = "lblRequest";
             this.lblRequest.Size = new System.Drawing.Size(50, 13);
@@ -576,8 +583,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblResponse
             // 
+            this.lblResponse.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblResponse.AutoSize = true;
-            this.lblResponse.Location = new System.Drawing.Point(18, 685);
+            this.lblResponse.Location = new System.Drawing.Point(4, 6);
             this.lblResponse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblResponse.Name = "lblResponse";
             this.lblResponse.Size = new System.Drawing.Size(58, 13);
@@ -587,9 +595,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // cbRequestFileList
             // 
-            this.cbRequestFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbRequestFileList.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cbRequestFileList.AutoSize = true;
-            this.cbRequestFileList.Location = new System.Drawing.Point(964, 457);
+            this.cbRequestFileList.Location = new System.Drawing.Point(879, 4);
             this.cbRequestFileList.Margin = new System.Windows.Forms.Padding(4);
             this.cbRequestFileList.Name = "cbRequestFileList";
             this.cbRequestFileList.Size = new System.Drawing.Size(104, 17);
@@ -599,9 +607,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // cbResponseFileList
             // 
-            this.cbResponseFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbResponseFileList.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cbResponseFileList.AutoSize = true;
-            this.cbResponseFileList.Location = new System.Drawing.Point(956, 686);
+            this.cbResponseFileList.Location = new System.Drawing.Point(879, 4);
             this.cbResponseFileList.Margin = new System.Windows.Forms.Padding(4);
             this.cbResponseFileList.Name = "cbResponseFileList";
             this.cbResponseFileList.Size = new System.Drawing.Size(104, 17);
@@ -613,7 +621,7 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.btnPostProcess.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnPostProcess.Enabled = false;
-            this.btnPostProcess.Location = new System.Drawing.Point(612, 614);
+            this.btnPostProcess.Location = new System.Drawing.Point(563, 6);
             this.btnPostProcess.Margin = new System.Windows.Forms.Padding(4);
             this.btnPostProcess.Name = "btnPostProcess";
             this.btnPostProcess.Size = new System.Drawing.Size(110, 24);
@@ -624,18 +632,19 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // txtPurposeOfUse
             // 
+            this.txtPurposeOfUse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPurposeOfUse.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.PurposeOfUse", true));
-            this.txtPurposeOfUse.Location = new System.Drawing.Point(143, 131);
-            this.txtPurposeOfUse.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPurposeOfUse.Location = new System.Drawing.Point(123, 99);
             this.txtPurposeOfUse.Name = "txtPurposeOfUse";
             this.txtPurposeOfUse.ReadOnly = true;
-            this.txtPurposeOfUse.Size = new System.Drawing.Size(178, 20);
+            this.txtPurposeOfUse.Size = new System.Drawing.Size(196, 20);
             this.txtPurposeOfUse.TabIndex = 12;
             // 
             // lblPurposeOfUse
             // 
+            this.lblPurposeOfUse.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblPurposeOfUse.AutoSize = true;
-            this.lblPurposeOfUse.Location = new System.Drawing.Point(58, 134);
+            this.lblPurposeOfUse.Location = new System.Drawing.Point(33, 101);
             this.lblPurposeOfUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPurposeOfUse.Name = "lblPurposeOfUse";
             this.lblPurposeOfUse.Size = new System.Drawing.Size(83, 13);
@@ -644,8 +653,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblPhiDisclosureLevel
             // 
+            this.lblPhiDisclosureLevel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblPhiDisclosureLevel.AutoSize = true;
-            this.lblPhiDisclosureLevel.Location = new System.Drawing.Point(432, 134);
+            this.lblPhiDisclosureLevel.Location = new System.Drawing.Point(349, 101);
             this.lblPhiDisclosureLevel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPhiDisclosureLevel.Name = "lblPhiDisclosureLevel";
             this.lblPhiDisclosureLevel.Size = new System.Drawing.Size(69, 13);
@@ -654,8 +664,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblTaskOrder
             // 
+            this.lblTaskOrder.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblTaskOrder.AutoSize = true;
-            this.lblTaskOrder.Location = new System.Drawing.Point(41, 194);
+            this.lblTaskOrder.Location = new System.Drawing.Point(16, 149);
             this.lblTaskOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTaskOrder.Name = "lblTaskOrder";
             this.lblTaskOrder.Size = new System.Drawing.Size(100, 13);
@@ -664,8 +675,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblActivity
             // 
+            this.lblActivity.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblActivity.AutoSize = true;
-            this.lblActivity.Location = new System.Drawing.Point(420, 194);
+            this.lblActivity.Location = new System.Drawing.Point(337, 149);
             this.lblActivity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblActivity.Name = "lblActivity";
             this.lblActivity.Size = new System.Drawing.Size(81, 13);
@@ -674,8 +686,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblActivityProject
             // 
+            this.lblActivityProject.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblActivityProject.AutoSize = true;
-            this.lblActivityProject.Location = new System.Drawing.Point(744, 194);
+            this.lblActivityProject.Location = new System.Drawing.Point(663, 149);
             this.lblActivityProject.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblActivityProject.Name = "lblActivityProject";
             this.lblActivityProject.Size = new System.Drawing.Size(117, 13);
@@ -684,47 +697,49 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // txtPhiDisclosureLevel
             // 
+            this.txtPhiDisclosureLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPhiDisclosureLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.PhiDisclosureLevel", true));
-            this.txtPhiDisclosureLevel.Location = new System.Drawing.Point(503, 131);
-            this.txtPhiDisclosureLevel.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPhiDisclosureLevel.Location = new System.Drawing.Point(425, 99);
             this.txtPhiDisclosureLevel.Name = "txtPhiDisclosureLevel";
             this.txtPhiDisclosureLevel.ReadOnly = true;
-            this.txtPhiDisclosureLevel.Size = new System.Drawing.Size(178, 20);
+            this.txtPhiDisclosureLevel.Size = new System.Drawing.Size(196, 20);
             this.txtPhiDisclosureLevel.TabIndex = 13;
             // 
             // txtTaskOrder
             // 
+            this.txtTaskOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTaskOrder.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.TaskOrder", true));
-            this.txtTaskOrder.Location = new System.Drawing.Point(143, 191);
-            this.txtTaskOrder.Margin = new System.Windows.Forms.Padding(4);
+            this.txtTaskOrder.Location = new System.Drawing.Point(123, 147);
             this.txtTaskOrder.Name = "txtTaskOrder";
             this.txtTaskOrder.ReadOnly = true;
-            this.txtTaskOrder.Size = new System.Drawing.Size(178, 20);
+            this.txtTaskOrder.Size = new System.Drawing.Size(196, 20);
             this.txtTaskOrder.TabIndex = 15;
             // 
             // txtActivityProject
             // 
+            this.txtActivityProject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtActivityProject.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.ActivityProject", true));
-            this.txtActivityProject.Location = new System.Drawing.Point(863, 191);
-            this.txtActivityProject.Margin = new System.Windows.Forms.Padding(4);
+            this.txtActivityProject.Location = new System.Drawing.Point(787, 147);
             this.txtActivityProject.Name = "txtActivityProject";
             this.txtActivityProject.ReadOnly = true;
-            this.txtActivityProject.Size = new System.Drawing.Size(178, 20);
+            this.txtActivityProject.Size = new System.Drawing.Size(197, 20);
             this.txtActivityProject.TabIndex = 17;
             // 
             // txtSourceActivity
             // 
+            this.txtSourceActivity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceActivity.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.SourceActivity", true));
-            this.txtSourceActivity.Location = new System.Drawing.Point(503, 161);
+            this.txtSourceActivity.Location = new System.Drawing.Point(425, 123);
             this.txtSourceActivity.Name = "txtSourceActivity";
             this.txtSourceActivity.ReadOnly = true;
-            this.txtSourceActivity.Size = new System.Drawing.Size(178, 20);
+            this.txtSourceActivity.Size = new System.Drawing.Size(196, 20);
             this.txtSourceActivity.TabIndex = 16;
             // 
             // lblRequesterCenter
             // 
+            this.lblRequesterCenter.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblRequesterCenter.AutoSize = true;
-            this.lblRequesterCenter.Location = new System.Drawing.Point(48, 224);
+            this.lblRequesterCenter.Location = new System.Drawing.Point(23, 173);
             this.lblRequesterCenter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRequesterCenter.Name = "lblRequesterCenter";
             this.lblRequesterCenter.Size = new System.Drawing.Size(93, 13);
@@ -733,28 +748,29 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // txtRequestorCenter
             // 
+            this.txtRequestorCenter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRequestorCenter.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.RequestorCenter", true));
-            this.txtRequestorCenter.Location = new System.Drawing.Point(143, 221);
-            this.txtRequestorCenter.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRequestorCenter.Location = new System.Drawing.Point(123, 171);
             this.txtRequestorCenter.Name = "txtRequestorCenter";
             this.txtRequestorCenter.ReadOnly = true;
-            this.txtRequestorCenter.Size = new System.Drawing.Size(178, 20);
+            this.txtRequestorCenter.Size = new System.Drawing.Size(196, 20);
             this.txtRequestorCenter.TabIndex = 18;
             // 
             // txtWorkplanType
             // 
+            this.txtWorkplanType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtWorkplanType.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.WorkplanType", true));
-            this.txtWorkplanType.Location = new System.Drawing.Point(503, 221);
-            this.txtWorkplanType.Margin = new System.Windows.Forms.Padding(4);
+            this.txtWorkplanType.Location = new System.Drawing.Point(425, 171);
             this.txtWorkplanType.Name = "txtWorkplanType";
             this.txtWorkplanType.ReadOnly = true;
-            this.txtWorkplanType.Size = new System.Drawing.Size(178, 20);
+            this.txtWorkplanType.Size = new System.Drawing.Size(196, 20);
             this.txtWorkplanType.TabIndex = 19;
             // 
             // lblWorkplanType
             // 
+            this.lblWorkplanType.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblWorkplanType.AutoSize = true;
-            this.lblWorkplanType.Location = new System.Drawing.Point(418, 224);
+            this.lblWorkplanType.Location = new System.Drawing.Point(335, 173);
             this.lblWorkplanType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWorkplanType.Name = "lblWorkplanType";
             this.lblWorkplanType.Size = new System.Drawing.Size(83, 13);
@@ -763,22 +779,21 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // txtAdditionalInstructions
             // 
-            this.txtAdditionalInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel4.SetColumnSpan(this.txtAdditionalInstructions, 2);
             this.txtAdditionalInstructions.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.AdditionalInstructions", true));
-            this.txtAdditionalInstructions.Location = new System.Drawing.Point(12, 299);
-            this.txtAdditionalInstructions.Margin = new System.Windows.Forms.Padding(2);
+            this.txtAdditionalInstructions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAdditionalInstructions.Location = new System.Drawing.Point(3, 23);
             this.txtAdditionalInstructions.Multiline = true;
             this.txtAdditionalInstructions.Name = "txtAdditionalInstructions";
             this.txtAdditionalInstructions.ReadOnly = true;
             this.txtAdditionalInstructions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtAdditionalInstructions.Size = new System.Drawing.Size(1058, 60);
+            this.txtAdditionalInstructions.Size = new System.Drawing.Size(981, 30);
             this.txtAdditionalInstructions.TabIndex = 22;
             // 
             // btnViewSQL
             // 
             this.btnViewSQL.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnViewSQL.Location = new System.Drawing.Point(341, 614);
+            this.btnViewSQL.Location = new System.Drawing.Point(293, 6);
             this.btnViewSQL.Margin = new System.Windows.Forms.Padding(2);
             this.btnViewSQL.Name = "btnViewSQL";
             this.btnViewSQL.Size = new System.Drawing.Size(80, 24);
@@ -789,59 +804,62 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // queryMSRequestIDTextBox
             // 
+            this.queryMSRequestIDTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.queryMSRequestIDTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.queryMSRequestIDTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.MSRequestID", true));
-            this.queryMSRequestIDTextBox.Location = new System.Drawing.Point(863, 221);
-            this.queryMSRequestIDTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.queryMSRequestIDTextBox.Location = new System.Drawing.Point(787, 171);
             this.queryMSRequestIDTextBox.Name = "queryMSRequestIDTextBox";
             this.queryMSRequestIDTextBox.ReadOnly = true;
-            this.queryMSRequestIDTextBox.Size = new System.Drawing.Size(178, 20);
+            this.queryMSRequestIDTextBox.Size = new System.Drawing.Size(197, 20);
             this.queryMSRequestIDTextBox.TabIndex = 14;
             // 
             // queryMSRequestIDLabel
             // 
+            this.queryMSRequestIDLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.queryMSRequestIDLabel.AutoSize = true;
-            this.queryMSRequestIDLabel.Location = new System.Drawing.Point(797, 224);
+            this.queryMSRequestIDLabel.Location = new System.Drawing.Point(716, 173);
             this.queryMSRequestIDLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.queryMSRequestIDLabel.Name = "queryMSRequestIDLabel";
             this.queryMSRequestIDLabel.Size = new System.Drawing.Size(64, 13);
             this.queryMSRequestIDLabel.TabIndex = 103;
             this.queryMSRequestIDLabel.Text = "Request ID:";
+            this.queryMSRequestIDLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtSourceTaskOrder
             // 
+            this.txtSourceTaskOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceTaskOrder.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.SourceTaskOrder", true));
-            this.txtSourceTaskOrder.Location = new System.Drawing.Point(143, 161);
-            this.txtSourceTaskOrder.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSourceTaskOrder.Location = new System.Drawing.Point(123, 123);
             this.txtSourceTaskOrder.Name = "txtSourceTaskOrder";
             this.txtSourceTaskOrder.ReadOnly = true;
-            this.txtSourceTaskOrder.Size = new System.Drawing.Size(178, 20);
+            this.txtSourceTaskOrder.Size = new System.Drawing.Size(196, 20);
             this.txtSourceTaskOrder.TabIndex = 104;
             // 
             // txtActivity
             // 
+            this.txtActivity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtActivity.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.Activity", true));
-            this.txtActivity.Location = new System.Drawing.Point(503, 191);
-            this.txtActivity.Margin = new System.Windows.Forms.Padding(4);
+            this.txtActivity.Location = new System.Drawing.Point(425, 147);
             this.txtActivity.Name = "txtActivity";
             this.txtActivity.ReadOnly = true;
-            this.txtActivity.Size = new System.Drawing.Size(178, 20);
+            this.txtActivity.Size = new System.Drawing.Size(196, 20);
             this.txtActivity.TabIndex = 105;
             // 
             // txtSourceActivityProject
             // 
+            this.txtSourceActivityProject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceActivityProject.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.SourceActivityProject", true));
-            this.txtSourceActivityProject.Location = new System.Drawing.Point(863, 161);
-            this.txtSourceActivityProject.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSourceActivityProject.Location = new System.Drawing.Point(787, 123);
             this.txtSourceActivityProject.Name = "txtSourceActivityProject";
             this.txtSourceActivityProject.ReadOnly = true;
-            this.txtSourceActivityProject.Size = new System.Drawing.Size(178, 20);
+            this.txtSourceActivityProject.Size = new System.Drawing.Size(197, 20);
             this.txtSourceActivityProject.TabIndex = 106;
             // 
             // lblSourceTaskOrder
             // 
+            this.lblSourceTaskOrder.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblSourceTaskOrder.AutoSize = true;
-            this.lblSourceTaskOrder.Location = new System.Drawing.Point(41, 164);
+            this.lblSourceTaskOrder.Location = new System.Drawing.Point(16, 125);
             this.lblSourceTaskOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSourceTaskOrder.Name = "lblSourceTaskOrder";
             this.lblSourceTaskOrder.Size = new System.Drawing.Size(100, 13);
@@ -850,8 +868,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblSourceActivity
             // 
+            this.lblSourceActivity.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblSourceActivity.AutoSize = true;
-            this.lblSourceActivity.Location = new System.Drawing.Point(420, 164);
+            this.lblSourceActivity.Location = new System.Drawing.Point(337, 125);
             this.lblSourceActivity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSourceActivity.Name = "lblSourceActivity";
             this.lblSourceActivity.Size = new System.Drawing.Size(81, 13);
@@ -860,8 +879,9 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // lblSourceActivityProject
             // 
+            this.lblSourceActivityProject.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblSourceActivityProject.AutoSize = true;
-            this.lblSourceActivityProject.Location = new System.Drawing.Point(744, 164);
+            this.lblSourceActivityProject.Location = new System.Drawing.Point(663, 125);
             this.lblSourceActivityProject.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSourceActivityProject.Name = "lblSourceActivityProject";
             this.lblSourceActivityProject.Size = new System.Drawing.Size(117, 13);
@@ -871,47 +891,46 @@ namespace Lpp.Dns.DataMart.Client
             // descriptionBrowser
             // 
             this.descriptionBrowser.AllowNavigation = false;
-            this.descriptionBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.descriptionBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.descriptionBrowser.IsWebBrowserContextMenuEnabled = false;
             this.descriptionBrowser.Location = new System.Drawing.Point(0, 0);
             this.descriptionBrowser.Margin = new System.Windows.Forms.Padding(4);
-            this.descriptionBrowser.MinimumSize = new System.Drawing.Size(25, 25);
             this.descriptionBrowser.Name = "descriptionBrowser";
-            this.descriptionBrowser.Size = new System.Drawing.Size(1053, 61);
+            this.descriptionBrowser.Size = new System.Drawing.Size(977, 86);
             this.descriptionBrowser.TabIndex = 115;
             this.descriptionBrowser.WebBrowserShortcutsEnabled = false;
             // 
             // txtReportAggregationLevel
             // 
+            this.txtReportAggregationLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtReportAggregationLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.ReportAggregationLevel", true));
-            this.txtReportAggregationLevel.Location = new System.Drawing.Point(863, 131);
-            this.txtReportAggregationLevel.Margin = new System.Windows.Forms.Padding(4);
+            this.txtReportAggregationLevel.Location = new System.Drawing.Point(787, 99);
             this.txtReportAggregationLevel.Name = "txtReportAggregationLevel";
             this.txtReportAggregationLevel.ReadOnly = true;
-            this.txtReportAggregationLevel.Size = new System.Drawing.Size(178, 20);
+            this.txtReportAggregationLevel.Size = new System.Drawing.Size(197, 20);
             this.txtReportAggregationLevel.TabIndex = 111;
             // 
             // lblReportAggregationLevel
             // 
+            this.lblReportAggregationLevel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblReportAggregationLevel.AutoSize = true;
-            this.lblReportAggregationLevel.Location = new System.Drawing.Point(779, 128);
+            this.lblReportAggregationLevel.Location = new System.Drawing.Point(637, 101);
             this.lblReportAggregationLevel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblReportAggregationLevel.Name = "lblReportAggregationLevel";
-            this.lblReportAggregationLevel.Size = new System.Drawing.Size(82, 26);
+            this.lblReportAggregationLevel.Size = new System.Drawing.Size(143, 13);
             this.lblReportAggregationLevel.TabIndex = 112;
-            this.lblReportAggregationLevel.Text = "Level of Report\r\n     Aggregation:";
+            this.lblReportAggregationLevel.Text = "Level of Report Aggregation:";
             // 
             // browserPanel
             // 
-            this.browserPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.browserPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tableLayoutPanel5.SetColumnSpan(this.browserPanel, 2);
             this.browserPanel.Controls.Add(this.descriptionBrowser);
-            this.browserPanel.Location = new System.Drawing.Point(12, 384);
+            this.browserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.browserPanel.Location = new System.Drawing.Point(4, 24);
             this.browserPanel.Margin = new System.Windows.Forms.Padding(4);
             this.browserPanel.Name = "browserPanel";
-            this.browserPanel.Size = new System.Drawing.Size(1056, 63);
+            this.browserPanel.Size = new System.Drawing.Size(979, 88);
             this.browserPanel.TabIndex = 113;
             // 
             // buttonPanel
@@ -920,109 +939,278 @@ namespace Lpp.Dns.DataMart.Client
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonPanel.AutoScroll = true;
             this.buttonPanel.AutoScrollMinSize = new System.Drawing.Size(1200, 0);
-            this.buttonPanel.Location = new System.Drawing.Point(0, 1126);
+            this.buttonPanel.Location = new System.Drawing.Point(0, 1220);
             this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(1036, 67);
+            this.buttonPanel.Size = new System.Drawing.Size(936, 67);
             this.buttonPanel.TabIndex = 116;
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.txtNetwork);
-            this.panel1.Controls.Add(queryActivityPriorityLabel);
-            this.panel1.Controls.Add(this.queryNameTextBox);
-            this.panel1.Controls.Add(this.queryActivityPriorityTextbox);
-            this.panel1.Controls.Add(queryCreatedByUserNameLabel);
-            this.panel1.Controls.Add(this.queryCreatedByUserNameTextBox);
-            this.panel1.Controls.Add(lblNetwork);
-            this.panel1.Controls.Add(queryNameLabel);
-            this.panel1.Controls.Add(this.lblSourceTaskOrder);
-            this.panel1.Controls.Add(this.txtSourceTaskOrder);
-            this.panel1.Controls.Add(this.lblPurposeOfUse);
-            this.panel1.Controls.Add(this.txtPurposeOfUse);
-            this.panel1.Controls.Add(this.txtRequestorCenter);
-            this.panel1.Controls.Add(this.lblRequesterCenter);
-            this.panel1.Controls.Add(this.txtTaskOrder);
-            this.panel1.Controls.Add(this.lblTaskOrder);
-            this.panel1.Controls.Add(label1);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(activityLabel);
-            this.panel1.Controls.Add(this.activityTextbox);
-            this.panel1.Controls.Add(activityDueDateLabel);
-            this.panel1.Controls.Add(this.activityDueDateTextbox);
-            this.panel1.Controls.Add(requestTimeLabel);
-            this.panel1.Controls.Add(this.requestTimeDateTimePicker);
-            this.panel1.Controls.Add(this.txtSourceActivity);
-            this.panel1.Controls.Add(this.txtActivityProject);
-            this.panel1.Controls.Add(this.txtPhiDisclosureLevel);
-            this.panel1.Controls.Add(this.lblPhiDisclosureLevel);
-            this.panel1.Controls.Add(this.lblSourceActivityProject);
-            this.panel1.Controls.Add(this.lblSourceActivity);
-            this.panel1.Controls.Add(this.lblActivityProject);
-            this.panel1.Controls.Add(this.lblActivity);
-            this.panel1.Controls.Add(this.txtSourceActivityProject);
-            this.panel1.Controls.Add(this.txtActivity);
-            this.panel1.Controls.Add(this.lblWorkplanType);
-            this.panel1.Controls.Add(this.txtWorkplanType);
-            this.panel1.Controls.Add(lblDataMart);
-            this.panel1.Controls.Add(this.txtDataMart);
-            this.panel1.Controls.Add(queryIdLabel);
-            this.panel1.Controls.Add(this.queryIdTextBox);
-            this.panel1.Controls.Add(requestorEmailLabel);
-            this.panel1.Controls.Add(this.requestorEmailTextBox);
-            this.panel1.Controls.Add(queryStatusTypeIdLabel);
-            this.panel1.Controls.Add(this.queryStatusTypeIdTextBox);
-            this.panel1.Controls.Add(this.lblReportAggregationLevel);
-            this.panel1.Controls.Add(this.txtReportAggregationLevel);
-            this.panel1.Controls.Add(this.queryMSRequestIDTextBox);
-            this.panel1.Controls.Add(this.queryMSRequestIDLabel);
-            this.panel1.Controls.Add(lblSubmittedTo);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(lblAdditionalInstructions);
-            this.panel1.Controls.Add(this.txtAdditionalInstructions);
-            this.panel1.Controls.Add(queryDescriptionLabel);
-            this.panel1.Controls.Add(this.lblRequest);
-            this.panel1.Controls.Add(this.cbRequestFileList);
-            this.panel1.Controls.Add(this.vpRequest);
-            this.panel1.Controls.Add(this.browserPanel);
-            this.panel1.Controls.Add(this.lblResponse);
-            this.panel1.Controls.Add(this.cbResponseFileList);
-            this.panel1.Controls.Add(this.vpResponse);
+            this.panel1.AutoScrollMinSize = new System.Drawing.Size(0, 900);
+            this.panel1.Controls.Add(this.splitContainer3);
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 36);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1104, 602);
+            this.panel1.Size = new System.Drawing.Size(1004, 707);
             this.panel1.TabIndex = 117;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 218);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.splitContainer1);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer3.Size = new System.Drawing.Size(987, 682);
+            this.splitContainer3.SplitterDistance = 176;
+            this.splitContainer3.TabIndex = 117;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel4);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
+            this.splitContainer1.Size = new System.Drawing.Size(987, 176);
+            this.splitContainer1.SplitterDistance = 56;
+            this.splitContainer1.TabIndex = 115;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(lblAdditionalInstructions, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.txtAdditionalInstructions, 0, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(987, 56);
+            this.tableLayoutPanel4.TabIndex = 62;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(queryDescriptionLabel, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.browserPanel, 0, 1);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(987, 116);
+            this.tableLayoutPanel5.TabIndex = 114;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel2);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel3);
+            this.splitContainer2.Size = new System.Drawing.Size(987, 502);
+            this.splitContainer2.SplitterDistance = 238;
+            this.splitContainer2.TabIndex = 116;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.lblRequest, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.cbRequestFileList, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.vpRequest, 0, 1);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(987, 238);
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
             // vpRequest
             // 
-            this.vpRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.vpRequest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tableLayoutPanel2.SetColumnSpan(this.vpRequest, 2);
+            this.vpRequest.Dock = System.Windows.Forms.DockStyle.Fill;
             this.vpRequest.LastView = null;
-            this.vpRequest.Location = new System.Drawing.Point(11, 476);
+            this.vpRequest.Location = new System.Drawing.Point(4, 29);
             this.vpRequest.Margin = new System.Windows.Forms.Padding(4);
             this.vpRequest.Name = "vpRequest";
             this.vpRequest.ShowView = Lpp.Dns.DataMart.Client.Controls.ViewPanel.DisplayType.PLAIN;
-            this.vpRequest.Size = new System.Drawing.Size(1056, 198);
+            this.vpRequest.Size = new System.Drawing.Size(979, 205);
             this.vpRequest.TabIndex = 23;
             this.vpRequest.ViewText = "";
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.lblResponse, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.cbResponseFileList, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.vpResponse, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(987, 260);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
             // vpResponse
             // 
-            this.vpResponse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.vpResponse.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.vpResponse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tableLayoutPanel3.SetColumnSpan(this.vpResponse, 2);
             this.vpResponse.LastView = null;
-            this.vpResponse.Location = new System.Drawing.Point(11, 705);
+            this.vpResponse.Location = new System.Drawing.Point(4, 29);
             this.vpResponse.Margin = new System.Windows.Forms.Padding(4);
             this.vpResponse.Name = "vpResponse";
             this.vpResponse.ShowView = Lpp.Dns.DataMart.Client.Controls.ViewPanel.DisplayType.PLAIN;
-            this.vpResponse.Size = new System.Drawing.Size(1050, 241);
+            this.vpResponse.Size = new System.Drawing.Size(979, 227);
             this.vpResponse.TabIndex = 25;
             this.vpResponse.ViewText = "";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 6;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.Controls.Add(this.txtRequestTimeLocal, 3, 3);
+            this.tableLayoutPanel1.Controls.Add(lblNetwork, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(lblSubmittedTo, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.txtRequestorCenter, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.txtSourceTaskOrder, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.lblRequesterCenter, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.lblSourceTaskOrder, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.txtTaskOrder, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.queryCreatedByUserNameTextBox, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblTaskOrder, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(queryCreatedByUserNameLabel, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.txtPurposeOfUse, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.lblPurposeOfUse, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.queryActivityPriorityTextbox, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(queryActivityPriorityLabel, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.txtNetwork, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.queryNameTextBox, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(activityLabel, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.activityTextbox, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(lblDataMart, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.txtDataMart, 5, 0);
+            this.tableLayoutPanel1.Controls.Add(queryNameLabel, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(label1, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtWorkplanType, 3, 7);
+            this.tableLayoutPanel1.Controls.Add(this.lblWorkplanType, 2, 7);
+            this.tableLayoutPanel1.Controls.Add(this.txtActivity, 3, 6);
+            this.tableLayoutPanel1.Controls.Add(this.lblActivity, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this.txtSourceActivity, 3, 5);
+            this.tableLayoutPanel1.Controls.Add(this.lblSourceActivity, 2, 5);
+            this.tableLayoutPanel1.Controls.Add(this.txtPhiDisclosureLevel, 3, 4);
+            this.tableLayoutPanel1.Controls.Add(requestTimeLabel, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblPhiDisclosureLevel, 2, 4);
+            this.tableLayoutPanel1.Controls.Add(this.activityDueDateTextbox, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(activityDueDateLabel, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.textBox2, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtActivityProject, 5, 6);
+            this.tableLayoutPanel1.Controls.Add(queryIdLabel, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.queryIdTextBox, 5, 1);
+            this.tableLayoutPanel1.Controls.Add(queryStatusTypeIdLabel, 4, 2);
+            this.tableLayoutPanel1.Controls.Add(this.lblSourceActivityProject, 4, 5);
+            this.tableLayoutPanel1.Controls.Add(this.lblActivityProject, 4, 6);
+            this.tableLayoutPanel1.Controls.Add(this.queryStatusTypeIdTextBox, 5, 2);
+            this.tableLayoutPanel1.Controls.Add(this.queryMSRequestIDTextBox, 5, 7);
+            this.tableLayoutPanel1.Controls.Add(requestorEmailLabel, 4, 3);
+            this.tableLayoutPanel1.Controls.Add(this.queryMSRequestIDLabel, 4, 7);
+            this.tableLayoutPanel1.Controls.Add(this.txtSourceActivityProject, 5, 5);
+            this.tableLayoutPanel1.Controls.Add(this.requestorEmailTextBox, 5, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblReportAggregationLevel, 4, 4);
+            this.tableLayoutPanel1.Controls.Add(this.txtReportAggregationLevel, 5, 4);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 9;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(987, 218);
+            this.tableLayoutPanel1.TabIndex = 114;
+            // 
+            // txtRequestTimeLocal
+            // 
+            this.txtRequestTimeLocal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRequestTimeLocal.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.queryDataMartBindingSource, "Source.CreatedOnLocal", true, System.Windows.Forms.DataSourceUpdateMode.Never, null, "g"));
+            this.txtRequestTimeLocal.Location = new System.Drawing.Point(425, 75);
+            this.txtRequestTimeLocal.Name = "txtRequestTimeLocal";
+            this.txtRequestTimeLocal.ReadOnly = true;
+            this.txtRequestTimeLocal.Size = new System.Drawing.Size(196, 20);
+            this.txtRequestTimeLocal.TabIndex = 115;
+            // 
+            // pnlFooter
+            // 
+            this.pnlFooter.Controls.Add(this.btnAddFile);
+            this.pnlFooter.Controls.Add(btn_Close);
+            this.pnlFooter.Controls.Add(this.btnExportResults);
+            this.pnlFooter.Controls.Add(this.btnRun);
+            this.pnlFooter.Controls.Add(this.btnDeleteFile);
+            this.pnlFooter.Controls.Add(this.btnUploadResults);
+            this.pnlFooter.Controls.Add(this.btnHold);
+            this.pnlFooter.Controls.Add(this.btnViewSQL);
+            this.pnlFooter.Controls.Add(this.btnPostProcess);
+            this.pnlFooter.Controls.Add(this.btnRejectQuery);
+            this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlFooter.Location = new System.Drawing.Point(0, 707);
+            this.pnlFooter.Name = "pnlFooter";
+            this.pnlFooter.Size = new System.Drawing.Size(1004, 34);
+            this.pnlFooter.TabIndex = 118;
             // 
             // RequestDetailForm
             // 
@@ -1030,32 +1218,44 @@ namespace Lpp.Dns.DataMart.Client
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CancelButton = btn_Close;
-            this.ClientSize = new System.Drawing.Size(1104, 647);
-            this.Controls.Add(btn_Close);
-            this.Controls.Add(this.btnRun);
-            this.Controls.Add(this.btnUploadResults);
-            this.Controls.Add(this.btnViewSQL);
-            this.Controls.Add(this.btnRejectQuery);
-            this.Controls.Add(this.btnPostProcess);
-            this.Controls.Add(this.btnHold);
-            this.Controls.Add(this.btnDeleteFile);
-            this.Controls.Add(this.btnExportResults);
-            this.Controls.Add(this.btnAddFile);
+            this.ClientSize = new System.Drawing.Size(1004, 741);
             this.Controls.Add(this.buttonPanel);
             this.Controls.Add(lblSubmittedByNote);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlFooter);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1020, 398);
             this.Name = "RequestDetailForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DataMart Client - Request Detail";
             this.Load += new System.EventHandler(this.RequestDetailForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.queryDataMartBindingSource)).EndInit();
             this.browserPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.pnlFooter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1065,7 +1265,6 @@ namespace Lpp.Dns.DataMart.Client
 
         private System.Windows.Forms.BindingSource queryDataMartBindingSource;
         private System.Windows.Forms.TextBox queryIdTextBox;
-        private System.Windows.Forms.DateTimePicker requestTimeDateTimePicker;
         private System.Windows.Forms.TextBox queryCreatedByUserNameTextBox;
         private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.Button btnUploadResults;
@@ -1123,5 +1322,15 @@ namespace Lpp.Dns.DataMart.Client
         private System.Windows.Forms.Panel browserPanel;
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox txtRequestTimeLocal;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.Panel pnlFooter;
     }
 }

@@ -68,6 +68,9 @@ module Workflow.Default.CreateRequest {
                 if (!Requests.Details.rovm.Validate())
                     return;
 
+                if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
+                    return;
+
                 var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
                 if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
                     Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
@@ -82,6 +85,7 @@ module Workflow.Default.CreateRequest {
 
                         Plugins.Requests.QueryBuilder.MDQ.vm.Request.Header.Name(Requests.Details.rovm.Request.Name());
                         Plugins.Requests.QueryBuilder.MDQ.vm.Request.Header.ViewUrl(location.protocol + '//' + location.host + '/querycomposer/summaryview?ID=' + Requests.Details.rovm.Request.ID());
+                        Plugins.Requests.QueryBuilder.MDQ.vm.Request.Header.SubmittedOn(new Date());
 
                         Requests.Details.rovm.Request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
                         Requests.Details.rovm.Request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions());

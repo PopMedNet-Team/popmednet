@@ -31,6 +31,10 @@ namespace Lpp.Dns.Data.Audit
 
         public DTO.Enums.RoutingStatus? NewStatus { get; set; }
 
+        public Guid? ResponseID { get; set; }
+
+        public virtual Response Response { get; set; }
+
     }
 
     internal class RoutingStatusChangeLogDTOMapping : EntityMappingConfiguration<RoutingStatusChangeLog, NotificationDTO>

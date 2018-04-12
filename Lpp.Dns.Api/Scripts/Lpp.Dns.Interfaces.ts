@@ -81,6 +81,16 @@ module Dns.Enums
 	 	 {value:ProcedureCode.Unknown , text: 'Unknown'},
 	 	 {value:ProcedureCode.Other , text: 'Other'},
 	 ]
+	 export enum RequestScheduleTypes{
+	 	Activate = 0,
+	 	Deactivate = 1,
+	 	Recurring = 2,
+	 }
+	 export var RequestScheduleTypesTranslation: Dns.Structures.KeyValuePair[] = [
+	 	 {value:RequestScheduleTypes.Activate , text: 'Activate'},
+	 	 {value:RequestScheduleTypes.Deactivate , text: 'Deactivate'},
+	 	 {value:RequestScheduleTypes.Recurring , text: 'Recurring'},
+	 ]
 	 export enum RoutingType{
 	 	AnalysisCenter = 0,
 	 	DataPartner = 1,
@@ -1282,6 +1292,22 @@ module Dns.Interfaces
 	 export var KendoModelApproveRejectResponseDTO: any = {
 	 	 fields: {
 	 	 	'ResponseID': { type:'any', nullable: false},
+	 	 }
+	 }
+	 export interface IEnhancedEventLogItemDTO{
+	 	 Step: number;
+	 	 Timestamp: Date;
+	 	 Description: string;
+	 	 Source: string;
+	 	 EventType: string;
+	 }
+	 export var KendoModelEnhancedEventLogItemDTO: any = {
+	 	 fields: {
+	 	 	'Step': { type:'number', nullable: false},
+	 	 	'Timestamp': { type:'date', nullable: false},
+	 	 	'Description': { type:'string', nullable: false},
+	 	 	'Source': { type:'string', nullable: false},
+	 	 	'EventType': { type:'string', nullable: false},
 	 	 }
 	 }
 	 export interface IHomepageRouteDetailDTO{
@@ -3866,6 +3892,18 @@ module Dns.Interfaces
 	 	 	'WorkflowActivityID': { type:'any', nullable: true},
 	 	 }
 	 }
+	 export interface ILegacySchedulerRequestDTO{
+	 	 RequestID?: any;
+	 	 AdapterPackageVersion: string;
+	 	 ScheduleJSON: string;
+	 }
+	 export var KendoModelLegacySchedulerRequestDTO: any = {
+	 	 fields: {
+	 	 	'RequestID': { type:'any', nullable: true},
+	 	 	'AdapterPackageVersion': { type:'string', nullable: false},
+	 	 	'ScheduleJSON': { type:'string', nullable: false},
+	 	 }
+	 }
 	 export interface IDistributedRegressionAnalysisCenterManifestItem{
 	 	 DocumentID: any;
 	 	 RevisionSetID: any;
@@ -3990,6 +4028,7 @@ module Dns.Interfaces
 	 	 Priority?: Dns.Enums.Priorities;
 	 	 DueDate?: Date;
 	 	 QueryType?: Dns.Enums.QueryComposerQueryTypes;
+	 	 SubmittedOn?: Date;
 	 }
 	 export var KendoModelQueryComposerHeaderDTO: any = {
 	 	 fields: {
@@ -4000,6 +4039,7 @@ module Dns.Interfaces
 	 	 	'Priority': { type:'dns.enums.priorities', nullable: true},
 	 	 	'DueDate': { type:'date', nullable: true},
 	 	 	'QueryType': { type:'dns.enums.querycomposerquerytypes', nullable: true},
+	 	 	'SubmittedOn': { type:'date', nullable: true},
 	 	 }
 	 }
 	 export interface IQueryComposerOrderByDTO{
@@ -4030,6 +4070,7 @@ module Dns.Interfaces
 	 }
 	 export interface IQueryComposerResponseDTO{
 	 	 ID?: any;
+	 	 DocumentID?: any;
 	 	 ResponseDateTime: Date;
 	 	 RequestID: any;
 	 	 Errors: IQueryComposerResponseErrorDTO[];
@@ -4041,6 +4082,7 @@ module Dns.Interfaces
 	 export var KendoModelQueryComposerResponseDTO: any = {
 	 	 fields: {
 	 	 	'ID': { type:'any', nullable: true},
+	 	 	'DocumentID': { type:'any', nullable: true},
 	 	 	'ResponseDateTime': { type:'date', nullable: false},
 	 	 	'RequestID': { type:'any', nullable: false},
 	 	 	'Errors': { type:'any[]', nullable: false},
@@ -5620,6 +5662,7 @@ module Dns.Interfaces
 	 	 Adapter: string;
 	 	 ProcessorID?: any;
 	 	 DataPartnerIdentifier: string;
+	 	 DataPartnerCode: string;
 	 }
 	 export var KendoModelDataMartDTO: any = {
 	 	 fields: {
@@ -5770,6 +5813,7 @@ module Dns.Interfaces
 	 	 	'Adapter': { type:'string', nullable: false},
 	 	 	'ProcessorID': { type:'any', nullable: true},
 	 	 	'DataPartnerIdentifier': { type:'string', nullable: false},
+	 	 	'DataPartnerCode': { type:'string', nullable: false},
 	 	 	'Name': { type:'string', nullable: false},
 	 	 	'Description': { type:'string', nullable: false},
 	 	 	'Acronym': { type:'string', nullable: false},

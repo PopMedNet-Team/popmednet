@@ -1,12 +1,16 @@
 /// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/knockout/knockout.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Request;
-(function (Request) {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Requests;
+(function (Requests) {
     var Edit;
     (function (Edit) {
         Edit.RawModel = null;
@@ -284,7 +288,7 @@ var Request;
             };
             RequestDetailsViewModel.prototype.onSelectProject = function () {
                 var _this = this;
-                Global.Helpers.ShowDialog("Select Project", "/request/selectproject", ["Close"], 550, 400, { Projects: Request.Edit.RawModel.Projects }).done(function (result) {
+                Global.Helpers.ShowDialog("Select Project", "/request/selectproject", ["Close"], 550, 400, { Projects: Requests.Edit.RawModel.Projects }).done(function (result) {
                     if (!result)
                         return;
                     _this.ProjectID(result.ID);
@@ -316,7 +320,7 @@ var Request;
                     if (d.Organization == null || d.Organization.length == 0)
                         d.Organization = 'N/A';
                     var dm = new Dns.ViewModels.DataMartListViewModel(d);
-                    var dataMart = new Request.Edit.Routings(dm);
+                    var dataMart = new Requests.Edit.Routings(dm);
                     //if the dataMart is a selected datamart, set the saved due date and priority
                     self.SelectedRequestDataMarts().forEach(function (sdm) {
                         if (sdm.DataMartID == d.ID) {
@@ -413,6 +417,6 @@ var Request;
             });
         }
         Edit.init = init;
-    })(Edit = Request.Edit || (Request.Edit = {}));
-})(Request || (Request = {}));
+    })(Edit = Requests.Edit || (Requests.Edit = {}));
+})(Requests || (Requests = {}));
 //# sourceMappingURL=Edit.js.map

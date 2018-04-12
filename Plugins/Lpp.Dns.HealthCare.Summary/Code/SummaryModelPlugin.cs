@@ -945,18 +945,11 @@ namespace Lpp.Dns.HealthCare.Summary
             switch (requestTypeId)
             {
                 case SummaryRequestType.EligibilityAndEnrollment:
-                    // Enrollment Tables- Drug Coverage should come right before Medical Coverage instead of after
-                    DataColumn MedCol = table.Columns.Contains("MedCov") ? table.Columns["MedCov"] : null;
-                    DataColumn DrugCol = table.Columns.Contains("DrugCov") ? table.Columns["DrugCov"] : null;
-                    if (MedCol != null && DrugCol != null) DrugCol.SetOrdinal(MedCol.Ordinal);
                     break;
 
                 case SummaryRequestType.DrugClass:
                 case SummaryRequestType.GenericName:
-                    //Members should be right before Days Supplied, instead of after.
-                    DataColumn MembersCol = table.Columns.Contains("Members") ? table.Columns["Members"] : null;
-                    DataColumn DaysSuppliedCol = table.Columns.Contains("DaysSupply") ? table.Columns["DaysSupply"] : null;
-                    if (MembersCol != null && DaysSuppliedCol != null ) MembersCol.SetOrdinal(DaysSuppliedCol.Ordinal);
+                case SummaryRequestType.MFU_DrugClass:
                     break;
 
                 case SummaryRequestType.ICD9Diagnosis:
@@ -965,13 +958,13 @@ namespace Lpp.Dns.HealthCare.Summary
                 case SummaryRequestType.HCPCSProcedures:
                 case SummaryRequestType.ICD9Procedures:
                 case SummaryRequestType.ICD9Procedures_4_digit:
-                    /*
-                        - Prevalent All DX (ICD9 3,4, 5 digit) Tables- Events should be right before Members, instead of after.
-                        - Prevalent All PX Tables, (ICD9 3 and 4 digit, and HCPCS)- Events should be right before Members, instead of after.
-                     */
-                    DataColumn MemberCol = table.Columns.Contains("Members") ? table.Columns["Members"] : null;
-                    DataColumn EventsCol = table.Columns.Contains("Events") ? table.Columns["Events"] : null;
-                    if (MemberCol != null && EventsCol != null ) EventsCol.SetOrdinal(MemberCol.Ordinal);
+                    int num = 2;
+                    if (removeDataMartColumn) num = 0;
+                    if (table.Columns.Contains("Period")) table.Columns["Period"].SetOrdinal(num);
+                    if (table.Columns.Contains("Sex")) table.Columns["Sex"].SetOrdinal(num + 1);
+                    if (table.Columns.Contains("AgeGroup")) table.Columns["AgeGroup"].SetOrdinal(num + 2);
+                    if (table.Columns.Contains("Members")) table.Columns["Members"].SetOrdinal(num + 6);
+                    if (table.Columns.Contains("Events")) table.Columns["Events"].SetOrdinal(num + 7);
                     break;
                 
                 case SummaryRequestType.MFU_GenericName:
@@ -983,13 +976,13 @@ namespace Lpp.Dns.HealthCare.Summary
                     name = requestTypeId == SummaryRequestType.GenericName ||
                            requestTypeId == SummaryRequestType.MFU_GenericName ? "GenericName" : "DrugClass";
 
-                    if (table.Columns.Contains("AgeGroup")) table.Columns["AgeGroup"].SetOrdinal(startNum);
+                    if (table.Columns.Contains("Period")) table.Columns["Period"].SetOrdinal(startNum); 
                     if (table.Columns.Contains("Sex")) table.Columns["Sex"].SetOrdinal(startNum + 1);
-                    if (table.Columns.Contains("Period")) table.Columns["Period"].SetOrdinal(startNum + 2);
+                    if (table.Columns.Contains("AgeGroup")) table.Columns["AgeGroup"].SetOrdinal(startNum + 2);
                     if (table.Columns.Contains(name)) table.Columns[name].SetOrdinal(startNum + 3);
-                    if (table.Columns.Contains("Members")) table.Columns["Members"].SetOrdinal(startNum + 4);
-                    if (table.Columns.Contains("Dispensings")) table.Columns["Dispensings"].SetOrdinal(startNum + 5);
-                    if (table.Columns.Contains("DaysSupply")) table.Columns["DaysSupply"].SetOrdinal(startNum + 6);
+                    if (table.Columns.Contains("Dispensings")) table.Columns["Dispensings"].SetOrdinal(startNum + 4);
+                    if (table.Columns.Contains("DaysSupply")) table.Columns["DaysSupply"].SetOrdinal(startNum + 5);
+                    if (table.Columns.Contains("Members")) table.Columns["Members"].SetOrdinal(startNum + 6);
                     if (table.Columns.Contains("Total Enrollment in Strata(Members)")) table.Columns["Total Enrollment in Strata(Members)"].SetOrdinal(startNum + 7);
                     if (table.Columns.Contains("Days Covered")) table.Columns["Days Covered"].SetOrdinal(startNum + 8);
 
@@ -1003,10 +996,10 @@ namespace Lpp.Dns.HealthCare.Summary
                     int start = 2;
                     if (removeDataMartColumn) start = 0;
 
-                    if (table.Columns.Contains("AgeGroup")) table.Columns["AgeGroup"].SetOrdinal(start);
+                    if (table.Columns.Contains("Period")) table.Columns["Period"].SetOrdinal(start);
                     if (table.Columns.Contains("Sex")) table.Columns["Sex"].SetOrdinal(start + 1);
-                    if (table.Columns.Contains("Setting")) table.Columns["Setting"].SetOrdinal(start + 2);
-                    if (table.Columns.Contains("Period")) table.Columns["Period"].SetOrdinal(start + 3);
+                    if (table.Columns.Contains("AgeGroup")) table.Columns["AgeGroup"].SetOrdinal(start +2);
+                    if (table.Columns.Contains("Setting")) table.Columns["Setting"].SetOrdinal(start + 3);
                     if (table.Columns.Contains("DXCode")) table.Columns["DXCode"].SetOrdinal(start + 4);
                     if (table.Columns.Contains("DXName")) table.Columns["DXName"].SetOrdinal(start + 5);
                     if (table.Columns.Contains("Members")) table.Columns["Members"].SetOrdinal(start + 6);

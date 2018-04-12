@@ -104,12 +104,22 @@
                 <div class="row">
                     <div class="col-sm-4 form-group">
                         <label for="txStartPeriod">Start Period<em>*</em></label>
-                        <input type="text" id="txStartPeriod" name="txStartPeriod" class="form-control" pattern=".{4,30}" maxlength="4" validationmessage="Field is required" data-bind="event: { keypress: Keypress }, kendoAutoComplete: { data: DataAvailableYears, dataTextField: 'text', dataValueField: 'value', value: StartPeriod, minLength: 4}, attr: { required: NotMetadataRequest }" />
+                        <input type="number"
+                               id="txStartPeriod"
+                               name="txStartPeriod"
+                               maxlength="4"
+                               validationmessage="Field is required"
+                               data-bind="kendoNumericTextBox: {value: StartPeriod, min: 1800, max: 9999, decimals: 0, format: '0000'}, attr: { required: NotMetadataRequest }"  />
                         <span class="k-invalid-msg" data-for="txStartPeriod"></span>
                     </div>
                     <div class="col-sm-4 form-group">
                         <label for="txEndPeriod">End Period<em>*</em></label>
-                        <input type="text" id="txEndPeriod" name="txEndPeriod" class="form-control" pattern=".{4,30}" maxlength="4" validationmessage="Field is required" data-bind="event: { keypress: Keypress }, kendoAutoComplete: { data: DataAvailableYears, dataTextField: 'text', dataValueField: 'value', value: EndPeriod, minLength: 4}, attr: { required: NotMetadataRequest }" />
+                        <input type="number"
+                               id="txEndPeriod"
+                               name="txEndPeriod"
+                               maxlength="4"
+                               validationmessage="Field is required"
+                               data-bind="kendoNumericTextBox: {value: EndPeriod, min: 1800, max: 9999, decimals: 0, format: '0000'}, attr: { required: NotMetadataRequest }" />
                         <span class="k-invalid-msg" data-for="txEndPeriod"></span>
                     </div>  
                 </div>

@@ -237,7 +237,7 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public async Task<IEnumerable<ObserverEventDTO>> LookupObserverEvents()
         {
-            return EventNames.OrderBy(n => n.Name);
+            return await Task.Run(() => EventNames.OrderBy(n => n.Name));
         }
 
         /// <summary>

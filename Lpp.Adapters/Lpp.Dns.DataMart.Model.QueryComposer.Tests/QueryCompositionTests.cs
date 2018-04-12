@@ -21,7 +21,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         static readonly string OracleConnectionString;
         static readonly log4net.ILog Logger;
 
-        const bool RunPostgreSQL = false;
+        const bool RunPostgreSQL = true;
         const bool RunOracle = false;
         const bool RunMySql = false;
 
@@ -34,6 +34,93 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             log4net.Config.XmlConfigurator.Configure();
             Logger = log4net.LogManager.GetLogger(typeof(QueryCompositionTests));
+        }
+
+        [TestMethod]
+        public void PMNDEV_6347()
+        {
+            string filename = "PMNDEV_6347.json";
+            //var response = RunRequest(filename);
+            //Logger.Debug(SerializeJsonToString(response));
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL, "PCORNET_MAIN_TEST_3_1");
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PMNDEV_6287_66()
+        {
+            string filename = "PMNDEV_6287_6_6.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            //Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PMNDEV_6287_532()
+        {
+            string filename = "PMNDEV_6287_5_3_2.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            //Assert.IsTrue(row.ContainsKey("Sex"));
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
+            }
         }
 
         /// <summary>
@@ -129,36 +216,35 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PMNMAINT_579_003()
         {
             string filename = "PMNMAINT-579_003.json";
-            var response = RunRequest(filename);
-            Logger.Debug(SerializeJsonToString(response));
+            //var response = RunRequest(filename);
+            //Logger.Debug(SerializeJsonToString(response));
 
-            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
 
-            var table = response.Results.First();
-            var row = table.First();
+            //var table = response.Results.First();
+            //var row = table.First();
 
-            Assert.IsTrue(row.ContainsKey("Sex"));
+            //Assert.IsTrue(row.ContainsKey("Sex"));
 
             if (RunOracle)
             {
                 var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
-                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
                 var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
-                Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
                 var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
-                Assert.AreEqual(
-                table.Count(), mysqlResponse.Results.First().Count());
+                //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
         }
 
@@ -3032,15 +3118,48 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 			//}
 		}
 
+        [TestMethod]
+        public void Oracle11gFailing_PMNDEV_6412()
+        {
+            string filename = "PMNDEV-6412.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+
+            var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, schema: "PCORNET_MAIN_TEST_3_1");
+            Assert.IsTrue(oracleResponse.Errors == null || response.Errors.Any() == false, "There were errors");
+
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            //if (RunOracle)
+            //{
+            //    var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, schema: "PCORNET_MAIN_TEST_3_1");
+            //    Assert.IsNull(oracleResponse.Errors);
+            //    //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            //}
+
+            //if (RunPostgreSQL)
+            //{
+            //    var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+            //    Assert.IsNull(npgsqlResponse.Errors);
+            //    //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+            //}
+
+        }
+
 		Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath)
         {
             return RunRequest(requestJsonFilepath, MSSqlConnectionString, Settings.SQLProvider.SQLServer);
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider, string schema = null)
         {
             var request = LoadRequest(requestJsonFilepath);
-            using (var adapter = Helper.CreatePCORIModelAdapterAdapter(connectionString, sqlProvider))
+            using (var adapter = Helper.CreatePCORIModelAdapterAdapter(connectionString, sqlProvider, schema))
             {
                 return adapter.Execute(request, false);
             }

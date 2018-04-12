@@ -16,10 +16,9 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>3d345ed0</NuGetPackageImportStamp>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
-    <Reference Include="CodeFirstStoreFunctions, Version=0.1.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.0.0\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="CodeFirstStoreFunctions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.1.0\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -64,9 +63,8 @@
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -147,6 +145,8 @@
     <Compile Include="Demographics\ZCTADemographic.cs" />
     <Compile Include="DistributedRegressionTracking\DistributedRegressionRoutingProcessor.cs" />
     <Compile Include="DistributedRegressionTracking\DistributedRegressionTrackingTableProcessor.cs" />
+    <Compile Include="DistributedRegressionTracking\EnhancedEventLogBuilder.cs" />
+    <Compile Include="DistributedRegressionTracking\TrackingTableItem.cs" />
     <Compile Include="DnsDataContextExtensions.cs" />
     <Compile Include="DnsEntitySecurityConfiguration.cs" />
     <Compile Include="Documents\Document.cs" />
@@ -2891,6 +2891,38 @@
     <Compile Include="Migrations\201708091615040_ModifyAclDataMartRightsTVF.Designer.cs">
       <DependentUpon>201708091615040_ModifyAclDataMartRightsTVF.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710142158533_AddRequestSchedulesTable.cs" />
+    <Compile Include="Migrations\201710142158533_AddRequestSchedulesTable.Designer.cs">
+      <DependentUpon>201710142158533_AddRequestSchedulesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712151526589_AddViewEnhancedEventLogTablePermission.cs" />
+    <Compile Include="Migrations\201712151526589_AddViewEnhancedEventLogTablePermission.Designer.cs">
+      <DependentUpon>201712151526589_AddViewEnhancedEventLogTablePermission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801041556417_AddDataPartnerCodeToDataMart.cs" />
+    <Compile Include="Migrations\201801041556417_AddDataPartnerCodeToDataMart.Designer.cs">
+      <DependentUpon>201801041556417_AddDataPartnerCodeToDataMart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801211028300_UpdateAndRenameRequestResponsePermissions.cs" />
+    <Compile Include="Migrations\201801211028300_UpdateAndRenameRequestResponsePermissions.Designer.cs">
+      <DependentUpon>201801211028300_UpdateAndRenameRequestResponsePermissions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801231540225_AddResponseIDToLogsRoutingStatusChange.cs" />
+    <Compile Include="Migrations\201801231540225_AddResponseIDToLogsRoutingStatusChange.Designer.cs">
+      <DependentUpon>201801231540225_AddResponseIDToLogsRoutingStatusChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802051702179_RenameApproveRejectResponsePermission.cs" />
+    <Compile Include="Migrations\201802051702179_RenameApproveRejectResponsePermission.Designer.cs">
+      <DependentUpon>201802051702179_RenameApproveRejectResponsePermission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802131556223_AddContentModifiedOnToDocuments.cs" />
+    <Compile Include="Migrations\201802131556223_AddContentModifiedOnToDocuments.Designer.cs">
+      <DependentUpon>201802131556223_AddContentModifiedOnToDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.cs" />
+    <Compile Include="Migrations\201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.Designer.cs">
+      <DependentUpon>201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -2916,6 +2948,7 @@
     <Compile Include="Requests\RequestObserverEventSubscription.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Requests\RequestSchedule.cs" />
     <Compile Include="Requests\RequestSearchTerm.cs" />
     <Compile Include="Requests\RequestSharedFolder.cs" />
     <Compile Include="Requests\RequestStatistics.cs" />
@@ -3608,6 +3641,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708091615040_ModifyAclDataMartRightsTVF.resx">
       <DependentUpon>201708091615040_ModifyAclDataMartRightsTVF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710142158533_AddRequestSchedulesTable.resx">
+      <DependentUpon>201710142158533_AddRequestSchedulesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712151526589_AddViewEnhancedEventLogTablePermission.resx">
+      <DependentUpon>201712151526589_AddViewEnhancedEventLogTablePermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801041556417_AddDataPartnerCodeToDataMart.resx">
+      <DependentUpon>201801041556417_AddDataPartnerCodeToDataMart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801211028300_UpdateAndRenameRequestResponsePermissions.resx">
+      <DependentUpon>201801211028300_UpdateAndRenameRequestResponsePermissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801231540225_AddResponseIDToLogsRoutingStatusChange.resx">
+      <DependentUpon>201801231540225_AddResponseIDToLogsRoutingStatusChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802051702179_RenameApproveRejectResponsePermission.resx">
+      <DependentUpon>201802051702179_RenameApproveRejectResponsePermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802131556223_AddContentModifiedOnToDocuments.resx">
+      <DependentUpon>201802131556223_AddContentModifiedOnToDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.resx">
+      <DependentUpon>201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

@@ -94,5 +94,46 @@ namespace Lpp.Dns.Data
             }
         }
 
+        /// <summary>
+        /// Reads the tracking table from the supplied IO stream.
+        /// </summary>
+        /// <param name="stream">The tracking table content.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<DistributedRegressionTracking.TrackingTableItem>> Read(Stream stream)
+        {
+            List<DistributedRegressionTracking.TrackingTableItem> items = new List<DistributedRegressionTracking.TrackingTableItem>(100);
+            using(var csv = new Microsoft.VisualBasic.FileIO.TextFieldParser(stream))
+            {
+                csv.SetDelimiters(",");
+                csv.TrimWhiteSpace = true;
+
+                string[] header = csv.ReadFields();
+                string[] currentLine = Array.Empty<string>();
+
+                while(csv.EndOfData == false)
+                {
+                    currentLine = await Task.Run(() => csv.ReadFields());
+                 
+                    int utc_offset = int.Parse(currentLine[Array.IndexOf(header, "UTC_OFFSET_SEC")]) * -1;
+                    DateTime start = DateTime.SpecifyKind(DateTime.ParseExact(currentLine[Array.IndexOf(header, "START_DTM")], "ddMMMyyyy:HH:mm:ss.ff", null).AddSeconds(utc_offset), DateTimeKind.Utc);
+                    DateTime end = DateTime.SpecifyKind(DateTime.ParseExact(currentLine[Array.IndexOf(header, "END_DTM")], "ddMMMyyyy:HH:mm:ss.ff", null).AddSeconds(utc_offset), DateTimeKind.Utc);
+
+                    items.Add(new DistributedRegressionTracking.TrackingTableItem
+                    {
+                        DataPartnerCode = currentLine[Array.IndexOf(header, "DP_CD")],
+                        Iteration = int.Parse(currentLine[Array.IndexOf(header, "ITER_NB")]),
+                        Step = int.Parse(currentLine[Array.IndexOf(header, "STEP_NB")]),
+                        Start = start,
+                        End = end,
+                        CurrentStepInstruction = int.Parse(currentLine[Array.IndexOf(header, "CURR_STEP_IN")]),
+                        LastIterationIn = int.Parse(currentLine[Array.IndexOf(header, "LAST_ITER_IN")]),
+                        UTC_Offset_Seconds = utc_offset
+                    });
+                }
+            }
+
+            return items;
+        }
+
     }
 }

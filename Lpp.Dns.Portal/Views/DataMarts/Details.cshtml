@@ -98,17 +98,6 @@
                         <div class="col-sm-3 form-group">
                             <label for="dtEndDate">End Year</label>
                             <input name="End Year" class="form-control" type="text" id="dtEndDate" maxlength="4" pattern="\d{4}" data-bind="value: EndYear" style="width: 100%;" />
-                            @*<script>
-                                window.onload = function () {
-                                    console.log(document.getElementById("dtEndDate").value)
-                                    if (document.getElementById("dtEndDate").value.length == 0) {
-                                        document.getElementById("dtEndDate").setAttribute("data-bind", "");
-                                        document.getElementById("dtEndDate").setAttribute("value", "1234");
-                                    }
-                                    console.log(document.getElementById("dtEndDate").value)
-                                }
-                            </script>*@
-
                         </div>
                         <div class="col-sm-5 form-group">
                             <label for="cboDataUpdateFreq">Data Update Frequency</label>
@@ -136,11 +125,13 @@
                     <div class="row" data-bind="visible: (HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels))">
                         <label for="cboAdapter" style="width:90%">Adapter Supported</label>
                         <input type="text" id="cboAdapter" data-bind="kendoDropDownList: {value: DataMart.AdapterID, data: QueryComposerAdapters, dataTextField:'Name', dataValueField:'ID', change: onAdapterChange }" style="width:90%;" />
-                        <label data-bind="visible: DataPartnerIdentifier_Display" style="margin-top:12px;">Data Partner Identifier<em>*</em></label>
-                        <input type="text" id="txtDataPartnerIdentifier" title="Please enter the Identifier for the DataPartner" data-bind="value: DataMart.DataPartnerIdentifier, visible: DataPartnerIdentifier_Display" class="form-control" />
                     </div>
                     <div class="row" data-bind="visible: (HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels)) && DataPartnerIdentifier_Display">
-                        <p><small>* An identifier is required even if this is an Analysis Center.</small></p>
+                        <label style="margin-top:12px;" for="txtDataPartnerIdentifier">Data Partner Identifier<em>*</em></label>
+                        <input type="text" id="txtDataPartnerIdentifier" title="Please enter the Identifier for the DataPartner" data-bind="value: DataMart.DataPartnerIdentifier" class="form-control" />
+                        <label for="DataPartnerCode">Data Partner Code<em>*</em></label>
+                        <input type="text" id="txtDataPartnerCode" title="Please enter the tracking table code for the DataPartner" data-bind="value: DataMart.DataPartnerCode" class="form-control" />
+                        <p style="font-style:italic"><small>An identifier and code are required for both the Analysis Center and Data Partners.</small></p>
                     </div>
                     <div class="row" data-bind="visible: !(HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels))">
                         <label style="width:90%">Adapter Supported</label>

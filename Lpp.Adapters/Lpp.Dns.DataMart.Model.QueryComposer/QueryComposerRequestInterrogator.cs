@@ -100,6 +100,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             }
         }
 
+        public bool HasRequestSubmissionDate
+        {
+            get
+            {
+                return _request.Header.SubmittedOn.HasValue;
+            }
+        }
+
+        public DateTime? RequestSubmissionDate
+        {
+            get
+            {
+                return _request.Header.SubmittedOn;
+            }
+        }
+
         public DTO.QueryComposer.QueryComposerTermDTO PrimaryObservationPeriodTerm
         {
             get

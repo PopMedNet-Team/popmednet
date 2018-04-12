@@ -61,7 +61,7 @@ namespace Theme.GlobalNetwork {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2015 PopMedNet, All Rights Reserved.
+        ///   Looks up a localized string similar to © 2018 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {
             get {

@@ -90,12 +90,11 @@ module Controls.WFFileUpload.Index {
             
             self.onFileUploadCompleted = (evt: any) => {
                 try {
-                    
-                    var result = JSON.parse((<any>evt.response).content);
-                    result.forEach((i) => self.Documents.push(i));
+
+                    self.Documents.push((<any>evt.response).Document);
 
                     Requests.Details.rovm.Save(false).done(() => { Requests.Details.rovm.RefreshTaskDocuments(); });
-                    
+
                 } catch (e) {
                     Global.Helpers.ShowAlert("Upload Error", Global.Helpers.ProcessAjaxError(e));
                 }
@@ -181,14 +180,26 @@ module Controls.WFFileUpload.Index {
             });
         }
 
-        public onFileUpload(evt: any) {        
+        public onFileUpload(evt: any) {
+            ko.utils.arrayForEach(evt.files, (item: any) => {
+                if (item.size > 2147483648) {
+                    evt.preventDefault();
+                    Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(() => {
+                    });
+                }
+            });
             evt.data = {
                 comments: 'Modular Program specification document added.',
                 requestID: Requests.Details.rovm.Request.ID(),
                 taskID: Requests.Details.rovm.CurrentTask.ID,
-                taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument,
-                authToken: User.AuthToken
+                taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument
             };
+            var xhr = evt.XMLHttpRequest;
+            xhr.addEventListener("readystatechange", function (e) {
+                if (xhr.readyState == 1 /* OPENED */) {
+                    xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                }
+            });
         }
 
         public onFileUploadError(evt: any) {

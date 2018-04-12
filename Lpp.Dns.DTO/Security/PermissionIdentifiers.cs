@@ -1333,6 +1333,12 @@ namespace Lpp.Dns.DTO.Security
                 Locations = new PermissionAclTypes[] { PermissionAclTypes.ProjectRequestTypeWorkflowActivity }
             };
 
+            public static readonly PermissionDefinition ViewEnhancedLogTable = new PermissionDefinition
+            {
+                ID = new Guid("75160001-97C3-4619-A197-A84A00FD2918"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.ProjectRequestTypeWorkflowActivity }
+            };
+
             static ProjectRequestTypeWorkflowActivities()
             {
                 PermissionIdentifiers.Definitions.AddRange(new PermissionDefinition[] {
@@ -1347,7 +1353,8 @@ namespace Lpp.Dns.DTO.Security
                     ViewRequestOverview,
                     TerminateWorkflow,
                     EditRequestMetadata,
-                    ViewTrackingTable
+                    ViewTrackingTable,
+                    ViewEnhancedLogTable
                 });
             }
             /// <summary>
@@ -1369,7 +1376,8 @@ namespace Lpp.Dns.DTO.Security
                     ViewRequestOverview,
                     TerminateWorkflow,
                     EditRequestMetadata,
-                    ViewTrackingTable
+                    ViewTrackingTable,
+                    ViewEnhancedLogTable
                 };
             }
         }

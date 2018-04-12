@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 using Lpp.Utilities.WebSites.Models;
 using Lpp.Dns.DTO;
 using Lpp.Utilities;
+using System.Collections.Generic;
+using log4net.Appender;
+using System.Net.Configuration;
+using log4net;
 
 namespace Lpp.Dns.Portal.Controllers
 {
@@ -336,5 +340,90 @@ namespace Lpp.Dns.Portal.Controllers
         {
             return View("~/Views/Home/NotYetImplemented.cshtml");
         }
+
+        [AllowAnonymous]
+        public ActionResult Diagnostics()
+        {
+            var smtp = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+
+            var model = new DiagnosticsDTO
+            {
+                ServerName = DataContext.Database.Connection.Database,
+                Theme = WebConfigurationManager.AppSettings["CurrentTheme"],
+                SSOURL = WebConfigurationManager.AppSettings["SsoUrl"],
+                ServiceUrl = WebConfigurationManager.AppSettings["ServiceUrl"],
+                ResourcesURL = WebConfigurationManager.AppSettings["ResourceUrl"],
+                MailSettings = new MailSettingsDTO
+                {
+                    DeliveryMethod = smtp.DeliveryMethod.ToString(),
+                    FromAddress = smtp.From.ToString(),
+                    Server = smtp.Network.Host
+                },
+            };
+
+            log4net.Repository.Hierarchy.Hierarchy hierachy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+            foreach (IAppender appender in hierachy.GetAppenders())
+            {
+                if (appender is RollingFileAppender)
+                {
+                    model.Log4Net = new Log4NetConfig
+                    {
+                        FileLocation = ((RollingFileAppender)appender).File,
+                        LogPattern = ((RollingFileAppender)appender).DatePattern,
+                        FileMaxSize = ((RollingFileAppender)appender).MaximumFileSize,
+                        MaxFilesToKeep = ((RollingFileAppender)appender).MaxSizeRollBackups.ToString()
+                    };
+                }
+            }
+
+
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            Assembly[] assems = currentDomain.GetAssemblies();
+            IList<AssemblyDTO> assemList = new List<AssemblyDTO>();
+            foreach (var ass in assems)
+            {
+                assemList.Add(new AssemblyDTO
+                {
+                    AssemblyName = ass.GetName().Name,
+                    AssemblyVersion = ass.GetName().Version.ToString()
+                });
+            }
+
+            model.Assemblies = assemList;
+
+            return View(model);
+        }
+    }
+    public class DiagnosticsDTO
+    {
+        public string ServerName { get; set; }
+        public string Theme { get; set; }
+        public string SSOURL { get; set; }
+        public string ServiceUrl { get; set; }
+        public string ResourcesURL { get; set; }
+        public MailSettingsDTO MailSettings { get; set; }
+        public Log4NetConfig Log4Net { get; set; }
+        public IEnumerable<AssemblyDTO> Assemblies { get; set; }
+    }
+
+    public class MailSettingsDTO
+    {
+        public string DeliveryMethod { get; set; }
+        public string Server { get; set; }
+        public string FromAddress { get; set; }
+    }
+
+    public class Log4NetConfig
+    {
+        public string FileLocation { get; set; }
+        public string LogPattern { get; set; }
+        public string FileMaxSize { get; set; }
+        public string MaxFilesToKeep { get; set; }
+    }
+
+    public class AssemblyDTO
+    {
+        public string AssemblyName { get; set; }
+        public string AssemblyVersion { get; set; }
     }
 }

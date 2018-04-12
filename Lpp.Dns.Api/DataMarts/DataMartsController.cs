@@ -111,10 +111,10 @@ namespace Lpp.Dns.Api.DataMarts
             return results;
         }
 
-        /// <summary>
-        /// Returns a list of Data Marts the user has access to that are filterable using OData
-        /// </summary>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Returns a list of Data Marts the user has access to that are filterable using OData
+        ///// </summary>
+        ///// <returns></returns>
         //[HttpGet]
         //public IQueryable<DataModelDTO> ListDataModels()
         //{
@@ -320,39 +320,6 @@ namespace Lpp.Dns.Api.DataMarts
                 var count = await DataContext.Database.ExecuteSqlCommandAsync(@"IF NOT EXISTS(SELECT NULL FROM AclDataMarts WHERE DataMartID = @DataMartID AND SecurityGroupID = @SecurityGroupID AND PermissionID = @PermissionID)
 	INSERT INTO AclDataMarts (DataMartID, SecurityGroupID, PermissionID, Allowed, Overridden) VALUES (@DataMartID, @SecurityGroupID, @PermissionID, @Allowed, 1)", new SqlParameter("DataMartID", datamart.ID), new SqlParameter("SecurityGroupID", existingDataMartAcl.SecurityGroupID), new SqlParameter("PermissionID", existingDataMartAcl.PermissionID), new SqlParameter("Allowed", existingDataMartAcl.Allowed));
             }
-            #region CNDS
-
-            //var network = DataContext.Networks.Where(x => x.Name != "Aqueduct").FirstOrDefault();
-            //if (!ConfigurationManager.AppSettings["CNDS.URL"].IsNullOrWhiteSpace())
-            //{
-
-            //    try
-            //    {
-            //        using (var cnds = new CNDS.ApiClient.CNDSClient(ConfigurationManager.AppSettings["CNDS.URL"]))
-            //        {
-            //            var dmids = new List<Guid>() { datamart.ID };
-            //            var dmDTO = datamart.Map<DataMart, DataMartDTO>();
-            //            var networkEntity = await cnds.Networks.LookupEntities(network.ID, dmids);
-            //            var returnedEntity = new { results = new[] { new { EntityID = Guid.Empty, NetworkEntityID = Guid.Empty } } };
-            //            var response = await networkEntity.GetMessage();
-            //            var alreadyCreated = JsonConvert.DeserializeAnonymousType(response, returnedEntity);
-
-            //            if (alreadyCreated.results.Any(o => o.NetworkEntityID == datamart.ID))
-            //            {
-            //                await EditCNDSDM(cnds, dmDTO, network.ID);
-            //            }
-            //            else
-            //            {
-            //                await NewCNDSDM(cnds, dmDTO, network.ID);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Logger.Error(ex.Message, ex);
-            //    }
-            //} 
-            #endregion CNDS
 
 
             return datamart.ID;

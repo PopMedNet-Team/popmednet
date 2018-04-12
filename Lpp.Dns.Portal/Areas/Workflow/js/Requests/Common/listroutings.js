@@ -1,9 +1,14 @@
 /// <reference path="../../../../../js/requests/details.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Workflow;
 (function (Workflow) {
     var Common;
@@ -76,7 +81,7 @@ var Workflow;
             ListRoutings.VirtualRoutingViewModel = VirtualRoutingViewModel;
             var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
-                function ViewModel(bindingControl, responses, responseGroups, overrideableRoutingIDs, canViewResponses, requestTypeModels, requestPermissions) {
+                function ViewModel(bindingControl, responses, responseGroups, overrideableRoutingIDs, canViewIndividualResponses, canViewAggregateResponses, requestTypeModels, requestPermissions) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
                     _this.NewGroupingName = null;
                     _this.RoutingHistory = ko.observableArray([]);
@@ -122,15 +127,16 @@ var Workflow;
                     self.OverrideableRoutingIDs = overrideableRoutingIDs || [];
                     self.SelectedCompleteResponses = ko.observableArray([]);
                     self.SelectedIncompleteRoutings = ko.observableArray([]);
-                    self.AllowViewResults = ko.observable(canViewResponses);
+                    self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
+                    self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
                     self.isDefault = (Requests.Details.rovm.Request.WorkflowID().toUpperCase() == 'F64E0001-4F9A-49F0-BF75-A3B501396946');
                     self.AllowCopy = Requests.Details.rovm.AllowCopy();
                     self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == Permissions.Request.ViewHistory; }) != null;
-                    self.AllowAggregateView = true;
+                    self.AllowAggregateView = ko.observable(true);
                     //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                     requestTypeModels.forEach(function (rt) {
                         if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
-                            self.AllowAggregateView = false;
+                            self.AllowAggregateView(false);
                     });
                     self.DataMartsToAdd = ko.observableArray([]);
                     self.strDataMartsToAdd = '';
@@ -648,11 +654,11 @@ var Workflow;
             function init() {
                 $(function () {
                     var id = Global.GetQueryParam("ID");
-                    $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewResponses(id), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetRequestTypeModels(id), Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory, Permissions]))
-                        .done(function (responses, canViewResponses, responseGroups, overrideableRoutingIDs, requestTypeModels, requestPermissions) {
+                    $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewIndividualResponses(id), Dns.WebApi.Response.CanViewAggregateResponses(id), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetRequestTypeModels(id), Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory, Permissions]))
+                        .done(function (responses, canViewIndividualResponses, canViewAggregateResponses, responseGroups, overrideableRoutingIDs, requestTypeModels, requestPermissions) {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                         var bindingControl = $("#CommonListRoutings");
-                        ListRoutings.vm = new ViewModel(bindingControl, responses[0], responseGroups || [], overrideableRoutingIDs, canViewResponses[0], requestTypeModels, requestPermissions || []);
+                        ListRoutings.vm = new ViewModel(bindingControl, responses[0], responseGroups || [], overrideableRoutingIDs, canViewIndividualResponses[0], canViewAggregateResponses[0], requestTypeModels, requestPermissions || []);
                         $(function () {
                             ko.applyBindings(ListRoutings.vm, bindingControl[0]);
                         });

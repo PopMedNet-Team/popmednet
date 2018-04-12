@@ -26,26 +26,27 @@ var RootLayout;
 })(RootLayout || (RootLayout = {}));
 var Users;
 (function (Users) {
-    function GetSetting(Key) {
+    function GetSetting(key) {
         var deferred = $.Deferred();
-        var setting = Global.Session(Key);
-        if (setting == null) {
-            Dns.WebApi.Users.GetSetting(Key).done(function (results) {
-                if (results.length == 1) {
-                    Global.Session(Key, results[0].Setting);
-                    deferred.resolve(results[0].Setting);
-                }
-                else {
-                    deferred.resolve(null);
-                }
-            });
-        }
-        else {
-            deferred.resolve(setting);
-        }
+        GetSettings([key]).done(function (results) {
+            if (results.length === 1) {
+                deferred.resolve(results[0].Setting);
+            }
+            else {
+                deferred.resolve(null);
+            }
+        });
         return deferred;
     }
     Users.GetSetting = GetSetting;
+    function GetSettings(key) {
+        var deferred = $.Deferred();
+        Dns.WebApi.Users.GetSetting(key).done(function (results) {
+            deferred.resolve(results);
+        });
+        return deferred;
+    }
+    Users.GetSettings = GetSettings;
     function SetSetting(Key, setting) {
         if (setting === Global.Session(Key)) {
             var deferred = $.Deferred();

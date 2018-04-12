@@ -2254,7 +2254,7 @@ namespace Lpp.Dns.General.Metadata
             Guid mpGuid = mpPlugins.First().Models.First().Requests.First().ID;
             bool hasModularProgram = false;
 
-            string fileName = "RequestExport" + "_" + context.Request.Model.Name + "_" + (format.ID == "xls" || format.ID == "csv" ? "Summary" : "Detail") + "_" + DataContext.Requests.Where(r => r.ID == context.Request.RequestID).Select(r => r.Identifier).Single().ToString() + "." + format.ID.Substring(0, 3);
+            string fileName = "RequestExport" + "_" + context.Request.Model.Name + "_" + (format.ID == "xls" || format.ID == "csv" ? "Summary" : "Detail") + "_" + DataContext.Requests.Where(r => r.ID == context.Request.RequestID).Select(r => r.Identifier).Single().ToString() + "." + (format.ID.Substring(0, 3) == "xls" ? "xlsx": format.ID.Substring(0, 3));
             string response = string.Empty;
             if (format.ID.ToLower() == "xml")
             {
@@ -2307,7 +2307,7 @@ namespace Lpp.Dns.General.Metadata
                                 new DataColumn("LevelOfPHIDisclosure"),
                                 new DataColumn("RequesterCenter"),
                                 new DataColumn("WorkplanType"),
-                                new DataColumn("Level of Report Aggregation")
+                                new DataColumn("LevelofReportAggregation")
                             });
 
                             // Any Modular Program request type found?
@@ -2352,7 +2352,7 @@ namespace Lpp.Dns.General.Metadata
 
                                 dr["RequesterCenter"] = !r.RequesterCenter.NullOrEmpty() ? r.RequesterCenter : "Not Selected";
                                 dr["WorkplanType"] = !r.WorkplanType.NullOrEmpty() ? r.WorkplanType : "Not Selected";
-                                dr["Level of Report Aggregation"] = !r.ReportAggregationLevel.NullOrEmpty() ? r.ReportAggregationLevel : "Not Selected";
+                                dr["LevelofReportAggregation"] = !r.ReportAggregationLevel.NullOrEmpty() ? r.ReportAggregationLevel : "Not Selected";
 
                                 if (r.RequestTypeID == mpGuid)
                                 {
@@ -2416,11 +2416,12 @@ namespace Lpp.Dns.General.Metadata
                                 new DataColumn("ProjectDescription"),
                                 new DataColumn("RequesterCenter"),
                                 new DataColumn("WorkplanType"),
-                                new DataColumn("Level of Report Aggregation"),
+                                new DataColumn("LevelofReportAggregation"),
                                 new DataColumn("DataMartId"),
                                 new DataColumn("DataMartName"),
                                 new DataColumn("DataMartOrganization"),
-                                new DataColumn("Status"),
+                                new DataColumn("RequestStatus"),
+                                new DataColumn("RoutingStatus"),
                                 new DataColumn("SubmittedBy"),
                                 new DataColumn("SubmitterOrganization"),
                                 new DataColumn("SubmitterEmail"),
@@ -2470,7 +2471,7 @@ namespace Lpp.Dns.General.Metadata
                                     dr["UpdatorOrganization"] = r.UpdatedByOrganization;
                                     dr["RequesterCenter"] = !string.IsNullOrWhiteSpace(r.RequesterCenter) ? r.RequesterCenter : "Not Selected";
                                     dr["WorkplanType"] = !string.IsNullOrWhiteSpace(r.WorkplanType) ? r.WorkplanType : "Not Selected";
-                                    dr["Level of Report Aggregation"] = !string.IsNullOrWhiteSpace(r.ReportAggregationLevel) ? r.ReportAggregationLevel : "Not Selected";
+                                    dr["LevelofReportAggregation"] = !string.IsNullOrWhiteSpace(r.ReportAggregationLevel) ? r.ReportAggregationLevel : "Not Selected";
                                     dr["Description"] = !r.Description.NullOrEmpty() ? r.Description : "n/a";
                                     dr["Group"] = r.Group;
                                     dr["SystemNumber"] = r.Identifier.ToString();
@@ -2492,7 +2493,8 @@ namespace Lpp.Dns.General.Metadata
                                     dr["DataMartName"] = rr.Key.DataMart;
                                     dr["DataMartId"] = rr.Key.DataMartID.ToString("D");
                                     dr["DataMartOrganization"] = rr.Key.Organization;
-                                    dr["Status"] = r.Status;
+                                    dr["RequestStatus"] = r.Status;
+                                    dr["RoutingStatus"] = rr.Key.Status;
 
                                     var instance = rr.FirstOrDefault(x => x.IsCurrentResponse);
                                     if (instance != null)

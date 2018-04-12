@@ -637,7 +637,7 @@ module Global {
 
             if (ds.filter()) {
                 ds.filter().filters.forEach((item: kendo.data.DataSourceFilterItem) => {
-                    params += "&filter=" + encodeURIComponent(item.field) + "|" + encodeURIComponent(item.operator) + "|" + encodeURIComponent(item.value);
+                    params += "&filter=" + encodeURIComponent(item.field) + "|" + encodeURIComponent(item.operator.toString()) + "|" + encodeURIComponent(item.value);
                 });
             }
 
@@ -768,18 +768,19 @@ module Global {
             return output;
         }
 
-        static ShowDialog(title: string, url: string, actions: string[]= null, width?: number, height?: number, parameters: any = null): JQueryDeferred<any> {
+        static ShowDialog(title: string, url: string, actions: string[] = null, width?: number, height?: number, parameters: any = null): JQueryDeferred<any> {
+            
             var deferred = $.Deferred();
             var loaded = false;
-            var kendoWindow = $('<div data-url="' + url + '" style="overflow: hidden;"/>').kendoWindow({
+            var kendoWindow = $('<div data-url="' + url + '" style="overflow: hidden;"/>').kendoWindow(<any>{
                 title: title,
                 resizable: false,
                 draggable: false,
                 modal: true,
                 visible: false,
                 actions: actions || [],
-                width: width || "auto" ,
-                height: height || "75px" ,
+                width: width || "auto",
+                height: height || "75px",
                 iframe: true,
                 content: url,
                 pinned: false,
@@ -787,34 +788,18 @@ module Global {
                     if (loaded)
                         return;
                     loaded = true;
-                    
-                    var win: kendo.ui.Window = kendoWindow.data("kendoWindow");
-                    //win.setOptions({
-                    //    //Center to the view port
-                    //    position: {
-                    //        left: (window.innerWidth - kendoWindow.width()) / 2,
-                    //        top: (window.innerHeight - kendoWindow.height()) / 2 - window.pageYOffset
-                    //    }
-                    //});
+
                     kendoWindow.data("kendoWindow").center().open();
                 },
                 deactivate: function () {
                     this.destroy();
                 },
                 parameters: parameters,
-                //open: function () {
-                //    // Kendo window's center does not work correctly. This allows it to somewhat center it vertically.
-                //    //kendoWindow.parent().css("top", "50%").css("padding-top", "0px");
-                // 
-                //},
                 close: function () {
                     deferred.resolve((<any>kendoWindow.data("kendoWindow").options).returnResults);
                 }
 
-            });   
-            
-            //kendoWindow.data("kendoWindow").center().open();
-            
+            });
 
             return deferred;
         }
@@ -1036,9 +1021,9 @@ module Global {
             };
 
             if (startsWith('http') || startsWith('https') || startsWith('/')) {
-                window.location.href = url;
+                window.top.location.href = url;
             } else {
-                window.location.href = '/' + url;
+                window.top.location.href = '/' + url;
             }                
             
         }

@@ -37,7 +37,7 @@ namespace Lpp.Dns.DataMart.Client
 
         DomainManger.DomainManager _domainManager = new DomainManger.DomainManager(Configuration.PackagesFolderPath);
         readonly IModelProcessor Processor;
-        readonly HubRequest Request;
+        public readonly HubRequest Request;
         readonly ModelDescription ModelDesc;
         bool wasRejected;
         DTO.DataMartClient.Enums.DMCRoutingStatus _initialStatusOnRun = DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted;
@@ -95,6 +95,8 @@ namespace Lpp.Dns.DataMart.Client
                 //format the routing status enum description based on the value's description attribute.
                 e.Value = HubRequestStatus.GetDescription((DTO.DataMartClient.Enums.DMCRoutingStatus)e.Value);
             };
+
+            this.Text = "DataMart Client - " + Request.Source.MSRequestID;
         }
 
         public string RequestId

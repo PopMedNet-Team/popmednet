@@ -11,10 +11,10 @@
             <caption data-bind="text:ResponseHistory.DataMartName"></caption>
             <tbody data-bind="foreach: ResponseHistory.HistoryItems">
                 <tr>
-                    <td data-bind="text: moment(DateTime).format('MM/D/YYYY h:mm a') " style="width:110px;"></td>
+                    <td data-bind="text: moment(DateTime).format('M/D/YYYY h:mm a')"></td>
                     <td>
-                        <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span>
-                        <div data-bind="visible:$.trim(Message || '') != '', text:', ' + (Message || '')"></div>
+                        <span data-bind="text:Action"></span> by <span data-bind="text:UserName + ($.trim(Message || '') == '' ? '' : ';')"></span>
+                        <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
                     </td>
                 </tr>
             </tbody>

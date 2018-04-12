@@ -12,13 +12,13 @@
                     <table class="table table-hover">
                         <caption data-bind="text:DataMartName"></caption>
                         <tbody data-bind="foreach:HistoryItems">
-                                <tr>
-                                    <td data-bind="text: moment(moment(DateTime).format('M/D/YYYY h:mm:ss A UTC')).local().format('M/D/YYYY h:mm:ss A')"></td>
-                                    <td>
-                                        <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span><span data-bind="visible:$.trim(Message || '') != ''">;</span>
-                                        <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td data-bind="text:moment(DateTime).format('M/D/YYYY h:mm:ss A')"></td>
+                                <td>
+                                    <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span><span data-bind="visible:$.trim(Message || '') != ''">;</span>
+                                    <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
+                                </td>
+                            </tr>
                             </tbody>
                     </table>
                 </div>
@@ -87,10 +87,10 @@
             <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="7821FC45-9FD5-4597-A405-B021E5ED14FA" data-bind="enable:CanUnGroupCompletedRoutings,click:Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Ungroup</button>
             <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="49F9C682-9FAD-4AE5-A2C5-19157E227186" data-bind="enable:CanGroupCompletedRoutings,click:onGroupResponses, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Group</button>
             <div class="btn-group pull-right">
-                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings, visible:AllowViewResults">View Results <span class="caret"></span></button>
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings, visible: (AllowViewIndividualResults || AllowViewAggregateResults)">View Results <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-                <li><a data-bind="click:onViewResponses, visible: AllowAggregateView" data-resultid="354A8015-5C1D-42F7-BE31-B9FCEF4A8798">Aggregate View</a></li>
-                <li><a data-bind="click:onViewResponses" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8">Individual View</a></li>
+                <li><a data-bind="visible:AllowViewAggregateResults() && AllowAggregateView(), click:onViewResponses" data-resultid="354A8015-5C1D-42F7-BE31-B9FCEF4A8798">Aggregate View</a></li>
+                <li><a data-bind="visible:AllowViewIndividualResults, click:onViewResponses" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8">Individual View</a></li>
             </ul>
             </div>
             <div class="clearfix"></div>

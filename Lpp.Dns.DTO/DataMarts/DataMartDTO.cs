@@ -791,15 +791,20 @@ namespace Lpp.Dns.DTO
         public string Adapter { get; set; }
 
         /// <summary>
-        /// Gets or sets the adapter ID on the datamart.
+        /// Gets or sets the processor ID on the datamart.
         /// </summary>
         [DataMember]
         public Guid? ProcessorID { get; set; }
         /// <summary>
-        /// Gets or Sets the Identifier for if the Adapter ID is Distributed Regression
+        /// Gets or sets the data partner identifier, used by Distributed Regression to specify the location to write the data partner output at the analysis center.
         /// </summary>
         [DataMember]
         public string DataPartnerIdentifier { get; set; }
+        /// <summary>
+        /// Gets or sets the data partner code, used by Distributed Regression to identify the data partner in the tracking tables.
+        /// </summary>
+        [DataMember]
+        public string DataPartnerCode { get; set; }
 
         ///// <summary>
         ///// Gets or Sets the Start Date

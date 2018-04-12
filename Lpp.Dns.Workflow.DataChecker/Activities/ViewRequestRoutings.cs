@@ -242,6 +242,16 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
                 await LogTaskModified();
                 await db.SaveChangesAsync();
+
+                var originalStatus = _entity.Status;
+                await db.SaveChangesAsync();
+
+                await db.Entry(_entity).ReloadAsync();
+
+                if (originalStatus != DTO.Enums.RequestStatuses.Complete && _entity.Status == DTO.Enums.RequestStatuses.Complete)
+                {
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Complete);
+                }
             }
             else if (activityResultID.Value == EditRoutingStatusResultID)
             {

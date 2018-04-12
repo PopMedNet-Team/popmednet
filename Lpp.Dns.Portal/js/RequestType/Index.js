@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../_rootlayout.ts" />
 var RequestType;
 (function (RequestType) {
@@ -29,12 +34,6 @@ var RequestType;
                     sort: { field: "Name", dir: "asc" },
                 });
                 Global.Helpers.SetDataSourceFromSettings(_this.ds, gRequestTypesSetting);
-                _this.onColumnMenuInit = function (e) {
-                    var menu = e.container.find(".k-menu").data("kendoMenu");
-                    menu.bind("close", function (e) {
-                        self.Save();
-                    });
-                };
                 return _this;
             }
             ViewModel.prototype.onNewRequestType = function () {
@@ -64,8 +63,10 @@ var RequestType;
                     var bindingControl = $('#Content');
                     Index.vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRequestType] : []);
                     ko.applyBindings(Index.vm, bindingControl[0]);
-                    $(window).unload(function () { return Index.vm.Save(); });
                     Global.Helpers.SetGridFromSettings(Index.vm.RequestTypesGrid(), gRequestTypesSetting);
+                    Index.vm.RequestTypesGrid().bind("dataBound", function (e) {
+                        Users.SetSetting("RequestType.Index.gRequestTypes.User:" + User.ID, Global.Helpers.GetGridSettings(Index.vm.RequestTypesGrid()));
+                    });
                 });
             });
         }

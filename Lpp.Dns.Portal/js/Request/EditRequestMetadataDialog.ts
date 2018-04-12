@@ -1,4 +1,4 @@
-﻿module Request.Utility.EditRequestMetadataDialog {
+﻿module Requests.Utility.EditRequestMetadataDialog {
     var vm: ViewModel;
 
     export class ViewModel extends Global.DialogViewModel {

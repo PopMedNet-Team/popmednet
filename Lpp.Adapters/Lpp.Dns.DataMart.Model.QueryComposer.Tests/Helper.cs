@@ -118,6 +118,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"Database", postgresConnectionStringBuilder.Database },
                     {"ConnectionTimeout", postgresConnectionStringBuilder.Timeout.ToString() },
                     {"CommandTimeout", postgresConnectionStringBuilder.CommandTimeout.ToString()},
+                    {"DatabaseSchema", schema},
                     {"DataProvider", sqlProvider.ToString()}
                 };
             }
