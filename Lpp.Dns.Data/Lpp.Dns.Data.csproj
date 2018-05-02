@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>3d345ed0</NuGetPackageImportStamp>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="CodeFirstStoreFunctions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.1.0\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
     </Reference>
@@ -2923,6 +2923,10 @@
     <Compile Include="Migrations\201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.Designer.cs">
       <DependentUpon>201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804091812000_FixGetNotificationsTVF.cs" />
+    <Compile Include="Migrations\201804091812000_FixGetNotificationsTVF.Designer.cs">
+      <DependentUpon>201804091812000_FixGetNotificationsTVF.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3665,6 +3669,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.resx">
       <DependentUpon>201803250642415_UpdateFilteredResponseList_Permissions_IndividualAndAggregate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804091812000_FixGetNotificationsTVF.resx">
+      <DependentUpon>201804091812000_FixGetNotificationsTVF.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

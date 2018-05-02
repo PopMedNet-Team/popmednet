@@ -36,8 +36,8 @@ namespace Lpp.Dns.DataMart.Client
         static readonly Guid DistributedRegressionModelID = new Guid("4C8A25DC-6816-4202-88F4-6D17E72A43BC");
 
         DomainManger.DomainManager _domainManager = new DomainManger.DomainManager(Configuration.PackagesFolderPath);
-        readonly IModelProcessor Processor;
-        public readonly HubRequest Request;
+        IModelProcessor Processor;
+        public HubRequest Request;
         readonly ModelDescription ModelDesc;
         bool wasRejected;
         DTO.DataMartClient.Enums.DMCRoutingStatus _initialStatusOnRun = DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted;
@@ -242,28 +242,34 @@ namespace Lpp.Dns.DataMart.Client
             {
                 responseDocuments = new Document[1] { new Document(new Guid().ToString(), "Text", "") };
             }
+
             var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
-            var postDocuments =
-                responseDocuments.NullOrEmpty()
-                ? Observable.Return(100)
-                : Observable.Start<Guid[]>(
-                    () => DnsServiceManager.PostResponseDocuments(RequestId, Request.DataMartId, responseDocuments, netWorkSetting),
-                    Scheduler.Default)
+
+            var postDocuments = responseDocuments.NullOrEmpty() ? Observable.Return(100) : Observable.Start<Guid[]>(
+                    () => {
+                        return DnsServiceManager.PostResponseDocuments(RequestId, Request.DataMartId, responseDocuments, netWorkSetting);
+                    }, Scheduler.Default)
                 .SelectMany(docIds =>
-                   docIds.Zip(responseDocuments, (srvId, localDoc) => new { srvId, localDoc })
-                   .Select((doc, index) => Observable.Using(
-                      () =>
-                      {
-                           Stream contentStream;
-                           Processor.ResponseDocument(RequestId, doc.localDoc.DocumentID.ToString(), out contentStream, 0x100000);
-                           return contentStream;
-                       },
-                      inStream => inStream == null ? Observable.Return(100 * (index + 1) / docIds.Length) :
-                          DnsServiceManager.PostResponseDocumentContent(doc.srvId, inStream, netWorkSetting)
-                          .Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.localDoc.Size)) / docIds.Length)
-                  ))
-                   .Concat()
-                );
+                {
+                    return docIds
+                    .Zip(responseDocuments, (srvId, localDoc) => new { srvId, localDoc })
+                    .Select((doc, index) =>
+                    {
+                        return Observable.Using(() =>
+                            {
+                                Stream contentStream;
+                                Processor.ResponseDocument(RequestId, doc.localDoc.DocumentID.ToString(), out contentStream, 0x100000);
+                                return contentStream;
+                            },
+                           inStream =>
+                           {
+                               return (inStream == null) ?
+                                             Observable.Return(100 * (index + 1) / docIds.Length) :
+                                             DnsServiceManager.PostResponseDocumentContent(doc.srvId, inStream, netWorkSetting).Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.localDoc.Size)) / docIds.Length);
+                           }
+                        );
+                    }).Concat();
+                });
 
             postDocuments
                 .ObserveOn(this)
@@ -275,7 +281,11 @@ namespace Lpp.Dns.DataMart.Client
                      RequestCache.ForNetwork(netWorkSetting).Release(Request);
                  }, Scheduler.Default)
                   .ObserveOn(this)
-                  .Do(_ => this.Close())
+                  .Do(_ => {
+
+                      this.Close();
+                      
+                      })
                 ))
                 .TakeUntil(progress.ShowAndWaitForCancel(this))
                 .Finally(progress.Dispose)
@@ -723,6 +733,13 @@ namespace Lpp.Dns.DataMart.Client
         {
             btnRun.Enabled = true;
             btnRejectQuery.Enabled = btnHold.Enabled = btnUploadResults.Enabled = btnExportResults.Enabled = false;
+
+            if(Processor == null)
+            {
+                //Processor can only be null if the form has been disposed when closing
+                //no need to do anything
+                return;
+            }
 
             try
             {

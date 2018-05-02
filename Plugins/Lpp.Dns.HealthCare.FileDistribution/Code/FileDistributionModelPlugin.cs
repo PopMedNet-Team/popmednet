@@ -109,7 +109,7 @@ namespace Lpp.Dns.HealthCare.FileDistribution
         {
             var lDocs = (from r in context.DataMartResponses
                          from doc in r.Documents
-                         orderby r.DataMart.ID
+                         orderby r.DataMart.ID, doc.Name
                          select new
                          {
                              Name = doc.Name,

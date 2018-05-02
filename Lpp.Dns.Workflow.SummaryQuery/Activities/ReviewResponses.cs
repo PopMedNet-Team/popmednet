@@ -128,13 +128,13 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             {
                 string[] guids = data.Split(',');
 
-                //Going with LastOrDefault cause we need the DistributeRequest ID
-                var previousTask = await (from a in db.Actions
-                                          join ar in db.ActionReferences on a.ID equals ar.TaskID
-                                          where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete
-                                          select a).OrderByDescending(x => x.EndOn).FirstOrDefaultAsync();
+                var revisionSetIDs = await (from req in db.Requests
+                                            join rdm in db.RequestDataMarts on req.ID equals rdm.RequestID
+                                            join res in db.Responses on rdm.ID equals res.RequestDataMartID
+                                            join reqDoc in db.RequestDocuments on res.ID equals reqDoc.ResponseID
+                                            where req.ID == _entity.ID && reqDoc.DocumentType == DTO.Enums.RequestDocumentType.Input
+                                            select reqDoc.RevisionSetID).Distinct().ToArrayAsync();
 
-                var document = await db.Documents.Where(x => x.ItemID == previousTask.ID).FirstOrDefaultAsync();
                 foreach (var guid in guids)
                 {
                     Guid dmGuid = new Guid(guid);
@@ -144,8 +144,10 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     dm.DueDate = _entity.DueDate;
                     //guid.Status = DTO.Enums.RoutingStatus.Submitted;
                     _entity.DataMarts.Add(dm);
-                    //in ResponseID, since we are just adding the DM, we know that a response hasnt been created yet so FirstOrDefault.
-                    db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = dm.Responses.FirstOrDefault().ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                    ////in ResponseID, since we are just adding the DM, we know that a response hasnt been created yet so FirstOrDefault.
+                    //db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = dm.Responses.FirstOrDefault().ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                    foreach (var revset in revisionSetIDs)
+                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = revset, ResponseID = dm.Responses.FirstOrDefault().ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
                 }
                 await LogTaskModified();
                 await db.SaveChangesAsync();

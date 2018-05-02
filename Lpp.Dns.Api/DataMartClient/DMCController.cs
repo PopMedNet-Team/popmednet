@@ -490,7 +490,7 @@ namespace Lpp.Dns.Api.DataMartClient
             HttpResponseMessage response = this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.OK);
             if(offset < document.Length)
             {
-                byte[] buffer = await LocalDiskCache.Instance.ReadChunk(DataContext, document.ID, offset, size);
+                byte[] buffer = await LocalDiskCache.Instance.ReadChunk(DataContext, document.ID, offset, Math.Min(size, Convert.ToInt32(document.Length - offset)));
 
                 response.Content = new ByteArrayContent(buffer);
                 response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");

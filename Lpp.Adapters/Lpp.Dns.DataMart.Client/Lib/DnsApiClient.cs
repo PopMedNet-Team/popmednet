@@ -93,10 +93,16 @@ namespace Lpp.Dns.DataMart.Client.Lib
         public async Task<IEnumerable<Guid>> PostResponseDocuments(Guid requestID, Guid datamartID, IEnumerable<Lpp.Dns.DTO.DataMartClient.Document> documents)
         {
             Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData data = new DTO.DataMartClient.Criteria.PostResponseDocumentsData { DataMartID = datamartID, RequestID = requestID, Documents = documents };
-            _log.Debug("Executing API Call to " + this._Host + Path + "/PostResponseDocuments");
+            _log.Debug($"Executing API Call to { this._Host + Path }/PostResponseDocuments for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }");
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData, Guid>(Path + "/PostResponseDocuments", data);
-            _log.Debug("API Call Successfull");
-            return result.results ?? Enumerable.Empty<Guid>();
+            if (result.errors == null || result.errors.Length == 0)
+            {
+                _log.Debug($"API Call Successfull to { _Host + Path }/PostResponseDocuments for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }");
+                return result.results ?? Enumerable.Empty<Guid>();
+            }
+
+            string errors = string.Join(", ", result.errors.Select(err => err.Description));
+            throw new Exception($"Unable to post response documents for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }. " + errors);
         }
 
         public async Task PostResponseDocumentChunk(Guid documentID, IEnumerable<byte> data)

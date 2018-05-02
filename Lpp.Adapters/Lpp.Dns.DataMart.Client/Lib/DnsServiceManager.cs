@@ -372,9 +372,10 @@ namespace Lpp.Dns.DataMart.Lib
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    _log.Debug("Uploading the following documents to Portal: " + string.Join(", ", documents.Select(x => string.Format("'{0:D}'", x.Filename))));
+                    string docString = string.Join(", ", documents.Select(x => string.Format("'{0:D}'", x.Filename)));
+                    _log.Debug("Uploading the following documents to Portal: " + docString + " for RequestID:" + requestId + ", DataMartID:" + dataMartId.ToString("D"));
                     var result = AsyncHelpers.RunSync<IEnumerable<Guid>>(() => web.PostResponseDocuments(new Guid(requestId), dataMartId, documents.Select(d => new Lpp.Dns.DTO.DataMartClient.Document { Name = d.Filename, MimeType = d.MimeType, Size = d.Size, IsViewable = d.IsViewable, Kind = d.Kind })));
-                    _log.Debug("Upload Complete");
+                    _log.Debug("Uploading complete for the following documents to Portal: " + docString + " for RequestID:" + requestId + ", DataMartID:" + dataMartId.ToString("D"));
                     return result.ToArray();
                 }
             }

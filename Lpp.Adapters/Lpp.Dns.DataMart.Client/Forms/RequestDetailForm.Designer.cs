@@ -19,7 +19,12 @@ namespace Lpp.Dns.DataMart.Client
                 if(components != null)
                     components.Dispose();
 
-                _domainManager.Dispose();
+                if (_domainManager != null)
+                {
+                    Processor = null;
+                    _domainManager.Dispose();
+                    _domainManager = null;
+                }
             }
             base.Dispose(disposing);
         }
