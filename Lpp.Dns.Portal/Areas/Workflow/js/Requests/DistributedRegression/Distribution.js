@@ -16,7 +16,7 @@ var Workflow;
         var Distribution;
         (function (Distribution) {
             var vm;
-            var Routings = (function () {
+            var Routings = /** @class */ (function () {
                 function Routings(dataMart) {
                     this.Priority = ko.observable(dataMart.Priority);
                     this.DueDate = ko.observable(dataMart.DueDate);
@@ -29,7 +29,7 @@ var Workflow;
                 return Routings;
             }());
             Distribution.Routings = Routings;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, fieldOptions, datamarts, existingRequestDataMarts, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

@@ -14,7 +14,7 @@ var Reports;
     var NewActivityReport;
     (function (NewActivityReport) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(projects, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

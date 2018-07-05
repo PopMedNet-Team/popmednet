@@ -6,7 +6,7 @@ var DataChecker;
     (function (RxAmt) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(parameters) {
                 this.requestID = ko.observable(null);
                 this.responseID = ko.observable(null);
@@ -162,4 +162,4 @@ var DataChecker;
         RxAmt.ViewModel = ViewModel;
     })(RxAmt = DataChecker.RxAmt || (DataChecker.RxAmt = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=RxAmtResponse.js.map
+//# sourceMappingURL=rxamtresponse.js.map

@@ -16,7 +16,7 @@ var Workflow;
         var DraftRequest;
         (function (DraftRequest) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -67,6 +67,15 @@ var Workflow;
                     else {
                         if (!Requests.Details.rovm.Validate())
                             return;
+                        var emptyCriteraGroups = false;
+                        ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Where.Criteria(), function (item) {
+                            if (item.Criteria().length === 0 && item.Terms().length === 0)
+                                emptyCriteraGroups = true;
+                        });
+                        if (emptyCriteraGroups) {
+                            Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
+                            return;
+                        }
                         var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
                         Requests.Details.PromptForComment()
                             .done(function (comment) {

@@ -5,7 +5,7 @@ var Security;
     (function (Acl) {
         var RequestTypes;
         (function (RequestTypes) {
-            var AclRequestTypeEditViewModel = (function () {
+            var AclRequestTypeEditViewModel = /** @class */ (function () {
                 function AclRequestTypeEditViewModel(requestTypes, securityGroupTree, acls, targets, aclType) {
                     var _this = this;
                     this.ViewTable = ko.observable(false);
@@ -168,7 +168,7 @@ var Security;
                 return AclRequestTypeEditViewModel;
             }());
             RequestTypes.AclRequestTypeEditViewModel = AclRequestTypeEditViewModel;
-            var RequestTypeAclViewModel = (function () {
+            var RequestTypeAclViewModel = /** @class */ (function () {
                 function RequestTypeAclViewModel(vm, requestType) {
                     var _this = this;
                     var self = this;

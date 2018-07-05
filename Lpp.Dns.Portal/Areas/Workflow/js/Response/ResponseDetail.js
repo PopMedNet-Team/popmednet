@@ -19,7 +19,7 @@ var Workflow;
             (function (ResponseDetail) {
                 var vm;
                 var rootVM;
-                var ViewModel = (function (_super) {
+                var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, routings, responses, documents, canViewPendingApprovalResponses, exportForFileDistribution) {
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;

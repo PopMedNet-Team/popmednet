@@ -16,7 +16,7 @@ var Workflow;
         var ApproveResponse;
         (function (ApproveResponse) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(completeddms, incompleteddms, bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -87,7 +87,7 @@ var Workflow;
                 });
                 //Bind the view model for the activity
             });
-            var RequestDataMartViewModel = (function (_super) {
+            var RequestDataMartViewModel = /** @class */ (function (_super) {
                 __extends(RequestDataMartViewModel, _super);
                 function RequestDataMartViewModel(requestDataMart) {
                     var _this = _super.call(this, requestDataMart) || this;

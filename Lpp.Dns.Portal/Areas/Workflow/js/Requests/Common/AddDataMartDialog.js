@@ -17,7 +17,7 @@ var Workflow;
         var AddDataMartDialog;
         (function (AddDataMartDialog) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, currentRoutings, allDataMarts, projectID) {
                     var _this = _super.call(this, bindingControl) || this;

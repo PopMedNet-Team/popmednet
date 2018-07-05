@@ -13,7 +13,7 @@ var RequestType;
 (function (RequestType) {
     var Index;
     (function (Index) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gRequestTypesSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;

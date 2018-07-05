@@ -17,6 +17,7 @@ module Workflow.Default.CreateRequest {
         }
 
         public PostComplete(resultID: string) {
+            debugger;
             if (Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
 
                 var deleteFilesDeferred = $.Deferred().resolve();
@@ -67,6 +68,17 @@ module Workflow.Default.CreateRequest {
 
                 if (!Requests.Details.rovm.Validate())
                     return;
+
+                var emptyCriteraGroups: boolean = false 
+                ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Where.Criteria(), (item) => {
+                  if (item.Criteria().length === 0 && item.Terms().length === 0)
+                    emptyCriteraGroups = true;
+                });
+
+                if (emptyCriteraGroups) {
+                  Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
+                  return;
+                }
 
                 if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
                     return;

@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../../ViewModels/Terms.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var RequestStatusTerm = (function (_super) {
+    var RequestStatusTerm = /** @class */ (function (_super) {
         __extends(RequestStatusTerm, _super);
         function RequestStatusTerm(requestStatusData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.RequestStatusTerm) || this;

@@ -6,7 +6,7 @@ var Controls;
         (function (Test) {
             var requestID = '4AD8BF04-19F3-4F25-82B1-A3AF00A9E96A';
             var vm;
-            var ViewModel = (function () {
+            var ViewModel = /** @class */ (function () {
                 function ViewModel(requests) {
                     this.Requests = requests;
                     this.Request = ko.observable(requests[0]);

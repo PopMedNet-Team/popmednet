@@ -16,7 +16,7 @@ var Controls;
         var AddUsers;
         (function (AddUsers) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, requestID, requestObservers, observerEvents) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -257,7 +257,7 @@ var Controls;
             }(Global.DialogViewModel));
             AddUsers.ViewModel = ViewModel;
             (function (ViewModel) {
-                var ObserverObj = (function () {
+                var ObserverObj = /** @class */ (function () {
                     function ObserverObj(observer) {
                         var self = this;
                         self.Observer = observer;

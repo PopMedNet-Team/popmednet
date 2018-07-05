@@ -47,16 +47,6 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public DateTime? DueDate { get; set; }
         /// <summary>
-        /// Time of request
-        /// </summary>
-        [DataMember]
-        public DateTimeOffset? RequestTime { get; set; }
-        /// <summary>
-        /// Response Time
-        /// </summary>
-        [DataMember]
-        public DateTimeOffset? ResponseTime { get; set; }
-        /// <summary>
         /// Error message
         /// </summary>
         [DataMember]

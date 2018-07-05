@@ -14,7 +14,7 @@ var Home;
     var Resources;
     (function (Resources) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(theme, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -27,7 +27,7 @@ var Home;
         Resources.ViewModel = ViewModel;
         function init() {
             var theming;
-            $.when(Dns.WebApi.Theme.GetText(theme, ["Resources"]).done(function (results) { theming = results[0]; })).then(function () {
+            $.when(Dns.WebApi.Theme.GetText(["Resources"]).done(function (results) { theming = results[0]; })).then(function () {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(theming, bindingControl);
                 ko.applyBindings(vm, bindingControl[0]);

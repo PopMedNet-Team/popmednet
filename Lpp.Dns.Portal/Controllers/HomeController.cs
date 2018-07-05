@@ -1,25 +1,26 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Reflection;
-using System.Web.Mvc;
+﻿using log4net;
+using log4net.Appender;
 using Lpp.Audit.UI;
+using Lpp.Dns.Data;
+using Lpp.Dns.DTO;
 using Lpp.Dns.Portal.Models;
 using Lpp.Mvc;
 using Lpp.Mvc.Controls;
-using System.Configuration;
-using System.Web.Configuration;
-using System.Security;
-using System.Web;
-using Lpp.Dns.Data;
-using System.Threading.Tasks;
-using Lpp.Utilities.WebSites.Models;
-using Lpp.Dns.DTO;
 using Lpp.Utilities;
+using Lpp.Utilities.WebSites.Filters;
+using Lpp.Utilities.WebSites.Models;
+using System;
 using System.Collections.Generic;
-using log4net.Appender;
+using System.ComponentModel.Composition;
+using System.Configuration;
+using System.Linq;
 using System.Net.Configuration;
-using log4net;
+using System.Reflection;
+using System.Security;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.Mvc;
 
 namespace Lpp.Dns.Portal.Controllers
 {
@@ -392,6 +393,17 @@ namespace Lpp.Dns.Portal.Controllers
             model.Assemblies = assemList;
 
             return View(model);
+        }
+
+        [NoCookieReset]
+        public ActionResult CheckAuth()
+        {
+            return Json(new { Request.IsAuthenticated, CookiesCount = Response.Cookies.Count });
+        }
+
+        public ActionResult RefreshSession()
+        {
+            return Json(new { Request.IsAuthenticated, CookiesCount = Response.Cookies.Count });
         }
     }
     public class DiagnosticsDTO

@@ -14,7 +14,7 @@ var Tasks;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(task, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

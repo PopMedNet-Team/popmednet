@@ -18,7 +18,7 @@ var Controls;
         var ForTask;
         (function (ForTask) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, tasks) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -231,4 +231,4 @@ var Controls;
         })(ForTask = WFFileUpload.ForTask || (WFFileUpload.ForTask = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=fortask.js.map
+//# sourceMappingURL=ForTask.js.map

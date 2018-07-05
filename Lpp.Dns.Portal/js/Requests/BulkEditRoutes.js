@@ -12,7 +12,7 @@ var Requests;
 (function (Requests) {
     var BulkEditRoutes;
     (function (BulkEditRoutes) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(routes, datamart, bindingControl, screenPermissions, gridSetting) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -109,7 +109,7 @@ var Requests;
             return ViewModel;
         }(Global.PageViewModel));
         BulkEditRoutes.ViewModel = ViewModel;
-        var RouteDetail = (function (_super) {
+        var RouteDetail = /** @class */ (function (_super) {
             __extends(RouteDetail, _super);
             function RouteDetail(data) {
                 var _this = _super.call(this, data) || this;

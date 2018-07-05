@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Http;
 
 namespace Lpp.Dns.Api.Themes
@@ -21,17 +22,13 @@ namespace Lpp.Dns.Api.Themes
         /// <summary>
         /// Get the theme 
         /// </summary>
-        /// <param name="themeID"></param>
         /// <param name="keys"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public ThemeDTO GetText(string themeID, [FromUri] IEnumerable<string> keys)
+        public ThemeDTO GetText([FromUri] IEnumerable<string> keys)
         {
-            if(string.IsNullOrWhiteSpace(themeID))
-            {
-                themeID = "Default";
-            }
-            
+            var themeID = string.IsNullOrWhiteSpace(WebConfigurationManager.AppSettings["CurrentTheme"]) ? "Default" : WebConfigurationManager.AppSettings["CurrentTheme"];
+
             Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name == "Theme." + themeID).FirstOrDefault();
             System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager("Theme." + themeID + ".Theme", assembly);
 
@@ -51,16 +48,12 @@ namespace Lpp.Dns.Api.Themes
         /// <summary>
         /// Get the image for theme
         /// </summary>
-        /// <param name="themeID"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public ThemeDTO GetImagePath(string themeID)
+        public ThemeDTO GetImagePath()
         {
-            if (string.IsNullOrWhiteSpace(themeID))
-            {
-                themeID = "Default";
-            }
-            
+            var themeID = string.IsNullOrWhiteSpace(WebConfigurationManager.AppSettings["CurrentTheme"]) ? "Default" : WebConfigurationManager.AppSettings["CurrentTheme"];
+
             Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name == "Theme." + themeID).FirstOrDefault();
             System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager("Theme." + themeID + ".Theme", assembly);
 

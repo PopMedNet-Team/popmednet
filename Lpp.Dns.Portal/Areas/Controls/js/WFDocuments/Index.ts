@@ -430,7 +430,7 @@ module Controls.WFDocuments.List {
         }
 
         export function buildDownloadLink(id: any, filename: string, documentName: string) {
-            return '<a href="' + buildDownloadUrl(id, filename) + '">' + documentName + '</a>';
+            return '<a id="' + filename + '" href="' + buildDownloadUrl(id, filename) + '">' + documentName + '</a>';
         }
 
         export function formatVersion(item: Dns.Interfaces.IExtendedDocumentDTO) {

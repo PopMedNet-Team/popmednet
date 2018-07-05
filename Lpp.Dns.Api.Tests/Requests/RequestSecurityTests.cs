@@ -218,8 +218,6 @@ namespace Lpp.Dns.Api.Tests.Requests
                                  DueDate = rdm.DueDate,
                                  RejectReason = rdm.RejectReason,
                                  RequestID = rdm.RequestID,
-                                 RequestTime = rdm.RequestTime,
-                                 ResponseTime = rdm.ResponseTime,
                                  ResultsGrouped = rdm.ResultsGrouped,
                                  ID = rdm.ID,
                                  Timestamp = rdm.Timestamp,

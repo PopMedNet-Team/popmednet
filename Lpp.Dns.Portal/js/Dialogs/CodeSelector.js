@@ -14,7 +14,7 @@ var Dialog;
     var CodeSelector;
     (function (CodeSelector) {
         var vm;
-        var CodeSelectorViewModel = (function (_super) {
+        var CodeSelectorViewModel = /** @class */ (function (_super) {
             __extends(CodeSelectorViewModel, _super);
             function CodeSelectorViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

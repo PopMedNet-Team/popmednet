@@ -15,7 +15,7 @@ var Workflow;
     (function (SummaryQuery) {
         var DistributeRequest;
         (function (DistributeRequest) {
-            var Routings = (function () {
+            var Routings = /** @class */ (function () {
                 function Routings(dataMart, existingRequestDataMart) {
                     this.Priority = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.Priority : dataMart.Priority);
                     this.DueDate = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.DueDate : dataMart.DueDate);
@@ -46,7 +46,7 @@ var Workflow;
                 return Routings;
             }());
             DistributeRequest.Routings = Routings;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(query, routes, fieldOptions, additionalInstructions, bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;

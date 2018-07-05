@@ -7,7 +7,6 @@ module Workflow.Common.Completed {
         public ID: any;
         public Name: string = '';
         public IsGroup: boolean = false;
-        public ResponseTime: Date;
         public Status: Dns.Enums.RoutingStatus = Dns.Enums.RoutingStatus.AwaitingResponseApproval;
         public Messages: string = '';
         public Routings: Dns.Interfaces.IRequestDataMartDTO[];
@@ -25,8 +24,7 @@ module Workflow.Common.Completed {
                 this.ID = routing.ResponseID;
                 this.Name = routing.DataMart;
             }
-
-            this.ResponseTime = routing.ResponseTime;
+            
             this.Status = routing.Status;
             this.Messages = '';
             this.addToMessages(routing.ErrorMessage);

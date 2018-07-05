@@ -22,7 +22,7 @@
     <Use64BitIISExpress />
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.1.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
@@ -1132,6 +1132,7 @@
     <Content Include="Views\Groups\Index.cshtml" />
     <Content Include="tsconfig.json" />
     <Content Include="Views\Home\Diagnostics.cshtml" />
+    <Content Include="Views\Dialogs\SessionExpiring.cshtml" />
     <None Include="Views\QlikTest\DivIntegration.cshtml" />
     <None Include="Views\QlikTest\Index.cshtml" />
     <None Include="Views\QlikTest\Qlik ReadMe.txt" />
@@ -1347,6 +1348,7 @@
     <TypeScriptCompile Include="js\Dialogs\MetadataBulkEditPropertiesEditor.ts" />
     <TypeScriptCompile Include="js\Dialogs\PredefinedLocationSelector.ts" />
     <TypeScriptCompile Include="js\Dialogs\RoutingHistory.ts" />
+    <TypeScriptCompile Include="js\Dialogs\SessionExpiring.ts" />
     <TypeScriptCompile Include="js\Home\Info.ts" />
     <TypeScriptCompile Include="js\Home\MetadataList.ts" />
     <TypeScriptCompile Include="js\Home\Resources.ts" />

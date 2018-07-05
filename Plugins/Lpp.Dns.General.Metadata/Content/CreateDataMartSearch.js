@@ -14,7 +14,7 @@ var MetadataQuery;
     var CreateDataMartSearch;
     (function (CreateDataMartSearch) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;

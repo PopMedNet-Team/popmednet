@@ -16,7 +16,7 @@ var Plugins;
         (function (QueryBuilder) {
             var DataMartRouting;
             (function (DataMartRouting) {
-                var Routings = (function () {
+                var Routings = /** @class */ (function () {
                     function Routings(dataMart, existingRequestDataMart) {
                         this.Priority = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.Priority : dataMart.Priority);
                         this.DueDate = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.DueDate : dataMart.DueDate);
@@ -46,7 +46,7 @@ var Plugins;
                     return Routings;
                 }());
                 DataMartRouting.Routings = Routings;
-                var ViewModel = (function (_super) {
+                var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
                         var _this = _super.call(this, bindingControl) || this;

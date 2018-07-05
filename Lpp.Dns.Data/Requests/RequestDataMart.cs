@@ -42,10 +42,7 @@ namespace Lpp.Dns.Data
         public Priorities Priority { get; set; }
 
         public DateTime? DueDate { get; set; }
-
-        public DateTime? RequestTime { get; set; }
-
-        public DateTime? ResponseTime { get; set; }
+        
 
         public string ErrorMessage { get; set; }
 
@@ -130,8 +127,6 @@ namespace Lpp.Dns.Data
                     DueDate = dm.DueDate,
                     RejectReason = dm.RejectReason,
                     RequestID = dm.RequestID,
-                    RequestTime = dm.RequestTime,
-                    ResponseTime = dm.ResponseTime,
                     ResultsGrouped = dm.ResultsGrouped,
                     ID = dm.ID,
                     Timestamp = dm.Timestamp,

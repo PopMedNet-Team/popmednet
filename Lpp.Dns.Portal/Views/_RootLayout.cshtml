@@ -37,7 +37,6 @@
     <script>
         var ServiceUrl = "@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]";
         var ResourceUrl = "@System.Web.Configuration.WebConfigurationManager.AppSettings["ResourceUrl"]";
-        var theme = "@System.Web.Configuration.WebConfigurationManager.AppSettings["CurrentTheme"]" == "" ? "Default" : "@System.Web.Configuration.WebConfigurationManager.AppSettings["CurrentTheme"]" ;
     </script>
 
     @Html.RenderStylesheets()

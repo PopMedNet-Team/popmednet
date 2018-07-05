@@ -16,7 +16,7 @@ var Controls;
         var ResposnseForDataPartner;
         (function (ResposnseForDataPartner) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -229,7 +229,7 @@ var Controls;
                 });
             }
             init();
-            var ReponseSFtpItem = (function () {
+            var ReponseSFtpItem = /** @class */ (function () {
                 function ReponseSFtpItem(name, path, type, length) {
                     var _this = this;
                     this.Name = ko.observable(name);

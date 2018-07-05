@@ -17,7 +17,7 @@ var Workflow;
         (function (ResponseDetails) {
             var vm;
             var rootVM;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, routings, responses, documents, canViewPendingApprovalResponses) {
                     var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
@@ -114,7 +114,7 @@ var Workflow;
                 }
                 Utils.formatDate = formatDate;
             })(Utils = ResponseDetails.Utils || (ResponseDetails.Utils = {}));
-            var RevisionSet = (function () {
+            var RevisionSet = /** @class */ (function () {
                 function RevisionSet(id) {
                     var _this = this;
                     this.gridData = null;

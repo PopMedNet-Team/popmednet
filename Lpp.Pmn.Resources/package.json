@@ -7,8 +7,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/knockout": "^3.4.47",
-    "@types/knockout.mapping": "^2.0.30",
+    "@types/knockout": "^3.4.53",
+    "@types/knockout.mapping": "^2.0.33",
     "@types/knockout.validation": "0.0.35"
   },
   "dependencies": {}

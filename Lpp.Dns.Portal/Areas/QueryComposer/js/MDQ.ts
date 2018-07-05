@@ -730,6 +730,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
             self.Request.Where.Criteria.remove(data);
             itemArr = null;
+			this.GetCompatibleDataMarts();
         }
 
         public btnSaveCriteriaGroup_Click(criteriaGroup: Dns.ViewModels.QueryComposerCriteriaViewModel) {

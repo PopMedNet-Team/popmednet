@@ -15,7 +15,7 @@ var DataMarts;
     (function (Details) {
         var vm;
         var DistributedRegressionModelID = '4C8A25DC-6816-4202-88F4-6D17E72A43BC';
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, datamart, installedModels, allDataModels, organizations, projects, permissionList, requestTypes, datamartPermissions, datamartRequestTypePermissions, securityGroupTree, dmTypeList, orgid, dmProcessors, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -221,7 +221,7 @@ var DataMarts;
             return ViewModel;
         }(Global.PageViewModel));
         Details.ViewModel = ViewModel;
-        var InstalledModels = (function () {
+        var InstalledModels = /** @class */ (function () {
             function InstalledModels(installedModels, allDataModels) {
                 var self = this;
                 this.InstalledDataModels = ko.observableArray(installedModels != null ? installedModels.sort(function (a, b) { return a.Model == b.Model ? 0 : a.Model > b.Model ? 1 : -1; }).map(function (item) { return new InstalledModelViewModel(item); }) : null);
@@ -236,11 +236,11 @@ var DataMarts;
                     });
                 });
             }
+            InstalledModels.QueryComposerModelID = '455C772A-DF9B-4C6B-A6B0-D4FD4DD98488';
             return InstalledModels;
         }());
-        InstalledModels.QueryComposerModelID = '455C772A-DF9B-4C6B-A6B0-D4FD4DD98488';
         Details.InstalledModels = InstalledModels;
-        var InstalledModelViewModel = (function (_super) {
+        var InstalledModelViewModel = /** @class */ (function (_super) {
             __extends(InstalledModelViewModel, _super);
             function InstalledModelViewModel(data) {
                 var _this = _super.call(this, data) || this;
@@ -253,7 +253,7 @@ var DataMarts;
             return InstalledModelViewModel;
         }(Dns.ViewModels.DataMartInstalledModelViewModel));
         Details.InstalledModelViewModel = InstalledModelViewModel;
-        var DataUpdateFrequency = (function () {
+        var DataUpdateFrequency = /** @class */ (function () {
             function DataUpdateFrequency(datamart) {
                 var self = this;
                 this.DataMart = datamart;
@@ -278,7 +278,7 @@ var DataMarts;
             return DataUpdateFrequency;
         }());
         Details.DataUpdateFrequency = DataUpdateFrequency;
-        var UnattendedMode = (function () {
+        var UnattendedMode = /** @class */ (function () {
             function UnattendedMode(datamart) {
                 var self = this;
                 this.DataMart = datamart;

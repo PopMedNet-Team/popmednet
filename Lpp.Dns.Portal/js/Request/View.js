@@ -8,7 +8,7 @@ var Requests;
         View.AllowEditRequestID = null;
         View.vmRoutings = null;
         var vmHeader = null;
-        var HeaderViewModel = (function () {
+        var HeaderViewModel = /** @class */ (function () {
             function HeaderViewModel(fieldOptions) {
                 this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 var self = this;
@@ -37,7 +37,7 @@ var Requests;
             return HeaderViewModel;
         }());
         View.HeaderViewModel = HeaderViewModel;
-        var RoutingsViewModel = (function () {
+        var RoutingsViewModel = /** @class */ (function () {
             function RoutingsViewModel(modelData, overrideableRoutingIDs, request) {
                 var _this = this;
                 var self = this;
@@ -334,7 +334,7 @@ var Requests;
             return translated;
         }
         View.TranslatePriority = TranslatePriority;
-        var VirtualResponseViewModel = (function () {
+        var VirtualResponseViewModel = /** @class */ (function () {
             function VirtualResponseViewModel(data) {
                 this.ID = data.ID;
                 this.RequestDataMartID = data.RequestDataMartID;
@@ -342,7 +342,7 @@ var Requests;
                 this.DataMartName = data.DataMartName;
                 this.Messages = data.Messages;
                 this.ResponseTime = data.ResponseTime;
-                this.ResponseTimeFormatted = moment(moment(this.ResponseTime).format("M/D/YYYY h:mm:ss A UTC")).local().format('M/D/YYYY h:mm:ss A');
+                this.ResponseTimeFormatted = moment.utc(this.ResponseTime).local().format('M/D/YYYY h:mm:ss A');
                 this.IsRejectedBeforeUpload = data.IsRejectedBeforeUpload;
                 this.IsRejectedAfterUpload = data.IsRejectedAfterUpload;
                 this.IsResultsModified = data.IsResultsModified;

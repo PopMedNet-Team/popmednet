@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var MetaDataTableTerm = (function (_super) {
+    var MetaDataTableTerm = /** @class */ (function (_super) {
         __extends(MetaDataTableTerm, _super);
         function MetaDataTableTerm(tableData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.MetaDataTableTerm) || this;

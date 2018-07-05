@@ -14,7 +14,7 @@ var Dialog;
     var RoutingHistory;
     (function (RoutingHistory) {
         var vm;
-        var RoutingHistoryViewModel = (function (_super) {
+        var RoutingHistoryViewModel = /** @class */ (function (_super) {
             __extends(RoutingHistoryViewModel, _super);
             function RoutingHistoryViewModel(bindingControl, responseHistory) {
                 var _this = _super.call(this, bindingControl) || this;

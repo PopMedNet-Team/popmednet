@@ -14,7 +14,7 @@ var Requests;
     var Index;
     (function (Index) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjecs) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -26,10 +26,6 @@ var Requests;
                 _this.SelectedProjectID = ko.observable(projectID);
                 //requestable project are the ones that the user can create new requests for.
                 _this.RequestableProjects = requestableProjecs;
-                var filters = [];
-                //this.filters = ko.observableArray();
-                if (projectID != Constants.GuidEmpty)
-                    filters.push({ field: "ProjectID", operator: "equals", value: projectID });
                 _this.dataSource = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -45,7 +41,6 @@ var Requests;
                         model: kendo.data.Model.define(Dns.Interfaces.KendoModelRequestDTO)
                     },
                     sort: Global.Helpers.GetSortsFromUrl() || { field: "SubmittedOn", dir: "desc" },
-                    filter: filters
                 });
                 // Save the reference to the original filter function.
                 var originalFilter = _this.dataSource.filter;
@@ -118,6 +113,10 @@ var Requests;
             }
         }
         Index.NameAchor = NameAchor;
+        function DueDateTemplate(dataItem) {
+            return dataItem.DueDate ? moment(dataItem.DueDate).format("MM/DD/YYYY") : "";
+        }
+        Index.DueDateTemplate = DueDateTemplate;
         function init() {
             $.when(Users.GetSetting("Requests.Index.gResults.User:" + User.ID), Dns.WebApi.Users.ListAvailableProjects(null, "ID, Name", "Name"), Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name")).done(function (gResultsSettings, projects, requestableProjects) {
                 $(function () {
@@ -133,6 +132,20 @@ var Requests;
                     arrDateColumns.push("SubmittedOn", "DueDate");
                     //This specific method ensures that date filters are processed accordingly.
                     Global.Helpers.SetGridFromSettingsWithDates(vm.ResultsGrid(), gResultsSettings, arrDateColumns);
+                    if (projectID != Constants.GuidEmpty) {
+                        vm.ResultsGrid().dataSource.filter({
+                            field: "ProjectID",
+                            operator: "equals",
+                            value: projectID
+                        });
+                    }
+                    else {
+                        vm.ResultsGrid().dataSource.filter({
+                            field: "ProjectID",
+                            operator: "notequals",
+                            value: projectID
+                        });
+                    }
                     vm.ResultsGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
                     });

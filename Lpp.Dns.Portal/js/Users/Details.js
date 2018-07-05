@@ -13,7 +13,7 @@ var Users;
 (function (Users) {
     var Details;
     (function (Details) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, canApproveReject, user, securityGroups, userAcls, userEvents, subscribedEvents, organizationList, securityGroupTree, permissionList, eventList, subscribableEventsList, assignedNotificationsList, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -206,7 +206,7 @@ var Users;
                             transport: {
                                 read: {
                                     cache: false,
-                                    url: Global.Helpers.GetServiceUrl("/Users/ListSuccessfulAudits?$orderby=DateTime desc&$filter=Success ne false and UserID eq " + Details.vm.User.ID() + ""),
+                                    url: Global.Helpers.GetServiceUrl("/Users/ListSuccessfulAudits?$orderby=DateTime desc&$filter=UserID eq " + Details.vm.User.ID() + ""),
                                 }
                             },
                             schema: {
@@ -463,7 +463,7 @@ var Users;
             });
         }
         init();
-        var EventViewModel = (function (_super) {
+        var EventViewModel = /** @class */ (function (_super) {
             __extends(EventViewModel, _super);
             function EventViewModel(vm, event) {
                 var _this = _super.call(this, event) || this;

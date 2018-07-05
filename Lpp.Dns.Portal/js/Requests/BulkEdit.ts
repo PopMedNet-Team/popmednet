@@ -3,6 +3,7 @@ module Requests.BulkEdit {
     export class ViewModel extends Global.PageViewModel {
         public dsRequest: kendo.data.DataSource;
         public BulkEditEnabled: KnockoutObservable<boolean>;
+        public SaveEnabled: KnockoutObservable<boolean>;
 
         public formatDueDateCell: (item: any) => string;
         public formatPriorityCell: (item: any) => string;    
@@ -12,8 +13,12 @@ module Requests.BulkEdit {
         public onColumnMenuInit: (e: any) => void;
         public SaveGridSettings: () => void;
 
+        public selectionChanged: (e: any) => void;
+
         private DueDateTemplate: (data: any) => string = kendo.template('<input value=\'#= DueDate #\' data-bind=\'value:DueDate\' data-role=\'datepicker\' />');
         private PriorityTemplate: (data: any) => string = kendo.template('<input value=\'#= Priority #\' data-bind=\'value:Priority\' data-role=\'dropdownlist\' data-source=\'Dns.Enums.PrioritiesTranslation\' data-text-field=\'text\' data-value-field=\'value\' />');
+
+        
 
         constructor(requestID: string[], bindingControl: JQuery, screenPermissions: any[], gridSetting:string) {
             super(bindingControl, screenPermissions);
@@ -24,11 +29,12 @@ module Requests.BulkEdit {
                     data: [],
                     schema: {
                         model: kendo.data.Model.define(Dns.Interfaces.KendoModelRequestDTO)
-                    },
+                    }
                 }
             );
 
             this.BulkEditEnabled = ko.observable(false);
+            this.SaveEnabled = ko.observable(false);
 
             this.onRowSelectionChange = (e: any) => {
                 var grid = $(e.sender.wrapper).data('kendoGrid');
@@ -45,6 +51,10 @@ module Requests.BulkEdit {
                 var models = ko.utils.arrayMap(requests, (r: any) => new Request(r));
                 self.dsRequest.data(models);
 
+            });
+
+            $(document).on("RequestChanged", function () {
+              self.SaveEnabled(true);
             });
 
             self.formatDueDateCell = (item: any) => self.DueDateTemplate(item);
@@ -174,6 +184,11 @@ module Requests.BulkEdit {
                 return self.Priority() != self._request.Priority || self.DueDate() != self._request.DueDate;
             }, this, { pure: true });
 
+            this.Changed.subscribe((val) => {
+              if (val)
+                $(document).trigger("RequestChanged");
+            });
+
             this.ApplyChangesToRoutings = ko.observable(false);
         }
     }
@@ -198,9 +213,6 @@ module Requests.BulkEdit {
                 Global.Helpers.SetGridFromSettings(vm.RequestsGrid(), gridSetting);
                 
             });
-
-
-
         });
 
     }

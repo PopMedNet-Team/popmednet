@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var RxAmtTerm = (function (_super) {
+    var RxAmtTerm = /** @class */ (function (_super) {
         __extends(RxAmtTerm, _super);
         function RxAmtTerm(amtData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.RxAmtTerm) || this;

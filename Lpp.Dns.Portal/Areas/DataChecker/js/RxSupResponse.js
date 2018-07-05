@@ -6,7 +6,7 @@ var DataChecker;
     (function (RxSup) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(parameters) {
                 var _this = this;
                 this.requestID = ko.observable(null);

@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var EncounterTerm = (function (_super) {
+    var EncounterTerm = /** @class */ (function (_super) {
         __extends(EncounterTerm, _super);
         function EncounterTerm(encounterData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.EncounterTypeTerm) || this;

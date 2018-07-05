@@ -17,7 +17,7 @@ var Controls;
         (function (List) {
             var vm;
             var TaskIDs;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID, currentTask) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -224,7 +224,7 @@ var Controls;
                 return vm;
             }
             List.initForRequest = initForRequest;
-            var RevisionSet = (function () {
+            var RevisionSet = /** @class */ (function () {
                 function RevisionSet(id) {
                     var _this = this;
                     this.gridData = null;
@@ -335,7 +335,7 @@ var Controls;
                 }
                 Utils.buildDownloadUrl = buildDownloadUrl;
                 function buildDownloadLink(id, filename, documentName) {
-                    return '<a href="' + buildDownloadUrl(id, filename) + '">' + documentName + '</a>';
+                    return '<a id="' + filename + '" href="' + buildDownloadUrl(id, filename) + '">' + documentName + '</a>';
                 }
                 Utils.buildDownloadLink = buildDownloadLink;
                 function formatVersion(item) {

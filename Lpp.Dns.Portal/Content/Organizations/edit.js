@@ -13,7 +13,7 @@ var Organizations;
 (function (Organizations) {
     var Edit;
     (function (Edit) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(organizationID, details, ehrs) {
                 var _this = _super.call(this, null) || this;
@@ -77,7 +77,7 @@ var Organizations;
             return ViewModel;
         }(Dns.PageViewModel));
         Edit.ViewModel = ViewModel;
-        var RegistryViewModel = (function () {
+        var RegistryViewModel = /** @class */ (function () {
             function RegistryViewModel(registry) {
                 this.RegistryID = ko.observable(registry.RegistryID);
                 this.Name = ko.observable(registry.Name);
@@ -92,7 +92,7 @@ var Organizations;
             return RegistryViewModel;
         }());
         Edit.RegistryViewModel = RegistryViewModel;
-        var EHRViewModel = (function () {
+        var EHRViewModel = /** @class */ (function () {
             function EHRViewModel(ehr) {
                 this.Id = ko.observable(ehr.Id);
                 this.OrganizationID = ko.observable(ehr.OrganizationID);

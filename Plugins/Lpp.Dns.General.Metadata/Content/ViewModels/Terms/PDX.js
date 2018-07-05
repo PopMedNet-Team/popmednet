@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var PDXTerm = (function (_super) {
+    var PDXTerm = /** @class */ (function (_super) {
         __extends(PDXTerm, _super);
         function PDXTerm(pdxData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.PDXTerm) || this;

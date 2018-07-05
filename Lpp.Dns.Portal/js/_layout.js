@@ -1,7 +1,7 @@
 /// <reference path="../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Layout;
 (function (Layout) {
-    var FooterViewModel = (function () {
+    var FooterViewModel = /** @class */ (function () {
         function FooterViewModel(themeing) {
             this.Theme = new Dns.ViewModels.ThemeViewModel(themeing);
         }
@@ -14,7 +14,7 @@ var Layout;
         return FooterViewModel;
     }());
     Layout.FooterViewModel = FooterViewModel;
-    var HeaderViewModel = (function () {
+    var HeaderViewModel = /** @class */ (function () {
         function HeaderViewModel(menu, themeing, themeimg) {
             this.MainMenu = ko.observable(menu);
             this.Theme = new Dns.ViewModels.ThemeViewModel(themeing);
@@ -54,7 +54,7 @@ var Layout;
     }());
     Layout.HeaderViewModel = HeaderViewModel;
     function init() {
-        $.when(Dns.WebApi.Theme.GetText(theme, ["Title", "Terms", "Info", "Footer"]), Dns.WebApi.Theme.GetImagePath(theme)).then(function (textThemeResult, imageThemeResult) {
+        $.when(Dns.WebApi.Theme.GetText(["Title", "Terms", "Info", "Footer", "ContactUsHref"]), Dns.WebApi.Theme.GetImagePath()).then(function (textThemeResult, imageThemeResult) {
             var menu = Global.Session("MainMenu");
             if (menu == null && User.AuthInfo) {
                 Dns.WebApi.Users.ReturnMainMenu().done(function (results) {

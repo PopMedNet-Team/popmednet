@@ -8,7 +8,7 @@ var Controls;
             ItemTypes[ItemTypes["Folder"] = 0] = "Folder";
             ItemTypes[ItemTypes["File"] = 1] = "File";
         })(ItemTypes = WFFileUpload.ItemTypes || (WFFileUpload.ItemTypes = {}));
-        var sFtpFileResults = (function () {
+        var sFtpFileResults = /** @class */ (function () {
             function sFtpFileResults() {
                 this.Results = ko.observableArray();
             }
@@ -17,7 +17,7 @@ var Controls;
             return sFtpFileResults;
         }());
         WFFileUpload.sFtpFileResults = sFtpFileResults;
-        var sFtpResult = (function () {
+        var sFtpResult = /** @class */ (function () {
             function sFtpResult(path, status) {
                 this.Path = ko.observable(path);
                 this.Status = ko.observable(status);
@@ -25,7 +25,7 @@ var Controls;
             return sFtpResult;
         }());
         WFFileUpload.sFtpResult = sFtpResult;
-        var sFtpItem = (function () {
+        var sFtpItem = /** @class */ (function () {
             function sFtpItem(name, path, type, length) {
                 var _this = this;
                 this.Name = ko.observable(name);
@@ -64,4 +64,4 @@ var Controls;
         WFFileUpload.sFtpItem = sFtpItem;
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=common.js.map
+//# sourceMappingURL=Common.js.map

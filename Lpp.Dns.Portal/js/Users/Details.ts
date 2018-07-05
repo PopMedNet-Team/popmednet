@@ -272,7 +272,7 @@ module Users.Details {
                         transport: {
                             read: {
                                 cache: false,
-                                url: Global.Helpers.GetServiceUrl("/Users/ListSuccessfulAudits?$orderby=DateTime desc&$filter=Success ne false and UserID eq " + vm.User.ID() + ""),
+                                url: Global.Helpers.GetServiceUrl("/Users/ListSuccessfulAudits?$orderby=DateTime desc&$filter=UserID eq " + vm.User.ID() + ""),
                             }
                         },
                         schema: {

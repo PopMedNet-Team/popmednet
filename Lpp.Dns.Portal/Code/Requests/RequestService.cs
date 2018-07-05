@@ -1053,7 +1053,7 @@ namespace Lpp.Dns.Portal
             DateTime dt;
             if (DateTime.TryParse(h.DueDate, out dt))
             {
-                r.DueDate = dt.AddHours(12);
+                r.DueDate = dt;
             }
         }        
 

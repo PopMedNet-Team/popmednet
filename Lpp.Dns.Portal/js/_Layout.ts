@@ -66,8 +66,8 @@ module Layout {
     function init() {
 
         $.when<any>(
-            Dns.WebApi.Theme.GetText(theme, ["Title", "Terms", "Info", "Footer"]),
-            Dns.WebApi.Theme.GetImagePath(theme)
+            Dns.WebApi.Theme.GetText(["Title", "Terms", "Info", "Footer", "ContactUsHref"]),
+            Dns.WebApi.Theme.GetImagePath()
             ).then((textThemeResult, imageThemeResult) => {  
                 var menu: Dns.Interfaces.IMenuItemDTO[] = Global.Session("MainMenu");              
                 if (menu == null && User.AuthInfo) {

@@ -14,7 +14,7 @@ var Tests;
     var LocationSelector;
     (function (LocationSelector) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel() {
                 var _this = _super.call(this, null) || this;

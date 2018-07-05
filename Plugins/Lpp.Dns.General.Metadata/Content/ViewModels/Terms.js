@@ -50,7 +50,7 @@ var __extends = (this && this.__extends) || (function () {
 // TODO - add data partner
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var Term = (function (_super) {
+    var Term = /** @class */ (function (_super) {
         __extends(Term, _super);
         function Term(termType) {
             var _this = _super.call(this) || this;

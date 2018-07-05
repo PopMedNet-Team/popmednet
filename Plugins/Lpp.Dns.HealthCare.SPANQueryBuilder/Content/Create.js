@@ -46,34 +46,34 @@ var SPAN;
             ViewModel.prototype.save = function () {
                 return this.store("");
             };
+            ViewModel.IndexVariableList = [
+                new Dns.KeyValuePairData('dx', 'Diagnosis Code (Dx)'),
+                new Dns.KeyValuePairData('px', 'Procedure Code (Px)'),
+                new Dns.KeyValuePairData('rx', 'Drug Code (Rx)'),
+                new Dns.KeyValuePairData('age', 'Age'),
+                new Dns.KeyValuePairData('bmi', 'BMI')
+            ];
+            ViewModel.BMIList = [
+                new Dns.KeyValuePairData('>= 25', '>= 25'),
+                new Dns.KeyValuePairData('>= 30', '>= 25'),
+                new Dns.KeyValuePairData('>= 35', '>= 25'),
+                new Dns.KeyValuePairData('>= 40', '>= 25'),
+                new Dns.KeyValuePairData('>= 45', '>= 25'),
+                new Dns.KeyValuePairData('>= 50', '>= 25')
+            ];
+            ViewModel.ParentContextList = [
+                new Dns.KeyValuePairData('And', 'All'),
+                new Dns.KeyValuePairData('Or', 'Any')
+            ];
+            ViewModel.AgeOperatorList = [
+                new Dns.KeyValuePairData('>', '>'),
+                new Dns.KeyValuePairData('>=', '>='),
+                new Dns.KeyValuePairData('=', '='),
+                new Dns.KeyValuePairData('<', '<'),
+                new Dns.KeyValuePairData('<=', '<=')
+            ];
             return ViewModel;
         }(Dns.PageViewModel));
-        ViewModel.IndexVariableList = [
-            new Dns.KeyValuePairData('dx', 'Diagnosis Code (Dx)'),
-            new Dns.KeyValuePairData('px', 'Procedure Code (Px)'),
-            new Dns.KeyValuePairData('rx', 'Drug Code (Rx)'),
-            new Dns.KeyValuePairData('age', 'Age'),
-            new Dns.KeyValuePairData('bmi', 'BMI')
-        ];
-        ViewModel.BMIList = [
-            new Dns.KeyValuePairData('>= 25', '>= 25'),
-            new Dns.KeyValuePairData('>= 30', '>= 25'),
-            new Dns.KeyValuePairData('>= 35', '>= 25'),
-            new Dns.KeyValuePairData('>= 40', '>= 25'),
-            new Dns.KeyValuePairData('>= 45', '>= 25'),
-            new Dns.KeyValuePairData('>= 50', '>= 25')
-        ];
-        ViewModel.ParentContextList = [
-            new Dns.KeyValuePairData('And', 'All'),
-            new Dns.KeyValuePairData('Or', 'Any')
-        ];
-        ViewModel.AgeOperatorList = [
-            new Dns.KeyValuePairData('>', '>'),
-            new Dns.KeyValuePairData('>=', '>='),
-            new Dns.KeyValuePairData('=', '='),
-            new Dns.KeyValuePairData('<', '<'),
-            new Dns.KeyValuePairData('<=', '<=')
-        ];
         Create.ViewModel = ViewModel;
         function init() {
             $(function () {

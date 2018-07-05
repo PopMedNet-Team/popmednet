@@ -6,7 +6,7 @@ var DataChecker;
     (function (NDC) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(model) {
                 var _this = this;
                 this.DataPartners = [];

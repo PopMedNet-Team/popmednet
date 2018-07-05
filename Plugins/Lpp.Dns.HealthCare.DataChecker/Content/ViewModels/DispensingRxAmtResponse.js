@@ -6,7 +6,7 @@ var DataChecker;
     (function (RxAmt) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(model, result) {
                 var _this = this;
                 this.Metrics = ko.observableArray([new DataChecker.ResponseMetricsItem("Overall Metrics", 0), new DataChecker.ResponseMetricsItem("Percent within Data Partner", 1), new DataChecker.ResponseMetricsItem("Data Partner Contribution", 2)]);

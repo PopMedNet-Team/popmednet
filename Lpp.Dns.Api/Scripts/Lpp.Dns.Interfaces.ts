@@ -1901,6 +1901,7 @@ module Dns.Interfaces
 	 	 LogoImage: string;
 	 	 SystemUserConfirmationTitle: string;
 	 	 SystemUserConfirmationContent: string;
+	 	 ContactUsHref: string;
 	 }
 	 export var KendoModelThemeDTO: any = {
 	 	 fields: {
@@ -1912,6 +1913,7 @@ module Dns.Interfaces
 	 	 	'LogoImage': { type:'string', nullable: false},
 	 	 	'SystemUserConfirmationTitle': { type:'string', nullable: false},
 	 	 	'SystemUserConfirmationContent': { type:'string', nullable: false},
+	 	 	'ContactUsHref': { type:'string', nullable: false},
 	 	 }
 	 }
 	 export interface IAssignedUserNotificationDTO{
@@ -5016,8 +5018,6 @@ module Dns.Interfaces
 	 	 Status: Dns.Enums.RoutingStatus;
 	 	 Priority: Dns.Enums.Priorities;
 	 	 DueDate?: Date;
-	 	 RequestTime?: Date;
-	 	 ResponseTime?: Date;
 	 	 ErrorMessage: string;
 	 	 ErrorDetail: string;
 	 	 RejectReason: string;
@@ -5037,8 +5037,6 @@ module Dns.Interfaces
 	 	 	'Status': { type:'dns.enums.routingstatus', nullable: false},
 	 	 	'Priority': { type:'dns.enums.priorities', nullable: false},
 	 	 	'DueDate': { type:'date', nullable: true},
-	 	 	'RequestTime': { type:'date', nullable: true},
-	 	 	'ResponseTime': { type:'date', nullable: true},
 	 	 	'ErrorMessage': { type:'string', nullable: false},
 	 	 	'ErrorDetail': { type:'string', nullable: false},
 	 	 	'RejectReason': { type:'string', nullable: false},

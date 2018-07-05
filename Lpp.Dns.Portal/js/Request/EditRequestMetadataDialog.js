@@ -15,7 +15,7 @@ var Requests;
         var EditRequestMetadataDialog;
         (function (EditRequestMetadataDialog) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(request, requesterCenterList, workplanList, reportAggregationLevelsList, activityTree, fieldOptions, allowEditRequestID, bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;

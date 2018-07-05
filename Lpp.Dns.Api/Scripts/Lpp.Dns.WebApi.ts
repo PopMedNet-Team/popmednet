@@ -581,9 +581,8 @@ module Dns.WebApi {
 
 	 }
 	 export class Theme{
-	 	 public static GetText(themeID: string, keys: string[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IThemeDTO[]>{
+	 	 public static GetText(keys: string[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IThemeDTO[]>{
 	 	 	 var params = '';
-	 	 	 if (themeID != null) params += '&themeID=' + encodeURIComponent(themeID);
 	 	 	 if (keys != null)
 	 	 	 	 for(var j = 0; j < keys.length; j++) { params += '&keys=' + encodeURIComponent(keys[j]); }
 	 	 	 if (params.length > 0)
@@ -592,9 +591,8 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IThemeDTO[]>('Theme/GetText' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static GetImagePath(themeID: string, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IThemeDTO[]>{
+	 	 public static GetImagePath( doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IThemeDTO[]>{
 	 	 	 var params = '';
-	 	 	 if (themeID != null) params += '&themeID=' + encodeURIComponent(themeID);
 	 	 	 if (params.length > 0)
 	 	 	 	 params = '?' + params.substr(1);
 

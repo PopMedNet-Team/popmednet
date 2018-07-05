@@ -15,7 +15,7 @@ var Workflow;
         var MSRequestID;
         (function (MSRequestID) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, requestID) {
                     var _this = _super.call(this, bindingControl) || this;

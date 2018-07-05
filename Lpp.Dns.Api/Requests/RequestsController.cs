@@ -101,7 +101,14 @@ namespace Lpp.Dns.Api.Requests
                             obj.Status = DTO.Enums.RoutingStatus.Draft;
                             insert.Status = DTO.Enums.RoutingStatus.Draft;
                             obj.Priority = insert.Priority;
-                            obj.DueDate = insert.DueDate;
+                            if (insert.DueDate.HasValue)
+                            {
+                                obj.DueDate = insert.DueDate.Value.Date;
+                            }
+                            else
+                            {
+                                obj.DueDate = null;
+                            }
                             obj.RoutingType = insert.RoutingType;
                             DataMartMap.Add(obj, insert);                      
                         }
@@ -155,8 +162,20 @@ namespace Lpp.Dns.Api.Requests
                         var updates = request.DataMarts.Where(dm => dm.ID.HasValue && (!entity.DataMarts.Any(ad => (ad.ID == dm.ID.Value)) || entity.DataMarts.Any(adm => (adm.ID == dm.ID.Value) && ((adm.Priority != dm.Priority) || (adm.DueDate != dm.DueDate) || (adm.RoutingType != dm.RoutingType)))));
                         foreach (var update in updates)
                         {
+							if(DataMartMap.Any(p => p.Key.ID == update.ID))
+                            {
+                                continue;
+                            }
+							
                             var dm = entity.DataMarts.First(adm => adm.ID == update.ID.Value);
-                            dm.DueDate = update.DueDate;
+                            if (update.DueDate.HasValue)
+                            {
+                                dm.DueDate = update.DueDate.Value.Date;
+                            }
+                            else
+                            {
+                                dm.DueDate = null;
+                            }
                             dm.Priority = update.Priority;
                             dm.RoutingType = update.RoutingType;
                             update.Apply(DataContext.Entry(dm));
@@ -655,8 +674,6 @@ namespace Lpp.Dns.Api.Requests
                              DueDate = rdm.DueDate,
                              RejectReason = rdm.RejectReason,
                              RequestID = rdm.RequestID,
-                             RequestTime = rdm.RequestTime,
-                             ResponseTime = rdm.ResponseTime,
                              ResultsGrouped = rdm.ResultsGrouped,
                              ID = rdm.ID,
                              Timestamp = rdm.Timestamp,
@@ -961,7 +978,7 @@ namespace Lpp.Dns.Api.Requests
             request.PhiDisclosureLevel = reqMetadata.PhiDisclosureLevel;
             request.RequesterCenterID = reqMetadata.RequesterCenterID;
             request.WorkplanTypeID = reqMetadata.WorkplanTypeID;
-            request.DueDate = reqMetadata.DueDate;
+            request.DueDate = reqMetadata.DueDate.HasValue ? reqMetadata.DueDate.Value.Date : reqMetadata.DueDate;
             request.Priority = reqMetadata.Priority;
             request.MSRequestID = reqMetadata.MSRequestID;
             request.ReportAggregationLevelID = reqMetadata.ReportAggregationLevelID;

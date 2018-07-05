@@ -116,7 +116,8 @@ namespace Lpp.Dns.Api.DataMartClient
                 Lpp.Dns.DTO.Enums.RoutingStatus.RequestRejected,
                 Lpp.Dns.DTO.Enums.RoutingStatus.ResponseRejectedBeforeUpload,
                 Lpp.Dns.DTO.Enums.RoutingStatus.ResponseRejectedAfterUpload,
-                Lpp.Dns.DTO.Enums.RoutingStatus.AwaitingResponseApproval
+                Lpp.Dns.DTO.Enums.RoutingStatus.AwaitingResponseApproval,
+                Lpp.Dns.DTO.Enums.RoutingStatus.Hold
             };
 
             bool routingIsComplete = completeStatuses.Contains(routing.Status);

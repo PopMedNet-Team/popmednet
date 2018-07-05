@@ -316,9 +316,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     await db.Entry(_entity).ReloadAsync();
                     await SetRequestStatus(newRequestStatus);
 
-
-                    await MarkTaskComplete(task);
                 }
+
+                await MarkTaskComplete(task);
 
                 return new CompletionResult
                 {

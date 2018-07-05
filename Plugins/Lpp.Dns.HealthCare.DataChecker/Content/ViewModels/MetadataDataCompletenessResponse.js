@@ -6,7 +6,7 @@ var DataChecker;
     (function (MetaData) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(model) {
                 this._model = model;
                 this.hasDiagnosis = ko.observable($.Enumerable.From(model.MetadataTables).Where(function (t) { return t == MetadataTableTypes.Diagnosis; }).Count() > 0);

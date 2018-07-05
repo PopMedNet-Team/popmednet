@@ -58,84 +58,73 @@ namespace Lpp.Dns.Api.Users
         [HttpPost]
         public async Task<UserDTO> ValidateLogin(LoginDTO login)
         {
-            IUser user;
-            User contact = null;
-            if (!DataContext.ValidateUser2(login.UserName, login.Password, out user))
+            try
             {
-                if(user == null)
+                IUser user;
+                if (!DataContext.ValidateUser2(login.UserName, login.Password, out user))
                 {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid user name or password."));
-                }
-                string errorMessage = "The Login or Password is invalid.";
-
-                contact = (User)user;
-                contact.FailedLoginCount++;
-
-                if (contact.FailedLoginCount >= Convert.ToInt32(ConfigurationManager.AppSettings["FailedLoginAttemptsBeforeLockingOut"]))
-                {
-                    if (contact.Active == true)
+                    if(user == null)
                     {
-                        contact.DeactivatedOn = DateTime.UtcNow;
-                        contact.Active = false;
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid user name or password."));
                     }
-                    errorMessage = "Your account has been locked after too many unsuccessful login attempts. Please contact your administrator.";
+                    string errorMessage = "The Login or Password is invalid.";
+                    var contact = (User)user;
+                    contact.FailedLoginCount++;
+                    if (contact.FailedLoginCount >= Convert.ToInt32(ConfigurationManager.AppSettings["FailedLoginAttemptsBeforeLockingOut"]))
+                    {
+                        if (contact.Active == true)
+                        {
+                            contact.DeactivatedOn = DateTime.UtcNow;
+                            contact.Active = false;
+                        }
+                        errorMessage = "Your account has been locked after too many unsuccessful login attempts. Please contact your administrator.";
+                    }
+                    Dns.Data.Audit.UserAuthenticationLogs failedAudit = new UserAuthenticationLogs
+                    {
+                        UserID = contact.ID,
+                        Description = "User Authenticated Failed from " + login.Enviorment + " from IP Address: " + login.IPAddress,
+                        Success = false,
+                        IPAddress = login.IPAddress,
+                        Enviorment = login.Enviorment,
+                        Details = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + login.UserName + " was attempted with Password:" + login.Password,"AuthenticationLog", contact.ID.ToString("D"))
+                    };
+                    DataContext.LogsUserAuthentication.Add(failedAudit);
+                    await DataContext.SaveChangesAsync();
+                    if (!contact.Active)
+                    {
+                        System.Threading.Thread.Sleep(contact.FailedLoginCount * 3000);
+                    }                    
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, errorMessage));
                 }
-
-                Dns.Data.Audit.UserAuthenticationLogs failedAudit = new UserAuthenticationLogs
+                if(!((User)user).Active)
                 {
-                    UserID = contact.ID,
-                    Description = "User Authenticated Failed from " + login.Enviorment + " from IP Address: " + login.IPAddress,
-                    Success = false,
-                    IPAddress = login.IPAddress,
-                    Enviorment = login.Enviorment,
-                    Details = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + login.UserName + " was attempted with Password:" + login.Password,"AuthenticationLog", contact.ID.ToString("D"))
-                };
-
-                DataContext.LogsUserAuthentication.Add(failedAudit);
-                await DataContext.SaveChangesAsync();
-
-                if (!contact.Active)
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User Account is locked"));
+                }
+                if(((User)user).FailedLoginCount > 0)
                 {
-                    System.Threading.Thread.Sleep(contact.FailedLoginCount * 3000);
-                }   
-                
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, errorMessage));
-            }
-
-            contact = (User)user;
-
-            if (!contact.Active)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User Account is locked"));
-            }
-
-            if(contact.FailedLoginCount > 0)
-            {
-                contact.FailedLoginCount = 0;
-            }
-
-            if (contact.PasswordRestorationToken.HasValue || contact.PasswordRestorationTokenExpiration.HasValue)
-            {
-                contact.PasswordRestorationTokenExpiration = null;
-                contact.PasswordRestorationToken = null;
-            }
-
-            if (login.Enviorment != null && login.IPAddress != null)
-            {
-                Dns.Data.Audit.UserAuthenticationLogs successAudit = new UserAuthenticationLogs
+                    var contact = (User)user;
+                    contact.FailedLoginCount = 0;
+                    await DataContext.SaveChangesAsync();
+                }
+                if (login.Enviorment != null && login.IPAddress != null)
                 {
-                    UserID = user.ID,
-                    Description = "User Authenticated Successful from " + login.Enviorment + " from IP Address: " + login.IPAddress,
-                    Success = true,
-                    IPAddress = login.IPAddress,
-                    Enviorment = login.Enviorment
-                };
-                DataContext.LogsUserAuthentication.Add(successAudit);
+                    Dns.Data.Audit.UserAuthenticationLogs successAudit = new UserAuthenticationLogs
+                    {
+                        UserID = user.ID,
+                        Description = "User Authenticated Successful from " + login.Enviorment + " from IP Address: " + login.IPAddress,
+                        Success = true,
+                        IPAddress = login.IPAddress,
+                        Enviorment = login.Enviorment
+                    };
+                    DataContext.LogsUserAuthentication.Add(successAudit);
+                    await DataContext.SaveChangesAsync(); 
+                }
+                return ((User)user).Map<User, UserDTO>();
             }
-
-            await DataContext.SaveChangesAsync();
-
-            return contact.Map<User, UserDTO>();
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -329,10 +318,6 @@ namespace Lpp.Dns.Api.Users
             var user = await DataContext.Users.FindAsync(updateInfo.UserID);
             user.PasswordHash = updateInfo.Password.ComputeHash();
             user.PasswordExpiration = DateTime.Now.AddMonths(ConfigurationManager.AppSettings["ConfiguredPasswordExpiryMonths"].ToInt32());
-            user.PasswordRestorationTokenExpiration = null;
-            user.PasswordRestorationToken = null;
-            user.FailedLoginCount = 0;
-
             //Save it
             await DataContext.SaveChangesAsync();
 
@@ -1234,7 +1219,7 @@ namespace Lpp.Dns.Api.Users
 
         private async Task CompleteRegistrationTask(IEnumerable<UserDTO> users)
         {
-            var userIDs = users.Where(u => u.ID.HasValue && u.Active).Select(u => u.ID.Value).ToArray();
+            var userIDs = users.Where(u => u.ID.HasValue && (u.Active || u.RejectedOn != null)).Select(u => u.ID.Value).ToArray();
 
             var tasks = await (from a in DataContext.Actions where a.References.Any(r => userIDs.Contains(r.ItemID)) && a.Status != TaskStatuses.Complete && (a.Type & TaskTypes.NewUserRegistration) == TaskTypes.NewUserRegistration select a).ToArrayAsync();
 

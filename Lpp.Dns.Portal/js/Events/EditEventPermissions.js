@@ -3,7 +3,7 @@ var Events;
 (function (Events) {
     var Acl;
     (function (Acl) {
-        var EventAclEditViewModel = (function () {
+        var EventAclEditViewModel = /** @class */ (function () {
             function EventAclEditViewModel(events, securityGroupTree, acls, targets, aclType, identifier) {
                 if (identifier === void 0) { identifier = null; }
                 var _this = this;
@@ -176,7 +176,7 @@ var Events;
             return EventAclEditViewModel;
         }());
         Acl.EventAclEditViewModel = EventAclEditViewModel;
-        var EventListViewModel = (function () {
+        var EventListViewModel = /** @class */ (function () {
             function EventListViewModel(vm, event) {
                 var _this = this;
                 var self = this;
@@ -240,4 +240,4 @@ var Events;
         Acl.EventListViewModel = EventListViewModel;
     })(Acl = Events.Acl || (Events.Acl = {}));
 })(Events || (Events = {}));
-//# sourceMappingURL=editeventpermissions.js.map
+//# sourceMappingURL=EditEventPermissions.js.map

@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../ViewModels/Criteria.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var RequestCriteria = (function (_super) {
+    var RequestCriteria = /** @class */ (function (_super) {
         __extends(RequestCriteria, _super);
         function RequestCriteria(requestCriteriaData, requesterCenters, workplanTypes, reportAggregationLevels) {
             var _this = _super.call(this) || this;

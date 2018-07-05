@@ -52,7 +52,13 @@ module Global {
         
         public Validator: kendo.ui.Validator;
         private _BindingControl: JQuery;
-        constructor(bindingControl: JQuery, screenPermissions: any[] = null) {
+        /**
+         * 
+         * @param bindingControl The control the page viewmodel is bound to.
+         * @param screenPermissions The permissions for controlling the UI the user has.
+         * @param validationContainer The container to use for validation other than the root binding container. If not specified the 'bindingControl' element is used.
+         */
+        constructor(bindingControl: JQuery, screenPermissions: any[] = null, validationContainer: JQuery = null) {
             this._BindingControl = bindingControl;
             var self = this;
             this.ScreenPermissions = screenPermissions == null ? null : screenPermissions.map((sp: string) => {
@@ -61,7 +67,7 @@ module Global {
 
             this.ValidationMessage = ko.observable("");
 
-            this.Validator = bindingControl.kendoValidator({
+            this.Validator = (validationContainer || bindingControl).kendoValidator({
                 validate: () => {
                     var errors = "";
                     this.Validator.errors().forEach((item: string) => {
@@ -157,8 +163,10 @@ module Global {
         public EmployerID: any = null;
         public PasswordExpiration: any = null;
         public SessionExpireMinutes: number = null;
+        private SessionTimeout: any = null;
 
         constructor() {
+            let self = this;
             var sAuthorization = Global.Cookies.get("Authorization");
             
             if (!sAuthorization)
@@ -167,15 +175,8 @@ module Global {
             this.AuthInfo = JSON.parse(sAuthorization);
 
             if (!this.AuthInfo)
-                return;
-            //if (!this.AuthInfo) {//Not logged in yet
-            //    //Check that the current URL isn't the login page
-            //    if (window.location.href.toLowerCase().indexOf("/account/login") >= 0 || window.location.protocol.toLowerCase() == "http")
-            //        return;  //On the login page or other insecure page before login, get out.
+              return;
 
-            //    window.location.href = "/account/login?ReturnUrl=" + encodeURIComponent(window.location.href);
-            //    return;
-            //}
             this.ID = this.AuthInfo.ID;
 
             if (this.AuthInfo.UserName) {
@@ -195,18 +196,88 @@ module Global {
                 this.AuthToken = null;
             }
 
-            this.SessionExpireMinutes = this.AuthInfo.SessionExpireMinutes;
+            if (window.location.pathname.toLowerCase() !== "/dialogs/sessionexpiring") {
+                self.SessionExpireMinutes = self.AuthInfo.SessionExpireMinutes;
+                localStorage.setItem("SessionExpire", moment(new Date()).add((self.SessionExpireMinutes), 'm').toJSON());
+            }
 
             if (this.AuthToken) {
                 $.ajaxSetup({
                     headers: { "Authorization": "PopMedNet " + this.AuthToken }
                 });
             }            
-            if (this.SessionExpireMinutes && this.SessionExpireMinutes > 0) {
-                setTimeout(() => {
-                    window.location.href = "/account/login?ReturnUrl=" + encodeURIComponent(window.location.href);
-                }, this.SessionExpireMinutes * 60 * 1000);
+            if (self.SessionExpireMinutes && self.SessionExpireMinutes > 0) {
+                self.SessionTimeout = setTimeout(function () { self.SessionExiring() }, (self.SessionExpireMinutes - 5) * 60 * 1000);
             }
+
+            setInterval(() => {
+                self.CheckAuth();
+            }, 15000);
+        }
+
+        public SessionExiring() {
+            let self = this;
+            setTimeout(() => { }, 1000)
+            ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
+            if (Helpers.DetectInternetExplorer()) {
+                localStorage.setItem("ieFix", null);
+            }
+            var exireDateTime = localStorage.getItem("SessionExpire");
+            if ((moment(exireDateTime).toDate().getTime() - moment(new Date()).toDate().getTime()) < (5 * 60 * 1000)) {
+                this.SessionExpringDialog();
+            }
+            else {
+                clearTimeout(self.SessionTimeout);
+                self.SessionTimeout = setTimeout(function () { self.SessionExiring() }, (((moment(exireDateTime).toDate().getTime() - moment(new Date()).toDate().getTime()) - 5) * 60 * 1000));
+            }
+        }
+
+        public SessionExpringDialog() {
+          let self = this;
+            Helpers.ShowDialog("Session Expiring", "/Dialogs/SessionExpiring", ["close"], 800, 600).done((response: boolean) => {
+                if (response == true) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/RefreshSession",
+                        dataType: "json",
+                    }).done((result) => {
+                        User = new UserInfo();
+                    }).fail((error) => {
+                        window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                    });
+                }
+                else {
+                    ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
+                    if (Helpers.DetectInternetExplorer()) {
+                        localStorage.setItem("ieFix", null);
+                    }
+                    let time = moment(localStorage.getItem("SessionExpire")).toDate().getTime() - moment(new Date()).toDate().getTime();
+                    let minutes = Math.floor((time / 1000 / 60));
+                    if (moment(localStorage.getItem("SessionExpire")).isBefore(moment(new Date())) || minutes <= 0) {
+                        window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                    }
+                }
+            });
+        }
+
+        public CheckAuth() {
+          $.ajax({
+            type: "GET",
+            url: "/Home/CheckAuth",
+            dataType: "json",
+          }).done((result) => {
+              if (!result.IsAuthenticated) {
+                  window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+              }
+          }).fail((error) => {
+              if (moment(new Date()).toDate() > moment(localStorage.getItem("SessionExpire")).toDate()) {
+                  if (Helpers.DetectInternetExplorer()) {
+                      localStorage.removeItem("ieFix");
+                  }
+                  localStorage.removeItem("SessionExpire");
+                  window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+            }
+          });
         }
 
         public SetEmployer(employerID: any) {
@@ -373,6 +444,21 @@ module Global {
             return arr;
         }
 
+        static AddClearAllFiltersMenuItem(e: any): void {
+              let popup = e.container.data('kendoPopup');
+              let menu = e.container.find(".k-menu").data("kendoMenu");
+              let grid: kendo.ui.Grid = e.sender;
+              menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
+              menu.bind("select", function (e) {
+                if ($(e.item).text() == "Clear All Filters") {
+                  //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
+                  grid.dataSource.filter({});
+                  menu.close();
+                  popup.close();
+                }
+              });
+            }
+
         static GetDataSourceSettings(ds: kendo.data.DataSource) : string {
             var state : IKendoDataSourceSettings = {
                 page: ds.page(),
@@ -484,6 +570,7 @@ module Global {
         }
 
         static SetDataSourceFromSettingsWithDates(ds: kendo.data.DataSource, settings: string, colDates: string[]) {
+
             var s: IKendoDataSourceSettings = JSON.parse(settings);
 
             if (s == null) {
@@ -769,7 +856,6 @@ module Global {
         }
 
         static ShowDialog(title: string, url: string, actions: string[] = null, width?: number, height?: number, parameters: any = null): JQueryDeferred<any> {
-            
             var deferred = $.Deferred();
             var loaded = false;
             var kendoWindow = $('<div data-url="' + url + '" style="overflow: hidden;"/>').kendoWindow(<any>{
@@ -1073,6 +1159,20 @@ module Global {
             return options;
         }
 
+        static DetectInternetExplorer(): boolean {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf('MSIE ');
+            if (msie > 0) {
+                return true;
+            }
+
+            var trident = ua.indexOf('Trident/');
+            if (trident > 0) {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     /** Custom class that overrides the default toString implementation to return the value specified using the a specific string format. */

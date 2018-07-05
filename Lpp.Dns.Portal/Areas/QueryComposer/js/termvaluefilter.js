@@ -6,7 +6,7 @@ var Plugins;
         (function (QueryBuilder) {
             var MDQ;
             (function (MDQ) {
-                var Terms = (function () {
+                var Terms = /** @class */ (function () {
                     function Terms() {
                     }
                     Object.defineProperty(Terms, "DataCheckerQueryTypeID", {
@@ -250,7 +250,7 @@ var Plugins;
                     return Terms;
                 }());
                 MDQ.Terms = Terms;
-                var TermValueFilter = (function () {
+                var TermValueFilter = /** @class */ (function () {
                     function TermValueFilter(models) {
                         var _this = this;
                         this._models = models || [];

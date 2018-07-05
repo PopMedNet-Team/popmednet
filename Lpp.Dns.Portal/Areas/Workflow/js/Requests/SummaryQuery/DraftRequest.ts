@@ -60,7 +60,18 @@ module Workflow.SummaryQuery.DraftRequest {
                 });
             } else {
                 if (!Requests.Details.rovm.Validate())
-                    return;
+                return;
+
+                var emptyCriteraGroups: boolean = false
+                ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Where.Criteria(), (item) => {
+                  if (item.Criteria().length === 0 && item.Terms().length === 0)
+                    emptyCriteraGroups = true;
+                });
+
+                if (emptyCriteraGroups) {
+                  Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
+                  return;
+                }
 
                 var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
 

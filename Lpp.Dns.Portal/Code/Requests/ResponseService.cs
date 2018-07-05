@@ -168,9 +168,27 @@ namespace Lpp.Dns.Portal
             var requests = GetRequests(db, instanceIDs);
 
             var routes = db.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Responses.Any(r => instanceIDs.Contains(r.ID)));
+
+            var routeIDs = routes.Select(rt => rt.ID).ToArray();
+            var responseIDs = responses.Select(res => res.ID).ToArray();
+            var statusChangeLogs = db.LogsRoutingStatusChange.Where(l => routeIDs.Contains(l.RequestDataMartID) && (l.ResponseID == null || (l.ResponseID.HasValue && responseIDs.Contains(l.ResponseID.Value)))).ToArray();
             foreach (var route in routes)
             {
-                route.Status = newStatus;
+                
+                if (newStatus == RoutingStatus.ResponseRejectedAfterUpload)
+                {
+                    route.Status = newStatus;
+                }
+                //if the response has ever had a status of Completed or ResponseModified it should be changed to ResponseModified
+                else if (statusChangeLogs.Where(l => l.RequestDataMartID == route.ID && (l.NewStatus == RoutingStatus.Completed || l.NewStatus == RoutingStatus.ResultsModified)).Any())
+                {
+                    route.Status = RoutingStatus.ResultsModified;
+                }
+                else
+                {
+                    route.Status = DTO.Enums.RoutingStatus.Completed;
+                }
+
                 route.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).ForEach(r => r.ResponseMessage = message ?? r.ResponseMessage);
             }
 
@@ -324,7 +342,7 @@ namespace Lpp.Dns.Portal
                              from routing in db.RequestDataMarts //req.Routings
                              //from instance in routing.Instances
                              where req.ID == routing.RequestID && routing.DataMartID == dataMartId && req.RequestTypeID == requestTypeId
-                             orderby routing.ResponseTime descending
+                             orderby routing.UpdatedOn descending
                              select routing;
 
                 var rr = routes.FirstOrDefault(rt => rt.Status == RoutingStatus.Completed || rt.Status == RoutingStatus.ResultsModified || rt.Status == RoutingStatus.ExaminedByInvestigator);
@@ -370,6 +388,15 @@ namespace Lpp.Dns.Portal
                 var userAcls = db.UserAcls.FilterAcl(Auth.ApiIdentity, PermissionIdentifiers.Request.ViewResults, PermissionIdentifiers.Request.ViewStatus);
                 var projectOrgAcls = db.ProjectOrganizationAcls.FilterAcl(Auth.ApiIdentity, PermissionIdentifiers.Request.ViewStatus);
 
+                var completedRoutingStatuses = new[] {
+                    RoutingStatus.Completed,
+                    RoutingStatus.ResultsModified,
+                    RoutingStatus.RequestRejected,
+                    RoutingStatus.ResponseRejectedBeforeUpload,
+                    RoutingStatus.ResponseRejectedAfterUpload,
+                    RoutingStatus.AwaitingResponseApproval
+                };
+
                 var instances = (from rri in db.Responses
                                  let canViewResults = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID).Select(a => a.Allowed)
                                                                 .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID )).Select(a => a.Allowed))
@@ -401,7 +428,7 @@ namespace Lpp.Dns.Portal
                                                             .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
                                  where rri.RequestDataMart.RequestID == requestID && rri.RequestDataMart.Status != RoutingStatus.Resubmitted
                                  && rri.Count == rri.RequestDataMart.Responses.Max(x => x.Count)
-                                 && rri.RespondedByID.HasValue
+                                 && completedRoutingStatuses.Contains(rri.RequestDataMart.Status)
                                  && (
                                     //the user can group
                                     (canGroup.Any() && canGroup.All(a => a)) ||
