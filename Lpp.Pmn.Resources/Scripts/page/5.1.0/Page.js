@@ -158,7 +158,8 @@ var Global;
             else {
                 this.AuthToken = null;
             }
-            if (window.location.pathname.toLowerCase() !== "/dialogs/sessionexpiring") {
+            var invalidURLs = ["/dialogs/sessionexpiring", "/login", "/account/login"];
+            if ($.inArray(window.location.pathname.toLowerCase(), invalidURLs) == -1) {
                 self.SessionExpireMinutes = self.AuthInfo.SessionExpireMinutes;
                 localStorage.setItem("SessionExpire", moment(new Date()).add((self.SessionExpireMinutes), 'm').toJSON());
             }
@@ -167,12 +168,12 @@ var Global;
                     headers: { "Authorization": "PopMedNet " + this.AuthToken }
                 });
             }
-            if (self.SessionExpireMinutes && self.SessionExpireMinutes > 0) {
+            if (self.SessionExpireMinutes && self.SessionExpireMinutes > 0 && $.inArray(window.location.pathname.toLowerCase(), invalidURLs) == -1) {
                 self.SessionTimeout = setTimeout(function () { self.SessionExiring(); }, (self.SessionExpireMinutes - 5) * 60 * 1000);
+                setInterval(function () {
+                    self.CheckAuth();
+                }, 15000);
             }
-            setInterval(function () {
-                self.CheckAuth();
-            }, 15000);
         }
         UserInfo.prototype.SessionExiring = function () {
             var self = this;
