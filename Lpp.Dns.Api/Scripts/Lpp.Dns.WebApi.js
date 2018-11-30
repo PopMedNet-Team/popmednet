@@ -1,4 +1,4 @@
-/// <reference path='../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.d.ts' />
+/// <reference path='../../node_modules/@types/jquery/index.d.ts' />
 /// <reference path='Lpp.Dns.ViewModels.ts' />
 var Dns;
 (function (Dns) {
@@ -688,6 +688,9 @@ var Dns;
                 if (params.length > 0)
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Terms/ListTemplateTerms' + params, doNotHandleFail);
+            };
+            Terms.ParseCodeList = function (doNotHandleFail) {
+                return Helpers.PostAPIValue('Terms/ParseCodeList', doNotHandleFail);
             };
             Terms.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
@@ -4326,4 +4329,3 @@ var Dns;
         WebApi.RequestsHub = RequestsHub;
     })(WebApi = Dns.WebApi || (Dns.WebApi = {}));
 })(Dns || (Dns = {}));
-//# sourceMappingURL=Lpp.Dns.WebApi.js.map

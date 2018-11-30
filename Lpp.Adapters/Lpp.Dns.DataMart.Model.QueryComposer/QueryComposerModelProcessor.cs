@@ -169,6 +169,14 @@ namespace Lpp.Dns.DataMart.Model
                     Required = true,
                     ValueType = typeof(int)
                 });
+                settings.Add(new ProcessorSetting
+                {
+                    Title = "Monitoring Frequency (seconds)",
+                    Key = "MonitoringFrequency",
+                    DefaultValue = "5",
+                    Required = true,
+                    ValueType = typeof(decimal)
+                });
             }
 
             
@@ -241,6 +249,19 @@ namespace Lpp.Dns.DataMart.Model
             set;
         }
 
+        //bool IPatientIdentifierProcessor.CanGenerateLists
+        //{
+        //    get
+        //    {
+        //        if (ModelMetadata.Capabilities.ContainsKey("CanGeneratePatientIdentifierLists"))
+        //        {
+        //            return modelMetadata.Capabilities["CanGeneratePatientIdentifierLists"];
+        //        }
+
+        //        return false;
+        //    }
+        //}
+
         string requestTypeId = null;
         RequestStatus status = new RequestStatus();
 
@@ -260,6 +281,7 @@ namespace Lpp.Dns.DataMart.Model
         bool IsFileDistributionRequest = false;
         bool IsDistributedRegressionRequest = false;
         string _requestDetails = string.Empty;
+        RequestMetadata _requestMetadata = null;
 
         public void Initialize(Guid modelID, Model.DocumentWithStream[] documents)
         {
@@ -318,7 +340,11 @@ namespace Lpp.Dns.DataMart.Model
                     log.Debug("No request.json found, assuming the request is for Modular Program/File Distribution.");
                     IsFileDistributionRequest = true;
                 }
-            }  
+            }
+            else
+            {
+                IsFileDistributionRequest = true;
+            }
 
             using (QueryComposer.IModelAdapter adapter = GetModelAdapter())
             {
@@ -330,10 +356,9 @@ namespace Lpp.Dns.DataMart.Model
                 modelMetadata.Capabilities["AddFiles"] = adapter.CanAddResponseFiles;
                 modelMetadata.Capabilities["IsFileDistributionRequest"] = IsFileDistributionRequest;
                 modelMetadata.Capabilities["IsDistributedRegressionRequest"] = IsDistributedRegressionRequest;
+                modelMetadata.Capabilities["CanGeneratePatientIdentifierLists"] = adapter.CanGeneratePatientIdentifierLists;
             }
         }
-
-        #region Model Processor Life Cycle Methods
 
         public void SetRequestProperties(string requestId, IDictionary<string, string> requestProperties)
         {
@@ -341,6 +366,7 @@ namespace Lpp.Dns.DataMart.Model
 
         public void Request(string requestId, NetworkConnectionMetadata network, RequestMetadata md, Document[] requestDocuments, out IDictionary<string, string> requestProperties, out Document[] desiredDocuments)
         {
+            _requestMetadata = md;
             this.requestTypeId = md.RequestTypeId;
             if (Settings.ContainsKey("MSRequestID"))
             {
@@ -444,19 +470,19 @@ namespace Lpp.Dns.DataMart.Model
         {
             if (IsFileDistributionRequest)
             {
-                return new QueryComposer.Adapters.ModularProgram.ModularProgramModelAdapter();
+                return new QueryComposer.Adapters.ModularProgram.ModularProgramModelAdapter(_requestMetadata);
             }
 
             if (IsDistributedRegressionRequest)
             {
-                return new QueryComposer.Adapters.DistributedRegression.DistributedRegressionModelAdapter();
+                return new QueryComposer.Adapters.DistributedRegression.DistributedRegressionModelAdapter(_requestMetadata);
             }
 
             if (ModelID == QueryComposerModelMetadata.SummaryTableModelID)
             {
                 if ((requireRequestDTO == false) && (_request == null))
                 {
-                    return new QueryComposer.Adapters.SummaryQuery.DummyModelAdapter();
+                    return new QueryComposer.Adapters.SummaryQuery.DummyModelAdapter(_requestMetadata);
                 }
 
                 if (!_request.Header.QueryType.HasValue)
@@ -465,27 +491,27 @@ namespace Lpp.Dns.DataMart.Model
                 switch (_request.Header.QueryType.Value)
                 {
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Incidence:
-                        return new QueryComposer.Adapters.SummaryQuery.IncidenceModelAdapter();
+                        return new QueryComposer.Adapters.SummaryQuery.IncidenceModelAdapter(_requestMetadata);
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_MFU:
-                        return new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter();
+                        return new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter(_requestMetadata);
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Prevalence:
-                        return new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter();
+                        return new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter(_requestMetadata);
                     case DTO.Enums.QueryComposerQueryTypes.Sql:
-                        return new QueryComposer.Adapters.SummaryQuery.SqlDistributionAdapter();
+                        return new QueryComposer.Adapters.SummaryQuery.SqlDistributionAdapter(_requestMetadata);
                     default:
                         throw new Exception("Cannot determine model query adapter:" + _request.Header.QueryType.Value);
                 }
                 
             }
 
-            var adaptersTypes = from a in AppDomain.CurrentDomain.GetAssemblies()
-                                from t in a.GetTypes()
-                                where t.GetInterfaces().Any(i => i == typeof(QueryComposer.IModelAdapter))
-                                 && t.GetConstructor(Type.EmptyTypes) != null
-                                 && !t.IsInterface
-                                select t;
+            var adaptersTypes = (from a in AppDomain.CurrentDomain.GetAssemblies()
+                                from t in GetLoadableTypes(a).Where(i => i.FullName.StartsWith("System.") == false)
+                                let interfaces = t.GetInterfaces().DefaultIfEmpty()
+                                where interfaces.Any(i => i == typeof(QueryComposer.IModelAdapter))
+                                && !t.IsInterface
+                                select t).ToArray();
 
-            foreach (Type type in adaptersTypes)
+            foreach (Type type in adaptersTypes.Where(t => t.GetConstructor(Type.EmptyTypes) != null))
             {
                 var adapter = (QueryComposer.IModelAdapter)Activator.CreateInstance(type);
 
@@ -493,8 +519,31 @@ namespace Lpp.Dns.DataMart.Model
                     return adapter;
             }
 
+            foreach(Type type in adaptersTypes.Where(t => t.GetConstructor(new[] { typeof(RequestMetadata) }) != null))
+            {
+                var adapter = (QueryComposer.IModelAdapter)Activator.CreateInstance(type, _requestMetadata);
+
+                if(adapter.ModelID == ModelID)
+                {
+                    return adapter;
+                }
+            }
+
             throw new Exception("Model adapter for modelID: " + ModelID + " not found.");
 
+        }
+
+        static IEnumerable<Type> GetLoadableTypes(System.Reflection.Assembly assembly)
+        {
+            if (assembly == null) throw new ArgumentNullException("assembly");
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (System.Reflection.ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
         }
 
         public void PostProcess(string requestId)
@@ -628,9 +677,39 @@ namespace Lpp.Dns.DataMart.Model
 
         public void Close(string requestId)
         {
-        }        
+        }
 
-        #endregion
+        //IDictionary<Guid, string> IPatientIdentifierProcessor.GetQueryIdentifiers()
+        //{
+        //    //TODO: interogate the current request.json to determine how many queries exist. Until multi-query implemented, will always be one.
+        //    var queries = new Dictionary<Guid, string>();
+        //    queries.Add(Guid.NewGuid(), "Default Query");
+        //    return queries;
+        //}
+
+        //void IPatientIdentifierProcessor.GenerateLists(Guid requestID, NetworkConnectionMetadata network, RequestMetadata md, IDictionary<Guid, string> outputPaths, string format)
+        //{
+        //    using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
+        //    {
+        //        if (Settings.ContainsKey("MSRequestID"))
+        //        {
+        //            Settings["MSRequestID"] = md.MSRequestID;
+        //        }
+        //        else
+        //        {
+        //            Settings.Add("MSRequestID", md.MSRequestID);
+        //        }
+
+        //        adapter.Initialize(Settings);
+        //        adapter.GeneratePatientIdentifierLists(_request, outputPaths, format);
+        //    }
+        //}
+
+        //void IPatientIdentifierProcessor.SetPatientIdentifierSources(IDictionary<Guid, string> inputPaths)
+        //{
+        //    //TODO: accept the input paths and store the identifiers, to be used when the adapter queries are run.
+        //    throw new NotImplementedException();
+        //}
 
         public class DocumentEx
         {
@@ -685,7 +764,6 @@ namespace Lpp.Dns.DataMart.Model
 
             return new System.Guid(guidArray);
         }
-
 
     }
 

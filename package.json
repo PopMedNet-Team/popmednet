@@ -1,0 +1,19 @@
+{
+  "name": "popmednet",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bootstrap": "3.3.37",
+    "@types/history": "^4.6.2",
+    "@types/jquery": "2.0.34",
+    "@types/jquery.cookie": "^1.4.31",
+    "@types/jquery.form": "^3.26.30",
+    "@types/knockout": "^3.4.54",
+    "@types/knockout.mapping": "^2.0.33",
+    "@types/knockout.validation": "0.0.35",
+    "@types/rx": "^4.1.1",
+    "@types/signalr": "^2.2.35"
+  }
+}

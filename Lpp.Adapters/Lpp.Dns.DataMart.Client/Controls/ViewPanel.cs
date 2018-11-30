@@ -365,7 +365,11 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     break;
 
                 case "JSON":
-                    string JSONcontent = new StreamReader( value ).ReadToEnd();
+                    string JSONcontent;
+                    //using (var reader = new StreamReader(value)) {
+                    // JSONcontent = reader.ReadToEnd();
+                    //}
+                    JSONcontent = new StreamReader(value).ReadToEnd();
                     DataSource = JSONcontent;
                     break;
                     

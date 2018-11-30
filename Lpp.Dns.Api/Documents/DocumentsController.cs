@@ -68,6 +68,8 @@ namespace Lpp.Dns.Api.Documents
                             Kind = d.Kind,
                             Length = d.Length,
                             CreatedOn = d.CreatedOn,
+                            ContentCreatedOn = d.ContentCreatedOn,
+                            ContentModifiedOn = d.ContentModifiedOn,
                             ParentDocumentID = d.ParentDocumentID,
                             RevisionDescription = d.RevisionDescription,
                             RevisionSetID = d.RevisionSetID,
@@ -120,6 +122,8 @@ namespace Lpp.Dns.Api.Documents
                            Kind = d.Kind,
                            Length = d.Length,
                            CreatedOn = d.CreatedOn,
+                           ContentCreatedOn = d.ContentCreatedOn,
+                           ContentModifiedOn = d.ContentModifiedOn,
                            ParentDocumentID = d.ParentDocumentID,
                            RevisionDescription = d.RevisionDescription,
                            RevisionSetID = d.RevisionSetID,
@@ -159,6 +163,8 @@ namespace Lpp.Dns.Api.Documents
                     Kind = d.Kind,
                     Length = d.Length,
                     CreatedOn = d.CreatedOn,
+                    ContentCreatedOn = d.ContentCreatedOn,
+                    ContentModifiedOn = d.ContentModifiedOn,
                     ParentDocumentID = d.ParentDocumentID,
                     RevisionDescription = d.RevisionDescription,
                     RevisionSetID = d.RevisionSetID,
@@ -424,6 +430,7 @@ namespace Lpp.Dns.Api.Documents
             
             await DataContext.SaveChangesAsync();
 
+            DateTime contentCreatedOn = DateTime.UtcNow;
             try
             {
                 using (var dbStream = new Dns.Data.Documents.DocumentStream(DataContext, document.ID))
@@ -441,7 +448,7 @@ namespace Lpp.Dns.Api.Documents
                 System.IO.File.Delete(o.FileData.First().LocalFileName);
             }
 
-            await DataContext.Database.ExecuteSqlCommandAsync("UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = @ID", new System.Data.SqlClient.SqlParameter("@ID", document.ID));
+            await DataContext.Database.ExecuteSqlCommandAsync("UPDATE Documents SET ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = @ContentCreatedOn WHERE ID = @ID", new System.Data.SqlClient.SqlParameter("@ID", document.ID), new System.Data.SqlClient.SqlParameter("@ContentCreatedOn", contentCreatedOn));
 
             if (!string.IsNullOrWhiteSpace(comments))
             {
@@ -489,6 +496,8 @@ namespace Lpp.Dns.Api.Documents
                 Kind = document.Kind,
                 Length = document.Length,
                 CreatedOn = document.CreatedOn,
+                ContentCreatedOn = document.ContentCreatedOn,
+                ContentModifiedOn = document.ContentModifiedOn,
                 ParentDocumentID = document.ParentDocumentID,
                 RevisionDescription = document.RevisionDescription,
                 RevisionSetID = document.RevisionSetID,
@@ -509,9 +518,6 @@ namespace Lpp.Dns.Api.Documents
         [HttpPost]
         public async Task<HttpResponseMessage> UploadChunked()
         {
-            Logger.Info("Start of Uploading chunk");
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
             if (!Request.Content.IsMimeMultipartContent())
             {
                 return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "Content must be mime multipart.");
@@ -523,14 +529,11 @@ namespace Lpp.Dns.Api.Documents
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
-            var provider = new ChunkedMultipartFormDataStreamProvider(uploadPath, HttpContext.Current.Request, DataContext, Identity);
+            var provider = new ChunkedMultipartFormDataStreamDbProvider<ExtendedDocumentDTO>(uploadPath, HttpContext.Current.Request, DataContext, Identity);
 
             var o = await Request.Content.ReadAsMultipartAsync(provider);
 
             var result = o.GetResult();
-            stopWatch.Stop();
-            TimeSpan ts = stopWatch.Elapsed;
-            Logger.Info("Chunk Finsihed uploading.  Time Taken was " + ts.ToString());
             if (result.uploaded == false)
             {
                 return Request.CreateResponse(HttpStatusCode.Created, result);
@@ -549,14 +552,9 @@ namespace Lpp.Dns.Api.Documents
                 //Get the requestID based on the task.
                 o.RequestID = await DataContext.ActionReferences.Where(tr => tr.TaskID == o.TaskID && tr.Type == DTO.Enums.TaskItemTypes.Request).Select(tr => tr.ItemID).FirstOrDefaultAsync();
             }
-
-
-            Logger.Info("Starting to chunk into DB");
-            var newStopwatch = new Stopwatch();
-            newStopwatch.Start();
             await o.SetUpDocumentInDatabase();
             
-            result.Document = new DTO.ExtendedDocumentDTO
+            result.Result = new DTO.ExtendedDocumentDTO
             {
                 ID = o.Doc.ID,
                 Name = o.Doc.Name,
@@ -569,6 +567,8 @@ namespace Lpp.Dns.Api.Documents
                 Kind = o.Doc.Kind,
                 Length = o.Doc.Length,
                 CreatedOn = o.Doc.CreatedOn,
+                ContentCreatedOn = o.Doc.ContentCreatedOn,
+                ContentModifiedOn = o.Doc.ContentModifiedOn,
                 ParentDocumentID = o.Doc.ParentDocumentID,
                 RevisionDescription = o.Doc.RevisionDescription,
                 RevisionSetID = o.Doc.RevisionSetID,
@@ -580,13 +580,8 @@ namespace Lpp.Dns.Api.Documents
                 UploadedByID = o.Doc.UploadedByID,
                 UploadedBy = Identity.UserName
             };
-            Logger.Info("Starting to stream to Database");
 
             await o.StreamDocumentToDatabase();
-
-            newStopwatch.Stop();
-            TimeSpan newTs = stopWatch.Elapsed;
-            Logger.Info("Chunk into DB Finished.  Time Taken was " + newTs.ToString());
 
             return Request.CreateResponse(HttpStatusCode.Created, result);
         }

@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -262,6 +265,7 @@ var Requests;
                 _this.RefreshTaskDocuments = function () {
                     if (self.TaskDocumentsViewModel)
                         self.TaskDocumentsViewModel.onRefreshDocuments();
+                    Controls.WFHistory.List.refreshHistory();
                 };
                 _this.AssignedWorkflowRequestUsers = new kendo.data.DataSource({
                     data: requestUsers
@@ -892,6 +896,7 @@ var Requests;
                         else if (!(typeof Plugins.Requests.QueryBuilder.Edit === "undefined") && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
                             Plugins.Requests.QueryBuilder.Edit.vm.fileUploadDMLoad();
                         }
+                        Controls.WFHistory.List.setRequestID(Details.rovm.Request.ID());
                     });
                 }
                 // ===== Scroll to Top ==== 
@@ -974,4 +979,3 @@ var Requests;
         Details.VirtualRoutingViewModel = VirtualRoutingViewModel;
     })(Details = Requests.Details || (Requests.Details = {}));
 })(Requests || (Requests = {}));
-//# sourceMappingURL=Details.js.map

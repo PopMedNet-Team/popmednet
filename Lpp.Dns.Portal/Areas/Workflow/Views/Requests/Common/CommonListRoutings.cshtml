@@ -52,7 +52,7 @@
             <tbody data-bind="foreach: VirtualRoutings">
                 <tr>
                     <td><input type="checkbox" id="chkRoutingSelect" data-bind="value: ID, checked:$root.SelectedCompleteResponses" /></td>
-                    <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                    <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0 &&  $root.AllowViewIndividualResults"></i><a href="#" data-bind="text: Name"></a></td>
                     <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
                     <td data-bind="html: Messages "></td>
                     <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
@@ -89,7 +89,7 @@
             <div class="btn-group pull-right">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings, visible: (AllowViewIndividualResults || AllowViewAggregateResults)">View Results <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-                <li><a data-bind="visible:AllowViewAggregateResults() && AllowAggregateView(), click:onViewResponses" data-resultid="354A8015-5C1D-42F7-BE31-B9FCEF4A8798">Aggregate View</a></li>
+                <li><a data-bind="visible:AllowViewAggregateResults && AllowAggregateView, click:onViewResponses" data-resultid="354A8015-5C1D-42F7-BE31-B9FCEF4A8798">Aggregate View</a></li>
                 <li><a data-bind="visible:AllowViewIndividualResults, click:onViewResponses" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8">Individual View</a></li>
             </ul>
             </div>

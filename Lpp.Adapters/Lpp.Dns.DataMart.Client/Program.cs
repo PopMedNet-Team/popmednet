@@ -30,7 +30,9 @@ namespace Lpp.Dns.DataMart.Client
             try
             {
                 Application.ThreadException +=new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-                AppDomain.CurrentDomain.UnhandledException +=new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);                
+                AppDomain.CurrentDomain.UnhandledException +=new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+                CheckForUpgradeSettings();
 
                 string dataMartClientId = Properties.Settings.Default.DataMartClientId;
                 if (dataMartClientId == null || dataMartClientId == string.Empty)
@@ -171,12 +173,20 @@ namespace Lpp.Dns.DataMart.Client
                 HandleError((Exception) e.ExceptionObject);
         }
 
-        private static bool ErrorHandled = false;
         private static void HandleError(Exception e)
         {
             log.Fatal("Unhandled exception: " + e.Message);
         }
 
+        private static void CheckForUpgradeSettings()
+        {
+            if(Properties.Settings.Default.UpdateSettings)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpdateSettings = false;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         /// <summary>
         /// Send an Email

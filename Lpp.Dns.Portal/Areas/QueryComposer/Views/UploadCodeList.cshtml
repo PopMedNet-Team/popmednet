@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+<script src="~/Areas/Controls/js/WFFileUpload/Common.js"></script>
+<script src="~/Areas/QueryComposer/js/UploadCodeList.js"></script>
+<section>
+    <div class="row">
+        <div class="col-sm-11">
+            <article id="Normal_FileUpload" class="panel panel-default">
+                <div class="panel-body">
+                    <span>
+                        Select the CSV or Excel file to import the codelists from:
+                    </span>
+
+                    <input name="files" id="files" type="file" data-bind="kendoUpload: {
+                        async: {
+						    withCredentials: false,
+                            autoUpload: false,
+                            saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Terms/ParseCodeList',
+						    chunkSize: 25000000,
+						    concurrent: false
+						},
+                           localization: {
+                            select: 'Select File...',
+                        },
+                        success: onFileUploadCompleted,
+                        upload: onFileUpload,
+                        error: onFileUploadError,
+                        select: onFileSelect,
+                        multiple: false
+                    }" />
+                    <br />
+                    For the Criteria Groups specified in the import:
+                    <div class="checkbox">
+                        <label class="radio-inline"><input type="radio" name="optradio" value="Replace" data-bind="checked: ReplaceOrAppend"><strong>Replace</strong> <u>ALL</u> Code Terms in the specified Criteria Group.</label>
+                    </div>
+                    <div class="checkbox">
+                        <label class="radio-inline"><input type="radio" name="optradio" value="Append" data-bind="checked: ReplaceOrAppend"><strong>Append Code Values</strong> to matching existing Code Terms in the specified Criteria Group.</label>
+                    </div>
+                    <span class="help-block alert alert-info">
+                        &#149; If a Criteria Group does not exist at the specified index, it will be created.<br />
+                        &#149; If a Code Term with matching CodeType and Search Type is not found in the specified Criteria Group, it will be added.
+                    </span>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<nav class="footer">
+    <button class="btn btn-primary pull-right" style="width:120px;" data-bind="click: onCancel">Cancel</button>
+    <button class="btn btn-primary pull-right" style="margin-right:15px;width:150px;" data-bind="click: onUpload">Upload</button>
+</nav>

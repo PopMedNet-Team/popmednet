@@ -192,25 +192,48 @@ module Workflow.SimpleModularProgram.DistributeRequest {
                 dm.DataMartID = datamartID;
 
                 return dm;
-            });
+          });
 
-            Dns.WebApi.Requests.CompleteActivity({
+            if (vm.UploadViewModel.Documents().length === 0) {
+              Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(() => {
+                Dns.WebApi.Requests.CompleteActivity({
+                  DemandActivityResultID: resultID,
+                  Dto: dto,
+                  DataMarts: requestDataMarts,
+                  Data: JSON.stringify(ko.utils.arrayMap(vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
+                  Comment: null
+                }).done((results) => {
+                  var result = results[0];
+                  if (result.Uri) {
+                    Global.Helpers.RedirectTo(result.Uri);
+                  } else {
+                    //Update the request etc. here 
+                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                    Requests.Details.rovm.UpdateUrl();
+                  }
+                });
+              }).fail(() => { return; });
+            }
+            else {
+              Dns.WebApi.Requests.CompleteActivity({
                 DemandActivityResultID: resultID,
                 Dto: dto,
                 DataMarts: requestDataMarts,
                 Data: JSON.stringify(ko.utils.arrayMap(vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
                 Comment: null
-            }).done((results) => {
+              }).done((results) => {
                 var result = results[0];
                 if (result.Uri) {
-                    Global.Helpers.RedirectTo(result.Uri);
+                  Global.Helpers.RedirectTo(result.Uri);
                 } else {
-                    //Update the request etc. here 
-                    Requests.Details.rovm.Request.ID(result.Entity.ID);
-                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                    Requests.Details.rovm.UpdateUrl();
+                  //Update the request etc. here 
+                  Requests.Details.rovm.Request.ID(result.Entity.ID);
+                  Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                  Requests.Details.rovm.UpdateUrl();
                 }
-            });
+              });
+            }
         }
 
 

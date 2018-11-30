@@ -2,6 +2,8 @@
 /// <reference path="../../Models/Terms.ts" />
 /// <reference path="../../ViewModels/Terms.ts" />
 
+
+
 module RequestCriteriaViewModels {
     export class DateRangeTerm extends RequestCriteriaViewModels.Term {
         public Title: KnockoutObservable<string>;

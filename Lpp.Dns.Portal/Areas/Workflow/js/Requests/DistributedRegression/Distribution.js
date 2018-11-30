@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -150,6 +153,7 @@ var Workflow;
                     return _this;
                 }
                 ViewModel.prototype.PostComplete = function (resultID) {
+                    var self = this;
                     var uploadCriteria = vm.UploadViewModel.serializeCriteria();
                     Requests.Details.rovm.Request.Query(uploadCriteria);
                     var AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val();
@@ -178,24 +182,48 @@ var Workflow;
                         return rdm.RoutingType == undefined || rdm.RoutingType == null || rdm.RoutingType == -1;
                     });
                     if (badDms.length == 0 && acCount == 1 && dpCount > 0) {
-                        Dns.WebApi.Requests.CompleteActivity({
-                            DemandActivityResultID: resultID,
-                            Dto: dto,
-                            DataMarts: requestDataMarts,
-                            Data: JSON.stringify(ko.utils.arrayMap(vm.UploadViewModel.Documents(), function (d) { return d.RevisionSetID; })),
-                            Comment: null
-                        }).done(function (results) {
-                            var result = results[0];
-                            if (result.Uri) {
-                                Global.Helpers.RedirectTo(result.Uri);
-                            }
-                            else {
-                                //Update the request etc. here 
-                                Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                Requests.Details.rovm.UpdateUrl();
-                            }
-                        });
+                        if (self.UploadViewModel.Documents().length === 0) {
+                            Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(function () {
+                                Dns.WebApi.Requests.CompleteActivity({
+                                    DemandActivityResultID: resultID,
+                                    Dto: dto,
+                                    DataMarts: requestDataMarts,
+                                    Data: JSON.stringify(ko.utils.arrayMap(vm.UploadViewModel.Documents(), function (d) { return d.RevisionSetID; })),
+                                    Comment: null
+                                }).done(function (results) {
+                                    var result = results[0];
+                                    if (result.Uri) {
+                                        Global.Helpers.RedirectTo(result.Uri);
+                                    }
+                                    else {
+                                        //Update the request etc. here 
+                                        Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                        Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                        Requests.Details.rovm.UpdateUrl();
+                                    }
+                                });
+                            }).fail(function () { return; });
+                        }
+                        else {
+                            Dns.WebApi.Requests.CompleteActivity({
+                                DemandActivityResultID: resultID,
+                                Dto: dto,
+                                DataMarts: requestDataMarts,
+                                Data: JSON.stringify(ko.utils.arrayMap(vm.UploadViewModel.Documents(), function (d) { return d.RevisionSetID; })),
+                                Comment: null
+                            }).done(function (results) {
+                                var result = results[0];
+                                if (result.Uri) {
+                                    Global.Helpers.RedirectTo(result.Uri);
+                                }
+                                else {
+                                    //Update the request etc. here 
+                                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                    Requests.Details.rovm.UpdateUrl();
+                                }
+                            });
+                        }
                     }
                     else {
                         if (badDms.length > 0)
@@ -225,4 +253,3 @@ var Workflow;
         })(Distribution = DistributedRegression.Distribution || (DistributedRegression.Distribution = {}));
     })(DistributedRegression = Workflow.DistributedRegression || (Workflow.DistributedRegression = {}));
 })(Workflow || (Workflow = {}));
-//# sourceMappingURL=Distribution.js.map

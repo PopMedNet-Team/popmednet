@@ -11,30 +11,32 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
     [SecurityPermission(SecurityAction.Demand, Infrastructure = true)]
     public sealed class LifetimeSponsor : MarshalByRefObject, ISponsor, IDisposable
     {
-        ILease _proxy;
-        bool _registered = false;
+        ILease _lease = null;
 
-        public LifetimeSponsor(ILease proxy)
+        public LifetimeSponsor(MarshalByRefObject lease)
         {
-            _proxy = proxy;
-            _proxy.Register(this);
-            _registered = true;
+            _lease = (ILease)System.Runtime.Remoting.RemotingServices.GetLifetimeService(lease);
+            if (_lease != null)
+            {
+                _lease.Register(this);
+            }
         }
 
         public TimeSpan Renewal(ILease lease)
         {
-            if (_registered == false)
-                return TimeSpan.Zero;
-
             return TimeSpan.FromDays(1);
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
         }
 
         public void Dispose()
         {
-            if (_registered)
+            if (_lease != null)
             {
-                _proxy.Unregister(this);
-                _registered = false;
+                _lease.Unregister(this);
             }
         }
     }

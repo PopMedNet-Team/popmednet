@@ -31,6 +31,8 @@ namespace Lpp.Dns.DataMart.Client.Controls
         private string requestId;
         private bool isRequestView = false;
 
+        Lib.Caching.DocumentCacheManager _cache = null;
+
         public DataMartViewPanel()
             : base()
         {
@@ -229,6 +231,58 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
+        public void InitializeResponseDocumentsFromCache(Lib.Caching.DocumentCacheManager cache)
+        {
+            _cache = cache;
+            this.documents = (cache.GetResponseDocuments() ?? Array.Empty<Document>()).ToArray();
+
+            FileListDataSource = documents;
+
+            // If "documents" is null, then no document is available, show a message.
+            if (documents == null || documents.Length == 0)
+            {
+                //initial view does not show a message
+                //ShowView = DisplayType.HTML;
+                //DataSource = "<html><body><p style='text-align:center;color:gray;font-family:arial'>No Result Documents Available.</p></body></html>";
+                return;
+            }
+
+            Document d = documents.Where(f => f.IsViewable).FirstOrDefault();
+            if (d != null)
+            {
+                Document s = documents.Where(f => f.Filename == "ViewableDocumentStyle.xml").FirstOrDefault();
+                Document j = documents.Where(f => f.Filename == "response.json").FirstOrDefault();
+
+                using (Stream contentStream = (j != null) ? cache.GetDocumentStream(Guid.Parse(j.DocumentID)) : cache.GetDocumentStream(Guid.Parse(d.DocumentID)))
+                {
+                    ShowMimeType = d.MimeType;
+                    if (s != null)
+                    {
+                        using (Stream styleStream = cache.GetDocumentStream(Guid.Parse(s.DocumentID)))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ViewableDocumentStyle));
+
+                            SetDataSourceStream(contentStream, (ViewableDocumentStyle)serializer.Deserialize(new StreamReader(styleStream)));
+                        }
+                    }
+                    else if (j != null)
+                    {
+                        ShowView = DisplayType.JSON;
+                        SetDataSourceStream(contentStream, null);
+                    }
+                    else
+                    {
+                        SetDataSourceStream(contentStream);
+                    }
+                }
+            }
+            else
+            {
+                ShowView = DisplayType.FILELIST;
+                FILELIST.BringToFront();
+            }
+        }
+
 
         /// <summary>
         /// Handle cellContentClick event (saving the document to disk)
@@ -259,7 +313,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        public void DeleteSelectedFiles()
+        public IEnumerable<Document> DeleteSelectedFiles()
         {
             var selectedDocuments = GetSelectedFiles();
             if (selectedDocuments.Count > 0)
@@ -274,12 +328,16 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     documents = processor.Response(requestId);
                     FileListDataSource = documents;
                     ShowView = DisplayType.FILELIST;
+
+                    return selectedDocuments;
                 }
 
             }else
             {
                 MessageBox.Show(this.ParentForm, "Please select at least one file first.", "Delete File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            return Array.Empty<Document>();
         }
 
         List<Document> GetSelectedFiles()
@@ -368,7 +426,16 @@ namespace Lpp.Dns.DataMart.Client.Controls
                             }
                         }
                         else
-                            processor.ResponseDocument(requestId, doc.DocumentID, out dcStream, 60000);
+                        {
+                            if(_cache != null)
+                            {
+                                dcStream = _cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
+                            }
+                            else
+                            {
+                                processor.ResponseDocument(requestId, doc.DocumentID, out dcStream, 60000);
+                            }
+                        }
                         return dcStream;
                     },
                     inStream => 
@@ -379,7 +446,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         .Scan(0, (totalTransferred, bytesRead) => totalTransferred + bytesRead)
                         .ObserveOn(this)
                         //.Do(totalTransferred => progress.Progress = totalTransferred * 100 / Math.Max(doc.Size, 1))
-                        .Do(totalTransferred => progress.Progress = totalTransferred * 100 / Math.Max((int)inStream.Length, 1))
+                        .Do(totalTransferred => progress.Progress = totalTransferred * 100 / Math.Max((inStream.CanSeek ? (int)inStream.Length : doc.Size), 1))
                    ) 
             )
             .SubscribeOn(Scheduler.Default)

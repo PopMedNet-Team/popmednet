@@ -28,6 +28,11 @@ namespace Lpp.Dns.Portal.Areas.QueryComposer.Controllers
             return View("~/areas/querycomposer/views/summaryview.cshtml");
         }
 
+        public ActionResult UploadCodeList()
+        {
+            return View("~/areas/querycomposer/views/UploadCodeList.cshtml");
+        }
+
         [HttpGet]
         public JsonResult VisualTerms()
         {

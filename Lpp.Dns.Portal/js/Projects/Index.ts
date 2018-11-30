@@ -61,6 +61,7 @@ module Projects.Index {
                 vm.ProjectsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ProjectsGrid()));
                 });
+                vm.ProjectsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

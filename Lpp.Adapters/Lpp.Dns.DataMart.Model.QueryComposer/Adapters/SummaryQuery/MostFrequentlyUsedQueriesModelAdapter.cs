@@ -22,7 +22,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                                            ModelTermsFactory.ICD9ProcedureCodes4digitID };
         }
 
-        public MostFrequentlyUsedQueriesModelAdapter() : base(QueryComposerModelMetadata.SummaryTableModelID) { }
+        public MostFrequentlyUsedQueriesModelAdapter(RequestMetadata requestMetadata) : base(QueryComposerModelMetadata.SummaryTableModelID, requestMetadata) { }
 
         public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
         {

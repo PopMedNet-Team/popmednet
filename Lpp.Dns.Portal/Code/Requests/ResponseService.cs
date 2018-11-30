@@ -172,6 +172,7 @@ namespace Lpp.Dns.Portal
             var routeIDs = routes.Select(rt => rt.ID).ToArray();
             var responseIDs = responses.Select(res => res.ID).ToArray();
             var statusChangeLogs = db.LogsRoutingStatusChange.Where(l => routeIDs.Contains(l.RequestDataMartID) && (l.ResponseID == null || (l.ResponseID.HasValue && responseIDs.Contains(l.ResponseID.Value)))).ToArray();
+
             foreach (var route in routes)
             {
                 

@@ -357,7 +357,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
 
             var reload =
-                DnsServiceManager.GetRequestList(Network, Page * _pageSize, _pageSize, Network.Filter, _sortColumn, _isSortAscending)
+                DnsServiceManager.GetRequestList("filtered requests lookup", Network, Page * _pageSize, _pageSize, Network.Filter, _sortColumn, _isSortAscending)
                 .TakeLast(1)
                 .ObserveOn(this)
                 .Select(list =>
@@ -383,7 +383,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             var now = DateTime.Now;
 
             var newReqsLookup =
-                DnsServiceManager.GetRequestList(Network, 0, 1, new RequestFilter { DateRange = DateRangeKind.Exact, FromDate = _lastNewRequestsLookup }, null, null)
+                DnsServiceManager.GetRequestList("new requests lookup", Network, 0, 1, new RequestFilter { DateRange = DateRangeKind.Exact, FromDate = _lastNewRequestsLookup }, null, null)
                 .Take(1)
                 .ObserveOn(this)
                 .Select(n =>
@@ -395,7 +395,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
 
             var invFilter = InvertFilter(_lastInvisibleRequestsLookup);
             var invisibleReqsLookup = invFilter == null ? Observable.Return(Unit.Default) :
-                DnsServiceManager.GetRequestList(Network, 0, 1, invFilter.Value, null, null)
+                DnsServiceManager.GetRequestList("hidden requests lookup", Network, 0, 1, invFilter.Value, null, null)
                 .Take(1)
                 .ObserveOn(this)
                 .Select(n =>

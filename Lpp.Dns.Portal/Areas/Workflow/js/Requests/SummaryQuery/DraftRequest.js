@@ -1,8 +1,11 @@
 /// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -42,26 +45,52 @@ var Workflow;
                                 return;
                             }
                             var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
-                            Requests.Details.PromptForComment().done(function (comment) {
-                                Dns.WebApi.Requests.CompleteActivity({
-                                    DemandActivityResultID: resultID,
-                                    Dto: Requests.Details.rovm.Request.toData(),
-                                    DataMarts: selectedDataMarts,
-                                    Data: JSON.stringify(null),
-                                    Comment: comment
-                                }).done(function (results) {
-                                    var result = results[0];
-                                    if (result.Uri) {
-                                        Global.Helpers.RedirectTo(result.Uri);
-                                    }
-                                    else {
-                                        //Update the request etc. here 
-                                        Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                        Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                        Requests.Details.rovm.UpdateUrl();
-                                    }
+                            if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0) {
+                                Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(function () {
+                                    Requests.Details.PromptForComment().done(function (comment) {
+                                        Dns.WebApi.Requests.CompleteActivity({
+                                            DemandActivityResultID: resultID,
+                                            Dto: Requests.Details.rovm.Request.toData(),
+                                            DataMarts: selectedDataMarts,
+                                            Data: JSON.stringify(null),
+                                            Comment: comment
+                                        }).done(function (results) {
+                                            var result = results[0];
+                                            if (result.Uri) {
+                                                Global.Helpers.RedirectTo(result.Uri);
+                                            }
+                                            else {
+                                                //Update the request etc. here 
+                                                Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                                Requests.Details.rovm.UpdateUrl();
+                                            }
+                                        });
+                                    });
+                                }).fail(function () { return; });
+                            }
+                            else {
+                                Requests.Details.PromptForComment().done(function (comment) {
+                                    Dns.WebApi.Requests.CompleteActivity({
+                                        DemandActivityResultID: resultID,
+                                        Dto: Requests.Details.rovm.Request.toData(),
+                                        DataMarts: selectedDataMarts,
+                                        Data: JSON.stringify(null),
+                                        Comment: comment
+                                    }).done(function (results) {
+                                        var result = results[0];
+                                        if (result.Uri) {
+                                            Global.Helpers.RedirectTo(result.Uri);
+                                        }
+                                        else {
+                                            //Update the request etc. here 
+                                            Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                            Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                            Requests.Details.rovm.UpdateUrl();
+                                        }
+                                    });
                                 });
-                            });
+                            }
                         });
                     }
                     else {
@@ -132,4 +161,3 @@ var Workflow;
         })(DraftRequest = SummaryQuery.DraftRequest || (SummaryQuery.DraftRequest = {}));
     })(SummaryQuery = Workflow.SummaryQuery || (Workflow.SummaryQuery = {}));
 })(Workflow || (Workflow = {}));
-//# sourceMappingURL=DraftRequest.js.map

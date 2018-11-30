@@ -56,4 +56,3 @@ var DataChecker;
         })(MetadataTableTypes = Metadata.MetadataTableTypes || (Metadata.MetadataTableTypes = {}));
     })(Metadata = DataChecker.Metadata || (DataChecker.Metadata = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=MetadataResponse.js.map

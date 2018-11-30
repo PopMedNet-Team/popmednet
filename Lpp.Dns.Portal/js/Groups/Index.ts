@@ -53,6 +53,7 @@ module Groups.Index {
                 vm.GroupsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Groups.Index.gGroups.User:" + User.ID, Global.Helpers.GetGridSettings(vm.GroupsGrid()));
                 });
+                vm.GroupsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

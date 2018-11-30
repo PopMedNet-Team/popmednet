@@ -425,6 +425,8 @@ module Requests.Details {
             this.RefreshTaskDocuments = () => {
                 if (self.TaskDocumentsViewModel)
                     self.TaskDocumentsViewModel.onRefreshDocuments();
+
+                Controls.WFHistory.List.refreshHistory();
             };
 
             this.AssignedWorkflowRequestUsers = new kendo.data.DataSource({
@@ -1271,6 +1273,8 @@ module Requests.Details {
                         } else if (!(typeof Plugins.Requests.QueryBuilder.Edit === "undefined") && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
                             Plugins.Requests.QueryBuilder.Edit.vm.fileUploadDMLoad();
                         }
+
+                        Controls.WFHistory.List.setRequestID(rovm.Request.ID());
                 });
             }
 

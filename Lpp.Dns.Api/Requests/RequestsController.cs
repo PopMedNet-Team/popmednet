@@ -162,11 +162,11 @@ namespace Lpp.Dns.Api.Requests
                         var updates = request.DataMarts.Where(dm => dm.ID.HasValue && (!entity.DataMarts.Any(ad => (ad.ID == dm.ID.Value)) || entity.DataMarts.Any(adm => (adm.ID == dm.ID.Value) && ((adm.Priority != dm.Priority) || (adm.DueDate != dm.DueDate) || (adm.RoutingType != dm.RoutingType)))));
                         foreach (var update in updates)
                         {
-							if(DataMartMap.Any(p => p.Key.ID == update.ID))
+                            if(DataMartMap.Any(p => p.Key.ID == update.ID))
                             {
                                 continue;
                             }
-							
+
                             var dm = entity.DataMarts.First(adm => adm.ID == update.ID.Value);
                             if (update.DueDate.HasValue)
                             {
@@ -889,7 +889,7 @@ namespace Lpp.Dns.Api.Requests
                 bool first = true;
                 var route = new ResponseHistoryDTO() { DataMartName = requestDatamart.DataMartName };
                 List<ResponseHistoryItemDTO> historyItems = new List<ResponseHistoryItemDTO>();
-                requestDatamart.Responses.ForEach(response =>
+                foreach (var response in requestDatamart.Responses)
                 {
                     historyItems.Add(new ResponseHistoryItemDTO
                     {
@@ -919,7 +919,7 @@ namespace Lpp.Dns.Api.Requests
                     }
 
                     first = false;
-                });
+                }
                 route.HistoryItems = historyItems;
 
                 return route;

@@ -262,11 +262,12 @@
                         <button type="submit" name="RemoveDataMarts" id="RemoveDataMarts" class="btn btn-default" @( Model.Routings.List.Entities.Any(r => r.RequestDataMart.Status != Lpp.Dns.DTO.Enums.RoutingStatus.Canceled) ? "" : "disabled") value="Remove DataMarts">Remove DataMarts</button>
                     }
 
-                        <button style="display: none;" type="button" id="btnEditRoutingStatus" class="btn btn-default" data-bind="visible: CanOverrideRoutingStatus, enable:SelectedRoutings().length > 0, click: onEditRoutingStatus">Edit Routing Status</button>
-                    @if (Model.AllowMetadataEdit){
-                    <button class="btn btn-default pull-right" type="button" id="btnBulkEdit" data-bind="click: onBulkEdit, enable: SelectedRoutings().length > 0">Bulk Edit</button>
+                    <button style="display: none;" type="button" id="btnEditRoutingStatus" class="btn btn-default" data-bind="visible: CanOverrideRoutingStatus, enable:SelectedRoutings().length > 0, click: onEditRoutingStatus">Edit Routing Status</button>
+                    @if (Model.AllowMetadataEdit)
+                    {
+                        <button class="btn btn-default pull-right" type="button" id="btnBulkEdit" data-bind="click: onBulkEdit, enable: SelectedRoutings().length > 0">Bulk Edit</button>
                     }
-                        </nav>
+                </nav>
 
                 <input type="hidden" name="AddDataMarts" id="AddDataMarts" data-bind="value: DataMartsToAdd" />
             </article>
@@ -301,7 +302,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script id="routings-row-template" type="text/html">

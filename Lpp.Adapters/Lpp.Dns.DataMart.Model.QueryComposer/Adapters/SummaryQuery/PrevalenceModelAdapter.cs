@@ -21,7 +21,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                                        ModelTermsFactory.ICD9ProcedureCodes4digitID };
         }
 
-        public PrevalenceModelAdapter() : base(QueryComposerModelMetadata.SummaryTableModelID) { }
+        public PrevalenceModelAdapter(RequestMetadata requestMetadata) : base(QueryComposerModelMetadata.SummaryTableModelID, requestMetadata) { }
 
         public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
         {

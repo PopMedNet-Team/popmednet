@@ -7,7 +7,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 {
     public abstract class SummaryQueryModelAdapter : ModelAdapter
     {
-        public SummaryQueryModelAdapter(Guid modelID) : base(modelID) { }
+        public SummaryQueryModelAdapter(Guid modelID, RequestMetadata requestMetadata) : base(modelID, requestMetadata) { }
 
         protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
         {

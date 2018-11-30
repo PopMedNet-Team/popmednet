@@ -10,7 +10,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
     public class DummyModelAdapter : ModelAdapter
     {
 
-        public DummyModelAdapter(): base(QueryComposerModelMetadata.SummaryTableModelID)
+        public DummyModelAdapter(RequestMetadata requestMetadata): base(QueryComposerModelMetadata.SummaryTableModelID, requestMetadata)
         {
 
         }

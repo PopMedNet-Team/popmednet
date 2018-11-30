@@ -20,6 +20,11 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             metadata = data;
         }
 
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
         public string ModelName
         {
             get 

@@ -1,14 +1,17 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 var Dialog;
 (function (Dialog) {
     var RoutingHistory;
@@ -61,4 +64,3 @@ var Dialog;
         init();
     })(RoutingHistory = Dialog.RoutingHistory || (Dialog.RoutingHistory = {}));
 })(Dialog || (Dialog = {}));
-//# sourceMappingURL=SessionExpiring.js.map

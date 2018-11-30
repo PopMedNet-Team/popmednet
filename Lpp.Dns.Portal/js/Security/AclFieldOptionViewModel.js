@@ -1,4 +1,4 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 var Security;
 (function (Security) {
     var Acl;
@@ -260,4 +260,3 @@ var Security;
         })(FieldOption = Acl.FieldOption || (Acl.FieldOption = {}));
     })(Acl = Security.Acl || (Security.Acl = {}));
 })(Security || (Security = {}));
-//# sourceMappingURL=AclFieldOptionViewModel.js.map

@@ -6,8 +6,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Xml.XPath;
 using Lpp.Dns.Api.Areas.HelpPage.ModelDescriptions;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Lpp.Dns.Api.Areas.HelpPage
 {
@@ -16,7 +14,7 @@ namespace Lpp.Dns.Api.Areas.HelpPage
     /// </summary>
     public class XmlDocumentationProvider : IDocumentationProvider, IModelDocumentationProvider
     {
-        private List<XPathNavigator> _documentNavigators = new List<XPathNavigator>();
+        private XPathNavigator _documentNavigator;
         private const string TypeExpression = "/doc/members/member[@name='T:{0}']";
         private const string MethodExpression = "/doc/members/member[@name='M:{0}']";
         private const string PropertyExpression = "/doc/members/member[@name='P:{0}']";
@@ -26,57 +24,29 @@ namespace Lpp.Dns.Api.Areas.HelpPage
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlDocumentationProvider"/> class.
         /// </summary>
-        /// <param name="appDataPath">The physical path to XML documents.</param>
-        public XmlDocumentationProvider(string appDataPath)
+        /// <param name="documentPath">The physical path to XML document.</param>
+        public XmlDocumentationProvider(string documentPath)
         {
-            if (appDataPath == null)
+            if (documentPath == null)
             {
-                throw new ArgumentNullException("appDataPath");
+                throw new ArgumentNullException("documentPath");
             }
-
-            var files = new[] { "Lpp.Dns.DTO.xml", "Lpp.Dns.Api.xml" };
-            foreach (var file in files)
-            {
-                XPathDocument xpath = new XPathDocument(Path.Combine(appDataPath, file));
-                _documentNavigators.Add(xpath.CreateNavigator());
-            }
+            XPathDocument xpath = new XPathDocument(documentPath);
+            _documentNavigator = xpath.CreateNavigator();
         }
 
-        private XPathNavigator SelectSingleNode(string selectExpression)
-        {
-            foreach (var navigator in _documentNavigators)
-            {
-                var propertyNode = navigator.SelectSingleNode(selectExpression);
-                if (propertyNode != null)
-                    return propertyNode;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Get Documentation
-        /// </summary>
-        /// <param name="controllerDescriptor"></param>
-        /// <returns></returns>
         public string GetDocumentation(HttpControllerDescriptor controllerDescriptor)
         {
             XPathNavigator typeNode = GetTypeNode(controllerDescriptor.ControllerType);
             return GetTagValue(typeNode, "summary");
         }
-        /// <summary>
-        /// Get Documentation
-        /// </summary>
-        /// <param name="actionDescriptor"></param>
-        /// <returns></returns>
+
         public virtual string GetDocumentation(HttpActionDescriptor actionDescriptor)
         {
             XPathNavigator methodNode = GetMethodNode(actionDescriptor);
             return GetTagValue(methodNode, "summary");
         }
-        /// <summary>
-        /// Get Documentation
-        /// </summary>
-        /// <param name="parameterDescriptor"></param>
-        /// <returns></returns>
+
         public virtual string GetDocumentation(HttpParameterDescriptor parameterDescriptor)
         {
             ReflectedHttpParameterDescriptor reflectedParameterDescriptor = parameterDescriptor as ReflectedHttpParameterDescriptor;
@@ -96,34 +66,22 @@ namespace Lpp.Dns.Api.Areas.HelpPage
 
             return null;
         }
-        /// <summary>
-        /// Get response documentation
-        /// </summary>
-        /// <param name="actionDescriptor"></param>
-        /// <returns></returns>
+
         public string GetResponseDocumentation(HttpActionDescriptor actionDescriptor)
         {
             XPathNavigator methodNode = GetMethodNode(actionDescriptor);
             return GetTagValue(methodNode, "returns");
         }
-        /// <summary>
-        /// Get Documentation
-        /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
+
         public string GetDocumentation(MemberInfo member)
         {
             string memberName = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", GetTypeName(member.DeclaringType), member.Name);
             string expression = member.MemberType == MemberTypes.Field ? FieldExpression : PropertyExpression;
             string selectExpression = String.Format(CultureInfo.InvariantCulture, expression, memberName);
-            XPathNavigator propertyNode = SelectSingleNode(selectExpression);
+            XPathNavigator propertyNode = _documentNavigator.SelectSingleNode(selectExpression);
             return GetTagValue(propertyNode, "summary");
         }
-        /// <summary>
-        /// Get Documentation
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+
         public string GetDocumentation(Type type)
         {
             XPathNavigator typeNode = GetTypeNode(type);
@@ -136,7 +94,7 @@ namespace Lpp.Dns.Api.Areas.HelpPage
             if (reflectedActionDescriptor != null)
             {
                 string selectExpression = String.Format(CultureInfo.InvariantCulture, MethodExpression, GetMemberName(reflectedActionDescriptor.MethodInfo));
-                return SelectSingleNode(selectExpression);
+                return _documentNavigator.SelectSingleNode(selectExpression);
             }
 
             return null;
@@ -173,7 +131,7 @@ namespace Lpp.Dns.Api.Areas.HelpPage
         {
             string controllerTypeName = GetTypeName(type);
             string selectExpression = String.Format(CultureInfo.InvariantCulture, TypeExpression, controllerTypeName);
-            return SelectSingleNode(selectExpression);
+            return _documentNavigator.SelectSingleNode(selectExpression);
         }
 
         private static string GetTypeName(Type type)

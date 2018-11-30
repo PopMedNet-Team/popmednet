@@ -38,5 +38,14 @@
     <Setting Name="AppDataFolderName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PopMedNet\PMN</Value>
     </Setting>
+    <Setting Name="CacheRootFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CacheRetentionTimerMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="UpdateSettings" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

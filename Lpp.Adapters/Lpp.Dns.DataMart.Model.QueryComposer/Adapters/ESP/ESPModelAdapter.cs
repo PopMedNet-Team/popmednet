@@ -17,7 +17,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
         string _connectionString = string.Empty;        
         DataContext db = null;
 
-        public ESPModelAdapter() : base(new Guid("7C69584A-5602-4FC0-9F3F-A27F329B1113")) { }
+        public ESPModelAdapter(RequestMetadata requestMetadata) : base(new Guid("7C69584A-5602-4FC0-9F3F-A27F329B1113"), requestMetadata) { }
 
         public override void Initialize(IDictionary<string, object> settings)
         {

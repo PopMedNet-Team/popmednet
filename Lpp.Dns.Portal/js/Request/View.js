@@ -357,4 +357,3 @@ var Requests;
         View.VirtualResponseViewModel = VirtualResponseViewModel;
     })(View = Requests.View || (Requests.View = {}));
 })(Requests || (Requests = {}));
-//# sourceMappingURL=View.js.map

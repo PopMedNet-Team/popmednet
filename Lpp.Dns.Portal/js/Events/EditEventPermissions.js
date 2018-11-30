@@ -1,4 +1,4 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 var Events;
 (function (Events) {
     var Acl;
@@ -240,4 +240,3 @@ var Events;
         Acl.EventListViewModel = EventListViewModel;
     })(Acl = Events.Acl || (Events.Acl = {}));
 })(Events || (Events = {}));
-//# sourceMappingURL=EditEventPermissions.js.map

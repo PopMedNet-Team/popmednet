@@ -482,7 +482,7 @@ namespace Lpp.Dns.Api.Requests
             var userAcls = DataContext.UserAcls.FilterAcl(Identity, PermissionIdentifiers.Request.ViewResults, PermissionIdentifiers.Request.ViewStatus);
             var projectOrgAcls = DataContext.ProjectOrganizationAcls.FilterAcl(Identity, PermissionIdentifiers.Request.ViewStatus);
 
-
+            //If the user has view individual rights they can also view aggregate results.
             var canView = await (from rri in DataContext.Responses.AsNoTracking()
                                  join t in
                                      (
@@ -490,10 +490,10 @@ namespace Lpp.Dns.Api.Requests
                                          where rdm.RequestID == requestID
                                          select rdm.ID
                                          ) on rri.RequestDataMartID equals t
-                                 let canViewResults = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID).Select(a => a.Allowed)
-                                                         .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
-                                                         .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
-                                                         .Concat(userAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID && a.UserID == Identity.ID).Select(a => a.Allowed))
+                                 let canViewResults = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID || (a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Allowed)).Select(a => a.Allowed)
+                                                         .Concat(projectAcls.Where(a => (a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID || (a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Allowed)) && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
+                                                         .Concat(organizationAcls.Where(a => (a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID || (a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Allowed)) && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
+                                                         .Concat(userAcls.Where(a => (a.PermissionID == PermissionIdentifiers.Request.ViewResults.ID || (a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Allowed)) && a.UserID == Identity.ID).Select(a => a.Allowed))
                                                          .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
                                                          .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.ProjectID == rri.RequestDataMart.Request.ProjectID).Select(a => a.Allowed))
                                                          .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
@@ -710,7 +710,7 @@ namespace Lpp.Dns.Api.Requests
 
             var query = JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(requestQuery);
             response.ExportForFileDistribution = query.Where.Criteria.FirstOrDefault().Terms.Where(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.FileUploadID || t.Type == Lpp.QueryComposer.ModelTermsFactory.ModularProgramID).Any();
-            
+
             response.RequestDataMarts = (from rdm in DataContext.RequestDataMarts.AsNoTracking()
                                          join r in DataContext.Requests on rdm.RequestID equals r.ID
                                          let userID = Identity.ID
@@ -720,6 +720,9 @@ namespace Lpp.Dns.Api.Requests
                                          let resubmitID = PermissionIdentifiers.Project.ResubmitRequests.ID
                                          let draftStatus = DTO.Enums.RoutingStatus.Draft
                                          let requestApproval = DTO.Enums.RoutingStatus.AwaitingRequestApproval
+                                         let aggregateViewID = PermissionIdentifiers.Request.ViewResults.ID
+                                         let individualViewID = PermissionIdentifiers.Request.ViewIndividualResults.ID
+
 
                                          where rdm.RequestID == requestID
 
@@ -741,10 +744,20 @@ namespace Lpp.Dns.Api.Requests
                                          let canResubmit = DataContext.FilteredGlobalAcls(userID, resubmitID).Select(a => a.Allowed)
                                          .Concat(DataContext.FilteredProjectAcls(userID, resubmitID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
 
+                                         let canViewAggregate = DataContext.FilteredGlobalAcls(userID, aggregateViewID).Select(a => a.Allowed)
+                                         .Concat(DataContext.FilteredProjectAcls(userID, aggregateViewID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                         .Concat(DataContext.FilteredOrganizationAcls(userID, aggregateViewID, r.OrganizationID).Select(a => a.Allowed))
+
+                                         let canViewIndividual = DataContext.FilteredGlobalAcls(userID, individualViewID).Select(a => a.Allowed)
+                                         .Concat(DataContext.FilteredProjectAcls(userID, individualViewID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                         .Concat(DataContext.FilteredOrganizationAcls(userID, individualViewID, r.OrganizationID).Select(a => a.Allowed))
+
                                          where (
                                              (canOverride.Any() && canOverride.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
                                              (canChangeRoutings.Any() && canChangeRoutings.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
-                                             (canResubmit.Any() && canResubmit.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0)
+                                             (canResubmit.Any() && canResubmit.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
+                                             (canViewAggregate.Any() && canViewAggregate.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) || 
+                                             (canViewIndividual.Any() && canViewIndividual.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0)
                                          ) 
                                          || (canSeeQueue.Any() && canSeeQueue.All(a => a) && rdm.Status != RoutingStatus.Canceled)
                                           || ((r.CreatedByID == userID || r.SubmittedByID == userID))
@@ -789,6 +802,8 @@ namespace Lpp.Dns.Api.Requests
                                                           Kind = d.Kind,
                                                           Length = d.Length,
                                                           CreatedOn = d.CreatedOn,
+                                                          ContentCreatedOn = d.ContentCreatedOn,
+                                                          ContentModifiedOn = d.ContentModifiedOn,
                                                           ParentDocumentID = d.ParentDocumentID,
                                                           RevisionDescription = d.RevisionDescription,
                                                           RevisionSetID = d.RevisionSetID,
@@ -862,6 +877,8 @@ namespace Lpp.Dns.Api.Requests
                                             Kind = doc.Kind,
                                             Length = doc.Length,
                                             CreatedOn = doc.CreatedOn,
+                                            ContentCreatedOn = doc.ContentCreatedOn,
+                                            ContentModifiedOn = doc.ContentModifiedOn,
                                             ParentDocumentID = doc.ParentDocumentID,
                                             RevisionDescription = doc.RevisionDescription,
                                             RevisionSetID = doc.RevisionSetID,
@@ -889,6 +906,8 @@ namespace Lpp.Dns.Api.Requests
                                                       Kind = d.Kind,
                                                       Length = d.Length,
                                                       CreatedOn = d.CreatedOn,
+                                                      ContentCreatedOn = d.ContentCreatedOn,
+                                                      ContentModifiedOn = d.ContentModifiedOn,
                                                       ParentDocumentID = d.ParentDocumentID,
                                                       RevisionDescription = d.RevisionDescription,
                                                       RevisionSetID = d.RevisionSetID,
@@ -1921,6 +1940,23 @@ namespace Lpp.Dns.Api.Requests
                                                     ContentModifiedOn = lastDoc.ContentModifiedOn
                                                 }).ToArrayAsync();
 
+                var documentDetails = await (from doc in DataContext.Documents
+                                       join rsp in DataContext.Responses on doc.ItemID equals rsp.ID
+                                       let currentRevision = DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(d => d.MajorVersion).OrderByDescending(d => d.MinorVersion).OrderByDescending(d => d.RevisionVersion).OrderByDescending(d => d.BuildVersion).FirstOrDefault()
+                                       where rsp.RequestDataMart.RequestID == requestID
+                                       && rsp.ResponseTime != null
+                                       && currentRevision.ID == doc.ID
+                                       select new
+                                       {
+                                           Iteration = rsp.Count,
+                                           DataMart = rsp.RequestDataMart.DataMart.Name,
+                                           doc.CreatedOn,
+                                           doc.ContentCreatedOn,
+                                           doc.ContentModifiedOn,
+                                           doc.FileName,
+                                           doc.Length
+                                       }).ToArrayAsync();
+
 
                 return lastDocumentUpload.Select(l => new EnhancedEventLogItemDTO
                 {
@@ -1929,7 +1965,13 @@ namespace Lpp.Dns.Api.Requests
                     Step = Math.Max(l.Iteration - 1m, 0m),
                     Description = "Files finished uploading",
                     EventType = "Document Upload Complete"
-                });
+                }).Concat(documentDetails.Select(l => new EnhancedEventLogItemDTO {
+                    Timestamp = l.ContentModifiedOn.HasValue ? l.ContentModifiedOn.Value : (l.ContentCreatedOn.HasValue ? l.ContentCreatedOn.Value : l.CreatedOn),
+                    Source = l.DataMart,
+                    Step = Math.Max(l.Iteration - 1, 0m),
+                    EventType = "Document Upload Details",
+                    Description = $"{l.FileName}, Size: { FormatDocumentLength(l.Length) }, Upload duration: { (l.ContentModifiedOn.HasValue ? l.ContentModifiedOn.Value : DateTime.UtcNow) - (l.ContentCreatedOn.HasValue ? l.ContentCreatedOn.Value : l.CreatedOn) }"
+                }));
 
             };
 
@@ -2290,6 +2332,25 @@ namespace Lpp.Dns.Api.Requests
                 stream.Position = 0;
             }
             return stream;
+        }
+
+        const long Kilobyte = 1024;
+        const long Megabyte = 1024 * 1024;
+        const long Gigabyte = 1024 * 1024 * 1024;
+        static string FormatDocumentLength(long length)
+        {
+            if(length > Gigabyte)
+            {
+                return (length / Gigabyte).ToString("0.00") + " Gb";
+            }else if(length > Megabyte)
+            {
+                return (length / Megabyte).ToString("0.00") + " Mb";
+            }else if(length > Kilobyte)
+            {
+                return (length / Kilobyte).ToString("0.00") + " Kb";
+            }
+
+            return length.ToString("0.00") + " bytes";
         }
     }
 }

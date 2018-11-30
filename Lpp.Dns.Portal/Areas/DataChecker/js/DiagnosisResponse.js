@@ -158,4 +158,3 @@ var DataChecker;
         DCDiagnosis.ViewModel = ViewModel;
     })(DCDiagnosis = DataChecker.DCDiagnosis || (DataChecker.DCDiagnosis = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=DiagnosisResponse.js.map

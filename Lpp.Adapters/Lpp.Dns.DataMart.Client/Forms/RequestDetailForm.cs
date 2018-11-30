@@ -40,7 +40,12 @@ namespace Lpp.Dns.DataMart.Client
         public HubRequest Request;
         readonly ModelDescription ModelDesc;
         bool wasRejected;
+        readonly DTO.DataMartClient.Enums.DMCRoutingStatus _initialStatusOnLoad;
         DTO.DataMartClient.Enums.DMCRoutingStatus _initialStatusOnRun = DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted;
+        readonly Lib.Caching.DocumentCacheManager Cache;
+        IPatientIdentifierProcessor _patientIdentifierProcessor = null;
+        BackgroundWorker _patientIdentifierGenerationBackgroundWorker = null;
+        ProgressForm _patIDprogressForm = new ProgressForm("Generating PatID Lists", "Generating Patient Identifier lists...") { Indeteminate = true, ShowInTaskbar = false };
 
         public RequestDetailForm()
         {
@@ -51,6 +56,8 @@ namespace Lpp.Dns.DataMart.Client
         public RequestDetailForm(HubRequest request)
         {
             Request = request;
+            _initialStatusOnRun = Request.RoutingStatus;
+            _initialStatusOnLoad = Request.RoutingStatus;
 
             ModelDesc = Configuration.Instance.GetModelDescription(Request.NetworkId, Request.DataMartId, Request.Source.ModelID);
 
@@ -67,10 +74,19 @@ namespace Lpp.Dns.DataMart.Client
                 Processor = _domainManager.GetProcessor(ModelDesc.ProcessorId);
                 ProcessorManager.UpdateProcessorSettings(ModelDesc, Processor);
                 Processor.Settings.Add("NetworkId", request.NetworkId);
+
+                Cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID);
+
+                if((Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted) && Cache.HasResponseDocuments)
+                {
+                    //if there are cached response documents and the request has not been run yet set the status to pending upload
+                    Request.RoutingStatus = DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload;
+                }
             }
             else
             {
                 Processor = null;
+                Cache = null;
             }
 
             InitializeComponent();
@@ -137,6 +153,52 @@ namespace Lpp.Dns.DataMart.Client
                     ((IEarlyInitializeModelProcessor)Processor).Initialize(ModelDesc.ModelId, Request.Documents.Select(d => new DocumentWithStream(d.ID, new Document(d.ID, d.Document.MimeType, d.Document.Name, d.Document.IsViewable, Convert.ToInt32(d.Document.Size), d.Document.Kind), new DocumentChunkStream(d.ID, netWorkSetting))).ToArray());
                 }
 
+                if(Processor is IPatientIdentifierProcessor)
+                {
+                    _patientIdentifierProcessor = (IPatientIdentifierProcessor)Processor;
+                    chkGeneratePATIDList.Visible = _patientIdentifierProcessor.CanGenerateLists;
+
+                    if (_patientIdentifierProcessor.CanGenerateLists)
+                    {
+                        _patientIdentifierGenerationBackgroundWorker = new BackgroundWorker();
+                        _patientIdentifierGenerationBackgroundWorker.WorkerSupportsCancellation = false;
+                        _patientIdentifierGenerationBackgroundWorker.WorkerReportsProgress = false;
+                        _patientIdentifierGenerationBackgroundWorker.DoWork += (object s, DoWorkEventArgs workArgs) => {
+
+                            _patientIdentifierProcessor.GenerateLists(Request.Source.ID, netWorkSetting.CreateInterfaceMetadata(), Request.CreateInterfaceMetadata(), (IDictionary<Guid,string>)workArgs.Argument, "csv");
+                            workArgs.Result = workArgs.Argument;
+
+                        };
+                        _patientIdentifierGenerationBackgroundWorker.RunWorkerCompleted += (object s, RunWorkerCompletedEventArgs workArgs) => {
+                            
+                            _patIDprogressForm.Close();
+
+                            if(workArgs.Error != null)
+                            {
+                                ShowUnexpectedError(workArgs.Error);
+                            }
+                            else
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendLine("Patient Identifier list sucessfully generated and saved to:");
+                                foreach (KeyValuePair<Guid, string> outputPath in ((IDictionary<Guid, string>)workArgs.Result))
+                                {
+                                    sb.AppendLine(outputPath.Value);
+                                }
+
+                                MessageBox.Show(this, sb.ToString(), "Patient Identifier List Generated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            }
+
+                        };
+                    }
+
+                }
+                else
+                {
+                    chkGeneratePATIDList.Visible = false;
+                }                
+
                 vpRequest.Initialize(netWorkSetting, Processor, RequestId, true);
                 vpRequest.SetRequestDocuments(requestDocuments);
 
@@ -145,9 +207,20 @@ namespace Lpp.Dns.DataMart.Client
                 cbRequestFileList.CheckedChanged += new System.EventHandler(this.cbRequestFileList_CheckedChanged);
 
                 vpResponse.Initialize(netWorkSetting, Processor, RequestId, false);
-                vpResponse.DataSource = null;
-                cbResponseFileList.Checked = vpResponse.ShowView == ViewPanel.DisplayType.FILELIST;
-                cbResponseFileList.CheckedChanged += new EventHandler(cbResponseFileList_CheckedChanged);
+                if (Cache == null)
+                {
+                    vpResponse.DataSource = null;
+                    cbResponseFileList.Checked = vpResponse.ShowView == ViewPanel.DisplayType.FILELIST;
+                }
+                else
+                {
+                    if (Cache.HasResponseDocuments && (Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted))
+                    {
+                        Request.RoutingStatus = DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload;
+                    }
+
+                    vpResponse.InitializeResponseDocumentsFromCache(Cache);
+                }
 
                 bool isFileDistributionRequest = (Processor.ModelProcessorId == FileDistributionProcessorID ||
                                                   Request.Source.ModelID == FileDistributionModelID ||
@@ -161,15 +234,11 @@ namespace Lpp.Dns.DataMart.Client
                     cbResponseFileList.Checked = true;
                 }
 
+                cbResponseFileList.CheckedChanged += new EventHandler(cbResponseFileList_CheckedChanged);
+
                 EnableDisableButtons();
 
-                RequestStatus.StatusCode statusCode;
-
-                // Status is complete or complete with message.
-                if (((statusCode = Processor.Status(RequestId).Code) & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete)
-                {
-                    DisplayResponse(Processor.Status(RequestId));
-                }
+                RequestStatus.StatusCode statusCode = Processor.Status(RequestId).Code;
 
                 if (statusCode == RequestStatus.StatusCode.Error)
                 {
@@ -206,6 +275,21 @@ namespace Lpp.Dns.DataMart.Client
 
         private void btnRun_Click(object sender, EventArgs e)
         {
+            if (chkGeneratePATIDList.Checked)
+            {
+                
+                var selectionDialog = new OutputPathSelectionForm(_patientIdentifierProcessor.GetQueryIdentifiers());
+                if(selectionDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    //DialogResult d = MessageBox.Show("Generating PatID list...");
+                    
+                    _patientIdentifierGenerationBackgroundWorker.RunWorkerAsync(selectionDialog.OutputPaths);
+                    _patIDprogressForm.ShowDialog(this);
+                    
+                }
+                return;
+            }
+
             // Warn that result may be different from completed run.
             if (Request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
             {
@@ -219,6 +303,10 @@ namespace Lpp.Dns.DataMart.Client
             btnRun.Enabled = false;
             btnRun.Text = "Running...";
             vpResponse.ShowProcessingMessage();
+
+            //on run clear the cache
+            Cache.ClearCache();
+
             processRequestWorker.RunWorkerAsync(Request);
         }
 
@@ -232,47 +320,64 @@ namespace Lpp.Dns.DataMart.Client
                 ButtonText = "Upload",
                 FormText = "Enter comments below if additional information should be provided about your results. The comments below will be returned to the originator of the query along with the results."
             };
-            if (rejectReasonForm.ShowDialog() != DialogResult.OK) return;
+
+            if (rejectReasonForm.ShowDialog() != DialogResult.OK)
+                return;
+
             var rejectReason = rejectReasonForm.RejectReason;
 
             this.Cursor = Cursors.WaitCursor;
-            var responseDocuments = Processor.Response(RequestId);
 
-            if (responseDocuments.NullOrEmpty())
+            Document[] responseDocuments;
+            if (Cache.Enabled) {
+                responseDocuments = Cache.GetResponseDocuments().ToArray();
+            }
+            else
             {
-                responseDocuments = new Document[1] { new Document(new Guid().ToString(), "Text", "") };
+                responseDocuments = Processor.Response(RequestId);
             }
 
             var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
-
-            var postDocuments = responseDocuments.NullOrEmpty() ? Observable.Return(100) : Observable.Start<Guid[]>(
-                    () => {
-                        return DnsServiceManager.PostResponseDocuments(RequestId, Request.DataMartId, responseDocuments, netWorkSetting);
-                    }, Scheduler.Default)
-                .SelectMany(docIds =>
+            
+            var postDocuments = responseDocuments.NullOrEmpty() ? Observable.Return(100) : Observable.Start<Document[]>(() => responseDocuments, Scheduler.Default)
+                .SelectMany(documents =>
                 {
-                    return docIds
-                    .Zip(responseDocuments, (srvId, localDoc) => new { srvId, localDoc })
-                    .Select((doc, index) =>
+                    return documents.Select((doc, index) =>
                     {
-                        return Observable.Using(() =>
+                        return Observable.Defer(() => {
+                            string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+                            Guid[] serverIDs = DnsServiceManager.PostResponseDocuments(uploadIdentifier, RequestId, Request.DataMartId, new[] { doc }, netWorkSetting);
+                            Guid serverDocumentID = serverIDs[0];
+
+                            Thread.Sleep(3000);
+
+                            return Observable.Using(() =>
                             {
-                                Stream contentStream;
-                                Processor.ResponseDocument(RequestId, doc.localDoc.DocumentID.ToString(), out contentStream, 0x100000);
-                                return contentStream;
+                                if (Cache.Enabled)
+                                {
+                                    return Cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
+                                }
+                                else
+                                {
+                                    Stream data;
+                                    Processor.ResponseDocument(RequestId, doc.DocumentID, out data, doc.Size);
+                                    return data;
+                                }
                             },
-                           inStream =>
-                           {
-                               return (inStream == null) ?
-                                             Observable.Return(100 * (index + 1) / docIds.Length) :
-                                             DnsServiceManager.PostResponseDocumentContent(doc.srvId, inStream, netWorkSetting).Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.localDoc.Size)) / docIds.Length);
-                           }
-                        );
+                               inStream =>
+                               {
+                                   return (inStream == null) ?
+                                                 Observable.Return(100 * (index + 1) / responseDocuments.Length) :
+                                                 DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, RequestId, Request.DataMartId, serverDocumentID, doc.Filename, inStream, netWorkSetting).Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.Size)) / responseDocuments.Length);
+                               }
+                            );
+                        });
+
+                        
                     }).Concat();
                 });
 
-            postDocuments
-                .ObserveOn(this)
+            postDocuments.ObserveOn(this)
                 .Do(percent => progress.Progress = percent)
                 .Select(_ => Unit.Default)
                 .Concat(Observable.Defer(() => Observable.Start(() =>
@@ -281,11 +386,12 @@ namespace Lpp.Dns.DataMart.Client
                      RequestCache.ForNetwork(netWorkSetting).Release(Request);
                  }, Scheduler.Default)
                   .ObserveOn(this)
-                  .Do(_ => {
+                  .Do(_ =>
+                  {
 
                       this.Close();
-                      
-                      })
+
+                  })
                 ))
                 .TakeUntil(progress.ShowAndWaitForCancel(this))
                 .Finally(progress.Dispose)
@@ -434,16 +540,25 @@ namespace Lpp.Dns.DataMart.Client
             {
                 DataTable tableToExport = null;
 
-                Lpp.Dns.DataMart.Model.Document[] responseDocuments = Processor.Response(RequestId);
+                var responseDocuments = Cache.GetResponseDocuments();
+
                 DataSet _dataSet = new DataSet();
                 foreach (Lpp.Dns.DataMart.Model.Document responseDocument in responseDocuments)
                 {
                     Stream contentStream = null;
                     try
                     {
-                        Processor.ResponseDocument(RequestId, responseDocument.DocumentID, out contentStream, 100);
                         if (responseDocument.IsViewable)
                         {
+                            if (Cache.Enabled)
+                            {
+                                contentStream = Cache.GetDocumentStream(Guid.Parse(responseDocument.DocumentID));
+                            }
+                            else
+                            {
+                                Processor.ResponseDocument(RequestId, responseDocument.DocumentID, out contentStream, responseDocument.Size);
+                            }
+
                             if (responseDocument.MimeType != "application/json")
                             {
                                 _dataSet.ReadXml(contentStream);
@@ -509,6 +624,7 @@ namespace Lpp.Dns.DataMart.Client
         {
             Processor.PostProcess(RequestId);
             btnPostProcess.Enabled = false;
+            Cache.ClearCache();
             DisplayResults();
         }
 
@@ -518,6 +634,13 @@ namespace Lpp.Dns.DataMart.Client
             {
                 vpResponse.AddResponseDocument();
                 EnableDisableButtons();
+
+                Document doc = Processor.Response(RequestId).LastOrDefault();
+                if(doc != null)
+                {
+                    AddDocumentsToCache(new[] { doc });
+                }
+
             }
             catch (Exception ex)
             {
@@ -530,7 +653,12 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                vpResponse.DeleteSelectedFiles();
+                var documentsRemoved = vpResponse.DeleteSelectedFiles();
+                if (documentsRemoved.Any())
+                {
+                    Cache.Remove(documentsRemoved);
+                }
+
                 EnableDisableButtons();
             }
             catch (Exception ex)
@@ -597,6 +725,24 @@ namespace Lpp.Dns.DataMart.Client
             Lpp.Dns.DataMart.Model.Document[] documents = Processor.Response(RequestId);
             cbResponseFileList.Checked = !documents.Any(s => s.IsViewable);
             vpResponse.SetResponseDocuments(documents);
+            AddDocumentsToCache(documents);
+        }
+
+        void AddDocumentsToCache(IEnumerable<Document> documents)
+        {
+            Cache.Add(documents.Select(d => {
+                Stream data;
+                Processor.ResponseDocument(RequestId, d.DocumentID, out data, d.Size);
+
+                Guid documentID;
+                if (!Guid.TryParse(d.DocumentID, out documentID))
+                {
+                    documentID = Utilities.DatabaseEx.NewGuid();
+                    d.DocumentID = documentID.ToString();
+                }
+
+                return new DocumentWithStream(documentID, d, data);
+            }));
         }
 
         private void DisplayResponse(RequestStatus status)
@@ -644,14 +790,16 @@ namespace Lpp.Dns.DataMart.Client
             queryDataMartBindingSource.ResetBindings(false);
         }
 
-        private void ProcessRequest(object sender, DoWorkEventArgs e)
+        private void processRequestWorker_ProcessRequest(object sender, DoWorkEventArgs e)
         {
             NetWorkSetting netWorkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
 
             try
             {
                 Processor.SetRequestProperties(Request.Source.ID.ToString(), Request.Properties);
+
                 ProcessRequest(Request, Processor, netWorkSetting, false);
+                //THE request has finished processing at this point => i.e. Processor.Start() is done doing it's thing.
 
                 RequestStatus.StatusCode statusCode;
                 while (((statusCode = Processor.Status(RequestId).Code) & RequestStatus.StatusCode.STOP) != RequestStatus.StatusCode.STOP)
@@ -671,7 +819,14 @@ namespace Lpp.Dns.DataMart.Client
                     var newStatus = DnsServiceManager.ConvertModelRequestStatus(Processor.Status(RequestId));
                     if (!wasRejected)
                     {
-                        Request.RoutingStatus = newStatus.Code;
+                        if (newStatus.Code == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval && (_initialStatusOnRun == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || _initialStatusOnRun == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted || _initialStatusOnRun == DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload))
+                        {
+                            Request.RoutingStatus = DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload;
+                        }
+                        else
+                        {
+                            Request.RoutingStatus = newStatus.Code;
+                        }
                     }
                     processRequestWorker.ReportProgress(100, Request.RoutingStatus.ToString());
 
@@ -732,128 +887,130 @@ namespace Lpp.Dns.DataMart.Client
         private void EnableDisableButtons()
         {
             btnRun.Enabled = true;
-            btnRejectQuery.Enabled = btnHold.Enabled = btnUploadResults.Enabled = btnExportResults.Enabled = false;
+            btnRejectQuery.Enabled = btnHold.Enabled = btnUploadResults.Enabled = btnExportResults.Enabled = btnClearCache.Enabled = false;
 
-            if(Processor == null)
+            if(Processor == null || chkGeneratePATIDList.Checked)
             {
                 //Processor can only be null if the form has been disposed when closing
                 //no need to do anything
                 return;
             }
 
-            try
+            Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus hubStatus = Request.RoutingStatus;
+            RequestStatus processorStatus = Processor.Status(Request.Source.ID.ToString());
+            RequestStatus.StatusCode processorStatusCode = processorStatus.Code;
+            NetWorkSetting networkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
+            bool CanRunAndUpload = true;
+            bool CanUploadWithoutRun = false;
+            bool CanViewSQL = false;
+
+            if (Processor != null
+                && Processor.ModelMetadata != null
+                && Processor.ModelMetadata.Capabilities != null
+                && Processor.ModelMetadata.Capabilities.ContainsKey("CanRunAndUpload")
+                && !(bool)Processor.ModelMetadata.Capabilities["CanRunAndUpload"])
             {
-                Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus hubStatus = Request.RoutingStatus;
-                RequestStatus processorStatus = Processor.Status(Request.Source.ID.ToString());
-                RequestStatus.StatusCode processorStatusCode = processorStatus.Code;
-                NetWorkSetting networkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
-                bool CanRunAndUpload = true;
-                bool CanUploadWithoutRun = false;
-                bool CanViewSQL = false;
+                CanRunAndUpload = false;
+            }
 
-                if (Processor != null
-                    && Processor.ModelMetadata != null
-                    && Processor.ModelMetadata.Capabilities != null
-                    && Processor.ModelMetadata.Capabilities.ContainsKey("CanRunAndUpload")
-                    && !(bool)Processor.ModelMetadata.Capabilities["CanRunAndUpload"])
+            if (Processor != null
+                && Processor.ModelMetadata != null
+                && Processor.ModelMetadata.Capabilities != null
+                && Processor.ModelMetadata.Capabilities.ContainsKey("CanUploadWithoutRun")
+                && (bool)Processor.ModelMetadata.Capabilities["CanUploadWithoutRun"])
+            {
+                CanUploadWithoutRun = true;
+            }
+            else if(Cache.HasResponseDocuments)
+            {
+                CanUploadWithoutRun = true;
+            }
+
+            if (Processor != null
+                && Processor.ModelMetadata != null
+                && Processor.ModelMetadata.Capabilities != null
+                && Processor.ModelMetadata.Capabilities.ContainsKey("CanViewSQL")
+                && (bool)Processor.ModelMetadata.Capabilities["CanViewSQL"])
+            {
+                CanViewSQL = true;
+            }
+
+            bool isFileBasedRequest = Processor.ModelProcessorId == FileDistributionProcessorID ||
+                                        Request.Source.ModelID == ModularProgramModelID ||
+                                        Request.Source.ModelID == FileDistributionModelID ||
+                                        Request.Source.ModelID == DistributedRegressionModelID ||
+                                        //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
+                                        (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]);
+
+            btnRun.Enabled = CanRunAndUpload && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) && processorStatusCode != RequestStatus.StatusCode.InProgress;
+
+            //can only change status to Hold when the request hasn't been run yet
+            btnHold.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Hold, networkSetting) &&
+                (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload
+                || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
+
+            btnRejectQuery.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Reject, networkSetting) &&
+                (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload
+                || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
+
+            //enable document export if the request is not being processed and there are documents that can be downloaded.
+            btnExportResults.Enabled = processorStatusCode != RequestStatus.StatusCode.InProgress && hubStatus != DTO.DataMartClient.Enums.DMCRoutingStatus.Failed
+                                       && ((Cache.Enabled && Cache.HasResponseDocuments) || (Cache.Enabled == false && vpResponse.HasDocuments))
+                                       && isFileBasedRequest == false;
+
+            if (isFileBasedRequest)
+            {
+                //New upload Results button enabler
+                btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun || isFileBasedRequest)
+                                        && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
+                                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
+                                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
+                                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
+                                        _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval &&
+                                        !wasRejected &&
+                                        vpResponse.HasDocuments;
+
+                //Per PMNDEV-4303: The text on the Upload Results button needs to be changed to "Re-Upload Results" when the request has been completed before.
+                //Per comment on PMNDEV-6242 by Zac, if the user has the modify results permission they can re-upload if the route status is awaiting response approval.
+                if ((hubStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed ||
+                        hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified ||
+                        hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval)
+                    && (processorStatusCode & RequestStatus.StatusCode.Complete) != RequestStatus.StatusCode.Complete)
                 {
-                    CanRunAndUpload = false;
-                }
-
-                if (Processor != null
-                    && Processor.ModelMetadata != null
-                    && Processor.ModelMetadata.Capabilities != null
-                    && Processor.ModelMetadata.Capabilities.ContainsKey("CanUploadWithoutRun")
-                    && (bool)Processor.ModelMetadata.Capabilities["CanUploadWithoutRun"])
-                {
-                    CanUploadWithoutRun = true;
-                }
-
-                if (Processor != null
-                    && Processor.ModelMetadata != null
-                    && Processor.ModelMetadata.Capabilities != null
-                    && Processor.ModelMetadata.Capabilities.ContainsKey("CanViewSQL")
-                    && (bool)Processor.ModelMetadata.Capabilities["CanViewSQL"])
-                {
-                    CanViewSQL = true;
-                }
-
-                bool isFileBasedRequest = Processor.ModelProcessorId == FileDistributionProcessorID ||
-                                          Request.Source.ModelID == ModularProgramModelID ||
-                                          Request.Source.ModelID == FileDistributionModelID ||
-                                          Request.Source.ModelID == DistributedRegressionModelID ||
-                                          //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
-                                          (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]);
-
-                btnRun.Enabled = CanRunAndUpload && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) && processorStatusCode != RequestStatus.StatusCode.InProgress;
-
-                //can only change status to Hold when the request hasn't been run yet
-                btnHold.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Hold, networkSetting) &&
-                    (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted
-                    || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
-
-                btnRejectQuery.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Reject, networkSetting) &&
-                    (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted
-                    || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
-
-                btnExportResults.Enabled = processorStatusCode != RequestStatus.StatusCode.InProgress &&
-                                           hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
-                                           (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete;
-
-                if (isFileBasedRequest)
-                {
-                    //New upload Results button enabler
+                    //Per PMNDEV-5920 the ability to modify results is independent of ability to upload results, only applicable to FD and MP requests.
                     btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
-                                            && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
+                                            && DnsServiceManager.CheckUserRight(Request, HubRequestRights.ModifyResults, networkSetting) &&
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                                            _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval &&
                                             !wasRejected &&
                                             vpResponse.HasDocuments;
 
-                    //Per PMNDEV-4303: The text on the Upload Results button needs to be changed to "Re-Upload Results" when the request has been completed before.
-                    //Per comment on PMNDEV-6242 by Zac, if the user has the modify results permission they can re-upload if the route status is awaiting response approval.
-                    if ((hubStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed ||
-                         hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified ||
-                         hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval)
-                        && (processorStatusCode & RequestStatus.StatusCode.Complete) != RequestStatus.StatusCode.Complete)
-                    {
-                        //Per PMNDEV-5920 the ability to modify results is independent of ability to upload results, only applicable to FD and MP requests.
-                        btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
-                                                && DnsServiceManager.CheckUserRight(Request, HubRequestRights.ModifyResults, networkSetting) &&
-                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
-                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                                                !wasRejected &&
-                                                vpResponse.HasDocuments;
-
-                        btnUploadResults.Text = "Re-Upload Results";
-                    }
+                    btnUploadResults.Text = "Re-Upload Results";
                 }
-                else
-                {
-                    btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
-                                                && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
-                                                (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval) &&
-                                                _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval &&
-                                                (CanUploadWithoutRun ||
-                                                     (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete
-                                                 )
-                                                 && !wasRejected;
-                }
-
-                btnDeleteFile.Enabled = btnAddFile.Enabled = Processor.ModelMetadata.Capabilities.ContainsKey("AddFiles") && Processor.ModelMetadata.Capabilities["AddFiles"] == true;
-
-                btnPostProcess.Enabled = processorStatus.PostProcess;
-
-                btnViewSQL.Enabled = CanViewSQL;
             }
-            catch (Exception ex)
+            else
             {
-                // If hub or processor is unavailable for status, then light up only "run".
-                log.Error("Unable to reach hub or processor for status to determine button statuses.", ex);
+                var validHubStatus = new[] { DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted, DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload, DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted, DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval };
+                btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
+                                            && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) 
+                                            && validHubStatus.Contains(hubStatus) 
+                                            && _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval 
+                                            &&
+                                            (CanUploadWithoutRun ||
+                                                    (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete
+                                                )
+                                                && !wasRejected;
             }
+
+            btnDeleteFile.Enabled = btnAddFile.Enabled = Processor.ModelMetadata.Capabilities.ContainsKey("AddFiles") && Processor.ModelMetadata.Capabilities["AddFiles"] == true;
+
+            btnPostProcess.Enabled = processorStatus.PostProcess;
+
+            btnViewSQL.Enabled = CanViewSQL;
+
+            btnClearCache.Enabled = Cache.CanClearRequestSpecificCache;
+            
         }
 
         public string ProcessRequest(HubRequest request, IModelProcessor processor, NetWorkSetting networkSetting, bool viewSQL)
@@ -898,12 +1055,10 @@ namespace Lpp.Dns.DataMart.Client
             }
             foreach (var requestDocument in desiredDocuments)
             {
-                log.Debug("About to post desired document ID: " + requestDocument.DocumentID);
-                log.Debug("Downloading document" + requestDocument.Filename);
+                log.Debug("Downloading document" + requestDocument.Filename + $" for Request: {Request.Source.MSRequestID}, DataMart: { Request.DataMartName }");
                 DocumentChunkStream requestDocumentStream = new DocumentChunkStream(Guid.Parse(requestDocument.DocumentID), networkSetting);
                 processor.RequestDocument(requestId, requestDocument.DocumentID, requestDocumentStream);
-                log.Debug("Successfully Downloaded document" + requestDocument.Filename);
-                log.Debug("Posted desired document ID: " + requestDocument.DocumentID);
+                log.Debug("Successfully Downloaded document" + requestDocument.Filename + $" for Request: {Request.Source.MSRequestID}, DataMart: { Request.DataMartName }");
             }
 
             log.Debug("Starting request with local request identifier: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
@@ -918,8 +1073,10 @@ namespace Lpp.Dns.DataMart.Client
                     processRequestWorker.ReportProgress(0, request.RoutingStatus);
                 }
             }
+
             processor.Start(requestId, viewSQL);
-            log.Debug("Start finished on request with local request identifier: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
+
+            log.Debug($"Finished executing request with local request identifier: { request.Source.Identifier} (ID: { request.Source.ID.ToString("D") })");
 
             return requestId;
         }
@@ -1013,6 +1170,33 @@ namespace Lpp.Dns.DataMart.Client
             {
                 log.Error(ex);
             }
+        }
+
+        private void btnClearCache_Click(object sender, EventArgs e)
+        {
+            if (Cache.CanClearRequestSpecificCache)
+            {
+                Cache.ClearCache();
+                log.Info($"Cache cleared for Request: { Request.Source.MSRequestID }, Path: { Cache.BaseCachePath }");
+
+                cbResponseFileList.Checked = false;
+                vpResponse.SetResponseDocuments(Array.Empty<Document>());
+
+                if (Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload)
+                {
+                    Request.RoutingStatus = _initialStatusOnLoad;
+                    queryDataMartBindingSource.ResetBindings(false);
+                }
+
+                EnableDisableButtons();
+
+                MessageBox.Show(this, $"Cache has been successfully cleared for Request: { Request.Source.MSRequestID }.", "Cache Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void chkGeneratePATIDList_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableDisableButtons();
         }
     }
 }

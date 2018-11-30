@@ -10,7 +10,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
     public class SqlDistributionAdapter : SummaryQueryModelAdapter
     {
 
-        public SqlDistributionAdapter() : base(QueryComposerModelMetadata.SummaryTableModelID)
+        public SqlDistributionAdapter(RequestMetadata requestMetadata) : base(QueryComposerModelMetadata.SummaryTableModelID, requestMetadata)
         {
         }
 

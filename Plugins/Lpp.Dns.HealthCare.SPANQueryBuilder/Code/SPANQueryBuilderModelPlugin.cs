@@ -75,7 +75,7 @@ namespace Lpp.Dns.HealthCare.SPANQueryBuilder.Code
         public IEnumerable<IDnsResponseExportFormat> GetExportFormats(IDnsResponseContext context)
         {
             return new[] {
-                Dns.ExportFormat( ".xls", "Excel" ),
+                Dns.ExportFormat( ".xlsx", "Excel" ),
             };
         }
 

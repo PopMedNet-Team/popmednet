@@ -53,7 +53,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                         codeType = DTO.Enums.DiagnosisCodeTypes.Any;
                     }
 
-                    var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Select(s => s.Trim()).Distinct().ToArray();
+                    var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Where(x => !string.IsNullOrEmpty(x.Trim())).Select(s => s.Trim()).Distinct().ToArray();
                     if (codes.Length == 0)
                         continue;
 

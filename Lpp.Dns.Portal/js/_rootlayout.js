@@ -1,4 +1,4 @@
-/// <reference path="../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../Scripts/page/Page.ts" />
 var RootLayout;
 (function (RootLayout) {
     $(function () {
@@ -221,4 +221,3 @@ var Permissions;
     }());
     Permissions.Request = Request;
 })(Permissions || (Permissions = {}));
-//# sourceMappingURL=_rootlayout.js.map

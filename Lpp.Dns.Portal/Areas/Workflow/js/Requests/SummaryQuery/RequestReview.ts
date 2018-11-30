@@ -35,7 +35,6 @@ module Workflow.SummaryQuery.RequestReview {
                 Dns.WebApi.Requests.CompleteActivity({
                     DemandActivityResultID: resultID,
                     Dto: dto,
-
                     DataMarts: selectedDataMarts,
                     Data: JSON.stringify(this.AbortRejectMessage()),
                     Comment: comment

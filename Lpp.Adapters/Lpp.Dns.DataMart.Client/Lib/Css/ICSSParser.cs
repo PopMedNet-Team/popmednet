@@ -33,7 +33,7 @@ namespace Lpp.Dns.DataMart.Lib.Css
         /// <summary>
         /// Removes all elements from the <see cref="CSSParser"></see>.
         /// </summary>
-        new void Clear();
+        void Clear();
 
         /// <summary>
         /// Reads the specified cascading style sheet.

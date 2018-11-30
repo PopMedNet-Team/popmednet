@@ -1018,7 +1018,7 @@ namespace Lpp.Dns.HealthCare.ESPQueryBuilder
         public IEnumerable<IDnsResponseExportFormat> GetExportFormats(IDnsResponseContext context)
         {
             return new[] {
-                Dns.ExportFormat( "xls", "Excel" ),
+                Dns.ExportFormat( "xlsx", "Excel" ),
                 Dns.ExportFormat( "csv", "CSV" )
             };
         }
@@ -1705,7 +1705,7 @@ namespace Lpp.Dns.HealthCare.ESPQueryBuilder
                 string filename = EXPORT_BASENAME + "_" + context.Request.Model.Name + "_" + context.Request.RequestID.ToString() + "." + format.ID;
                 switch (format.ID)
                 {
-                    case "xls":
+                    case "xlsx":
 
                         ExcelHelper.ToExcel(ds, filename, HttpContext.Current.Response);
                         break;

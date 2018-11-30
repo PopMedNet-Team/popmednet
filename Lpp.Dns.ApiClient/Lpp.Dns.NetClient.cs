@@ -683,6 +683,11 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.QueryComposer.TemplateTermDTO>(Path + "/ListTemplateTerms?id=" + System.Net.WebUtility.UrlEncode(id.ToString()) + "&", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> ParseCodeList()
+	 	 {
+	 	 	 var result = await Client.Post(Path + "/ParseCodeList");
+	 	 	 return result;
+	 	 }
 	 }
 	 public class Security
 	 {

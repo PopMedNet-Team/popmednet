@@ -389,11 +389,11 @@ namespace Lpp.Dns.Api.Requests
                     if (grantedDataMarts.Any(dm => dm.ID == d.DataMartID))
                     {
                         d.Status = targetStatus;
-                        d.Responses.ForEach(response =>
+                        foreach (var response in d.Responses)
                         {
                             response.SubmittedByID = identity.ID;
                             response.SubmittedOn = request.SubmittedOn ?? DateTime.UtcNow;
-                        });
+                        }
                     }
                     else
                     {

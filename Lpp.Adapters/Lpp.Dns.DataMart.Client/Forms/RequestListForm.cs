@@ -26,6 +26,7 @@ namespace Lpp.Dns.DataMart.Client
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private List<IDisposable> _networkRefreshList = new List<IDisposable>();
+        readonly Lib.Caching.CacheRetentionService _cachRetentionService;
         private bool _isFormInitialized = false;
         List<RequestDetailForm> _openRequestDetails = new List<RequestDetailForm>();
 
@@ -131,6 +132,8 @@ namespace Lpp.Dns.DataMart.Client
                 { TabIcon_Broken, Properties.Resources.NotifyIconBusy }
             } };
             tabs.SelectedIndexChanged += ( _, __ ) => ToggleDetailsButton();
+
+            _cachRetentionService = new Lib.Caching.CacheRetentionService();
         }
 
         #endregion
@@ -240,6 +243,8 @@ namespace Lpp.Dns.DataMart.Client
                     .LogExceptions(log.Error)
                     .Retry()
                     .Subscribe());
+
+                _cachRetentionService.RegisterNetwork(ns);
             }
 
             //if (AllLists().Any())

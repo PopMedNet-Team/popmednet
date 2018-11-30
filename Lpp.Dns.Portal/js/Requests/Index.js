@@ -1,8 +1,11 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" /> 
+/// <reference path="../../Scripts/page/Page.ts" /> 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -75,6 +78,26 @@ var Requests;
                 }
                 vm.dataSource.filter(filter.filters);
                 return false;
+            };
+            ViewModel.prototype.AddClearAllFiltersMenuItem = function (e) {
+                var self = this;
+                var popup = e.container.data('kendoPopup');
+                var menu = e.container.find(".k-menu").data("kendoMenu");
+                var grid = e.sender;
+                menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
+                menu.bind("select", function (e) {
+                    if ($(e.item).text() == "Clear All Filters") {
+                        //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
+                        if (vm.SelectedProjectID() != Constants.GuidEmpty) {
+                            grid.dataSource.filter({ field: "ProjectID", operator: "equals", value: vm.SelectedProjectID() });
+                        }
+                        else {
+                            grid.dataSource.filter({ field: "ProjectID", operator: "notequals", value: Constants.GuidEmpty });
+                        }
+                        menu.close();
+                        popup.close();
+                    }
+                });
             };
             ViewModel.prototype.ResultsGrid = function () {
                 return $("#gResults").data("kendoGrid");
@@ -149,10 +172,10 @@ var Requests;
                     vm.ResultsGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
                     });
+                    vm.ResultsGrid().bind("columnMenuInit", vm.AddClearAllFiltersMenuItem);
                 });
             });
         }
         init();
     })(Index = Requests.Index || (Requests.Index = {}));
 })(Requests || (Requests = {}));
-//# sourceMappingURL=Index.js.map

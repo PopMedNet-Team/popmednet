@@ -1,4 +1,4 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 var Security;
 (function (Security) {
     var Acl;
@@ -276,4 +276,3 @@ var Security;
         })(RequestTypes = Acl.RequestTypes || (Acl.RequestTypes = {}));
     })(Acl = Security.Acl || (Security.Acl = {}));
 })(Security || (Security = {}));
-//# sourceMappingURL=AclRequestTypeViewModel.js.map

@@ -172,4 +172,3 @@ var DataChecker;
         AgeDistribution.ViewModel = ViewModel;
     })(AgeDistribution = DataChecker.AgeDistribution || (DataChecker.AgeDistribution = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=AgeDistributionResponse.js.map

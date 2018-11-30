@@ -107,20 +107,20 @@ namespace Lpp.Dns.General.Metadata
                 gm.RequesterCenterList = new List<KeyValuePair<string, string>>();
                 gm.ReportAggregationLevelList = new List<KeyValuePair<string, string>>();
 
-                DataContext.WorkplanTypes.Select(w => new { w.ID, w.Name }).ForEach(i =>
+                foreach (var i in DataContext.WorkplanTypes.Select(w => new { w.ID, w.Name }))
                 {
                     gm.WorkplanTypeList.Add(new KeyValuePair<string, string>(i.ID.ToString("D"), i.Name));
-                });
+                }
 
-                DataContext.RequesterCenters.Select(r => new { r.ID, r.Name }).ForEach(i =>
+                foreach (var i in DataContext.RequesterCenters.Select(r => new { r.ID, r.Name }))
                 {
                     gm.RequesterCenterList.Add(new KeyValuePair<string, string>(i.ID.ToString("D"), i.Name));
-                });
+                }
 
-                DataContext.ReportAggregationLevels.Select(r => new { r.ID, r.Name }).ForEach(i => 
+                foreach (var i in DataContext.ReportAggregationLevels.Select(r => new { r.ID, r.Name }))
                 {
                     gm.ReportAggregationLevelList.Add(new KeyValuePair<string, string>(i.ID.ToString("D"), i.Name));
-                });
+                }
 
                 return html => html.Partial<DisplayRequest>().WithModel(gm);
             }
@@ -269,9 +269,10 @@ namespace Lpp.Dns.General.Metadata
                     foreach (var responseID in responseIDs)
                     {
                         db.Database.ExecuteSqlCommand("DELETE FROM RequestDataMartResponseSearchResults WHERE RequestDataMartResponseID = '" + responseID + "'");
-                        q.Select(x => x.ID).ToArray().ForEach(id =>
-                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id })
-                        );
+                        foreach (var id in q.Select(x => x.ID).ToArray())
+                        {
+                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id });
+                        }
                         db.SaveChanges();
                     }
 
@@ -396,9 +397,10 @@ namespace Lpp.Dns.General.Metadata
                         var predicate = PredicateBuilder.True<Organization>();
                         emptyPredicate = predicate.Body.ToString();
 
-                        ehrs.ForEach(ehr =>
-                            predicate = predicate.And(o => o.EHRSes.Any(c => c.System == ehr && c.Type == EHRSTypes.Inpatient))
-                            );
+                        foreach (var ehr in ehrs)
+                        {
+                            predicate = predicate.And(o => o.EHRSes.Any(c => c.System == ehr && c.Type == EHRSTypes.Inpatient));
+                        }
                         if (predicate.Body != null && emptyPredicate != predicate.Body.ToString())
                             q = q.AsExpandable().Where(predicate);
                     }
@@ -408,10 +410,10 @@ namespace Lpp.Dns.General.Metadata
                     {
                         var predicate = PredicateBuilder.True<Organization>();
                         emptyPredicate = predicate.Body.ToString();
-
-                        ehrs.ForEach(ehr =>
-                            predicate = predicate.And(o => o.EHRSes.Any(c => c.System == ehr && c.Type == EHRSTypes.Outpatient))
-                            );
+                        foreach (var ehr in ehrs)
+                        {
+                            predicate = predicate.And(o => o.EHRSes.Any(c => c.System == ehr && c.Type == EHRSTypes.Outpatient));
+                        }
                         if (predicate.Body != null && emptyPredicate != predicate.Body.ToString())
                             q = q.AsExpandable().Where(predicate);
 
@@ -421,9 +423,10 @@ namespace Lpp.Dns.General.Metadata
                     foreach (var responseID in responseIDs)
                     {
                         db.Database.ExecuteSqlCommand("DELETE FROM RequestDataMartResponseSearchResults WHERE RequestDataMartResponseID = '" + responseID + "'");
-                        q.Select(x => x.ID).ToArray().ForEach(id =>
-                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id })
-                        );
+                        foreach (var id in q.Select(x => x.ID).ToArray())
+                        {
+                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id });
+                        }
                         db.SaveChanges();
                     }
 
@@ -508,10 +511,10 @@ namespace Lpp.Dns.General.Metadata
                         emptyPredicate = predicate.Body.ToString();
 
                         IEnumerable<Guid> installedModelIDs = GetModelIDs(data);
-                        installedModelIDs.ForEach(md =>
+                        foreach (var md in installedModelIDs)
                         {
                             predicate = predicate.And(dm => dm.Models.Any(im => im.ModelID == md));
-                        });
+                        }
 
                         if (predicate.Body != null && emptyPredicate != predicate.Body.ToString())
                             q = q.AsExpandable().Where(predicate);
@@ -787,9 +790,10 @@ namespace Lpp.Dns.General.Metadata
                     foreach (var responseID in responseIDs)
                     {
                         db.Database.ExecuteSqlCommand("DELETE FROM RequestDataMartResponseSearchResults WHERE RequestDataMartResponseID = '" + responseID + "'");
-                        q.Select(x => x.ID).ToArray().ForEach(id =>
-                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id })
-                        );
+                        foreach (var id in q.Select(x => x.ID).ToArray())
+                        {
+                            db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id });
+                        }
                         db.SaveChanges();
                     }
 
@@ -1003,9 +1007,10 @@ namespace Lpp.Dns.General.Metadata
                         foreach (var responseID in responseIDs)
                         {
                             db.Database.ExecuteSqlCommand("DELETE FROM RequestDataMartResponseSearchResults WHERE RequestDataMartResponseID = '" + responseID + "'");
-                            results.ForEach(id =>
-                                db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id })
-                            );
+                            foreach (var id in q.Select(x => x.ID).ToArray())
+                            {
+                                db.ResponseSearchResults.Add(new ResponseSearchResult { ResponseID = responseID, ItemID = id });
+                            }
                             db.SaveChanges();
                         }
                     }
@@ -1544,7 +1549,7 @@ namespace Lpp.Dns.General.Metadata
                             table.Columns.Add("Description");
                             table.Columns.Add("CollaborationRequirements");
 
-                            datamarts.ForEach(dm =>
+                            foreach (var dm in datamarts)
                             {
                                 DataRow dr = table.NewRow();
                                 dr["Name"] = dm.Name;
@@ -1558,7 +1563,8 @@ namespace Lpp.Dns.General.Metadata
                                 dr["Description"] = dm.DataMartDescription;
                                 dr["CollaborationRequirements"] = dm.SpecialRequirements;
                                 table.Rows.Add(dr);
-                            });
+                            }
+
                             break;
 
                         default:
@@ -1729,7 +1735,7 @@ namespace Lpp.Dns.General.Metadata
 
                             #endregion
 
-                            datamarts.ForEach(dm =>
+                            foreach (var dm in datamarts)
                             {
                                 DataRow dr = table.NewRow();
                                 dr["Name"] = dm.Name;
@@ -1770,7 +1776,7 @@ namespace Lpp.Dns.General.Metadata
                                 dr["DataDomains_InpatientEncounters_Other_Specified"] = dm.InpatientOtherText;
                                 //Outpatient Encounters
                                 dr["DataDomains_OutpatientEncounters"] = dm.OutpatientEncountersAny ? "Yes" : "No";
-                                dr["DataDomains_OutpatientEncounters_EncounterID"] = dm.OutpatientEncountersEncounterID ? "Yes" : "No"; 
+                                dr["DataDomains_OutpatientEncounters_EncounterID"] = dm.OutpatientEncountersEncounterID ? "Yes" : "No";
                                 dr["DataDomains_OutpatientEncounters_DateOfService"] = dm.OutpatientDatesOfService ? "Yes" : "No";
                                 dr["DataDomains_OutpatientEncounters_ProviderIdentifier"] = dm.OutpatientEncountersProviderIdentifier ? "Yes" : "No";
                                 dr["DataDomains_OutpatientEncounters_ICD9Procedure"] = dm.OutpatientICD9Procedures ? "Yes" : "No";
@@ -1798,7 +1804,7 @@ namespace Lpp.Dns.General.Metadata
                                 dr["DataDomains_LaboratoryResults_Test_Other"] = dm.LaboratoryResultsTestOther ? "Yes" : "No";
                                 dr["DataDomains_LaboratoryResults_Test_OtherSpecified"] = dm.LaboratoryResultsTestOtherText;
                                 //Prescription Orders
-                                dr["DataDomains_PrescriptionOrders"] = dm.PrescriptionOrdersAny ? "Yes" : "No"; 
+                                dr["DataDomains_PrescriptionOrders"] = dm.PrescriptionOrdersAny ? "Yes" : "No";
                                 dr["DataDomains_PrescriptionOrders_Dates"] = dm.PrescriptionOrderDates ? "Yes" : "No";
                                 dr["DataDomains_PrescriptionOrders_NDC"] = dm.PrescriptionOrderNDC ? "Yes" : "No";
                                 dr["DataDomains_PrescriptionOrders_RxNorm"] = dm.PrescriptionOrderRxNorm ? "Yes" : "No";
@@ -1815,7 +1821,7 @@ namespace Lpp.Dns.General.Metadata
                                 dr["DataDomains_OutpatientPharmacyDispensings_Other_Specified"] = dm.PharmacyDispensingOtherText;
                                 //Demographics
                                 //dr["DataDomains_Demographics_PatientID"] = dm.DemographicsPatientID ? "Yes" : "No";
-                                dr["DataDomains_Demographics"] = dm.DemographicsAny ? "Yes" : "No"; 
+                                dr["DataDomains_Demographics"] = dm.DemographicsAny ? "Yes" : "No";
                                 dr["DataDomains_Demographics_Sex"] = dm.DemographicsSex ? "Yes" : "No";
                                 dr["DataDomains_Demographics_DateOfBirth"] = dm.DemographicsDateOfBirth ? "Yes" : "No";
                                 dr["DataDomains_Demographics_DateOfDeath"] = dm.DemographicsDateOfDeath ? "Yes" : "No";
@@ -1838,7 +1844,7 @@ namespace Lpp.Dns.General.Metadata
                                 //dr["DataDomains_PatientBehavior_Other"] = dm.PatientBehaviorOther ? "Yes" : "No";
                                 //dr["DataDomains_PatientBehavior_Other_Specified"] = dm.PatientBehaviorOtherText;
                                 //Vital Signs
-                                dr["DataDomains_VitalSigns"] = dm.VitalSignsAny ? "Yes" : "No"; 
+                                dr["DataDomains_VitalSigns"] = dm.VitalSignsAny ? "Yes" : "No";
                                 dr["DataDomains_VitalSigns_Height"] = dm.VitalSignsHeight ? "Yes" : "No";
                                 dr["DataDomains_VitalSigns_Weight"] = dm.VitalSignsWeight ? "Yes" : "No";
                                 dr["DataDomains_VitalSigns_Length"] = dm.VitalSignsLength ? "Yes" : "No";
@@ -1854,7 +1860,7 @@ namespace Lpp.Dns.General.Metadata
                                 //Installed models.
                                 var pluginModels = Plugins.GetAllPlugins().SelectMany(p => p.Models.Select(m => new { p, m }));
 
-                                dm.Models.ForEach(m =>
+                                foreach (var m in dm.Models)
                                 {
                                     IDnsModel model = null;
                                     if (pluginModels.Any(pm => pm.m.ID == m.ModelID))
@@ -1869,11 +1875,9 @@ namespace Lpp.Dns.General.Metadata
                                         }
                                         dr[colName] = "Yes";
                                     }
-                                });
+                                }
                                 table.Rows.Add(dr);
-
-
-                            });
+                            }
                             break;
                     }
                     if (format.ID.Substring(0, 3) == "xls")
@@ -2067,7 +2071,7 @@ namespace Lpp.Dns.General.Metadata
 
                                 //EHRs
                                 int ehrCount = 0;
-                                org.EHRSes.ForEach(e =>
+                                foreach (var e in org.EHRSes)
                                 {
                                     //EHRs
                                     ehrCount++;
@@ -2107,11 +2111,11 @@ namespace Lpp.Dns.General.Metadata
                                     dr[colEHRSystem] = e.System.ToString();
                                     dr[colEHRStartYear] = e.StartYear.HasValue ? e.StartYear.Value.ToString() : null;
                                     dr[colEHREndYear] = e.EndYear.HasValue ? e.EndYear.Value.ToString() : null;
-                                });
+                                }
 
                                 //REGISTRIES
                                 int regCount = 0;
-                                org.Registries.ForEach(r =>
+                                foreach (var r in org.Registries)
                                 {
                                     regCount++;
                                     string colRegType = "Registry_Type_" + regCount;
@@ -2141,7 +2145,7 @@ namespace Lpp.Dns.General.Metadata
                                     dr[colRegType] = r.Registry.Type.ToString();
                                     dr[colRegName] = r.Registry.Name;
                                     dr[colRegDescription] = r.Registry.Description;
-                                });
+                                }
 
                                 table.Rows.Add(dr);
                             });
@@ -2316,10 +2320,10 @@ namespace Lpp.Dns.General.Metadata
                             if (hasModularProgram)
                             {
                                 IList<DataColumn> mpColumns = new List<DataColumn>();
-                                Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>().ForEach(d =>
+                                foreach (var d in Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>())
                                 {
                                     mpColumns.Add(new DataColumn(Enum.GetName(typeof(CommonSignatureFileTermType), d)));
-                                });
+                                }
 
                                 table.Columns.AddRange(mpColumns.ToArray());
                             }
@@ -2357,19 +2361,20 @@ namespace Lpp.Dns.General.Metadata
                                 if (r.RequestTypeID == mpGuid)
                                 {
                                     IList<RequestSearchResult> requestSearchResults = new List<RequestSearchResult>();
-                                    DataContext.RequestSearchTerms.Where(term => term.RequestID == r.RequestID).ForEach(term =>
+                                    foreach (var term in DataContext.RequestSearchTerms.Where(term => term.RequestID == r.RequestID))
+                                    {
                                         requestSearchResults.Add(new RequestSearchResult
                                         {
                                             Variable = (CommonSignatureFileTermType)term.Type,
                                             Value = term.StringValue
-                                        }));
-
-                                    Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>().ForEach(d =>
+                                        });
+                                    }
+                                    foreach (var d in Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>())
                                     {
                                         var var = requestSearchResults.Where(rq => rq.Variable == d);
                                         if (!var.NullOrEmpty())
                                             dr[Enum.GetName(typeof(CommonSignatureFileTermType), d)] = requestSearchResults.Where(rq => rq.Variable == d).First().Value;
-                                    });
+                                    }
                                 }
 
                                 table.Rows.Add(dr);
@@ -2439,17 +2444,17 @@ namespace Lpp.Dns.General.Metadata
                             if (hasModularProgram)
                             {
                                 IList<DataColumn> mpColumns = new List<DataColumn>();
-                                Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>().ForEach(d =>
+                                foreach (var d in Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>())
                                 {
                                     mpColumns.Add(new DataColumn(Enum.GetName(typeof(CommonSignatureFileTermType), d)));
-                                });
+                                }
 
                                 table.Columns.AddRange(mpColumns.ToArray());
                             }
 
                             requests.ForEach(r =>
                             {
-                                routingResults.Where(rt => rt.RequestID == r.RequestID).GroupBy(k => new { k.DataMartID, k.DataMart, k.Organization, k.Status }).ForEach(rr =>
+                                foreach (var rr in routingResults.Where(rt => rt.RequestID == r.RequestID).GroupBy(k => new { k.DataMartID, k.DataMart, k.Organization, k.Status }))
                                 {
                                     DataRow dr = null;
                                     dr = table.NewRow();
@@ -2525,24 +2530,25 @@ namespace Lpp.Dns.General.Metadata
                                     if (r.RequestTypeID == mpGuid)
                                     {
                                         IList<RequestSearchResult> requestSearchResults = new List<RequestSearchResult>();
-                                        DataContext.RequestSearchTerms.Where(term => term.RequestID == r.RequestID).ForEach(term =>
+                                        foreach (var term in DataContext.RequestSearchTerms.Where(term => term.RequestID == r.RequestID))
+                                        {
                                             requestSearchResults.Add(new RequestSearchResult
                                             {
                                                 //Variable = Enum.GetName(typeof(RequestSearchTermType), term.Type),
                                                 Variable = (CommonSignatureFileTermType)term.Type,
                                                 Value = term.StringValue
-                                            }));
-
-                                        Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>().ForEach(d =>
+                                            });
+                                        }
+                                        foreach (var d in Enum.GetValues(typeof(CommonSignatureFileTermType)).Cast<CommonSignatureFileTermType>())
                                         {
                                             var var = requestSearchResults.Where(rq => rq.Variable == d);
                                             if (!var.NullOrEmpty())
                                                 dr[Enum.GetName(typeof(CommonSignatureFileTermType), d)] = requestSearchResults.Where(rq => rq.Variable == d).First().Value;
-                                        });
+                                        }
                                     }
 
                                     table.Rows.Add(dr);
-                                });
+                                }
                             });
                             break;
                     }
@@ -2581,9 +2587,20 @@ namespace Lpp.Dns.General.Metadata
                 gm.RequesterCenterList = new List<KeyValuePair<string, string>>();
                 gm.ReportAggregationLevelList = new List<KeyValuePair<string,string>>();
 
-                DataContext.WorkplanTypes.Select(w => new { w.ID, w.Name }).ToArray().ForEach(w => gm.WorkplanTypeList.Add(new KeyValuePair<string, string>(w.ID.ToString("D"), w.Name)));
-                DataContext.RequesterCenters.Select(c => new { c.ID, c.Name }).ToArray().ForEach(c => gm.RequesterCenterList.Add(new KeyValuePair<string, string>(c.ID.ToString("D"), c.Name)));
-                DataContext.ReportAggregationLevels.Select(l => new {l.ID, l.Name}).ToArray().ForEach(l => gm.ReportAggregationLevelList.Add(new KeyValuePair<string,string>(l.ID.ToString("D"), l.Name)));
+                foreach (var w in DataContext.WorkplanTypes.Select(w => new { w.ID, w.Name }).ToArray())
+                {
+                    gm.WorkplanTypeList.Add(new KeyValuePair<string, string>(w.ID.ToString("D"), w.Name));
+                }
+
+                foreach (var c in DataContext.RequesterCenters.Select(c => new { c.ID, c.Name }).ToArray())
+                {
+                    gm.RequesterCenterList.Add(new KeyValuePair<string, string>(c.ID.ToString("D"), c.Name));
+                }
+
+                foreach (var l in DataContext.ReportAggregationLevels.Select(l => new { l.ID, l.Name }))
+                {
+                    gm.ReportAggregationLevelList.Add(new KeyValuePair<string, string>(l.ID.ToString("D"), l.Name));
+                }
 
                 if (string.IsNullOrEmpty(gm.CriteriaGroupsJSON))
                 {

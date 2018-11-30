@@ -51,7 +51,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             QueryComposerRequestDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(json);
 
             //The connection string to the Adapter's database.
-            Adapters.PCORI.PCORIModelAdapter pcori = new Adapters.PCORI.PCORIModelAdapter();
+            Adapters.PCORI.PCORIModelAdapter pcori = new Adapters.PCORI.PCORIModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             pcori.Initialize(settings);
 
             //Execute the query

@@ -47,4 +47,3 @@ $(function utilities() {
             gate.release();
     }
 });
-//# sourceMappingURL=utilities.js.map

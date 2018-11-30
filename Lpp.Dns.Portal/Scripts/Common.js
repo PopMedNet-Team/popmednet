@@ -1,8 +1,11 @@
 /// <reference path="../../Lpp.Mvc.Composition/Lpp.Mvc.Controls.Interfaces/utilities.d.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -169,4 +172,3 @@ $.fn.dataDisplay = function jQuery$dataDisplay(strDisplay) {
         this.data("{1863E2EF-AEF9-446E-B70D-DABACC8D9CAB}") :
         this.data("{1863E2EF-AEF9-446E-B70D-DABACC8D9CAB}", strDisplay);
 };
-//# sourceMappingURL=Common.js.map

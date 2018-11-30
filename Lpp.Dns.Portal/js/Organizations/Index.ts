@@ -62,6 +62,7 @@ module Organizations.Index {
                 vm.OrganizationsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Organizations.Index.gOrganizations.User:" + User.ID, Global.Helpers.GetGridSettings(vm.OrganizationsGrid()));
                 });
+                vm.OrganizationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

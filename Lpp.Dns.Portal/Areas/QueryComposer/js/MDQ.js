@@ -1,9 +1,12 @@
 /// <reference path="../../../js/_rootlayout.ts" />
 /// <reference path="termvaluefilter.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -428,6 +431,34 @@ var Plugins;
                         self.onExportJSON = function () {
                             return 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(self.Request.toData()));
                         };
+                        self.onUploadCodeList = function () {
+                            Global.Helpers.ShowDialog("Import Code Values", "/QueryComposer/UploadCodeList", [], 670, 450, null).done(function (importResponse) {
+                                if (importResponse.Status === "Complete" && importResponse.Result != null && importResponse.Result.length > 0) {
+                                    var helper = new Plugins.Requests.QueryBuilder.MDQ.ImportCodeListHelper(self);
+                                    helper.ImportCodeList(importResponse.Result, importResponse.Criteria === 'Append' ? false : true);
+                                    self.GetCompatibleDataMarts();
+                                } //end of successful parsing response guard clause
+                            }).fail(function (err) {
+                                debugger;
+                            }); //end of the import promise
+                        }; //end of on upload action
+                        self.showCodeListUpload = ko.pureComputed(function () {
+                            var diagTerm = ko.utils.arrayFirst(self.CriteriaTermList(), function (item) {
+                                return item.TermID === "86110001-4bab-4183-b0ea-a4bc0125a6a7";
+                            });
+                            var procedureTerm = ko.utils.arrayFirst(self.CriteriaTermList(), function (item) {
+                                return item.TermID === "f81ae5de-7b35-4d7a-b398-a72200ce7419";
+                            });
+                            if (diagTerm !== null && procedureTerm !== null) {
+                                return true;
+                            }
+                            else if (diagTerm !== null || procedureTerm !== null) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
                         self.TermsColumnVisible = ko.computed(function () {
                             var isVis = false;
                             if (self.IsTemplateEdit)
@@ -1212,4 +1243,3 @@ var TermVm = /** @class */ (function () {
     }
     return TermVm;
 }());
-//# sourceMappingURL=MDQ.js.map

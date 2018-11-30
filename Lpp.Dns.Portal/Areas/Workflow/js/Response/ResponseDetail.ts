@@ -177,12 +177,41 @@ module Workflow.Response.Common.ResponseDetail {
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                     $('#gResults').append(bucket);
 
-                    //resize the iframe to the contents plus padding for the export dropdown menu
-                    $(window.frameElement).height($('html').height() + 70);
+                  //resize the iframe to the contents plus padding for the export dropdown menu
+                  let prevHeight = $('html').height();
+
+                  let interval = setInterval(() => {
+                    var newVal = $('html').height();
+
+                    if (newVal > prevHeight) {
+                      prevHeight = newVal;
+                      $(window.frameElement).height($('html').height() + 70);
+
+                    }
+                    else if (newVal === prevHeight && prevHeight !== 0) {
+                      clearInterval(interval);
+                    }
+
+                  }, 10);
+
                 }).fail(() => {
                     self.IsResponseLoadFailed(true);
                     self.ResponseContentComplete(true);
-                    $(window.frameElement).height($('html').height());
+                    let prevHeight = $('html').height();
+
+                    let interval = setInterval(() => {
+                      var newVal = $('html').height();
+
+                      if (newVal > prevHeight) {
+                        prevHeight = newVal;
+                        $(window.frameElement).height($('html').height() + 70);
+
+                      }
+                      else if (newVal === prevHeight && prevHeight !== 0) {
+                        clearInterval(interval);
+                      }
+
+                    }, 10);
                 });
             } else {
                 self.ResponseContentComplete(true);

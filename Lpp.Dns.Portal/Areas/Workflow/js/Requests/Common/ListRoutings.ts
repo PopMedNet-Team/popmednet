@@ -111,7 +111,7 @@ module Workflow.Common.ListRoutings {
 
         public isDefault: boolean;
         public AllowCopy: boolean;
-        public AllowAggregateView: KnockoutObservable<boolean>;
+        
 
         private onShowRoutingHistory: (item: VirtualRoutingViewModel) => void;
         private onShowIncompleteRoutingHistory: (item: Dns.Interfaces.IRequestDataMartDTO) => void;
@@ -130,8 +130,9 @@ module Workflow.Common.ListRoutings {
 
         public ProjectID: any;
 
-        private AllowViewAggregateResults: KnockoutObservable<boolean>;
-        private AllowViewIndividualResults: KnockoutObservable<boolean>;
+        private AllowViewAggregateResults: boolean;
+        private AllowViewIndividualResults: boolean;
+        public AllowAggregateView: boolean;
 
         private AllowViewRoutingHistory: boolean;
         private ShowReportingOptions: boolean = false;
@@ -148,18 +149,18 @@ module Workflow.Common.ListRoutings {
             self.SelectedCompleteResponses = ko.observableArray([]);
             self.SelectedIncompleteRoutings = ko.observableArray([]);
 
-            self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
-            self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
+            self.AllowViewIndividualResults = canViewIndividualResponses;
+            self.AllowViewAggregateResults = canViewAggregateResponses;
             self.isDefault = (Requests.Details.rovm.Request.WorkflowID().toUpperCase() == 'F64E0001-4F9A-49F0-BF75-A3B501396946');
             self.AllowCopy = Requests.Details.rovm.AllowCopy();
             self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == Permissions.Request.ViewHistory) != null;
 
-            self.AllowAggregateView = ko.observable(true);
+            self.AllowAggregateView = true;
 
             //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
             requestTypeModels.forEach((rt) => {
                 if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
-                    self.AllowAggregateView(false);
+                    self.AllowAggregateView = false;
             });
 
             self.DataMartsToAdd = ko.observableArray([]);

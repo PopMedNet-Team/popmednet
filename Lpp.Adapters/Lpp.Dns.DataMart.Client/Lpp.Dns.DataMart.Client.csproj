@@ -74,14 +74,12 @@
   <PropertyGroup>
     <StartupObject>Lpp.Dns.DataMart.Client.Program</StartupObject>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.8.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
-    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
-      <Private>True</Private>
+  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.9.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.9.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -89,7 +87,6 @@
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
@@ -107,17 +104,16 @@
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Renci.SshNet, Version=2016.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SSH.NET.2016.0.0\lib\net40\Renci.SshNet.dll</HintPath>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="RestSharp, Version=106.2.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RestSharp.106.2.2\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -213,6 +209,12 @@
     <Compile Include="Forms\NetworkConnectForm.Designer.cs">
       <DependentUpon>NetworkConnectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OutputPathSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OutputPathSelectionForm.Designer.cs">
+      <DependentUpon>OutputPathSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +227,7 @@
     <Compile Include="Forms\ViewSQL.Designer.cs">
       <DependentUpon>ViewSQL.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lib\Caching\CacheRetentionService.cs" />
     <Compile Include="Lib\Configuration\DataMartDescription.cs" />
     <Compile Include="Lib\Configuration\ModelDescription.cs" />
     <Compile Include="Lib\Configuration\NetWorkSetting.cs" />
@@ -235,6 +238,7 @@
     <Compile Include="Lib\Css\ICSSParser.cs" />
     <Compile Include="Lib\Css\RegularExpressionLibrary.cs" />
     <Compile Include="Lib\Css\StringExtensions.cs" />
+    <Compile Include="Lib\Caching\DataMartCacheManager.cs" />
     <Compile Include="Lib\DataMartExceptions.cs" />
     <Compile Include="Lib\Data\HubConfiguration.cs" />
     <Compile Include="Lib\Data\HubDataMart.cs" />
@@ -243,6 +247,8 @@
     <Compile Include="Lib\Data\HubUser.cs" />
     <Compile Include="Lib\DnsApiClient.cs" />
     <Compile Include="Lib\DnsServiceManager.cs" />
+    <Compile Include="Lib\Caching\DocumentCacheManager.cs" />
+    <Compile Include="Lib\DummyPatientIdentifierProcessor.cs" />
     <Compile Include="Lib\GlobalSuppressions.cs" />
     <Compile Include="Lib\RequestCache.cs" />
     <Compile Include="Lib\SingletonProcessors.cs" />
@@ -252,6 +258,7 @@
     <Compile Include="Lib\Utils\SFtpClient.cs" />
     <Compile Include="Lib\Utils\Util.cs" />
     <Compile Include="Lib\Utils\UtilityExtensions.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Utils\AsyncHelpers.cs" />
     <Compile Include="Utils\Configuration.cs" />
     <Compile Include="Controls\DataMartViewPanel.cs">
@@ -361,6 +368,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkConnectForm.resx">
       <DependentUpon>NetworkConnectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OutputPathSelectionForm.resx">
+      <DependentUpon>OutputPathSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>

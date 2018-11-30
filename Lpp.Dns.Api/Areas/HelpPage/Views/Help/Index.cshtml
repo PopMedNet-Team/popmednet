@@ -6,7 +6,7 @@
 @model Collection<ApiDescription>
 
 @{
-    ViewBag.Title = "PopMedNet API Help Documentation";
+    ViewBag.Title = "ASP.NET Web API Help Page";
 
     // Group APIs by controller
     ILookup<HttpControllerDescriptor, ApiDescription> apiGroups = Model.ToLookup(api => api.ActionDescriptor.ControllerDescriptor);
@@ -25,7 +25,7 @@
         <div class="content-wrapper">
             <h2>Introduction</h2>
             <p>
-                Welcome to the PopMedNet (PMN) API documentation site. All API calls follow HTTP REST based calls. Each endpoint has full documentation demonstrating how the structure of the request should be made and the structure and data types of the response to be returned. All Enumerations and structures are fully defined within the endpoint.
+                Provide a general description of your APIs here.
             </p>
         </div>
     </section>

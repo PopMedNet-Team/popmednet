@@ -28,8 +28,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
         /// </remarks>
         protected readonly HashSet<Func<QueryComposerCriteriaDTO, System.Linq.Expressions.Expression<Func<TBaseQuery, bool>>, System.Linq.Expressions.Expression<Func<TBaseQuery, bool>>>> ParagraphPredicateBuilders = new HashSet<Func<QueryComposerCriteriaDTO, System.Linq.Expressions.Expression<Func<TBaseQuery, bool>>, System.Linq.Expressions.Expression<Func<TBaseQuery, bool>>>>();
         
-        public DynamicModelAdapter(Guid modelID)
-            : base(modelID)
+        public DynamicModelAdapter(Guid modelID, RequestMetadata requestMetadata)
+            : base(modelID, requestMetadata)
         {
 
             //register the default predicate actions

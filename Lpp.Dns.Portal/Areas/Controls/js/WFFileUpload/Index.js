@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -72,7 +75,7 @@ var Controls;
                     _this.sFtpFolders = ko.observableArray([_this.sFtpRoot]);
                     self.onFileUploadCompleted = function (evt) {
                         try {
-                            self.Documents.push(evt.response.Document);
+                            self.Documents.push(evt.response.Result);
                             Requests.Details.rovm.Save(false).done(function () { Requests.Details.rovm.RefreshTaskDocuments(); });
                         }
                         catch (e) {
@@ -115,7 +118,7 @@ var Controls;
                             data: JSON.stringify({
                                 credentials: data.Credentials,
                                 paths: paths,
-                                comments: 'Modular Program specification document added.',
+                                comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
                                 requestID: Requests.Details.rovm.Request.ID(),
                                 taskID: Requests.Details.rovm.CurrentTask.ID,
                                 taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument,
@@ -159,7 +162,7 @@ var Controls;
                         }
                     });
                     evt.data = {
-                        comments: 'Modular Program specification document added.',
+                        comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
                         requestID: Requests.Details.rovm.Request.ID(),
                         taskID: Requests.Details.rovm.CurrentTask.ID,
                         taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument
@@ -245,4 +248,3 @@ var Controls;
         })(Index = WFFileUpload.Index || (WFFileUpload.Index = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=Index.js.map

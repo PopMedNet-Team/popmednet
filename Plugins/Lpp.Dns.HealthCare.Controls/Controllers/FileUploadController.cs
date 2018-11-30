@@ -97,6 +97,7 @@ namespace Lpp.Dns.HealthCare.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadFTPFiles(FTPCredentials credentials, Guid requestId, IEnumerable<string> paths)
         {
+            var userIdentity = HttpContext.User.Identity as Lpp.Utilities.Security.ApiIdentity;
             List<Document> uploadedDocuments = new List<Document>();
             using (var sftp = new SftpClient(credentials.Address, credentials.Port, credentials.Login, credentials.Password))
             {
@@ -110,8 +111,11 @@ namespace Lpp.Dns.HealthCare.Controllers
                         {
                             using (var db = new DataContext())
                             {
+                                Guid id = Lpp.Utilities.DatabaseEx.NewGuid();
                                 var document = new Document
                                 {
+                                    ID = id,
+                                    RevisionSetID = id,
                                     CreatedOn = DateTime.UtcNow,
                                     FileName = fileInfo.Name,
                                     ItemID = requestId,
@@ -121,6 +125,11 @@ namespace Lpp.Dns.HealthCare.Controllers
                                     Viewable = false,
                                     Kind = DocumentKind.User
                                 };
+
+                                if(userIdentity != null)
+                                {
+                                    document.UploadedByID = userIdentity.ID;
+                                }
 
                                 db.Documents.Add(document);
                                 uploadedDocuments.Add(document);
@@ -182,12 +191,18 @@ namespace Lpp.Dns.HealthCare.Controllers
                         throw new ArgumentException("Unable to parse the file content correctly.");
                     }
 
+                    var userIdentity = HttpContext.User.Identity as Lpp.Utilities.Security.ApiIdentity;
+
                     List<Document> addedDocuments = new List<Document>();
                     using (var db = new DataContext())
                     {
                         string filename = System.IO.Path.GetFileName(file.FileName);
+                        Guid id = Lpp.Utilities.DatabaseEx.NewGuid();
+
                         var document = new Document
                         {
+                            ID = id,
+                            RevisionSetID = id,
                             CreatedOn = DateTime.UtcNow,
                             FileName = filename,
                             ItemID = requestID,
@@ -197,6 +212,11 @@ namespace Lpp.Dns.HealthCare.Controllers
                             Viewable = false,
                             Kind = DocumentKind.User
                         };
+
+                        if(userIdentity != null)
+                        {
+                            document.UploadedByID = userIdentity.ID;
+                        }
 
                         db.Documents.Add(document);
                         addedDocuments.Add(document);

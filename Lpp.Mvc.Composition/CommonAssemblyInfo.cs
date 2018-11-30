@@ -8,5 +8,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © PopMedNet 2011-2018")]
 [assembly: ComVisible( false )]
 
-[assembly: AssemblyVersion( /*<VERSION>*/ "6.8.0.*" /*</VERSION>*/ )]
-[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.8.0.0" /*</VERSION>*/ )]
+[assembly: AssemblyVersion( /*<VERSION>*/ "6.9.0.*" /*</VERSION>*/ )]
+[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.9.0.0" /*</VERSION>*/ )]

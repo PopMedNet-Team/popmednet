@@ -31,7 +31,7 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
 
         public override Guid ID
         {
-            get { return ModularProgramWorkflowConfiguration.ViewStatusAndResultsID; }
+            get { return SimpleModularProgramWorkflowConfiguration.ViewStatusAndResultsID; }
         }
 
         public override string Uri

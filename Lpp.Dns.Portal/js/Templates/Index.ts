@@ -64,6 +64,7 @@
                 vm.TemplatesGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Templates.Index.gTemplates.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TemplatesGrid()));
                 });
+                vm.TemplatesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

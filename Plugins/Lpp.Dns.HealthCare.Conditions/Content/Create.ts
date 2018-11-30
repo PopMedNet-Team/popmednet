@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
+﻿/// <reference path="../../../lpp.dns.portal/Scripts/typings/bootstrap.dns.d.ts" />
 
 module Conditions.Create {
     export var RawModel: IViewModelData = null;

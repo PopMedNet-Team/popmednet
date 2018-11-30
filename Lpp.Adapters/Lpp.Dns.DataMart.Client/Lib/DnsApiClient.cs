@@ -14,7 +14,7 @@ namespace Lpp.Dns.DataMart.Client.Lib
 
     internal class DnsApiClient : HttpClientEx
     {
-        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        readonly ILog _log = LogManager.GetLogger(typeof(DnsApiClient));
         const string Path = "/DMC";
         const string AdaptersPath = "/Adapters";
 
@@ -32,23 +32,60 @@ namespace Lpp.Dns.DataMart.Client.Lib
             this._Client.Timeout = ns.WcfReceiveTimoutTimeSpan;
         }
 
+        string ExecutingMessage(string action, out string identifier)
+        {
+            identifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+            return $"{identifier} - Executing API request to { this._Host + Path }/{action}";
+        }
+
+        string CompletionMessage(string identifier, string action, bool success)
+        {
+            if (success)
+                return $"{identifier} - Successful execution of API request to { this._Host + Path}/{action}";
+
+            return $"{identifier} - FAILED executing API request to { this._Host + Path}/{action}";
+        }
+
         public async Task<Lpp.Dns.DTO.DataMartClient.Profile> GetProfile()
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetProfile");
+
+            string identifier;
+            _log.Debug(ExecutingMessage("GetProfile", out identifier));
+
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.Profile>(Path + "/GetProfile");
-            _log.Debug("API Call successfull");
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(identifier, "GetProfile", result.IsSuccess));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(identifier, "GetProfile", result.IsSuccess) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
             return result.ReturnSingleItem();
         }
 
         public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartClient.DataMart>> GetDataMarts(string oDataQuery = null)
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetDataMarts");
+            string identifier;
+            _log.Debug(ExecutingMessage("GetDataMarts", out identifier));
+
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.DataMart>(Path + "/GetDataMarts", oDataQuery);
-            _log.Debug("API Call successfull");
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(identifier, "GetDataMarts", result.IsSuccess));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(identifier, "GetDataMarts", result.IsSuccess) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
             return result.ReturnList();
         }
 
-        public async Task<Lpp.Dns.DTO.DataMartClient.RequestList> GetRequestList(System.Nullable<System.DateTime> fromDate, System.Nullable<System.DateTime> toDate, System.Collections.Generic.IEnumerable<System.Guid> filterByDataMartIDs, System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus> filterByStatus, System.Nullable<Lpp.Dns.DTO.DataMartClient.RequestSortColumn> sortColumn, System.Nullable<System.Boolean> sortAscending, System.Nullable<System.Int32> startIndex, System.Nullable<System.Int32> maxCount)
+        public async Task<Lpp.Dns.DTO.DataMartClient.RequestList> GetRequestList(string queryDescription, System.Nullable<System.DateTime> fromDate, System.Nullable<System.DateTime> toDate, System.Collections.Generic.IEnumerable<System.Guid> filterByDataMartIDs, System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus> filterByStatus, System.Nullable<Lpp.Dns.DTO.DataMartClient.RequestSortColumn> sortColumn, System.Nullable<System.Boolean> sortAscending, System.Nullable<System.Int32> startIndex, System.Nullable<System.Int32> maxCount)
         {
             var criteria = new Lpp.Dns.DTO.DataMartClient.Criteria.RequestListCriteria
             {
@@ -61,59 +98,100 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 StartIndex = startIndex,
                 MaxCount = maxCount
             };
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetRequestList");
+
+            string identifier;
+            _log.Debug(ExecutingMessage("GetRequestList for " + queryDescription, out identifier) + ". Criteria:" + JsonConvert.SerializeObject(criteria, Formatting.None));
+
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.RequestListCriteria, Lpp.Dns.DTO.DataMartClient.RequestList>(Path + "/GetRequestList", criteria);
-            var s = result.ReturnSingleItem();
-            _log.Debug("API Call successfull");
-            return s;
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(identifier, "GetRequestList for " + queryDescription, result.IsSuccess) + ". Criteria:" + JsonConvert.SerializeObject(criteria, Formatting.None));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(identifier, "GetRequestList for " + queryDescription, result.IsSuccess) + ". Criteria:" + JsonConvert.SerializeObject(criteria, Formatting.None) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
+            return result.ReturnSingleItem();
         }
 
-        public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartClient.Request>> GetRequests(System.Collections.Generic.IEnumerable<System.Guid> ID, Guid? dataMartID, string oDataQuery = null)
+        public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartClient.Request>> GetRequests(System.Collections.Generic.IEnumerable<System.Guid> ID, Guid dataMartID, string oDataQuery = null)
         {
-            Lpp.Dns.DTO.DataMartClient.Criteria.RequestCriteria criteria = new DTO.DataMartClient.Criteria.RequestCriteria { ID = ID , DatamartID = dataMartID };
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetRequests");
+            string identifier;
+            _log.Debug(ExecutingMessage($"GetRequests?ID={ ID.First().ToString("D") }&DataMartID={ dataMartID.ToString("D")}", out identifier));
+
+            Lpp.Dns.DTO.DataMartClient.Criteria.RequestCriteria criteria = new DTO.DataMartClient.Criteria.RequestCriteria { ID = ID, DatamartID = dataMartID };
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.RequestCriteria, Lpp.Dns.DTO.DataMartClient.Request>(Path + "/GetRequests", criteria);
-            _log.Debug("API Call successfull");
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(identifier, $"GetRequests?ID={ ID.First().ToString("D") }&DataMartID={ dataMartID.ToString("D")}", result.IsSuccess));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(identifier, $"GetRequests?ID={ ID.First().ToString("D") }&DataMartID={ dataMartID.ToString("D")}", result.IsSuccess) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
             return result.ReturnList();
         }
 
         public async Task<System.Collections.Generic.IEnumerable<byte>> GetDocumentChunk(Guid ID, int offset, int size)
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetDocumentChunk?ID=" + (ID == null ? "" : System.Web.HttpUtility.UrlEncode(ID.ToString())) + "&offset=" + (offset == null ? "" : System.Web.HttpUtility.UrlEncode(offset.ToString())) + "&size=" + (size == null ? "" : System.Web.HttpUtility.UrlEncode(size.ToString())));
-            var result = await this._Client.GetAsync(this._Host + Path + "/GetDocumentChunk?ID=" + (ID == null ? "" : System.Web.HttpUtility.UrlEncode(ID.ToString())) + "&offset=" + (offset == null ? "" : System.Web.HttpUtility.UrlEncode(offset.ToString())) + "&size=" + (size == null ? "" : System.Web.HttpUtility.UrlEncode(size.ToString())));
+            string path = $"GetDocumentChunk?ID={ System.Web.HttpUtility.UrlEncode(ID.ToString("D"))}&offset={ System.Web.HttpUtility.UrlEncode(offset.ToString()) }&size={ System.Web.HttpUtility.UrlEncode(size.ToString()) }";
+            string identifier;
+            _log.Debug(ExecutingMessage(path, out identifier));
+
+            var result = await this._Client.GetAsync(this._Host + Path + "/" + path);
             if (result.IsSuccessStatusCode)
             {
-                _log.Debug("API Call successfull");
+                _log.Debug(CompletionMessage(identifier, path, true));
                 return await result.Content.ReadAsByteArrayAsync();
             }
 
-            throw new Exception("Unable to download document, request returned with status code: " + result.StatusCode);
+            var errorMsg = await result.GetMessage();
+            _log.Error(CompletionMessage(identifier, path, false) + ".\r\n" + errorMsg);
+
+            throw new Exception("Unable to download document chunk, request returned with status code: " + result.StatusCode);
         }
 
         public async Task<IEnumerable<Guid>> PostResponseDocuments(Guid requestID, Guid datamartID, IEnumerable<Lpp.Dns.DTO.DataMartClient.Document> documents)
         {
+            string path = $"PostResponseDocuments for RequestID: { requestID.ToString("D") }, DataMartID: { datamartID.ToString("D") }";
+            string identifier;
+            _log.Debug(ExecutingMessage(path, out identifier));
+
             Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData data = new DTO.DataMartClient.Criteria.PostResponseDocumentsData { DataMartID = datamartID, RequestID = requestID, Documents = documents };
-            _log.Debug($"Executing API Call to { this._Host + Path }/PostResponseDocuments for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }");
             var result = await this.Post<Lpp.Dns.DTO.DataMartClient.Criteria.PostResponseDocumentsData, Guid>(Path + "/PostResponseDocuments", data);
-            if (result.errors == null || result.errors.Length == 0)
+
+            if (result.IsSuccess)
             {
-                _log.Debug($"API Call Successfull to { _Host + Path }/PostResponseDocuments for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }");
-                return result.results ?? Enumerable.Empty<Guid>();
+                _log.Debug(CompletionMessage(identifier, path, true));
+                return result.results;
             }
 
             string errors = string.Join(", ", result.errors.Select(err => err.Description));
-            throw new Exception($"Unable to post response documents for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }. " + errors);
+            _log.Error(CompletionMessage(identifier, path, false) + ".\r\n" + errors);
+
+            throw new Exception($"Error posting response document metadata for RequestID: { requestID }, DataMartID: { datamartID.ToString("D") }. \r\n" + errors);
         }
 
         public async Task PostResponseDocumentChunk(Guid documentID, IEnumerable<byte> data)
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/PostResponseDocumentChunk?documentID=" + documentID.ToString("D"));
+            string identifier;
+            _log.Debug(ExecutingMessage("PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), out identifier));
+
             var result = await this._Client.PutAsync(this._Host + Path + "/PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), new ByteArrayContent(data.ToArray()));
+
             if (!result.IsSuccessStatusCode)
             {
-                throw new Exception("An error occured during upload of document data: " + result.GetMessage());
+                var errorMsg = await result.GetMessage();
+                _log.Error(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), false) + ".\r\n" + errorMsg);
+                
+                throw new Exception("An error occured during upload of document data: " + errorMsg);
             }
-            _log.Debug("API Call Successfull");
+
+            _log.Debug(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), true));
         }
 
         public async Task SetRequestStatus(Guid requestID, Guid datamartID, Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus status, string statusMessage, IEnumerable<Lpp.Dns.DTO.DataMartClient.RoutingProperty> properties)
@@ -125,41 +203,80 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 Message = statusMessage,
                 Properties = properties
             };
-            _log.Debug("Executing API Call to " + this._Host + Path + "/SetRequestStatus");
+
+            string identifier;
+            _log.Debug(ExecutingMessage($"SetRequestStatus for RequestID: { requestID.ToString("D") }, DataMartID: { datamartID.ToString("D") }, Status: { status.ToString() }", out identifier));
+
             var result = await this.Put<Lpp.Dns.DTO.DataMartClient.Criteria.SetRequestStatusData>(Path + "/SetRequestStatus", data);
+
             if (!result.IsSuccessStatusCode)
             {
+                string errors = await result.GetMessage();
+
+                _log.Error(CompletionMessage(identifier, $"SetRequestStatus for RequestID: { requestID.ToString("D") }, DataMartID: { datamartID.ToString("D") }, Status: { status.ToString() }.\r\n{ errors }", false));
+
                 throw new Exception("An error occured while updating the request status: " + result.GetMessage());
             }
-            _log.Debug("API Call successfull");
-            
+
+            _log.Debug(CompletionMessage(identifier, $"SetRequestStatus for RequestID: { requestID.ToString("D") }, DataMartID: { datamartID.ToString("D") }, Status: { status.ToString() }", true));
+
         }
 
         public async Task<string> GetCurrentVersion(string identifier)
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier));
+            string reqIdentifier;
+            _log.Debug(ExecutingMessage("GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier), out reqIdentifier));
+
             var result = await this.Get<string>(AdaptersPath + "/GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier));
-            _log.Debug("API Call successfull");
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(reqIdentifier, "GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier), result.IsSuccess));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(reqIdentifier, "GetCurrentVersion?identifier=" + System.Web.HttpUtility.UrlEncode(identifier), result.IsSuccess) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
             return result.ReturnSingleItem();
         }
 
         public async Task<Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier> GetRequestTypeIdentifier(Guid modelID, Guid processorID)
         {
-            _log.Debug("Executing API Call to " + this._Host + AdaptersPath + "/GetRequestTypeIdentifier?modelID=" + modelID.ToString("D") + "&processorID=" + processorID.ToString("D"));
+            string path = "GetRequestTypeIdentifier?modelID=" + modelID.ToString("D") + "&processorID=" + processorID.ToString("D");
+            string identifier;
+            _log.Debug(ExecutingMessage(path, out identifier));
+
             var result = await this.Get<Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier>(AdaptersPath + "/GetRequestTypeIdentifier?modelID=" + modelID.ToString("D") + "&processorID=" + processorID.ToString("D"));
-            _log.Debug("API Call successfull");
+
+            if (result.IsSuccess)
+            {
+                _log.Debug(CompletionMessage(identifier, path, result.IsSuccess));
+            }
+            else
+            {
+                _log.Error(CompletionMessage(identifier, path, result.IsSuccess) + "\r\n" + result.ReturnErrorsAsString());
+            }
+
             return result.ReturnSingleItem();
         }
 
         public async Task<System.IO.Stream> GetPackage(Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier packageIdentifier)
         {
-            _log.Debug("Executing API Call to " + this._Host + Path + "/GetPackage?identifier=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Identifier) + "&version=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Version));
+            string path = "GetPackage?identifier=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Identifier) + "&version=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Version);
+            string identifier;
+            _log.Debug(ExecutingMessage(path, out identifier));
+
             var response = await this._Client.GetAsync(this._Host + AdaptersPath + "/GetPackage?identifier=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Identifier) + "&version=" + System.Web.HttpUtility.UrlEncode(packageIdentifier.Version));
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
+                _log.Error(CompletionMessage(identifier, path, false) + "\r\n" + response.GetMessage());
+
                 throw new Exception("An error occurred while trying to download the package:" + packageIdentifier.PackageName() + "/n" + response.ReasonPhrase + "/nStatusCode:" + response.StatusCode.ToString());
             }
-            _log.Debug("API Call successfull");
+
+            _log.Debug(CompletionMessage(identifier, path, true));
+
             return await response.Content.ReadAsStreamAsync();
         }
 
@@ -348,6 +465,12 @@ namespace Lpp.Dns.DataMart.Client.Lib
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore), DataMember]
         public ResponseError[] errors { get; set; }
+
+        [JsonIgnore]
+        public bool IsSuccess
+        {
+            get { return errors == null || errors.Length == 0; }
+        }
 
         /// <summary>
         /// Returns all errors as a string

@@ -105,7 +105,7 @@
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(584, 20);
             label3.TabIndex = 5;
-            label3.Text = "DataMartClient was unable to connection to this network. The error message was:";
+            label3.Text = "DataMartClient was unable to connect to this network. The error message was:";
             // 
             // label2
             // 

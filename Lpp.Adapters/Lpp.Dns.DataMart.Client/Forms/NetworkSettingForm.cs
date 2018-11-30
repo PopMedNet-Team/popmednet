@@ -216,12 +216,18 @@ namespace Lpp.Dns.DataMart.Client
                 if (SaveNetworkSetting())
                 {
                     _isNewNetworksetting = false;
+
                     PopulateDataMarts(ref _NetworkSetting);
+
                     txtNetWorkId.Text = _NetworkSetting.NetworkId.ToString();
                     MessageBox.Show("Settings saved successfully");
+
                     btnApply.Enabled = btnOk.Enabled = false;
+
                     _NetworkSetting = (NetWorkSetting)Configuration.Instance.GetNetworkSetting(_NetworkSetting.NetworkId);
+
                     NetworkSettingChanged(sender, _NetworkSetting);
+
                     if (_NetworkSetting.NetworkStatus == Util.ConnectionFailedStatus)
                         lblStatusMessage.Text = _NetworkSetting.NetworkMessage;
                 }

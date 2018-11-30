@@ -53,7 +53,7 @@ module Controls.WFFileUpload.ResposnseForDataPartner {
             self.onFileUploadCompleted = (evt) => {
                 try {
 
-                    self.Documents.push((<any>evt.response).Document);
+                    self.Documents.push((<any>evt.response).Result);
 
                     Requests.Details.rovm.Save(false).done(() => { Requests.Details.rovm.RefreshTaskDocuments(); });
 
@@ -95,7 +95,7 @@ module Controls.WFFileUpload.ResposnseForDataPartner {
 
                 data.sFtpSelectedFiles().forEach((item: string) => {
                     var selector = (document.getElementById("ddl" + item.split('/').pop().trim().replace(/\s/g, ''))) as HTMLSelectElement;
-                    var value = selector[selector.selectedIndex].value;
+                    var value = (<any>selector[selector.selectedIndex]).value;
 
                     paths.push(<FTPPaths>{ Path: item, DocumentType: value });
 

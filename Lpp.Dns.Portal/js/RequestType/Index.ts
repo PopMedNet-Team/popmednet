@@ -61,6 +61,7 @@ module RequestType.Index {
                 vm.RequestTypesGrid().bind("dataBound", function (e) {
                   Users.SetSetting("RequestType.Index.gRequestTypes.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestTypesGrid()));
                 });
+                vm.RequestTypesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

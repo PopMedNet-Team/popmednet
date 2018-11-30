@@ -22,8 +22,9 @@ namespace Lpp.Dns.DataMart.Client
 
         #region Private variables
 
-        private DataMartDescription _DataMartDescription = null;
+        private DataMartDescription _dataMartDescription = null;
         ToolTip toolTip = new ToolTip();
+        Lib.Caching.DataMartCacheManager _cache = null;
 
         #endregion
 
@@ -31,8 +32,8 @@ namespace Lpp.Dns.DataMart.Client
 
         public DataMartDescription DataMartDescription
         {
-            get { return _DataMartDescription; }
-            set { _DataMartDescription = value; }
+            get { return _dataMartDescription; }
+            set { _dataMartDescription = value; }
         }
 
         public NetWorkSetting NetworkSetting
@@ -77,10 +78,31 @@ namespace Lpp.Dns.DataMart.Client
                         return;
                     }
                 }
-                _DataMartDescription.AllowUnattendedOperation = chkAllowUnattendedOperation.Checked;
-                _DataMartDescription.ProcessQueriesAndUploadAutomatically = rbModeProcess.Checked;
-                _DataMartDescription.NotifyOfNewQueries = rbModeNotify.Checked;
-                _DataMartDescription.ProcessQueriesAndNotUpload = rbSemiAutomatic.Checked;
+                _dataMartDescription.AllowUnattendedOperation = chkAllowUnattendedOperation.Checked;
+                _dataMartDescription.ProcessQueriesAndUploadAutomatically = rbModeProcess.Checked;
+                _dataMartDescription.NotifyOfNewQueries = rbModeNotify.Checked;
+                _dataMartDescription.ProcessQueriesAndNotUpload = rbSemiAutomatic.Checked;
+
+                if (chkEnableCache.Checked)
+                {
+                    _dataMartDescription.EnableResponseCaching = true;
+                    _dataMartDescription.DaysToRetainCacheItems = nmCacheRetentionPeriod.Value;
+                    _dataMartDescription.EncryptCacheItems = chkEncryptCacheItems.Checked;
+                    _dataMartDescription.EnableExplictCacheRemoval = chkExplicitCacheRemoval.Checked;
+                }
+                else
+                {
+                    _dataMartDescription.EnableResponseCaching = false;
+                    _dataMartDescription.DaysToRetainCacheItems = nmCacheRetentionPeriod.Value;
+                    _dataMartDescription.EncryptCacheItems = false;
+                    _dataMartDescription.EnableExplictCacheRemoval = false;
+
+                    //remove any cache items
+                    _cache.ClearCache();
+                    log.Info($"Caching disabled, clearing existing cached documents on save for DataMart: { DataMartDescription.DataMartName }, Path: { _cache.BaseCachePath }");
+                }
+
+
                 DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -94,15 +116,35 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                chkAllowUnattendedOperation.Checked = _DataMartDescription.AllowUnattendedOperation;
-                rbModeProcess.Checked = _DataMartDescription.ProcessQueriesAndUploadAutomatically;
-                rbModeNotify.Checked = _DataMartDescription.NotifyOfNewQueries;
-                rbSemiAutomatic.Checked = _DataMartDescription.ProcessQueriesAndNotUpload;
+                chkAllowUnattendedOperation.Checked = _dataMartDescription.AllowUnattendedOperation;
+                rbModeProcess.Checked = _dataMartDescription.ProcessQueriesAndUploadAutomatically;
+                rbModeNotify.Checked = _dataMartDescription.NotifyOfNewQueries;
+                rbSemiAutomatic.Checked = _dataMartDescription.ProcessQueriesAndNotUpload;
                 update_processing_mode_controls();
 
                 Guid dataMartId = DataMartDescription.DataMartId;
-                dgvModels.DataSource = DnsServiceManager.GetModels(dataMartId, NetworkSetting).Where(m => m.ModelProcessorId != Guid.Empty).ToArray();
+
+                var models = DnsServiceManager.GetModels(NetworkSetting);
+                if (models.ContainsKey(dataMartId))
+                {
+                    dgvModels.DataSource = (models[dataMartId] ?? Array.Empty<HubModel>()).Where(m => m.ModelProcessorId != Guid.Empty).ToArray();
+                }
+                else
+                {
+                    dgvModels.DataSource = Array.Empty<HubModel>();
+                }
+
                 btnEdit.Enabled = dgvModels.DataSource != null && (dgvModels.DataSource as HubModel[]).Length > 0;
+
+                _cache = new Lib.Caching.DataMartCacheManager(NetworkSetting.NetworkId, DataMartDescription.DataMartId);
+
+                chkEncryptCacheItems.Checked = _dataMartDescription.EncryptCacheItems;
+                chkExplicitCacheRemoval.Checked = _dataMartDescription.EnableExplictCacheRemoval;
+                nmCacheRetentionPeriod.Value = _dataMartDescription.DaysToRetainCacheItems;
+                chkEnableCache.Checked = _dataMartDescription.EnableResponseCaching;
+
+                chkEnableCache_CheckedChanged(null, EventArgs.Empty);
+                chkEnableCache.CheckedChanged += chkEnableCache_CheckedChanged;
             }
             catch (Exception ex)
             {
@@ -176,6 +218,23 @@ namespace Lpp.Dns.DataMart.Client
             f.HubModel = dgvModels.SelectedRows[0].DataBoundItem as HubModel;
             f.NetworkSetting = NetworkSetting;
             f.ShowDialog();
+        }
+
+        private void chkEnableCache_CheckedChanged(object sender, EventArgs e)
+        {
+            //enable settings based on checkstate
+            nmCacheRetentionPeriod.Enabled = chkEnableCache.Checked;
+            chkEncryptCacheItems.Enabled = chkEnableCache.Checked;
+            chkExplicitCacheRemoval.Enabled = chkEnableCache.Checked;
+            btnClearCache.Enabled = chkEnableCache.Checked;
+        }
+
+        private void OnClearCache_Clicked(object sender, EventArgs e)
+        {
+            _cache.ClearCache();
+
+            log.Info($"Cache cleared for DataMart: { DataMartDescription.DataMartName }, Path: { _cache.BaseCachePath }");
+            MessageBox.Show(this, $"Cache has been successfully cleared for DataMart: { DataMartDescription.DataMartName }.", "Cache Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

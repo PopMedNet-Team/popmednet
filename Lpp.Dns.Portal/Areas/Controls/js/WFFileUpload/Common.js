@@ -64,4 +64,3 @@ var Controls;
         WFFileUpload.sFtpItem = sFtpItem;
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=Common.js.map

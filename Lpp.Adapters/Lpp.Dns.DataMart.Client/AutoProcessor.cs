@@ -26,7 +26,7 @@ namespace Lpp.Dns.DataMart.Client
         Timer _timer;
         int _queriesProcessedCount = 0;
 
-        enum ProcessingStatus { InProcessing, Complete, CannotRunAndUpload }        
+        enum ProcessingStatus { InProcessing, Complete, CannotRunAndUpload, PendingUpload }        
 
         public AutoProcessor(NetWorkSetting networkSetting)
         {
@@ -80,29 +80,29 @@ namespace Lpp.Dns.DataMart.Client
 
                     HubRequest[] requests = await GetRequestsAsync();
 
-                    Log.Debug($"For network: { _networkSetting.NetworkName }, found { requests.Length } requests to process.");
+                    Dictionary<string, HubRequest> newRequests = requests.ToDictionary(k => MakeKey(k));
 
-                    HashSet<string> newRequestKeys = new HashSet<string>();
+                    Log.Debug($"For network: { _networkSetting.NetworkName }, found { newRequests.Where(k => RequestStatuses.ContainsKey(k.Key) == false).Count() } new requests that require automated processing.");
 
-                    for(int i = 0; i < requests.Length; i++)
+
+                    foreach(var pair in newRequests)
                     {
-                        var key = MakeKey(requests[i]);
-
-                        newRequestKeys.Add(key);
-
-                        if (!RequestStatuses.ContainsKey(key))
+                        if (!RequestStatuses.ContainsKey(pair.Key))
                         {
-                            AutoProcess(new KeyValuePair<string, HubRequest>(key, requests[i]));
+                            AutoProcess(pair);
                         }
                     }
                     
-                    var toRemove = RequestStatuses.Where(kv => kv.Value == ProcessingStatus.Complete || (kv.Value == ProcessingStatus.CannotRunAndUpload && !newRequestKeys.Contains(kv.Key))).ToArray();
+                    var toRemove = RequestStatuses.Where(kv => kv.Value == ProcessingStatus.Complete || (kv.Value == ProcessingStatus.CannotRunAndUpload && !newRequests.ContainsKey(kv.Key))).ToArray();
                     for(int i = 0; i < toRemove.Length; i++)
                     {
                         ProcessingStatus v;
                         RequestStatuses.TryRemove(toRemove[i].Key, out v);
                     }
 
+                    toRemove = null;
+                    newRequests = null;
+                    requests = null;
                 }
                 catch(Exception ex)
                 {
@@ -122,7 +122,7 @@ namespace Lpp.Dns.DataMart.Client
 
             var datamartDescription = Configuration.Instance.GetDataMartDescription(request.NetworkId, request.DataMartId);
 
-            if (datamartDescription.ProcessQueriesAndUploadAutomatically == false)
+            if (datamartDescription.ProcessQueriesAndUploadAutomatically == false && datamartDescription.ProcessQueriesAndNotUpload == false)
             {
                 //just notify, do not process
                 string message = $"New query submitted and awaiting processing in { request.ProjectName } Project: { request.Source.Name } ({request.Source.Identifier})";
@@ -148,9 +148,12 @@ namespace Lpp.Dns.DataMart.Client
                 domainManager.Load(request.Source.RequestTypePackageIdentifier, request.Source.AdapterPackageVersion);
                 IModelProcessor processor = domainManager.GetProcessor(modelDescription.ProcessorId);
                 ProcessorManager.UpdateProcessorSettings(modelDescription, processor);
+                processor.Settings.Add("NetworkId", request.NetworkId);
+
+                Lib.Caching.DocumentCacheManager cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID);
 
                 //need to initialize before checking the capabilities and settings of the processor since they may change based on the type of request being sent.
-                if(processor is IEarlyInitializeModelProcessor)
+                if (processor is IEarlyInitializeModelProcessor)
                 {
                     ((IEarlyInitializeModelProcessor)processor).Initialize(modelDescription.ModelId, request.Documents.Select(d => new DocumentWithStream(d.ID, new Document(d.ID, d.Document.MimeType, d.Document.Name, d.Document.IsViewable, Convert.ToInt32(d.Document.Size), d.Document.Kind), new DocumentChunkStream(d.ID, _networkSetting))).ToArray());
                 }
@@ -170,12 +173,12 @@ namespace Lpp.Dns.DataMart.Client
 
                 request.Processor = processor;
 
-                if (request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted)
+                if (cache.HasResponseDocuments == false && (request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted))
                 {
                     if (processor != null)
                     {
                         SystemTray.GenerateNotification(request, request.NetworkId);
-                        StartProcessingRequest(request, processor, datamartDescription, domainManager);
+                        StartProcessingRequest(request, processor, datamartDescription, domainManager, cache);
                         return;
                     }
                 }
@@ -188,9 +191,13 @@ namespace Lpp.Dns.DataMart.Client
 
                         SystemTray.UpdateNotifyText(_queriesProcessedCount, request.DataMartName, request.NetworkId);
 
-                        StartUploadingRequest(request, domainManager);
+                        StartUploadingRequest(request, domainManager, cache);
                         return;
                     }
+                }
+                else if (cache.HasResponseDocuments)
+                {
+                    RequestStatuses.TryAdd(input.Key, ProcessingStatus.PendingUpload);
                 }
 
                 domainManager.Dispose();
@@ -204,25 +211,47 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
 
-        private void UploadRequest(HubRequest request)
+        private void UploadRequest(HubRequest request, Lib.Caching.DocumentCacheManager cache)
         {
-            Log.Info(string.Format("BackgroundProcess:  Processing query {0} (RequestId: {3}, DataMartId: {1}, NetworkId: {2})", request.Source.Identifier, request.DataMartId, request.NetworkId, request.Source.ID));
+            
 
             string requestId = request.Source.ID.ToString();
 
-            Lpp.Dns.DataMart.Model.Document[] responseDocuments = request.Processor.Response(requestId);
+            Document[] responseDocuments;
+            if (cache.Enabled)
+            {
+                responseDocuments = cache.GetResponseDocuments().ToArray();
+            }
+            else
+            {
+                responseDocuments = request.Processor.Response(requestId);
+            }
+
             if (responseDocuments != null && responseDocuments.Length > 0)
             {
-                Guid[] documentIds = DnsServiceManager.PostResponseDocuments(requestId, request.DataMartId, responseDocuments, _networkSetting);
-                Log.Info(string.Format("Number of portal document ids returned by PostResponseDocuments: {0} (Request Identifier: {1}, DataMart: {2}, Network: {3})", documentIds.Length, request.Source.Identifier, request.DataMartName, request.NetworkName));
-                for (int i = 0; i < documentIds.Length; i++)
+                Log.Info(string.Format("Uploading {4} documents for query: {0} (DataMart:{1}, Network:{2}, RequestID: {3:D})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID, responseDocuments.Length));
+
+                //since the ID of the document returned from the API is not known when posting, and the order cannot be assumed in the response
+                //loop over each document and post the metadata and the content as a single unit of work per document.
+
+                for (int i=0; i < responseDocuments.Length; i++)
                 {
-                    Log.Info(string.Format("About to post content for portal document id: " + documentIds[i] + " corresponding to response document id: " + responseDocuments[i].DocumentID + " (Request Identifier: {0}, DataMart: {1}, Network: {2})", request.Source.Identifier, request.DataMartName, request.NetworkName));
+                    string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+                    Guid[] metaDataPostResponse = DnsServiceManager.PostResponseDocuments(uploadIdentifier, requestId, request.DataMartId, new[] { responseDocuments[i] }, _networkSetting);
+
                     System.IO.Stream contentStream = null;
                     try
                     {
-                        request.Processor.ResponseDocument(requestId, responseDocuments[i].DocumentID, out contentStream, 60000);
-                        DnsServiceManager.PostResponseDocumentContent(documentIds[i], contentStream, _networkSetting)
+                        if (cache.Enabled)
+                        {
+                            contentStream = cache.GetDocumentStream(Guid.Parse(responseDocuments[i].DocumentID));
+                        }
+                        else
+                        {
+                            request.Processor.ResponseDocument(requestId, responseDocuments[i].DocumentID, out contentStream, 60000);
+                        }
+
+                        DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, requestId, request.DataMartId, metaDataPostResponse[0], responseDocuments[i].Filename, contentStream, _networkSetting)
                             .LogExceptions(Log.Error)
                             .Catch()
                             .Wait();
@@ -235,7 +264,7 @@ namespace Lpp.Dns.DataMart.Client
             }
             else
             {
-                Log.Info(string.Format("No documents to upload for query {0} (RequestId: {1}, DataMart: {2}, Network: {3})", request.Source.Identifier, request.Source.ID, request.DataMartName, request.NetworkName));
+                Log.Info(string.Format("No documents to upload for query: {0} (DataMart:{1}, Network:{2}, RequestID: {3:D})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID, responseDocuments.Length));
             }
 
             if (request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed)
@@ -271,12 +300,12 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
 
-        private void StartUploadingRequest(HubRequest request, DomainManger.DomainManager domainManager)
+        private void StartUploadingRequest(HubRequest request, DomainManger.DomainManager domainManager, Lib.Caching.DocumentCacheManager cache)
         {
-            RunTask(MakeKey(request), domainManager, () => UploadRequest(request));
+            RunTask(MakeKey(request), domainManager, () => UploadRequest(request, cache));
         }
 
-        private void StartProcessingRequest(HubRequest request, IModelProcessor processor, DataMartDescription datamartDescription, DomainManger.DomainManager domainManager)
+        private void StartProcessingRequest(HubRequest request, IModelProcessor processor, DataMartDescription datamartDescription, DomainManger.DomainManager domainManager, Lib.Caching.DocumentCacheManager cache)
         {
             Action process = () =>
             {
@@ -289,10 +318,51 @@ namespace Lpp.Dns.DataMart.Client
                 HubRequestStatus hubRequestStatus = null;
                 var statusCode = request.Processor.Status(request.Source.ID.ToString()).Code;
 
-                if (datamartDescription.ProcessQueriesAndUploadAutomatically && (statusCode == RequestStatus.StatusCode.Complete || statusCode == RequestStatus.StatusCode.CompleteWithMessage))
+                if (cache.Enabled)
+                {
+                    Document[] responseDocuments = processor.Response(request.Source.ID.ToString());
+                    cache.Add(responseDocuments.Select(doc => {
+                        System.IO.Stream data;
+                        processor.ResponseDocument(request.Source.ID.ToString(), doc.DocumentID, out data, doc.Size);
+
+                        Guid documentID;
+                        if (!Guid.TryParse(doc.DocumentID, out documentID))
+                        {
+                            documentID = Utilities.DatabaseEx.NewGuid();
+                            doc.DocumentID = documentID.ToString();
+                        }
+
+                        return new DocumentWithStream(documentID, doc, data);
+                    }));
+                }
+
+                if(datamartDescription.ProcessQueriesAndNotUpload && (statusCode == RequestStatus.StatusCode.Complete || statusCode == RequestStatus.StatusCode.CompleteWithMessage))
+                {
+                    RequestStatuses.TryAdd(MakeKey(request), ProcessingStatus.PendingUpload);
+                }
+                else if (datamartDescription.ProcessQueriesAndUploadAutomatically && (statusCode == RequestStatus.StatusCode.Complete || statusCode == RequestStatus.StatusCode.CompleteWithMessage))
                 {
                     // Post process requests that are automatically uploaded
                     processor.PostProcess(request.Source.ID.ToString());
+
+                    if (cache.Enabled)
+                    {
+                        cache.ClearCache();
+                        Document[] responseDocuments = processor.Response(request.Source.ID.ToString());
+                        cache.Add(responseDocuments.Select(doc => {
+                            System.IO.Stream data;
+                            processor.ResponseDocument(request.Source.ID.ToString(), doc.DocumentID, out data, doc.Size);
+
+                            Guid documentID;
+                            if (!Guid.TryParse(doc.DocumentID, out documentID))
+                            {
+                                documentID = Utilities.DatabaseEx.NewGuid();
+                                doc.DocumentID = documentID.ToString();
+                            }
+
+                            return new DocumentWithStream(documentID, doc, data);
+                        }));
+                    }
 
                     // Increment counter
                     System.Threading.Interlocked.Increment(ref _queriesProcessedCount);
@@ -309,7 +379,7 @@ namespace Lpp.Dns.DataMart.Client
                         SystemTray.UpdateNotifyText(_queriesProcessedCount, request.DataMartName, request.NetworkId);
                         try
                         {
-                            UploadRequest(request);
+                            UploadRequest(request, cache);
                             statusCode = request.Processor.Status(request.Source.ID.ToString()).Code;
                             hubRequestStatus = DnsServiceManager.ConvertModelRequestStatus(request.Processor.Status(request.Source.ID.ToString()));
                             hubRequestStatus.Message = request.Processor.Status(request.Source.ID.ToString()).Message;
@@ -317,7 +387,7 @@ namespace Lpp.Dns.DataMart.Client
                         }
                         catch (Exception ex)
                         {
-                            string message = string.Format("An error occurred while attempting unattended processing of the following query {0} (ID: {1}, DataMart: {3}, Network: {4})", request.Source.Identifier, request.Source.ID, request.DataMartName, request.NetworkName);
+                            string message = string.Format("An error occurred while attempting unattended processing of the following query {0} (ID: {1}, DataMart: {2}, Network: {3})", request.Source.Identifier, request.Source.ID, request.DataMartName, request.NetworkName);
                             Log.Error(message, ex);
                             hubRequestStatus = new HubRequestStatus(Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed, message);
                         }
@@ -396,10 +466,10 @@ namespace Lpp.Dns.DataMart.Client
 
                 foreach (Lpp.Dns.DataMart.Model.Document requestDocument in desiredDocuments)
                 {
-                    Log.Info("About to download desired document id: " + requestDocument.DocumentID);
+                    Log.Debug("Downloading document" + requestDocument.Filename + $" for Request: {request.Source.MSRequestID}, DataMart: { request.DataMartName }");
                     DocumentChunkStream requestDocumentStream = new DocumentChunkStream(Guid.Parse(requestDocument.DocumentID), _networkSetting);
                     processor.RequestDocument(requestId, requestDocument.DocumentID, requestDocumentStream);
-                    Log.Info("Downloaded desired document id: " + requestDocument.DocumentID);
+                    Log.Debug("Successfully Downloaded document" + requestDocument.Filename + $" for Request: {request.Source.MSRequestID}, DataMart: { request.DataMartName }");
                 }
 
                 Log.Info("Starting request with local request: " + request.Source.Identifier + " (ID: " + requestId + ")");
@@ -435,8 +505,7 @@ namespace Lpp.Dns.DataMart.Client
             }
 
             var datamartIDs = _networkSetting.DataMartList
-                                // BMS: Note the ProcessAndNotUpload feature has been temporarilty disabled until we fix the processing around this feature
-                                .Where(dm => dm.AllowUnattendedOperation && (dm.NotifyOfNewQueries || /* dm.ProcessQueriesAndNotUpload || */ dm.ProcessQueriesAndUploadAutomatically))
+                                .Where(dm => dm.AllowUnattendedOperation && (dm.NotifyOfNewQueries || dm.ProcessQueriesAndNotUpload || dm.ProcessQueriesAndUploadAutomatically))
                                 .Select(dm => dm.DataMartId).ToArray();
 
             if(datamartIDs.Length == 0)
@@ -450,13 +519,72 @@ namespace Lpp.Dns.DataMart.Client
                 DataMartIds = datamartIDs
             };
 
-            var requests = from list in DnsServiceManager.GetRequestList(_networkSetting, 0, Properties.Settings.Default.AutoProcessingBatchSize, requestFilter, null, null)
-                           from rl in list.Segment.EmptyIfNull().ToObservable()
-                           where rl.AllowUnattendedProcessing
-                           from r in RequestCache.ForNetwork(_networkSetting).LoadRequest(rl.ID, rl.DataMartID)
-                           select r;
+            var requests = Observable.Create<DTO.DataMartClient.RequestList>(async observer =>
+            {
+                int index = 0;
+                int batchSize = Properties.Settings.Default.AutoProcessingBatchSize;
+                DTO.DataMartClient.RequestList rl = null;
 
-            return await requests.ToArray();
+                while (rl == null || (index < rl.TotalCount))
+                {
+                    rl = await DnsServiceManager.GetRequestList("AutoProcessor", _networkSetting, index, batchSize, requestFilter, DTO.DataMartClient.RequestSortColumn.RequestTime, true);
+
+                    if(rl == null || rl.TotalCount == 0)
+                    {
+                        break;
+                    }
+
+                    observer.OnNext(rl);                    
+
+                    index += batchSize;
+                }
+
+                observer.OnCompleted();
+            }).DefaultIfEmpty()
+            .Aggregate((requestList1, requestList2) =>
+            {
+                if (requestList1 == null && requestList2 == null)
+                {
+                    return new DTO.DataMartClient.RequestList
+                    {
+                        Segment = Array.Empty<DTO.DataMartClient.RequestListRow>(),
+                        SortedAscending = true,
+                        SortedByColumn = DTO.DataMartClient.RequestSortColumn.RequestTime
+                    };
+                }
+                else if (requestList1 != null && requestList2 == null)
+                {
+                    return requestList1;
+                }
+                else if (requestList1 == null && requestList2 != null)
+                {
+                    return requestList2;
+                }
+                else
+                {
+                    return new DTO.DataMartClient.RequestList
+                    {
+                        Segment = requestList1.Segment.EmptyIfNull().Concat(requestList2.Segment.EmptyIfNull()).ToArray(),
+                        SortedAscending = requestList1.SortedAscending,
+                        SortedByColumn = requestList1.SortedByColumn,
+                        StartIndex = requestList1.StartIndex,
+                        TotalCount = requestList1.TotalCount
+                    };
+                }
+            })
+           .SelectMany(requestList => 
+           {
+               if (requestList == null)
+               {
+                   return Array.Empty<DTO.DataMartClient.RequestListRow>();
+               }
+
+               return requestList.Segment.DefaultIfEmpty().Where(s => s.AllowUnattendedProcessing);
+           })
+           .SelectMany(rlr => RequestCache.ForNetwork(_networkSetting).LoadRequest(rlr.ID, rlr.DataMartID))
+           .ToArray();
+
+            return await requests;
         }
 
         public void Dispose()

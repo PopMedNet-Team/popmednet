@@ -19,8 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{689C93D0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{8B341407-BF90-4379-A946-471113794BB2}"
 	ProjectSection(SolutionItems) = preProject
+		Build\baseTSConfig.json = Build\baseTSConfig.json
 		Build\CommonAssemblyInfo.cs = Build\CommonAssemblyInfo.cs
 		Build\DataMartClientCommonAssemlbyInfo.cs = Build\DataMartClientCommonAssemlbyInfo.cs
+		Build\Dependencies.targets = Build\Dependencies.targets
 		Build\Lpp.Dns.Base.targets = Build\Lpp.Dns.Base.targets
 		Build\Lpp.Dns.targets = Build\Lpp.Dns.targets
 	EndProjectSection
@@ -112,8 +114,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Auth", "Lpp.Mvc.Composition\Lpp.Auth\Lpp.Auth.csproj", "{22116AA2-D508-43FD-AB00-12A383D02C6B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.HealthCare.ModularProgram", "Plugins\Lpp.Dns.HealthCare.ModularProgram\Lpp.Dns.HealthCare.ModularProgram.csproj", "{4F40CE06-1468-48AD-B1C4-76D3008E8A44}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Portal.RequestMetadataCollection", "Lpp.Dns.Portal.RequestMetadataCollection\Lpp.Dns.Portal.RequestMetadataCollection.csproj", "{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.General.SqDistribution", "Plugins\Lpp.Dns.General.Sql\Lpp.Dns.General.SqDistribution.csproj", "{3DE91B41-16C5-4FC3-87CD-363F9BB10D96}"
 EndProject
@@ -297,10 +297,6 @@ Global
 		{4F40CE06-1468-48AD-B1C4-76D3008E8A44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F40CE06-1468-48AD-B1C4-76D3008E8A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F40CE06-1468-48AD-B1C4-76D3008E8A44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3DE91B41-16C5-4FC3-87CD-363F9BB10D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3DE91B41-16C5-4FC3-87CD-363F9BB10D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DE91B41-16C5-4FC3-87CD-363F9BB10D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -418,7 +414,6 @@ Global
 		{4FFE4C8F-F9F5-44BE-A21F-C44F6087DFB1} = {5548201A-0CAB-47DA-9AF6-DAB2734F3F20}
 		{22116AA2-D508-43FD-AB00-12A383D02C6B} = {5548201A-0CAB-47DA-9AF6-DAB2734F3F20}
 		{4F40CE06-1468-48AD-B1C4-76D3008E8A44} = {F6A54BA3-CF60-4751-A602-EF9639114CF9}
-		{52D50C16-1EC6-40ED-A35C-EBDB2FB87D1D} = {A1F7177F-85C0-4053-AE7A-0FF70E2D77F4}
 		{3DE91B41-16C5-4FC3-87CD-363F9BB10D96} = {1BFBC81B-E4A2-4F93-BA7F-0CE4AD1F5F9A}
 		{7A0CE541-DDFA-44AD-8D53-32AE5B306978} = {1BFBC81B-E4A2-4F93-BA7F-0CE4AD1F5F9A}
 		{E383F358-C6E0-44CB-BAE2-14454E4D8D18} = {1BFBC81B-E4A2-4F93-BA7F-0CE4AD1F5F9A}

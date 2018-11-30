@@ -1,4 +1,4 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
+/// <reference path="../../Scripts/typings/bootstrap.dns.d.ts" />
 var Responses;
 (function (Responses) {
     var Detail;
@@ -106,4 +106,3 @@ var Responses;
         Detail.init = init;
     })(Detail = Responses.Detail || (Responses.Detail = {}));
 })(Responses || (Responses = {}));
-//# sourceMappingURL=Detail.js.map

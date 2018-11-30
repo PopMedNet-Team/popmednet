@@ -168,4 +168,3 @@ var DataChecker;
         DCProcedure.ViewModel = ViewModel;
     })(DCProcedure = DataChecker.DCProcedure || (DataChecker.DCProcedure = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=ProcedureResponse.js.map

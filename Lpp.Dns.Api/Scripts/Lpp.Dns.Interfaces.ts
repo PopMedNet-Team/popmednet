@@ -4413,6 +4413,8 @@ module Dns.Interfaces
 	 	 Length: number;
 	 	 ItemID: any;
 	 	 CreatedOn: Date;
+	 	 ContentModifiedOn?: Date;
+	 	 ContentCreatedOn?: Date;
 	 	 ItemTitle: string;
 	 	 Description: string;
 	 	 ParentDocumentID?: any;
@@ -4437,6 +4439,8 @@ module Dns.Interfaces
 	 	 	'Length': { type:'number', nullable: false},
 	 	 	'ItemID': { type:'any', nullable: false},
 	 	 	'CreatedOn': { type:'date', nullable: false},
+	 	 	'ContentModifiedOn': { type:'date', nullable: true},
+	 	 	'ContentCreatedOn': { type:'date', nullable: true},
 	 	 	'ItemTitle': { type:'string', nullable: false},
 	 	 	'Description': { type:'string', nullable: false},
 	 	 	'ParentDocumentID': { type:'any', nullable: true},

@@ -122,7 +122,7 @@ namespace Lpp.Dns.General.SqlDistribution
         public IEnumerable<IDnsResponseExportFormat> GetExportFormats(IDnsResponseContext context)
         {
             return new[] {
-                Dns.ExportFormat( "xls", "Excel" ),
+                Dns.ExportFormat( "xlsx", "Excel" ),
                 Dns.ExportFormat( "csv", "CSV" )
             };
         }
@@ -136,7 +136,7 @@ namespace Lpp.Dns.General.SqlDistribution
 
                 switch (format.ID)
                 {
-                    case "xls":
+                    case "xlsx":
                         ExcelHelper.ToExcel(ds, filename, HttpContext.Current.Response);
                         break;
                     case "csv":

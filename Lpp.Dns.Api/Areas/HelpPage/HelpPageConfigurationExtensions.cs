@@ -16,9 +16,6 @@ using Lpp.Dns.Api.Areas.HelpPage.Models;
 
 namespace Lpp.Dns.Api.Areas.HelpPage
 {
-    /// <summary>
-    /// Help page configuration extensions
-    /// </summary>
     public static class HelpPageConfigurationExtensions
     {
         private const string ApiModelPrefix = "MS_HelpPageApiModel_";

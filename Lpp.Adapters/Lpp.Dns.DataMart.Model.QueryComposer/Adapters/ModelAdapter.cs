@@ -8,11 +8,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
     public abstract class ModelAdapter : IModelAdapter
     {
         readonly Guid _modelID;
+        readonly RequestMetadata _requestMetadata;
         protected IDictionary<string, object> _settings = null;
         protected double? _lowThresholdValue = null;
 
-        public ModelAdapter(Guid modelID)
+        public ModelAdapter(Guid modelID, RequestMetadata requestMetadata)
         {
+            _requestMetadata = requestMetadata;
             _modelID = modelID;
         }
 
@@ -22,6 +24,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
             { 
                 return _modelID;
             } 
+        }
+
+        public RequestMetadata RequestMetadata
+        {
+            get
+            {
+                return _requestMetadata;
+            }
         }
 
         public virtual bool CanViewSQL
@@ -44,6 +54,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
             get { return false; }
         }
 
+        public virtual bool CanGeneratePatientIdentifierLists
+        {
+            get { return false; }
+        }
+
         public virtual void Initialize(IDictionary<string, object> settings)
         {
             _settings = settings;
@@ -58,6 +73,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
         }
 
         public abstract DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL);
+
+        public virtual void GeneratePatientIdentifierLists(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<Guid,string> outputSettings, string format)
+        {
+            throw new NotSupportedException("Generating Patient Identifier Lists is not supported by this adapter.");
+        }
 
         public virtual bool CanPostProcess(DTO.QueryComposer.QueryComposerResponseDTO response, out string message)
         {
