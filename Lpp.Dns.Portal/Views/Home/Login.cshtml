@@ -12,7 +12,7 @@
 
 <form id="fLogin" action="/login" method="post">
     <input type="hidden" name="returnUrl" value="@(Request.QueryString["returnUrl"] ?? Model.ReturnUrl)" />
-    <p class="right">Version @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString(4)</p>
+    <p class="right">@Lpp.Dns.Portal.Root.Global.ApplicationVersion Release</p>
     <font color="Red">@TempData["Error"]</font>
     <br /><br />
     <section style="width: 600px; margin: auto;">

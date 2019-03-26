@@ -14,7 +14,7 @@ module Plugins.Requests.QueryBuilder.Edit {
         fileUpload: KnockoutObservable<boolean>;
         MDQ: KnockoutObservable<boolean> = ko.observable<boolean>();
         IsTemplateEdit: KnockoutObservable<boolean>;
-        UploadViewModel: Controls.WFFileUpload.Index.ViewModel;
+        UploadViewModel: Controls.WFFileUpload.Index.ViewModel = null;
         rawRequestData: Dns.Interfaces.IQueryComposerRequestDTO;
         projectID: any;
 

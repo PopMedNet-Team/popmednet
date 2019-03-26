@@ -23,6 +23,7 @@ var Workflow;
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
+                    _this.SubmitButtonText = ko.observable('Submit');
                     _this.Request = Requests.Details.rovm.Request;
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
                         //call function on the composer to update routing info
@@ -168,6 +169,9 @@ var Workflow;
                             request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions() || '');
                             return true;
                         });
+                        if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) < 0 && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel == null) {
+                            vm.SubmitButtonText('Submit for Review');
+                        }
                     }
                 });
             });

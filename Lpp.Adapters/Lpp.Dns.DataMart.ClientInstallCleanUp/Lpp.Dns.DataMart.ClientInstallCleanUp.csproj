@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
+  <Import Project="..\..\Build\Lpp.Dns.Base.targets" />
   <PropertyGroup />
   <PropertyGroup>
     <StartupObject>Lpp.Dns.DataMart.ClientInstallCleanUp.Program</StartupObject>

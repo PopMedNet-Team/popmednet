@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Lpp.Dns.DataMart.Client.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

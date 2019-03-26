@@ -16,6 +16,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
     {
         public static readonly Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
         public static readonly Guid SubmitResultID = new Guid("F14B4432-804A-4052-A8EE-64260CE5DCB7");
+        public static readonly Guid SubmitToDistributionID = new Guid("34285004-D933-4B27-AC7C-52F65B01891F");
         public static readonly Guid DeleteResultID = new Guid("10AC80A5-850B-49D1-9E13-AE6AE2D63701");
 
         public override Guid ID
@@ -92,12 +93,17 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                 {
 
                     var originalStatus = _entity.Status;
-                    await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
+                    //file distribution never requires review before submission, So go right to Distribute.
+                    await SetRequestStatus(DTO.Enums.RequestStatuses.RequestPendingDistribution);
 
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.RequestPendingDistribution);
 
                     await MarkTaskComplete(task);
 
+                    return new CompletionResult
+                    {
+                        ResultID = SubmitToDistributionID
+                    };
                 }
                 else
                 {
@@ -109,12 +115,12 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     await NotifyRequestStatusChanged(DTO.Enums.RequestStatuses.Draft, DTO.Enums.RequestStatuses.DraftReview);
 
                     await MarkTaskComplete(task);
-                }
 
-                return new CompletionResult
-                {
-                    ResultID = SubmitResultID
-                };
+                    return new CompletionResult
+                    {
+                        ResultID = SubmitResultID
+                    };
+                }
             }
             else if (activityResultID.Value == DeleteResultID)
             {

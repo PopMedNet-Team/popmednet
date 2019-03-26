@@ -111,7 +111,7 @@ namespace Lpp.Dns.Api.DataMartClient
                      from d in r.DataMarts
                      from i in d.Responses
                      let isCurrent = i.Count == d.Responses.Max(rr => rr.Count)
-                     where isCurrent && d.Status != DTO.Enums.RoutingStatus.Draft && d.Status != DTO.Enums.RoutingStatus.AwaitingRequestApproval && d.Status != DTO.Enums.RoutingStatus.Canceled && d.Status > 0
+                     where isCurrent && d.Status != DTO.Enums.RoutingStatus.Draft && d.Status != DTO.Enums.RoutingStatus.RequestRejected && d.Status != DTO.Enums.RoutingStatus.AwaitingRequestApproval && d.Status != DTO.Enums.RoutingStatus.Canceled && d.Status > 0
                      select new { r, d, i, OrganizationID = d.DataMart.OrganizationID };
 
             if (criteria.FilterByDataMartIDs != null && criteria.FilterByDataMartIDs.Any())
@@ -682,7 +682,7 @@ namespace Lpp.Dns.Api.DataMartClient
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<HttpResponseMessage> PostResponseDocumentChunk([FromUri]Guid documentID, [RawBody]IEnumerable<byte> data)
+        public async Task<HttpResponseMessage> PostResponseDocumentChunk([FromUri]Guid documentID, [Utilities.WebSites.Attributes.RawBody]IEnumerable<byte> data)
         {            
             
             var details = await (from d in DataContext.Documents

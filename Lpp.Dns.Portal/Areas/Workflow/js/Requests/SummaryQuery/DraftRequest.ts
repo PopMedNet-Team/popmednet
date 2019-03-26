@@ -5,11 +5,18 @@ module Workflow.SummaryQuery.DraftRequest {
 
     export class ViewModel extends Global.WorkflowActivityViewModel {
         public AbortRejectMessage: KnockoutObservable<string>;
+        public SubmitButtonText: KnockoutObservable<string> = ko.observable('Submit');
 
         constructor(bindingControl: JQuery) {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions);
             this.AbortRejectMessage = ko.observable("");
 
+            if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
+                this.SubmitButtonText = ko.observable('Submit');
+            }
+            else {
+                this.SubmitButtonText = ko.observable('Submit for Review');
+            }
             Requests.Details.rovm.RoutingsChanged.subscribe((info: any) => {
                 //call function on the composer to update routing info
                 Plugins.Requests.QueryBuilder.Edit.vm.UpdateRoutings(info);

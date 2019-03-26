@@ -96,7 +96,7 @@ module Requests.Edit {
 
             this.Name = ko.observable(rawModel.Request.Name);
             this.Priority = ko.observable(rawModel.Request.Priority);
-            this.DueDate = ko.observable(moment(rawModel.Request.DueDate).toDate());
+            this.DueDate = ko.observable(rawModel.Request.DueDate);
             this.PurposeOfUse = ko.observable(rawModel.Header.PurposeOfUse);
             this.PhiDisclosureLevel = ko.observable(rawModel.Header.PhiDisclosureLevel);
             this.RequesterCenterID = ko.observable(rawModel.Header.RequesterCenterID);
@@ -439,7 +439,7 @@ module Requests.Edit {
                 //if the dataMart is a selected datamart, set the saved due date and priority
                 self.SelectedRequestDataMarts().forEach((sdm) => {
                     if (sdm.DataMartID == d.ID) {
-                        dataMart.DueDate(moment(sdm.DueDate).toDate());
+                        dataMart.DueDate(sdm.DueDate);
                         dataMart.Priority(sdm.Priority);
                     }
                 });

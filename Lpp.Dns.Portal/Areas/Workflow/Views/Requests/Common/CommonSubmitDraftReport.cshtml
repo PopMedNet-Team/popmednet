@@ -7,12 +7,14 @@
     </article>
     <!-- /ko-->
     </div>
+
     <div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) == false">
         <p class="alert alert-info" style="width:75%;margin:auto;">
             <strong>Permission Required!</strong><br/>
             You do not have permission to edit this task, please let your Administrator know if you feel you should have permission.
         </p>
     </div>
+
     <nav>
         <button class="btn btn-primary pull-right" data-bind="click:onReviewDraftReport, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Submit for Draft Report Review</button>
         <button class="btn btn-primary pull-right" data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete" style="margin-right:15px;">Report Status: Not Applicable</button>

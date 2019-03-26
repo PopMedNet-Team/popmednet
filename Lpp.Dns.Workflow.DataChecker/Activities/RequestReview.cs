@@ -90,7 +90,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                                           join ar in db.ActionReferences on a.ID equals ar.TaskID
                                           where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete
                                           select a).FirstOrDefaultAsync();
-                var document = await db.Documents.Where(x => x.ItemID == previousTask.ID).FirstOrDefaultAsync();
+                var document = await db.Documents.Where(x => x.ItemID == previousTask.ID).OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync();
                 foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval))
                 {
                     dm.Status = DTO.Enums.RoutingStatus.Submitted;
@@ -131,11 +131,13 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 _entity.RejectedOn = DateTime.UtcNow;
 
                 var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-                if (task != null)
-                {
-                    task.Status = DTO.Enums.TaskStatuses.Complete;
-                    task.EndOn = DateTime.UtcNow;
-                }
+
+                var originalStatus = _entity.Status;
+                await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);
+
+                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.RequestRejected);
+
+                await MarkTaskComplete(task);
 
                 await db.SaveChangesAsync();
 

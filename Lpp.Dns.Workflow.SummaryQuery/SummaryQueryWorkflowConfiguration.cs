@@ -17,7 +17,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery
         //list the routings and their status, handle grouping, and resubmitting
         public static readonly Guid ReviewResponsesID = new Guid("6BD20AD7-502C-4D8E-A0BB-A9A5CE388C4B");
         
-        public static readonly Guid RespondToRequestID = new Guid("303C1C1B-A330-41DB-B3B6-4D7C02D02C8C");
+        //public static readonly Guid RespondToRequestID = new Guid("303C1C1B-A330-41DB-B3B6-4D7C02D02C8C");
         //respond to request goes back to review responses with either Upload Response or Reject Response. What is this step?
         //linked to review response through add/remove datamart and resubmit? TODO: clarify
         
@@ -36,7 +36,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery
                 dict.Add(SummaryQueryWorkflowConfiguration.ReviewRequestID, typeof(RequestReview));
                 dict.Add(SummaryQueryWorkflowConfiguration.DistributeRequestID, typeof(DistributeRequest));
                 dict.Add(SummaryQueryWorkflowConfiguration.ReviewResponsesID, typeof(ReviewResponses));
-                dict.Add(SummaryQueryWorkflowConfiguration.RespondToRequestID, typeof(RespondToRequest));
+                //dict.Add(SummaryQueryWorkflowConfiguration.RespondToRequestID, typeof(RespondToRequest));
                 dict.Add(SummaryQueryWorkflowConfiguration.SubmitDraftReportID, typeof(SubmitDraftReport));
                 dict.Add(SummaryQueryWorkflowConfiguration.ReviewDraftReportID, typeof(ReviewDraftReport));
                 dict.Add(SummaryQueryWorkflowConfiguration.SubmitFinalReportID, typeof(SubmitFinalReport));

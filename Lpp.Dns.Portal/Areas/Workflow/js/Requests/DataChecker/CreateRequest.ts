@@ -6,11 +6,13 @@ module Workflow.WFDataChecker.CreateRequest {
     export class ViewModel extends Global.WorkflowActivityViewModel {
         //public Request: KnockoutComputed<Dns.ViewModels.RequestViewModel>;
         public Request: Dns.ViewModels.RequestViewModel;
+        public SubmitButtonText: KnockoutObservable<string> = ko.observable('Submit');
 
         constructor(bindingControl: JQuery) {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions);
 
             this.Request = Requests.Details.rovm.Request;
+
             Requests.Details.rovm.RoutingsChanged.subscribe((info: any) => {
                 //call function on the composer to update routing info
                 Plugins.Requests.QueryBuilder.Edit.vm.UpdateRoutings(info);
@@ -184,6 +186,10 @@ module Workflow.WFDataChecker.CreateRequest {
                         request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions() || '');
                         return true;
                     });
+
+                    if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) < 0 && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel == null) {
+                        vm.SubmitButtonText('Submit for Review');
+                    }
                 }
             });
                         

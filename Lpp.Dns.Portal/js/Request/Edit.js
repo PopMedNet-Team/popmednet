@@ -41,7 +41,7 @@ var Requests;
                 _this.FieldOptions = fieldOptions;
                 _this.Name = ko.observable(rawModel.Request.Name);
                 _this.Priority = ko.observable(rawModel.Request.Priority);
-                _this.DueDate = ko.observable(moment(rawModel.Request.DueDate).toDate());
+                _this.DueDate = ko.observable(rawModel.Request.DueDate);
                 _this.PurposeOfUse = ko.observable(rawModel.Header.PurposeOfUse);
                 _this.PhiDisclosureLevel = ko.observable(rawModel.Header.PhiDisclosureLevel);
                 _this.RequesterCenterID = ko.observable(rawModel.Header.RequesterCenterID);
@@ -327,7 +327,7 @@ var Requests;
                     //if the dataMart is a selected datamart, set the saved due date and priority
                     self.SelectedRequestDataMarts().forEach(function (sdm) {
                         if (sdm.DataMartID == d.ID) {
-                            dataMart.DueDate(moment(sdm.DueDate).toDate());
+                            dataMart.DueDate(sdm.DueDate);
                             dataMart.Priority(sdm.Priority);
                         }
                     });

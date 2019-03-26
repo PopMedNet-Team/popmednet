@@ -103,7 +103,7 @@ namespace Lpp.Dns.Api.Requests
                             obj.Priority = insert.Priority;
                             if (insert.DueDate.HasValue)
                             {
-                                obj.DueDate = insert.DueDate.Value.Date;
+                                obj.DueDate = insert.DueDate.Value;
                             }
                             else
                             {
@@ -170,7 +170,7 @@ namespace Lpp.Dns.Api.Requests
                             var dm = entity.DataMarts.First(adm => adm.ID == update.ID.Value);
                             if (update.DueDate.HasValue)
                             {
-                                dm.DueDate = update.DueDate.Value.Date;
+                                dm.DueDate = update.DueDate.Value;
                             }
                             else
                             {

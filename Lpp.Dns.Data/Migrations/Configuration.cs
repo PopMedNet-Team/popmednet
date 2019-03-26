@@ -9,8 +9,8 @@ namespace Lpp.Dns.Data.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = false;
             CommandTimeout = Int32.MaxValue;            
         }
 
