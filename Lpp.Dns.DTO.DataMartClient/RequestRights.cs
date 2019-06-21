@@ -20,6 +20,10 @@ namespace Lpp.Dns.DTO.DataMartClient
         [EnumMember]
         ModifyResults = 0x08,
         [EnumMember]
-        All = Run | Hold | Reject | ModifyResults
+        ViewAttachments = 0x10,
+        [EnumMember]
+        ModifyAttachments = 0x20,
+        [EnumMember]
+        All = Run | Hold | Reject | ModifyResults | ViewAttachments | ModifyAttachments
     }
 }

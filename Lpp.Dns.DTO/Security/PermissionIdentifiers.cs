@@ -1254,6 +1254,22 @@ namespace Lpp.Dns.DTO.Security
                 Locations = new PermissionAclTypes[] { PermissionAclTypes.ProjectRequestTypeWorkflowActivity }
             };
             /// <summary>
+            /// Modify Attachments
+            /// </summary>
+            public static readonly PermissionDefinition ModifyAttachments = new PermissionDefinition
+            {
+                ID = new Guid("D59FA0D4-15FA-4088-9A98-35CDD7902EC1"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.Projects, PermissionAclTypes.ProjectRequestTypeWorkflowActivity, PermissionAclTypes.ProjectDataMarts, PermissionAclTypes.ProjectOrganizations }
+            };
+            /// <summary>
+            /// View Attachments
+            /// </summary>
+            public static readonly PermissionDefinition ViewAttachments = new PermissionDefinition
+            {
+                ID = new Guid("50157D72-8EED-45E4-B6F4-2A935191F57F"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.Projects, PermissionAclTypes.ProjectRequestTypeWorkflowActivity, PermissionAclTypes.ProjectDataMarts, PermissionAclTypes.ProjectOrganizations }
+            };
+            /// <summary>
             /// View comments
             /// </summary>
             public static readonly PermissionDefinition ViewComments = new PermissionDefinition
@@ -1344,6 +1360,8 @@ namespace Lpp.Dns.DTO.Security
                 PermissionIdentifiers.Definitions.AddRange(new PermissionDefinition[] {
                     ViewTask,
                     EditTask,
+                    ModifyAttachments,
+                    ViewAttachments,
                     ViewComments,
                     AddComments,
                     ViewDocuments,
@@ -1369,6 +1387,8 @@ namespace Lpp.Dns.DTO.Security
                     EditTask,
                     ViewComments,
                     AddComments,
+                    ModifyAttachments,
+                    ViewAttachments,
                     ViewDocuments,
                     AddDocuments,
                     ReviseDocuments,

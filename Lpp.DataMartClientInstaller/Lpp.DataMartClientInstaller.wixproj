@@ -44,6 +44,16 @@
       <Name>WixUIExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.DataMartClientChecker\Lpp.DataMartClientChecker.csproj">
+      <Name>Lpp.DataMartClientChecker</Name>
+      <Project>{b4503821-9097-455a-9557-d5a819de022e}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <Target Name="BeforeBuild">
     <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)Lpp.Adapters\Lpp.Dns.DataMart.Client\bin\Lpp.Dns.DataMart.Client.exe">

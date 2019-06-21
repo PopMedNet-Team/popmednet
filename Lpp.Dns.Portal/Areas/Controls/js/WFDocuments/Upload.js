@@ -25,10 +25,12 @@ var Controls;
                     var _this = _super.call(this, bindingControl) || this;
                     _this.TaskID = _this.Parameters.TaskID || null;
                     _this.RequestID = _this.Parameters.RequestID || null;
+                    _this.DocumentKind = _this.Parameters.documentKind || null;
                     _this.ParentDocument = _this.Parameters.ParentDocument || null;
                     _this.DocumentName = _this.ParentDocument == null ? ko.observable('') : ko.observable(_this.ParentDocument.Name);
                     _this.Description = _this.ParentDocument == null ? ko.observable('') : ko.observable(_this.ParentDocument.Description);
                     _this.Comments = ko.observable('');
+                    _this.UploadDocumentType = ((_this.DocumentKind || '').toLowerCase() === 'attachmentinput') ? 'Attachment' : 'Document';
                     var self = _this;
                     _this.onSelectFile = function (e) {
                         if (e.files && e.files.length > 0 && self.ParentDocument == null) {
@@ -50,7 +52,8 @@ var Controls;
                             documentName: self.DocumentName(),
                             description: self.Description(),
                             comments: self.Comments(),
-                            parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null
+                            parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null,
+                            documentKind: self.DocumentKind != null ? self.DocumentKind : null
                         };
                         var xhr = e.XMLHttpRequest;
                         xhr.addEventListener("readystatechange", function (e) {
@@ -62,7 +65,7 @@ var Controls;
                     _this.onSuccess = function (e) {
                         //fires when upload is complete with or without errors
                         //on success should close the dialog with the document information
-                        self.Close(e.response.Document);
+                        self.Close(e.response.Result);
                     };
                     _this.onCancel = function () { self.Close(); };
                     return _this;

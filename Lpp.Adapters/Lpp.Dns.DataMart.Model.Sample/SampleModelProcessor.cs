@@ -364,11 +364,13 @@ namespace Lpp.Dns.DataMart.Model
             }
         }
 
+        const string RESPONSE_DOCUMENTID = "C2B11510-DE08-4AC2-8B8C-1AC576DCBA94";
+
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             contentStream = null;
 
-            if (documentId == "0")
+            if (documentId == RESPONSE_DOCUMENTID)
             {
                 var stream = new MemoryStream();
 
@@ -398,7 +400,7 @@ namespace Lpp.Dns.DataMart.Model
             if (resultDataset != null)
             {
                 responseDocument = new Document[1];
-                responseDocument[0] = new Document("0", "x-application/lpp-dns-table", "SampleModelResponse.xml");
+                responseDocument[0] = new Document(RESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "SampleModelResponse.xml");
                 responseDocument[0].IsViewable = true;
 
                 using (MemoryStream stream = new MemoryStream())

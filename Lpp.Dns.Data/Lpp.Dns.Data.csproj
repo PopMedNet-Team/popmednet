@@ -9,14 +9,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Dns.Data</RootNamespace>
     <AssemblyName>Lpp.Dns.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>3d345ed0</NuGetPackageImportStamp>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="CodeFirstStoreFunctions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.1.1\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
     </Reference>
@@ -2933,6 +2933,14 @@
     <Compile Include="Migrations\201806271937364_RemoveBigModularProgramWorkflow.Designer.cs">
       <DependentUpon>201806271937364_RemoveBigModularProgramWorkflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131615518_AddPermissionsForAttachments.cs" />
+    <Compile Include="Migrations\201808131615518_AddPermissionsForAttachments.Designer.cs">
+      <DependentUpon>201808131615518_AddPermissionsForAttachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809141513171_UpdateAclDataMartRights_TVF.cs" />
+    <Compile Include="Migrations\201809141513171_UpdateAclDataMartRights_TVF.Designer.cs">
+      <DependentUpon>201809141513171_UpdateAclDataMartRights_TVF.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs" />
     <Compile Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.Designer.cs">
       <DependentUpon>201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs</DependentUpon>
@@ -2948,6 +2956,14 @@
     <Compile Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.cs" />
     <Compile Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.Designer.cs">
       <DependentUpon>201901211640465_FixSummaryWorkflowToMatchDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901242042352_AddAdaptableTerms.cs" />
+    <Compile Include="Migrations\201901242042352_AddAdaptableTerms.Designer.cs">
+      <DependentUpon>201901242042352_AddAdaptableTerms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904151600283_FixRequestStatusForRequestRejected.cs" />
+    <Compile Include="Migrations\201904151600283_FixRequestStatusForRequestRejected.Designer.cs">
+      <DependentUpon>201904151600283_FixRequestStatusForRequestRejected.cs</DependentUpon>
     </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
@@ -3704,6 +3720,12 @@
     <EmbeddedResource Include="Migrations\201806271937364_RemoveBigModularProgramWorkflow.resx">
       <DependentUpon>201806271937364_RemoveBigModularProgramWorkflow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131615518_AddPermissionsForAttachments.resx">
+      <DependentUpon>201808131615518_AddPermissionsForAttachments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809141513171_UpdateAclDataMartRights_TVF.resx">
+      <DependentUpon>201809141513171_UpdateAclDataMartRights_TVF.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.resx">
       <DependentUpon>201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs</DependentUpon>
     </EmbeddedResource>
@@ -3715,6 +3737,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.resx">
       <DependentUpon>201901211640465_FixSummaryWorkflowToMatchDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901242042352_AddAdaptableTerms.resx">
+      <DependentUpon>201901242042352_AddAdaptableTerms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904151600283_FixRequestStatusForRequestRejected.resx">
+      <DependentUpon>201904151600283_FixRequestStatusForRequestRejected.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

@@ -159,13 +159,13 @@ namespace Lpp.Dns.Data
         }
 
         [DbFunction("DataContext", "AclDataMartRights")]
-        public IQueryable<ShortPermission> DataMartRights(Guid userID, Guid projectID, Guid dataMartID)
+        public IQueryable<ShortPermission> DataMartRights(Guid userID, Guid requestID, Guid dataMartID)
         {
             return
                 ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ShortPermission>(
-                    "DataContext.AclDataMartRights(@UserID, @ProjectID, @DataMartID)",
+                    "DataContext.AclDataMartRights(@UserID, @RequestID, @DataMartID)",
                     new ObjectParameter("UserID", userID),
-                    new ObjectParameter("ProjectID", projectID),
+                    new ObjectParameter("RequestID", requestID),
                     new ObjectParameter("DataMartID", dataMartID)
                     );
         }

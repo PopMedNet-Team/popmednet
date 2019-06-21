@@ -195,10 +195,14 @@ var Dns;
         (function (RequestDocumentType) {
             RequestDocumentType[RequestDocumentType["Input"] = 0] = "Input";
             RequestDocumentType[RequestDocumentType["Output"] = 1] = "Output";
+            RequestDocumentType[RequestDocumentType["AttachmentInput"] = 2] = "AttachmentInput";
+            RequestDocumentType[RequestDocumentType["AttachmentOutput"] = 3] = "AttachmentOutput";
         })(RequestDocumentType = Enums.RequestDocumentType || (Enums.RequestDocumentType = {}));
         Enums.RequestDocumentTypeTranslation = [
             { value: RequestDocumentType.Input, text: 'Input' },
             { value: RequestDocumentType.Output, text: 'Output' },
+            { value: RequestDocumentType.AttachmentInput, text: 'AttachmentInput' },
+            { value: RequestDocumentType.AttachmentOutput, text: 'AttachmentOutput' },
         ];
         var ConditionClassifications;
         (function (ConditionClassifications) {
@@ -1063,6 +1067,7 @@ var Dns;
             TaskItemTypes[TaskItemTypes["QueryTemplate"] = 6] = "QueryTemplate";
             TaskItemTypes[TaskItemTypes["RequestType"] = 7] = "RequestType";
             TaskItemTypes[TaskItemTypes["Project"] = 8] = "Project";
+            TaskItemTypes[TaskItemTypes["RequestAttachment"] = 9] = "RequestAttachment";
         })(TaskItemTypes = Enums.TaskItemTypes || (Enums.TaskItemTypes = {}));
         Enums.TaskItemTypesTranslation = [
             { value: TaskItemTypes.User, text: 'User' },
@@ -1073,6 +1078,7 @@ var Dns;
             { value: TaskItemTypes.QueryTemplate, text: 'QueryTemplate' },
             { value: TaskItemTypes.RequestType, text: 'RequestType' },
             { value: TaskItemTypes.Project, text: 'Project' },
+            { value: TaskItemTypes.RequestAttachment, text: 'RequestAttachment' },
         ];
         var TaskRoles;
         (function (TaskRoles) {
@@ -2660,6 +2666,14 @@ var Dns;
                 'RequestDataMartID': { type: 'any', nullable: false },
             }
         };
+        Interfaces.KendoModelQueryComposerTemporalEventDTO = {
+            fields: {
+                'IndexEventDateIdentifier': { type: 'string', nullable: false },
+                'DaysBefore': { type: 'number', nullable: false },
+                'DaysAfter': { type: 'number', nullable: false },
+                'Criteria': { type: 'any[]', nullable: false },
+            }
+        };
         Interfaces.KendoModelSectionSpecificTermDTO = {
             fields: {
                 'TermID': { type: 'any', nullable: false },
@@ -3579,6 +3593,7 @@ var Dns;
                 'Header': { type: 'any', nullable: false },
                 'Where': { type: 'any', nullable: false },
                 'Select': { type: 'any', nullable: false },
+                'TemporalEvents': { type: 'any[]', nullable: false },
                 'ID': { type: 'any', nullable: true },
                 'Timestamp': { type: 'any', nullable: false },
             }

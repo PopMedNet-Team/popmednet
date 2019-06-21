@@ -184,6 +184,8 @@ module Permissions {
         public static EditTask: any = '75FC4DEA-220C-486D-9E8C-AC2B6F6F8415';
         public static ViewComments: any = '7025F490-9635-4540-B682-3A4F152E73EF';
         public static AddComments: any = 'B03BDDE0-CD76-47C3-BB7D-C39A28B232B4';
+        public static ModifyAttachments: any = 'D59FA0D4-15FA-4088-9A98-35CDD7902EC1';
+        public static ViewAttachments: any = '50157D72-8EED-45E4-B6F4-2A935191F57F';
         public static ViewDocuments: any = 'FAE8FC24-362D-4382-AF31-0933AF95FDE9';
         public static AddDocuments: any = 'A593C7EC-61F3-42F8-8D26-8A4BACC8BC17';
         public static ReviseDocuments: any = '0312B7F3-FFBC-4FBF-B3BD-5CB69AEAA045';

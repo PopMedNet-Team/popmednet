@@ -279,7 +279,8 @@ namespace Lpp.Dns.DataMart.Client.Controls
             {
                 ReloadDatamarts();
 
-                cmbStatus.SetList<Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus>(HubRequestStatus.All.Select(s => s.Code).ToArray(), filter.Statuses, d => HubRequestStatus.All.Single(s => s.Code == d).Name);
+                //filter out Pending Upload since it is a local status and no way to correctly filter server-side
+                cmbStatus.SetList<Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus>(HubRequestStatus.All.Where(s => s.Code != DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload).Select(s => s.Code).ToArray(), filter.Statuses, d => HubRequestStatus.All.Single(s => s.Code == d).Name);
                 
                 SetStatusText();
 
@@ -371,6 +372,17 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     }
 
                     var selected = SelectedRequest;
+
+                    //update request statuses that have cached results that are awaiting upload - Pending Upload is a local status and is not known by the API
+                    foreach(var seg in list.Segment.Where(s => s.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || s.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted))
+                    {
+                        var cache = new Lib.Caching.DocumentCacheManager(Network.NetworkId, seg.DataMartID, seg.ID, seg.ResponseID);
+                        if (cache.HasResponseDocuments)
+                        {
+                            seg.Status = DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload;
+                        }
+                    }
+
                     dgvRequestList.DataSource = list.Segment;
                     SelectedRequest = selected == null ? null : list.Segment.FirstOrDefault(rq => rq.ID == selected.ID && rq.DataMartID == selected.DataMartID);
 

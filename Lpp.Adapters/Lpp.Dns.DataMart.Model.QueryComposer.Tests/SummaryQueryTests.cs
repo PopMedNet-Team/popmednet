@@ -373,6 +373,24 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
         }
 
+        [TestMethod]
+        public void PMNDEV7081()
+        {
+
+            var response = RunPrevRequest("PMNDEV-7081.json");
+            Logger.Debug(SerializeJsonToString(response));
+
+        }
+
+        [TestMethod]
+        public void PMNDEV7083()
+        {
+
+            var response = RunPrevRequest("PMNDEV-7083.json");
+            Logger.Debug(SerializeJsonToString(response));
+
+        }
+
         Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunIncRequest(string requestJsonFilepath)
         {
             var request = LoadRequest(requestJsonFilepath);

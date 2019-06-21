@@ -84,5 +84,7 @@ namespace Lpp.Dns.DTO.DataMartClient
                 return ResponseTime;
             }
         }
+        [DataMember]
+        public Guid? ResponseID { get; set; }
     }
 }

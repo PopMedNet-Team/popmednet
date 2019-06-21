@@ -22,6 +22,16 @@ namespace Lpp.Dns.DTO.Enums
         /// Output is the Documents for the DataMarts Response
         /// </summary>
         [DataMember]
-        Output = 1
+        Output = 1,
+        /// <summary>
+        /// AttachmentInput is the Attachment for the Datamart to Consume
+        /// </summary>
+        [DataMember]
+        AttachmentInput = 2,
+        /// <summary>
+        /// AttachmentInput is the Attachment for the the DataMarts Response
+        /// </summary>
+        [DataMember]
+        AttachmentOutput = 3
     }
 }

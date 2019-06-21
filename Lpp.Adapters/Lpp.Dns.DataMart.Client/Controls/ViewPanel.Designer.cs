@@ -38,14 +38,14 @@
             this.JSON = new System.Windows.Forms.DataGridView();
             this.XSLXML = new System.Windows.Forms.WebBrowser();
             this.FILELIST = new System.Windows.Forms.DataGridView();
+            this.colDocumentSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colFilename = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDocumentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMimeType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bsDocumentList = new System.Windows.Forms.BindingSource(this.components);
             this.XML = new System.Windows.Forms.TreeView();
             this.lblNoResults = new Lpp.Dns.DataMart.Client.Controls.TransparentLabel();
-            this.colDocumentSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Filename = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDocumentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MimeType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sizeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.JSON)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FILELIST)).BeginInit();
@@ -83,9 +83,9 @@
             // 
             // HTML
             // 
+            this.HTML.AllowWebBrowserDrop = false;
             this.HTML.Dock = System.Windows.Forms.DockStyle.Fill;
             this.HTML.Location = new System.Drawing.Point(0, 0);
-            this.HTML.MinimumSize = new System.Drawing.Size(20, 20);
             this.HTML.Name = "HTML";
             this.HTML.Size = new System.Drawing.Size(782, 333);
             this.HTML.TabIndex = 11;
@@ -93,9 +93,9 @@
             // 
             // URL
             // 
+            this.URL.AllowWebBrowserDrop = false;
             this.URL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.URL.Location = new System.Drawing.Point(0, 0);
-            this.URL.MinimumSize = new System.Drawing.Size(20, 20);
             this.URL.Name = "URL";
             this.URL.Size = new System.Drawing.Size(782, 333);
             this.URL.TabIndex = 11;
@@ -122,6 +122,7 @@
             // 
             // XSLXML
             // 
+            this.XSLXML.AllowWebBrowserDrop = false;
             this.XSLXML.Dock = System.Windows.Forms.DockStyle.Fill;
             this.XSLXML.Location = new System.Drawing.Point(0, 0);
             this.XSLXML.Name = "XSLXML";
@@ -137,10 +138,10 @@
             this.FILELIST.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.FILELIST.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colDocumentSelected,
-            this.Filename,
+            this.colFilename,
             this.colDocumentID,
-            this.MimeType,
-            this.sizeDataGridViewTextBoxColumn});
+            this.colMimeType,
+            this.colSize});
             this.FILELIST.DataSource = this.bsDocumentList;
             this.FILELIST.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FILELIST.Location = new System.Drawing.Point(0, 0);
@@ -154,6 +155,42 @@
             this.FILELIST.TabIndex = 52;
             this.FILELIST.Visible = false;
             // 
+            // colDocumentSelected
+            // 
+            this.colDocumentSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colDocumentSelected.HeaderText = "Select";
+            this.colDocumentSelected.Name = "colDocumentSelected";
+            this.colDocumentSelected.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colDocumentSelected.Width = 55;
+            // 
+            // colFilename
+            // 
+            this.colFilename.DataPropertyName = "Filename";
+            this.colFilename.HeaderText = "File Name";
+            this.colFilename.Name = "colFilename";
+            this.colFilename.ReadOnly = true;
+            // 
+            // colDocumentID
+            // 
+            this.colDocumentID.DataPropertyName = "DocumentID";
+            this.colDocumentID.HeaderText = "Document ID";
+            this.colDocumentID.Name = "colDocumentID";
+            this.colDocumentID.ReadOnly = true;
+            // 
+            // colMimeType
+            // 
+            this.colMimeType.DataPropertyName = "MimeType";
+            this.colMimeType.HeaderText = "File Type";
+            this.colMimeType.Name = "colMimeType";
+            this.colMimeType.ReadOnly = true;
+            // 
+            // colSize
+            // 
+            this.colSize.DataPropertyName = "Size";
+            this.colSize.HeaderText = "Size";
+            this.colSize.Name = "colSize";
+            this.colSize.ReadOnly = true;
+            // 
             // bsDocumentList
             // 
             this.bsDocumentList.DataSource = typeof(Lpp.Dns.DataMart.Model.Document);
@@ -163,7 +200,6 @@
             this.XML.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.XML.Dock = System.Windows.Forms.DockStyle.Fill;
             this.XML.Location = new System.Drawing.Point(0, 0);
-            this.XML.MinimumSize = new System.Drawing.Size(20, 20);
             this.XML.Name = "XML";
             this.XML.Size = new System.Drawing.Size(782, 333);
             this.XML.TabIndex = 55;
@@ -185,54 +221,18 @@
             this.lblNoResults.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lblNoResults.Visible = false;
             // 
-            // colDocumentSelected
-            // 
-            this.colDocumentSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.colDocumentSelected.HeaderText = "Select";
-            this.colDocumentSelected.Name = "colDocumentSelected";
-            this.colDocumentSelected.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colDocumentSelected.Width = 55;
-            // 
-            // Filename
-            // 
-            this.Filename.DataPropertyName = "Filename";
-            this.Filename.HeaderText = "File Name";
-            this.Filename.Name = "Filename";
-            this.Filename.ReadOnly = true;
-            // 
-            // colDocumentID
-            // 
-            this.colDocumentID.DataPropertyName = "DocumentID";
-            this.colDocumentID.HeaderText = "Document ID";
-            this.colDocumentID.Name = "colDocumentID";
-            this.colDocumentID.ReadOnly = true;
-            // 
-            // MimeType
-            // 
-            this.MimeType.DataPropertyName = "MimeType";
-            this.MimeType.HeaderText = "File Type";
-            this.MimeType.Name = "MimeType";
-            this.MimeType.ReadOnly = true;
-            // 
-            // sizeDataGridViewTextBoxColumn
-            // 
-            this.sizeDataGridViewTextBoxColumn.DataPropertyName = "Size";
-            this.sizeDataGridViewTextBoxColumn.HeaderText = "Size";
-            this.sizeDataGridViewTextBoxColumn.Name = "sizeDataGridViewTextBoxColumn";
-            this.sizeDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
             // ViewPanel
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.FILELIST);
             this.Controls.Add(this.lblNoResults);
+            this.Controls.Add(this.PLAIN);
+            this.Controls.Add(this.XML);
+            this.Controls.Add(this.FILELIST);
             this.Controls.Add(this.HTML);
             this.Controls.Add(this.URL);
             this.Controls.Add(this.JSON);
             this.Controls.Add(this.XSLXML);
             this.Controls.Add(this.DATASET);
-            this.Controls.Add(this.PLAIN);
-            this.Controls.Add(this.XML);
             this.Name = "ViewPanel";
             this.Size = new System.Drawing.Size(782, 333);
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).EndInit();
@@ -256,9 +256,9 @@
         private System.Windows.Forms.BindingSource bsDocumentList;
         protected TransparentLabel lblNoResults;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colDocumentSelected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Filename;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFilename;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDocumentID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn MimeType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sizeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colMimeType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSize;
     }
 }

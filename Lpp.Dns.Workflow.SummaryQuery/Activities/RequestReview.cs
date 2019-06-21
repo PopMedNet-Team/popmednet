@@ -89,8 +89,6 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             } 
             else if (activityResultID.Value == RejectResultID)
             {
-                _entity.CancelledByID = _workflow.Identity.ID;
-                _entity.CancelledOn = DateTime.UtcNow;
                 _entity.Status = DTO.Enums.RequestStatuses.RequestRejected;
 
                 var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);

@@ -55,78 +55,109 @@ var Workflow;
                                 if (responses == null || responses.length == 0)
                                     return;
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
-                                var bucket = $('<div class="panel panel-default"></div>');
+                                var panels = [];
                                 responses.forEach(function (resp) {
+                                    var bucket = $('<div class="panel panel-default"></div>');
+                                    panels.push(bucket);
                                     var datamartName = (resp.Aggregation == null || resp.Aggregation.Name == null) ? 'Aggregated or Grouped Results' : resp.Aggregation.Name;
                                     if (resp.ID) {
-                                        var response = ko.utils.arrayFirst(self.Responses, function (x) { return x.ID == resp.ID; });
-                                        if (response) {
-                                            var routing = ko.utils.arrayFirst(self.Routings, function (d) { return d.ID == response.RequestDataMartID; });
+                                        var response_1 = ko.utils.arrayFirst(self.Responses, function (x) { return x.ID == resp.ID; });
+                                        if (response_1) {
+                                            var routing = ko.utils.arrayFirst(self.Routings, function (d) { return d.ID == response_1.RequestDataMartID; });
                                             if (routing) {
                                                 datamartName = routing.DataMart;
                                             }
                                         }
                                     }
-                                    for (var i = 0; i < resp.Results.length; i++) {
-                                        //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
-                                        var resultID = (resp.ID || 'aggregate') + '-' + i;
-                                        var suppressedValues = false;
-                                        bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
-                                        var kendoColumnNames = [];
-                                        var kendoColumnFields = [];
-                                        var table = resp.Results[i];
-                                        var newTable = [];
-                                        var row;
-                                        for (var j = 0; j < table.length; j++) {
-                                            row = table[j];
-                                            newTable.push(row);
-                                            for (var prop in row) {
-                                                var columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
-                                                if (j == 0) {
-                                                    kendoColumnNames.push(columnName);
-                                                    kendoColumnFields.push(prop);
-                                                }
-                                                if (columnName != prop) {
-                                                    row[columnName] = row[prop];
-                                                    delete row[prop];
+                                    if (resp.Results != null && resp.Results.length > 0) {
+                                        //The response has results
+                                        for (var i = 0; i < resp.Results.length; i++) {
+                                            //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
+                                            var resultID = (resp.ID || 'aggregate') + '-' + i;
+                                            var suppressedValues = false;
+                                            bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
+                                            var table = resp.Results[i];
+                                            var newTable = [];
+                                            var row = void 0;
+                                            for (var j = 0; j < table.length; j++) {
+                                                row = table[j];
+                                                newTable.push(row);
+                                                for (var prop in row) {
+                                                    var columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
+                                                    if (columnName != prop) {
+                                                        row[columnName] = row[prop];
+                                                        delete row[prop];
+                                                    }
                                                 }
                                             }
+                                            var kendoColumns = [];
+                                            for (var i_1 = 0; i_1 < resp.Properties.length; i_1++) {
+                                                var propertyDefinition = resp.Properties[i_1];
+                                                if (propertyDefinition.Name == "LowThreshold") {
+                                                    kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
+                                                    suppressedValues = true;
+                                                }
+                                                else {
+                                                    kendoColumns.push({
+                                                        title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
+                                                    });
+                                                }
+                                            }
+                                            var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
+                                            var datasource = kendo.data.DataSource.create({ data: newTable });
+                                            grid.kendoGrid({
+                                                dataSource: datasource,
+                                                height: 520,
+                                                columns: kendoColumns,
+                                                resizable: true,
+                                                filterable: true,
+                                                columnMenu: { columns: true },
+                                                groupable: false,
+                                                pageable: false,
+                                                scrollable: true
+                                            }).data('kendoGrid');
+                                            var gridContainer = $('<div class="panel-body"></div>');
+                                            if (suppressedValues) {
+                                                gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
+                                            }
+                                            gridContainer.append(grid);
+                                            bucket.append(gridContainer);
+                                            bucket.append($('<br>'));
                                         }
-                                        var kendColumn = [];
-                                        for (var k = 0; k < kendoColumnFields.length; k++) {
-                                            if (kendoColumnFields[k] == "LowThreshold") {
-                                                kendColumn.push({ title: kendoColumnFields[k], field: kendoColumnNames[k], width: 100, hidden: true });
+                                    }
+                                    else {
+                                        //No results, build the table with only the column headers and a no results message
+                                        var resultID = (resp.ID || 'aggregate') + '- 1';
+                                        var suppressedValues = false;
+                                        bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
+                                        var kendoColumns = [];
+                                        for (var i = 0; i < resp.Properties.length; i++) {
+                                            var propertyDefinition = resp.Properties[i];
+                                            if (propertyDefinition.Name == "LowThreshold") {
+                                                kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
                                                 suppressedValues = true;
                                             }
                                             else {
-                                                kendColumn.push({
-                                                    title: kendoColumnFields[k], field: kendoColumnNames[k], width: 100,
-                                                    template: '# if(' + kendoColumnNames[k] + ' != null) { # #:' + kendoColumnNames[k] + '# #}else { # <div class="null-cell">&lt;&lt; NULL &gt;&gt;</div> # } #'
+                                                kendoColumns.push({
+                                                    title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
                                                 });
                                             }
                                         }
                                         var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
-                                        var datasource = kendo.data.DataSource.create({ data: newTable });
-                                        //var grid = $('#grid' + resultID + '').kendoGrid({
+                                        var datasource = kendo.data.DataSource.create({ data: [] });
                                         grid.kendoGrid({
                                             dataSource: datasource,
-                                            height: 520,
-                                            columns: kendColumn,
+                                            height: 120,
+                                            columns: kendoColumns,
                                             resizable: true,
-                                            filterable: true,
-                                            columnMenu: { columns: true },
+                                            filterable: false,
+                                            columnMenu: false,
                                             groupable: false,
                                             pageable: false,
-                                            scrollable: true
-                                            //dataBound: function () {
-                                            //    var grid = this;
-                                            //    grid.tbody.find('>tr').each(function () {
-                                            //        var dataItem = grid.dataItem(this);
-                                            //        if (dataItem.LowThreshold) {
-                                            //            $(this).addClass('Highlight');
-                                            //        }
-                                            //    })
-                                            //}
+                                            scrollable: false,
+                                            noRecords: {
+                                                template: '<div style="width:993px;"><p class="alert alert-info" style="width:350px;display:inline-block;margin-top:12px;">No data available for the current response.</p></div>'
+                                            }
                                         }).data('kendoGrid');
                                         var gridContainer = $('<div class="panel-body"></div>');
                                         if (suppressedValues) {
@@ -139,33 +170,23 @@ var Workflow;
                                 });
                                 self.ResponseContentComplete(true);
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
-                                $('#gResults').append(bucket);
-                                //resize the iframe to the contents plus padding for the export dropdown menu
-                                var prevHeight = $('html').height();
-                                var interval = setInterval(function () {
-                                    var newVal = $('html').height();
-                                    if (newVal > prevHeight) {
-                                        prevHeight = newVal;
-                                        $(window.frameElement).height($('html').height() + 70);
-                                    }
-                                    else if (newVal === prevHeight && prevHeight !== 0) {
-                                        clearInterval(interval);
-                                    }
-                                }, 10);
+                                $('#gResults').append(panels);
                             }).fail(function () {
                                 self.IsResponseLoadFailed(true);
                                 self.ResponseContentComplete(true);
-                                var prevHeight = $('html').height();
-                                var interval = setInterval(function () {
-                                    var newVal = $('html').height();
-                                    if (newVal > prevHeight) {
-                                        prevHeight = newVal;
-                                        $(window.frameElement).height($('html').height() + 70);
+                            }).always(function () {
+                                //resize the iframe to the contents 
+                                var intervalID = setInterval(function () {
+                                    var scrollHeight = window.document.documentElement.scrollHeight || document.body.scrollHeight;
+                                    var frameHeight = $(window.frameElement).height();
+                                    if (frameHeight < scrollHeight) {
+                                        $(window.frameElement).height(scrollHeight);
+                                        clearInterval(intervalID);
                                     }
-                                    else if (newVal === prevHeight && prevHeight !== 0) {
-                                        clearInterval(interval);
+                                    else if (frameHeight > 0 && scrollHeight > 0 && frameHeight > scrollHeight) {
+                                        clearInterval(intervalID);
                                     }
-                                }, 10);
+                                }, 100);
                             });
                         }
                         else {

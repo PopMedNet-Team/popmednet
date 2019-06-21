@@ -211,7 +211,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Diagnosis4digitID) ||
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Diagnosis5digitID) ||
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Procedure3digitID) ||
-                                    Terms.Compare(childTerm.TermID, Terms.ICD9Procedure4digitID)
+                                    Terms.Compare(childTerm.TermID, Terms.ICD9Procedure4digitID) 
                                 ) {
                                     childTerm.IncludeInStratifiers = hasSummaryModel;
                                 }
@@ -625,7 +625,6 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
                     }//end of successful parsing response guard clause
                 }).fail((err) => {
-                    debugger;
                     });//end of the import promise
             };//end of on upload action
 
@@ -698,6 +697,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 }
                 return isVis;
             });
+
         }
         
         public AreTermsValid(): boolean {
@@ -921,7 +921,11 @@ module Plugins.Requests.QueryBuilder.MDQ {
             //Vitals Measure Date
             Terms.VitalsMeasureDateID,
             // Procedure Codes
-            Terms.ProcedureCodesID 
+            Terms.ProcedureCodesID,
+            //TrialID
+            Terms.TrialID,
+            //PatientReportedOutcome
+            Terms.PatientReportedOutcomeID,
         ];
 
         /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
@@ -966,6 +970,10 @@ module Plugins.Requests.QueryBuilder.MDQ {
             Terms.ZipCodeID,
             //Vitals Measure Date
             Terms.VitalsMeasureDateID,
+            //TrialID
+            Terms.TrialID,
+            //PatientReportedOutcome
+            Terms.PatientReportedOutcomeID,
         ];
 
         public AddTerm(root: ViewModel, data: IVisualTerm, parent: Dns.ViewModels.QueryComposerCriteriaViewModel, event: JQueryEventObject) {
@@ -1097,9 +1105,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
         }
 
         public AddField(data: IVisualField, parent: Dns.ViewModels.QueryComposerSelectViewModel, event: JQueryEventObject) {
-
+            let self = this;
             SuspendDataMartTimer();
-
             var fieldsToAdd: Dns.ViewModels.QueryComposerFieldViewModel[] = [];
 
             var selectFields = parent.Fields();
@@ -1136,6 +1143,14 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
                 if (i < fieldsToAdd.length - 1)
                     SuspendDataMartTimer();
+            }
+
+            if (data.TermID.toUpperCase() == Terms.PatientReportedOutcomeEncounterID && self.Request.TemporalEvents().length == 0) {
+                let dto = new Dns.ViewModels.QueryComposerTemporalEventViewModel();
+                dto.IndexEventDateIdentifier("HOSPITALIZATION_DATE");
+                dto.DaysBefore(7);
+                dto.DaysAfter(7);
+                self.Request.TemporalEvents.push(dto);
             }
 
         }
@@ -1349,7 +1364,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
         }
 
         public DeleteField(data: Dns.ViewModels.QueryComposerFieldViewModel, selectFields: Dns.ViewModels.QueryComposerSelectViewModel) {
-
+            let self = this;
             SuspendDataMartTimer();
 
             /** removes the count as well **/
@@ -1363,6 +1378,10 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
                 if (i < fieldsToRemove.length - 1)
                     SuspendDataMartTimer();
+            }
+
+            if (data.Type().toUpperCase() == Terms.PatientReportedOutcomeEncounterID) {
+                self.Request.TemporalEvents.removeAll();
             }
 
         }
@@ -1465,7 +1484,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
                     jTemplate = {
                         Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType, SubmittedOn: null },
                         Where: { Criteria: [<Dns.Interfaces.IQueryComposerCriteriaDTO>json] },
-                        Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO>json] }
+                        Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO>json] },
+                        TemporalEvents: []
                     };
                 } else {
                     jTemplate = json;

@@ -588,7 +588,9 @@ namespace Lpp.Dns.DataMart.Lib
         Hold       =   0x02,
         Reject     =   0x04,
         ModifyResults = 0x08,
-        All        =   Run | Hold | Reject | ModifyResults
+        ViewAttachments = 0x10,
+        ModifyAttachments = 0x20,
+        All        =   Run | Hold | Reject | ModifyResults | ViewAttachments | ModifyAttachments
     }
 
     public class HubRequestStatus

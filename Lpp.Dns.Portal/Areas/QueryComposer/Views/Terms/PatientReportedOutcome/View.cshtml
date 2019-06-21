@@ -1,0 +1,17 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.PatientReportedOutcomeID">
+		<p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+		<div class="row row-noborder">
+				<div class="col-sm-3 bold">Patient Reported Outcome (PRO)</div>
+				<div class="col-sm-9">
+						<div class="form-group">
+								<label>Item Name:</label>
+								<span data-bind="text: Values().ItemName()"></span>
+						</div>
+						<div class="form-group">
+								<label>Item Response:</label>
+								<span data-bind="text: Values().ItemResponse()"></span>
+						</div>
+				</div>
+		</div>
+</script>

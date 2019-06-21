@@ -6,20 +6,31 @@
             <h4>Distribute Request</h4>
         </div>
         <div class="panel-body">
-            <div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)"> 
-                <!-- ko stopBinding: true -->
-                <div id="mpupload">        
-                @Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
-                </div>
-                <!-- /ko-->
+						<div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+								<!-- ko stopBinding: true -->
+								<div id="mpupload">
+										@Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
+								</div>
+								<!-- /ko-->
 
-                <h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
-                <div class="cleanlist">        
-                    @Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
-                </div>
+								<h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
+								<div class="cleanlist">
+										@Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+								</div>
 
-
-            </div>
+								<!-- ko stopBinding: true -->
+								<article id="attachments_upload" class="panel panel-default" data-bind="visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments) && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)">
+										<div class="panel-heading">
+												<h3>Attachments</h3>
+										</div>
+										<div>
+												<article>
+														@Html.Partial("~/areas/controls/views/wffileupload/forattachments.cshtml")
+												</article>
+										</div>
+								</article>
+								<!-- /ko-->
+						</div>
         </div>
     </article>
     <nav>

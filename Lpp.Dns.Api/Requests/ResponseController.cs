@@ -862,8 +862,9 @@ namespace Lpp.Dns.Api.Requests
 
             response.Documents = (from doc in DataContext.Documents
                                         join reqDoc in DataContext.RequestDocuments on doc.RevisionSetID equals reqDoc.RevisionSetID
-                                        where nonGroupedResponseIDs.Contains(reqDoc.ResponseID)
-                                        select new ExtendedDocumentDTO
+                                        where nonGroupedResponseIDs.Contains(reqDoc.ResponseID) &&
+                                        doc == DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault()
+                                  select new ExtendedDocumentDTO
                                         {
                                             ID = doc.ID,
                                             Name = doc.Name,
@@ -891,7 +892,7 @@ namespace Lpp.Dns.Api.Requests
                                             UploadedBy = DataContext.Users.Where(u => u.ID == doc.UploadedByID).Select(u => u.UserName).FirstOrDefault(),
                                             DocumentType = reqDoc.DocumentType
                                         }).Concat(DataContext.Documents
-                                                  .Where(d => nonGroupedResponseIDs.Contains(d.ItemID))
+                                                  .Where(d => nonGroupedResponseIDs.Contains(d.ItemID) && d == DataContext.Documents.Where(dd => dd.RevisionSetID == d.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault())
                                                   .Select(d => new ExtendedDocumentDTO
                                                   {
                                                       ID = d.ID,
@@ -1024,6 +1025,7 @@ namespace Lpp.Dns.Api.Requests
                 //dont include LowThreshold as an aggregation
                 IEnumerable<Dictionary<string, object>> aggregatedResults = Lpp.Objects.Dynamic.TypeBuilderHelper.ConvertToDictionary(((IQueryable)q).AsEnumerable(), aggregate.Select.Where(s => s.Name != "LowThreshold"));
                 combinedResponse.Results = new[] { aggregatedResults.ToArray() };
+                combinedResponse.Properties = responsesToAggregate.First().Properties.ToArray();
                 combinedResponse.Aggregation = aggregate;
 
             }
@@ -1054,9 +1056,15 @@ namespace Lpp.Dns.Api.Requests
                 ResponseID = rri.ID,
                 ResponseGroupName = rri.ResponseGroup.Name,
                 ResponseGroupID = rri.ResponseGroupID,
-                Documents = DataContext.Documents.Where(d => d.ItemID == rri.ID && d.Name == "response.json").Select(d => d.ID),
+                //select the most recently uploaded response document, and only one to avoid double counting from the same route
+                Documents = DataContext.Documents.Where(d => d.ItemID == rri.ID && d.Name == "response.json").Select(d => new { d.ID, d.ContentModifiedOn }),
                 DataMartName = rri.RequestDataMart.DataMart.Name
             }).OrderBy(r => r.DataMartName).ToArrayAsync();
+
+            if (responseReferences.Where(x => x.Documents.ToArray().Count() == 0).Any())
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "The response for the following DataMarts is not defined: <br /><br />" + string.Join(", <br />", responseReferences.Where(x => x.Documents.ToArray().Count() == 0).Select(x => x.DataMartName))));
+            }
             
             var serializationSettings = new Newtonsoft.Json.JsonSerializerSettings();
             serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
@@ -1070,28 +1078,26 @@ namespace Lpp.Dns.Api.Requests
                 List<string> lstMissingDataMartResponses = new List<string>();
                 var resultsToAggregate = responseReferences.SelectMany(r =>
                                                             {
-
                                                                 List<DTO.QueryComposer.QueryComposerResponseDTO> l = new List<DTO.QueryComposer.QueryComposerResponseDTO>();
 
                                                                 bool hasResponseData = false;
-                                                                foreach (var documentID in r.Documents)
+                                                                var document = r.Documents.ToArray().OrderByDescending(d => d.ContentModifiedOn).First();
+                                                                
+                                                                using (var documentStream = new Data.Documents.DocumentStream(DataContext, document.ID))
+                                                                using (var streamReader = new System.IO.StreamReader(documentStream))
                                                                 {
-                                                                    using (var documentStream = new Data.Documents.DocumentStream(DataContext, documentID))
-                                                                    using (var streamReader = new System.IO.StreamReader(documentStream))
+                                                                    DTO.QueryComposer.QueryComposerResponseDTO rsp = (DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
+                                                                    if(rsp != null)
                                                                     {
-                                                                        DTO.QueryComposer.QueryComposerResponseDTO rsp = (DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
-                                                                        if(rsp != null)
-                                                                        {
-                                                                            rsp.ID = r.ResponseID;
-                                                                            rsp.DocumentID = documentID;
-                                                                            rsp.RequestID = requestID;
-                                                                            l.Add(rsp);
+                                                                        rsp.ID = r.ResponseID;
+                                                                        rsp.DocumentID = document.ID;
+                                                                        rsp.RequestID = requestID;
+                                                                        l.Add(rsp);
 
-                                                                            hasResponseData = true;
-                                                                        }
+                                                                        hasResponseData = true;
                                                                     }
                                                                 }
-
+                                                                
                                                                 if (!hasResponseData)
                                                                     lstMissingDataMartResponses.Add(DataContext.Responses.Where(p => p.ID == r.ResponseID).Select(p => p.RequestDataMart.DataMart.Name).FirstOrDefault());
 
@@ -1119,8 +1125,9 @@ namespace Lpp.Dns.Api.Requests
                     foreach (var vrsp in vr)
                     {
                         bool hasResponseData = false;
-                        foreach (Guid documentID in vrsp.Documents)
+                        foreach (var document in vrsp.Documents)
                         {
+                            Guid documentID = document.ID;
                             using (var documentStream = new Data.Documents.DocumentStream(DataContext, documentID))
                             using (var streamReader = new System.IO.StreamReader(documentStream))
                             {
@@ -1238,6 +1245,7 @@ namespace Lpp.Dns.Api.Requests
             {
                 MemoryStream ms = new MemoryStream();
                 StreamWriter writer = new StreamWriter(ms);
+                List<string> columns = new List<string>();
 
                 for (int i = 0; i < requestResponses.Length; i++)
                 {
@@ -1253,50 +1261,62 @@ namespace Lpp.Dns.Api.Requests
                         }
                     }
 
-                    List<string> rowValues = new List<string>();
+                    
                     if (i == 0)
                     {
                         if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace() && view != TaskItemTypes.AggregateResponse)
                         {
-                            rowValues.Add("DataMart");
+                            columns.Add("DataMart");
                         }
 
+                        //do not include the low threshold column in the results
+                        columns.AddRange(response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => EscapeForCsv(p.As)));
 
-                        foreach (var table in response.Results)
-                        {
-                            if (table.Any())
-                            {
-                                rowValues.AddRange(table.First().Keys.Select(k => EscapeForCsv(k)));
-                                if (rowValues.Contains("LowThreshold"))
-                                {
-                                    rowValues.Remove("LowThreshold");
-                                }
-                            }
-                        }
-
-                        writer.WriteLine(string.Join(",", rowValues.ToArray()));
+                        writer.WriteLine(string.Join(",", columns.ToArray()));
                     }
 
-                    foreach (var table in response.Results)
+                    List<string> rowValues = new List<string>();
+                    //check if the response contains any results that have at least one row
+                    var resultTables = response.Results.ToArray();
+                    if (resultTables.Length > 0 && resultTables[0].Any())
                     {
-
-                        foreach (var row in table)
+                        foreach (var table in response.Results)
                         {
-                            rowValues.Clear();
 
-                            if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace() && view != TaskItemTypes.AggregateResponse)
+                            foreach (var row in table)
                             {
-                                rowValues.Add(tableName);
-                            }
-                            if (row.ContainsKey("LowThreshold"))
-                            {
-                                row.Remove("LowThreshold");
-                            }
-                            rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
+                                rowValues.Clear();
 
-                            writer.WriteLine(string.Join(",", rowValues.ToArray()));
+                                if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace() && view != TaskItemTypes.AggregateResponse)
+                                {
+                                    rowValues.Add(tableName);
+                                }
+                                if (row.ContainsKey("LowThreshold"))
+                                {
+                                    row.Remove("LowThreshold");
+                                }
+                                rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
+
+                                await writer.WriteLineAsync(string.Join(",", rowValues.ToArray()));
+                            }
+
                         }
-
+                    }
+                    else
+                    {
+                        string row = string.Empty;
+                        foreach(var col in columns)
+                        {
+                            if (!string.IsNullOrEmpty(row))
+                            {
+                                row += ",";
+                            }
+                            else
+                            {
+                                row += tableName;
+                            }                            
+                        }
+                        await writer.WriteLineAsync(row);
                     }
 
                 }
@@ -1352,30 +1372,29 @@ namespace Lpp.Dns.Api.Requests
                             SheetData sheetData = new SheetData();
                             worksheetPart.Worksheet = new Worksheet(sheetData);
 
+                            //foreach resultset create a header row, each set of results for a datamart/grouping will be on the same sheet
+
+                            Row headerRow = new Row();
+                            if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName) && view != TaskItemTypes.AggregateResponse)
+                            {
+                                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
+                            }
+
+                            foreach (var property in response.Properties)
+                            {
+                                if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
+                                }
+                            }
+                            sheetData.AppendChild(headerRow);
+
                             int totalResultSets = response.Results.Count();
                             int resultSetIndex = 0;
                             foreach (var table in response.Results)
                             {
-                                //foreach resultset create a header row, each set of results for a datamart/grouping will be on the same sheet
-
-                                Row headerRow = new Row();
-                                if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName) && view != TaskItemTypes.AggregateResponse)
-                                {
-                                    headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
-                                }
-
                                 if (table.Count() > 0)
                                 {
-                                    var firstRow = table.ElementAt(0);
-                                    foreach (var columnName in firstRow.Keys)
-                                    {
-                                        if (columnName != "LowThreshold")
-                                        {
-                                            headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(columnName) });
-                                        }
-                                    }
-                                    sheetData.AppendChild(headerRow);
-
                                     Row dataRow;
                                     foreach (var row in table)
                                     {
@@ -1535,6 +1554,7 @@ namespace Lpp.Dns.Api.Requests
             {
                 MemoryStream ms = new MemoryStream();
                 StreamWriter writer = new StreamWriter(ms);
+                List<string> columns = new List<string>();
 
                 for (int i = 0; i < requestResponses.Length; i++)
                 {
@@ -1549,50 +1569,62 @@ namespace Lpp.Dns.Api.Requests
                         }
                     }
 
-                    List<string> rowValues = new List<string>();
+                    
                     if (i == 0)
                     {
                         if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace())
                         {
-                            rowValues.Add("DataMart");
-                        }
-                        
-
-                        foreach (var table in response.Results)
-                        {
-                            if (table.Any())
-                            {
-                                rowValues.AddRange(table.First().Keys.Select(k => EscapeForCsv(k)));
-                                if (rowValues.Contains("LowThreshold")) 
-                                { 
-                                    rowValues.Remove("LowThreshold");
-                                }
-                            }
+                            columns.Add("DataMart");
                         }
 
-                        writer.WriteLine(string.Join(",", rowValues.ToArray()));
+                        //do not include the low threshold column in the results
+                        columns.AddRange(response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => EscapeForCsv(p.As)));
+
+                        writer.WriteLine(string.Join(",", columns.ToArray()));
                     }
 
-                    foreach (var table in response.Results)
+                    List<string> rowValues = new List<string>();
+                    //check if the response contains any results that have at least one row
+                    var resultTables = response.Results.ToArray();
+                    if (resultTables.Length > 0 && resultTables[0].Any())
                     {
-
-                        foreach (var row in table)
+                        foreach (var table in response.Results)
                         {
-                            rowValues.Clear();
 
-                            if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace())
+                            foreach (var row in table)
                             {
-                                rowValues.Add(tableName);
-                            }
-                            if (row.ContainsKey("LowThreshold"))
-                            {
-                                row.Remove("LowThreshold");
-                            }
-                            rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
+                                rowValues.Clear();
 
-                            writer.WriteLine(string.Join(",", rowValues.ToArray()));
+                                if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace())
+                                {
+                                    rowValues.Add(tableName);
+                                }
+                                if (row.ContainsKey("LowThreshold"))
+                                {
+                                    row.Remove("LowThreshold");
+                                }
+                                rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
+
+                                await writer.WriteLineAsync(string.Join(",", rowValues.ToArray()));
+                            }
+
                         }
-
+                    }
+                    else
+                    {
+                        string row = string.Empty;
+                        foreach (var col in columns)
+                        {
+                            if (!string.IsNullOrEmpty(row))
+                            {
+                                row += ",";
+                            }
+                            else
+                            {
+                                row += tableName;
+                            }
+                        }
+                        await writer.WriteLineAsync(row);
                     }
 
                 }
@@ -1647,29 +1679,27 @@ namespace Lpp.Dns.Api.Requests
                         SheetData sheetData = new SheetData();
                         worksheetPart.Worksheet = new Worksheet(sheetData);
 
+                        //foreach resultset create a header row, each set of results for a datamart/grouping will be on the same sheet
+
+                        Row headerRow = new Row();
+                        if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName))
+                        {
+                            headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
+                        }
+
+                        foreach (var property in response.Properties)
+                        {
+                            if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
+                            {
+                                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
+                            }
+                        }
+                        sheetData.AppendChild(headerRow);
 
                         int totalResultSets = response.Results.Count();
                         int resultSetIndex = 0;
                         foreach (var table in response.Results)
                         {
-                            //foreach resultset create a header row, each set of results for a datamart/grouping will be on the same sheet
-
-                            Row headerRow = new Row();
-                            if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName))
-                            {
-                                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
-                            }
-
-                            var firstRow = table.ElementAt(0);
-                            foreach (var columnName in firstRow.Keys)
-                            {
-                                if (columnName != "LowThreshold")
-                                {
-                                    headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(columnName) });
-                                }
-                            }
-                            sheetData.AppendChild(headerRow);
-
                             Row dataRow;
                             foreach (var row in table)
                             {

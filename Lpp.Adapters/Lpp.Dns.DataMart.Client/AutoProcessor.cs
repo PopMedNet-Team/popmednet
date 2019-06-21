@@ -150,7 +150,7 @@ namespace Lpp.Dns.DataMart.Client
                 ProcessorManager.UpdateProcessorSettings(modelDescription, processor);
                 processor.Settings.Add("NetworkId", request.NetworkId);
 
-                Lib.Caching.DocumentCacheManager cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID);
+                Lib.Caching.DocumentCacheManager cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID, request.Source.Responses.Where(x => x.DataMartID == request.DataMartId).FirstOrDefault().ResponseID);
 
                 //need to initialize before checking the capabilities and settings of the processor since they may change based on the type of request being sent.
                 if (processor is IEarlyInitializeModelProcessor)

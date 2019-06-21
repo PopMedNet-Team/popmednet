@@ -107,6 +107,27 @@ var Plugins;
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "TrialID", {
+                        get: function () {
+                            return '56A38F6D-993A-4953-BCB9-11BDD809C0B4';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "PatientReportedOutcomeID", {
+                        get: function () {
+                            return 'AE87C785-BB74-4708-B0CD-FA91D584615C';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "PatientReportedOutcomeEncounterID", {
+                        get: function () {
+                            return 'A11DCC97-4C8D-4B80-AE61-58ECB2F66C3D';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Terms, "VisitsID", {
                         get: function () {
                             return 'F01BE0A4-7D8E-4288-AE33-C65166AF8335';

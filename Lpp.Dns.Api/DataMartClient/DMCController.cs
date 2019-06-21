@@ -158,8 +158,8 @@ namespace Lpp.Dns.Api.DataMartClient
                                                        let projectRequestTypesFilter = DataContext.ProjectRequestTypeAcls.Where(a => a.RequestTypeID == rt.ID && a.SecurityGroup.Users.Any(u => u.UserID == r.CreatedByID) && a.Permission >= DTO.Enums.RequestTypePermissions.Automatic && a.ProjectID == r.ProjectID)
                                                        where rt.ID == r.RequestTypeID
                                                        && (datamartRequestTypesFilter.Any() || projectDataMartRequestTypesFilter.Any() || projectRequestTypesFilter.Any())                                                       
-                                                       select rt).Any()
-
+                                                       select rt).Any(),
+                           ResponseID = i.ID
                       };
 
             var totalCount = await res.CountAsync();
@@ -225,7 +225,8 @@ namespace Lpp.Dns.Api.DataMartClient
                         RespondedBy = r.RespondedByUsername,
                         ResponseTime = r.ResponseTime,
                         ProjectName = r.ProjectName,
-                        Status = (DTO.DataMartClient.Enums.DMCRoutingStatus)((int)r.Status)
+                        Status = (DTO.DataMartClient.Enums.DMCRoutingStatus)((int)r.Status),
+                        ResponseID = r.ResponseID
                     })
                     .ToListAsync();
             }
@@ -302,7 +303,9 @@ namespace Lpp.Dns.Api.DataMartClient
                                      let holdRequestPermissionID = PermissionIdentifiers.DataMartInProject.HoldRequest.ID
                                      let rejectRequestPermissionID = PermissionIdentifiers.DataMartInProject.RejectRequest.ID
                                      let modifyResultsPermissionID = PermissionIdentifiers.DataMartInProject.ModifyResults.ID
-                                           let acls = DataContext.DataMartRights(Identity.ID, r.ProjectID, rdm.DataMartID)
+                                     let viewAttachmentsPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewAttachments.ID
+                                     let modifyAttachmentsPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ModifyAttachments.ID
+                                     let acls = DataContext.DataMartRights(Identity.ID, r.ID, rdm.DataMartID)
                                     where dataMartIDs.Contains(rdm.DataMartID) 
                                     select new
                                    {
@@ -317,9 +320,14 @@ namespace Lpp.Dns.Api.DataMartClient
                                        canReject = acls.Where(a => a.PermissionID == rejectRequestPermissionID).Any() && acls.Where(a => a.PermissionID == rejectRequestPermissionID).All(a => a.Allowed) ? dmc.RequestRights.Reject : 0,
 
                                        canModifyResults = acls.Where(a => a.PermissionID == modifyResultsPermissionID).Any() && acls.Where(a => a.PermissionID == modifyResultsPermissionID).All(a => a.Allowed) ? dmc.RequestRights.ModifyResults : 0,
+
+                                       canViewAttachments = acls.Where(a => a.PermissionID == viewAttachmentsPermissionID).Any() && acls.Where(a => a.PermissionID == viewAttachmentsPermissionID).All(a => a.Allowed) ? dmc.RequestRights.ViewAttachments : 0,
+
+                                       canModifyAttachments = acls.Where(a => a.PermissionID == modifyAttachmentsPermissionID).Any() && acls.Where(a => a.PermissionID == modifyAttachmentsPermissionID).All(a => a.Allowed) ? dmc.RequestRights.ModifyAttachments : 0
                                    }),
                                Responses = r.DataMarts.Select(rdm => rdm.Responses.FirstOrDefault(response => !DataContext.Responses.Any(oReponse => oReponse.RequestDataMartID == response.RequestDataMartID && oReponse.Count > response.Count))).Select(response => new
                                {
+                                   ResponseID = response.ID,
                                    CreatedOn = response.ResponseTime ?? response.SubmittedOn,
                                    DataMartID = response.RequestDataMart.DataMartID,
                                    Email = response.RespondedBy.Email,
@@ -329,57 +337,76 @@ namespace Lpp.Dns.Api.DataMartClient
                                })							   
                            }).ToArrayAsync();
 
-            
-            var requestDocuments = from req in DataContext.Secure<Request>(Identity)
-                                   join reqdm in DataContext.RequestDataMarts on req.ID equals reqdm.RequestID
-                                   join res in DataContext.Responses on reqdm.ID equals res.RequestDataMartID
-                                   join reqDoc in DataContext.RequestDocuments on res.ID equals reqDoc.ResponseID
-                                   where criteria.ID.Contains(req.ID)
-                                       && reqDoc.DocumentType == DTO.Enums.RequestDocumentType.Input
-                                       && dataMartIDs.Contains(reqdm.DataMartID)
-                                       && res.Count == reqdm.Responses.Max(r => r.Count)
-                                   select reqDoc.RevisionSetID;
+            if(requests.Length == 0)
+            {
+                return Enumerable.Empty<dmc.Request>();
+            }
 
-
-            IEnumerable<dmc.DocumentWithID> docs = await DataContext.Documents.Where(doc => requestDocuments.Contains(doc.RevisionSetID.Value) &&
-                DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID)
-                .OrderByDescending(o => o.MajorVersion)
-                .ThenByDescending(o => o.MinorVersion)
-                .ThenByDescending(o => o.BuildVersion)
-                .ThenByDescending(o => o.RevisionVersion)
-                .FirstOrDefault() == doc
-                 ).Union(DataContext.Documents.Where(dx => criteria.ID.Contains(dx.ItemID))).Select(doc => new dmc.DocumentWithID
-                 {
-                     ID = doc.ID,
-                     Document = new dmc.Document
-                     {
-                         IsViewable = doc.Viewable,
-                         Kind = doc.Kind,
-                         MimeType = doc.MimeType,
-                         Name = doc.FileName,
-                         Size = doc.Length
-                     }
-                 }).ToArrayAsync();
-
+            Guid[] requestIDs = requests.Select(r => r.ID).ToArray();
+            var docs = await DataContext.Documents.Where(dx => requestIDs.Contains(dx.ItemID)).Select(d => new DocumentDetailsDTO { RequestID = d.ItemID, ID = d.ID, IsViewable = d.Viewable, Kind = d.Kind, MimeType = d.MimeType, Name = d.FileName, Size = d.Length, DocumentType = DTO.Enums.RequestDocumentType.Input })
+                .Union(
+                from rd in DataContext.RequestDocuments
+                join rsp in DataContext.Responses on rd.ResponseID equals rsp.ID
+                join rdm in DataContext.RequestDataMarts on rsp.RequestDataMartID equals rdm.ID
+                where requestIDs.Contains(rdm.RequestID)
+                && dataMartIDs.Contains(rdm.DataMartID)
+                && rsp.Count == rdm.Responses.Max(rr => rr.Count)
+                && (rd.DocumentType == DTO.Enums.RequestDocumentType.Input || rd.DocumentType == DTO.Enums.RequestDocumentType.AttachmentInput)
+                from doc in DataContext.Documents
+                where doc == DataContext.Documents.Where(d => d.RevisionSetID == rd.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault()
+                select new DocumentDetailsDTO {
+                    RequestID = rdm.RequestID,
+                    ID = doc.ID,
+                    IsViewable = doc.Viewable,
+                    Kind = doc.Kind,
+                    MimeType = doc.MimeType,
+                    Name = doc.FileName,
+                    Size = doc.Length,
+                    DocumentType = rd.DocumentType
+                }
+                ).ToArrayAsync();
 
             var results = (from r in requests
                            select new dmc.Request
                            {
-                               Activity = r.Activity,
-                               ActivityDescription = r.ActivityDescription,
-                               ActivityProject = r.ActivityProject,
-                               AdapterPackageVersion = r.AdapterPackageVersion,
-                               AdditionalInstructions = r.AdditionalInstructions,
-                               Author = new dmc.Profile
-                               {
-                                   Email = r.Author.Email,
-                                   FullName = r.Author.FullName,
-                                   OrganizationName = r.Author.OrganizationName,
-                                   Username = r.Author.Username
-                               },
-                               CreatedOn = r.CreatedOn,
-                               Description = r.WorkFlowActivityID.HasValue ? r.Description : FormatRequestDescription(r.Description),    //edit in line breaks for legacy requests
-                               Documents = docs.ToArray(),
+                              Activity = r.Activity,
+                              ActivityDescription = r.ActivityDescription,
+                              ActivityProject = r.ActivityProject,
+                              AdapterPackageVersion = r.AdapterPackageVersion,
+                              AdditionalInstructions = r.AdditionalInstructions,
+                              Author = new dmc.Profile
+                              {
+                                  Email = r.Author.Email,
+                                  FullName = r.Author.FullName,
+                                  OrganizationName = r.Author.OrganizationName,
+                                  Username = r.Author.Username
+                              },
+                              CreatedOn = r.CreatedOn,
+                              Description = r.WorkFlowActivityID.HasValue ? r.Description : FormatRequestDescription(r.Description),    //edit in line breaks for legacy requests
+                              Documents = docs.Where(d => d.DocumentType == DTO.Enums.RequestDocumentType.Input && d.RequestID == r.ID).Select(d => new dmc.DocumentWithID
+                              {
+                                  ID = d.ID,
+                                  Document = new dmc.Document
+                                  {
+                                      IsViewable = d.IsViewable,
+                                      Kind = d.Kind,
+                                      MimeType = d.MimeType,
+                                      Name = d.Name,
+                                      Size = d.Size
+                                  }
+                              }).OrderBy(d => d.Document.Name).ToArray(),
+                              Attachments = docs.Where(d => d.DocumentType == DTO.Enums.RequestDocumentType.AttachmentInput && d.RequestID == r.ID).Select(d => new dmc.DocumentWithID
+                              {
+                                  ID = d.ID,
+                                  Document = new dmc.Document
+                                  {
+                                      IsViewable = d.IsViewable,
+                                      Kind = d.Kind,
+                                      MimeType = d.MimeType,
+                                      Name = d.Name,
+                                      Size = d.Size
+                                  }
+                              }).OrderBy(d => d.Document.Name).ToArray(),
                               DueDate = r.DueDate,
                               ID = r.ID,
                               Identifier = r.Identifier,
@@ -397,6 +424,7 @@ namespace Lpp.Dns.Api.DataMartClient
                               RequestTypePackageIdentifier = r.RequestTypePackageIdentifier,
                               Responses = r.Responses.Select(response => new dmc.Response
                               {
+                                  ResponseID = response.ResponseID,
                                   Author = new dmc.Profile
                                   {
                                       Email = response.Email,
@@ -411,7 +439,7 @@ namespace Lpp.Dns.Api.DataMartClient
                               {
                                   AllowUnattendedProcessing = routing.AllowUnattendedProcessing,
                                   DataMartID = routing.DataMartID,
-                                  Rights = routing.canHold | routing.canReject | routing.canRun | routing.canModifyResults,
+                                  Rights = routing.canHold | routing.canReject | routing.canRun | routing.canModifyResults | routing.canViewAttachments | routing.canModifyAttachments,
                                   Status = routing.Status,
                                   Properties = routing.Properties == null ? null : (
                                             from root in ParseXml(routing.Properties)
@@ -883,6 +911,31 @@ namespace Lpp.Dns.Api.DataMartClient
             {
                 return Enumerable.Empty<XElement>();
             }
-        }        
+        }
+        
+        class DocumentDetailsDTO
+        {
+
+            public DocumentDetailsDTO()
+            {
+                DocumentType = DTO.Enums.RequestDocumentType.Input;
+            }
+
+            public Guid RequestID { get; set; }
+
+            public Guid ID { get; set; }
+
+            public bool IsViewable { get; set; }
+
+            public string Kind { get; set; }
+
+            public string MimeType { get; set; }
+
+            public string Name { get; set; }
+
+            public long Size { get; set; }
+
+            public DTO.Enums.RequestDocumentType DocumentType { get; set; }
+        }
     }
 }

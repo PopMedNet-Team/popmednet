@@ -198,6 +198,8 @@ var Permissions;
         ProjectRequestTypeWorkflowActivities.EditTask = '75FC4DEA-220C-486D-9E8C-AC2B6F6F8415';
         ProjectRequestTypeWorkflowActivities.ViewComments = '7025F490-9635-4540-B682-3A4F152E73EF';
         ProjectRequestTypeWorkflowActivities.AddComments = 'B03BDDE0-CD76-47C3-BB7D-C39A28B232B4';
+        ProjectRequestTypeWorkflowActivities.ModifyAttachments = 'D59FA0D4-15FA-4088-9A98-35CDD7902EC1';
+        ProjectRequestTypeWorkflowActivities.ViewAttachments = '50157D72-8EED-45E4-B6F4-2A935191F57F';
         ProjectRequestTypeWorkflowActivities.ViewDocuments = 'FAE8FC24-362D-4382-AF31-0933AF95FDE9';
         ProjectRequestTypeWorkflowActivities.AddDocuments = 'A593C7EC-61F3-42F8-8D26-8A4BACC8BC17';
         ProjectRequestTypeWorkflowActivities.ReviseDocuments = '0312B7F3-FFBC-4FBF-B3BD-5CB69AEAA045';

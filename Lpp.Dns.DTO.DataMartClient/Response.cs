@@ -11,6 +11,8 @@ namespace Lpp.Dns.DTO.DataMartClient
     public class Response
     {
         [DataMember]
+        public Guid? ResponseID { get; set; }
+        [DataMember]
         public Guid DataMartID { get; set; }
         [DataMember]
         public DateTime CreatedOn { get; set; }

@@ -197,13 +197,6 @@ FROM
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 		)
 
-		--LEFT JOIN
-
-			-- Add the names to the rows by matching against summary data.
-
-			--(SELECT distinct %SD_CODE_FIELD%, %NAME_FIELD% FROM %SD_TABLE% WHERE %SD_CODE_FIELD% in (%CODES%)) AS nm
-			--ON nm.%SD_CODE_FIELD%=AgeGroups.%CODE_FIELD%
-
 		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%CODE_FIELD%, AgeGroups.%NAME_FIELD%, AgeGroups.Setting
 		
 	) AS EnrollmentData
@@ -221,7 +214,7 @@ LEFT JOIN
 		CAST(SUM(Members) AS float) AS mb, CAST(SUM([Events]) AS float) AS ev
 		FROM %SD_TABLE% AS sd
 		WHERE %SD_CODE_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND  SETTING IN (%SETTING%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y' and drugcov = 'Y') > 0)
 		GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting, age_group_id, age_group, %MATCH_SEX3% period
 	) AS SummaryData
 
@@ -281,13 +274,6 @@ FROM
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 		)
 
-		--LEFT JOIN
-
-			-- Add the names to the rows by matching against summary data.
-
-			--(SELECT distinct %SD_CODE_FIELD%, %NAME_FIELD% FROM %SD_TABLE% WHERE %SD_CODE_FIELD% in (%CODES%)) AS nm
-			--ON nm.%SD_CODE_FIELD%=AgeGroups.%CODE_FIELD%
-
 		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%CODE_FIELD%, AgeGroups.%NAME_FIELD%, AgeGroups.Setting
 		
 	) AS EnrollmentData
@@ -305,7 +291,7 @@ LEFT JOIN
 		SUM(Members) AS mb, SUM(Events) AS ev
 		FROM %SD_TABLE% AS sd
 		WHERE %SD_CODE_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND  SETTING IN (%SETTING%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y' and drugcov = 'Y') > 0)
 		GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting, age_group_id, age_group, %MATCH_SEX3% period
 	) AS SummaryData
 

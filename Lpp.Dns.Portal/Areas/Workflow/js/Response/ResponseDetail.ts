@@ -29,7 +29,7 @@ module Workflow.Response.Common.ResponseDetail {
 
         constructor(bindingControl: JQuery, routings: Dns.Interfaces.IRequestDataMartDTO[], responses: Dns.Interfaces.IResponseDTO[], documents: Dns.Interfaces.IExtendedDocumentDTO[], canViewPendingApprovalResponses: boolean, exportForFileDistribution: boolean) {
             super(bindingControl, rootVM.ScreenPermissions);
-            var self = this;
+            let self = this;
             
             this.IsResponseVisible = ko.observable(null);
             this.ResponseContentComplete = ko.observable(false);
@@ -37,9 +37,9 @@ module Workflow.Response.Common.ResponseDetail {
             this.Routings = routings;
             this.Responses = responses;
             this.Documents = documents;
-            var currentResponseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+            let currentResponseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
             
-            var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes[$.url().param('view')];
+            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes[$.url().param('view')];
             this.ResponseView = ko.observable(responseView);
  
             this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
@@ -68,97 +68,139 @@ module Workflow.Response.Common.ResponseDetail {
                         return;
 
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
-                    var bucket = $('<div class="panel panel-default"></div>');
+
+                    let panels = [];
 
                     responses.forEach((resp) => {
-                        var datamartName = (resp.Aggregation == null || resp.Aggregation.Name == null) ? 'Aggregated or Grouped Results' : resp.Aggregation.Name;
+                        let bucket = $('<div class="panel panel-default"></div>');
+                        panels.push(bucket);
+
+                        let datamartName = (resp.Aggregation == null || resp.Aggregation.Name == null) ? 'Aggregated or Grouped Results' : resp.Aggregation.Name;
 
                         if (resp.ID) {
-                            var response = ko.utils.arrayFirst(self.Responses, (x) => x.ID == resp.ID);
+                            let response = ko.utils.arrayFirst(self.Responses, (x) => x.ID == resp.ID);
                             if (response) {
-                                var routing = ko.utils.arrayFirst(self.Routings, (d) => d.ID == response.RequestDataMartID);
+                                let routing = ko.utils.arrayFirst(self.Routings, (d) => d.ID == response.RequestDataMartID);
                                 if (routing) {
                                     datamartName = routing.DataMart;
                                 }
                             }
                         }
 
-                        for (var i = 0; i < resp.Results.length; i++) {
-                            //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
-                            var resultID = (resp.ID || 'aggregate') + '-' + i;
-                            var suppressedValues: boolean = false;
+                        if (resp.Results != null && resp.Results.length > 0) {
+                            //The response has results
 
-                            bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
+                            for (let i = 0; i < resp.Results.length; i++) {
+                                //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
+                                let resultID = (resp.ID || 'aggregate') + '-' + i;
+                                let suppressedValues: boolean = false;
 
-                            var kendoColumnNames = [];
-                            var kendoColumnFields = [];
+                                bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
 
-                            var table = resp.Results[i];
-                            var newTable = [];
-                            var row;
 
-                            for (var j = 0; j < table.length; j++) {
-                                row = table[j];
-                                newTable.push(row);
-                                for (var prop in row) {
-                                    var columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
-                                    if (j == 0) {
-                                        kendoColumnNames.push(columnName);
-                                        kendoColumnFields.push(prop);
+                                let table = resp.Results[i];
+                                let newTable = [];
+                                let row;
+
+                                for (let j = 0; j < table.length; j++) {
+                                    row = table[j];
+                                    newTable.push(row);
+                                    for (let prop in row) {
+                                        let columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
+
+                                        if (columnName != prop) {
+                                            row[columnName] = row[prop];
+                                            delete row[prop];
+                                        }
                                     }
 
-                                    if (columnName != prop) {
-                                        row[columnName] = row[prop];
-                                        delete row[prop];
+
+                                }
+
+                                let kendoColumns = [];
+                                for (let i = 0; i < resp.Properties.length; i++) {
+                                    let propertyDefinition = resp.Properties[i];
+                                    if (propertyDefinition.Name == "LowThreshold") {
+                                        kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
+                                        suppressedValues = true;
+                                    }
+                                    else {
+                                        kendoColumns.push({
+                                            title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
+                                        });
                                     }
                                 }
 
+                                let grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
+
+                                let datasource = kendo.data.DataSource.create({ data: newTable });
+                                grid.kendoGrid({
+                                    dataSource: datasource,
+                                    height: 520,
+                                    columns: kendoColumns,
+                                    resizable: true,
+                                    filterable: true,
+                                    columnMenu: { columns: true },
+                                    groupable: false,
+                                    pageable: false,
+                                    scrollable: true
+                                }).data('kendoGrid');
+
+
+                                let gridContainer = $('<div class="panel-body"></div>');
+
+                                if (suppressedValues) {
+                                    gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
+                                }
+
+                                gridContainer.append(grid);
+                                bucket.append(gridContainer);
+                                bucket.append($('<br>'));
 
                             }
 
-                            var kendColumn = [];
-                            for (var k = 0; k < kendoColumnFields.length; k++) {
-                                if (kendoColumnFields[k] == "LowThreshold") {
-                                    kendColumn.push({ title: kendoColumnFields[k], field: kendoColumnNames[k], width: 100, hidden: true });
+                        } else {
+
+                            //No results, build the table with only the column headers and a no results message
+                            let resultID = (resp.ID || 'aggregate') + '- 1';
+                            let suppressedValues: boolean = false;
+
+                            bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
+
+                            let kendoColumns = [];
+                            for (let i = 0; i < resp.Properties.length; i++) {
+                                let propertyDefinition = resp.Properties[i];
+                                if (propertyDefinition.Name == "LowThreshold") {
+                                    kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
                                     suppressedValues = true;
                                 }
                                 else {
-                                    kendColumn.push({
-                                        title: kendoColumnFields[k], field: kendoColumnNames[k], width: 100,
-                                        template: '# if(' + kendoColumnNames[k] + ' != null) { # #:' + kendoColumnNames[k] + '# #}else { # <div class="null-cell">&lt;&lt; NULL &gt;&gt;</div> # } #'
+                                    kendoColumns.push({
+                                        title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
                                     });
                                 }
                             }
 
-                            var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
+                            let grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
 
-                            var datasource = kendo.data.DataSource.create({ data: newTable });
-                            //var grid = $('#grid' + resultID + '').kendoGrid({
+                            let datasource = kendo.data.DataSource.create({ data: [] });
                             grid.kendoGrid({
                                 dataSource: datasource,
-                                height: 520,
-                                columns: kendColumn,
+                                height: 120,
+                                columns: kendoColumns,
                                 resizable: true,
-                                filterable: true,
-                                columnMenu: { columns: true },
+                                filterable: false,
+                                columnMenu: false,
                                 groupable: false,
                                 pageable: false,
-                                scrollable: true
-                                //dataBound: function () {
-                                //    var grid = this;
-                                //    grid.tbody.find('>tr').each(function () {
-                                //        var dataItem = grid.dataItem(this);
-                                //        if (dataItem.LowThreshold) {
-                                //            $(this).addClass('Highlight');
-                                //        }
-                                //    })
-                                //}
+                                scrollable: false,
+                                noRecords: {
+                                    template: '<div style="width:993px;"><p class="alert alert-info" style="width:350px;display:inline-block;margin-top:12px;">No data available for the current response.</p></div>'
+                                }
                             }).data('kendoGrid');
 
 
-
-
-                            var gridContainer = $('<div class="panel-body"></div>');
+                            let gridContainer = $('<div class="panel-body"></div>');
 
                             if (suppressedValues) {
                                 gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
@@ -166,52 +208,37 @@ module Workflow.Response.Common.ResponseDetail {
 
                             gridContainer.append(grid);
                             bucket.append(gridContainer);
-                            bucket.append($('<br>'));
 
+                            bucket.append($('<br>'));
                         }
+
                     });
 
 
                     self.ResponseContentComplete(true);
 
+
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
-                    $('#gResults').append(bucket);
-
-                  //resize the iframe to the contents plus padding for the export dropdown menu
-                  let prevHeight = $('html').height();
-
-                  let interval = setInterval(() => {
-                    var newVal = $('html').height();
-
-                    if (newVal > prevHeight) {
-                      prevHeight = newVal;
-                      $(window.frameElement).height($('html').height() + 70);
-
-                    }
-                    else if (newVal === prevHeight && prevHeight !== 0) {
-                      clearInterval(interval);
-                    }
-
-                  }, 10);
+                    $('#gResults').append(panels);
 
                 }).fail(() => {
+
                     self.IsResponseLoadFailed(true);
                     self.ResponseContentComplete(true);
-                    let prevHeight = $('html').height();
 
-                    let interval = setInterval(() => {
-                      var newVal = $('html').height();
+                }).always(() => {
+                    //resize the iframe to the contents 
+                    let intervalID = setInterval(() => {
+                        let scrollHeight = window.document.documentElement.scrollHeight || document.body.scrollHeight;
+                        let frameHeight = $(window.frameElement).height();
 
-                      if (newVal > prevHeight) {
-                        prevHeight = newVal;
-                        $(window.frameElement).height($('html').height() + 70);
-
-                      }
-                      else if (newVal === prevHeight && prevHeight !== 0) {
-                        clearInterval(interval);
-                      }
-
-                    }, 10);
+                        if (frameHeight < scrollHeight) {
+                            $(window.frameElement).height(scrollHeight);
+                            clearInterval(intervalID);
+                        } else if (frameHeight > 0 && scrollHeight > 0 && frameHeight > scrollHeight) {
+                            clearInterval(intervalID);
+                        }
+                    }, 100);
                 });
             } else {
                 self.ResponseContentComplete(true);
@@ -220,7 +247,7 @@ module Workflow.Response.Common.ResponseDetail {
             self.onApprove = () => {
                 Global.Helpers.ShowDialog('Enter an Approval Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        var responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
 
                         Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                             .done(() => {
@@ -232,7 +259,7 @@ module Workflow.Response.Common.ResponseDetail {
                                 
                             })
                             .fail((err:any) => {
-                                var errorMessage = err.responseJSON.errors[0].Description;
+                                let errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Approve Responses', errorMessage);
                             });
                     });
@@ -241,7 +268,7 @@ module Workflow.Response.Common.ResponseDetail {
             self.onReject = () => {
                 Global.Helpers.ShowDialog('Enter an Reject Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        var responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
                         Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                             .done(() => {
 
@@ -251,7 +278,7 @@ module Workflow.Response.Common.ResponseDetail {
                                 self.showApproveReject(false);
 
                             }).fail((err:any) => {
-                                var errorMessage = err.responseJSON.errors[0].Description;
+                                let errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Reject Responses', errorMessage);
                             });
                     });
@@ -260,12 +287,12 @@ module Workflow.Response.Common.ResponseDetail {
             self.onResubmit = () => {
                 Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        var responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
                         Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                             .done(() => {
                                 Global.Helpers.RedirectTo(window.top.location.href);
                             }).fail((err: any) => {
-                                var errorMessage = err.responseJSON.errors[0].Description;
+                                let errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Reject and Resubmit Responses', errorMessage);
                             });
                     });
@@ -277,12 +304,12 @@ module Workflow.Response.Common.ResponseDetail {
     $(() => {
 
         rootVM = (<any>parent).Requests.Details.rovm;
-        var id: any = Global.GetQueryParam("ID");
-        var responseIDs = id.split(',');
+        let id: any = Global.GetQueryParam("ID");
+        let responseIDs = id.split(',');
         
         Dns.WebApi.Response.GetDetails(responseIDs).done((details) => {
-            var ss = details[0];
-            var bindingControl = $('#DefaultResponseDetail');
+            let ss = details[0];
+            let bindingControl = $('#DefaultResponseDetail');
             vm = new ViewModel(bindingControl, ss.RequestDataMarts, ss.Responses, ss.Documents, ss.CanViewPendingApprovalResponses, ss.ExportForFileDistribution);
             ko.applyBindings(vm, bindingControl[0]);
         });

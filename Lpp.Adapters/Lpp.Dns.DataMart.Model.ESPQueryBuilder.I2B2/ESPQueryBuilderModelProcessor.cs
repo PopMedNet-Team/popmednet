@@ -532,7 +532,7 @@ namespace Lpp.Dns.DataMart.Model
         {
             BuildResponseDocuments();
             string mimeType = GetMimeType(filePath);
-            Document document = new Document(responseDocument.Length.ToString(), mimeType, filePath);
+            Document document = new Document(Guid.NewGuid().ToString("D"), mimeType, filePath);
             IList<Document> responseDocumentList = responseDocument.ToList<Document>();
             responseDocumentList.Add(document);
             responseDocument = responseDocumentList.ToArray<Document>();
@@ -553,11 +553,13 @@ namespace Lpp.Dns.DataMart.Model
             }
         }
 
+        const string RESPONSE_DOCUMENTID = "AB1EDEA2-6675-4F0C-B2D6-8BA062F26C74";
+
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             contentStream = null;
 
-            if ( documentId == "0" )
+            if ( documentId == RESPONSE_DOCUMENTID )
             {
                 var stream = new MemoryStream();
 
@@ -587,7 +589,7 @@ namespace Lpp.Dns.DataMart.Model
             if (resultDataset != null)
             {
                 responseDocument = new Document[1];
-                responseDocument[0] = new Document("0", "x-application/lpp-dns-table", "ESPResponse.xml");
+                responseDocument[0] = new Document(RESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "ESPResponse.xml");
                 responseDocument[0].IsViewable = true;
 
                 using (MemoryStream stream = new MemoryStream())

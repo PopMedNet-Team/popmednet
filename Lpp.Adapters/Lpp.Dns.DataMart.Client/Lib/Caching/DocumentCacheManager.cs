@@ -19,7 +19,7 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
         public readonly string RequestIdentifier;
         public readonly string BaseCachePath;
 
-        public DocumentCacheManager(int networkID, Guid datamartID, Guid requestID)
+        public DocumentCacheManager(int networkID, Guid datamartID, Guid requestID, Guid? responseID)
         {
             NetworkID = networkID;
             DataMartID = datamartID;
@@ -31,7 +31,27 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
                 rootCachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Properties.Settings.Default.AppDataFolderName, "cache");
             }
 
-            BaseCachePath = Path.Combine(rootCachePath, NetworkID.ToString(), DataMartID.ToString("D"), RequestID.ToString());
+            if (responseID.HasValue)
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(Path.Combine(rootCachePath, NetworkID.ToString(), DataMartID.ToString("D"), RequestID.ToString()));
+
+                if (di.Exists)
+                {
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    var dir = di.GetDirectories();
+                    foreach (DirectoryInfo sub in dir.Where(x => !string.Equals(x.Name, responseID.Value.ToString("D"), StringComparison.OrdinalIgnoreCase)))
+                    {
+                        sub.Delete(true);
+                    }
+                }                
+
+                BaseCachePath = Path.Combine(rootCachePath, NetworkID.ToString(), DataMartID.ToString("D"), RequestID.ToString(), responseID.Value.ToString("D"));
+            }                
+            else
+                BaseCachePath = Path.Combine(rootCachePath, NetworkID.ToString(), DataMartID.ToString("D"), RequestID.ToString());
 
             if (!Directory.Exists(BaseCachePath))
                 Directory.CreateDirectory(BaseCachePath);

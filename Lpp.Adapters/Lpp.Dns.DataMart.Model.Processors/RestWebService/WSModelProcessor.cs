@@ -166,6 +166,8 @@ namespace Lpp.Dns.DataMart.Model
 
         }
 
+        const string RESPONSE_DOCUMENTID = "5F58F341-5981-4D74-BCE2-46BE5BDCAAF8";
+
         public void Start(string requestId, bool viewSQL)
         {
             try
@@ -190,7 +192,7 @@ namespace Lpp.Dns.DataMart.Model
                 string responseFromServer = reader.ReadToEnd();
                 responsesText = responseFromServer.ToString();
                 var documents = new List<Document>();
-                documents.Add(BuildDocument("0", responseFromServer, "Response.xml", true, true));
+                documents.Add(BuildDocument(RESPONSE_DOCUMENTID, responseFromServer, "Response.xml", true, true));
                 responseDocument = documents.ToArray();
                 status.Code = RequestStatus.StatusCode.Complete;
 

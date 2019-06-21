@@ -9,7 +9,7 @@ namespace Lpp.Dns.DataMart.Model
     /// <summary>
     /// Interface to provide support for executing generation of PATID lists, and reading existing PATID lists for use in future query.
     /// </summary>
-    public interface IPatientIdentifierProcessor
+    public interface IPatientIdentifierProcessor : IEarlyInitializeModelProcessor
     {
         /// <summary>
         /// Gets if the current model/adapter can generate patient identifier lists for the current request.

@@ -22,7 +22,7 @@
     <Use64BitIISExpress />
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
@@ -244,6 +244,9 @@
     <Content Include="App_Code\Terms\SqlDistribution.cs" />
     <Content Include="App_Code\Terms\FileUpload.cs" />
     <Content Include="App_Code\Terms\ProcedureCodes.cs" />
+    <Content Include="App_Code\Terms\Trial.cs" />
+    <Content Include="App_Code\Terms\PatientReportedOutcome.cs" />
+    <Content Include="App_Code\Terms\PatientReportedOutcomeEncounter.cs" />
     <Compile Include="App_Code\UI.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1761,6 +1764,17 @@
     <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\View.cshtml" />
     <Content Include="Areas\Controls\Views\WFEnhancedEventLog\Index.cshtml" />
     <Content Include="Areas\QueryComposer\Views\UploadCodeList.cshtml" />
+    <Content Include="Areas\Controls\Views\WFFileUpload\ForAttachments.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Trial\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Trial\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Trial\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Trial\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcome\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcome\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcome\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcome\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcomeEncounter\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcomeEncounter\StratifierView.cshtml" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -5443,6 +5457,7 @@
     <TypeScriptCompile Include="Areas\Controls\js\WFDocuments\Upload.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFEnhancedEventLog\Index.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Common.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ForAttachments.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ForTask.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Index.ts" />
     <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ResponseForDataPartner.ts" />

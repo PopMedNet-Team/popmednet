@@ -148,6 +148,9 @@ var Workflow;
                             var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                             var uploadViewModel = Controls.WFFileUpload.Index.init($('#DRUpload'), query, modularProgramTermID);
                             self.UploadViewModel = uploadViewModel;
+                            Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done(function (viewModel) {
+                                self.AttachmentsVM = viewModel;
+                            });
                         });
                     });
                     return _this;
@@ -246,6 +249,11 @@ var Workflow;
                 //Bind the view model for the activity
                 var bindingControl = $("#DRDistribution");
                 vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
+                if (Requests.Details.rovm.Request.ID() != null) {
+                    Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done(function (viewModel) {
+                        vm.AttachmentsVM = viewModel;
+                    });
+                }
                 $(function () {
                     ko.applyBindings(vm, bindingControl[0]);
                 });

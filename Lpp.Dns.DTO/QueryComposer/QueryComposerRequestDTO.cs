@@ -29,5 +29,9 @@ namespace Lpp.Dns.DTO.QueryComposer
         /// </summary>
         [DataMember]
         public QueryComposerSelectDTO Select { get; set; }
+        /// <summary>
+        /// A Collection of Temporal Events.
+        /// </summary>
+        public IEnumerable<QueryComposerTemporalEventDTO> TemporalEvents { get; set; }
     }
 }

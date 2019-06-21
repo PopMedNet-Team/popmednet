@@ -131,13 +131,13 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             var processorTypes = (from a in AppDomain.CurrentDomain.GetAssemblies()
                                   from t in a.GetLoadableTypes()
                                   let interfaces = t.GetInterfaces().DefaultIfEmpty()
-                                 where interfaces.Any(i => i == typeof(Model.IModelProcessor) || i == typeof(Model.IEarlyInitializeModelProcessor))
-                                 && t.GetConstructor(Type.EmptyTypes) != null
-                                 && !t.IsInterface
-                                 && t != typeof(ProxyModelProcessor) && t != typeof(ProxyModelProcessorWithEarlyInitialize) && t != typeof(ProxyModelProcessorWithPatientIdentifierCapabilities)
-                                  select interfaces.Any(i =>  i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Model.IModelProcessor).ToArray();
+                                  where interfaces.Any(i => i == typeof(Model.IModelProcessor) || i == typeof(Model.IEarlyInitializeModelProcessor) || i == typeof(Model.IPatientIdentifierProcessor))
+                                  && t.GetConstructor(Type.EmptyTypes) != null
+                                  && !t.IsInterface
+                                  && t != typeof(ProxyModelProcessor) && t != typeof(ProxyModelProcessorWithEarlyInitialize) && t != typeof(ProxyModelProcessorWithPatientIdentifierCapabilities)
+                                  select interfaces.Any(i => i == typeof(Model.IPatientIdentifierProcessor)) ? Activator.CreateInstance(t) as Model.IPatientIdentifierProcessor : (interfaces.Any(i => i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Model.IModelProcessor)).ToArray();
 
-            if(processorTypes == null || processorTypes.Length == 0)
+            if (processorTypes == null || processorTypes.Length == 0)
             {
                 throw new ProcessorNotFoundException("No processor types implementing IPatientIdentifierProcessor, IEarlyInitializeModelProcessor, or IModelProcessor found.");
             }
