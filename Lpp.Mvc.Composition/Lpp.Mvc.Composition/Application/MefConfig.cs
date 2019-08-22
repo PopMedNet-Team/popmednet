@@ -1,19 +1,15 @@
 ﻿using Lpp.Composition;
 using Lpp.Composition.Modules;
-using Lpp.Mvc.Controllers;
+using Lpp.Utilities.Legacy;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Registration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
-using Lpp.Utilities.Legacy;
 
 namespace Lpp.Mvc.Composition.Application
 {

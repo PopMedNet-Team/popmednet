@@ -63,7 +63,6 @@ namespace Lpp.Dns.DataMart.Client
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RequestDetailForm));
             this.queryDataMartBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.FileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.processRequestWorker = new System.ComponentModel.BackgroundWorker();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.lblStatusBarProgress = new System.Windows.Forms.Label();
@@ -361,13 +360,6 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.FileDialog.FileName = "openFileDialog1";
             // 
-            // processRequestWorker
-            // 
-            this.processRequestWorker.WorkerReportsProgress = true;
-            this.processRequestWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.processRequestWorker_ProcessRequest);
-            this.processRequestWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.processRequestWorker_ProgressChanged);
-            this.processRequestWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.processRequestWorker_RunWorkerCompleted);
-            // 
             // buttonPanel
             // 
             this.buttonPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -493,10 +485,6 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // vpAttachments
             // 
-            this.processRequestWorker.WorkerReportsProgress = true;
-            this.processRequestWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.processRequestWorker_ProcessRequest);
-            this.processRequestWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.processRequestWorker_ProgressChanged);
-            this.processRequestWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.processRequestWorker_RunWorkerCompleted);
             this.tableLayoutPanel5.SetColumnSpan(this.vpAttachments, 2);
             this.vpAttachments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.vpAttachments.LastView = null;
@@ -1347,7 +1335,6 @@ namespace Lpp.Dns.DataMart.Client
 
         private System.Windows.Forms.BindingSource queryDataMartBindingSource;
         private System.Windows.Forms.OpenFileDialog FileDialog;
-        private System.ComponentModel.BackgroundWorker processRequestWorker;
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.TabControl tabControl1;

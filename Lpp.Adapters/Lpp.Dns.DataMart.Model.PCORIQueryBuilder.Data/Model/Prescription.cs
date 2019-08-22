@@ -13,7 +13,6 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
     {
         public Prescription()
         {
-            //Dispensings = new HashSet<Dispensing>();
         }
 
         [Key, Column("PRESCRIBINGID")]
@@ -39,32 +38,43 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         [Column("RX_END_DATE")]
         public DateTime? EndedOn { get; set; }
 
+        [Column("RX_DOSE_ORDERED")]
+        public float? DoseOrdered { get; set; }
+
+        [Column("RX_DOSE_ORDERED_UNIT")]
+        public string DoseOrderedUnit { get; set; }
+
         [Column("RX_QUANTITY")]
-        public double? QuantityOrdered { get; set; }
+        public float? QuantityOrdered { get; set; }
+
+        [Column("RX_DOSE_FORM")]
+        public string DoseForm { get; set; }
 
         [Column("RX_REFILLS")]
-        public double? RefillsOrdered { get; set; }
+        public float? RefillsOrdered { get; set; }
 
         [Column("RX_DAYS_SUPPLY")]
-        public double? DaysSupplyOrdered { get; set; }
+        public float? DaysSupplyOrdered { get; set; }
 
         [Column("RX_FREQUENCY")]
         public string Frequency { get; set; }
+
+        [Column("RX_PRN_FLAG"), MaxLength(1)]
+        public string PRN_Flag { get; set; }
+
+        [Column("RX_ROUTE")]
+        public string RouteOfMedicationDelivery { get; set; }
 
         [Column("RX_BASIS")]
         public string Basis { get; set; }
 
         [Column("RXNORM_CUI")]
-        public double? RXNORMConceptIdentifier { get; set; }
+        public float? RXNORMConceptIdentifier { get; set; }
 
-        //public virtual ICollection<Dispensing> Dispensings { get; set; }
-    }
+        [Column("RX_SOURCE")]
+        public string Source { get; set; }
 
-    internal class PrescriptionConfiguration : EntityTypeConfiguration<Prescription>
-    {
-        public PrescriptionConfiguration()
-        {
-            //HasMany(p => p.Dispensings).WithOptional(d => d.Prescription).HasForeignKey(d => d.PrescriptionID).WillCascadeOnDelete(false);
-        }
+        [Column("RX_DISPENSE_AS_WRITTEN"), MaxLength(2)]
+        public string DispenseAsWritten { get; set; }
     }
 }

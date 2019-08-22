@@ -423,6 +423,18 @@ namespace Lpp.Dns.Api.Requests
                         select new HomepageRouteDetailDTO
                         {
                             DataMartID = rdm.DataMartID,
+                            DataMart = rdm.DataMart.Name,
+                            RoutingType = rdm.RoutingType,
+                            ResponseID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ID).FirstOrDefault(),
+                            ResponseGroupID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroupID).FirstOrDefault(),
+                            ResponseGroup = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroup.Name).FirstOrDefault(),
+                            ResponseMessage = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseMessage).FirstOrDefault(),
+                            RespondedBy = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.RespondedBy.UserName).FirstOrDefault(),
+                            ResponseSubmittedBy = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedBy.UserName).FirstOrDefault(),
+                            ResponseSubmittedByID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedBy.ID).FirstOrDefault(),
+                            RespondedByID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.RespondedBy.ID).FirstOrDefault(),
+                            ResponseSubmittedOn = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedOn).FirstOrDefault(),
+                            ResponseTime = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseTime).FirstOrDefault(),
                             DueDate = rdm.DueDate,
                             Identifier = r.Identifier,
                             IsWorkflowRequest = r.WorkFlowActivityID.HasValue,
@@ -508,76 +520,116 @@ namespace Lpp.Dns.Api.Requests
                     return null;
                 }
 
-                QueryComposerRequestDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(requestDetails.Request);
-                if (dto == null || dto.Where.Criteria.Count() == 0)
+                QueryComposerRequestDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(requestDetails.Request); 
+
+                if(dto.Select.Fields.Any(x => x.Type == Lpp.QueryComposer.ModelTermsFactory.MetaDataRefreshID))
                 {
-                    return null;
-                }
+                    var predicate = PredicateBuilder.True<DataMart>();
+                    predicate = predicate.And(p => (requestDetails.ProjectID == null || p.Projects.Any(proj => proj.ProjectID == requestDetails.ProjectID))).And(dm => dm.AdapterID.HasValue
+                                             && dm.Deleted == false
+                                             && dm.Adapter.SupportedTerms.Any(t => t.TermID == Lpp.QueryComposer.ModelTermsFactory.MetaDataRefreshID)
+                                         );
 
-                bool primaryCriteria = true;
-                var predicate = PredicateBuilder.True<DataMart>();
-                predicate = predicate.And(p => (requestDetails.ProjectID == null || p.Projects.Any(proj => proj.ProjectID == requestDetails.ProjectID)));
+                    var requestID = requestDetails.RequestID;
 
-                foreach (var paragraph in dto.Where.Criteria)
-                {
-                    var inner = PredicateBuilder.True<DataMart>();
-                    List<Guid> paragraphTermIDs = paragraph.Terms.Select(p => p.Type).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Select(t => t.Type))).Distinct().ToList();
-
-                    //changing from looking at the installed model to the adapter set on the datamart.
-                    //require that the datamart supports all the specified terms
-                    inner = inner.And(dm => dm.AdapterID.HasValue
-                                         && dm.Deleted == false
-                                         && dm.Adapter.SupportedTerms.Any(t => paragraphTermIDs.Any(a => a == t.TermID)) 
-                                         && paragraphTermIDs.All(t => dm.Adapter.SupportedTerms.Any(st => st.TermID == t))
-                                     );
-
-                    if (!primaryCriteria)
+                    if (requestID == null)
                     {
-                        //For additional paragraphs, we need to use AND or OR. 
-                        if (paragraph.Operator == DTO.Enums.QueryComposerOperators.And)
-                        {
-                            predicate = predicate.And(inner.Expand());
-                        }
-                        else
-                        {
-                            predicate = predicate.Or(inner.Expand());
-                        }
+                        return null;
+
                     }
                     else
                     {
-                        //Use AND as this is the primary/first paragraph.
-                        primaryCriteria = false;
-                        predicate = predicate.And(inner.Expand());
+                        var datamartAcls = DataContext.DataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var projectDatamartAcls = DataContext.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var projectAcls = DataContext.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var requests = DataContext.Secure<Request>(Identity).Where(r => r.ID == requestID);
+
+                        var query = (from dm in DataContext.Secure<DataMart>(Identity)
+                                     from r in requests
+                                     let dmAcls = datamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID)
+                                     let pdmAcls = projectDatamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID && a.ProjectID == r.ProjectID)
+                                     let pAcls = projectAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.ProjectID == r.ProjectID)
+                                     where r.ID == requestID &&
+                                     (dmAcls.Any(a => a.Permission > 0) || pdmAcls.Any(a => a.Permission > 0) || pAcls.Any(a => a.Permission > 0))
+                                     &&
+                                     (dmAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0) && pAcls.All(a => a.Permission > 0))
+                                     orderby dm.Name
+                                     select dm).AsExpandable().Where(predicate).Map<DataMart, DataMartListDTO>();
+                        return query;
                     }
-                }
-
-                var requestID = requestDetails.RequestID;
-
-                if (requestID == null)
-                {
-                    return null;
-
                 }
                 else
                 {
-                    var datamartAcls = DataContext.DataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-                    var projectDatamartAcls = DataContext.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-                    var projectAcls = DataContext.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-                    var requests = DataContext.Secure<Request>(Identity).Where(r => r.ID == requestID);
+                    if (dto == null || dto.Where.Criteria.Count() == 0)
+                    {
+                        return null;
+                    }
 
-                    var query = (from dm in DataContext.Secure<DataMart>(Identity)
-                                 from r in requests
-                                 let dmAcls = datamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID)
-                                 let pdmAcls = projectDatamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID && a.ProjectID == r.ProjectID)
-                                 let pAcls = projectAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.ProjectID == r.ProjectID)
-                                 where r.ID == requestID &&
-                                 (dmAcls.Any(a => a.Permission > 0) || pdmAcls.Any(a => a.Permission > 0) || pAcls.Any(a => a.Permission > 0))
-                                 &&
-                                 (dmAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0) && pAcls.All(a => a.Permission > 0))
-                                 orderby dm.Name
-                                 select dm).AsExpandable().Where(predicate).Map<DataMart, DataMartListDTO>();
-                    return query;
-                }
+                    bool primaryCriteria = true;
+                    var predicate = PredicateBuilder.True<DataMart>();
+                    predicate = predicate.And(p => (requestDetails.ProjectID == null || p.Projects.Any(proj => proj.ProjectID == requestDetails.ProjectID)));
+
+                    foreach (var paragraph in dto.Where.Criteria)
+                    {
+                        var inner = PredicateBuilder.True<DataMart>();
+                        List<Guid> paragraphTermIDs = paragraph.Terms.Select(p => p.Type).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Select(t => t.Type))).Distinct().ToList();
+
+                        //changing from looking at the installed model to the adapter set on the datamart.
+                        //require that the datamart supports all the specified terms
+                        inner = inner.And(dm => dm.AdapterID.HasValue
+                                             && dm.Deleted == false
+                                             && dm.Adapter.SupportedTerms.Any(t => paragraphTermIDs.Any(a => a == t.TermID))
+                                             && paragraphTermIDs.All(t => dm.Adapter.SupportedTerms.Any(st => st.TermID == t))
+                                         );
+
+                        if (!primaryCriteria)
+                        {
+                            //For additional paragraphs, we need to use AND or OR. 
+                            if (paragraph.Operator == DTO.Enums.QueryComposerOperators.And)
+                            {
+                                predicate = predicate.And(inner.Expand());
+                            }
+                            else
+                            {
+                                predicate = predicate.Or(inner.Expand());
+                            }
+                        }
+                        else
+                        {
+                            //Use AND as this is the primary/first paragraph.
+                            primaryCriteria = false;
+                            predicate = predicate.And(inner.Expand());
+                        }
+                    }
+
+                    var requestID = requestDetails.RequestID;
+
+                    if (requestID == null)
+                    {
+                        return null;
+
+                    }
+                    else
+                    {
+                        var datamartAcls = DataContext.DataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var projectDatamartAcls = DataContext.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var projectAcls = DataContext.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+                        var requests = DataContext.Secure<Request>(Identity).Where(r => r.ID == requestID);
+
+                        var query = (from dm in DataContext.Secure<DataMart>(Identity)
+                                     from r in requests
+                                     let dmAcls = datamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID)
+                                     let pdmAcls = projectDatamartAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.DataMartID == dm.ID && a.ProjectID == r.ProjectID)
+                                     let pAcls = projectAcls.Where(a => a.RequestTypeID == r.RequestTypeID && a.ProjectID == r.ProjectID)
+                                     where r.ID == requestID &&
+                                     (dmAcls.Any(a => a.Permission > 0) || pdmAcls.Any(a => a.Permission > 0) || pAcls.Any(a => a.Permission > 0))
+                                     &&
+                                     (dmAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0) && pAcls.All(a => a.Permission > 0))
+                                     orderby dm.Name
+                                     select dm).AsExpandable().Where(predicate).Map<DataMart, DataMartListDTO>();
+                        return query;
+                    }
+                }                
             }
         }
 
@@ -681,7 +733,11 @@ namespace Lpp.Dns.Api.Requests
                              ResponseID = currentResonse.ID,
                              ResponseGroupID = currentResonse.ResponseGroupID,
                              ResponseGroup = currentResonse.ResponseGroup.Name,
-                             ResponseMessage = currentResonse.ResponseMessage
+                             ResponseMessage = currentResonse.ResponseMessage,
+                             ResponseSubmittedBy = currentResonse.SubmittedBy.UserName,
+                             ResponseSubmittedByID = currentResonse.SubmittedByID,
+                             ResponseSubmittedOn = currentResonse.SubmittedOn,
+                             ResponseTime = currentResonse.ResponseTime
                          };
             return routes;
         }
@@ -1258,6 +1314,66 @@ namespace Lpp.Dns.Api.Requests
             await DataContext.SaveChangesAsync();
 
             return r.ID;
+        }
+
+        /// <summary>
+        /// Endpoint for returning the Buget Info Metadata for a list of requests
+        /// </summary>
+        /// <param name="ids">A list of Requests Identifiers</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<RequestBudgetInfoDTO>> RetrieveBudgetInfoForRequests([FromUri] IEnumerable<Guid> ids)
+        {
+            var dto = new List<RequestBudgetInfoDTO>();
+
+            var requests = DataContext.Requests.Where(x => ids.Contains(x.ID));
+
+            foreach (var request in requests)
+            {
+                var activities = await DataContext.Activities.Where(x => x.ProjectID == request.ProjectID).ToArrayAsync();
+
+                var addDTO = new RequestBudgetInfoDTO
+                {
+                    ID = request.ID,
+                };
+
+                var firstActivity = activities.Where(x => x.ID == request.ActivityID).FirstOrDefault();
+
+                if(firstActivity.TaskLevel == 3)
+                {
+                    addDTO.BudgetActivityProjectID = firstActivity.ID;
+                    addDTO.BudgetActivityProjectDescription = firstActivity.Name;
+
+                    var budgetActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
+
+                    addDTO.BudgetActivityID = budgetActivity.ID;
+                    addDTO.BudgetActivityDescription = budgetActivity.Name;
+
+                    var budgetTaskOrderActivity = activities.Where(x => x.ID == budgetActivity.ParentActivityID.Value).FirstOrDefault();
+
+                    addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                    addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                }
+                else if(firstActivity.TaskLevel == 2)
+                {
+                    addDTO.BudgetActivityID = firstActivity.ID;
+                    addDTO.BudgetActivityDescription = firstActivity.Name;
+
+                    var budgetTaskOrderActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
+
+                    addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                    addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                }
+                else if(firstActivity.TaskLevel == 1)
+                {
+                    addDTO.BudgetTaskOrderID = firstActivity.ID;
+                    addDTO.BudgetTaskOrderDescription = firstActivity.Name;
+                }
+
+                dto.Add(addDTO);
+            }
+
+            return dto;
         }
     }
 }

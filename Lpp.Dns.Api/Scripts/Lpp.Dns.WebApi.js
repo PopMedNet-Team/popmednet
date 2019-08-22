@@ -2052,240 +2052,6 @@ var Dns;
             return Events;
         }());
         WebApi.Events = Events;
-        var DataModels = /** @class */ (function () {
-            function DataModels() {
-            }
-            DataModels.Get = function (ID, doNotHandleFail) {
-                var params = '';
-                if (ID != null)
-                    params += '&ID=' + ID;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataModels/Get' + params, doNotHandleFail);
-            };
-            DataModels.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataModels/List' + params, doNotHandleFail);
-            };
-            DataModels.ListDataModelProcessors = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataModels/ListDataModelProcessors' + params, doNotHandleFail);
-            };
-            DataModels.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if (IDs != null)
-                    for (var j = 0; j < IDs.length; j++) {
-                        params += '&IDs=' + IDs[j];
-                    }
-                if (permissions != null)
-                    for (var j = 0; j < permissions.length; j++) {
-                        params += '&permissions=' + permissions[j];
-                    }
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataModels/GetPermissions' + params, doNotHandleFail);
-            };
-            DataModels.InsertOrUpdate = function (values, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataModels/InsertOrUpdate', values, doNotHandleFail);
-            };
-            DataModels.Update = function (values, doNotHandleFail) {
-                return Helpers.PutAPIValue('DataModels/Update', values, doNotHandleFail);
-            };
-            DataModels.Insert = function (values, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataModels/Insert', values, doNotHandleFail);
-            };
-            DataModels.Delete = function (ID, doNotHandleFail) {
-                var params = '';
-                if (ID != null)
-                    for (var j = 0; j < ID.length; j++) {
-                        params += '&ID=' + ID[j];
-                    }
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.DeleteAPIValue('DataModels/Delete' + params, doNotHandleFail);
-            };
-            return DataModels;
-        }());
-        WebApi.DataModels = DataModels;
-        var DataMarts = /** @class */ (function () {
-            function DataMarts() {
-            }
-            DataMarts.Get = function (ID, doNotHandleFail) {
-                var params = '';
-                if (ID != null)
-                    params += '&ID=' + ID;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/Get' + params, doNotHandleFail);
-            };
-            DataMarts.GetByRoute = function (requestDataMartID, doNotHandleFail) {
-                var params = '';
-                if (requestDataMartID != null)
-                    params += '&requestDataMartID=' + requestDataMartID;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/GetByRoute' + params, doNotHandleFail);
-            };
-            DataMarts.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/List' + params, doNotHandleFail);
-            };
-            DataMarts.ListBasic = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/ListBasic' + params, doNotHandleFail);
-            };
-            DataMarts.DataMartTypeList = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/DataMartTypeList' + params, doNotHandleFail);
-            };
-            DataMarts.GetRequestTypesByDataMarts = function (DataMartId, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataMarts/GetRequestTypesByDataMarts', DataMartId, doNotHandleFail);
-            };
-            DataMarts.GetInstalledModelsByDataMart = function (DataMartId, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if (DataMartId != null)
-                    params += '&DataMartId=' + DataMartId;
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/GetInstalledModelsByDataMart' + params, doNotHandleFail);
-            };
-            DataMarts.UninstallModel = function (model, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataMarts/UninstallModel', model, doNotHandleFail);
-            };
-            DataMarts.Copy = function (datamartID, doNotHandleFail) {
-                var params = '';
-                if (datamartID != null)
-                    params += '&datamartID=' + datamartID;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/Copy' + params, doNotHandleFail);
-            };
-            DataMarts.Delete = function (ID, doNotHandleFail) {
-                var params = '';
-                if (ID != null)
-                    for (var j = 0; j < ID.length; j++) {
-                        params += '&ID=' + ID[j];
-                    }
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.DeleteAPIValue('DataMarts/Delete' + params, doNotHandleFail);
-            };
-            DataMarts.Insert = function (values, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataMarts/Insert', values, doNotHandleFail);
-            };
-            DataMarts.InsertOrUpdate = function (values, doNotHandleFail) {
-                return Helpers.PostAPIValue('DataMarts/InsertOrUpdate', values, doNotHandleFail);
-            };
-            DataMarts.Update = function (values, doNotHandleFail) {
-                return Helpers.PutAPIValue('DataMarts/Update', values, doNotHandleFail);
-            };
-            DataMarts.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if (IDs != null)
-                    for (var j = 0; j < IDs.length; j++) {
-                        params += '&IDs=' + IDs[j];
-                    }
-                if (permissions != null)
-                    for (var j = 0; j < permissions.length; j++) {
-                        params += '&permissions=' + permissions[j];
-                    }
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('DataMarts/GetPermissions' + params, doNotHandleFail);
-            };
-            return DataMarts;
-        }());
-        WebApi.DataMarts = DataMarts;
         var Tasks = /** @class */ (function () {
             function Tasks() {
             }
@@ -3138,6 +2904,26 @@ var Dns;
             Requests.CopyRequest = function (requestID, doNotHandleFail) {
                 return Helpers.PostAPIValue('Requests/CopyRequest', requestID, doNotHandleFail);
             };
+            Requests.RetrieveBudgetInfoForRequests = function (ids, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (ids != null)
+                    for (var j = 0; j < ids.length; j++) {
+                        params += '&ids=' + ids[j];
+                    }
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Requests/RetrieveBudgetInfoForRequests' + params, doNotHandleFail);
+            };
             Requests.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if (IDs != null)
@@ -3974,6 +3760,262 @@ var Dns;
             return Documents;
         }());
         WebApi.Documents = Documents;
+        var DataMartAvailability = /** @class */ (function () {
+            function DataMartAvailability() {
+            }
+            DataMartAvailability.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMartAvailability/List' + params, doNotHandleFail);
+            };
+            return DataMartAvailability;
+        }());
+        WebApi.DataMartAvailability = DataMartAvailability;
+        var DataModels = /** @class */ (function () {
+            function DataModels() {
+            }
+            DataModels.Get = function (ID, doNotHandleFail) {
+                var params = '';
+                if (ID != null)
+                    params += '&ID=' + ID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataModels/Get' + params, doNotHandleFail);
+            };
+            DataModels.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataModels/List' + params, doNotHandleFail);
+            };
+            DataModels.ListDataModelProcessors = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataModels/ListDataModelProcessors' + params, doNotHandleFail);
+            };
+            DataModels.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (IDs != null)
+                    for (var j = 0; j < IDs.length; j++) {
+                        params += '&IDs=' + IDs[j];
+                    }
+                if (permissions != null)
+                    for (var j = 0; j < permissions.length; j++) {
+                        params += '&permissions=' + permissions[j];
+                    }
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataModels/GetPermissions' + params, doNotHandleFail);
+            };
+            DataModels.InsertOrUpdate = function (values, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataModels/InsertOrUpdate', values, doNotHandleFail);
+            };
+            DataModels.Update = function (values, doNotHandleFail) {
+                return Helpers.PutAPIValue('DataModels/Update', values, doNotHandleFail);
+            };
+            DataModels.Insert = function (values, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataModels/Insert', values, doNotHandleFail);
+            };
+            DataModels.Delete = function (ID, doNotHandleFail) {
+                var params = '';
+                if (ID != null)
+                    for (var j = 0; j < ID.length; j++) {
+                        params += '&ID=' + ID[j];
+                    }
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.DeleteAPIValue('DataModels/Delete' + params, doNotHandleFail);
+            };
+            return DataModels;
+        }());
+        WebApi.DataModels = DataModels;
+        var DataMarts = /** @class */ (function () {
+            function DataMarts() {
+            }
+            DataMarts.Get = function (ID, doNotHandleFail) {
+                var params = '';
+                if (ID != null)
+                    params += '&ID=' + ID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/Get' + params, doNotHandleFail);
+            };
+            DataMarts.GetByRoute = function (requestDataMartID, doNotHandleFail) {
+                var params = '';
+                if (requestDataMartID != null)
+                    params += '&requestDataMartID=' + requestDataMartID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/GetByRoute' + params, doNotHandleFail);
+            };
+            DataMarts.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/List' + params, doNotHandleFail);
+            };
+            DataMarts.ListBasic = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/ListBasic' + params, doNotHandleFail);
+            };
+            DataMarts.DataMartTypeList = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/DataMartTypeList' + params, doNotHandleFail);
+            };
+            DataMarts.GetRequestTypesByDataMarts = function (DataMartId, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataMarts/GetRequestTypesByDataMarts', DataMartId, doNotHandleFail);
+            };
+            DataMarts.GetInstalledModelsByDataMart = function (DataMartId, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (DataMartId != null)
+                    params += '&DataMartId=' + DataMartId;
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/GetInstalledModelsByDataMart' + params, doNotHandleFail);
+            };
+            DataMarts.UninstallModel = function (model, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataMarts/UninstallModel', model, doNotHandleFail);
+            };
+            DataMarts.Copy = function (datamartID, doNotHandleFail) {
+                var params = '';
+                if (datamartID != null)
+                    params += '&datamartID=' + datamartID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/Copy' + params, doNotHandleFail);
+            };
+            DataMarts.Delete = function (ID, doNotHandleFail) {
+                var params = '';
+                if (ID != null)
+                    for (var j = 0; j < ID.length; j++) {
+                        params += '&ID=' + ID[j];
+                    }
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.DeleteAPIValue('DataMarts/Delete' + params, doNotHandleFail);
+            };
+            DataMarts.Insert = function (values, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataMarts/Insert', values, doNotHandleFail);
+            };
+            DataMarts.InsertOrUpdate = function (values, doNotHandleFail) {
+                return Helpers.PostAPIValue('DataMarts/InsertOrUpdate', values, doNotHandleFail);
+            };
+            DataMarts.Update = function (values, doNotHandleFail) {
+                return Helpers.PutAPIValue('DataMarts/Update', values, doNotHandleFail);
+            };
+            DataMarts.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (IDs != null)
+                    for (var j = 0; j < IDs.length; j++) {
+                        params += '&IDs=' + IDs[j];
+                    }
+                if (permissions != null)
+                    for (var j = 0; j < permissions.length; j++) {
+                        params += '&permissions=' + permissions[j];
+                    }
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('DataMarts/GetPermissions' + params, doNotHandleFail);
+            };
+            return DataMarts;
+        }());
+        WebApi.DataMarts = DataMarts;
         var Comments = /** @class */ (function () {
             function Comments() {
             }

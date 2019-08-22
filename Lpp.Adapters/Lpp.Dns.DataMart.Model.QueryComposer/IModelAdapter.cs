@@ -42,7 +42,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         /// Initializes the adapter with the provided settings.
         /// </summary>
         /// <param name="settings"></param>
-        void Initialize(IDictionary<string, object> settings);
+        /// <param name="requestID">The ID of the request being executed.</param>
+        void Initialize(IDictionary<string, object> settings, string requestID);
 
         /// <summary>
         /// Executes the specified request, if viewSQL is true only the response will only contain the sql for the query.
@@ -51,6 +52,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         /// <param name="viewSQL">Indicates if the request should be fully executed and results returned, or just the query sql.</param>
         /// <returns></returns>
         QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL);
+
+        /// <summary>
+        /// Returns the output documents for the last execution of the model adapter.
+        /// </summary>
+        /// <returns></returns>
+        QueryComposerModelProcessor.DocumentEx[] OutputDocuments();
 
         /// <summary>
         /// Indicates if the adapter can provide post processing for the response.

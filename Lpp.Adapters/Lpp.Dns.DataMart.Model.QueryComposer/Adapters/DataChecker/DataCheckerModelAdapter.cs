@@ -15,12 +15,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         string _connectionString = string.Empty;        
         DataContext db = null;
+        QueryComposerResponseDTO _currentResponse = null;
 
         public DataCheckerModelAdapter(RequestMetadata requestMetadata) : base(new Guid("321ADAA1-A350-4DD0-93DE-5DE658A507DF"), requestMetadata) { }
 
-        public override void Initialize(IDictionary<string, object> settings)
+        public override void Initialize(IDictionary<string, object> settings, string requestId)
         {
-            base.Initialize(settings);
+            base.Initialize(settings, requestId);
 
             _connectionString = Utilities.BuildConnectionString(settings, logger);
             db = DataContext.Create(_connectionString);
@@ -92,8 +93,32 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                 default:
                     throw new ArgumentOutOfRangeException("QueryType", request.Header.QueryType, "The specified query type is not supported by the Data Characterization Adapter. Value:" + (request.Header.QueryType.HasValue ? request.Header.QueryType.Value.ToString() : string.Empty));
             }
+
+
+            Guid requestID;
+            if (Guid.TryParse(_requestId, out requestID))
+                results.RequestID = requestID;
+
+            _currentResponse = results;
+
             return results;
+        }        
+
+        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        {
+            if (_currentResponse == null)
+                return new QueryComposerModelProcessor.DocumentEx[0];
+
+            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
         }
+
+        public override void PostProcess(QueryComposerResponseDTO response)
+        {
+            base.PostProcess(response);
+
+            _currentResponse = response;
+        }
+
 
         public override void Dispose()
         {

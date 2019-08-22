@@ -6,100 +6,98 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "82313779-09a4-48ef-9470-885511272c76",
-            "Name": "i_Sex",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-                "Values": { "Sex": "3" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "9616414e-d679-4d08-a72b-91b04b9b488f",
+            "ID": "d7323c8c-a715-4855-994c-167e63c0c7fe",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "75290001-0e78-490c-9635-a3ca01550704",
                 "Values": {
-                  "Codes": [ ],
+                  "Codes": [],
                   "CodeValues": [
                     {
-                      "Code": "Anti-Obesity - Fat Absorption Decreasing Agents",
-                      "Name": "Anti-Obesity - Fat Absorption Decreasing Agents",
+                      "Code": "Analgesic - Central Alpha-2 Receptor Agonists",
+                      "Name": "Analgesic - Central Alpha-2 Receptor Agonists",
                       "ExpireDate": null
                     }
                   ]
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "b69c259c-dcb9-4445-b060-0be4a6af951c",
+            "ID": "a79707e7-8f47-4aa6-9f6c-01ddf539f8dd",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "a08a5c08-c557-4f6a-8aa8-d2b8133eda69",
             "Name": "i_Year/Quarter_Observation Period",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "d62f0001-3fe1-4910-99a9-a3cb014c2bc7",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2010
+                  "EndYear": 2018,
+                  "ByYearsOrQuarters": "ByQuarters",
+                  "StartQuarter": "Q1",
+                  "EndQuarter": "Q3"
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "c42ee9c4-b44c-4d21-828a-cc47e0bec53b",
+            "ID": "a050dcb1-9ec3-444f-850d-63ea3b1e6ccd",
             "Name": "i_Settings",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "4" },
-                "Criteria": [ ]
+                "Values": { "Setting": "1" },
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": [ ]
+        "Terms": []
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "Sex_Count",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": 1,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
-        "FieldName": "Sex",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "Drug Class",
+        "Type": "75290001-0e78-490c-9635-a3ca01550704",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -108,16 +106,25 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
-        "FieldName": "Drug Class",
-        "Type": "75290001-0e78-490c-9635-a3ca01550704",
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -126,7 +133,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -135,7 +142,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       }
     ]

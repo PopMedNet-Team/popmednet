@@ -33,7 +33,6 @@ var Workflow;
                 }
                 ViewModel.prototype.PostComplete = function (resultID) {
                     var _this = this;
-                    debugger;
                     if (Plugins.Requests.QueryBuilder.Edit.vm !== undefined && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
                         var deleteFilesDeferred = $.Deferred().resolve();
                         if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel != null && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.DocumentsToDelete().length > 0) {
@@ -104,10 +103,18 @@ var Workflow;
                             if (item.Criteria().length === 0 && item.Terms().length === 0)
                                 emptyCriteraGroups = true;
                         });
-                        if (emptyCriteraGroups) {
+                        var canSkipCriteriaGroupCheck_1 = false;
+                        ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Select.Fields(), function (item) {
+                            if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(item.Type(), Plugins.Requests.QueryBuilder.MDQ.Terms.MetadataRefreshID)) {
+                                canSkipCriteriaGroupCheck_1 = true;
+                            }
+                        });
+                        if (emptyCriteraGroups && !canSkipCriteriaGroupCheck_1) {
                             Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
                             return;
                         }
+                        if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
+                            return;
                         var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
                         Requests.Details.PromptForComment()
                             .done(function (comment) {

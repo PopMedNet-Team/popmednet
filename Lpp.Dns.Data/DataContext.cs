@@ -225,6 +225,13 @@ namespace Lpp.Dns.Data
                 .CreateQuery<WorkflowHistoryItemDTO>("DataContext.GetWorkflowHistory(@RequestID, @UserID)", new ObjectParameter("RequestID", requestID), new ObjectParameter("UserID", userID));
         }
 
+        [DbFunction("DataContext", "GetDataMartsAvailability")]
+        public IQueryable<DataMartAvailabilityPeriodV2DTO> GetDataMartsAvailability(Guid userID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext
+                .CreateQuery<DataMartAvailabilityPeriodV2DTO>("DataContext.GetDataMartsAvailability(@UserID)", new ObjectParameter("UserID", userID));
+        }
+
         [DbFunction("CodeFirstDatabaseSchema", "GetRequestAssigneesForTask")]
         public string GetRequestAssigneesForTask(Guid taskID, string delimiter)
         {
@@ -328,6 +335,8 @@ namespace Lpp.Dns.Data
         public DbSet<DataMartInstalledModel> DataMartModels { get; set; }
         public DbSet<DataMartAvailabilityPeriod> DataMartAvailabilityPeriods { get; set; }
         public DbSet<DataAvailabilityPeriodCategory> DataAvailabilityPeriodCategory { get; set; }
+
+        public DbSet<DataMartAvailabilityPeriod_v2> DataMartAvailabilityPeriodsV2 { get; set; }
 
         public DbSet<LookupList> LookupLists { get; set; }
         public DbSet<LookupListCategory> LookupListCategories { get; set; }
@@ -456,6 +465,7 @@ namespace Lpp.Dns.Data
             modelBuilder.ComplexType<NotificationDTO>();
             modelBuilder.ComplexType<WorkflowHistoryItemDTO>();
             modelBuilder.ComplexType<ShortPermission>();
+            modelBuilder.ComplexType<DataMartAvailabilityPeriodV2DTO>();
             modelBuilder.Conventions.Add(new FunctionsConvention<DataContext>("dbo"));
 
             //Loads all of the configuration classes to define the joins. These are stored in the same file as the originating class

@@ -134,7 +134,11 @@ namespace Lpp.Dns.Data
                     ResponseID = dm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ID).FirstOrDefault(),
                     ResponseGroupID = dm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroupID).FirstOrDefault(),
                     ResponseGroup = dm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroup.Name).FirstOrDefault(),
-                    ResponseMessage = dm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseMessage).FirstOrDefault()
+                    ResponseMessage = dm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseMessage).FirstOrDefault(),
+                    ResponseSubmittedBy = dm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedBy.UserName).FirstOrDefault(),
+                    ResponseSubmittedByID = dm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedByID).FirstOrDefault(),
+                    ResponseSubmittedOn = dm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedOn).FirstOrDefault(),
+                    ResponseTime = dm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseTime).FirstOrDefault(),
                 };
             }
         }
@@ -150,6 +154,18 @@ namespace Lpp.Dns.Data
                 {
                     RequestDataMartID = rdm.ID,
                     DataMartID = rdm.DataMartID,
+                    DataMart = rdm.DataMart.Name,
+                    RoutingType = rdm.RoutingType,
+                    ResponseID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ID).FirstOrDefault(),
+                    ResponseGroupID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroupID).FirstOrDefault(),
+                    ResponseGroup = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseGroup.Name).FirstOrDefault(),
+                    ResponseMessage = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseMessage).FirstOrDefault(),
+                    RespondedBy = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.RespondedBy.UserName).FirstOrDefault(),
+                    ResponseSubmittedBy = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedBy.UserName).FirstOrDefault(),
+                    ResponseSubmittedByID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedBy.ID).FirstOrDefault(),
+                    RespondedByID = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.RespondedBy.ID).FirstOrDefault(),
+                    ResponseSubmittedOn = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.SubmittedOn).FirstOrDefault(),
+                    ResponseTime = rdm.Responses.Where(r => r.Count == r.RequestDataMart.Responses.Max(x => x.Count)).Select(r => r.ResponseTime).FirstOrDefault(),
                     RequestID = rdm.Request.ID,
                     DueDate = rdm.DueDate,
                     Identifier = rdm.Request.Identifier,

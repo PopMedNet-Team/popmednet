@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Lpp.Dns.DTO.Enums;
+using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lpp.Dns.DTO
 {
@@ -15,17 +12,27 @@ namespace Lpp.Dns.DTO
     public class HomepageRouteDetailDTO
     {
         /// <summary>
-        /// Gets or sets the RequestDataMartID.
+        /// Gets or Sets the Identifier of the RequestDatamart.
         /// </summary>
         [DataMember]
         public Guid RequestDataMartID { get; set; }
         /// <summary>
-        /// Gets or sets the DataMartID.
+        /// Gets or Sets the Name of the Datamart.
+        /// </summary>
+        [DataMember]
+        public string DataMart { get; set; }
+        /// <summary>
+        /// Gets or Sets the Identifier of the Datamart.
         /// </summary>
         [DataMember]
         public Guid DataMartID { get; set; }
         /// <summary>
-        /// Gets or sets the RequestID.
+        /// Gets or Sets the Type of Routing this Route is
+        /// </summary>
+        [DataMember]
+        public RoutingType? RoutingType { get; set; }
+        /// <summary>
+        /// Gets or sets the Identifier of the Request.
         /// </summary>
         [DataMember]
         public Guid RequestID { get; set; }
@@ -50,6 +57,56 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public string SubmittedByName { get; set; }
         /// <summary>
+        /// Gets or Sets the Identifier of the Current Response.
+        /// </summary>
+        [DataMember]
+        public Guid ResponseID { get; set; }
+        /// <summary>
+        /// Gets or Sets the Date when the Current Response was submitted on.
+        /// </summary>
+        [DataMember]
+        public DateTimeOffset? ResponseSubmittedOn { get; set; }
+        /// <summary>
+        /// Gets or Sets the Identifier if the User who Submitted the Current Response.
+        /// </summary>
+        [DataMember]
+        public Guid? ResponseSubmittedByID { get; set; }
+        /// <summary>
+        /// Gets or Sets the UserName of the user who submitted the Current Response.
+        /// </summary>
+        [DataMember]
+        public string ResponseSubmittedBy { get; set; }
+        /// <summary>
+        /// Gets or Sets the Time the Current Response was Responded To.
+        /// </summary>
+        [DataMember]
+        public DateTime? ResponseTime { get; set; }
+        /// <summary>
+        /// Gets or Sets the Identifier of the User who Responded to the Route.
+        /// </summary>
+        [DataMember]
+        public Guid? RespondedByID { get; set; }
+        /// <summary>
+        /// Gets or Sets the Username of the User who Responded to the Route.
+        /// </summary>
+        [DataMember]
+        public string RespondedBy { get; set; }
+        /// <summary>
+        /// Gets or Sets the Identifier of the Response Group of the Current Response.
+        /// </summary>
+        [DataMember]
+        public Guid? ResponseGroupID { get; set; }
+        /// <summary>
+        /// Gets or Sets the name of the Response Group of the Current Response.
+        /// </summary>
+        [DataMember]
+        public string ResponseGroup { get; set; }
+        /// <summary>
+        /// Gets or Sets the Message for the Current Reponse.
+        /// </summary>
+        [DataMember]
+        public string ResponseMessage { get; set; }
+        /// <summary>
         /// Gets or sets the display text for the status of the Request.
         /// </summary>
         [DataMember]
@@ -60,12 +117,12 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public DTO.Enums.RequestStatuses RequestStatus { get; set; }
         /// <summary>
-        /// The status of the routing.
+        /// Gets or Sets The status of the routing.
         /// </summary>
         [DataMember]
         public DTO.Enums.RoutingStatus RoutingStatus { get; set; }
         /// <summary>
-        /// The display text for the status of the routing.
+        /// Gets or Sets The display text for the status of the routing.
         /// </summary>
         [DataMember]
         public string RoutingStatusText { get; set; }

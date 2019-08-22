@@ -51,7 +51,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                                                  select v.Trim();
 
             model.Codes = string.Join(",", codeTermValues.Distinct());
-            model.CodeNames = null;//this is a collection of the full names of the codes selected, original query used in the crossjoin for the name of the code, pulling from db now
+
+            IEnumerable<string> codeNameValues = from t in codeTerms
+                                                 from v in t.GetCodeNameStringCollection()
+                                                 where !string.IsNullOrWhiteSpace(v)
+                                                 select v.Trim();
+
+            model.CodeNames = codeNameValues.Distinct().ToArray();
 
             DTO.Enums.Settings settingValue;
             var setting = GetAllCriteriaTerms(criteria, ModelTermsFactory.SettingID).FirstOrDefault();
@@ -90,7 +96,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
 
             string[] codes = ParseCodeValues(args, true).ToArray();
-            string codeCJ = QueryAdapter.BuildCrossJoinClauseForHCPCSProcedures("code", codes, "sd");
+            string codeCJ = QueryAdapter.BuildCrossJoinClauseForHCPCSProcedures("code", codes, args.CodeNames, "sd");
 
             cjcs += "," + codeCJ;
             query = query.Replace("%CODES%", string.Join(",", codes).Replace("%comma;", ",")); 

@@ -56,7 +56,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            pcori.Initialize(settings);
+            pcori.Initialize(settings, Guid.NewGuid().ToString("D"));
 
             //Execute the query
             return pcori.Execute(dto, false);

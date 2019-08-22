@@ -402,6 +402,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             }
         }
 
+        public static IEnumerable<string> GetCodeNameStringCollection(this DTO.QueryComposer.QueryComposerTermDTO term)
+        {
+            if (term.GetValue("CodeValues") == null)
+            {
+                //legacy stuff
+                var token = term.GetValue("Codes");
+                return token.Values<string>();
+            }
+            else
+            {
+                var token = term.GetValue("CodeValues");
+                List<Dns.DTO.CodeSelectorValueDTO> dto = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dns.DTO.CodeSelectorValueDTO>>(token.ToString());
+                return dto.Select(p => p.Name);
+            }
+        }
+
         /// <summary>
         /// Parses the "CodeValues" value of the term into a collection of Dns.DTO.CodeSelectorValueDTO.
         /// </summary>

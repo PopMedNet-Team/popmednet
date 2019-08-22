@@ -64,8 +64,12 @@ module Workflow.Response.Common.ResponseDetail {
             if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                 Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done((responses: Dns.Interfaces.IQueryComposerResponseDTO[]) => {
 
-                    if (responses == null || responses.length == 0)
+                    if (responses == null || responses.length == 0) {
+                        self.showApproveReject(false);
+                        self.ResponseContentComplete(true);
                         return;
+                    }
+                        
 
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
 

@@ -24,5 +24,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
         {
             throw new NotImplementedException();
         }
+
+        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

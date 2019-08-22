@@ -8,6 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © PopMedNet 2011-2019")]
 [assembly: ComVisible( false )]
 
-[assembly: AssemblyVersion( /*<VERSION>*/ "6.10.0.0" /*</VERSION>*/ )]
-[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.10.0.0" /*</VERSION>*/ )]
-[assembly: AssemblyInformationalVersion("2019.1")]
+[assembly: AssemblyVersion( /*<VERSION>*/ "6.12.0.0" /*</VERSION>*/ )]
+[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.12.0.0" /*</VERSION>*/ )]
+[assembly: AssemblyInformationalVersion("2019.3")]

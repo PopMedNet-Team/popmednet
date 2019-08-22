@@ -55,9 +55,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 
         readonly List<EventLogItem> EventLog = new List<EventLogItem>(20);
 
-        public override void Initialize(IDictionary<string, object> settings)
+        public override void Initialize(IDictionary<string, object> settings, string requestId)
         {
-            base.Initialize(settings);
+            base.Initialize(settings, requestId);
 
             RootMonitorFolder = settings.GetAsString("MonitorFolder", "");
             JobStartFilename = settings.GetAsString("SuccessfulInitializationFilename", "job_started.ok");
@@ -97,6 +97,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             //throw new NotSupportedException("This model adapter does not support post processing.");
         }
 
+
+        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        {
+            throw new NotSupportedException("This model adapter does not support providing output documents via OutputDocuments(), execute the adapter by calling StartRequest.");
+        }
 
         public IEnumerable<QueryComposerModelProcessor.DocumentEx> StartRequest(Model.DocumentWithStream[] requestDocs)
         {

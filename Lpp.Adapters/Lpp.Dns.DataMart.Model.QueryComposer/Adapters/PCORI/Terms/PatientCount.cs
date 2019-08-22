@@ -55,9 +55,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         public override IEnumerable<System.Linq.Expressions.MemberBinding> InnerSelectBindings(Type selectType, ParameterExpression sourceTypeParameter)
         {
             //Assumes that the sourceTypeParameter is going to be a pcori.Patient.
-            if (sourceTypeParameter.Type != typeof(PCORIQueryBuilder.Model.Patient))
-                throw new ArgumentException("Expected source parameter expression of type PCORIQueryBuild.Model.Patient, actual: " + sourceTypeParameter.Type.Name);
+            //if (sourceTypeParameter.Type != typeof(PCORIQueryBuilder.Model.Patient))
+            //    throw new ArgumentException("Expected source parameter expression of type PCORIQueryBuild.Model.Patient, actual: " + sourceTypeParameter.Type.Name);
 
+            //binding on dynamic class for joining to clinical trials table
+            if(selectType.Name == "ClinicalTrial_Join" || selectType.Name == "PRO_CM_Join")
+            {
+                return new[] {
+                Expression.Bind(
+                        selectType.GetProperty("PatientID"),
+                        Expression.Property( sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PatientID") )
+                   )
+                };
+
+            }
+
+            //binding on Patient class
             return new[] { 
                 Expression.Bind( 
                         selectType.GetProperty("PatientID"), 

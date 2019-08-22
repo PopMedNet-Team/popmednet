@@ -53,6 +53,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
         public TemplateNotes: string;
         public TermsColumnVisible: KnockoutComputed<boolean>;
         public StratifiersColumnVisible: KnockoutComputed<boolean>;
+        public IsMetadataRefreshValid: KnockoutObservable<boolean> = ko.observable(true);
 
         public AvailableOrganizations: KnockoutObservableArray<Dns.Interfaces.IOrganizationDTO>;
 
@@ -211,7 +212,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Diagnosis4digitID) ||
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Diagnosis5digitID) ||
                                     Terms.Compare(childTerm.TermID, Terms.ICD9Procedure3digitID) ||
-                                    Terms.Compare(childTerm.TermID, Terms.ICD9Procedure4digitID) 
+                                    Terms.Compare(childTerm.TermID, Terms.ICD9Procedure4digitID) ||
+                                    Terms.Compare(childTerm.TermID, Terms.MetadataRefreshID)
                                 ) {
                                     childTerm.IncludeInStratifiers = hasSummaryModel;
                                 }
@@ -609,6 +611,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 });
             }
 
+            self.ValidateMetadataRefreshTerm();
+
             self.onExportJSON = () => {
                 return 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(self.Request.toData()));
             };
@@ -701,17 +705,47 @@ module Plugins.Requests.QueryBuilder.MDQ {
         }
         
         public AreTermsValid(): boolean {
+            let self = this;
             var areTermsValid: boolean = true;
             $.each(this.TermValidators, function (key, value) {
                 if (!value()) {
                     areTermsValid = false;
                 }
             });
-            if (!areTermsValid) {
+
+            self.ValidateMetadataRefreshTerm();
+
+            if (!areTermsValid || !self.IsMetadataRefreshValid()) {
                 Global.Helpers.ShowAlert("Validation Error", "One or more terms contain invalid or insufficient information.");
                 return false;
             }
             return true;
+        }
+
+        private ValidateMetadataRefreshTerm() {
+            let self = this;
+
+            let hasMetadataRefreshTerm = $(".metadata-refresh-term").length > 0
+
+            if (hasMetadataRefreshTerm) {
+                if (self.Request.Where.Criteria().length > 1) {
+                    self.IsMetadataRefreshValid(false);
+                }
+                else if (self.Request.Where.Criteria()[0].Terms().length != 0 || self.Request.Where.Criteria()[0].Criteria().length != 0) {
+                    self.IsMetadataRefreshValid(false);
+                }
+                else {
+                    self.IsMetadataRefreshValid(true);
+                }
+
+                if (self.IsMetadataRefreshValid()) {
+                    ko.utils.arrayForEach(self.Request.Select.Fields(), (item) => {
+                        if (!Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(item.Type(), Plugins.Requests.QueryBuilder.MDQ.Terms.MetadataRefreshID)) {
+                            self.IsMetadataRefreshValid(false);
+                        }
+                    });
+                }
+            }
         }
 
         public FilterTermsForCriteria(terms: TermVm[]): TermVm[] {

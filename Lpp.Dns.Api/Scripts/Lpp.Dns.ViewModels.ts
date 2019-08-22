@@ -38,6 +38,51 @@ module Dns.ViewModels {
 	 	 	 };
 	 	 }
 	 }
+	 export class DataMartAvailabilityPeriodV2ViewModel extends ViewModel<Dns.Interfaces.IDataMartAvailabilityPeriodV2DTO>{
+	 	 public DataMartID: KnockoutObservable<any>;
+	 	 public DataMart: KnockoutObservable<string>;
+	 	 public DataTable: KnockoutObservable<string>;
+	 	 public PeriodCategory: KnockoutObservable<string>;
+	 	 public Period: KnockoutObservable<string>;
+	 	 public Year: KnockoutObservable<number>;
+	 	 public Quarter: KnockoutObservable<number>;
+	 	 constructor(DataMartAvailabilityPeriodV2DTO?: Dns.Interfaces.IDataMartAvailabilityPeriodV2DTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (DataMartAvailabilityPeriodV2DTO== null) {
+	 	 	 	 this.DataMartID = ko.observable<any>();
+	 	 	 	 this.DataMart = ko.observable<any>();
+	 	 	 	 this.DataTable = ko.observable<any>();
+	 	 	 	 this.PeriodCategory = ko.observable<any>();
+	 	 	 	 this.Period = ko.observable<any>();
+	 	 	 	 this.Year = ko.observable<any>();
+	 	 	 	 this.Quarter = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.DataMartID = ko.observable(DataMartAvailabilityPeriodV2DTO.DataMartID);
+	 	 	 	 this.DataMart = ko.observable(DataMartAvailabilityPeriodV2DTO.DataMart);
+	 	 	 	 this.DataTable = ko.observable(DataMartAvailabilityPeriodV2DTO.DataTable);
+	 	 	 	 this.PeriodCategory = ko.observable(DataMartAvailabilityPeriodV2DTO.PeriodCategory);
+	 	 	 	 this.Period = ko.observable(DataMartAvailabilityPeriodV2DTO.Period);
+	 	 	 	 this.Year = ko.observable(DataMartAvailabilityPeriodV2DTO.Year);
+	 	 	 	 this.Quarter = ko.observable(DataMartAvailabilityPeriodV2DTO.Quarter);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IDataMartAvailabilityPeriodV2DTO{
+	 	 	  return {
+	 	 	 	DataMartID: this.DataMartID(),
+	 	 	 	DataMart: this.DataMart(),
+	 	 	 	DataTable: this.DataTable(),
+	 	 	 	PeriodCategory: this.PeriodCategory(),
+	 	 	 	Period: this.Period(),
+	 	 	 	Year: this.Year(),
+	 	 	 	Quarter: this.Quarter(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class DataModelProcessorViewModel extends ViewModel<Dns.Interfaces.IDataModelProcessorDTO>{
 	 	 public ModelID: KnockoutObservable<any>;
 	 	 public Processor: KnockoutObservable<string>;
@@ -500,12 +545,24 @@ module Dns.ViewModels {
 	 }
 	 export class HomepageRouteDetailViewModel extends ViewModel<Dns.Interfaces.IHomepageRouteDetailDTO>{
 	 	 public RequestDataMartID: KnockoutObservable<any>;
+	 	 public DataMart: KnockoutObservable<string>;
 	 	 public DataMartID: KnockoutObservable<any>;
+	 	 public RoutingType: KnockoutObservable<Dns.Enums.RoutingType>;
 	 	 public RequestID: KnockoutObservable<any>;
 	 	 public Name: KnockoutObservable<string>;
 	 	 public Identifier: KnockoutObservable<number>;
 	 	 public SubmittedOn: KnockoutObservable<Date>;
 	 	 public SubmittedByName: KnockoutObservable<string>;
+	 	 public ResponseID: KnockoutObservable<any>;
+	 	 public ResponseSubmittedOn: KnockoutObservable<Date>;
+	 	 public ResponseSubmittedByID: KnockoutObservable<any>;
+	 	 public ResponseSubmittedBy: KnockoutObservable<string>;
+	 	 public ResponseTime: KnockoutObservable<Date>;
+	 	 public RespondedByID: KnockoutObservable<any>;
+	 	 public RespondedBy: KnockoutObservable<string>;
+	 	 public ResponseGroupID: KnockoutObservable<any>;
+	 	 public ResponseGroup: KnockoutObservable<string>;
+	 	 public ResponseMessage: KnockoutObservable<string>;
 	 	 public StatusText: KnockoutObservable<string>;
 	 	 public RequestStatus: KnockoutObservable<Dns.Enums.RequestStatuses>;
 	 	 public RoutingStatus: KnockoutObservable<Dns.Enums.RoutingStatus>;
@@ -522,12 +579,24 @@ module Dns.ViewModels {
 	 	 	  super();
 	 	 	 if (HomepageRouteDetailDTO== null) {
 	 	 	 	 this.RequestDataMartID = ko.observable<any>();
+	 	 	 	 this.DataMart = ko.observable<any>();
 	 	 	 	 this.DataMartID = ko.observable<any>();
+	 	 	 	 this.RoutingType = ko.observable<any>();
 	 	 	 	 this.RequestID = ko.observable<any>();
 	 	 	 	 this.Name = ko.observable<any>();
 	 	 	 	 this.Identifier = ko.observable<any>();
 	 	 	 	 this.SubmittedOn = ko.observable<any>();
 	 	 	 	 this.SubmittedByName = ko.observable<any>();
+	 	 	 	 this.ResponseID = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedOn = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedByID = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedBy = ko.observable<any>();
+	 	 	 	 this.ResponseTime = ko.observable<any>();
+	 	 	 	 this.RespondedByID = ko.observable<any>();
+	 	 	 	 this.RespondedBy = ko.observable<any>();
+	 	 	 	 this.ResponseGroupID = ko.observable<any>();
+	 	 	 	 this.ResponseGroup = ko.observable<any>();
+	 	 	 	 this.ResponseMessage = ko.observable<any>();
 	 	 	 	 this.StatusText = ko.observable<any>();
 	 	 	 	 this.RequestStatus = ko.observable<any>();
 	 	 	 	 this.RoutingStatus = ko.observable<any>();
@@ -541,12 +610,24 @@ module Dns.ViewModels {
 	 	 	 	 this.CanEditMetadata = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.RequestDataMartID = ko.observable(HomepageRouteDetailDTO.RequestDataMartID);
+	 	 	 	 this.DataMart = ko.observable(HomepageRouteDetailDTO.DataMart);
 	 	 	 	 this.DataMartID = ko.observable(HomepageRouteDetailDTO.DataMartID);
+	 	 	 	 this.RoutingType = ko.observable(HomepageRouteDetailDTO.RoutingType);
 	 	 	 	 this.RequestID = ko.observable(HomepageRouteDetailDTO.RequestID);
 	 	 	 	 this.Name = ko.observable(HomepageRouteDetailDTO.Name);
 	 	 	 	 this.Identifier = ko.observable(HomepageRouteDetailDTO.Identifier);
 	 	 	 	 this.SubmittedOn = ko.observable(HomepageRouteDetailDTO.SubmittedOn);
 	 	 	 	 this.SubmittedByName = ko.observable(HomepageRouteDetailDTO.SubmittedByName);
+	 	 	 	 this.ResponseID = ko.observable(HomepageRouteDetailDTO.ResponseID);
+	 	 	 	 this.ResponseSubmittedOn = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedOn);
+	 	 	 	 this.ResponseSubmittedByID = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedByID);
+	 	 	 	 this.ResponseSubmittedBy = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedBy);
+	 	 	 	 this.ResponseTime = ko.observable(HomepageRouteDetailDTO.ResponseTime);
+	 	 	 	 this.RespondedByID = ko.observable(HomepageRouteDetailDTO.RespondedByID);
+	 	 	 	 this.RespondedBy = ko.observable(HomepageRouteDetailDTO.RespondedBy);
+	 	 	 	 this.ResponseGroupID = ko.observable(HomepageRouteDetailDTO.ResponseGroupID);
+	 	 	 	 this.ResponseGroup = ko.observable(HomepageRouteDetailDTO.ResponseGroup);
+	 	 	 	 this.ResponseMessage = ko.observable(HomepageRouteDetailDTO.ResponseMessage);
 	 	 	 	 this.StatusText = ko.observable(HomepageRouteDetailDTO.StatusText);
 	 	 	 	 this.RequestStatus = ko.observable(HomepageRouteDetailDTO.RequestStatus);
 	 	 	 	 this.RoutingStatus = ko.observable(HomepageRouteDetailDTO.RoutingStatus);
@@ -564,12 +645,24 @@ module Dns.ViewModels {
 	 	 public toData(): Dns.Interfaces.IHomepageRouteDetailDTO{
 	 	 	  return {
 	 	 	 	RequestDataMartID: this.RequestDataMartID(),
+	 	 	 	DataMart: this.DataMart(),
 	 	 	 	DataMartID: this.DataMartID(),
+	 	 	 	RoutingType: this.RoutingType(),
 	 	 	 	RequestID: this.RequestID(),
 	 	 	 	Name: this.Name(),
 	 	 	 	Identifier: this.Identifier(),
 	 	 	 	SubmittedOn: this.SubmittedOn(),
 	 	 	 	SubmittedByName: this.SubmittedByName(),
+	 	 	 	ResponseID: this.ResponseID(),
+	 	 	 	ResponseSubmittedOn: this.ResponseSubmittedOn(),
+	 	 	 	ResponseSubmittedByID: this.ResponseSubmittedByID(),
+	 	 	 	ResponseSubmittedBy: this.ResponseSubmittedBy(),
+	 	 	 	ResponseTime: this.ResponseTime(),
+	 	 	 	RespondedByID: this.RespondedByID(),
+	 	 	 	RespondedBy: this.RespondedBy(),
+	 	 	 	ResponseGroupID: this.ResponseGroupID(),
+	 	 	 	ResponseGroup: this.ResponseGroup(),
+	 	 	 	ResponseMessage: this.ResponseMessage(),
 	 	 	 	StatusText: this.StatusText(),
 	 	 	 	RequestStatus: this.RequestStatus(),
 	 	 	 	RoutingStatus: this.RoutingStatus(),
@@ -7587,6 +7680,53 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class RequestBudgetInfoViewModel extends EntityDtoWithIDViewModel<Dns.Interfaces.IRequestBudgetInfoDTO>{
+	 	 public BudgetActivityID: KnockoutObservable<any>;
+	 	 public BudgetActivityDescription: KnockoutObservable<string>;
+	 	 public BudgetActivityProjectID: KnockoutObservable<any>;
+	 	 public BudgetActivityProjectDescription: KnockoutObservable<string>;
+	 	 public BudgetTaskOrderID: KnockoutObservable<any>;
+	 	 public BudgetTaskOrderDescription: KnockoutObservable<string>;
+	 	 constructor(RequestBudgetInfoDTO?: Dns.Interfaces.IRequestBudgetInfoDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (RequestBudgetInfoDTO== null) {
+	 	 	 	 this.BudgetActivityID = ko.observable<any>();
+	 	 	 	 this.BudgetActivityDescription = ko.observable<any>();
+	 	 	 	 this.BudgetActivityProjectID = ko.observable<any>();
+	 	 	 	 this.BudgetActivityProjectDescription = ko.observable<any>();
+	 	 	 	 this.BudgetTaskOrderID = ko.observable<any>();
+	 	 	 	 this.BudgetTaskOrderDescription = ko.observable<any>();
+	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.Timestamp = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.BudgetActivityID = ko.observable(RequestBudgetInfoDTO.BudgetActivityID);
+	 	 	 	 this.BudgetActivityDescription = ko.observable(RequestBudgetInfoDTO.BudgetActivityDescription);
+	 	 	 	 this.BudgetActivityProjectID = ko.observable(RequestBudgetInfoDTO.BudgetActivityProjectID);
+	 	 	 	 this.BudgetActivityProjectDescription = ko.observable(RequestBudgetInfoDTO.BudgetActivityProjectDescription);
+	 	 	 	 this.BudgetTaskOrderID = ko.observable(RequestBudgetInfoDTO.BudgetTaskOrderID);
+	 	 	 	 this.BudgetTaskOrderDescription = ko.observable(RequestBudgetInfoDTO.BudgetTaskOrderDescription);
+	 	 	 	 this.ID = ko.observable(RequestBudgetInfoDTO.ID);
+	 	 	 	 this.Timestamp = ko.observable(RequestBudgetInfoDTO.Timestamp);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IRequestBudgetInfoDTO{
+	 	 	  return {
+	 	 	 	BudgetActivityID: this.BudgetActivityID(),
+	 	 	 	BudgetActivityDescription: this.BudgetActivityDescription(),
+	 	 	 	BudgetActivityProjectID: this.BudgetActivityProjectID(),
+	 	 	 	BudgetActivityProjectDescription: this.BudgetActivityProjectDescription(),
+	 	 	 	BudgetTaskOrderID: this.BudgetTaskOrderID(),
+	 	 	 	BudgetTaskOrderDescription: this.BudgetTaskOrderDescription(),
+	 	 	 	ID: this.ID(),
+	 	 	 	Timestamp: this.Timestamp(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class RequestMetadataViewModel extends EntityDtoWithIDViewModel<Dns.Interfaces.IRequestMetadataDTO>{
 	 	 public Name: KnockoutObservable<string>;
 	 	 public Description: KnockoutObservable<string>;
@@ -8645,6 +8785,10 @@ module Dns.ViewModels {
 	 	 public ResponseGroupID: KnockoutObservable<any>;
 	 	 public ResponseGroup: KnockoutObservable<string>;
 	 	 public ResponseMessage: KnockoutObservable<string>;
+	 	 public ResponseSubmittedOn: KnockoutObservable<Date>;
+	 	 public ResponseSubmittedByID: KnockoutObservable<any>;
+	 	 public ResponseSubmittedBy: KnockoutObservable<string>;
+	 	 public ResponseTime: KnockoutObservable<Date>;
 	 	 constructor(RequestDataMartDTO?: Dns.Interfaces.IRequestDataMartDTO)
 	 	  {
 	 	 	  super();
@@ -8665,6 +8809,10 @@ module Dns.ViewModels {
 	 	 	 	 this.ResponseGroupID = ko.observable<any>();
 	 	 	 	 this.ResponseGroup = ko.observable<any>();
 	 	 	 	 this.ResponseMessage = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedOn = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedByID = ko.observable<any>();
+	 	 	 	 this.ResponseSubmittedBy = ko.observable<any>();
+	 	 	 	 this.ResponseTime = ko.observable<any>();
 	 	 	 	 this.ID = ko.observable<any>();
 	 	 	 	 this.Timestamp = ko.observable<any>();
 	 	 	  }else{
@@ -8684,6 +8832,10 @@ module Dns.ViewModels {
 	 	 	 	 this.ResponseGroupID = ko.observable(RequestDataMartDTO.ResponseGroupID);
 	 	 	 	 this.ResponseGroup = ko.observable(RequestDataMartDTO.ResponseGroup);
 	 	 	 	 this.ResponseMessage = ko.observable(RequestDataMartDTO.ResponseMessage);
+	 	 	 	 this.ResponseSubmittedOn = ko.observable(RequestDataMartDTO.ResponseSubmittedOn);
+	 	 	 	 this.ResponseSubmittedByID = ko.observable(RequestDataMartDTO.ResponseSubmittedByID);
+	 	 	 	 this.ResponseSubmittedBy = ko.observable(RequestDataMartDTO.ResponseSubmittedBy);
+	 	 	 	 this.ResponseTime = ko.observable(RequestDataMartDTO.ResponseTime);
 	 	 	 	 this.ID = ko.observable(RequestDataMartDTO.ID);
 	 	 	 	 this.Timestamp = ko.observable(RequestDataMartDTO.Timestamp);
 	 	 	 }
@@ -8707,6 +8859,10 @@ module Dns.ViewModels {
 	 	 	 	ResponseGroupID: this.ResponseGroupID(),
 	 	 	 	ResponseGroup: this.ResponseGroup(),
 	 	 	 	ResponseMessage: this.ResponseMessage(),
+	 	 	 	ResponseSubmittedOn: this.ResponseSubmittedOn(),
+	 	 	 	ResponseSubmittedByID: this.ResponseSubmittedByID(),
+	 	 	 	ResponseSubmittedBy: this.ResponseSubmittedBy(),
+	 	 	 	ResponseTime: this.ResponseTime(),
 	 	 	 	ID: this.ID(),
 	 	 	 	Timestamp: this.Timestamp(),
 	 	 	  };

@@ -1,6 +1,5 @@
 ﻿using Lpp.Dns.Data;
 using Lpp.Dns.DTO;
-using Lpp.Dns.WebServices;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -29,9 +28,9 @@ namespace Lpp.Dns.Api.Users
     {
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
-        /// Gets the specified User
+        /// Returns a specifiec User.
         /// </summary>
-        /// <param name="ID"></param>
+        /// <param name="ID">The Identifier of the User.</param>
         /// <returns></returns>
         [HttpGet]
         public override async Task<UserDTO> Get(Guid ID)
@@ -40,7 +39,7 @@ namespace Lpp.Dns.Api.Users
         }
 
         /// <summary>
-        /// Returns a secure list of Users that can be filtered using OData
+        /// Returns a secure list based on the logged in User permissions of Users that can be filtered using OData.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -1159,7 +1158,7 @@ namespace Lpp.Dns.Api.Users
         /// <summary>
         /// Check if user password has been set.
         /// </summary>
-        /// <param name="userID"></param>
+        /// <param name="userID">The Identifier of the User</param>
         /// <returns></returns>
         [HttpGet]
         public async Task<bool> HasPassword(Guid userID)

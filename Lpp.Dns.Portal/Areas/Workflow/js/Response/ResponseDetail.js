@@ -52,8 +52,11 @@ var Workflow;
                         self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
                         if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                             Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done(function (responses) {
-                                if (responses == null || responses.length == 0)
+                                if (responses == null || responses.length == 0) {
+                                    self.showApproveReject(false);
+                                    self.ResponseContentComplete(true);
                                     return;
+                                }
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var panels = [];
                                 responses.forEach(function (resp) {

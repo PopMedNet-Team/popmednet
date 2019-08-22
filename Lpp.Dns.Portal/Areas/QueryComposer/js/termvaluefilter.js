@@ -100,6 +100,13 @@ var Plugins;
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "MetadataRefreshID", {
+                        get: function () {
+                            return '421BAC16-CAAC-4918-8760-A10FF76CC87B';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Terms, "ConditionID", {
                         get: function () {
                             return 'EC593176-D0BF-4E5A-BCFF-4BBD13E88DBF';

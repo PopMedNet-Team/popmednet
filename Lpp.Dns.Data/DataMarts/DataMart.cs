@@ -302,6 +302,7 @@ namespace Lpp.Dns.Data
         public virtual ICollection<RequestDataMart> Requests { get; set; }
         public virtual ICollection<ProjectDataMart> Projects { get; set; }
         public virtual ICollection<DataMartInstalledModel> Models { get; set; }
+        public virtual ICollection<DataMartAvailabilityPeriod_v2> DataMartAvailabilityPeriods_v2 { get; set; }
 
         public virtual ICollection<AclDataMart> DataMartAcls { get; set; }
         public virtual ICollection<AclOrganizationDataMart> OrganizationDataMarts { get; set; }
@@ -332,6 +333,8 @@ namespace Lpp.Dns.Data
             HasMany(t => t.Requests).WithRequired(t => t.DataMart).HasForeignKey(t => t.DataMartID).WillCascadeOnDelete(true);
 
             HasMany(t => t.Projects).WithRequired(t => t.DataMart).HasForeignKey(t => t.DataMartID).WillCascadeOnDelete(true);
+
+            HasMany(t => t.DataMartAvailabilityPeriods_v2).WithRequired(t => t.DataMart).HasForeignKey(t => t.DataMartID).WillCascadeOnDelete(false);
 
             HasMany(t => t.Models)
                 .WithRequired(t => t.DataMart)

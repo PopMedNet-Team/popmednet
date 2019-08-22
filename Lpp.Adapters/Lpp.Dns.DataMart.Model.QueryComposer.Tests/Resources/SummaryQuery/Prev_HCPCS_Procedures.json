@@ -6,109 +6,114 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "6c0fa238-d5a1-4b2d-a725-da8fec77a224",
+            "ID": "d9fbd147-50ec-4c21-ad78-a771f6551f8b",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
                 "Values": {
-                  "Codes": [ ],
+                  "Codes": [],
                   "CodeValues": [
                     {
-                      "Code": "0054T",
-                      "Name": "BONE SURGERY USING COMPUTER",
+                      "Code": "00120",
+                      "Name": "ANESTH EAR SURGERY",
+                      "ExpireDate": null
+                    },
+                    {
+                      "Code": "11922",
+                      "Name": "CORRECT SKIN COLOR EA 20.0CM",
+                      "ExpireDate": null
+                    },
+                    {
+                      "Code": "Q2004",
+                      "Name": "IRRIG SOL TX BLADDER CALCULI 500 ML",
                       "ExpireDate": null
                     }
                   ]
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "a88f035c-b58a-46ba-95bb-15f14d355030",
-            "Name": "i_Sex",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-                "Values": { "Sex": "3" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "cc27cfb3-3062-4b30-9cf0-15954e61abf0",
+            "ID": "fff75ee3-7951-4d81-971a-9486553923d9",
             "Name": "i_Settings",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
                 "Values": { "Setting": "4" },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "81b27429-c797-4b96-b6f7-b543c11e1327",
+            "ID": "aef53fb0-2826-446a-bae2-f3ecb4fdc396",
             "Name": "i_Year_Observation Period",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2010
+                  "EndYear": 2018
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "4a251c72-0cef-4a89-94fc-59cf0980cbcb",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": [ ]
+        "Terms": []
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "HCPCS_Count",
-        "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": 1,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "HCPCS",
         "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
-        "FieldName": "Sex_Count",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "HCPCS_Count",
+        "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -117,7 +122,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -126,7 +140,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -135,7 +149,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       }
     ]

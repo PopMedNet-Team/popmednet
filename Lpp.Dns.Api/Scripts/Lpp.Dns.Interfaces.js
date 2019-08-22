@@ -160,6 +160,7 @@ var Dns;
             QueryComposerQueryTypes[QueryComposerQueryTypes["SummaryTable_Prevalence"] = 40] = "SummaryTable_Prevalence";
             QueryComposerQueryTypes[QueryComposerQueryTypes["SummaryTable_Incidence"] = 41] = "SummaryTable_Incidence";
             QueryComposerQueryTypes[QueryComposerQueryTypes["SummaryTable_MFU"] = 42] = "SummaryTable_MFU";
+            QueryComposerQueryTypes[QueryComposerQueryTypes["SummaryTable_Metadata_Refresh"] = 43] = "SummaryTable_Metadata_Refresh";
             QueryComposerQueryTypes[QueryComposerQueryTypes["Sql"] = 50] = "Sql";
         })(QueryComposerQueryTypes = Enums.QueryComposerQueryTypes || (Enums.QueryComposerQueryTypes = {}));
         Enums.QueryComposerQueryTypesTranslation = [
@@ -180,6 +181,7 @@ var Dns;
             { value: QueryComposerQueryTypes.SummaryTable_Prevalence, text: 'Summary Table: Prevalence' },
             { value: QueryComposerQueryTypes.SummaryTable_Incidence, text: 'Summary Table: Incidence' },
             { value: QueryComposerQueryTypes.SummaryTable_MFU, text: 'Summary Table: MFU' },
+            { value: QueryComposerQueryTypes.SummaryTable_Metadata_Refresh, text: 'Summary Table: Metadata Refresh' },
             { value: QueryComposerQueryTypes.Sql, text: 'Sql Query' },
         ];
         var QueryComposerSections;
@@ -1185,6 +1187,17 @@ var Dns;
 (function (Dns) {
     var Interfaces;
     (function (Interfaces) {
+        Interfaces.KendoModelDataMartAvailabilityPeriodV2DTO = {
+            fields: {
+                'DataMartID': { type: 'any', nullable: false },
+                'DataMart': { type: 'string', nullable: false },
+                'DataTable': { type: 'string', nullable: false },
+                'PeriodCategory': { type: 'string', nullable: false },
+                'Period': { type: 'string', nullable: false },
+                'Year': { type: 'number', nullable: false },
+                'Quarter': { type: 'number', nullable: true },
+            }
+        };
         Interfaces.KendoModelDataModelProcessorDTO = {
             fields: {
                 'ModelID': { type: 'any', nullable: false },
@@ -1299,12 +1312,24 @@ var Dns;
         Interfaces.KendoModelHomepageRouteDetailDTO = {
             fields: {
                 'RequestDataMartID': { type: 'any', nullable: false },
+                'DataMart': { type: 'string', nullable: false },
                 'DataMartID': { type: 'any', nullable: false },
+                'RoutingType': { type: 'dns.enums.routingtype', nullable: true },
                 'RequestID': { type: 'any', nullable: false },
                 'Name': { type: 'string', nullable: false },
                 'Identifier': { type: 'number', nullable: false },
                 'SubmittedOn': { type: 'date', nullable: true },
                 'SubmittedByName': { type: 'string', nullable: false },
+                'ResponseID': { type: 'any', nullable: false },
+                'ResponseSubmittedOn': { type: 'date', nullable: true },
+                'ResponseSubmittedByID': { type: 'any', nullable: true },
+                'ResponseSubmittedBy': { type: 'string', nullable: false },
+                'ResponseTime': { type: 'date', nullable: true },
+                'RespondedByID': { type: 'any', nullable: true },
+                'RespondedBy': { type: 'string', nullable: false },
+                'ResponseGroupID': { type: 'any', nullable: true },
+                'ResponseGroup': { type: 'string', nullable: false },
+                'ResponseMessage': { type: 'string', nullable: false },
                 'StatusText': { type: 'string', nullable: false },
                 'RequestStatus': { type: 'dns.enums.requeststatuses', nullable: false },
                 'RoutingStatus': { type: 'dns.enums.routingstatus', nullable: false },
@@ -3047,6 +3072,18 @@ var Dns;
                 'Timestamp': { type: 'any', nullable: false },
             }
         };
+        Interfaces.KendoModelRequestBudgetInfoDTO = {
+            fields: {
+                'BudgetActivityID': { type: 'any', nullable: true },
+                'BudgetActivityDescription': { type: 'string', nullable: false },
+                'BudgetActivityProjectID': { type: 'any', nullable: true },
+                'BudgetActivityProjectDescription': { type: 'string', nullable: false },
+                'BudgetTaskOrderID': { type: 'any', nullable: true },
+                'BudgetTaskOrderDescription': { type: 'string', nullable: false },
+                'ID': { type: 'any', nullable: true },
+                'Timestamp': { type: 'any', nullable: false },
+            }
+        };
         Interfaces.KendoModelRequestMetadataDTO = {
             fields: {
                 'Name': { type: 'string', nullable: false },
@@ -3336,6 +3373,10 @@ var Dns;
                 'ResponseGroupID': { type: 'any', nullable: true },
                 'ResponseGroup': { type: 'string', nullable: false },
                 'ResponseMessage': { type: 'string', nullable: false },
+                'ResponseSubmittedOn': { type: 'date', nullable: true },
+                'ResponseSubmittedByID': { type: 'any', nullable: true },
+                'ResponseSubmittedBy': { type: 'string', nullable: false },
+                'ResponseTime': { type: 'date', nullable: true },
                 'ID': { type: 'any', nullable: true },
                 'Timestamp': { type: 'any', nullable: false },
             }

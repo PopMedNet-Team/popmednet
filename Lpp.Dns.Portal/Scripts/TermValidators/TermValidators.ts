@@ -1,4 +1,5 @@
-﻿interface KnockoutBindingHandlers {
+﻿
+interface KnockoutBindingHandlers {
     dateRangeTermValidator: KnockoutBindingHandler;
     patientReportedOutcomeEncounterTermValidator: KnockoutBindingHandler;
     patientReportedOutcomeTermValidator: KnockoutBindingHandler;

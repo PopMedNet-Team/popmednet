@@ -100,6 +100,11 @@ namespace Lpp.Dns.DTO.Enums
         [EnumMember, Description("Summary Table: MFU")]
         SummaryTable_MFU = 42,
         /// <summary>
+        /// Indicates the query is Data Characterization: Metadata Refresh.
+        /// </summary>
+        [EnumMember, Description("Summary Table: Metadata Refresh")]
+        SummaryTable_Metadata_Refresh = 43,
+        /// <summary>
         /// Indicates the query is a Raw Sql Query.
         /// </summary>
         [EnumMember, Description("Sql Query")]

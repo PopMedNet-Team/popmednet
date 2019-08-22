@@ -19,7 +19,6 @@ module Workflow.SummaryQuery.RequestReview {
         }
 
         public PostComplete(resultID: string) {
-            debugger;
             if (Plugins.Requests.QueryBuilder.Edit.vm !== undefined && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
                 var deleteFilesDeferred = $.Deferred().resolve();
 
@@ -94,10 +93,21 @@ module Workflow.SummaryQuery.RequestReview {
                         emptyCriteraGroups = true;
                 });
 
-                if (emptyCriteraGroups) {
+                let canSkipCriteriaGroupCheck: boolean = false;
+
+                ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Select.Fields(), (item) => {
+                    if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(item.Type(), Plugins.Requests.QueryBuilder.MDQ.Terms.MetadataRefreshID)) {
+                        canSkipCriteriaGroupCheck = true;
+                    }
+                });
+
+                if (emptyCriteraGroups && !canSkipCriteriaGroupCheck) {
                     Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
                     return;
                 }
+
+                if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
+                    return;
 
                 var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
 

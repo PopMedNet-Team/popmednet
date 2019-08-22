@@ -16,12 +16,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         string _connectionString = string.Empty;        
         DataContext db = null;
+        QueryComposerResponseDTO _currentResponse = null;
 
         public ESPModelAdapter(RequestMetadata requestMetadata) : base(new Guid("7C69584A-5602-4FC0-9F3F-A27F329B1113"), requestMetadata) { }
 
-        public override void Initialize(IDictionary<string, object> settings)
+        public override void Initialize(IDictionary<string, object> settings, string requestId)
         {
-            base.Initialize(settings);
+            base.Initialize(settings, requestId);
 
             _connectionString = Utilities.BuildConnectionString(settings, logger);
             db = DataContext.Create(_connectionString);
@@ -105,6 +106,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                     Results = new[] { queryResults },
                     Properties = columnProperties
                 };
+
+                Guid requestID;
+                if (results.RequestID == default(Guid) && Guid.TryParse(_requestId, out requestID))
+                    results.RequestID = requestID;
+
+                _currentResponse = results;
+
                 return results;
             }
             else
@@ -589,7 +597,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 };
 
                 if (request.ID.HasValue)
+                {
                     response.RequestID = request.ID.Value;
+                }
+                else
+                {
+                    Guid requestID;
+                    if (Guid.TryParse(_requestId, out requestID))
+                        response.RequestID = requestID;
+
+                    _currentResponse = response;
+                }
 
                 return response; 
             }
@@ -759,6 +777,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
             }
             return query;
+        }
+
+        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        {
+            if (_currentResponse == null)
+                return new QueryComposerModelProcessor.DocumentEx[0];
+
+            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
+        }
+
+        public override void PostProcess(QueryComposerResponseDTO response)
+        {
+            base.PostProcess(response);
+
+            _currentResponse = response;
         }
 
         public override void Dispose()

@@ -6,64 +6,16 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "c48a3ed3-e91b-4d33-9596-eb0747a284ac",
-            "Name": "i_Sex",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-                "Values": { "Sex": "3" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "54e2e2ac-2bbd-4c11-8092-549349098fa5",
-            "Name": "i_Year_Observation Period",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
-                "Values": {
-                  "StartYear": 2000,
-                  "EndYear": 2010
-                },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "81e77d8b-83d6-4526-84ec-d97b7b17fc6a",
-            "Name": "i_Settings",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "4" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "ad7aead9-b3f5-45a2-bb14-221148dc4030",
+            "ID": "ce3c64a4-706b-4d2e-8ab0-1c12cd84d34b",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
                 "Values": {
-                  "Codes": [ ],
+                  "Codes": [],
                   "CodeValues": [
                     {
                       "Code": "250",
@@ -72,43 +24,77 @@
                     }
                   ]
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "8abb7263-0eb5-4743-9268-7ddf696a6038",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "1a184dbc-20f4-4f53-90ff-78fd17b79dc3",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "4" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "da1143d8-148a-4fb3-ae31-18a0cf606e20",
+            "Name": "i_Year_Observation Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
+                "Values": {
+                  "StartYear": 2005,
+                  "EndYear": 2006
+                },
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": [ ]
+        "Terms": []
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "Sex_Count",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": 1,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
-        "FieldName": "Sex",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": null,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "ICD-9 Diagnosis (3 digit)_Count",
         "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -117,7 +103,25 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -126,7 +130,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -135,7 +139,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       }
     ]

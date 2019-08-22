@@ -22,6 +22,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
         {
             SummarySqlQueryAdapter sql = new SummarySqlQueryAdapter();
             var result = sql.Execute(request, _settings, viewSQL);
+
+            _currentResponse = result;
+
             return result;
         }
     }

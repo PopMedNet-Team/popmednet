@@ -208,26 +208,6 @@ namespace Lpp.Dns.ApiClient
                                     return _Events;
                                 }
                             }
-	 	DataModels _DataModels = null;
-        public DataModels DataModels
-                            {
-                                get {
-                                    if (_DataModels == null)
-                                        _DataModels = new DataModels(this);
-
-                                    return _DataModels;
-                                }
-                            }
-	 	DataMarts _DataMarts = null;
-        public DataMarts DataMarts
-                            {
-                                get {
-                                    if (_DataMarts == null)
-                                        _DataMarts = new DataMarts(this);
-
-                                    return _DataMarts;
-                                }
-                            }
 	 	Tasks _Tasks = null;
         public Tasks Tasks
                             {
@@ -376,6 +356,36 @@ namespace Lpp.Dns.ApiClient
                                         _Documents = new Documents(this);
 
                                     return _Documents;
+                                }
+                            }
+	 	DataMartAvailability _DataMartAvailability = null;
+        public DataMartAvailability DataMartAvailability
+                            {
+                                get {
+                                    if (_DataMartAvailability == null)
+                                        _DataMartAvailability = new DataMartAvailability(this);
+
+                                    return _DataMartAvailability;
+                                }
+                            }
+	 	DataModels _DataModels = null;
+        public DataModels DataModels
+                            {
+                                get {
+                                    if (_DataModels == null)
+                                        _DataModels = new DataModels(this);
+
+                                    return _DataModels;
+                                }
+                            }
+	 	DataMarts _DataMarts = null;
+        public DataMarts DataMarts
+                            {
+                                get {
+                                    if (_DataMarts == null)
+                                        _DataMarts = new DataMarts(this);
+
+                                    return _DataMarts;
                                 }
                             }
 	 	Comments _Comments = null;
@@ -1198,60 +1208,6 @@ namespace Lpp.Dns.ApiClient
 	 	 	 return result;
 	 	 }
 	 }
-	 public class DataModels : HttpClientDataEndpoint<DnsClient, DataModelDTO>
-	 {
-	 	 public DataModels(DnsClient client) : base(client, "/DataModels") {}
-	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.DataModelProcessorDTO>> ListDataModelProcessors(string oDataQuery = null)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataModelProcessorDTO>(Path + "/ListDataModelProcessors", oDataQuery);
-	 	 	 return result.ReturnList();
-	 	 }
-	 }
-	 public class DataMarts : HttpClientDataEndpoint<DnsClient, DataMartDTO>
-	 {
-	 	 public DataMarts(DnsClient client) : base(client, "/DataMarts") {}
-	 	 public async Task<Lpp.Dns.DTO.DataMartDTO> GetByRoute(System.Guid requestDataMartID)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartDTO>(Path + "/GetByRoute?requestDataMartID=" + System.Net.WebUtility.UrlEncode(requestDataMartID.ToString()) + "&");
-	 	 	 return result.ReturnSingleItem();
-	 	 }
-	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartListDTO>> ListBasic(string oDataQuery = null)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartListDTO>(Path + "/ListBasic", oDataQuery);
-	 	 	 return result.ReturnList();
-	 	 }
-	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartTypeDTO>> DataMartTypeList(string oDataQuery = null)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartTypeDTO>(Path + "/DataMartTypeList", oDataQuery);
-	 	 	 return result.ReturnList();
-	 	 }
-	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.RequestTypeDTO>> GetRequestTypesByDataMarts(System.Collections.Generic.IEnumerable<System.Guid> DataMartId)
-	 	 {
-	 	 	 var result = await Client.Post<System.Collections.Generic.IEnumerable<System.Guid>, Lpp.Dns.DTO.RequestTypeDTO>(Path + "/GetRequestTypesByDataMarts", DataMartId);
-	 	 	 return result.ReturnList();
-	 	 }
-	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartInstalledModelDTO>> GetInstalledModelsByDataMart(System.Guid DataMartId, string oDataQuery = null)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartInstalledModelDTO>(Path + "/GetInstalledModelsByDataMart?DataMartId=" + System.Net.WebUtility.UrlEncode(DataMartId.ToString()) + "&", oDataQuery);
-	 	 	 return result.ReturnList();
-	 	 }
-	 	 public async Task<System.Net.Http.HttpResponseMessage> UninstallModel(Lpp.Dns.DTO.DataMartInstalledModelDTO model)
-	 	 {
-	 	 	 var result = await Client.Post<Lpp.Dns.DTO.DataMartInstalledModelDTO>(Path + "/UninstallModel", model);
-	 	 	 return result;
-	 	 }
-	 	 public async Task<System.Guid> Copy(System.Guid datamartID)
-	 	 {
-
-	 	 	 var result = await Client.Get<System.Guid>(Path + "/Copy?datamartID=" + System.Net.WebUtility.UrlEncode(datamartID.ToString()) + "&");
-	 	 	 return result.ReturnSingleItem();
-	 	 }
-	 }
 	 public class Tasks : HttpClientDataEndpoint<DnsClient, TaskDTO>
 	 {
 	 	 public Tasks(DnsClient client) : base(client, "/Tasks") {}
@@ -1588,6 +1544,13 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Post<System.Guid, System.Guid>(Path + "/CopyRequest", requestID);
 	 	 	 return result.ReturnSingleItem();
 	 	 }
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.RequestBudgetInfoDTO>> RetrieveBudgetInfoForRequests(System.Collections.Generic.IEnumerable<System.Guid> ids, string oDataQuery = null)
+	 	 {
+	 	 	 var idsQueryString = string.Join("&", ids.Select(i => string.Format("{0}={1}", "ids", System.Net.WebUtility.UrlEncode(i.ToString()))));
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.RequestBudgetInfoDTO>(Path + "/RetrieveBudgetInfoForRequests?" + idsQueryString + "&", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
 	 }
 	 public class RequestTypes : HttpClientDataEndpoint<DnsClient, RequestTypeDTO>
 	 {
@@ -1898,6 +1861,76 @@ namespace Lpp.Dns.ApiClient
 	 	 public async Task Delete(System.Collections.Generic.IEnumerable<System.Guid> id)
 	 	 {
 	 	 	 await Client.Delete(Path + "/Delete", id);
+	 	 }
+	 }
+	 public class DataMartAvailability
+	 {
+	 	 readonly DnsClient Client;
+	 	 readonly string Path;
+	 	 public DataMartAvailability(DnsClient client)
+	 	 {
+	 	 	 this.Client = client;
+	 	 	 this.Path = "/DataMartAvailability";
+	 	 }
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartAvailabilityPeriodV2DTO>> List(string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartAvailabilityPeriodV2DTO>(Path + "/List", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 }
+	 public class DataModels : HttpClientDataEndpoint<DnsClient, DataModelDTO>
+	 {
+	 	 public DataModels(DnsClient client) : base(client, "/DataModels") {}
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.DataModelProcessorDTO>> ListDataModelProcessors(string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataModelProcessorDTO>(Path + "/ListDataModelProcessors", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 }
+	 public class DataMarts : HttpClientDataEndpoint<DnsClient, DataMartDTO>
+	 {
+	 	 public DataMarts(DnsClient client) : base(client, "/DataMarts") {}
+	 	 public async Task<Lpp.Dns.DTO.DataMartDTO> GetByRoute(System.Guid requestDataMartID)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartDTO>(Path + "/GetByRoute?requestDataMartID=" + System.Net.WebUtility.UrlEncode(requestDataMartID.ToString()) + "&");
+	 	 	 return result.ReturnSingleItem();
+	 	 }
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartListDTO>> ListBasic(string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartListDTO>(Path + "/ListBasic", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartTypeDTO>> DataMartTypeList(string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartTypeDTO>(Path + "/DataMartTypeList", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.RequestTypeDTO>> GetRequestTypesByDataMarts(System.Collections.Generic.IEnumerable<System.Guid> DataMartId)
+	 	 {
+	 	 	 var result = await Client.Post<System.Collections.Generic.IEnumerable<System.Guid>, Lpp.Dns.DTO.RequestTypeDTO>(Path + "/GetRequestTypesByDataMarts", DataMartId);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.DataMartInstalledModelDTO>> GetInstalledModelsByDataMart(System.Guid DataMartId, string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.DataMartInstalledModelDTO>(Path + "/GetInstalledModelsByDataMart?DataMartId=" + System.Net.WebUtility.UrlEncode(DataMartId.ToString()) + "&", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> UninstallModel(Lpp.Dns.DTO.DataMartInstalledModelDTO model)
+	 	 {
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.DataMartInstalledModelDTO>(Path + "/UninstallModel", model);
+	 	 	 return result;
+	 	 }
+	 	 public async Task<System.Guid> Copy(System.Guid datamartID)
+	 	 {
+
+	 	 	 var result = await Client.Get<System.Guid>(Path + "/Copy?datamartID=" + System.Net.WebUtility.UrlEncode(datamartID.ToString()) + "&");
+	 	 	 return result.ReturnSingleItem();
 	 	 }
 	 }
 	 public class Comments : HttpClientDataEndpoint<DnsClient, CommentDTO>

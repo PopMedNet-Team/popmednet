@@ -29,6 +29,7 @@ var Plugins;
                         var _this = _super.call(this, options.BindingControl) || this;
                         _this.TemplateTerms = [];
                         _this.TermListUpdateDummy = ko.observable();
+                        _this.IsMetadataRefreshValid = ko.observable(true);
                         _this.TermValidators = {}; // Validation functions for criteria tab concepts
                         _this.CurrentlySelectedModels = [];
                         var self = _this;
@@ -110,7 +111,8 @@ var Plugins;
                                                 MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.ICD9Diagnosis4digitID) ||
                                                 MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.ICD9Diagnosis5digitID) ||
                                                 MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.ICD9Procedure3digitID) ||
-                                                MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.ICD9Procedure4digitID)) {
+                                                MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.ICD9Procedure4digitID) ||
+                                                MDQ.Terms.Compare(childTerm.TermID, MDQ.Terms.MetadataRefreshID)) {
                                                 childTerm.IncludeInStratifiers = hasSummaryModel;
                                             }
                                         }
@@ -428,6 +430,7 @@ var Plugins;
                                 MDQ.GetDataMartTimer = setInterval((function () { return self.GetCompatibleDataMarts(); }).bind(self), 2000);
                             });
                         }
+                        self.ValidateMetadataRefreshTerm();
                         self.onExportJSON = function () {
                             return 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(self.Request.toData()));
                         };
@@ -509,17 +512,41 @@ var Plugins;
                         return _this;
                     }
                     ViewModel.prototype.AreTermsValid = function () {
+                        var self = this;
                         var areTermsValid = true;
                         $.each(this.TermValidators, function (key, value) {
                             if (!value()) {
                                 areTermsValid = false;
                             }
                         });
-                        if (!areTermsValid) {
+                        self.ValidateMetadataRefreshTerm();
+                        if (!areTermsValid || !self.IsMetadataRefreshValid()) {
                             Global.Helpers.ShowAlert("Validation Error", "One or more terms contain invalid or insufficient information.");
                             return false;
                         }
                         return true;
+                    };
+                    ViewModel.prototype.ValidateMetadataRefreshTerm = function () {
+                        var self = this;
+                        var hasMetadataRefreshTerm = $(".metadata-refresh-term").length > 0;
+                        if (hasMetadataRefreshTerm) {
+                            if (self.Request.Where.Criteria().length > 1) {
+                                self.IsMetadataRefreshValid(false);
+                            }
+                            else if (self.Request.Where.Criteria()[0].Terms().length != 0 || self.Request.Where.Criteria()[0].Criteria().length != 0) {
+                                self.IsMetadataRefreshValid(false);
+                            }
+                            else {
+                                self.IsMetadataRefreshValid(true);
+                            }
+                            if (self.IsMetadataRefreshValid()) {
+                                ko.utils.arrayForEach(self.Request.Select.Fields(), function (item) {
+                                    if (!Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(item.Type(), Plugins.Requests.QueryBuilder.MDQ.Terms.MetadataRefreshID)) {
+                                        self.IsMetadataRefreshValid(false);
+                                    }
+                                });
+                            }
+                        }
                     };
                     ViewModel.prototype.FilterTermsForCriteria = function (terms) {
                         return ko.utils.arrayFilter(terms, function (t) { return t.IncludeInCriteria; });

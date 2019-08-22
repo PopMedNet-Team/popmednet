@@ -15,42 +15,42 @@ namespace Lpp.Dns.DTO
     public class ResponseHistoryItemDTO
     {
         /// <summary>
-        /// Response ID
+        /// Gets or Sets the Identifier of the Response.
         /// </summary>
         [DataMember]
         public Guid ResponseID { get; set; }
         /// <summary>
-        /// Request ID
+        /// Gets or Sets the Identifier of the Request.
         /// </summary>
         [DataMember]
         public Guid RequestID { get; set; }
         /// <summary>
-        /// DateTime of Action
+        /// Gets or Sets DateTime of Action.
         /// </summary>
         [DataMember]
         public DateTime DateTime { get; set; }
         /// <summary>
-        /// Response Action
+        /// Gets or Sets the Response Action.
         /// </summary>
         [DataMember]
         public string Action { get; set; }
         /// <summary>
-        /// Usename of user who carried out the action
+        /// Gets or Sets the Username of user who carried out the action.
         /// </summary>
         [DataMember]
         public string UserName { get; set; }
         /// <summary>
-        /// Message
+        /// Gets or Sets the Message.
         /// </summary>
         [DataMember]
         public string Message { get; set; }
         /// <summary>
-        /// Is Response Item
+        /// Gets or Sets if Is Response Item.
         /// </summary>
         [DataMember]
         public bool IsResponseItem { get; set; }
         /// <summary>
-        /// Is Current
+        /// Gets or Sets if Is Current.
         /// </summary>
         [DataMember]
         public bool IsCurrent { get; set; }

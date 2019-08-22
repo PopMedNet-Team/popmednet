@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -347,6 +348,36 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         }
 
         [TestMethod]
+        public void Metadata_Refresh_Dates_Response()
+        {
+
+            var response = RunMetadataRefreshRequest("MetdataRefrshDates.json");
+            Logger.Debug(SerializeJsonToString(response));
+
+        }
+
+        [TestMethod]
+        public void Metadata_Refresh_Dates_Documents()
+        {
+            QueryComposerModelProcessor.DocumentEx[] docs;
+            var request = LoadRequest("MetdataRefrshDates.json");
+            using (var adapter = Helper.CreateMetadataRefreshAdapter(ConnectionString))
+            {
+                adapter.Execute(request, false);
+                docs = adapter.OutputDocuments();
+
+                foreach (var doc in docs)
+                {
+                    using (var fileStream = File.Create(doc.Document.Filename))
+                    {
+                        fileStream.Write(doc.Content, 0, doc.Content.Length);
+                        fileStream.Flush();
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void PMNDEV5164()
         {
 
@@ -383,6 +414,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         }
 
         [TestMethod]
+        public void PMNDEV7082()
+        {
+
+            var response = RunPrevRequest("PMNDEV-7082.json");
+            Logger.Debug(SerializeJsonToString(response));
+
+        }
+
+        [TestMethod]
         public void PMNDEV7083()
         {
 
@@ -412,6 +452,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         {
             var request = LoadRequest(requestJsonFilepath);
             using (var adapter = Helper.CreatePrevSummaryModelAdapterAdapter(ConnectionString))
+            {
+                return adapter.Execute(request, false);
+            }
+        }
+
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunMetadataRefreshRequest(string requestJsonFilepath)
+        {
+            var request = LoadRequest(requestJsonFilepath);
+            using (var adapter = Helper.CreateMetadataRefreshAdapter(ConnectionString))
             {
                 return adapter.Execute(request, false);
             }

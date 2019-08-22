@@ -1,0 +1,45 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7144573f-5552-4371-ba98-09e52f530716",
+            "Name": "i_Trial",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+                "Values": { "Trial": "" },
+                "Criteria": [],
+                "Design": { "Locked": true }
+              }
+              //{
+              //  "Operator": 1,
+              //  "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+              //  "Values": { "Trial": "FAKE_TRIAL-15" },
+              //  "Criteria": [],
+              //  "Design": { "Locked": true }
+              //},
+              //{
+              //  "Operator": 1,
+              //  "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+              //  "Values": { "Trial": "FAKE_TRIAL-41" },
+              //  "Criteria": [],
+              //  "Design": {}
+              //}
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}
