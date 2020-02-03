@@ -1,0 +1,15 @@
+@{
+    var shareUrl = Html.Raw( 
+        Url.Action( ( SharedFolderController c ) => c.ShareRequest( "__folder__", "__req__" ) )
+        .Replace( "__folder__", "' + folderId + '" )
+        .Replace( "__req__", "' + requestId + '" ) );
+}
+<script type="text/javascript">
+    require(['@this.Resource("SharedFolders.js")', 'networkTree', 'requireCss'], function (sf, nt, css) {
+        css('@this.Resource("SharedFolders.css")');
+
+        function setup() { sf.initializeSharedFolders(function (folderId, requestId) { return '@shareUrl'; }); }
+        setup();
+        $(nt).bind("treechanged", setup);
+    });
+</script>

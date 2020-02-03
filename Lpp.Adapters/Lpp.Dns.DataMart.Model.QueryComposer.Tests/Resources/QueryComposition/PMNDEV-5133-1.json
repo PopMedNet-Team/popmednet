@@ -1,0 +1,31 @@
+﻿{
+    "Header": { "Name": "Weight baseline", "ViewUrl": "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=73173e78-fb85-4be0-a133-a53d00e55156" },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "7b9a071e-5556-41df-bc9f-1a651885bcef",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "3b0ed310-dde9-4836-9857-0000a45a0018",
+                        "Values": { "WeightMin": 1, "WeightMax": 400 },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            { "FieldName": "Weight_Count", "Type": "3b0ed310-dde9-4836-9857-0000a45a0018", "GroupBy": null, "StratifyBy": null, "Aggregate": 1, "Select": [ ], "OrderBy": 0 },
+            { "FieldName": "Weight", "Type": "3b0ed310-dde9-4836-9857-0000a45a0018", "GroupBy": null, "StratifyBy": "20", "Aggregate": null, "Select": [ ], "OrderBy": 0 }
+        ]
+    }
+}

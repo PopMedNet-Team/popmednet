@@ -1,0 +1,43 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Weight 10 - 150 lb",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=e4ea2199-b0e4-4b59-af46-a4b5012d702f"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+						"Values" : {
+							"WeightMin" : 10,
+							"WeightMax" : 150
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Weight_Count",
+				"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Weight",
+				"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : "10",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

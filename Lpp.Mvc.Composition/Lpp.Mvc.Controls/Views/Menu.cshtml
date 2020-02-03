@@ -1,0 +1,30 @@
+@model IEnumerable<MenuItemModel>
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+}
+<script src="~/__r/Lpp.Mvc.Controls/-/menu.js"></script>
+
+<script type="text/javascript">
+    //require(["jQuery", "lpp.mvc.controls/menu"],
+    $(function menu(){
+         $("#@(id) li").menuItems();
+        
+        });
+</script>
+
+<ul class="Menu" id="@id">@Items(Model)</ul>
+
+@helper SubMenu(IEnumerable<MenuItemModel> items)
+{
+    if (items == null || !items.Any()) { return; }
+    <ul class="Menu SubMenu">@Items(items)</ul>
+}
+
+@helper Items(IEnumerable<MenuItemModel> items)
+{
+    foreach (var i in items)
+    {
+        <li><a href="@( i.Target ?? "javascript:return false;")">@i.Title</a>@SubMenu(i.Children)</li>
+    }
+}

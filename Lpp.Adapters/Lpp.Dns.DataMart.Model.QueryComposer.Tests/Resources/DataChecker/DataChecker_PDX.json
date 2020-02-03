@@ -1,0 +1,35 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker PDX",
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=3a554532-63b7-42d7-b834-a4f4010d3bd1"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "d1ea31f7-6602-4dfe-b650-2804f25ad3e4",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "8b6e6e5c-7fe8-4962-aa37-2641d396cff7",
+                        "Values": { "PDXes": [ "P" ] },
+                        "Criteria": [ ]
+                    
+                    },
+                    { "Operator": 0, "Type": "1f065b02-5bf3-4340-a412-84465c9b164c", "Values": { "QueryType": "0F1EA012-B588-4775-9E16-CB6DBE12F8BE" }, "Criteria": [ ] },
+                    { "Operator": 0, "Type": "0255f535-b529-4753-834a-be5afb4b4e5e", "Values": { "Encounters": [ "ALL" ] }, "Criteria": [ ] }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+
+}

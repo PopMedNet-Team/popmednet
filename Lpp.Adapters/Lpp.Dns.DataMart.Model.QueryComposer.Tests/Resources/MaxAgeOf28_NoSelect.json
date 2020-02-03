@@ -1,0 +1,34 @@
+﻿{
+    "Header":
+    {
+        "Name": "28 and Younger Stratified by Sex"
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                        "Values":
+                        {
+                            "MinAge": null,
+                            "MaxAge": 28
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields": [ ]
+
+    }
+}

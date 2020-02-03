@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\..\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\MSBuild.ExtensionPack.tasks" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\MSBuild.ExtensionPack.tasks')" />
+  <PropertyGroup>
+    <ExtensionTasksPath>.\</ExtensionTasksPath>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B22805C6-4152-400A-9567-C8F5E39FA400}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.DataMart.Model.QueryComposer</RootNamespace>
+    <AssemblyName>Lpp.Dns.DataMart.Model.QueryComposer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  
+  <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
+  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.1.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework6.Npgsql.3.1.1\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.3.1, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\LinqKit.1.1.3.1\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MySql.Data.Entity.6.9.8\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.1.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Npgsql.3.1.8\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.1.24160419\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess.EntityFramework, Version=6.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.EntityFramework.12.1.2400\lib\net45\Oracle.ManagedDataAccess.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Adapters\DataChecker\DataCheckerModelAdapter.cs" />
+    <Compile Include="Adapters\DataChecker\DataContext.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Age.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Diagnosis.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Height.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Hispanic.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Metadata.cs" />
+    <Compile Include="Adapters\DataChecker\Model\NDC.cs" />
+    <Compile Include="Adapters\DataChecker\Model\PDX.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Procedure.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Race.cs" />
+    <Compile Include="Adapters\DataChecker\Model\RXAmt.cs" />
+    <Compile Include="Adapters\DataChecker\Model\RXSUP.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Sex.cs" />
+    <Compile Include="Adapters\DataChecker\Model\Weight.cs" />
+    <Compile Include="Adapters\DistributedRegressionModelAdapter.cs" />
+    <Compile Include="Adapters\DynamicModelAdapter.cs" />
+    <Compile Include="Adapters\ESP\EncountersGroupingResult.cs" />
+    <Compile Include="Adapters\ESP\ESPModelAdapter.cs" />
+    <Compile Include="Adapters\ESP\ESPQueryResult.cs" />
+    <Compile Include="Adapters\Helpers\AdapterHelpers.cs" />
+    <Compile Include="Adapters\Helpers\PredicateHelper.cs" />
+    <Compile Include="Adapters\Helpers\ValueTemplates\AgeRangeValues.cs" />
+    <Compile Include="Adapters\Helpers\ValueTemplates\DateRangeValues.cs" />
+    <Compile Include="Adapters\Helpers\ValueTemplates\EncounterPeriodValues.cs" />
+    <Compile Include="Adapters\Helpers\ValueTemplates\HeightValues.cs" />
+    <Compile Include="Adapters\Helpers\ValueTemplates\WeightValues.cs" />
+    <Compile Include="Adapters\ModelAdapter.cs" />
+    <Compile Include="Adapters\ModularProgramModelAdapter.cs" />
+    <Compile Include="Adapters\PCORI\TermImplementation.cs" />
+    <Compile Include="Adapters\PCORI\PCORIModelAdapter.cs" />
+    <Compile Include="Adapters\PCORI\Terms\AgeRange.cs" />
+    <Compile Include="Adapters\PCORI\Terms\CombinedDiagnosisCodes.cs" />
+    <Compile Include="Adapters\PCORI\Terms\EncounterObservationPeriod.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Height.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Hispanic.cs" />
+    <Compile Include="Adapters\PCORI\Terms\PatientCount.cs" />
+    <Compile Include="Adapters\PCORI\Terms\ProcedureCodes.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Race.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Setting.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Sex.cs" />
+    <Compile Include="Adapters\PCORI\Terms\VitalMeasureDate.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Weight.cs" />
+    <Compile Include="Adapters\SummaryQuery\SqlDistributionAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\SummarySqlQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\DummyModelAdapter.cs" />
+    <Compile Include="Adapters\TermProviders\DataChecker.cs" />
+    <Compile Include="Adapters\TermProviders\DistributedRegression.cs" />
+    <Compile Include="Adapters\TermProviders\ESP.cs" />
+    <Compile Include="Adapters\TermProviders\ModularProgram.cs" />
+    <Compile Include="Adapters\TermProviders\PCORI.cs" />
+    <Compile Include="Adapters\TermProviders\QueryComposer.cs" />
+    <Compile Include="Adapters\SummaryQuery\SummaryQueryModelAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\IncidenceICD9DiagnosisQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\IncidencePharmaDispensingQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\MostFrequentlyUsedCodesQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\MostFrequentlyUsedPharmaDispensingQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\MostFrequentlyUsedQueriesModelAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\IncidenceModelAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\PrevalenceEnrollmentQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\PrevalenceHCPCSProceduresQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\PrevalenceICD9QueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\PrevalencePharmaDispensingQueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\PrevalenceModelAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\QueryAdapter.cs" />
+    <Compile Include="Adapters\SummaryQuery\SummaryQueryUtil.cs" />
+    <Compile Include="Adapters\SummaryQuery\SummaryRequestModel.cs" />
+    <Compile Include="Adapters\TermProviders\SummaryTable.cs" />
+    <Compile Include="IModelAdapter.cs" />
+    <Compile Include="ParameterRebinder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryComposerModelProcessor.cs" />
+    <Compile Include="QueryComposerRequestInterrogator.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    
+    
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data.csproj">
+      <Project>{1b945fa5-035d-49ac-a901-4570a2a64c08}</Project>
+      <Name>Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj">
+      <Project>{325d9b27-88f8-49d3-a347-40a22881624c}</Project>
+      <Name>Lpp.Dns.DataMart.Model.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data.csproj">
+      <Project>{1bce7532-35ef-4875-a26d-fe690516983e}</Project>
+      <Name>Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      
+      <PluginFiles Include="$(OutputPath)*.dll;$(OutputPath)*.pdb;$(OutputPath)*.xml">
+        <InProject>false</InProject>
+      </PluginFiles>
+    </ItemGroup>
+    
+    <Copy SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="$(SolutionDir)Lpp.Adapters\Lpp.Wbd.AdapterService\$(OutputPath)Plugins" />
+    
+  </Target>
+  <Target Name="CreateVersionedZip" AfterTargets="AfterBuild">
+    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(OutputPath)$(AssemblyName).dll">
+      <Output TaskParameter="OutputItems" ItemName="Info" />
+    </MSBuild.ExtensionPack.Framework.Assembly>
+    <ItemGroup>
+      
+      <dlls Include="$(OutputPath)Lpp.*.dll;">
+        <InProject>false</InProject>
+      </dlls>
+    </ItemGroup>
+    <SignFile SigningTarget="%(dlls.Identity)" CertificateThumbprint="E12D1B344047B37CF741F24EE9914A6F4D180EE3" TimestampUrl="http://timestamp.verisign.com/scripts/timestamp.dll" Condition="'$(Configuration)' != 'Debug'" />
+    <PropertyGroup>
+      <PackageIdentifier>Lpp.Dns.DataMart.Model.QueryComposer</PackageIdentifier>
+      <PackageFileName>$(PackageIdentifier).%(Info.FileVersion).zip</PackageFileName>
+      <PackageDeployPath Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Dev' Or '$(Configuration)' == 'Release'">$(SolutionDir)Lpp.Dns.Api\App_Data\</PackageDeployPath>
+      
+      <PackageDeployPath Condition=" '$(Configuration)' == 'Adapters'">C:\Checkouts\Plugins\</PackageDeployPath>
+    </PropertyGroup>
+    <MSBuild.ExtensionPack.Compression.Zip Condition=" ('$(PackageDeployPath)' != '' And $(PackageDeployPath) != '*Undefined*') " TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
+  </Target>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets')" />
+</Project>

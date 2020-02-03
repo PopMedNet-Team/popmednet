@@ -1,0 +1,64 @@
+{
+	"Header" : {
+		"Name" : "[Data Checker QE] Diagnosis: PDX",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=58442082-d080-44ad-bcdf-a4f900a4dd46"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "2514b53b-5620-41e2-b3aa-736a6acccc76",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+						"Values" : {
+							"DataPartnersValue" : ["OPOS"]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "8b6e6e5c-7fe8-4962-aa37-2641d396cff7",
+						"Values" : {
+							"PDXes" : ["P", "S"]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "0255f535-b529-4753-834a-be5afb4b4e5e",
+						"Values" : {
+							"Encounters" : ["AV", "ED", "IP", "IS", "OA"]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "1f065b02-5bf3-4340-a412-84465c9b164c",
+						"Values" : {
+							"QueryType" : "0F1EA012-B588-4775-9E16-CB6DBE12F8BE"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Data Partners_Count",
+				"Type" : "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Data Partners",
+				"Type" : "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

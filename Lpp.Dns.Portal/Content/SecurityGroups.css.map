@@ -1,0 +1,9 @@
+﻿{
+  "version": 3,
+  "file": "SecurityGroups.css",
+  "sources": [
+    "SecurityGroups.less"
+  ],
+  "names": [],
+  "mappings": "AAAA,eAAgB;EACf,WAAA"
+}

@@ -1,0 +1,23 @@
+@model ObjectSelectorModel
+@{
+    Layout = null; 
+    var id = Html.UniqueId();
+}
+
+<div class="Value ObjectSelector" id="@id">
+    <a href="#" class="Link">@(Model.CurrentValue == null ? "<none>" : Model.CurrentValue.Value.Name)</a>
+    @if ( Model.AllowClear )
+    { <a href="#" class="Clear">[x]</a> }
+    <input type="hidden" name="@Model.FieldName" value="@(Model.CurrentValue == null ? "" : Model.CurrentValue.Value.ID)" />
+    <div class="Options" style="display: none">
+        <h3>TODO: fix grid</h3>
+        @*@(Html.Partial<Views.Crud.ForSelectionList>().WithModel( Model.SelectionList ))*@
+    </div>
+</div>
+
+<script src="@this.Resource("ObjectSelector.js")"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#@(id)").objectSelector( '@Html.Raw((Model.DialogTitle ?? "").Replace("'", "\\'"))' );
+    });
+</script>

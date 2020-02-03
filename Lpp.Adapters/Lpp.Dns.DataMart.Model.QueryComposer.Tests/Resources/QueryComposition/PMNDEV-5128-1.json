@@ -1,0 +1,29 @@
+{
+	"Header" : {
+		"Name" : "Age Baseline",
+		"ViewUrl" : "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=762ee7d5-df04-45ca-a357-a53d00efc416"
+	},
+	"Where" : {
+		"Criteria" : []
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Age Ranges_Count",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Age Ranges",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

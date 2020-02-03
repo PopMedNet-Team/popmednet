@@ -1,0 +1,16 @@
+﻿@model SubjectGroupsListModel
+@{ 
+   this.Stylesheet( "security.min.css" );
+   var id = Html.UniqueId();
+   var subjectSelectorHandle = Html.UniqueId();
+   var noGroupsMessage = "This user is not a member of any group";
+}
+<div class="SubjectGroupsSelector" id="@id">
+    <input type="hidden" name="@Model.FieldName" value="@string.Join(",", Model.MemberOf.EmptyIfNull().Select( g => g.ID ))" />
+    @(Html.Render<IGrid>()
+        .From( Model.MemberOf.EmptyIfNull() )
+        .Id( s => s.ID )
+        .ClientSideSortColumn( s => s.DisplayName, setOptions: c => c.Title( "Groups" ).Class( "Group" ) )
+        .With( o => o.NoDataMessage = @<text>@noGroupsMessage</text> )
+    )
+</div>

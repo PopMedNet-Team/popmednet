@@ -1,0 +1,30 @@
+@model SharedRequestViewModel
+@{ this.Stylesheet( "Request.min.css" ); } 
+
+@*@(Html.Render<Breadcrumbs>().For( Model.TreeNode ))*@
+@using ( Html.BeginForm<RequestController>( c => c.CopyShared( Model.Request.ID, Model.Folder.ID ) ) )
+{
+@*@Lpp.Dns.Portal.UI.ValidationSection( Html )*@
+<div class="SharedRequestView-Header RequestHeader ui-section ui-minimizable ui-maximizable ui-has-header" title-text="Request">
+    <div class="Fields ui-form">
+        @*@(Html.Partial<RequestHeader>().WithModel( new RequestHeaderViewModel
+        {
+            Request = Model.Request,
+            Type = Model.RequestType
+        } ))*@
+        @(Html.Partial("RequestHeader", new RequestHeaderViewModel
+        {
+            Request = Model.Request,
+            Type = Model.RequestType
+        }))
+    </div>
+
+    <div class="Buttons">
+        <input type="submit" name="Copy" value="Copy" class="ui-standard-button" onclick="LoadSpinner()" />
+    </div>                                                                                        
+
+    <div class="Body">
+        @Model.PluginBody( Html )
+    </div>
+</div>
+}

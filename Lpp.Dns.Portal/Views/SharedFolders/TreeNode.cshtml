@@ -1,0 +1,3 @@
+@model RequestSharedFolder 
+<img src="@this.Resource( "img/icons/request_folder.ico" )" height="24" width="24" />
+<a data-folderid="@Model.ID" class="SharedFolder" href="@Url.Action( (SharedFolderController c) => c.Contents( Model.ID, new RequestListGetModel() ) )">@Model.Name</a>

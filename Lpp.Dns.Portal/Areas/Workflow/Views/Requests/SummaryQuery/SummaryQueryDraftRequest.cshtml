@@ -1,0 +1,15 @@
+﻿<br />
+<!-- ko stopBinding: true -->
+<div id="DefaultCreateRequest">
+    <!-- ko stopBinding: true -->
+    @Html.Partial("~/areas/QueryComposer/Views/edit.cshtml")
+    <!-- /ko-->
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+        <button class="btn btn-warning pull-right" data-bind="click: Requests.Details.rovm.Cancel">Cancel</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="F14B4432-804A-4052-A8EE-64260CE5DCB7" data-bind="click:Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Submit</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Save</button>
+    </div>
+    <div class="clearfix"></div>    
+</div>
+<!-- /ko-->
+<script src="~/Areas/Workflow/js/Requests/SummaryQuery/DraftRequest.js"></script>

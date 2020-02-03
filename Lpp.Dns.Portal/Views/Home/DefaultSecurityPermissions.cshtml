@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Site-Wide Security Permissions";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head {
+<script src="~/js/Security/AclFieldOptionViewModel.js"></script>
+<script src="~/js/Security/AclViewModel.js"></script>
+<script src="~/js/Events/EditEventPermissions.js"></script>
+<script src="~/js/Home/DefaultSecurityPermissions.js"></script>
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/defaultsecuritypermissions">Site-Wide Security Permissions</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="tabs" class="" data-bind="kendoTabStrip: {}, visible: true">
+            <ul>
+                <li class="k-state-active">Portal</li>
+                <li>Organization</li>
+                <li>Group</li>
+                <li>Project</li>
+                <li>Registry</li>
+                <li>User</li>
+                <li>Request Metadata</li>
+            </ul>
+            <div id="#Portal" class="tab-pane active">
+                <p class="alert alert-info">
+                    Rights in this panel apply globally across the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: Global">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: GlobalEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#Organization" class="tab-pane">
+                <p class="alert alert-info">
+                    Rights in this panel determine who may access and modify all organizations in the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: Organization">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: OrganizationEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#Group" class="tab-pane">
+                <p class="alert alert-info">
+                    Rights in this panel determine who may access and modify all groups in the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: Group">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: GroupEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#Project" class="tab-pane">
+                <p class="alert alert-info">
+                    Rights in this panel determine who may access and modify all projects in the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: Project">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: ProjectEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#Registry" class="tab-pane">
+                <p class="alert alert-info">
+                    Rights in this panel determine who may access and modify all registry objects in the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: Registry">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: RegistryEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#User" class="tab-pane">
+                <p class="alert alert-info">
+                    Rights in this panel determine who may access and modify all user objects in the network.
+                </p>
+                <h2>Permissions</h2>
+                <div data-bind="with: User">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+                <h2>Events</h2>
+                <div data-bind="with: UserEvents">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div id="#RequestMetadata" class="tab-pane">
+                <p class="alert alert-info">
+                    This panel determines the field configuration options for the request metadata header across all Projects. The configuration options set here may be overidden at the Project level.
+                </p>
+                <div data-bind="with: FieldOptions">
+                    @Html.Partial("~/Views/Security/EditFieldOptionAcl.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>

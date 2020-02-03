@@ -1,0 +1,43 @@
+@* Generator : MvcHelper *@
+
+@using Lpp;
+@using Lpp.Mvc;
+@using Lpp.Utilities.Legacy;
+
+@helper Buttons( Lpp.Dns.Portal.ICrudSecObjectEditModel model, string deleteConfirmation = null )
+{
+    var id = Lpp.Mvc.UtilityExtensions.UniqueId(HelperPage.Html);
+    if ( deleteConfirmation.NullOrEmpty() ) { deleteConfirmation = "Are you sure?"; }
+    else { deleteConfirmation = deleteConfirmation.Replace( "'", "\\'" ).Replace( "\n", "\\n" ).Replace( "\r", "\\r" ); }
+    
+    <div class="Buttons" id="@id">
+        @if ( model.AllowSave )
+        {
+            <!-- NOTE: Force a formChanged to false on "Save". The "submit" and "beforeunload" binding in UI.chtml appear to be out of sequence sometimes, -->
+            <!--       causing a "save" to confirm page discard, which it shouldn't. (PMN-579)                                                             -->
+            <input type="submit" value="Save" name="Save" class="ui-standard-button" disabled="disabled" onclick="LoadSpinner();"/>
+            <input type="button" value="Cancel" name="Cancel" class="ui-standard-button" onclick="window.history.back();" disabled="disabled" />
+        }
+        @if (model.AllowDelete)
+{
+    <input type="submit" value="Delete" id="btnDelete" name="Delete" class="ui-standard-button"/>
+}
+        @if ( model.AllowSave || model.AllowDelete )
+        {
+           <script type="text/javascript">
+               $(document).ready(function () {
+                   $("form").bind("formChanged", function () { if ($(this).affectFormChange()) $("#@(id).Buttons input").removeAttr("disabled"); });
+                   $("input, textarea").bind("keydown", function (e) { if ($(this).affectFormChange() && $(this).IsKeyPrintable(e)) $("#@(id).Buttons input").removeAttr("disabled"); });
+                   $("input, textarea").bind("paste", function () { if ($(this).affectFormChange()) $("#@(id).Buttons input").removeAttr("disabled"); });
+                   $("#btnDelete").click(function(e) {
+                       if (confirm('@(deleteConfirmation)')) {
+                           LoadSpinner();
+                       } else {
+                           e.preventDefault();
+                       }
+                   });
+               });
+           </script>
+        }
+    </div>
+}

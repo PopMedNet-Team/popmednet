@@ -1,0 +1,149 @@
+@{
+    Layout = "~/Views/_RootLayout.cshtml";
+}
+
+@section Head {
+@RenderSection("Head", false)
+}
+<section id="frame">
+    <header id="header" class="noprint">
+        <h1>
+            <img data-bind="src: this.ResourceUrl + ThemeIMG.LogoImage()  " />
+        </h1>
+        <section >
+            @if (Request.IsAuthenticated)
+            {
+                <span class="floatright">Welcome, @User.Identity.Name</span>
+            }
+            <div data-bind="text: Theme.Title"></div>
+            
+        </section>
+        <nav class="visible">
+            @if (Request.IsAuthenticated)
+            {
+                <ul id="menu" data-bind="kendoMenu: {dataSource: MainMenu}"></ul>
+            }
+
+            @if (Request.IsAuthenticated)
+            {
+                <a href="/logout" data-bind="click: Logout">Log Off</a>
+            }
+            <a href="mailto://support@popmednet.org">Contact Us</a>&nbsp;
+        </nav>
+    </header>
+
+
+    @*
+            This is commented for now, but is the basis for using the bootstrap menu in the future
+            <header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <nav class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#header-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="/"><img src="/images/shared/popmednet-logo.png" style="margin-top: 5px;" alt="PopMedNet" /></a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="header-collapse">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="#">Home</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Requests <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                            </ul>
+                        </li>
+                        <li><a href="#">Resources</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">DataMart Audit Report</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    }
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li><a href="/registration/signup" data-toggle="tooltip" data-placement="bottom" title="Register yourself for access to PopMedNet.">Register</a></li>
+                        }
+                        else
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Setup <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </header>*@
+    @*@if (Request.IsAuthenticated)
+    {
+        @Html.Partial("~/Views/_NetworkBrowser.cshtml")
+    }*@
+    <section id="Content">
+        @*<img src="@this.ResourceUrl("/images/loading.gif")" alt="Loading. Please Wait..." class="visible" id="imgLoading" data-bind="css:{invisible: true}" />*@
+
+        
+        @RenderBody()
+        <div id="NotificationsKendo"></div>
+    </section>
+
+    <footer id="footer" class="noprint">
+        <pre>Version @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString(4)</pre>
+        <nav>|&nbsp;<a href="#" id="TermsAndConditionsFooterLink" data-bind="click: ShowTerms">Terms and Conditions</a>&nbsp;|&nbsp;<a href="#" id="InfoFooterLink" data-bind="click: ShowInfo">Info</a></nav>
+        <img id="lpplogo" src="@this.ResourceUrl("/images/lpp-logo.png")" alt="Lincoln Peak" />
+        @*&copy; @DateTime.Today.Year PopMedNet, All Rights Reserved*@
+        <span data-bind="text:Theme.Footer"></span>
+    </footer>
+
+    @*
+            This is commented for now but will be enabled when we switch to bootstrap
+
+            <footer class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <nav class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".footer-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="navbar-brand" href="http://wwww.lincolnpeak.com" target="_blank"><img src="/images/shared/powered-by-lincolnpeak.png" alt="PopMedNet is Powered By Lincoln Peak"></a>
+                </div>
+                <ul class="nav navbar-nav navbar-right collapse navbar-collapse footer-collapse">
+                    <li><p class="navbar-text">&copy;@DateTime.Now.Year PopMedNet. All Rights Reserved.</p></li>
+                    <li><a href="#" id="lTermsAndConditions" data-bind="click: ShowTerms">Terms and Conditions</a></li>
+                    <li><a href="#" id="lInformation" data-bind="click: ShowInfo">Information</a></li>
+                    <li><p class="navbar-text"><strong>Version:</strong> @System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3)</p></li>
+                </ul>
+
+            </nav>
+        </footer>*@
+</section>
+@section Scripts {
+<script src="~/js/_Layout.js"></script>
+@RenderSection("scripts", false)
+
+<script type="text/javascript">
+    function LoadSpinner() {
+        //var form = $(".Content form");
+        //if (form && (!form.checkValidity || form.checkValidity())) {
+        //    form.showLoadingSign({ foregroundClass: "BodyLoadingSign" });
+        //    //form.find("input[name='save']").prop("disabled", true);
+        //    //form.find("input[name='submit']").prop("disabled", true);
+        //    //form.find("input[name='copy']").prop("disabled", true);
+        //    //form.formChanged(false);
+        //}
+    }
+</script>
+
+}

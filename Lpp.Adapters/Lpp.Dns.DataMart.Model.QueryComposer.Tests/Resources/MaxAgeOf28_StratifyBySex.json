@@ -1,0 +1,33 @@
+﻿{
+	"Header" : {
+		"Name" : "28 and Younger Stratified by Sex"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+						"Values" : {
+							"MinAge" : null,
+							"MaxAge" : 28
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"Aggregate" : 1,//aggregate by Count
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

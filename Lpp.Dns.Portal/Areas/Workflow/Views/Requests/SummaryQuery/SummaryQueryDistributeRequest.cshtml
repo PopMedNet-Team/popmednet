@@ -1,0 +1,26 @@
+﻿<br />
+<!-- ko stopBinding: true -->
+<div id="DefaultDistributeRequest">
+
+    <div data-bind="visible:true" style="display:none;">
+        <!-- ko stopBinding: true -->
+        <div id="QCreadonly">
+            @Html.Partial("~/areas/QueryComposer/Views/view.cshtml")
+        </div>
+        <!-- /ko-->
+    </div>
+    
+    <h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
+    <div class="cleanlist">
+        @Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+    </div>
+
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="80FD6F76-2E32-4D35-9797-0B541507CB56" data-bind="click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Submit</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="94513F48-4C4A-4449-BA95-5B0CD81DB642" data-bind="click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Modify</button>
+        @*<button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="click: Complete">Save</button>*@
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!-- /ko-->
+<script src="~/Areas/Workflow/js/Requests/SummaryQuery/DistributeRequest.js"></script>

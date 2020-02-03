@@ -1,0 +1,73 @@
+.ChildSelectDialog 
+{ 
+	display: none;
+
+	.block()
+	{
+		display: inline-block; vertical-align: top;
+	}
+	.pointer() { cursor: pointer; }
+
+	.Parents
+	{ 
+		width: 260px; 
+		.block;
+		.Header
+		{
+			border-top: 1px solid navy;
+			border-bottom: 1px solid navy;
+			background: #96ADD6;
+			font-weight: bold;
+			padding-left: .5em;
+			margin: 5px 0;
+			cursor: pointer;
+		}
+		.Nodes
+		{
+			margin-left: 2em;
+		}
+		.ParentLink 
+		{ 
+			.pointer;
+			//padding: 2px 10px; 
+			&.Selected { background: #96ADD6; color: White }
+		}		
+	}
+
+	.ChildrenBox 
+	{
+		@wdth: 254px;
+		.block;
+		.Grid 
+		{ 
+			width: @wdth; 
+			thead { display: none }
+		}
+		.Search { width: (@wdth - 4px); }
+	}
+
+	.ChooseLink { .pointer; color: Blue; text-decoration: underline }
+}
+
+.OrgChildSelector 
+{
+	width: 200px; 
+	height: 16px; 
+	border: 1px solid black; 
+	padding: 3px 7px; 
+	background: white;
+
+	.Button 
+	{ 
+		width: 20px;
+		height: 22px;
+		font-size: 10px;
+		float: right;
+		border: 1px solid gray;
+		background: #EEE;
+		text-align: center;
+		margin: -4px -8px;
+		cursor: pointer;
+    }
+	.Value { display: inline-block; }
+}

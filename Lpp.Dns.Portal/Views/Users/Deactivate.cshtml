@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "RejectRegistration";
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+
+@section Head {
+<script src="~/js/Users/deactivate.js"></script>
+}
+
+<form role="form">
+    <fieldset>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="txtReason">Reason<em>*</em></label>
+                <textarea id="txtReason" data-bind="kendoEditor: {value: Reason}"></textarea>
+            </div>
+        </div>
+    </fieldset>
+</form>
+<nav class="footer">
+    <button id="btnSave" class="btn btn-success btn-sm" data-bind="click: Save"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+    <button id="btnCancel" class="btn btn-warning btn-sm" data-bind="click: Cancel"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+</nav>

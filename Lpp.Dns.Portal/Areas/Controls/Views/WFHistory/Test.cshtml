@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head{
+    <script src="/areas/controls/js/wfhistory/index.js"></script>
+    <script src="/areas/controls/js/wfhistory/test.js"></script>    
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-body">
+        <h2>Workflow History Test</h2>
+        <div class="panel panel-default">
+            <div class="panel-heading">History</div>
+            <div class="panel-body">
+                <div data-bind="kendoDropDownList:{ data: Requests, value: Request, dataTextField: 'Name'}" style="width:600px;"></div>
+                <ul>
+                    <li>Request: <span data-bind="text:Request().Name"></span></li>
+                    <li>Request Identifier: <span data-bind="text:Request().Identifier"></span></li>
+                    <li>Request ID: <span data-bind="text:Request().ID"></span></li>
+                </ul>
+            </div>
+        </div>        
+        <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height: 500px;">
+            <ul>
+                <li class="k-state-active">History</li>
+            </ul>
+            <!-- ko stopBinding: true -->
+            <div class="tab-body" style="padding:2px 1px;">
+                @Html.Partial("Index")
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+</article>

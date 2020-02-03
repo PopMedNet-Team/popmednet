@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "AddUsers";
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+<script src="~/Areas/Controls/js/WFNotifications/AddUsers.js"></script>
+<style>
+    #Content {
+        margin-bottom: 0px !important;
+    }
+
+    .row {
+        box-sizing: border-box;
+    }
+
+    input.k-input {
+        display: none;
+    }
+    .invalid-message-list {
+        margin:0px;
+        padding-left:8px;
+    }
+    .invalid-message-item {
+    }
+</style>
+
+<section class="panel panel-default">
+
+
+    <div class="panel-body">
+
+        <div id="observersBox" style="margin-bottom:12px;">
+            @*<select id="observersList" data-bind="kendoMultiSelect: { data: RequestObservers, value: RequestObserversSelected, change: OnObserversChanged, dataTextField: 'getDisplayName()', dataValueField: 'getID()', template: cboObserversTemplate }"></select>*@
+            <div class="row k-multiselect-wrap" style="margin: 0; border: 1px solid #c5c5c5; border-radius: 3px;">
+                <!-- ko foreach: RequestObservers -->
+                <div style="color: white; background-color: #428bca; border: 1px solid #357ebd; border-radius: 3px; padding: 4px; margin: 1px 0 1px 1px; float: left;">
+                    <span data-bind="text: toString()" style="margin-left: 2px;"></span>
+                    <span data-bind="click: $root.onRemoveObserver.bind($data, $index())" class="k-icon k-delete" style="background-position: -160px -80px; margin: 0 -2px 0 -4px; cursor: pointer;"></span>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+
+        <div class="alert alert-warning" style="display:none;" data-bind="visible:EventNotificationValidationErrors().length > 0">
+            <ul class="invalid-message-list" data-bind="foreach:EventNotificationValidationErrors">
+                <li data-bind="text:$data" class="invalid-message-item"></li>
+            </ul>
+        </div>
+        
+
+        <div id="tabs" data-bind="kendoTabStrip:{}" style="margin-bottom:12px;">
+            <ul>
+                <li class="k-state-active">Add Existing User or Security Group</li>
+                <li>Add Email Address</li>
+            </ul>
+            <div class="tab-body">
+                <p>Search by a User's Name, Email, or a Security Group name</p>
+                <div class="row">
+                    <div style="width:400px;" class="col-sm-8 form-group">
+                        <input id="autocomplete" style="width:500px;" class="form-control" data-bind="kendoAutoComplete:
+                                            {
+                                                widget: requestObserverWidget,
+                                                dataTextField: 'DisplayName',
+                                                dataValueField: 'ID',
+                                                minLength: 3,
+                                                template: kacTemplate,
+                                                filter: 'contains',
+                                                placeholder: 'Search...',
+                                                dataSource: observersDataSource,
+                                                select: onSelectObserver,
+                                                change: onChangeObserver
+                                            }" />
+                        <br />
+                        <span id="lblCustomValue" style="display:none;color:red;font-weight:bold;">Custom values are not allowed. Search and select from the list</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" data-bind="click: onAddObserver">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-body">
+                <div class="row" style="box-sizing:border-box;">
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="txtEmailAddress" style="margin-left:1em;">Email</label>
+                                <input id="txtEmailAddress" class="form-control" style="width:300px; margin-left:1em;" data-bind="kendoMaskedTextBox: EmailObserverAddress" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="txtDisplayName" style="margin-left:1em;">Display Name</label>
+                                <input id="txtDisplayName" class="form-control" style="width:300px; margin-left:1em;" data-bind="kendoMaskedTextBox: EmailObserverName" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-default" data-bind="click: onAddEmail">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered table-condensed">
+            <colgroup>
+                <col style="width:50px; text-align:center;" />
+                <col style="width:100%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" data-bind="click: onBtnAllEvents, checked: (SelectedObserverEvents().length == ObserverEvents().length)" />
+                    </th>
+                    <th>
+                        Notifications
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: ObserverEvents -->
+                <tr>
+                    <td>
+                        <input type="checkbox" data-bind="value: ID, checked: $root.SelectedObserverEvents" />
+                    </td>
+                    <td>
+                        <label style="font-weight:normal;" data-bind="text: Name"></label>
+                    </td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+
+
+</section>
+<nav class="footer">
+    <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:120px;" id="btnCancel" data-bind="click:onCancel">Cancel</button>
+    <button class="btn btn-default pull-right" type="button" style="width:120px;" id="btnSave" data-bind="click:onSave, visable: SelectedUser() != null">Save</button>
+    <div class="clear"></div>
+</nav>

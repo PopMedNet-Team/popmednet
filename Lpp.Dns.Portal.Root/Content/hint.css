@@ -1,0 +1,12 @@
+.ui-hint 
+{
+    position: absolute;
+    border: 1px solid black;
+    background: #EEE;
+    padding: 10px;
+    text-align: left;
+    font-size: 10px;
+    min-width: 100px;
+    max-width: 250px;
+    -moz-box-shadow: 3px 3px;
+}

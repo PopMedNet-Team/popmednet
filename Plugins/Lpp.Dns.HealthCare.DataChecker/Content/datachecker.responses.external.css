@@ -1,0 +1,73 @@
+﻿body {
+    margin:0px;
+    font-family:Calibri, Arial, sans-serif;
+}
+.ShowAllDocumentsLink{
+    background-color:#E3E6EB;
+    border-bottom:1px solid #808080;
+    padding:2px 0px;
+    margin-bottom:2px;
+}
+div.Visual{
+    margin:4px;
+}
+.DocumentsView {
+    max-height:none;
+}
+.DocumentsGrid {
+    width:720px;
+    margin:2px auto;
+}
+
+.DocumentsGrid .Type {
+    max-width:200px;
+    width:200px;
+}
+
+div.halfwidth-barchart-dpc,
+div.halfwidth-piechart-dpc,
+div.halfwidth-barchart-dpp,
+div.halfwidth-piechart-dpp{
+    display:inline-block;
+}
+
+div.halfwidth-barchart-dpc {    
+    height:225px;    
+}
+div.halfwidth-piechart-dpc {
+    height:300px;  
+}
+div.halfwidth-barchart-dpp{
+    height:500px;  
+}
+div.halfwidth-piechart-dpp{
+    height:400px;
+}
+
+
+
+
+@media print {
+    #ResponseContainer {
+        overflow:visible;
+    }
+    .ShowAllDocumentsLink,
+    .responseview_selector {
+        display:none;
+    }
+    .DocumentsGrid {
+        width:660px;
+    }
+
+    .DocumentsGrid td.ViewCol a,
+    .DocumentsGrid td.DownloadCol a {
+        display:none;
+    }
+
+    .DocumentsGrid td.ViewCol,
+    .DocumentsGrid td.DownloadCol {
+        width:2px;
+    }
+
+
+}

@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/_Layout.cshtml";
+    ViewBag.Title = "Qlik Tests - Div Integration";
+}
+
+@section Head{
+    <script language="javascript" type="text/javascript" src="http://localhost:4848/QVAJAXZfc/htc/QvAjax.js"></script>
+
+}
+
+<section id="ContentWrapper">
+    
+    <script>
+        Qv.InitWorkBench({
+            View: 'Requests',
+            Host: null
+            });
+    </script>
+
+<div avqview="Requests" avq="object:.Document\HpkEjZh"></div>
+
+
+</section>

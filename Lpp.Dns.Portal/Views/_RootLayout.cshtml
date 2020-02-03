@@ -1,0 +1,123 @@
+﻿@using System.Web.Configuration
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="fragment" content="!">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="EXPIRES" content="0">
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
+
+    <title>@(ViewBag.Title ?? "Distributed Network Solution")</title>
+
+    @if (System.Web.HttpContext.Current.IsDebuggingEnabled)
+    {
+    <link href="@this.ResourceUrl("/content/bootstrap/3.3.6/css/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@this.ResourceUrl("/content/bootstrap/3.3.6/css/bootstrap-theme.min.css")" rel="stylesheet" />
+    }
+    else
+    {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet" />
+    }
+
+    <link href="@this.ResourceUrl("/content/kendo/2017.1.118/kendo.common-bootstrap.min.css")" rel="stylesheet" />
+    <link href="@this.ResourceUrl("/content/kendo/2017.1.118/kendo.bootstrap.min.css")" rel="stylesheet" />
+    
+    
+    <link href="@this.ResourceUrl("/content/site.css")" rel="stylesheet" />
+
+    <link href="/content/Layout.css" rel="stylesheet" />
+    <script>
+        var ServiceUrl = "@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]";
+        var ResourceUrl = "@System.Web.Configuration.WebConfigurationManager.AppSettings["ResourceUrl"]";
+        var theme = "@System.Web.Configuration.WebConfigurationManager.AppSettings["CurrentTheme"]" == "" ? "Default" : "@System.Web.Configuration.WebConfigurationManager.AppSettings["CurrentTheme"]" ;
+    </script>
+
+    @Html.RenderStylesheets()
+
+    @if (System.Web.HttpContext.Current.IsDebuggingEnabled)
+    {
+    <script src="@this.ResourceUrl("/scripts/es6-shim/0.15.1/es6-shim.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+        <script>if (typeof window.Modernizr == 'undefined' || window.Modernizr == null) document.write('<script src="@this.ResourceUrl("/scripts/modernizr/2.8.3/modernizr.min.js")"><\/script>'); </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
+        <script> if (typeof window.jQuery == 'undefined' || window.jQuery == null) document.write('<script src="@this.ResourceUrl("/scripts/jquery/2.2.3/jquery.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <script>if (typeof $.cookie == 'undefined' || $.cookie == null) document.write('<script src="@this.ResourceUrl("/scripts/jquery.cookie/1.4.1/jquery.cookie.js")"><\/script>'); </script>
+    <script src="//ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>
+        <script>if (typeof $.connection == 'undefined'  || $.connection == null) document.write('<script src="@this.ResourceUrl("/scripts/signalr/2.2.0/jquery.signalR-2.2.0.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
+        <script>moment || document.write('<script src="@this.ResourceUrl("/scripts/moment/2.13.0/moment.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-debug.js"></script>
+        <script>if ( typeof ko == 'undefined' || ko == null) document.write('<script src="@this.ResourceUrl("/scripts/knockout/3.4.0/knockout-3.4.0.debug.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.js"></script>
+        <script>ko.validation || document.write('<script src="@this.ResourceUrl("/scripts/knockout-validation/2.0.3/knockout.validation.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js"></script>
+        <script>ko.mapping || document.write('<script src="@this.ResourceUrl("/scripts/knockout-mapping/2.4.1/knockout.mapping.js")"><\/script>');</script>
+    <script src="@this.ResourceUrl("/scripts/knockout-bootstrap/0.3.0/knockout-bootstrap.min.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/linq/2.2.0.2/linq.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/linq/2.2.0.2/jquery.linq.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/purl/2.3.1/purl.js"></script>
+    <script src="@this.ResourceUrl("/scripts/kendo/2017.1.118/kendo.web.min.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/knockout-kendo/0.9.7/knockout-kendo.js")"></script>
+    }
+    else
+    {
+    <script src="@this.ResourceUrl("/scripts/es6-shim/0.15.1/es6-shim.min.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script>if (typeof window.Modernizr == 'undefined' || window.Modernizr == null) document.write('<script src="@this.ResourceUrl("/scripts/modernizr/2.8.3/modernizr.min.js")"><\/script>'); </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+        <script>if (typeof window.jQuery == 'undefined' || window.jQuery == null) document.write('<script src="@this.ResourceUrl("/scripts/jquery/2.2.3/jquery.min.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script>if (typeof $.cookie == 'undefined' || $.cookie == null) document.write('<script src="@this.ResourceUrl("/scripts/jquery.cookie/1.4.1/jquery.cookie.js")"><\/script>'); </script>
+    <script src="//ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>
+        <script>if (typeof $.connection == 'undefined' || $.connection == null) document.write('<script src="@this.ResourceUrl("/scripts/signalr/2.2.0/jquery.signalR-2.2.0.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+        <script>moment || document.write('<script src="@this.ResourceUrl("/scripts/moment/2.13.0/moment.min.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+        <script>if (typeof ko == 'undefined' || ko == null) document.write('<script src="@this.ResourceUrl("/scripts/knockout/3.4.0/knockout-3.4.0.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.min.js"></script>
+        <script>ko.validation || document.write('<script src="@this.ResourceUrl("/scripts/knockout-validation/2.0.3/knockout.validation.min.js")"><\/script>');</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+        <script>ko.mapping || document.write('<script src="@this.ResourceUrl("/scripts/knockout-mapping/2.4.1/knockout.mapping.min.js")"><\/script>');</script>
+    <script src="@this.ResourceUrl("/scripts/knockout-bootstrap/0.3.0/knockout-bootstrap.min.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/linq/2.2.0.2/linq.min.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/linq/2.2.0.2/jquery.linq.min.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/purl/2.3.1/purl.min.js"></script>
+    <script src="@this.ResourceUrl("/scripts/kendo/2017.1.118/kendo.web.min.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/knockout-kendo/0.9.7/knockout-kendo.min.js")"></script>
+    }
+
+    <script src="@this.ResourceUrl("/scripts/kendo/2017.1.118/kendo.data.webapi.js")"></script>
+
+    <script src="@this.ResourceUrl("/scripts/custombindings/5.0.0/customknockoutbindings.js")"></script>
+    <script src="/scripts/utilities.js"></script>
+
+    <script src="@WebConfigurationManager.AppSettings["ServiceUrl"]/scripts/Lpp.dns.interfaces.js"></script>
+    <script src="@WebConfigurationManager.AppSettings["ServiceUrl"]/scripts/Lpp.dns.viewmodels.js"></script>
+    <script src="@WebConfigurationManager.AppSettings["ServiceUrl"]/scripts/Lpp.dns.webapi.js"></script>
+
+
+    <script src="@this.ResourceUrl("/scripts/page/5.1.0/page.js")"></script>
+    <script src="@this.ResourceUrl("/scripts/expandomenu/5.0.0/expandomenu.js")"></script>
+    <script src="/js/_rootlayout.js"></script>
+    <link href="/content/print.css" rel="stylesheet" media="print" />
+    @RenderSection("Head", false)
+    @Html.RenderScripts()
+</head>
+<body>
+    @RenderBody()
+    @RenderSection("Scripts", false)
+</body>
+</html>

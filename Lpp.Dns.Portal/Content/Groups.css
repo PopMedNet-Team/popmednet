@@ -1,0 +1,4 @@
+.Groups .Grid { width: 100% }
+
+.Group-Organizations .Grid, .Group-Projects .Grid { width: 100% }
+.Group-Organizations .Grid td.Checkbox, .Group-Projects .Grid td.Checkbox { width: 30px; }

@@ -1,0 +1,38 @@
+﻿{
+    "Header": {
+        "Description": "Select stratifications."
+        /*
+SELECT c.Stratification, COUNT(c.StratificationValue) as Total FROM Demographic
+JOIN (
+	SELECT PATID, CASE WHEN YearsOld < 65 THEN '65' ELSE '65+' END as Stratification, YearsOld as StratificationValue FROM 
+	(
+		SELECT PATID, (DATEDIFF(yy, BIRTH_DATE, SysDateTime())  - CASE WHEN (MONTH(BIRTH_DATE) > MONTH(GETDATE())) OR (MONTH(BIRTH_DATE) = MONTH(GETDATE()) AND DAY(BIRTH_DATE) > DAY(GETDATE())) THEN 1 ELSE 0 END) AS YearsOld  FROM Demographic
+	) as s
+) c ON Demographic.PATID = c.PATID
+GROUP BY c.Stratification
+        */
+    },
+    "Where": { },
+    "Select":
+    {
+        "Fields":
+        [
+            {
+                "FieldName": "Age",
+                "Type": "D9DD6E82-BBCA-466A-8022-B54FF3D99A3C",
+                "StratifyBy": 4, //2 Stratifications (Under 65,65+)
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Age_Count",
+                "Type": "D9DD6E82-BBCA-466A-8022-B54FF3D99A3C",
+                "StratifyBy": null,
+                "Aggregate": 1,//Count
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+﻿@{
+     Layout = "~/Views/_RootLayout.cshtml";
+}
+
+@section Head {
+    <style>
+        section#Content {
+            /* but where's the 53px bottom margin defined? */
+            margin-bottom: 0 !important;
+        }
+    </style>
+
+    <link href="@this.ResourceUrl("/content/dialog.css")" rel="stylesheet" />
+
+    @RenderSection("Head", false)
+}
+
+<section id="Content" class="container-fluid">
+    @RenderBody()
+</section>
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+}

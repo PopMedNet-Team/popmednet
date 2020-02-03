@@ -1,0 +1,6 @@
+@{
+    Layout = "~/Views/Response/ExternalLayout.cshtml";
+    this.Page.PageTitle = Model.Request.Name;
+}
+@model Lpp.Dns.Portal.Models.ResponseViewModel
+@Model.BodyView( Html )

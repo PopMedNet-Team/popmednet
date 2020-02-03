@@ -1,0 +1,93 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_HeightDistribution">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-4 bold"><h4 id="lblHeightDistribution" class="TermHeader bold">Height Distribution<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-4 form-group">
+            <div class="checkbox">
+                <input type="checkbox" onchange="SelectAll(this, 'AllHeightDistributions')" />
+                <label class="hover-ibeam" for="SelectAll">Select All</label>
+            </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div id="AllHeightDistributions">
+                <div style="float:left; margin-right: 50px;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="0" id="HeightTo10" />
+                        <label class="hover-ibeam" for="HeightTo10">0-10 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="1" id="HeightTo20" />
+                        <label class="hover-ibeam" for="HeightTo20">11-20 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="2" id="HeightTo45" />
+                        <label class="hover-ibeam" for="HeightTo45">21-45 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="3" id="HeightTo52" />
+                        <label class="hover-ibeam" for="HeightTo52">46-52 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="4" id="HeightTo58" />
+                        <label class="hover-ibeam" for="HeightTo58">53-58 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="5" id="HeightTo64" />
+                        <label class="hover-ibeam" for="HeightTo64">59-64 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="6" id="HeightTo70" />
+                        <label class="hover-ibeam" for="HeightTo70">65-70 in</label>
+                    </div>
+                </div>
+                <div style="float:left; margin-right: 50px;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="7" id="HeightTo76" />
+                        <label class="hover-ibeam" for="HeightTo76">71-76 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="8" id="HeightTo82" />
+                        <label class="hover-ibeam" for="HeightTo82">77-82 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="9" id="HeightTo88" />
+                        <label class="hover-ibeam" for="HeightTo88">83-88 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="10" id="HeightTo94" />
+                        <label class="hover-ibeam" for="HeightTo94">89-94 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="11" id="HeightOver95" />
+                        <label class="hover-ibeam" for="HeightOver95">95+ in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="12" id="HeightUnder0" />
+                        <label class="hover-ibeam" for="HeightUnder0">&lt;0 in</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().HeightDistributions" value="13" id="HeightNullOrMissing" />
+                        <label class="hover-ibeam" for="HeightNullOrMissing">NULL or Missing</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteHeightDistributionTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    function SelectAll(checker, container) {
+        $("#" + container + " div input[type=checkbox]").each(function () {
+            if (this.checked != checker.checked)
+                $(this).click();
+        });
+    }
+</script>

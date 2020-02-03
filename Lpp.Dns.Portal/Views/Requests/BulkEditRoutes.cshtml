@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Request DataMarts Bulk Edit";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head{
+    <script src="~/js/requests/bulkeditroutes.js" async></script>
+    <style>
+        .action-buttons {
+            width:120px;
+        }
+    </style>
+}
+
+<section id="ContentWrapper" class="invisible" data-bind="css: {invisible: false}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title" id="requests-panel-title" >Edit DataMart Request MetaData for <span data-bind="text:DataMart.Name"></span> </h4>  
+        </div>
+        <div class="panel-body" style="height:600px;">
+            
+            <div id="gRequests" data-bind="kendoGrid: {
+                data: dsRequest,
+                sortable: true,
+                filterable: false,
+                autoBind: true,
+                resizable: true,
+                reorderable: true,
+                columnMenu: { columns: true },
+                columnMenuInit: $root.onColumnMenuInit,
+                height: '100%',
+                scrollable: {
+                    virtual: false
+                },
+                pageable: false,
+                selectable: 'multiple,row',
+                useKOTemplates:true,
+                dataBound:onGridDataBound,
+                change: onRowSelectionChange,
+                columns: [
+                    {field: 'Name', title: 'Name', template:'#:Name()#', width: 200},
+                    {field: 'Identifier', title: 'System Number', template:'#:Identifier()#', width: 120, filterable: {
+                        ui: function (element) {
+                            element.kendoNumericTextBox({
+                                format: '####',
+                                decimals: 0
+                            });
+                        }
+                    }  },
+                    {field: 'Project', title: 'Project', template:'#:Project()#', width: 125},
+                    {field: 'Priority', title: 'Priority', template:formatPriorityCell, values: Dns.Enums.PrioritiesTranslation, width: 200 },
+                    {field: 'DueDate', title: 'Due Date', template:formatDueDateCell, width: 200 },
+                    {field: 'StatusText', title: 'Status', template:'#:StatusText()#', width: 125},
+                    {field: 'RoutingStatusText', title: 'Routing Status', template:'#:RoutingStatusText()#', width: 125 },
+                    {field: 'RequestType', title: 'Type', template:'#:RequestType()#', width: 175},
+                    {field: 'MSRequestID', title: 'Request ID', template:'#if(MSRequestID() == null){ \'\' } else {# #:MSRequestID()# #}#', width:120 },
+                    {field: 'SubmittedOn', title: 'Date Submitted', template:'#if(SubmittedOn() == null){ \'\' } else {# #: Constants.FormatDateTime(SubmittedOn()) # #}#', format: Constants.DateTimeFormatter, width: 165},
+                    {field: 'SubmittedByName', title: 'Submitter', template:'#:SubmittedByName()#', width: 200}
+                ]
+                }">
+            </div>
+
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-default action-buttons" data-bind="enable:BulkEditEnabled, click:onBulkEdit">Bulk Edit</button>
+
+            <a href="/" class="btn btn-default action-buttons pull-right">Cancel</a>
+            <button class="btn btn-default pull-right action-buttons" data-bind="click:onApplyChanges" style="margin-right:12px;">Apply Changes</button>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</section>

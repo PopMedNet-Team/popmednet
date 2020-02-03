@@ -1,0 +1,65 @@
+@using Lpp.Dns.Portal.Views.Request
+@model RequestListModel
+@{ var id = Html.UniqueId(); } 
+
+<div class="RequestsPage" id="@id">
+    @if ( Model.AllProjects != null ) {
+        <a href="#" class="Scroller Left">&lt;</a>
+        <a href="#" class="Scroller Right">&gt;</a>
+        <div class="ProjectTabs">
+            @foreach( var p in Model.AllProjects.StartWith( (Lpp.Dns.Data.Project) null ) ) {
+                <a href="#" data-project="@( p == null ? "" : p.ID.ToString() )"
+                    @Html.Raw( p == Model.Project ? "class=\"Selected\"" : "" )>@( p == null ? "All Projects" : p.Name )</a>
+            }
+        </div>
+        <script>
+            $(function ($) {
+                $("#@(id) > .ProjectTabs > a").click(function () {
+                    var id = $(this).data("project");
+                    $(".RequestsGrid .ProjectFilterLink").filter(function () { return $(this).data("project") == id; }).click();
+                    $("#@(id) > .ProjectTabs > a").removeClass("Selected");
+                    $(this).addClass("Selected");
+                    return false;
+                });
+            });
+        </script>
+    }
+    <div class="ui-section ui-no-padding ui-has-header" title-text="Requests">
+        @(Html.Partial<ListBody>())
+    </div>
+    <script type="text/javascript">
+        $(function() {
+
+            var root = $("#@(id)");
+            var tabs = $("#@(id) > .ProjectTabs");
+            var left = $("#@(id) > .Scroller.Left");
+            var right = $("#@(id) > .Scroller.Right");
+
+            function updateScrollers(showLeft, showRight) {
+                if (showLeft === undefined) showLeft = tabs.scrollLeft() > 0;
+                if (showRight === undefined) {
+                    var lastTab = tabs.find("a:last");
+                    showRight = tabs.scrollLeft() + tabs.width() < lastTab.position().left + lastTab.width();
+                }
+
+                left.toggle( showLeft );
+                right.toggle( showRight );
+            }
+            updateScrollers();
+
+            $("#@(id) > .Scroller.Left").click(function () {
+                var newLeft = tabs.scrollLeft() - 100;
+                tabs.scrollLeft(newLeft);
+                updateScrollers(tabs.scrollLeft() <= newLeft);
+                return false;
+            });
+            $("#@(id) > .Scroller.Right").click(function () {
+                var newLeft = tabs.scrollLeft() + 100;
+                tabs.scrollLeft(newLeft);
+                updateScrollers( undefined, tabs.scrollLeft() >= newLeft );
+                return false;
+            });
+
+        });
+    </script>
+</div>

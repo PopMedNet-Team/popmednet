@@ -1,0 +1,100 @@
+﻿@using Lpp.QueryComposer
+
+
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_AgeDistribution">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-3 bold"><h4 id="lblAgeDistribution" class="TermHeader bold">Age Distribution<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-5 form-group">
+            
+                <div class="checkbox">
+                    <input type="checkbox" id="AgeDistributionAll" onchange="SelectAll(this, 'AgeDistributionGrid')" />
+                    <label for="AgeDistributionAll">Select All</label>
+                </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 350px; padding-left:0px; margin-left:-50px; border-bottom-color: lightgray; ">
+            </div>
+            <div id="AgeDistributionGrid">
+                <div style="float:left; margin-right: 50px;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="0" id="lt0years" />
+                        <label for="lt0years">&#60;0 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="1" id="0-1years" />
+                        <label for="0-1years">0-1 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="2" id="2-4years" />
+                        <label for="2-4years">2-4 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="3" id="5-9years" />
+                        <label for="5-9years">5-9 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="4" id="10-14years" />
+                        <label for="10-14years">10-14 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="5" id="15-18years" />
+                        <label for="15-18years">15-18 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="6" id="19-21years" />
+                        <label for="19-21years">19-21 years</label>
+                    </div>
+                </div>
+                <div style="float:left; margin-right: -30px;">
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="7" id="22-44years" />
+                        <label for="22-44years">22-44 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="8" id="45-64years" />
+                        <label for="45-64years">45-64 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="9" id="65-74years" />
+                        <label for="65-74years">65-74 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="10" id="75-110years" />
+                        <label for="75-110years">75-110 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="11" id="gt110years" />
+                        <label for="gt110years">&#62;110 years</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="12" id="nullormissingyears" />
+                        <label for="nullormissingyears">NULL or missing</label>
+                    </div>
+                    <div styly="margin-right: 0px;" class="checkbox">
+                        <input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="13" id="vocdmsyears" />
+                        <label for="vocdmsyears">Values outside of CDM specifications</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteAgeDistributionTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>
+
+@*Select ALL*@
+<script type="text/javascript">
+    function SelectAll(checker, container) {
+
+        $("#" + container + " div input[type=checkbox]").each(function () {
+            if (this.checked != checker.checked)
+                $(this).click();
+        });
+    }
+
+</script>

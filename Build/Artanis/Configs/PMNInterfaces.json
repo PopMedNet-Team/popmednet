@@ -1,0 +1,10 @@
+﻿{
+  "DtoNamespace": "Lpp.Dns.DTO",
+  "EnumNamespace": "Lpp.Dns.DTO.Enums",
+  "TSNamespace": "Dns",
+  "ApiNamespace": "",
+  "NetclientNamespace": "",
+  "NetclientVariable": "",
+  "OutputPath": "\\Lpp.Dns.Api\\Scripts\\Lpp.Dns.Interfaces.ts",
+  "ResourcesPath": "Lpp.Pmn.Resources"
+}

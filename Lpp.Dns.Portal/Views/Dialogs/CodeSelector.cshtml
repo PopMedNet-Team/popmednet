@@ -1,0 +1,116 @@
+﻿@{
+    Layout = "~/views/_dialoglayout.cshtml";
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        Search
+    </div>
+    <div class="panel-body">
+        <fieldset id="search">
+            <legend class="hidden"></legend>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label id="lblQuery" for="txtQuery">Type in a text query:</label>
+                    <input id="txtQuery" aria-labelledby="lblQuery" class="form-control" type="text" style="width: 100%;" data-bind="value: Query, valueUpdate: 'keyup'" />
+                </div>
+                <div class="col-sm-8 form-group" data-bind="visible: ShowCategoryDropdown">
+                    <label id="lblCategory" for="txtCategory">Choose a category:</label>
+                    <input id="txtCategory" aria-labelledby="lblCategory" style="width:100%;" data-bind="kendoDropDownList:{dataTextField: 'CategoryName', dataValueField: 'CategoryId', dataSource: dsCategories,  value: CategoriesValue}" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</article>
+
+<div class="row">
+    <div class="col-sm-6">
+        <article class="panel panel-default" data-bind="css: {visible: true}">
+            <div class="panel-heading">
+                Results<small>(Click to Select)</small>
+            </div>
+            <div class="panel-body">
+                <!--ko if: Parameters.ListID != 13-->
+                <div id="gResults" data-bind="kendoGrid: {
+                    data: dsResults,
+                    scrollable: true,
+                    resizable: true,
+                    sortable: true,
+                    selectable: 'row',
+                    columns: [
+                        {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ExpireDate', title: 'Expire Date', width: 100, format: Constants.DateFormatter, attributes: { style: 'cursor: pointer;'}},
+                    ],
+                    change: AddCode
+                }" style="height: 300px;"></div>
+                <!--/ko-->
+                <!--ko if: Parameters.ListID == 13-->
+                <div id="gResults" data-bind="kendoGrid: {
+                    data: dsResults,
+                    scrollable: true,
+                    resizable: true,
+                    sortable: true,
+                    selectable: 'row',
+                    columns: [
+                        {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
+                    ],
+                    change: AddCode
+                }" style="height: 300px;"></div>
+                <!--/ko-->
+            </div>
+        </article>
+    </div>
+    <div class="col-sm-6">
+        <article class="panel panel-default" data-bind="css: {visible: true}">
+            <div class="panel-heading">
+                Selected<small>(Click to Remove)</small>
+            </div>
+            <div class="panel-body">
+                <!--ko if: Parameters.ListID != 13-->
+                <div id="Selected" data-bind="kendoGrid: {
+                    data: dsSelected,
+                    scrollable: true,
+                    resizable: true,
+                    sortable: true,
+                    selectable: 'row',
+                    columns: [
+                        {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ExpireDate', title: 'Expire Date', width: 100, format: Constants.DateFormatter, attributes: { style: 'cursor: pointer;'}},
+                    ],
+                    change: RemoveCode
+                }" style="height: 300px;"></div>
+                <!--/ko-->
+                <!--ko if: Parameters.ListID == 13-->
+                <div id="Selected" data-bind="kendoGrid: {
+                    data: dsSelected,
+                    scrollable: true,
+                    resizable: true,
+                    sortable: true,
+                    selectable: 'row',
+                    columns: [
+                        {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
+                        {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
+                    ],
+                    change: RemoveCode
+                }" style="height: 300px;"></div>
+                <!--/ko-->
+            </div>
+        </article>
+    </div>
+</div>
+       
+<nav class="footer">
+    <button class="btn btn-primary" data-bind="click: Save, enabled: Changed, css: {'k-state-disabled': !Changed()}"><img src="@this.ResourceUrl("/images/Approve24.png")" alt="Approve" />Save</button>
+    <button class="btn btn-danger" data-bind="click: Cancel"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Reject" />Cancel</button>
+</nav>
+
+@section head {
+    <script src="~/js/Dialogs/CodeSelector.js"></script>
+    <style>
+        section#Content {
+            height: 500px;
+        }
+    </style>
+}

@@ -1,0 +1,30 @@
+@model ReportModel
+@{ Layout = null; }
+
+    <table class="Report" cellpadding="0" cellspacing="0">
+        <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Event</th>
+            @foreach ( var c in Model.Columns )
+            {
+                <th>@c.Name</th>
+            }
+        </tr>
+        @foreach( var row in Model.Rows.Select( (r,idx) => new { r, idx } ) )
+        {
+            var props = from c in Model.Columns
+                        join p in row.r.VisualizedProperties on c.ID equals p.Key.ID into ps
+                        from p in ps.DefaultIfEmpty()
+                        select p.Value == null ? null : p.Value( Html );
+            <tr>
+                <td class="Num">@(row.idx+1)</td>
+                <td>@row.r.Event.Time.ToString( "MM/dd/yyyy hh:mm tt" )</td>
+                <td>@row.r.Kind.Name</td>
+                @foreach ( var p in props )
+                {
+                    <td>@p</td>
+                }
+            </tr>
+        }
+    </table>

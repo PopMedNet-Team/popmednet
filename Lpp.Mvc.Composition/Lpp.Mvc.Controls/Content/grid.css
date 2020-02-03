@@ -1,0 +1,163 @@
+﻿table.Grid
+{
+    border: 1px solid #A2A2A0;
+    border-collapse: collapse;
+}
+
+table.Grid td, table.Grid th
+{
+    text-align: left;
+    padding: 5px;
+}
+
+table.Grid > tbody > tr
+{	
+    background-color:#E3E6EB;
+    border-top: 1px solid #A2A2A0;
+}
+
+table.Grid > tbody > tr.Alt
+{		
+    background-color :#FEFEF4;                       
+}
+
+table.Grid > thead > tr
+{		
+    background-color :#96ADD6;
+    color: #FFFFFF;
+    font-weight:bold; 
+}
+
+table.Grid > thead th { white-space: nowrap; }
+
+table.Grid > thead th.Sortable, table.Grid > thead th.ClientSortable
+{
+    cursor: hand;
+    cursor: pointer;
+}
+
+table.Grid .SortIcon { display: none; }
+
+table.Grid > thead th.SortedAsc > .SortIcon, table.Grid > thead th.SortedDesc > .SortIcon
+{
+    display: inline-block;
+    background-position: left center;
+    background-repeat: no-repeat;
+    margin-right: 2px;
+    width: 10px; min-width: 10px; max-width: 10px;
+}
+
+table.Grid > thead th.SortedAsc > .SortIcon
+{
+    background-image: url('img/arrow-up.png');
+}
+
+table.Grid > thead th.SortedDesc > .SortIcon
+{
+    background-image: url('img/arrow-down.png');
+}
+
+table.Grid > tfoot .Pager { display: inline-block; }
+
+table.Grid > tfoot .Page, table.Grid > tfoot .PageArrow
+{
+    color: blue;
+    padding: 2px 2px;
+    text-decoration: none;
+    background: #EEE;
+    width: 12px;
+    height: 12px;
+    border: 1px solid navy;
+    display: inline-block;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+table.Grid > tfoot a:hover.Page, table.Grid > tfoot a:hover.PageArrow
+{
+    border: 2px solid navy;
+    padding: 1px 1px;
+}
+
+table.Grid > tfoot a:hover.Page.Selected
+{
+    padding: 2px 2px;
+}
+
+table.Grid > tfoot .Page.Selected
+{
+    background: #CCC;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+}
+
+table.Grid > tfoot .AbbreviationEllipsis
+{
+    display: inline-block;
+    color: White;
+    font-weight: bold;
+}
+
+table.Grid > tfoot > tr
+{
+    border-top: 1px solid #A2A2A0;
+    background: #96ADD6;
+    color: White;
+}
+
+table.Grid > tfoot > tr > td {
+    vertical-align: middle;
+}
+
+table.Grid th .FilterButton {
+    display: inline-block;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url('img/filter.png');
+    cursor: hand;
+    cursor: pointer;
+    padding-left: 12px;
+    margin-left: 10px;
+}
+
+table.Grid th .FilterButton.Active {
+    background-image: url('img/filter-active.png');
+}
+
+table.Grid .FilterOptions > a:link, table.Grid .FilterOptions > a:visited {
+    display: block;
+    padding: 3px 10px;
+    color: Navy;
+}
+
+table.Grid .FilterOptions > a:link.Selected {
+    background: silver;
+}
+
+table.Grid .FilterOptions > a:hover, table.Grid .FilterOptions > a:visited:hover {
+    background: navy;
+    color: White;
+}
+
+table.Grid .PageSizeSelector
+{
+    display: inline-block;
+    padding: 5px 0;
+    vertical-align: middle;
+    margin-left: 40px;
+}
+
+table.Grid td.NoData { text-align: center; }
+
+.GridLoading.LoadingSign
+{
+    background: url('img/grid-loading.gif');
+    background-position: top center;
+    background-repeat: no-repeat;
+    height: 30px;
+    min-height: 30px;
+    width: 250px;
+    min-width: 250px;
+}

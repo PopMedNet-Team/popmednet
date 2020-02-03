@@ -1,0 +1,26 @@
+{
+	"Header" : {
+		"Name" : "Race_A, NH, W",
+		"ViewUrl" : "https://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=80bc9e75-f83e-41b2-81aa-a5520103fd59"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "fa8cdc05-750e-4f6f-a441-c0e6e0ee15b6",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+						"Values" : {
+							"Race" : [4, 5, 2]
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <style>
+        .meta-edit {
+            margin-left:15px;
+            margin-top:15px;
+        }
+        .action-button {
+             margin-right:15px;
+             margin-top:15px;
+             width:100px;
+        }
+    </style>
+    <script src="~/js/dialogs/MetadataBulkEditPropertiesEditor.js"></script>
+}
+<section id="MetadataBulkEditPropertiesEditor">
+    <article>    
+        <p class="alert alert-info" data-bind="text:InfoText">
+            The following values will be applied to the selected datamarts.
+        </p>
+        <div class="row meta-edit">
+            <div class="col-xs-4 form-group">
+                <label for="dueDateCheckBox">
+                    <input id="dueDateCheckBox" type="checkbox" data-bind="value: 'true', checked: DueDateSelected" />
+                    Due Date
+                </label>
+            </div>
+            <div class="col-xs-8 form-group">
+                <input type="text" id="dataMartDueDate" data-bind="kendoDatePicker:{value: DueDate }" style="width:60%;"/>
+            </div>
+        </div>
+        <div class="row meta-edit">
+            <div class="col-xs-4 form-group">
+                <label>
+                    <input id="priorityCheckBox" type="checkbox" data-bind="value: 'true', checked: PrioritySelected " />
+                    Priority
+                </label>
+            </div>
+            <div class="col-xs-8 form-group">
+                <input type="text" id="dataMartPriority" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width: 60%;" />
+            </div>
+        </div>
+        <div class="row meta-edit" style="display:none;" data-bind="visible:IsRequestLevel">
+            <div class="col-xs-12 form-group">
+                <label for="chkApplyToRoutings" style="font-weight:normal">
+                    <input id="chkApplyToRoutings" type="checkbox" data-bind="checked: ApplyToRoutings" />
+                    &nbsp;Apply new values to all datamarts that receive this request.
+                </label>
+            </div>
+        </div>
+        
+    </article>
+    <nav class="footer">
+        <button class="btn btn-default action-button pull-right" data-bind="click: onCancel">Cancel</button>
+        <button class="btn btn-default action-button pull-right" data-bind="click: onApply, enable: (PrioritySelected() || DueDateSelected())">Apply</button>
+    </nav>
+</section>

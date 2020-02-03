@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="~/js/Request/SelectProjectDialog.js"></script>
+    <style>
+        #ProjectsList {
+            margin:8px 4px;
+            list-style-type:none;
+        }
+        #ProjectsList li {
+            margin:4px 0px 4px 6px;
+        }
+        #ProjectsList > li > a {
+            cursor:pointer;
+        }
+        .text-info {
+            margin-top:8px;
+            margin-bottom:8px;
+        }
+    </style>
+}
+ 
+<p class="text-info">Please select a Project:</p>
+<ul id="ProjectsList" data-bind="foreach: Projects">
+    <li><a data-bind="click: $parent.onSelectProject, text: Name, attr:{ id: ID }"></a></li>
+</ul>

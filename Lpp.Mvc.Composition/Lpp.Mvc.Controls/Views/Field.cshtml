@@ -1,0 +1,5 @@
+﻿@model FieldModel
+<div class="Field@( string.IsNullOrEmpty( Model.CssClass ) ? "" : " " + Model.CssClass )">
+    <label>@Html.Raw(Model.Label)</label>
+    @Model.Content( Html )
+</div>

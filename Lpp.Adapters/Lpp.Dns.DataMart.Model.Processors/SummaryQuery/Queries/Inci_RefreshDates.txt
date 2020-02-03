@@ -1,0 +1,4 @@
+﻿-- Inci_RefreshDates
+SELECT Distinct(Period), 14 as QueryTypeId, 'Inci: Pharmacy Dispensings by Generic Name' as "Query Type" FROM Incident_Generic_Name;;
+SELECT Distinct(Period), 15 as QueryTypeId, 'Inci: Pharmacy Dispensings by Drug Class' as "Query Type" FROM Incident_Drug_Class;;
+SELECT Distinct(Period), 17 as QueryTypeId, 'Inci: ICD-9 Diagnoses (3 digit codes)' as "Query Type" FROM Incident_ICD9_diagnosis;;

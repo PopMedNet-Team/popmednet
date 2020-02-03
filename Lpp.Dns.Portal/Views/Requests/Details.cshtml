@@ -1,0 +1,395 @@
+@using System;
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/_Layout.cshtml";
+
+    bool viewOverview = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewRequestOverview.ID) || ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.DataMartInProject.SeeRequests.ID);
+    bool viewTask = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTask.ID);
+    bool viewComments = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewComments.ID) || ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.DataMartInProject.SeeRequests.ID);
+    bool viewDocuments = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewDocuments.ID) || ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.DataMartInProject.SeeRequests.ID);
+    bool canAssignRequestLevelNotifications = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.Request.AssignRequestLevelNotifications.ID);
+    bool viewTrackingTable = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.ID);
+}
+
+@section Scripts {
+<script src="/areas/controls/js/wfhistory/index.js"></script>
+<script src="/areas/controls/js/wfdocuments/index.js" ></script>
+<script src="/areas/controls/js/wfcomments/index.js"></script>
+    @if (canAssignRequestLevelNotifications) { 
+<script src="/areas/controls/js/wfnotifications/index.js"></script>
+    }
+<script src="/areas/controls/js/wffileupload/common.js"></script>
+<script src="/areas/controls/js/wffileupload/fortask.js"></script>
+@if (viewTrackingTable) {<script src="/areas/controls/js/wftrackingtable/index.js"></script>}
+<script src="/areas/querycomposer/js/termvaluefilter.js"></script>
+<script src="~/js/Requests/Details.js"></script>
+<style>
+    a.routing-history{
+        cursor: pointer;
+    }
+    .tabPanel {
+        border-top:none;
+        border-top-left-radius:0;
+        border-top-right-radius:0;
+    }
+
+</style>
+}
+
+<section id="ContentWrapper" class="invisible" data-bind="css: {invisible: false}">
+    <section class="row">
+        <div class="col-md-7">
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Summary
+                </div>
+                <div class="panel-body">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Name')" class="Row" style="margin-bottom:12px;">
+                        <label for="txtName">Name<em data-bind="visible: $root.IsFieldRequired('Request-Name')" style="color:red;">* </em>:    </label>
+                        <span data-bind="text: Request.Name"></span>
+                    </div>
+                    <div class="Row" style="margin-bottom:12px;">
+                        <label for="cboProjects">Project:    </label>
+                        <span data-bind="text: Request.Project"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-RequestID')" class="Row" style="margin-bottom:12px;">
+                        <label for="MSRequestID">Request ID<em data-bind="visible: $root.IsFieldRequired('Request-RequestID')" style="color:red;">* </em>:    </label>
+                        <span data-bind="text: Request.MSRequestID"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Priority')" class="Row" style="margin-bottom:12px;">
+                        <label for="Summary_Priority">Priority<em data-bind="visible: $root.IsFieldRequired('Request-Priority')" style="color:red;">* </em>:     </label>
+                        <span id="Summary_Priority" data-bind="text: Priority_Display"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="Row">
+                        <label for="Header_DueDate">Due Date<em data-bind="visible: $root.IsFieldRequired('Request-Due-Date')" style="color:red;">* </em>:     </label>
+                        <span data-bind="text: Request.DueDate() ? moment(Request.DueDate()).format('MM/D/YYYY') : ''"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsNotTerminatedRequest()" class="Row">
+                        <button class="btn btn-default pull-right" name="EditWFRequestMetadata" data-bind="click:onEditWFRequestMetadata, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata) || WorkflowActivity.Name() == 'New Request'" style="width:115px; margin-bottom: 5px; margin-top: 8px;">Edit Metadata</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-5">
+            <article class="panel panel-default">
+                <div class="panel-heading">Assignments</div>
+                <div class="panel-body">
+                    <div data-bind="kendoGrid:{
+                        data:AssignedWorkflowRequestUsers,
+                        height:180,
+                        selectable:'row',
+                        change: $root.onRequestUserRowSelected,
+                        columns:[
+                            {field: 'Username', title:'User' },
+                            {field: 'WorkflowRole', title:'Role' }
+                        ]
+                    }"></div>
+                    <button class="btn btn-default pull-right" data-bind="click:onRemoveRequestUser,enable:EnableRemoveRequestUser" style="margin-top:4px;width:80px;margin-left:8px;">Remove</button>
+                    <button class="btn btn-default pull-right" data-bind="click:onAddRequestUser" style="margin-top:4px;width:80px;">Add</button>  
+                </div>
+            </article>
+            <div class="Row">
+                
+            </div>
+        </div>
+    </section>
+    
+    <ul id="tabs" class="nav nav-tabs" role="tablist">
+        @if (viewOverview) { 
+        <li class="active"><a href="#Overview" role="tab" data-toggle="tab">Overview</a></li>
+        }
+        <li data-bind="visible: $root.IsFieldVisible('Request-Description')"><a href="#Description" role="tab" data-toggle="tab">Description<em data-bind="visible: $root.IsFieldRequired('Request-Description')" , style="color:red;">* </em></a></li>
+        @if (viewTask) { 
+        <li><a href="#Task" id="aTask" role="tab" data-toggle="tab" data-bind="text:'Task: ' + WorkflowActivity.Name(), style:{fontWeight: WorkflowActivity.Name().legnth > 0 ? '700' : '700' }"></a></li>
+        }
+        @if (viewComments) { 
+        <li><a href="#Comments" role="tab" data-toggle="tab">Comments</a></li>
+        }
+        @if (viewDocuments) { 
+        <li><a href="#Documents" id="aDocuments" role="tab" data-toggle="tab">Documents</a></li>
+        }
+        @if (canAssignRequestLevelNotifications) {
+        <li><a href="#Notifications" id="aNotifications" role="tab" data-toggle="tab">Notifications</a></li>
+        }
+        @if (viewTrackingTable)
+        {
+        <li><a href="#TrackingTable" id="aTrackingTable" role="tab" data-toggle="tab">Tracking Table</a></li>
+        }
+        <li data-bind="visible:$root.HasHistory"><a href="#History" role="tab" data-toggle="tab">History</a></li>
+    </ul>
+    <div id="root-tab-content" class="tab-content">
+        @if (viewOverview) { 
+        <div class="tab-pane fade in active" id="Overview">
+            <br />
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Request Header
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Requester-Center')" class="col-md-4 form-group">
+                            <label for="Header_RequesterCenterID">Requester Center<em data-bind="visible: $root.IsFieldRequired('Request-Requester-Center')" style="color:red;">* </em>:  </label>
+                            <span id="Header_RequesterCenter" data-bind="text: RequesterCenter_Display"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Purpose-Of-Use')" class="col-md-4 form-group">
+                            <label for="Header_PurposeOfUse">Purpose of use<em data-bind="visible: $root.IsFieldRequired('Request-Purpose-Of-Use')" style="color:red;">* </em>:  <img src="/Content/img/icons/help16.gif" class="helptip" title="Purpose of use values are consistent with ONC S&I Framework specifications for the Query Envelope. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Purpose+of+Use' target='_blank'>PopMedNet User's Guide: Purpose of Use</a>" /></label>
+                            <span data-bind="text: PurposeOfUse_Display"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Level-Of-PHI-Disclosure')" class="col-md-4 form-group">
+                            <label for="Header_PhiDisclosureLevel">Level of PHI Disclosure<em data-bind="visible: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')" style="color:red;">* </em>: </label>
+                            <span data-bind="text: Request.PhiDisclosureLevel"></span>
+                        </div>
+                    </div>
+
+           @* Source Activities, new *@
+                    <!--Task stuff here-->
+                    <div class="row" data-bind="visible: $root.IsFieldVisible('Request-Task-Order-Originating-Group')" style="margin-bottom: 10px;">
+
+                        <div class="col-md-4 form-group">
+                            <label id="lblTask" for="cboTask">Source Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order-Originating-Group')" style="color:red;">* </em>: </label>
+                            <span id="Header_Source_Task" data-bind="text: SourceTaskOrder_Display"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Originating-Group')" class="col-md-4 form-group">
+                            <label id="lblActivity" for="Header_Activity">Source Activity<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Originating-Group')" style="color:red;">* </em>: </label>
+                            <span id="Header_Source_Activity" data-bind="text: SourceActivity_Display"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project-Originating-Group')" class="col-md-4 form-group">
+                            <label id="lblActivityProject" for="cboActivityProject">Source Activity Project<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')" style="color:red;">* </em>: </label>
+                            <span id="Header_Source_ActivityProject" data-bind="text: SourceActivityProject_Display" ></span>
+                        </div>
+                    </div>
+
+            @* Budget Activities, Old *@
+                    <div class="row" data-bind="visible: $root.IsFieldVisible('Request-Task-Order')" style="margin-bottom: 10px;">
+                        <!--Task stuff here-->
+                        <div class="col-md-4 form-group">
+                            <label id="lblTask" for="cboTask">Budget Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order')" style="color:red;">* </em>: </label>
+                            <span id="Header_Task" data-bind="text: TaskOrderName"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Activity')" class="col-md-4 form-group">
+                            <label id="lblActivity" for="Header_Activity">Budget Activity<em data-bind="visible: $root.IsFieldRequired('Request-Activity')" style="color:red;">* </em>: </label>
+                            <span id="Header_Activity" data-bind="text: ActivityName"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project')" class="col-md-4 form-group">
+                            <label id="lblActivityProject" for="cboActivityProject">Budget Activity Project<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project')" style="color:red;">* </em>: </label>
+                            <span id="Header_ActivityProject" data-bind="text: ActivityProjectName" ></span>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="Header_ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">* </em>: <img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" /></label>
+                        <span data-bind="text: ReportAggregationLevel_Display" style="white-space:pre;"></span>
+                        </div>
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Workplan-Type')" class="col-md-4 form-group">
+                            <label for="Header_WorkplanTypeID">Workplan Type<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">* </em>: </label>
+                            <span data-bind="text: Request.WorkplanType" style="white-space:pre;"></span>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="Header_AdditionalInstructions">Additional Instructions: </label>
+                            <span data-bind="text: Request.AdditionalInstructions()" style="white-space: pre-wrap;"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="sStartDate">Start Date: </label>
+                            <span id="sStartDate" data-bind="text: moment(Request.CreatedOn()).format('MM/D/YYYY h:mm a')"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sEndDate">End Date: </label>
+                            <span id="sEndDate" data-bind="text: Request.CompletedOn() ? moment(Request.CompletedOn()).format('MM/D/YYYY h:mm a') : ''"></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            @if (viewTask) { 
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Request Details
+                </div>
+                <!-- ko stopBinding: true -->
+                <div class="panel-body" id="overview-queryview">
+                    @Html.Partial((string)ViewBag.TaskOverviewPartial)
+                </div>
+                <!-- /ko -->
+            </article>
+            }
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Results
+                </div>
+                <div class="panel-body">
+                    <table class="table table-stripped table-bordered table-hover">
+                        <colgroup>
+                            <col style="width: 30px;" />
+                            <col style="width: 250px;" />
+                            <col style="width: 100px;" />
+                            <col />
+                            <col style="width: 80px;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <td><i class="glyphicon glyphicon-ok"></i></td>
+                                <td>DataMart</td>
+                                <td>Status</td>
+                                <td>Message</td>
+                                <td>History</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ko foreach: IncompleteRoutings-->
+                            <tr>
+                                <td></td>
+                                <td><a href="#" data-bind="text: Name, href: '/datamarts/details?ID=' + DataMartID"></a></td>
+                                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                                <td data-bind="html: Messages">
+                                <td><a data-bind="click:$root.onShowRoutingHistory">[History]</a></td>
+                            </tr>
+                            <!-- /ko -->
+                            <!-- ko foreach: CompletedRoutings -->
+                            <tr>
+                                <td><input type="checkbox" data-bind="value:ID, checked:$root.SelectedCompleteResponses, visible:$root.CanViewResponses" /></td>
+                                <td><a href="#" data-bind="text: Name, href: '/datamarts/details?ID=' + DataMartID, visible:IsGroup == false"></a><a href="#" data-bind="text: Name, visible:IsGroup"></a></td>
+                                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                                <td data-bind="html: Messages">
+                                <td><a data-bind="hidden:IsGroup, click: $root.onShowRoutingHistory">[History]</a></td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                    <nav style="margin:15px 0px;display:none;" data-bind="visible:$root.CanViewResponses">
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings">View Results <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a data-bind="click:onViewAggregatedResults">Aggregate View</a></li>
+                                <li><a data-bind="click:onViewIndividualResults">Individual View</a></li>
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                    </nav>
+                </div>
+            </article>
+
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Comments
+                </div>
+                <!-- ko stopBinding: true -->
+                <div id="OverallComments" class="panel-body">
+                    @Html.Partial("/areas/controls/views/wfcomments/index.cshtml")   
+                </div>
+                <!-- /ko -->
+            </article>
+                
+            @if (viewDocuments) { 
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    Documents
+                </div>
+                <!-- ko stopBinding: true -->
+                <div id="OverviewDocuments" class="panel-body">                    
+                    @Html.Partial("/areas/controls/views/wfdocuments/index.cshtml")                    
+                </div>
+                <!-- /ko -->
+            </article>
+            }
+            
+            <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+                <button class="btn btn-danger" data-bind="click: Requests.Details.rovm.Terminate, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.TerminateWorkflow) && Request.ID() != null && IsNotTerminatedRequest() && RequestIsComplete() == false">Terminate Request</button>
+            </div>
+        </div>
+        }
+        <div class="tab-pane fade" id="Description">          
+            <section class="panel panel-default tabPanel" >
+                <div data-bind="html:Description_Display" class="panel-body" style="min-height:500px"></div>
+            </section>
+        </div>
+        @if (viewTask) { 
+        <div class="tab-pane fade" id="Task">
+            <div id="TaskContent"></div>
+        </div>
+        }
+        @if (viewComments) { 
+        <!-- ko stopBinding: true -->
+        <div class="tab-pane fade" id="Comments">            
+            @Html.Partial("/areas/controls/views/wfcomments/index.cshtml")            
+        </div>
+        <!-- /ko -->
+        }
+        @if (viewDocuments) {
+         <div class="tab-pane fade" id="Documents">
+            <!-- ko stopBinding: true -->
+            <div id="TaskDocuments">                        
+                @Html.Partial("/areas/controls/views/wfdocuments/index.cshtml")            
+            </div>
+            <!-- /ko -->
+             <div class="panel panel-default" data-bind="visible:Request.ID() == null">
+                 <div class="panel-body" style="padding:1px;">
+                    @* NOTE: The grid is here purely for cosmetic purposes so that it looks the same as when 
+                        the task documents control is actually initiated for an existing request. *@
+                    <div data-bind="kendoGrid: {
+                        data: [],
+                        sortable: true,
+                        filterable: false,
+                        resizable: true,
+                        reorderable: false,
+                        selectable:'row',
+                        scrollable: true,
+                        pageable: false,
+                        groupable: false,
+                        columnMenu: false,
+                        columns: [
+                            {field: 'FormattedDocumentName()', title: 'Name', encoded:false },
+                            {field: 'Description()', title: 'Description', hidden:false },
+                            {field: 'FormattedLength()', title: 'Size', attributes: { style: 'text-align:right;' }, width:95, headerAttributes: { style: 'text-align:center;' } },
+                            {field: 'FormattedCreatedOn()', title: 'Date', width:155 },
+                            {field: 'FormattedUploadedBy()', title: 'UploadedBy', hidden:false }
+                        ]
+                    }">
+                    </div>
+                </div>
+                 <nav class="panel-footer" style="display:none;" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.AddDocuments)">
+                     <button type="button" class="btn btn-default pull-right" data-bind="click:DefaultSaveTaskDocument"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>
+                     <div class="clearfix"></div>
+                 </nav>
+             </div>
+        </div>
+        }
+        
+        @if (canAssignRequestLevelNotifications) { 
+        <!-- ko stopBinding: true -->
+            <div class="tab-pane fade" id="Notifications">
+                @Html.Partial("/areas/controls/views/wfnotifications/index.cshtml")
+            </div>
+        <!-- /ko -->
+        }
+
+        @if (viewTrackingTable)
+        {
+            <!-- ko stopBinding: true -->
+                <div class="tab-pane fade" id="TrackingTable">
+                    @Html.Partial("/areas/controls/views/wftrackingtable/index.cshtml")
+                </div>
+            <!-- /ko -->
+        }
+
+        <div class="tab-pane fade" id="History" data-bind="visible:$root.HasHistory">
+            <!-- ko stopBinding: true -->
+            @Html.Partial("/areas/controls/views/wfhistory/index.cshtml")
+            <!-- /ko -->
+        </div>
+
+    </div>
+</section>
+
+<script>
+    var WorkflowActivityList = [];
+    @foreach (var wa in Lpp.Dns.Portal.Areas.Workflow.WorkflowAreaRegistration.Activities)
+    {
+        <text>
+            WorkflowActivityList.push({ID: '@wa.WorkflowActivityID', Name: '@wa.Name', Path: '@wa.Path', WorkflowID: '@wa.WorkflowID'});
+        </text>        
+    }
+</script>

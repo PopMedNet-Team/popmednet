@@ -1,0 +1,95 @@
+﻿<section id="WFNotifications" class="panel panel-default">
+
+    <div class="panel-heading" data-bind="visible:WorkflowActivityID != null">
+        <p class="panel-title">Notified users for: <span data-bind="text:WorkflowActivity"></span></p>
+    </div>
+
+    <div class="panel-body" style="padding:1px;">
+        <div class="row" style="border:none;">
+            <div class="col-sm-8 col-sm-offset-2" style="text-align:center; margin-top: 10px; margin-bottom: 10px">
+                <button class="btn btn-default" type="button" style="margin-left:10px;width:170px;" data-bind="click:onAddRequestObservers"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> Add Users</button>
+                <button class="btn btn-default" type="button" style="margin-left:10px;width:170px;" data-bind="click:onRemoveRequestObservers, enable: SelectedObserverIDs().length > 0"><span class="glyphicon glyphicon-remove" style="font-size:smaller;"></span> Remove Users</button>
+            </div>
+        </div>
+        <div class="row" style="border:none;">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div id="grNotifications" data-bind="kendoGrid: {
+                        data: dsRequestObservers,
+                        sortable: true,
+                        filterable: true,
+                        resizable: true,
+                        reorderable: true,
+                        scrollable: true,
+                        pageable: false,
+                        groupable: false,
+                        useKOTemplates: true,
+                        rowTemplate: 'templateRequestObservers',
+                        columnMenu: { columns: true },
+                        columnMenuInit: $root.onColumnMenuInit,
+                        columns: [
+                            {field: 'DisplayName', title: 'Name'},
+                            {field: 'EventSubscriptions', title: 'Notifications'},
+                            {field: 'ID', title: ' ', width: 50}
+                        ]
+                    }">
+                </div>
+                <br />
+                <script id="templateRequestObservers" type="text/html">
+                    <tr class="hover-pointer">
+                        <td data-bind="visible: $root.isDisplayNameHidden">
+                            <!-- ko if: SecurityGroupID != null -->
+                            <span class="glyphicon glyphicon-lock"></span>&nbsp;<span data-bind="text: DisplayName"></span>
+                            <!-- /ko -->
+                            <!-- ko if: Email != '' -->
+                            <span class="glyphicon glyphicon-envelope"></span>&nbsp;<span data-bind="text: DisplayName + ' <' + Email + '>'"></span>
+                            <!-- /ko -->
+                            <!-- ko if: UserID != null -->  
+                            <span class="glyphicon glyphicon-user"></span>&nbsp;<span data-bind="text: DisplayName"></span>
+                            <!-- /ko -->
+                            @*<span data-bind="text: DisplayName"></span>*@
+                        </td>
+                        <td data-bind=" visible: $root.isEventSubscriptionHidden">
+                            <ul data-bind="foreach: EventSubscriptions">
+                                <li>
+                                    <!-- ko if: EventID.toString().toUpperCase() == "45DA0001-7E63-4578-9A19-A43B0100F7C8" -->
+                                    <span data-bind="text: 'Request Assigned'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "F9C20001-E0C2-4996-B5CC-A3BF01301150" -->
+                                    <span data-bind="text: 'New Document Attached to Request'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "0A850001-FC8A-4DE2-9AA5-A22200E82398" -->
+                                    <span data-bind="text: 'Request Status Changed'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "D2DC0001-43E9-477E-B60D-A3BE01550FA4" -->
+                                    <span data-bind="text: 'Request Workflow Activity Changed'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "5AB90001-8072-42CD-940F-A22200CC24A2" -->
+                                    <span data-bind="text: 'Request DataMart Routing Status Changed'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "06E30001-ED86-4427-9936-A22200CC74F0" -->
+                                    <span data-bind="text: 'New Request Submitted'"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: EventID.toString().toUpperCase() == "E7160001-D933-476E-A706-A43C0137D4E9" -->
+                                    <span data-bind="text: 'New Comment on Request'"></span>
+                                    <!-- /ko -->
+                                </li>
+                            </ul>
+                        </td>
+                        <td data-bind="visible: $root.isCheckboxHidden">
+                            <!-- ko if: ID != null -->
+                            <input type="checkbox" data-bind="checkedValue: ID, checked: $root.SelectedObserverIDs" />
+                            <!-- /ko -->
+                        </td>
+                    </tr>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <nav class="panel-footer" data-bind="visible:WorkflowActivityID != null">
+        @*<button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:140px;" data-bind="click:onAddRequestObservers "><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> Add Users</button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:200px;" data-bind="click:onAddRequestObservers "><span class="glyphicon" style="font-size:smaller;"></span> <b>-</b> Remove Selected Users</button>
+        <div class="clear"></div>*@
+    </nav>
+
+</section>

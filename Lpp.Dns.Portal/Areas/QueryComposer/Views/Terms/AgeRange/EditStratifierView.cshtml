@@ -1,0 +1,14 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.AgeRangeID">
+     
+    <div class="row">
+        <div class="col-sm-2"><h4 class="TermHeader" style="font-weight:bold;">Age Groups</h4></div>
+        <div class="col-sm-8 form-group">
+            <input type="text" id="cboAgeRangeGroupBy" name="Ageterm" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: $root.AgeGroupForStratification, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'}, attr:{ required: $root.IsTemplateEdit == false }" validationmessage="Age stratification is required"  style="width: 250px;" />
+            <span class="k-invalid-msg" data-for="cboAgeRangeGroupBy"></span>
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteAgeRangeField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

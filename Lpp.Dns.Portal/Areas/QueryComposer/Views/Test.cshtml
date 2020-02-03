@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+<h2>Test</h2>
+<p> This is the new Query Composer test page that houses the embedable Query Composer</p>
+<br />
+<hr />
+@Html.Partial("~/areas/QueryComposer/Views/edit.cshtml")
+<script>
+    Plugins.Requests.QueryBuilder.MDQ.RawRequestData = null;
+    Plugins.Requests.QueryBuilder.MDQ.init();
+</script>

@@ -1,0 +1,64 @@
+﻿{
+    "Header":
+    {
+        "Description": "From Demographic where Sex = 'M' select the Sex value and Total of that value."
+        /* 
+            Sql: 
+                SELECT SEX, COUNT(PATID) AS Total FROM Demographic WHERE SEX = 'M' GROUP BY SEX
+
+            Linq:
+                db.Patients.Where(p => p.Sex == "M").GroupBy(p => new { p.Sex }).Select(k => new { k.Key.Sex, Total = k.Count() })
+        */
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "Name": "Group 1",
+                "Criteria" : [{
+						"ID" : "be2a3684-290d-46dc-91b0-38c439bf852b",
+						"Name" : "i_Sex",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+                            "Operator": 1,
+                                //Sex
+								"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+								"Values" : {
+									"Sex" : "2"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+                "Terms": []
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            //This will induce a count of sex and include the sex value
+            {
+                "FieldName": "Sex",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Sex_Count",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "StratifyBy": null,
+                "Aggregate": 1, //Count
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

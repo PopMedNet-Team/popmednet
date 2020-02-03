@@ -1,0 +1,149 @@
+﻿{
+  "Header": { "QueryType": "42" },
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "efd698b3-fabd-4e30-b281-1b58d11880a4",
+            "Name": "i_Code_Metric Types",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "e39d0001-07a1-4dfd-9299-a3cb00f2474b",
+                "Values": { "Metric": "1" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "20b3fc1e-49b9-4df3-9e89-8353b6d330e0",
+            "Name": "i_Output_Criteria",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "17540001-8185-41bb-be64-a3cb00f27ec2",
+                "Values": { "Criteria": "10" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "a3e23ce8-652d-4fd2-ae54-00a7c1841ac6",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "4" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "f254fb27-22f2-4c07-b757-1efc5c01adab",
+            "Name": "i_Year_Observation Period",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
+                "Values": {
+                  "StartYear": 2000,
+                  "EndYear": 2010
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "e2042da7-52db-4d1e-8f89-160f01afbc90",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "ICD-9_Procedures (4 digit)",
+        "Type": "9e870001-1d48-4aa3-8889-a3d40146ccb3",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "ICD-9_Procedures (4 digit)_Count",
+        "Type": "9e870001-1d48-4aa3-8889-a3d40146ccb3",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": "1",
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range_Count",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

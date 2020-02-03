@@ -1,0 +1,2 @@
+﻿@model PrimitiveValueModel
+<input type="text" value="@Model.Value" onchange="(@Html.Raw(Model.OnChangeFunction))( $(this).val() )" />

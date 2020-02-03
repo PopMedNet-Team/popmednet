@@ -1,0 +1,157 @@
+﻿
+
+@{
+    ViewBag.Title = "Request Type Details";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Scripts {
+<script src="~/js/Security/AclViewModel.js"></script>
+<script src="~/js/RequestType/Details.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/requesttype">Request Types</a></li>
+            <li class="active" data-bind="text: RequestType.Name"></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <form class="form" role="form">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtName">Name<em>*</em></label>
+                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: RequestType.Name, enable: HasPermission(Permissions.RequestTypes.Edit)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="txtDescription">Description</label>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: RequestType.Description, enable: HasPermission(Permissions.RequestTypes.Edit)" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label>Data Model</label>
+                    <div class="checkbox" style="margin-top:0px;">
+                        <label>
+                            <input value="321adaa1-a350-4dd0-93de-5de658a507df" type="checkbox" data-bind="checked:SelectedModels"> Data Characterization
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input value="7c69584a-5602-4fc0-9f3f-a27f329b1113" type="checkbox" data-bind="checked:SelectedModels"> ESP
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input value="85ee982e-f017-4bc4-9acd-ee6ee55d2446" type="checkbox" data-bind="checked:SelectedModels"> PCORnet
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input value="cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb" type="checkbox" data-bind="checked:SelectedModels"> Summary Tables
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input value="1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154" type="checkbox" data-bind="checked:SelectedModels"> Modular Program
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input value="4c8a25dc-6816-4202-88f4-6d17e72a43bc" type="checkbox" data-bind="checked:SelectedModels"> Distributed Regression
+                        </label>
+                    </div>
+                    @*<div class="checkbox">
+                        <label>
+                            <input value="00bf515f-6539-405b-a617-ca9f8aa12970" type="checkbox" data-bind="checked:SelectedModels"> File Distribution
+                        </label>
+                    </div>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="txtDataAdapterDetail">Data Adapter Detail</label>
+                    <input id="txtDataAdapterDetail" name="DataAdapterDetail" class="form-control" data-bind="kendoDropDownList: {value: Template.QueryType, data: Dns.Enums.QueryComposerQueryTypesTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:'<None>'}" style="width:100%" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="cboComposerInterface">Query Composer Interface<em>*</em></label>
+                    <input id="cboComposerInterface" required title="Please select a Query Composer Interface" name="ComposerInterface" class="form-control" data-bind="kendoDropDownList:{value: Template.ComposerInterface, data: Dns.Enums.QueryComposerInterfaceTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width:100%" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="cboWorkFlow">Workflow<em>*</em></label>
+                    <input id="cboWorkFlow" required title="Please select a Workflow" data-bind="kendoDropDownList: {value: RequestType.WorkflowID, data: Workflows, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'<Not Selected>', enable: HasPermission(Permissions.RequestTypes.Edit)}" style="width: 100%;" />
+                </div>
+            </div>
+        </form>
+        <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height:500px;">
+            <ul>
+                <li class="k-state-active">Design</li>
+                <li>Notes</li>
+                <li>Permissions</li>
+                <li>Terms</li>
+            </ul>
+            <div class="tab-body" style="overflow-x:hidden;min-height:500px;padding-top:12px;">
+                
+                    <!-- ko stopBinding: true -->
+                    @Html.Partial("~/areas/QueryComposer/Views/edit.cshtml")
+                    <!-- /ko -->
+                
+            </div>
+            <div class="tab-body" style="min-height:500px;">
+                <p class="alert alert-info">Specify any specific useage notes you wish to be displayed to the user in a workflow step using this request type's template.</p>
+                <textarea id="txtNotes" data-bind="kendoEditor:{value: Template.Notes}" style="height: 500px;width:100%;"></textarea>
+            </div>
+            <div class="tab-body">
+                <p class="alert alert-info">Please ensure that you have added at least one security group to the Permissions tab to administer this template.</p>
+                <div data-bind="with: RequestTypeSecurity">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+            </div>
+            <div class="tab-body">
+                <p class="alert alert-info">This allows you to control which terms can be added/removed from a template. Note that if you specify no terms on this screen, all terms will be available in the request's query composer.</p>
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Term</th>
+                            <th>OID</th>
+                            <th>Description</th>
+                            <th>X</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: RequestTypeTerms">
+                        <tr>
+                            <td><a href="#" data-bind="text: Term, attr: {href: ReferenceUrl() || '#'}" target="_blank"></a></td>
+                            <td data-bind="text: OID"></td>
+                            <td data-bind="text: Description"></td>
+                            <td><button id="btnTermDelete" data-bind="click: $root.DeleteTerm, attr: {id: 'btnTermDelete' + TermID()}" class="btn btn-danger">X</button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="panel-footer">
+                        <tr>
+                            <td colspan="4">
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown">Add Term <span class="caret"></span></button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableTerms">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: $root.AddRequestTypeTerm, text: Name"></a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: RequestType.ID() != null && HasPermission(Permissions.RequestTypes.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.RequestTypes.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>
+

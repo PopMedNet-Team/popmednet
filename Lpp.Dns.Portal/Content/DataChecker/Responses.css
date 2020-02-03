@@ -1,0 +1,134 @@
+﻿/*.DocumentsView {
+    overflow:visible;
+}*/
+.responseview_selector{
+    float:right;
+}
+.open-external {
+    float:right;
+    margin:2px;
+}
+
+.metricview {
+    clear:both;
+}
+
+/*.metricview table{
+    margin-bottom:16px;
+}*/
+
+.table-container{
+    overflow-x:auto;
+    margin-bottom:16px;
+}
+
+.overallmetric-header {
+    padding: 4px 8px;
+    text-align:right;
+    background-color:#F0F0F0;
+}
+
+.overallmetric-body {
+    padding: 4px 8px;
+    text-align:right;
+}
+
+.overallmetric_barchart {
+    width:650px;
+    height:500px;
+    display:inline-block;
+}
+
+.overallmetric_barchart_fullwidth {
+    width:960px;
+    height:400px;
+    display:inline-block;
+}
+
+.overallmetric_piechart{
+    width:650px;
+    height:450px;
+    display:block;
+}
+
+.overallmetric_piechart_fullwidth{
+    width:960px;
+    height:450px;
+    display:block;
+}
+
+
+#ResponseContainer table{
+    background:#ffffff;
+    border:1px solid #333;
+}
+
+td.numbers,
+td.percent {
+    text-align:right;
+    padding-left:8px;
+}
+
+#race_overall table,
+#procedures_overall table,
+#ethnicity_overall table,
+#diagnosis_overall table {
+    margin-left:18px;
+}
+
+div.halfwidth-barchart-dpc,
+div.halfwidth-piechart-dpc,
+div.halfwidth-barchart-dpp,
+div.halfwidth-piechart-dpp{
+    display:inline-block;
+    width:450px;
+    margin-left:12px;
+}
+
+div.halfwidth-barchart-dpc {    
+    /*height:225px;*/
+    /*since this controls the height of the entire container and not just the grid, grids with long titles on the x-axis (like race) were getting squished. had to increase height.*/  
+    height:400px;  
+}
+div.halfwidth-piechart-dpc {
+    height:300px;
+}
+div.halfwidth-barchart-dpp{
+    height:500px;
+}
+div.halfwidth-piechart-dpp{
+    width:650px;
+    height:300px;
+}
+
+div.fullwidth-barchart-dpc,
+div.fullwidth-piechart-dpc,
+div.fullwidth-barchart-dpp,
+div.fullwidth-piechart-dpp{
+    display:inline-block;
+    width:960px;
+    margin-left:12px;
+}
+
+div.fullwidth-barchart-dpc {    
+    /*height:225px;*/
+    /*since this controls the height of the entire container and not just the grid, grids with long titles on the x-axis (like race) were getting squished. had to increase height.*/
+    height:400px;
+}
+
+div.fullwidth-piechart-dpc {
+    height:600px;
+}
+
+div.fullwidth-barchart-dpp{
+    height:500px;
+}
+
+div.fullwidth-piechart-dpp{
+    height:300px;
+}
+
+div.jqplot-highlighter-tooltip{
+    z-index:1000000;
+}
+

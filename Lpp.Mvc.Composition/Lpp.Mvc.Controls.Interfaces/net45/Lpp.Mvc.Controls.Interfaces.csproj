@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc.Controls</RootNamespace>
+    <AssemblyName>Lpp.Mvc.Controls.Interfaces</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Interactive, Version=1.1.10823.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{d4f2cad5-58ec-4783-ba3e-6bb5b92d262a}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup><Compile Include="..\ClientSettings\ClientSettingsExtensions.cs"><Link>ClientSettings\ClientSettingsExtensions.cs</Link></Compile>
+    
+<Compile Include="..\ClientSettings\IClientSettingsProvider.cs"><Link>ClientSettings\IClientSettingsProvider.cs</Link></Compile>
+    
+<Compile Include="..\ClientSettings\IClientSettingsService.cs"><Link>ClientSettings\IClientSettingsService.cs</Link></Compile>
+    
+<Compile Include="..\IJsPackage.cs"><Link>IJsPackage.cs</Link></Compile>
+    
+<Compile Include="..\Grid\DataTableGrid.cs"><Link>Grid\DataTableGrid.cs</Link></Compile>
+    
+<Compile Include="..\Grid\GridClientSortColumn.cs"><Link>Grid\GridClientSortColumn.cs</Link></Compile>
+    
+<Compile Include="..\SectionsExtensions.cs"><Link>SectionsExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Grid\GridCheckboxColumn.cs"><Link>Grid\GridCheckboxColumn.cs</Link></Compile>
+    
+<Compile Include="..\Grid\Grid.cs"><Link>Grid\Grid.cs</Link></Compile>
+    
+<Compile Include="..\IField.cs"><Link>IField.cs</Link></Compile>
+    
+<Compile Include="..\List\ListModel.cs"><Link>List\ListModel.cs</Link></Compile>
+    
+<Compile Include="..\List\ListGetModel.cs"><Link>List\ListGetModel.cs</Link></Compile>
+    
+<Compile Include="..\Menu\IMenu.cs"><Link>Menu\IMenu.cs</Link></Compile>
+    
+<Compile Include="..\Menu\MenuItemModel.cs"><Link>Menu\MenuItemModel.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+    
+<Compile Include="..\List\SortHelper.cs"><Link>List\SortHelper.cs</Link></Compile>
+    
+<Compile Include="..\Tree\ITree.cs"><Link>Tree\ITree.cs</Link></Compile>
+  
+<Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Content Include="..\rx.d.ts"><Link>rx.d.ts</Link></Content>
+    
+<Content Include="..\jquery.d.ts"><Link>jquery.d.ts</Link></Content>
+    
+<Content Include="..\jqueryui.d.ts"><Link>jqueryui.d.ts</Link></Content>
+    
+<Content Include="..\require.d.ts"><Link>require.d.ts</Link></Content>
+    
+<Content Include="..\utilities.d.ts"><Link>utilities.d.ts</Link></Content>
+  
+</ItemGroup>
+</Project>

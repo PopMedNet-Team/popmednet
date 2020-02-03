@@ -1,0 +1,117 @@
+@model DocumentListModel
+@{    
+    var id = "Docs_" + Guid.NewGuid().ToString().Substring( 0, 10 ).Replace( "-", "" ); 
+}
+
+<div id="@id">
+    <ul>
+        <li class="k-state-active">@Model.Title</li>
+        @if (Model.Visual != null) {
+        <li>Documents</li>
+        }
+    </ul>
+    @if (Model.Visual != null) { 
+    <div>
+        @Model.Visual( Html )
+    </div>
+    }
+    <div>
+        @Html.Partial("~/Views/Documents/ListBody.cshtml", Model.Documents == null ? new List<DocumentListElementModel>() : Model.Documents)
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#@id').kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            }
+        });
+    });
+</script>
+
+
+
+@*<style>
+.DocumentsView { overflow: auto; max-height: 700px; }
+.ShowAllDocumentsLink { text-align: center; }
+</style>
+
+<div class="DocumentsView ui-has-header ui-minimizable ui-no-padding ui-maximizable" id="@id" title-text="@Model.Title">
+    @if ( Model.Visual != null )
+    {
+        if ( Model.ShowDocuments )
+        {
+            <div class="ui-in-header ShowAllDocumentsLink">
+                <a href="javascript:0" id="@(id)_toggle">Show Documents List</a>
+            </div>
+        }
+        <div class="Visual">@Model.Visual( Html )</div>
+    }
+    
+    @if ( Model.ShowDocuments )
+    {
+        <div class="Documents"@Html.Raw( Model.Visual == null ? "" : " style=\"display: none\"")>
+            @Html.Partial("~/Views/Documents/ListBody.cshtml", Model.Documents )
+        </div>
+    }
+</div>
+
+
+@if ( Model.Visual != null && Model.ShowDocuments )
+{
+<script type="text/javascript">
+    var visual = $("#@(id) .Visual");
+    var docs = $("#@(id) .Documents");
+    $('.ui-button-minimize').click(function () {
+
+        var arr = ["Show View"];
+        if (jQuery.inArray($("#@(id)_toggle").text(), arr) == 0) {
+            visual.slideUp(100);
+            docs.slideDown(100);
+        }
+        else {
+            visual.slideDown(100);
+            docs.slideUp(100);
+        }
+
+    });
+
+$("#@(id)_toggle").click(function ()
+    {
+       if (visual.is(":visible")) 
+       {
+            visual.slideUp(100);
+            docs.slideDown(100);
+            $(this).text("Show View");
+            return false;
+        }
+        if (docs.is(":visible")) 
+        {
+            visual.slideDown(100);
+            docs.slideUp(100);
+            $(this).text("Show Documents List");
+            return false;
+        }
+        else {
+
+            if ($(this).text() == "Show View") 
+                {
+                $(this).text("Show Documents List");
+                
+                return false;
+                }
+            if ($(this).text() == "Show Documents List") 
+            {
+                $(this).text("Show View");
+                
+                return false;
+
+            }
+        }
+
+        return false;
+    });
+</script>
+}*@

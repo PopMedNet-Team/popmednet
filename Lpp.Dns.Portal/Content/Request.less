@@ -1,0 +1,624 @@
+.ProjectSelector {
+    display: inline-block;
+    padding: 5px;
+    vertical-align: middle;
+    margin-left: 2em;
+}
+
+.Request-HeaderDescription {
+    color: maroon;
+    text-align: center;
+    font-size: 16px;
+    padding-right: 60px;
+}
+
+.Request-Footer {
+    .Buttons {
+        width: 380px;
+        display: inline-block;
+        text-align: center;
+
+        input {
+            margin: 20px 10px 0 10px;
+        }
+    }
+}
+
+.header-body() {
+    .ui-section {
+        width: 930px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px 15px;
+
+        &.ui-no-padding {
+            padding: 0;
+        }
+    }
+
+    .ui-section-outside {
+        width: 930px;
+        margin-left: auto;
+        margin-right: auto;
+
+        > .ui-section {
+            width: 880px;
+        }
+    }
+}
+
+.RequestHeader {
+    .RequestType {
+        margin-bottom: 15px;
+
+        div {
+            display: inline-block;
+        }
+
+        .Name {
+            font-size: 16pt;
+            display: block;
+        }
+
+        .Description {
+            display: block;
+        }
+    }
+
+    .Body {
+        .header-body;
+        margin: 15px 0 0 0;
+        width: auto;
+    }
+
+    .Field {
+        display: inline-block;
+        margin-right: 35px;
+        margin-bottom: 5px;
+        vertical-align: top;
+
+        &.Description {
+            display: block;
+
+            textarea {
+                width: 925px;
+            }
+
+            .Value {
+                width: 700px;
+                min-height: 50px;
+                max-height: 4em;
+                overflow-x: none;
+                overflow-y: scroll;
+            }
+        }
+
+        &.ActivityDescription {
+            textarea {
+                width: 680px;
+            }
+
+            .Value {
+                width: 538px;
+                min-height: 50px;
+                max-height: 4em;
+                overflow-x: none;
+                overflow-y: scroll;
+            }
+        }
+
+        &.RequestType {
+            display: block;
+
+            .Value {
+                width: 700px;
+            }
+        }
+
+        .Buttons, .Fields {
+            vertical-align: top;
+            display: inline-block;
+        }
+
+            .Buttons input {
+                display: block;
+                margin-top: 15px;
+            }
+    }
+}
+
+.RequestView-Header {
+    .RequestType {
+        margin-bottom: 15px;
+
+        div {
+            display: inline-block;
+        }
+
+        .Name {
+            font-size: 16pt;
+            display: block;
+        }
+
+        .Description {
+            display: block;
+        }
+    }
+
+    .Body {
+        .header-body;
+        margin: 15px 0 0 0;
+        width: auto;
+    }
+
+    .Field {
+        display: inline-block;
+        margin-right: 35px;
+        margin-bottom: 5px;
+        vertical-align: top;
+
+        &.Description {
+            display: block;
+
+            textarea {
+                width: 925px;
+            }
+
+            .Value {
+                width: 925px;
+                min-height: 50px;
+                max-height: 4em;
+                overflow-x: none;
+                overflow-y: scroll;
+            }
+        }
+
+        &.ActivityDescription {
+            textarea {
+                width: 680px;
+            }
+
+            .Value {
+                width: 538px;
+                min-height: 50px;
+                max-height: 4em;
+                overflow-x: none;
+                overflow-y: scroll;
+            }
+        }
+
+        &.RequestType {
+            display: block;
+
+            .Value {
+                width: 700px;
+            }
+        }
+
+        .Buttons, .Fields {
+            vertical-align: top;
+            display: inline-block;
+        }
+
+            .Buttons input {
+                display: block;
+                margin-top: 15px;
+            }
+    }
+}
+
+#RequestView-DataMartsForAdding {
+    text-align: center;
+}
+
+.RequestView-DataMartsForAdding {
+    min-width: 500px;
+}
+
+.Request-Footer-DataMarts {
+    width: 560px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+}
+
+.routings-and-responses() {
+    padding: 0;
+
+    .Grid {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        border: 0;
+
+        th {
+            min-width: 20px;
+            max-width: 20px;
+            width: 20px;
+        }
+    }
+}
+
+.RequestView-Footer-Routings {
+    .routings-and-responses;
+
+    td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    th, td {
+        width: 100%;
+
+        &.DataMart {
+            min-width: 300px;
+            max-width: 300px;
+            width: 300px;
+        }
+
+        &.Status {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+
+        &.Message {
+            width: 380px;
+            min-width: 380px;
+            max-width: 380px;
+
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+}
+
+.RequestView-Footer-Responses {
+    .routings-and-responses;
+
+    .DataMart {
+        min-width: 267px;
+        max-width: 267px;
+        width: 267px;
+    }
+
+    .Message {
+        width: 100%;
+
+        .Full {
+            display: none;
+        }
+    }
+
+    .ResponseTime {
+        min-width: 169px;
+        width: 169px;
+        max-width: 169px;
+    }
+
+    .Status {
+        white-space: nowrap;
+    }
+
+    .AggregationModes {
+        display: none;
+        background: white;
+        border: 1px solid black;
+        padding: 1em;
+        position: absolute;
+
+        a {
+            padding: 4px 10px;
+            display: block;
+
+            &:hover {
+                background: navy;
+                color: white;
+            }
+        }
+    }
+}
+
+.Request-Footer-Buttons {
+    display: inline-block;
+
+    > input, > button {
+        display: block;
+    }
+}
+
+/*.RequestView-Body {
+    display: none;
+}*/
+
+.RequestView-Header .RequestView-Body {
+    display: block;
+
+    > .DocumentsView .ui-section-outside {
+        width: 930px;
+    }
+}
+
+.Response-Header {
+    .RequestBody {
+        .header-body;
+        display: none;
+    }
+
+    &.ui-maximized .RequestBody {
+        display: block;
+
+        > .ui-section-outside {
+            width: 960px;
+        }
+    }
+
+    .SourceDataMarts {
+        h1 {
+            font-size: 1.2em;
+            display: inline-block;
+            font-weight: bold;
+            font-family: inherit;
+            margin-right: 1em;
+        }
+
+        span {
+            border: 1px solid silver;
+            display: inline-block;
+            padding: 5px 10px;
+            background: white;
+        }
+    }
+
+    .Buttons, .Response-Header {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .Buttons {
+        float: right;
+    }
+
+        .Buttons .ui-standard-button {
+            width: 190px;
+            margin-left: -20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+}
+
+.DataMartGrid {
+    width: 550px;
+    table-layout: fixed;
+    margin-top: 10px;
+
+    tr {
+        > .DataMartName {
+            width: 240px;
+            max-width: 240px;
+            min-width: 240px;
+        }
+
+        > .DataMartOrg {
+            width: 250px;
+            max-width: 250px;
+            min-width: 250px;
+        }
+    }
+
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+table.Grid.RequestsGrid {
+    width: 100%;
+    table-layout: fixed;
+
+    th.SortedAsc, th.SortedDesc {
+        padding-left: 15px;
+    }
+
+    tr {
+        > .Name {
+            min-width: 264px;
+            max-width: 264px;
+            width: 264px;
+        }
+
+        > .Id {
+            min-width: 30px;
+            max-width: 30px;
+            width: 30px;
+        }
+
+        > .Date {
+            min-width: 180px;
+            max-width: 180px;
+            width: 180px;
+        }
+
+        > .User {
+            min-width: 100px;
+            max-width: 100px;
+            width: 100px;
+        }
+
+        > .Status {
+            min-width: 100px;
+            max-width: 100px;
+            width: 100px;
+        }
+    }
+
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.CreateRequestDialog {
+    text-align: left;
+    min-width: 700px;
+    padding: 0 auto;
+
+    .Prompt {
+        margin: 20px 0;
+        font-weight: bold;
+    }
+
+    .RequestTypesContainer, .NewModelDropDown {
+        min-width: 600px;
+        max-width: 600px;
+        width: 600px;
+        display: block;
+    }
+
+    .RequestTypesContainer {
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 260px;
+        margin: 7px 0;
+
+        .RequestTypes {
+            display: none;
+        }
+    }
+
+    a {
+        &:link, &:visited {
+            display: block;
+            padding: 3px 0 3px 0;
+        }
+
+        &:hover {
+            background: navy;
+            color: White;
+        }
+    }
+
+    .Models a:link.Selected {
+        background: #96ADD6;
+        color: White;
+    }
+}
+
+.DocumentsView .Grid {
+    width: 100%;
+}
+
+.ProjectTabs {
+    padding: 2px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 8px;
+    position: relative;
+    top: 4px;
+
+    > a {
+        padding: 5px;
+        border: 2px solid #678FC0;
+        background: #E8E8E8;
+        -moz-box-shadow: 0 10px 30px white inset;
+        -webkit-box-shadow: 0 10px 30px white inset;
+        box-shadow: 0 10px 30px white inset;
+        min-width: 100px;
+        display: inline-block;
+        height: 20px;
+
+        &.Selected {
+            -moz-box-shadow: -5px 10px 30px #E1EBFA inset;
+            -webkit-box-shadow: -5px 10px 30px #E1EBFA inset;
+            box-shadow: -5px 10px 30px #E1EBFA inset;
+            border-bottom: none;
+            z-index: 10;
+            height: 21px;
+            background: white;
+        }
+    }
+}
+
+.Layout .Middle .Content .RequestHeader > .Body .ui-section-outside {
+    width: 960px;
+}
+
+.Layout .Middle .Content .RequestsPage {
+    .ui-section-outside {
+        padding-top: 10px;
+        margin-top: 0;
+        z-index: 100;
+
+        .ui-section-header {
+            display: none;
+        }
+    }
+
+    .Scroller {
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        padding: 4px 10px;
+        border: 1px solid black;
+        margin-top: 7px;
+        padding-right: 0;
+        margin-left: 2px;
+        margin-right: 2px;
+        font-weight: bold;
+        display: none;
+        text-decoration: none;
+
+        &.Right {
+            float: right;
+        }
+
+        &.Left {
+            float: left;
+        }
+
+        &:hover {
+            background: #F0F0F0;
+        }
+    }
+}
+
+.RequestRoutingHistory-DropDown {
+    min-width: 300px;
+    min-height: 50px;
+    border: 1px solid black;
+    background: white;
+    padding: 0.5em 1em;
+}
+
+.RequestRoutingHistory .History {
+    .Row {
+        display: block;
+        font-size: 13px;
+
+        > div {
+            display: inline-block;
+
+            &.Time {
+                width: 100px;
+                font-size: 10px;
+            }
+
+            &.Action, &.User {
+                font-weight: bold;
+            }
+
+            &.Text {
+            }
+
+            &.Message {
+                font-style: italic;
+            }
+        }
+
+        > a {
+            display: inline-block;
+        }
+    }
+}

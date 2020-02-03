@@ -1,0 +1,86 @@
+﻿{
+	"Header": {},
+	"Where": {
+		"Criteria": [
+			{
+				"Name": "Group 1",
+				"Criteria": [
+					{
+						"ID": "a0b738e3-dd45-47f3-9a4b-f5993e5560b6",
+						"Name": "i_Observation_Period",
+						"Operator": 0,
+						"Criteria": [],
+						"Terms": [
+							{
+								"Operator": 1,
+								"Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+								"Values": {
+									"Start": "2015-01-01T05:00:00.000Z",
+									"End": "2015-12-31T05:00:00.000Z"
+								},
+								"Criteria": [],
+								"Design": {}
+							}
+						],
+						"Type": 0
+					},
+					{
+						"ID": "d4c1a83b-9f21-4919-86f0-c75308e0b05a",
+						"Name": "i_codeterms",
+						"Operator": 0,
+						"Criteria": [],
+						"Terms": [
+							{
+								"Operator": 1,
+								"Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+								"Values": {
+									"CodeType": 3,
+									"CodeValues": "B22",
+									"SearchMethodType": 1
+								},
+								"Criteria": [],
+								"Design": {}
+							},
+							{
+								"Operator": 1,
+								"Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+								"Values": {
+									"CodeType": 5,
+									"CodeValues": "75571; 75572; 75573; 75574",
+									"SearchMethodType": 0
+								},
+								"Criteria": [],
+								"Design": {}
+							}
+						],
+						"Type": 0
+					},
+					{
+						"ID": "48a25a2b-ca52-43cf-be67-f89232fffff2",
+						"Name": "i_Age_Range",
+						"Operator": 0,
+						"Criteria": [],
+						"Terms": [
+							{
+								"Operator": 1,
+								"Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+								"Values": {
+									"MinAge": 45,
+									"MaxAge": 84,
+									"CalculationType": "1",
+									"CalculateAsOf": null,
+									"CalculateAsOfRequired": false
+								},
+								"Criteria": [],
+								"Design": {}
+							}
+						],
+						"Type": 0
+					}
+				],
+				"Terms": []
+			}
+		]
+	},
+	"Select": { "Fields": [] }
+}

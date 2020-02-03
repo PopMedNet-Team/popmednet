@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.DTO</RootNamespace>
+    <AssemblyName>Lpp.Dns.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>82e362e5</NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="..\Build\Lpp.Dns.Base.Targets" />
+  <PropertyGroup>
+    <DocumentationFile>bin\Lpp.Dns.DTO.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Activities\ActivityImportDTO.cs" />
+    <Compile Include="DataMarts\DataModelProcessorDTO.cs" />
+    <Compile Include="Enums\AgeRangeCalculationType.cs" />
+    <Compile Include="Enums\ProcedureCode.cs" />
+    <Compile Include="Enums\RoutingType.cs" />
+    <Compile Include="Enums\ESPCodes.cs" />
+    <Compile Include="Enums\FieldOptionPermissions.cs" />
+    <Compile Include="Enums\ObserverTypes.cs" />
+    <Compile Include="Enums\QueryComposerInterface.cs" />
+    <Compile Include="Enums\QueryComposerQueryTypes.cs" />
+    <Compile Include="Enums\QueryComposerSections.cs" />
+    <Compile Include="Enums\RequestDocumentType.cs" />
+    <Compile Include="Events\PropertyChangeDetailDTO.cs" />
+    <Compile Include="HttpResponseErrors\HttpResponseErrors.cs" />
+    <Compile Include="LookupLists\LookupListCategoryImportDTO.cs" />
+    <Compile Include="LookupLists\LookupListsImportDTO.cs" />
+    <Compile Include="LookupLists\LookupListValuesImportDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Comments\AddWFCommentDTO.cs" />
+    <Compile Include="Comments\CommentDocumentReferenceDTO.cs" />
+    <Compile Include="Comments\WFCommentDTO.cs" />
+    <Compile Include="Comments\CommentDTO.cs" />
+    <Compile Include="DataMarts\DataModelWithRequestTypesDTO.cs" />
+    <Compile Include="DataMarts\UpdateDataMartInstalledModelsDTO.cs" />
+    <Compile Include="Documents\DocumentDTO.cs" />
+    <Compile Include="Documents\ExtendedDocumentDTO.cs" />
+    <Compile Include="Enums\ConditionClassifications.cs" />
+    <Compile Include="Enums\Coverages.cs" />
+    <Compile Include="Enums\DataAvailabilityPeriodCategories.cs" />
+    <Compile Include="Enums\DiagnosisCodeTypes.cs" />
+    <Compile Include="Enums\DiagnosisRelatedGroupTypes.cs" />
+    <Compile Include="Enums\DispensingMetricType.cs" />
+    <Compile Include="Enums\CodeMetricType.cs" />
+    <Compile Include="Enums\EncounterTypes.cs" />
+    <Compile Include="Enums\HeightStratification.cs" />
+    <Compile Include="Enums\Hispanic.cs" />
+    <Compile Include="Enums\LookupMetrics.cs" />
+    <Compile Include="Enums\ObjectStates.cs" />
+    <Compile Include="Enums\OrderByDirections.cs" />
+    <Compile Include="Enums\PeriodStratification.cs" />
+    <Compile Include="Enums\QueryComposerAggregates.cs" />
+    <Compile Include="Enums\QueryComposerCriteriaTypes.cs" />
+    <Compile Include="Enums\QueryComposerOperators.cs" />
+    <Compile Include="Enums\Race.cs" />
+    <Compile Include="Enums\SecurityEntityTypes.cs" />
+    <Compile Include="Enums\Settings.cs" />
+    <Compile Include="Enums\OutputCriteria.cs" />
+    <Compile Include="Enums\SexStratifications.cs" />
+    <Compile Include="Enums\AgeStratifications.cs" />
+    <Compile Include="Enums\LookupLists.cs" />
+    <Compile Include="DataMarts\DataAvailabilityPeriodCategoryDTO.cs" />
+    <Compile Include="DataMarts\DataMartAvailabilityPeriodDTO.cs" />
+    <Compile Include="Enums\CommentItemTypes.cs" />
+    <Compile Include="Enums\TemplateTypes.cs" />
+    <Compile Include="Enums\TermTypes.cs" />
+    <Compile Include="Enums\TextSearchMethodType.cs" />
+    <Compile Include="Enums\TobaccoUses.cs" />
+    <Compile Include="Enums\WeightStratification.cs" />
+    <Compile Include="Enums\WorkflowMPAllowOnOrMultipleExposureEpisodes.cs" />
+    <Compile Include="Enums\WorkflowMPSpecifyExposedTimeAssessments.cs" />
+    <Compile Include="Enums\YesNo.cs" />
+    <Compile Include="Notifications\NotificationCrudDTO.cs" />
+    <Compile Include="Organizations\OrganizationEHRSDTO.cs" />
+    <Compile Include="Projects\ProjectRequestTypeDTO.cs" />
+    <Compile Include="Organizations\OrganizationUpdateEHRsesDTO.cs" />
+    <Compile Include="Projects\ProjectDataMartUpdateDTO.cs" />
+    <Compile Include="Projects\ProjectOrganizationUpdateDTO.cs" />
+    <Compile Include="Projects\UpdateProjectRequestTypesDTO.cs" />
+    <Compile Include="QueryComposer\DistributedRegressionAnalysisCenterManifestItem.cs" />
+    <Compile Include="QueryComposer\SectionSpecificTermDTO.cs" />
+    <Compile Include="QueryComposer\TemplateTermDTO.cs" />
+    <Compile Include="QueryComposer\HasGlobalSecurityForTemplateDTO.cs" />
+    <Compile Include="QueryComposer\MatchingCriteriaDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerCriteriaDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerFieldDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerGroupByDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerHeaderDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerOrderByDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerRequestDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponseErrorDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerSelectDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponseDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerTermDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerWhereDTO.cs" />
+    <Compile Include="QueryComposer\TemplateDTO.cs" />
+    <Compile Include="QueryComposer\TermDTO.cs" />
+    <Compile Include="Requests\ApproveRejectResponseDTO.cs" />
+    <Compile Include="Requests\HomepageRequestDetailDTO.cs" />
+    <Compile Include="Requests\HomepageRouteDetailDTO.cs" />
+    <Compile Include="Requests\RejectResponseDTO.cs" />
+    <Compile Include="Requests\ApproveResponseDTO.cs" />
+    <Compile Include="Requests\ReportAggregationLevelDTO.cs" />
+    <Compile Include="Requests\RequestCompletionRequestDTO.cs" />
+    <Compile Include="Requests\RequestCompletionResponseDTO.cs" />
+    <Compile Include="Requests\RequestMetadataDTO.cs" />
+    <Compile Include="Requests\RequestObserverDTO.cs" />
+    <Compile Include="Requests\RequestObserverEventSubscriptionDTO.cs" />
+    <Compile Include="Requests\RequestSearchTermDTO.cs" />
+    <Compile Include="Requests\RequestTypeModelDTO.cs" />
+    <Compile Include="Requests\RequestTypeTermDTO.cs" />
+    <Compile Include="Requests\RequestUserDTO.cs" />
+    <Compile Include="Requests\ResponseGroupDTO.cs" />
+    <Compile Include="Requests\ResponseHistoryDTO.cs" />
+    <Compile Include="Requests\ResponseHistoryItemDTO.cs" />
+    <Compile Include="Requests\SaveCriteriaGroupRequestDTO.cs" />
+    <Compile Include="Requests\UpdateRequestDataMartStatusDTO.cs" />
+    <Compile Include="Requests\UpdateRequestTypeModelsDTO.cs" />
+    <Compile Include="Requests\UpdateRequestTypeRequestDTO.cs" />
+    <Compile Include="Requests\UpdateRequestTypeResponseDTO.cs" />
+    <Compile Include="Requests\UpdateRequestTypeTermsDTO.cs" />
+    <Compile Include="Security\AclGlobalFieldOptionDTO.cs" />
+    <Compile Include="Security\AclProjectFieldOptionDTO.cs" />
+    <Compile Include="Security\AclProjectRequestTypeWorkflowActivityDTO.cs" />
+    <Compile Include="Security\AclTemplateDTO.cs" />
+    <Compile Include="Security\BaseAclRequestTypeDTO.cs" />
+    <Compile Include="Security\BaseFieldOptionAclDTO.cs" />
+    <Compile Include="Security\FieldOptionIdentifiers.cs" />
+    <Compile Include="Security\SecurityEntityDTO.cs" />
+    <Compile Include="Tasks\HomepageTaskRequestUserDTO.cs" />
+    <Compile Include="Tasks\HomepageTaskSummaryDTO.cs" />
+    <Compile Include="Tasks\TaskDTO.cs" />
+    <Compile Include="Activities\ActivityDTO.cs" />
+    <Compile Include="DataMarts\DataMartTypeDTO.cs" />
+    <Compile Include="DataMarts\DataModelDTO.cs" />
+    <Compile Include="DataMarts\DataMartListDTO.cs" />
+    <Compile Include="DataMarts\DataMartDTO.cs" />
+    <Compile Include="DataMarts\DataMartInstalledModelDTO.cs" />
+    <Compile Include="Demographic\DemographicDTO.cs" />
+    <Compile Include="Enums\PasswordScores.cs" />
+    <Compile Include="Enums\SupportedDataModels.cs" />
+    <Compile Include="Enums\DataUpdateFrequencies.cs" />
+    <Compile Include="Enums\AgeGroups.cs" />
+    <Compile Include="Enums\DocumentKind.cs" />
+    <Compile Include="Enums\EHRSSystems.cs" />
+    <Compile Include="Enums\EHRSTypes.cs" />
+    <Compile Include="Enums\Ethnicities.cs" />
+    <Compile Include="Enums\PermissionAclTypes.cs" />
+    <Compile Include="Enums\Priorities.cs" />
+    <Compile Include="Enums\RegistryTypes.cs" />
+    <Compile Include="Enums\RequestStatuses.cs" />
+    <Compile Include="Enums\RequestTypePermissions.cs" />
+    <Compile Include="Enums\SecurityGroupKinds.cs" />
+    <Compile Include="Enums\SecurityGroupTypes.cs" />
+    <Compile Include="Enums\Frequencies.cs" />
+    <Compile Include="Enums\Stratifications.cs" />
+    <Compile Include="Enums\TaskItemTypes.cs" />
+    <Compile Include="Enums\TaskRoles.cs" />
+    <Compile Include="Enums\TaskStatuses.cs" />
+    <Compile Include="Enums\TaskTypes.cs" />
+    <Compile Include="Enums\UnattendedModes.cs" />
+    <Compile Include="Enums\UserTypes.cs" />
+    <Compile Include="Events\BaseEventPermissionDTO.cs" />
+    <Compile Include="Events\EventDTO.cs" />
+    <Compile Include="Events\EventIdentifiers.cs" />
+    <Compile Include="Events\GroupEventDTO.cs" />
+    <Compile Include="Events\OrganizationEventDTO.cs" />
+    <Compile Include="Events\RegistryEventDTO.cs" />
+    <Compile Include="Events\UserEventDTO.cs" />
+    <Compile Include="ISupportsSoftDelete.cs" />
+    <Compile Include="LookupLists\LookupListCategoryDTO.cs" />
+    <Compile Include="LookupLists\LookupListDetailRequestDTO.cs" />
+    <Compile Include="LookupLists\LookupListDTO.cs" />
+    <Compile Include="LookupLists\LookupListValueDTO.cs" />
+    <Compile Include="Networks\GroupDTO.cs" />
+    <Compile Include="Networks\NetworkMessageDTO.cs" />
+    <Compile Include="Organizations\OrganizationDTO.cs" />
+    <Compile Include="Organizations\OrganizationGroupDTO.cs" />
+    <Compile Include="Organizations\OrganizationRegistryDTO.cs" />
+    <Compile Include="Projects\ProjectDataMartDTO.cs" />
+    <Compile Include="Projects\ProjectDataMartWithRequestTypesDTO.cs" />
+    <Compile Include="Projects\ProjectDTO.cs" />
+    <Compile Include="Projects\ProjectOrganizationDTO.cs" />
+    <Compile Include="Registries\RegistryDTO.cs" />
+    <Compile Include="Registries\RegistryItemDefinitionDTO.cs" />
+    <Compile Include="Registries\UpdateRegistryItemsDTO.cs" />
+    <Compile Include="Requests\RequestDataMartDTO.cs" />
+    <Compile Include="Requests\WorkplanTypeDTO.cs" />
+    <Compile Include="Requests\RequesterCenterDTO.cs" />
+    <Compile Include="Requests\RequestDTO.cs" />
+    <Compile Include="Requests\QueryTypeDTO.cs" />
+    <Compile Include="Requests\RequestTypeDTO.cs" />
+    <Compile Include="Requests\ResponseDetailDTO.cs" />
+    <Compile Include="Requests\ResponseDTO.cs" />
+    <Compile Include="Enums\RoutingStatus.cs" />
+    <Compile Include="Schedule\RequestSchedulerModel.cs" />
+    <Compile Include="Security\AccessControlTypes.cs" />
+    <Compile Include="Events\DataMartEventDTO.cs" />
+    <Compile Include="Security\AclDataMartRequestTypeDTO.cs" />
+    <Compile Include="Security\AclDTO.cs" />
+    <Compile Include="Security\AclDataMartDTO.cs" />
+    <Compile Include="Events\ProjectDataMartEventDTO.cs" />
+    <Compile Include="Events\ProjectEventDTO.cs" />
+    <Compile Include="Events\ProjectOrganizationEventDTO.cs" />
+    <Compile Include="Security\AclGroupDTO.cs" />
+    <Compile Include="Security\AclOrganizationDTO.cs" />
+    <Compile Include="Security\AclProjectOrganizationDTO.cs" />
+    <Compile Include="Security\AclProjectDataMartDTO.cs" />
+    <Compile Include="Security\AclProjectDataMartRequestTypeDTO.cs" />
+    <Compile Include="Security\AclProjectDTO.cs" />
+    <Compile Include="Security\AclProjectRequestTypeDTO.cs" />
+    <Compile Include="Security\AclRegistryDTO.cs" />
+    <Compile Include="Security\AclRequestTypeDTO.cs" />
+    <Compile Include="Security\AclUserDTO.cs" />
+    <Compile Include="Security\BaseAclDTO.cs" />
+    <Compile Include="Security\PermissionDTO.cs" />
+    <Compile Include="Security\PermissionIdentifiers.cs" />
+    <Compile Include="Security\SecurityGroupDTO.cs" />
+    <Compile Include="Security\SecurityGroupWithUsersDTO.cs" />
+    <Compile Include="Security\SecurityTupleDTO.cs" />
+    <Compile Include="Security\UpdateUserSecurityGroupsDTO.cs" />
+    <Compile Include="Subscriptions\ISimpleScheduledSubscription.cs" />
+    <Compile Include="Subscriptions\ISubscription.cs" />
+    <Compile Include="Terms\DesignDTO.cs" />
+    <Compile Include="Terms\CodeSelectorValueDTO.cs" />
+    <Compile Include="Themes\ThemeDTO.cs" />
+    <Compile Include="Users\AssignedUserNotificationDTO.cs" />
+    <Compile Include="Users\MetadataEditPermissionsSummaryDTO.cs" />
+    <Compile Include="Users\NotificationDTO.cs" />
+    <Compile Include="Users\ForgotPasswordDTO.cs" />
+    <Compile Include="Users\LoginDTO.cs" />
+    <Compile Include="Users\MenuItemDTO.cs" />
+    <Compile Include="Users\ObserverDTO.cs" />
+    <Compile Include="Users\ObserverEventDTO.cs" />
+    <Compile Include="Users\RestorePasswordDTO.cs" />
+    <Compile Include="Users\SsoEndpointDTO.cs" />
+    <Compile Include="Users\TreeItemDTO.cs" />
+    <Compile Include="Users\UpdateUserPasswordDTO.cs" />
+    <Compile Include="Users\UserAuthenticationDTO.cs" />
+    <Compile Include="Users\UserDTO.cs" />
+    <Compile Include="Users\UserEventSubscriptionDetail.cs" />
+    <Compile Include="Users\UserEventSubscriptionDTO.cs" />
+    <Compile Include="Users\UserRegistrationDTO.cs" />
+    <Compile Include="Users\UserSettingDTO.cs" />
+    <Compile Include="Users\UserWithSecurityDetailsDTO.cs" />
+    <Compile Include="Wbd\DataMartRegistrationResultDTO.cs" />
+    <Compile Include="Wbd\GetChangeRequestDTO.cs" />
+    <Compile Include="Wbd\RegisterDataMartDTO.cs" />
+    <Compile Include="Wbd\RequestDocumentDTO.cs" />
+    <Compile Include="Wbd\UpdateResponseStatusRequestDTO.cs" />
+    <Compile Include="Wbd\WbdChangeSetDTO.cs" />
+    <Compile Include="Workflows\CommonResponseDetailDTO.cs" />
+    <Compile Include="Workflows\ModularProgram\PrepareSpecificationDTO.cs" />
+    <Compile Include="Workflows\ModularProgram\RequestFormDTO.cs" />
+    <Compile Include="Workflows\WorkflowActivityDTO.cs" />
+    <Compile Include="Workflows\WorkflowDTO.cs" />
+    <Compile Include="Workflows\WorkflowHistoryItemDTO.cs" />
+    <Compile Include="Workflows\WorkflowRoleDTO.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      
+      <PluginFiles Include="$(OutputPath)\Lpp.Dns.DTO.XML">
+        <InProject>false</InProject>
+      </PluginFiles>
+    </ItemGroup>
+    
+    <Copy SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="$(SolutionDir)Lpp.Dns.Api\bin" Condition="Exists('$(OutputPath)\Lpp.Dns.DTO.XML')" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+</Project>

@@ -1,0 +1,120 @@
+﻿
+@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+
+@section Head{
+    <script src="~/js/Request/EditRequestMetadataDialog.js"></script>
+}
+<section >
+    <form id="EditRequestMetadataDialog" data-bind="submit: onSave" role="form">
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Name')" class="col-xs-12 form-group">
+                    <label for="RequestName">Name<em data-bind="visible: $root.IsFieldRequired('Request-Name')" style="color:red;">* </em></label>
+                    <input type="text" id="RequestName" name="RequestName" class="form-control" maxlength="255" data-bind="value:RequestName" required />
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-RequestID')" class="col-xs-12 form-group">
+                    <label for="Request-RequestID">Request ID</label><em data-bind="visible: $root.IsFieldRequired('Request-RequestID')" style="color:red;">*</em>
+                    <input class="form-control" id="Request-RequestID" name="MSRequestID" maxlength="100" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-RequestID')}, value: MSRequestID, enable: EditRequestIDAllowed" />
+                    <span class="k-invalid-msg" data-for="Request-RequestID"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Priority')" class="col-xs-6 form-group">
+                    <label>Priority</label><em data-bind="visible: $root.IsFieldRequired('Request-Priority')" style="color:red;">*</em><img src="/Content/img/icons/help16.gif" class="helptip" id="PriorityToolTip" title="The priority selected here will apply to all DataMarts selected for this request in the DataMart routing panel. Individual DataMart priorities can be applied before distributing the request to data partners." />
+                    <input type="text" id="RequestPriority" validationmessage="Field is Required" name="Priority" data-bind="attr:{required: $root.IsFieldRequired('Request-Priority')}, kendoDropDownList: { value: Priority, data: Priorities, dataTextField: 'Name', dataValueField: 'Value'}" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="Priority"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="col-xs-6 form-group">
+                    <label>Due Date</label><em data-bind="visible: $root.IsFieldRequired('Request-Due-Date')" style="color:red;">*</em><img src="/Content/img/icons/help16.gif" class="helptip" id="DueDateToolTip" title="The due date selected here will apply to all DataMarts selected for this request in the DataMart routing panel. Individual DataMart due dates can be applied before distributing the request to data partners." />
+                    <input type="text" validationmessage="Field is Required" id="RequestDueDate" name="Due_Date" data-bind="attr:{required: $root.IsFieldRequired('Request-Due-Date')}, kendoDatePicker: {value: DueDate}" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="Due_Date"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Requester-Center')" class="col-xs-6 form-group">
+                    <label for="RequestCenterID">Requester Center</label><em data-bind="visible: $root.IsFieldRequired('Request-Requester-Center')" style="color:red;">*</em>
+                    <input type="text" name="RequesterCenter" id="RequesterCenterID" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Requester-Center')}, kendoDropDownList: { value: RequesterCenterID, data: RequesterCenters, dataTextField: 'Name', dataValueField: 'ID', optionLabel: { Name: '<not specified>', ID: '' }}" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="RequesterCenter"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Purpose-Of-Use')" class="col-xs-6 form-group">
+                    <label for="PurposeOfUse">Purpose of use<em data-bind="visible: $root.IsFieldRequired('Request-Purpose-Of-Use')" style="color:red;">* </em> <img src="/Content/img/icons/help16.gif" class="helptip" title="Purpose of use values are consistent with ONC S&I Framework specifications for the Query Envelope. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Purpose+of+Use' target='_blank'>PopMedNet User's Guide: Purpose of Use</a>" /></label>
+                    <input type="text" id="PurposeOfUse" name="PurposeOfUse" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Purpose-Of-Use')}, kendoDropDownList: { value: PurposeOfUse, data: PurposeOfUseOptions, dataTextField: 'Name', dataValueField: 'Value', optionLabel: { Name: '<not specified>', Value: '' } }" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="PurposeOfUse"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Level-Of-PHI-Disclosure')" class="col-xs-6 form-group">
+                    <label for="Header_PhiDisclosureLevel">Level of PHI Disclosure</label><em data-bind="visible: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')" , style="color:red;">*</em>
+                    <input type="text" id="PhiDisclosureLevel" name="Header.PhiDisclosureLevel" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')}, kendoDropDownList: { value: PhiDisclosureLevel, data: PhiDisclosureLevelOptions, dataTextField: 'Name', dataValueField: 'Value', optionLabel: { Name: '<not specified>', Value: '' }}" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="PhiDisclosureLevel"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Workplan-Type')" class="col-xs-6 form-group">
+                    <label for="WorkplanTypeID">Workplan Type</label><em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">*</em>
+                    <input type="text" id="WorkplanTypeID" name="WorkplanTypeID" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Workplan-Type')}, kendoDropDownList: {value: WorkplanTypeID, data: WorkplanTypes, dataTextField: 'Name', dataValueField: 'ID', optionLabel: { Name: '<not specified>', ID: '' } }" style="width:100%;" />
+                    <span class="k-invalid-msg" data-for="WorkplanTypeID"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Report-Aggregation-Level')" class="col-xs-6 form-group">
+                    <label for="ReportAggregationLevelID">Level of Report Aggregation </label><em data-bind="visible: $root.IsFieldRequired('Request-Report-Aggregation-Level')" , style="color:red;">*</em><img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" />
+                    <input type="text" id="ReportAggregationLevelID" name="Header.ReportAggregationLevelID" validationmessage="FieldisRequired" data-bind="attr:{required: $root.IsFieldRequired('Request-Report-Aggregation-Level')}, kendoDropDownList:{value: ReportAggregationLevelID, data: ReportAggregationLevels, dataTextField: 'Name', dataValueField: 'ID', optionLabel: {Name: '<not specified>', ID: ''} }" style="width:100%" />
+                    <span class="k-invalid-msg" data-for="ReportAggregationLevelID"></span>
+                </div>
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Description')" class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="Request.Description">Description</label><em data-bind="visible: $root.IsFieldRequired('Request-Description')" style="color:red;">* </em>
+                    <textarea id="RequestDescription" name="Description" class="form-control" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Description')}, value: Description" maxlength="400"></textarea>
+                    <span class="k-invalid-msg" data-for="RequestDescription"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order-Originating-Group')" class="col-xs-4 form-group">
+                    <label id="lblSourceTask" for="SourceTask">Source Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order-Originating-Group')" style="color:red;">* </em> <img src="/Content/img/icons/help16.gif" class="helptip" title="Use of the Task Order, Activity, and Activity Project fields is network specific. These fields may not be relevant for all networks." /></label>
+                    <input id="SourceTaskOrderID" name="SourceTaskOrderID" aria-labelledby="lblSourceTask" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Task-Order-Originating-Group')}, kendoDropDownList: {value: SourceTaskOrderID, dataSource: dsTaskOrders, dataTextField: 'Name', dataValueField: 'ID', optionLabel:{ Name:'Not Selected', ID:'' }}" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="SourceTaskOrderID"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Originating-Group')" class="col-xs-4 form-group">
+                    <label id="lblSourceActivity" for="SourceActivity">Source Activity</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Originating-Group')" style="color:red;">*</em>
+                    <input id="SourceActivityID" name="SourceActivityID" class="smalltext" aria-labelledby="lblSourceActivity" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity-Originating-Group')}, kendoDropDownList: {value: SourceActivityID, dataSource: dsSourceActivities, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'SourceTaskOrderID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true }" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="SourceActivityID"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project-Originating-Group')" class="col-xs-4 form-group">
+                    <label id="lblSourceActivityProject" for="SourceActivityProject">Source Activity Project</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')" style="color:red;">*</em>
+                    <input id="SourceActivityProjectID" name="SourceActivityProjectID" aria-labelledby="lblSourceActivityProject" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')}, kendoDropDownList: {value: SourceActivityProjectID, dataSource: dsSourceActivityProjects, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'SourceActivityID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="SourceActivityProjectID"></span>
+                </div>
+            </div>
+            <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order' && 'Request-Task-Order-Originating-Group' && 'Budget-Source-CheckBox')" class="row">
+                <div class="col-xs-4 checkbox">
+                    <label for="chkSetSource" id="lblSetSource"><input id="chkSetSource" type="checkbox" aria-labelledby="lblSetSource" validationmessage="Check box is Required" data-bind="attr:{required: $root.IsFieldRequired('Budget-Source-CheckBox')}, checked: isCheckedSource" /> Budget = Source?<em data-bind="visible: $root.IsFieldRequired('Budget-Source-CheckBox')" style="color:red;">*</em></label>
+                    <span class="k-invalid-msg" data-for="chkSetSource"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order')" class="col-xs-4 form-group">
+                    <label for="BudgetTaskOrderID">Budget Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order')" style="color:red;">* </em> <img src="/Content/img/icons/help16.gif" class="helptip" title="Use of the Task Order, Activity, and Activity Project fields is network specific. These fields may not be relevant for all networks." /></label>
+                    <input id="BudgetTaskOrderID" name="ParentActivity" aria-labelledby="lblTask" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Task-Order')}, kendoDropDownList: {value: BudgetTaskOrderID, dataSource: dsTaskOrders, dataTextField: 'Name', dataValueField: 'ID', optionLabel:{ Name:'Not Selected', ID:'' }}" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="BudgetTaskOrderID"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Activity')" class="col-xs-4 form-group">
+                    <label for="BudgetActivityID">Budget Activity</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity')" style="color:red;">*</em>
+                    <input id="BudgetActivityID" name="TaskActivity" class="smalltext" aria-labelledby="lblActivity" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity')}, kendoDropDownList: {value: BudgetActivityID, dataSource: dsActivities, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'BudgetTaskOrderID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true }" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="BudgetActivityID"></span>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project')" class="col-xs-4 form-group">
+                    <label for="BudgetActivityProjectID">Budget Activity Project</label><em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project')" style="color:red;">*</em>
+                    <input id="BudgetActivityProjectID" name="ProjectActivityID" aria-labelledby="lblActivityProject" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity-Project')}, kendoDropDownList: {value: BudgetActivityProjectID, dataSource: dsActivityProjects, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'BudgetActivityID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    <span class="k-invalid-msg" data-for="BudgetActivityProjectID"></span>
+                </div>
+            </div>
+
+            <nav class="clearfix">
+                <button class="btn btn-default pull-right" data-bind="click:onCancel" style="margin-top:4px;width:80px;margin-left:8px;">Cancel</button>
+                <input type="submit" value="Save" class="btn btn-primary pull-right" style="margin-top:4px;width:80px;" />
+            </nav>
+    </form>
+</section>

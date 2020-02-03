@@ -1,0 +1,79 @@
+﻿{
+    "Header":
+    {
+        "Description": "Select stratifications."
+        /*
+            Sql:
+                SELECT Demographic.SEX, c.Stratification, COUNT(Demographic.PATID) as Total FROM Demographic
+                JOIN (
+	                SELECT PATID, CASE WHEN YearsOld < 65 THEN '65' ELSE '65+' END as Stratification FROM 
+	                (
+		                SELECT PATID, (DATEDIFF(yy, BIRTH_DATE, SysDateTime())  - CASE WHEN (MONTH(BIRTH_DATE) > MONTH(GETDATE())) OR (MONTH(BIRTH_DATE) = MONTH(GETDATE()) AND DAY(BIRTH_DATE) > DAY(GETDATE())) THEN 1 ELSE 0 END) AS YearsOld  FROM Demographic
+	                ) as s
+                ) c ON Demographic.PATID = c.PATID
+                WHERE Demographic.SEX = 'M'
+                GROUP BY Demographic.SEX, c.Stratification
+
+            Linq:
+                
+        */
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "Name": "Group 1",
+                "Criteria" : [{
+						"ID" : "be2a3684-290d-46dc-91b0-38c439bf852b",
+						"Name" : "i_Sex",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+                            "Operator": 1,
+                                //Sex
+								"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+								"Values" : {
+									"Sex" : "2"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+                "Terms": []
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            {
+                "FieldName": "Sex",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "StratifyBy": null,
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Age",
+                "Type": "D9DD6E82-BBCA-466A-8022-B54FF3D99A3C",
+                "StratifyBy": 4, //2 Stratifications (Under 65,65+)
+                "Aggregate": null,
+                "Select": [ ],
+                "OrderBy": 0
+            },
+            {
+                "FieldName": "Age_Count",
+                "Type": "D9DD6E82-BBCA-466A-8022-B54FF3D99A3C",
+                "StratifyBy": null,
+                "Aggregate": 1, //Count
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

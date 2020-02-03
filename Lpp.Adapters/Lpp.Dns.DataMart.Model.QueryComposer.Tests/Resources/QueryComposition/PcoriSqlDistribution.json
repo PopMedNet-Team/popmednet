@@ -1,0 +1,46 @@
+﻿{
+  "Header": {
+    "Name": "PCORI Sql",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=d5544fcb-79c5-4de6-a064-a5ef00dc9ffc",
+    "QueryType": "50"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "43bb983b-c3f5-4724-a98f-2fa0ade51e05",
+        "Name": "Group 1",
+        "Criteria": [ ],
+        "Terms": [
+          {
+            "Operator": 0,
+            "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+            "Values": { "Sql": "SELECT * FROM DIAGNOSIS where DX LIKE '250%'" },
+            "Criteria": [ ]
+          }
+        ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Sql Distribution_Count",
+        "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sql Distribution",
+        "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

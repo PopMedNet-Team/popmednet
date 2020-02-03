@@ -1,0 +1,10 @@
+﻿-- Prev_RefreshDates
+SELECT Distinct(Period), 1 as QueryTypeId, 'Prev: Pharmacy Dispensings by Generic Name' as [Query Type] FROM Generic_Name;;
+SELECT Distinct(Period), 2 as QueryTypeId, 'Prev: Pharmacy Dispensings by Drug Class' as [Query Type] FROM Drug_Class;;
+SELECT Distinct(Period), 4 as QueryTypeId, 'Prev: ICD-9 Diagnoses (3 digit codes)' as [Query Type] FROM ICD9_diagnosis;;
+SELECT Distinct(Period), 5 as QueryTypeId, 'Prev: ICD-9 Procedures (3 digit codes)' as [Query Type] FROM ICD9_procedure;;
+SELECT Distinct(Period), 6 as QueryTypeId, 'Prev: HCPCS Procedures' as [Query Type] FROM HCPCS;;
+SELECT Distinct(year) as Period, 7 as QueryTypeId, 'Prev: Enrollment' as [Query Type] FROM Enrollment;;
+SELECT Distinct(Period), 12 as QueryTypeId, 'Prev: ICD-9 Procedures (4 digit codes)' as [Query Type] FROM ICD9_procedure_4_digit;;
+SELECT Distinct(Period), 10 as QueryTypeId, 'Prev: ICD-9 Diagnoses (4 digit codes)' as [Query Type] FROM ICD9_diagnosis_4_digit;;
+SELECT Distinct(Period), 11 as QueryTypeId, 'Prev ICD-9 Diagnoses (5 digit codes)' as [Query Type] FROM ICD9_diagnosis_5_digit;;

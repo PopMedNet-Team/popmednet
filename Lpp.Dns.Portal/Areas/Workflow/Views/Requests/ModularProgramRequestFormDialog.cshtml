@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/views/_dialoglayout.cshtml";
+}
+
+
+@Html.Partial("~/areas/Workflow/Views/Requests/CommoRequestForm.cshtml")
+
+<script src="~/Areas/Workflow/js/Requests/ModularProgram/RequestFormDialog.js"></script>
+<script>
+    $('input').attr('disabled', '');
+    $('select').attr('disabled', '');
+    $('div').attr('disabled', '');
+    $('textarea').attr('disabled', '');
+</script>

@@ -1,0 +1,45 @@
+﻿@model DefaultPrivilegesEditorModel
+@{ 
+    var id = Html.UniqueId();
+    var allowcheckboxID = id + "_allowcheck";
+    var denycheckboxID = id + "_denycheck";
+}
+@(Html.Partial<InheritedResetPopup>())
+
+@(Html.Render<IGrid>()
+    .From(Model.AllPrivileges)
+    .Attributes(new { id, @class = "Grid Acl-Privileges" })
+    .Column(@<span data-id="@item.SerializedId">@item.View(Html)</span>, c => c.Title("Right"))
+    .Column(@<input type="checkbox" class="Allow"/>, c => c.Title((obj) => { return Html.Raw("<input type=\"checkbox\" id=\""+ allowcheckboxID + "\" />Allow"); }))
+    .Column(@<input type="checkbox" class="Deny"/>, c => c.Title((obj) => { return Html.Raw("<input type=\"checkbox\" id=\""+ denycheckboxID + "\" />Deny"); }))
+    .Column(@<a href="#" class="Inherited">[inherited]</a>, c => { })
+)
+
+<script type="text/javascript">
+    define('@Model.Handle', ['@Html.Raw( this.Resource( "defaultPrivilegesEditor.min.js" ) )'], function (bind) { return bind("@id"); });
+
+    $(function () {
+        $('#@allowcheckboxID').change(function () {
+            var checked = $('#@allowcheckboxID').prop('checked')
+            $('#@id').find('input.Allow').prop('checked', checked).trigger('change');
+            if (checked)//Uncheck Deny only when Allow is Checked. When Allow is UnChecked, do not Check Deny.
+            {
+                var denied = !checked;
+                $('#@denycheckboxID').attr("checked", denied);
+                $('#@denycheckboxID').prop('checked', denied).trigger('change');
+            }
+        });
+
+        $('#@denycheckboxID').change(function () {
+            var checked = $('#@denycheckboxID').prop('checked')
+            $('#@id').find('input.Deny').prop('checked', checked).trigger('change');
+            if (checked)//Uncheck Allow only when Deny is Checked. When Deny is UnChecked, do not Check Allow.
+            {
+                var allowed = !checked;
+                $('#@allowcheckboxID').attr("checked", allowed);
+                $('#@allowcheckboxID').prop('checked', allowed).trigger('change');
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,48 @@
+﻿-- Prev_Enroll
+-- SEX_AGGREGATION = en.sex, 'All' (if M/F aggregated)
+-- MATCH_SEX = AND ed.Sex = AgeGroups.Sex (if M/F aggregated)
+SELECT EnrollmentData.AgeGroup, EnrollmentData.Sex AS Sex, EnrollmentData.Period AS Year, EnrollmentData.MedCov, EnrollmentData.DrugCov,
+
+SUM(IIF(ISNULL(EnrollmentData.SumOfMembers), 0, EnrollmentData.SumOfMembers)) AS [Total Enrollment in Strata(Members)], 
+SUM(IIF(ISNULL(EnrollmentData.DaysCovered), 0, EnrollmentData.DaysCovered)) AS [Days Covered] 
+
+FROM
+
+	--
+	-- Age Group and Enrollment Data Section
+	--
+	-- This part makes sure that all age groups for all desired enrollment years, genders and codes/names are represented in the result table
+	-- even if there is no summary data.
+	--
+
+	(
+		SELECT AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, %MEDCOV_AGGREGATED% AS MedCov, %DRUGCOV_AGGREGATED% AS DrugCov,
+		Sum(ed.Members) AS SumOfMembers, 
+		Sum(ed.DaysCovered) AS DaysCovered 
+		FROM
+
+		(
+			-- Cross join ensures all age groups for all desired enrollment years, genders and codes/names are represented in the result table.
+
+			(
+				SELECT distinct ag.id AS AgeGroupId, ag.%STRATIFICATION%_name AS AgeGroup, ag.%STRATIFICATION%_sort_order AS AgeGroupSort, %SEX_AGGREGATED% AS Sex, en.Year AS Period
+				FROM age_groups AS ag, 
+
+				%CJC%
+
+			) AS AgeGroups
+
+		LEFT JOIN
+
+			-- Add the enrollment data to the rows (where drug coverage is Y).
+
+			(SELECT * FROM enrollment WHERE medcov IN (%MEDCOV%) AND drugcov IN (%DRUGCOV%)) AS ed
+			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX% AND ed.Year = AgeGroups.Period 
+		)
+
+		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, ed.DrugCov, ed.MedCov
+
+	) AS EnrollmentData
+
+GROUP BY EnrollmentData.AgeGroup, EnrollmentData.Sex, EnrollmentData.Period, EnrollmentData.AgeGroupSort, EnrollmentData.MedCov, EnrollmentData.DrugCov
+ORDER BY EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroupSort

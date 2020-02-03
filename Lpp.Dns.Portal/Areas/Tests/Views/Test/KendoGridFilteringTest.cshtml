@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head {
+<script src="~/Areas/Tests/Scripts/KendoGridFilteringTest.js"></script>
+}
+
+
+
+<div class="panel-body" data-bind="style: {height: gRequestsHeight}" style="padding: 0; overflow: hidden;">
+    <div id="gRequests" data-bind="kendoGrid: {
+            data: dsRequest,
+            sortable: true,
+            filterable: {
+                operators:{
+                    date: {
+                        gt: 'Is after',
+                        lt: 'Is before'
+                    }
+                }
+             },
+            autoBind: true,
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            height: '100%',
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: Tests.KendoGridFilteringTest.NameAnchor, width: 200},
+                {field: 'Identifier', title: 'System Number', width: 90, filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: '####',
+                            decimals: 0
+                        });
+                    }
+                }  },
+                {field: 'SubmittedOn', title: 'Date Submitted', format: Constants.DateTimeFormatter, width: 165},
+                {field: 'SubmittedByName', title: 'Submitter', width: 100},
+                {field: 'StatusText', title: 'Status', width: 125},
+                {field: 'RequestType', title: 'Type', width: 175},
+                {field: 'Project', title: 'Project', width: 125},
+                {field: 'Priority', title: 'Priority', values: Dns.Enums.PrioritiesTranslation, width: 100 },
+                {field: 'DueDate', title: 'Due Date', format: Constants.DateFormatter, width: 120 },
+                {field: 'MSRequestID', title: 'Request ID', width:120 }
+            ]
+        }">
+    </div>
+</div>

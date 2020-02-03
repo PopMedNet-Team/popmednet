@@ -1,0 +1,14 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+      <Proj Include="**/net45/*.csproj" Exclude="lpp.mvc.vsextensions\**;tests\**" />
+    </ItemGroup>
+
+  <Target Name="Build">
+    <MSBuild Projects="@(Proj)" Targets="Build" />
+  </Target>
+  <Target Name="Rebuild">
+	<MSBuild Projects="@(Proj)" Targets="Clean" />
+    <MSBuild Projects="@(Proj)" Targets="Build" />
+  </Target>
+
+</Project>

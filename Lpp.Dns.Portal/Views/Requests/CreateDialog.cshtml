@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="~/js/Requests/CreateDialog.js"></script>
+    <style>        
+        .RequestTypesList {
+            margin:8px 2px;
+            padding-left:12px;
+            list-style-type:none;
+        }
+        .RequestTypesList li {
+            margin:0;
+        }
+        .RequestTypesList > li > a {
+            cursor:pointer;
+        }
+
+        #Content {
+            margin-bottom: 0px !important;
+        }
+    </style>
+} 
+<p class="alert alert-info">Please select the type of request to create.</p>
+
+<div style="height: 100%; overflow: auto;">
+    <ul class="RequestTypesList" data-bind="foreach:RequestTypes">
+        <li><a href="#" data-bind="text: Name, click: $root.onSelectRequestType"></a></li>
+    </ul>
+</div>

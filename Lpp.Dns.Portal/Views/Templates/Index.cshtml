@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Criteria Group Templates";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head{
+    <script src="~/js/Templates/Index.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/templates">Criteria Group Templates</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="gTemplates" style="min-height: 400px;" data-bind="kendoGrid: {
+            data: ds,
+            sortable: true,
+            filterable: true,
+            resizable: true,
+            reorderable: true,
+            columnMenu: { columns: true },
+            columnMenuInit: $root.onColumnMenuInit,
+            scrollable: false,
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: Templates.Index.NameAchor}
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        &nbsp;
+    </nav>
+</article>
+

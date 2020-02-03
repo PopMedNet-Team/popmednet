@@ -1,0 +1,40 @@
+﻿{
+	"Header": {
+		"Name": "ICD-9 Single Exact Code",
+		"ViewUrl": ""
+	},
+	"Where": {
+		"Criteria": [{
+			"ID": "511aa7dd-e2f0-4ab7-bf9e-46a1e8f5cda6",
+			"Name": "Group 1",
+      "Criteria": [
+        {
+          "ID": "6d7ebaf2-8fff-4982-914e-33c1ddd4612f",
+          "Name": "i_codeterms",
+          "Operator": 0,
+          "Criteria": [ ],
+          "Terms": [
+            {
+              "Operator": 1,
+              "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+              "Design": {
+                "locked":  true
+              },
+              "Values": {
+                "CodeType": 3,
+                "CodeValues": "250.00",
+                "SearchMethodType": 0
+              },
+              "Criteria": [ ]
+            }
+          ],
+          "Type": 0
+        }
+      ],
+			"Terms": []
+		}]
+	},
+	"Select": {
+		"Fields": []
+	}
+}

@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup><TargetFrameworkVersion>v4.5</TargetFrameworkVersion></PropertyGroup>
+<PropertyGroup>
+    <ProjectGuid>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc</RootNamespace>
+    <AssemblyName>Lpp.Mvc</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup><Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Compile Include="..\Controllers\TypedControllerHtmlExtensions.cs"><Link>Controllers\TypedControllerHtmlExtensions.cs</Link></Compile>
+    
+<Compile Include="..\AjaxJsonResponseResult.cs"><Link>AjaxJsonResponseResult.cs</Link></Compile>
+    
+<Compile Include="..\IgnoreWebMatrix.cs"><Link>IgnoreWebMatrix.cs</Link></Compile>
+    
+<Compile Include="..\IJsControlledView.cs"><Link>IJsControlledView.cs</Link></Compile>
+    
+<Compile Include="..\UtilityExtensions.cs"><Link>UtilityExtensions.cs</Link></Compile>
+    
+<Compile Include="..\ReferenceAggregationShortcuts.cs"><Link>ReferenceAggregationShortcuts.cs</Link></Compile>
+    
+<Compile Include="..\IThemeService.cs"><Link>IThemeService.cs</Link></Compile>
+    
+<Compile Include="..\ModelBinders\IModelContext.cs"><Link>ModelBinders\IModelContext.cs</Link></Compile>
+    
+<Compile Include="..\RoutedComputation.cs"><Link>RoutedComputation.cs</Link></Compile>
+    
+<Compile Include="..\ReferenceAggregationExtensions.cs"><Link>ReferenceAggregationExtensions.cs</Link></Compile>
+    
+<Compile Include="..\RoutingExtensions.cs"><Link>RoutingExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Controllers\FullTypeNameControllerFactory.cs"><Link>Controllers\FullTypeNameControllerFactory.cs</Link></Compile>
+    
+<Compile Include="..\Views\View.cs"><Link>Views\View.cs</Link></Compile>
+    
+<Compile Include="..\Views\TypedPartialViewExtensions.cs"><Link>Views\TypedPartialViewExtensions.cs</Link></Compile>
+    
+<Compile Include="..\ModelBinders\IfModifiedSinceBinder.cs"><Link>ModelBinders\IfModifiedSinceBinder.cs</Link></Compile>
+    
+<Compile Include="..\Resources\ResourceRoute.cs"><Link>Resources\ResourceRoute.cs</Link></Compile>
+    
+<Compile Include="..\Resources\ResourceExtensions.cs"><Link>Resources\ResourceExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+    
+<Compile Include="..\Controllers\TypedControllerRoutingExtensions.cs"><Link>Controllers\TypedControllerRoutingExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Views\CompiledView.cs"><Link>Views\CompiledView.cs</Link></Compile>
+    
+<Compile Include="..\Views\CompiledViewEngine.cs"><Link>Views\CompiledViewEngine.cs</Link></Compile>
+    
+<Compile Include="..\Views\CompiledViewsAttribute.cs"><Link>Views\CompiledViewsAttribute.cs</Link></Compile>
+  
+</ItemGroup>
+</Project>

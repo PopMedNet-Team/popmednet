@@ -1,0 +1,40 @@
+@model TemplateViewModel
+@{  
+    this.Stylesheet( "Request.min.css" );
+} 
+
+<div class="ui-form ui-section ui-minimizable ui-has-header" title-text="Request Template">
+    This is a request template.<br />
+    It has been put aside for future reuse, such as scheduling or sharing. It cannot be modified in any way or made back into a regular request.<br />
+    If you wish to reuse these settings, please create a new request out of this template by clicking the "Copy" button.
+</div>
+
+<div class="RequestHeader ui-form ui-section ui-minimizable ui-maximizable ui-has-header" title-text="Request">
+    <div class="Fields ui-form">
+        @*@(Html.Partial<RequestHeader>().WithModel( new RequestHeaderViewModel { Request = Model.Request, Type = Model.RequestType } ))*@
+        @(Html.Partial("RequestHeader", new RequestHeaderViewModel { Request = Model.Request, Type = Model.RequestType }))
+    </div>
+
+    <div class="Body">
+        @Model.BodyView( Html )
+    </div>
+</div>
+
+<div class="Request-Footer ui-form ui-section ui-minimizable ui-maximizable ui-has-header" title-text="DataMart Routing">
+    <div class="DataMarts">
+        <label>This template has been routed to the following datamarts</label>
+        @*@(Html.Partial<TemplateDataMartsListBody>().WithModel(Model.DataMarts))*@
+    </div>
+
+    <div class="Buttons">
+        <div>
+            @{
+            //(Html.Partial<Lpp.Dns.Scheduler.Views.Scheduler>().WithModel(Model.SchedulerModel))
+            }            
+            @using ( Html.BeginForm<RequestController>( c => c.CopyTemplate( Model.Request.ID ) ) )
+            {
+                <input type="submit" name="Copy" value="Copy" class="ui-standard-button" />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+﻿{
+  "Header": {
+    "Name": "DC SQL",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=2de7aee6-4f59-4f2a-8729-a5ef00dca769",
+    "QueryType": "50"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "c45e09d1-799e-4993-b6fe-77ea72d7603b",
+        "Name": "Group 1",
+        "Criteria": [ ],
+        "Terms": [
+          {
+            "Operator": 0,
+            "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+            "Values": { "Sql": "select * from DIAGNOSES where DX like '250%'" },
+            "Criteria": [ ]
+          }
+        ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Sql Distribution_Count",
+        "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sql Distribution",
+        "Type": "9fccd255-eec2-49d5-a446-997ea2853bd5",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

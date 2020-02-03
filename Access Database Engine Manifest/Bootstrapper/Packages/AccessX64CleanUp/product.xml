@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Product ProductCode="Microsoft.Access.Data.Access.x64.CleanUp" xmlns="http://schemas.microsoft.com/developer/2004/01/bootstrapper">
+  <PackageFiles CopyAllPackageFiles="false">
+      <PackageFile Name="lpp.dns.datamart.clientinstallcleanup.exe" Hash="EFB503B06ED035884B79F9C4F0A424DF46F70195" />
+  </PackageFiles>
+  <Commands Reboot="Defer">
+      <Command PackageFile="lpp.dns.datamart.clientinstallcleanup.exe" EstimatedInstalledBytes="0" EstimatedInstallSeconds="5" EstimatedTempBytes="10000">
+          <InstallConditions>
+              <BypassIf Property="ProcessorArchitecture" Compare="ValueNotEqualTo" Value="amd64" />
+          </InstallConditions>
+          <ExitCodes>
+              <ExitCode Value="0" Result="Success"/>
+              <DefaultExitCode Result="Fail" String="Anunexpectedexitcodewasr" FormatMessageFromSystem="true"/>
+          </ExitCodes>
+      </Command>
+  </Commands>
+</Product>

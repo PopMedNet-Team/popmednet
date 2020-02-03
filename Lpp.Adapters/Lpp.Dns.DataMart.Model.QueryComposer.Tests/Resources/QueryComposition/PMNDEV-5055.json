@@ -1,0 +1,34 @@
+﻿{
+    "Header": { "Name": "LPP Query Composer / Default Workflow", "ViewUrl": "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=c1bde69e-14c0-4761-8b08-a53800f44921" },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "b9ccfc6f-4596-4c17-a167-9d3a08a066d7",
+                "Name": "Group 1",
+                "Criteria":
+                [
+                    {
+                        "ID": "e4fdca48-4a8e-42bf-9b4d-da9efd806401",
+                        "Name": "i_codeterms",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values": { "CodeType": 3, "CodeValues": "250.00", "SearchMethodType": 0 },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    }
+                ],
+                "Terms": [ ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+}

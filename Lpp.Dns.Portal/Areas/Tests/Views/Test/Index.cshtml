@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head {
+    <script src="~/areas/tests/scripts/index.js"></script>
+}
+
+<h1>Test Pages</h1>
+
+<ul>
+    <li><a href="/tests/test/locationselector">Location Selector</a></li>
+    <li>
+        <button data-bind="click: onAddRequestObserver">Add Request Observer</button>
+    </li>
+</ul>

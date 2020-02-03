@@ -1,0 +1,36 @@
+@using Lpp.Audit.UI
+@using Lpp.Utilities.Legacy
+@model IListModel<VisualizedAuditEvent, NotificationsGetModel>
+@{ Layout = null; }
+<link rel="stylesheet" href="~/__r/Lpp.Mvc.Controls/-/dropdown.css" />
+@(Html.Render<IGrid>()
+    .From( Model )
+    .Attributes( new { @class = "Grid Notifications" } )
+    .Column( e => e.Event.Time, c => c.Title( @<text>Date @PeriodFilter()</text> ).Sortable( "Time" ).Class( "Time" ) )
+    .Column( e => e.Kind.Name, c => c.Title( "Event" ).Sortable( "Kind" ).Class( "Kind" ) )
+    .Column( e => e.VisualizedEvent( Html ), c => c.Title( "Message" ).Class( "Message" ) )
+    .ReloadUrl( Url.Action<HomeController>( c => c.NotificationsBody( Model.ModelForReload() ) ) )
+    .With( c => c.NoDataMessage = @<text>No Notifications</text> )
+    .FooterSuffix( _ => Html.PageSizeSelector( "notifications", Model, m => Url.Action( (HomeController c) => c.NotificationsBody( m ) ) ) )
+)
+
+@helper PeriodFilter()
+{
+    var currentDays = Model.OriginalRequest.GetPeriodDaysBack();
+    var id = Html.UniqueId();
+    <div id="@id" class="ui-dropdown-button ui-has-hint FilterButton@( Model.OriginalRequest.PeriodDaysBack.NullOrEmpty() ? "" : " Active")" 
+         hint-text="Showing @currentDays days back">&nbsp;</div>
+    <div class="ui-dropdown FilterOptions" style="display: none">
+        @foreach ( var days in new[] { 7, 10, 30, 60 } )
+        {
+            var m = Model.OriginalRequest;
+            m.PeriodDaysBack = days == 7 ? null : days.ToString();
+            <a href="@(Url.Action<HomeController>( rc => rc.NotificationsBody( m ) ))" 
+                class="GridReloadLink@( days == currentDays ? " Selected" : "")">Show @days days back</a>
+        }
+    </div>
+    <script src="~/__r/Lpp.Mvc.Controls/-/dropdown.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () { $("#@(id)").dropdown(); });
+    </script>
+}

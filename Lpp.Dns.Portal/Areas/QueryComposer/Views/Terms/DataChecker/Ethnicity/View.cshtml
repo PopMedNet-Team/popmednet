@@ -1,0 +1,20 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_Ethnicity">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Ethnicity:</div>
+        &nbsp;
+        <div class="col-sm-10">
+            <span data-bind="foreach: Values().EthnicityValue()">
+                <span data-bind="visible: ($index() > 0)">or</span>
+                <span data-bind="visible: $data == 0, text: 'Unknown'"></span>
+                <span data-bind="visible: $data == 1, text: 'Hispanic'"></span>
+                <span data-bind="visible: $data == 2, text: 'Not Hispanic'"></span>
+                <span data-bind="visible: $data == 3, text: 'Missing'"></span>
+            </span>
+            <span data-bind="visible: Values().EthnicityValue().length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

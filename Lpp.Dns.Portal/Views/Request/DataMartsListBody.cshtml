@@ -1,0 +1,14 @@
+@using Lpp.Utilities.Legacy
+@model DataMartsListModel
+@{ Layout = null; }
+
+@(Html.Render<IGrid>()
+    .From( Model.DataMarts )
+    .Attributes( new { @class = "Grid DataMartGrid" } )
+    .ReloadUrl( Model.ReloadUrl )
+    .Id( dm => dm.ID )
+    .CheckboxColumn( Model.HiddenFieldName, Model.AllDataMartIdsExpression )
+    .Column( dm => dm.Name, c => c.Title( "DataMart" ).Class( "DataMartName" ).Sortable( "Name" ) )
+    .Column( dm => string.IsNullOrWhiteSpace(dm.Organization) ? "N/A" : dm.Organization, c => c.Title( "Organization" ).Class( "DataMartOrg" ) )
+    .If( Model.Suffix != null, g => g.FooterPrefix( Model.Suffix ) )
+)

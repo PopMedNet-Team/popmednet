@@ -1,0 +1,37 @@
+﻿<script src="/areas/querycomposer/js/termvaluefilter.js"></script>
+<script src="/Areas/QueryComposer/js/edit.js"></script>
+
+<div id="ComposerControl">
+    
+    <!--ko if: MDQ-->
+            <div id="MDQControl" >
+                <!-- ko stopBinding: true -->
+                @Html.Partial("~/areas/QueryComposer/Views/MDQ.cshtml")
+                <!-- /ko -->
+            </div>
+    <!-- /ko -->
+    <!--ko if: fileUpload-->
+        <!-- ko stopBinding: true -->
+            <div id="FileUploadControl">
+                @Html.Partial("~/areas/controls/views/wffileupload/Index.cshtml")
+            </div>
+        <!-- /ko -->
+    <!-- /ko -->
+
+    <div data-bind="visible: !IsTemplateEdit()">
+        <!-- ko stopBinding: true-->
+        <div id="DataMartsControl">
+            <h2>Available DataMarts</h2>
+            <p>Please select the DataMarts to which this query will be sent to:</p>
+            <div class="cleanlist">
+                @Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+
+
+
+    
+
+    </div>

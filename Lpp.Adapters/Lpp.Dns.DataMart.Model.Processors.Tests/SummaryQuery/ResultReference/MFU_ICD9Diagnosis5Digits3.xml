@@ -1,0 +1,179 @@
+﻿<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Table">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Period" type="xs:string" minOccurs="0" />
+                <xs:element name="Sex" type="xs:string" minOccurs="0" />
+                <xs:element name="AgeGroup" type="xs:string" minOccurs="0" />
+                <xs:element name="Setting" type="xs:string" minOccurs="0" />
+                <xs:element name="DXCode" type="xs:string" minOccurs="0" />
+                <xs:element name="DXName" type="xs:string" minOccurs="0" />
+                <xs:element name="Members" type="xs:double" minOccurs="0" />
+                <xs:element name="Events" type="xs:double" minOccurs="0" />
+                <xs:element name="Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Days_x0020_Covered" type="xs:double" minOccurs="0" />
+                <xs:element name="User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Events_x0020_per_x0020_member" type="xs:double" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>41401</DXCode>
+    <DXName>COR ATHEROSLERO NATIVE COR ART</DXName>
+    <Members>1660</Members>
+    <Events>38114</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>4.3</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>98.3</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>23</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>V3000</DXCode>
+    <DXName>SINGLE LIVEBORN HOSP W/O C-SEC</DXName>
+    <Members>2040</Members>
+    <Events>29402</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>5.3</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>75.8</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>14.4</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>51881</DXCode>
+    <DXName>ACUTE RESPIRATORY FAILURE</DXName>
+    <Members>991</Members>
+    <Events>26786</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>2.6</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>69.1</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>27</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>42731</DXCode>
+    <DXName>ATRIAL FIBRILLATION</DXName>
+    <Members>1391</Members>
+    <Events>22437</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>3.6</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>57.9</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>16.1</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>71536</DXCode>
+    <DXName>LOC OSTEOARTHROSIS-LOWER LEG</DXName>
+    <Members>575</Members>
+    <Events>20110</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>1.5</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>51.9</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>35</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>V3001</DXCode>
+    <DXName>SINGLE LIVEBORN HOSP C-SEC DELIV</DXName>
+    <Members>1036</Members>
+    <Events>20058</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>2.7</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>51.7</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>19.4</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>25000</DXCode>
+    <DXName>DB W/O COMP TYPE II/UNS NOT UNCNTRL</DXName>
+    <Members>1599</Members>
+    <Events>18375</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>4.1</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>47.4</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>11.5</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>78650</DXCode>
+    <DXName>CHEST PAIN UNSPECIFIED</DXName>
+    <Members>3472</Members>
+    <Events>18168</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>9</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>46.9</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>5.2</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>41071</DXCode>
+    <DXName>ACUT MI SUBNDOCRDL INFARCT INIT EOC</DXName>
+    <Members>394</Members>
+    <Events>17156</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>1</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>44.3</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>43.5</Events_x0020_per_x0020_member>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>65421</DXCode>
+    <DXName>PREV C/S DEL DEL W/WO ANTPRTM COND</DXName>
+    <Members>597</Members>
+    <Events>15727</Events>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+    <User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>1.5</User_x0020_Rate_x0020__x0028_Users_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>40.6</Event_x0020_Rate_x0020__x0028_Events_x0020_per_x0020_1000_x0020_enrollees_x0029_>
+    <Events_x0020_per_x0020_member>26.3</Events_x0020_per_x0020_member>
+  </Table>
+</NewDataSet>

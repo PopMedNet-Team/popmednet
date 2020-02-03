@@ -1,0 +1,44 @@
+@model IEnumerable<DocumentListElementModel>
+@{
+    Layout = null; 
+    var kilobyte = 1024;
+    var megabyte = kilobyte * 1024;
+    var gigabyte = megabyte * 1024;
+    var formatBodySize = new Func<long, string>((size) => {
+        if (size > gigabyte)
+        {
+            return (size / gigabyte).ToString("0.00") + " Gb";
+        }
+        if (size > megabyte) {
+            return (size / megabyte).ToString("0.00") + " Mb";
+        }
+        if (size > kilobyte)
+        {
+            return (size / kilobyte).ToString("0.00") + " Kb";
+        }
+        return size + " bytes";
+    });
+    
+    var gridID = "grid_" + Html.UniqueId();
+}
+<div id="@gridID" class="DocumentGrid"></div>
+<script>
+    var dataSource = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(d => new { Name = d.Document.Name, DocumentVersion = d.Document.MajorVersion.ToString() + "." + d.Document.MinorVersion.ToString() + "." + d.Document.BuildVersion.ToString() + "." + d.Document.RevisionVersion.ToString(), MimeType = d.Document.MimeType, Length = d.Document.Length, LengthFormatted = formatBodySize(d.Document.Length),  CanVisualize = d.CanVisualize, ID = d.Document.ID })) + ';')
+    $('#@gridID').kendoGrid({
+        columns: [
+            { field: 'Name', title: 'Name' },
+            { field: 'DocumentVersion', title: 'Version' },
+            { field: 'MimeType', title: 'Type', width: 200 },
+            { field: 'LengthFormatted', title: 'Size', width: 150 },
+            { field: 'CanVisualize', title: ' ', width: 110, attributes: { style: 'text-align:center;' }, template: function (item) { return item.CanVisualize ? '<a href="/document/' + item.ID + '/view" target="_blank">[view]</a>' : ''; } },
+            { field: 'ID', title: ' ', width: 110, attributes: { style: 'text-align:center;' }, template: function (item) { return '<a href="/document/' + item.ID + '/download">[download]</a>'; } }
+        ],
+        dataSource: {
+            data: dataSource,
+            sort: [
+                { field : 'Name', dir: 'asc' },
+                { field: 'DocumentVersion', dir: 'desc' }
+            ]
+        }
+    });
+</script>

@@ -1,0 +1,100 @@
+{
+    "Header":
+    {
+        "Name": "DX Term_Case 11 real",
+        "ViewUrl": "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=a0eb836d-87db-402a-93b9-a56a00a10884"
+    },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "410a2676-6850-42d8-90f8-108adea6f246",
+                "Name": "Group 1",
+                "Criteria":
+                [
+                    {
+                        "ID": "59d880ec-6111-4af0-ae63-52a4a1ba332c",
+                        "Name": "i_codeterms",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values":
+                                {
+                                    "CodeType": 3,
+                                    "CodeValues": "V7",
+                                    "SearchMethodType": 1
+                                },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    }
+                ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                        "Values":
+                        {
+                            "Start": null,
+                            "End": null
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            },
+            {
+                "ID": "ebbcb45d-0ee1-4f5e-9559-6b03eb393e32",
+                "Name": "group deux",
+                "Criteria":
+                [
+                    {
+                        "ID": "2ad34f5d-49cf-490d-8998-797c25743f45",
+                        "Name": "i_codeterms",
+                        "Operator": 0,
+                        "Criteria": [ ],
+                        "Terms":
+                        [
+                            {
+                                "Operator": 1,
+                                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values":
+                                {
+                                    "CodeType": 1,
+                                    "CodeValues": "346.90",
+                                    "SearchMethodType": 0
+                                },
+                                "Criteria": [ ]
+                            }
+                        ],
+                        "Type": 0
+                    }
+                ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                        "Values":
+                        {
+                            "Start": null,
+                            "End": null
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+                ]
+            },
+            "Select"
+            :
+            {
+                "Fields": [ ]
+            }
+    }

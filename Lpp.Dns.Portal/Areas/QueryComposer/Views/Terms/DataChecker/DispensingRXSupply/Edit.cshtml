@@ -1,0 +1,61 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_DispensingRXSupply">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-4 bold"><h4 id="DispensingRXSupply" class="TermHeader bold">Dispensing RX Supply<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-4 form-group">
+            <div class="checkbox">
+                <input type="checkbox" onchange="SelectAll(this, 'AllDispensingRXSupplies')" />
+                <label class="hover-ibeam" for="SelectAll">Select All</label>
+            </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div id="AllDispensingRXSupplies">
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="0" id="rxLessThanZero" />
+                    <label class="hover-ibeam" for="rxLessThanZero">&lt;0</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="1" id="rxSupZero" />
+                    <label class="hover-ibeam" for="rxSupZero">0-1</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="2" id="rxSupTwo" />
+                    <label class="hover-ibeam" for="rxSupTwo">2-30</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="3" id="rxSupThirty" />
+                    <label class="hover-ibeam" for="rxSupThirty">31-60</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="4" id="rxSupSixty" />
+                    <label class="hover-ibeam" for="rxSupSixty">61-90</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="5" id="rxSupNinety" />
+                    <label class="hover-ibeam" for="rxSupNinety">&gt;90</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" data-bind="checked: Values().RXSupply" value="7" id="rxSupMissing" />
+                    <label class="hover-ibeam" for="rxSupMissing">Missing</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
+            <input type="checkbox" data-bind="checked: Design.Locked" />
+            <span>Locked</span>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteDispensingRXSupplyTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    function SelectAll(checker, container) {
+        $("#" + container + " div input[type=checkbox]").each(function () {
+            if (this.checked != checker.checked)
+                $(this).click();
+        });
+    }
+</script>

@@ -1,0 +1,73 @@
+﻿-- MFU_Strat7
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, ' 0-4' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('0-1','2-4') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, ' 5-9' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('5-9') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, '10-18' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('10-14','15-18') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, '19-21' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('19-21') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, '22-44' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('22-44') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, '45-64' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('45-64') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)
+
+UNION ALL
+
+(
+SELECT TOP %OUTPUT_CRITERIA% %SD_CODE_FIELD% AS %CODE_FIELD%, %NAME_FIELD%, Setting, '65+' AS age_group,  period, SUM(Members) AS mb, SUM(Events) AS ev
+FROM %SD_TABLE% AS sd
+WHERE period in (%PERIODS%) AND SETTING IN (%SETTING%) AND  sex in ('M','F') and age_group in ('65-74','75+') AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+GROUP BY %SD_CODE_FIELD%, %NAME_FIELD%, Setting,  period
+ORDER BY SUM(%METRIC_TYPE%) DESC
+)

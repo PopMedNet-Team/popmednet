@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EF6CE0B0-6C92-4285-A99C-433B2CEB17FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Security.Tests</RootNamespace>
+    <AssemblyName>Lpp.Security.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\..\..\..\packages\Rx-Main.1.0.11226\lib\Net4\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex">
+      <HintPath>..\..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit">
+      <HintPath>..\..\..\..\packages\xunit.1.9.0.1566\lib\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\..\..\packages\xunit.extensions.1.9.0.1566\lib\xunit.extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\net45\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\net45\Lpp.Data.Composition\Lpp.Data.Composition.csproj">
+      <Project>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</Project>
+      <Name>Lpp.Data.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\net45\Lpp.Data.Interfaces\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\net45\Lpp.Security\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\net45\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Tests\net45\Lpp.Tests.csproj">
+      <Project>{C26AA376-8202-47A7-80AF-9CDA4042A5D8}</Project>
+      <Name>Lpp.Tests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    
+    
+    
+  </ItemGroup>
+  <ItemGroup>
+    
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+  
+
+
+
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\AccessControl.cs"><Link>AccessControl.cs</Link></Compile>
+    
+<Compile Include="..\SecurityDag.cs"><Link>SecurityDag.cs</Link></Compile>
+    
+<Compile Include="..\SqlCaching.cs"><Link>SqlCaching.cs</Link></Compile>
+    
+<Compile Include="..\DatabaseFixture.cs"><Link>DatabaseFixture.cs</Link></Compile>
+    
+<Compile Include="..\Properties\Resources.Designer.cs"><Link>Properties\Resources.Designer.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+<Compile Include="..\SqlHierarchy.cs"><Link>SqlHierarchy.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+  
+<EmbeddedResource Include="..\..\..\Lpp.Security\Data\DAG.sql"><Link>..\..\Lpp.Security\Data\DAG.sql</Link><Link>Resources\DAG.sql</Link>
+    </EmbeddedResource>
+<Content Include="..\..\..\Lpp.Security\Data\DDL.sql"><Link>..\..\Lpp.Security\Data\DDL.sql</Link><Link>Resources\DDL.sql</Link>
+    </Content>
+<Content Include="..\..\..\Lpp.Security\Data\TupleViews.sql"><Link>..\..\Lpp.Security\Data\TupleViews.sql</Link><Link>Resources\TupleViews.sql</Link>
+    </Content>
+<EmbeddedResource Include="..\Properties\Resources.resx"><Link>Properties\Resources.resx</Link><Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+</ItemGroup>
+</Project>

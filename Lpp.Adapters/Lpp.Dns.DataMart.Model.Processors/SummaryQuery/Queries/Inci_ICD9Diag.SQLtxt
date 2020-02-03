@@ -1,0 +1,90 @@
+﻿-- Inci_ICD9Diag
+SELECT EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroup, 
+
+EnrollmentData.Setting, EnrollmentData.DXCode, EnrollmentData.DXName,
+CAST(SUM(ISNULL(SummaryData.m90, 0)) AS FLOAT) AS Members90, 
+CAST(SUM(ISNULL(SummaryData.e90, 0)) AS FLOAT) AS Events90, 
+CAST(SUM(ISNULL(SummaryData.m180, 0)) AS FLOAT) AS Members180, 
+CAST(SUM(ISNULL(SummaryData.e180, 0)) AS FLOAT) AS Events180, 
+CAST(SUM(ISNULL(SummaryData.m270, 0)) AS FLOAT) AS Members270, 
+CAST(SUM(ISNULL(SummaryData.e270, 0)) AS FLOAT) AS Events270,
+
+CAST(SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) AS FLOAT) AS [Total Enrollment in Strata(Members)], 
+CAST(SUM(ISNULL(EnrollmentData.DaysCovered, 0)) AS FLOAT) AS [Days Covered] 
+
+FROM
+
+	--
+	-- Age Group and Enrollment Data Section
+	--
+	-- This part makes sure that all age groups for all desired enrollment years, genders and codes/names are represented in the result table
+	-- even if there is no summary data.
+	--
+
+	(
+		SELECT AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, 
+		AgeGroups.DXCode, AgeGroups.DXName, AgeGroups.Setting, 
+		Sum(ed.Members) AS SumOfMembers, 
+		Sum(ed.DaysCovered) AS DaysCovered 
+
+		FROM
+
+		(
+			-- Cross join ensures all age groups for all desired enrollment years, genders and codes/names are represented in the result table.
+
+			(
+				SELECT distinct ag.id AS AgeGroupId, ag.%STRATIFICATION%_name AS AgeGroup, ag.%STRATIFICATION%_sort_order AS AgeGroupSort,  %SEX_AGGREGATED% AS Sex, en.Year AS Period, 
+				sd.Code AS DXCode, sd.Name AS DXName, %SETTING% AS Setting
+				FROM age_groups AS ag,
+
+				%CJC%
+
+			) AS AgeGroups
+
+		LEFT JOIN
+
+			-- Add the enrollment data to the rows (where medical coverage is Y).
+
+			(SELECT * FROM enrollment WHERE medcov='Y') AS ed
+			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
+		)
+
+		--LEFT JOIN
+
+			-- Add the names to the rows by matching against summary data.
+
+			--(SELECT distinct code, dxname FROM Incident_ICD9_Diagnosis WHERE code in (%CODES%)) AS nm
+			--ON nm.code=AgeGroups.dxcode
+
+		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.DXCode, AgeGroups.DXName, AgeGroups.Setting
+
+	) AS EnrollmentData
+
+LEFT JOIN
+
+	--
+	-- Summary Data Section
+	--
+	-- Now add the corresponding summary data to the table (for those with medical coverage enrollment).
+	--
+
+	(
+		SELECT code, DXName, Setting, 
+
+		age_group_id, age_group, %MATCH_SEX3% period, 
+		SUM(Members90) AS m90, SUM(Events90) AS e90,
+		SUM(Members180) AS m180, SUM(Events180) AS e180,
+		SUM(Members270) AS m270, SUM(Events270) AS e270
+
+		FROM Incident_ICD9_diagnosis AS sd
+
+		WHERE code IN (%CODES%)  AND period in (%PERIODS%) AND  SETTING IN (%SETTING%) AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year=sd.period and medcov = 'Y') > 0)
+		GROUP BY code, DXName, Setting, age_group_id, age_group, %MATCH_SEX3% period
+
+	) AS SummaryData
+
+ON (SummaryData.age_group_id = EnrollmentData.agegroupid %MATCH_SEX2% and SummaryData.Period = EnrollmentData.Period and SummaryData.code = EnrollmentData.DXCode)
+
+GROUP BY EnrollmentData.AgeGroup, EnrollmentData.Sex, EnrollmentData.Period, EnrollmentData.DXCode, EnrollmentData.DXName, EnrollmentData.Setting, EnrollmentData.AgeGroupSort
+ORDER BY EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroupSort

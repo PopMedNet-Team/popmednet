@@ -1,0 +1,39 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker Age",
+
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=40140ade-078e-4d0c-add6-a4f4010a33b8"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "86b246eb-3fc0-4ebb-a447-04a2e6563d67",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "BBBB4" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "C2BFBB73-8F93-4318-A8C8-73570494FF29",
+                        "Values": { "AgeDistributionValue": [ "3" ] },
+                        "Criteria": [ ]
+                    
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "68CB6117-365D-4F17-BDB3-10FA0B854DEC" },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    }, "Select": { "Fields": [ ] } 
+
+}

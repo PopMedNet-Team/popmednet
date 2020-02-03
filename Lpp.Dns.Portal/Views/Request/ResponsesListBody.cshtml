@@ -1,0 +1,117 @@
+@model ResponsesListModel
+@{ Layout = null; } 
+
+@*@(Html.Render<IGrid>()
+    .From( Model.List )
+    .ReloadUrl( Url.Action<RequestController>( c => c.ResponsesListBody( Model.List.ModelForReload() ) ) )
+    .Id( r => r.ID )
+    .If( Model.ShowCheckboxes, g => g.CheckboxColumn( "SelectedResponses", "allResponseIds" ) )
+    .Column( @<span title="@item.Name">@item.Name</span>,
+             c => c.Title( "DataMart" ).Sortable( "DataMart" ).Class( "DataMart" ) )
+    .Column( r => r.ResponseTime, c => c.Title( "Last Response" ).Format( "MM/dd/yyyy hh:mm:ss tt" ).Sortable( "ResponseTime" ).Class( "ResponseTime" ) )
+    .Column( r =>
+        r.IsRejectedAfterUpload ? "Rejected After Upload" : 
+        r.NeedsApproval ? "Awaiting Approval" : 
+        "Completed",
+        c => c.Title( "Status" ).NotSortable().Class( "Status" ) )
+    .Column( @<a href="#" class="ui-has-hint" hint-text="Click to display the full message">
+        @Html.Raw( item.Messages.EmptyIfNull().FirstOrDefault() )
+        <div class="Full" style="display: none">@Html.Raw( string.Join( "<br/>", item.Messages.EmptyIfNull() ) )</div>
+        </a>, c => c.Title( "Message" ).Class( "Message" ) )
+
+    .If( Model.ShowHistory, g => g.Column( @<a href="#" data-popup-parent="#Body"
+        data-get-url="@Url.Action( ( RequestController c ) => c.History( Model.Request.ID, item.Id, null ) )" 
+        data-controller="lpp.mvc.controls/dynamicPopup" class="has-controller" data-popup-class="ui-dropdown RequestRoutingHistory-DropDown">[history]</a>, c => { } ) )
+
+    .If( Model.AllowViewResults || Model.AllowGroup || Model.AllowUngroup || Model.AllowApproval || Model.AllowResubmit, g => g.FooterPrefix( @<div class="ActionButtons">
+        @if ( Model.AllowViewResults )
+        { 
+            <input id="btnViewResults" type="submit" name="DisplayResults" value="View Results" class="ui-standard-button" />
+            if ( Model.AggregationModes.EmptyIfNull().Skip( 1 ).Any() )
+            {
+                <input type="hidden" name="AggregationMode" />
+                <div class="AggregationModes">
+                    @foreach ( var m in Model.AggregationModes )
+                    {
+                        <a href="#" class="AggregationMode" data-mode="@m.Id">@m.Name</a>
+                    }
+                </div>
+            }
+        }
+        @if ( Model.AllowApproval || Model.AllowResubmit )
+        { 
+            <input type="hidden" name="RejectMessage" />
+        }
+        @if ( Model.AllowApproval )
+        { 
+            <input type="submit" name="ApproveResponses" value="Approve" class="ui-standard-button" />
+            <input type="submit" name="RejectResponses" value="Reject" class="ui-standard-button" onclick="return promptField( 'RejectMessage', 'Please enter rejection message' );" />
+        }
+        @if ( Model.AllowResubmit )
+        {
+            <input type="submit" name="ResubmitResponses" value="Resubmit" class="ui-standard-button" onclick="return promptField('RejectMessage', 'Please enter resubmit message');" />
+        }
+        @if ( Model.AllowGroup || Model.AllowUngroup )
+        { <input type="hidden" name="GroupName" /> }
+        @if ( Model.AllowGroup )
+        { <input type="submit" name="GroupResponses" value="Group" class="ui-standard-button" onclick="return promptGroupName();" /> }
+        @if ( Model.AllowUngroup )
+        { <input type="submit" name="UngroupResponses" value="Ungroup" class="ui-standard-button" /> }
+        <script type="text/javascript">
+            function promptGroupName() { return promptField('GroupName', "Please specify a name for this group"); }
+            function promptField(fieldName, invitation) {
+                var field = $("input[name=" + fieldName + "]");
+                var n = prompt(invitation, field.val());
+                while (n == '') {
+                    n = prompt(invitation, field.val());
+                }
+                field.val(n);
+                return n != null;
+            }
+        </script>
+    </div> ) )
+)
+
+<script type="text/javascript">
+    $(function () {
+        var popupKey = "{53F76702-1EC5-47CC-BCEC-21D3DEDA36BD}";
+        $(".Grid td.Message > a").click(function () {
+            var popup = $(this).data(popupKey) || $(".Full", this);
+            $(this).data(popupKey, popup);
+            popup.dialog({ title: "Message from DataMart", buttons: { Close: function () { $(this).dialog("close"); } }, modal: true, width: 600 });
+            return false;
+        });
+    });
+</script>
+@if ( Model.AggregationModes.EmptyIfNull().Skip( 1 ).Any() )
+{
+<script type="text/javascript">
+    $(function () {
+        $("input[name=DisplayResults]").click(function () {
+            $(".AggregationModes")
+                .css({ left: "", top: "" }).position({ my: "left top", at: "left bottom", of: this })
+                .fadeIn(100);
+            var fadeOut = function () { $(".AggregationModes").fadeOut(100); $(document.body).unbind("click", fadeOut); return false; }
+            $(document.body).click(fadeOut);
+            return false;
+        });
+        $(".AggregationMode").click(function (e) {
+            LoadSpinner();
+            $("input[name=AggregationMode]")
+                .val($(this).data("mode"))
+                .after('<input type="hidden" name="DisplayResults" value="1" />');
+            $(this).closest("form").submit();
+            return false;
+        });
+    });
+</script>
+} else {
+<script>
+    $(function () {
+        $("input[name=DisplayResults]").click(function () {
+            LoadSpinner();
+            return false;
+        });
+    });
+</script>    
+}*@

@@ -1,0 +1,118 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    <div id="ResponseViewHeader" style="">
+        <h2>Metadata: Data Completeness</h2>
+
+        <div style="overflow-x: auto;">
+            @*only a table is required, no charts*@
+            <div class="table-container">
+                <table class="table table-striped" style="width:100%;" data-bind="visible:Results().length > 0">
+                    <thead>
+                        <tr>
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-header" style="text-align:right" data-bind="visible: hasDiagnosis">Diagnosis</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-header" style="text-align:right" data-bind="visible: hasProcedure">Procedure</td>
+                            <td class="overallmetric-header" data-bind="visible: hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-header" style="text-align:right" data-bind="visible: hasDispensing">Dispensing</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-header" style="text-align:right" data-bind="visible: hasEncounter">Encounter</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-header" style="text-align:right" data-bind="visible: hasEnrollment">Enrollment</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-header" data-bind="visible: hasEnrollment">&nbsp;</td>
+
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header">Data Partner</td>
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header">MSDD</td>
+                            <td class="overallmetric-header">&nbsp;</td>
+                            <td class="overallmetric-header">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="overallmetric-body">DP</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDiagnosis">Min</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDiagnosis">Max</td>
+                            <td class="overallmetric-body" data-bind="visible: hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasProcedure">Min</td>
+                            <td class="overallmetric-body" data-bind="visible: hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasProcedure">Max</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDispensing">Min</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasDispensing">Max</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEncounter">Min</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEncounter">Max</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEnrollment">Min</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: hasEnrollment">Max</td>
+
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body">Min</td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body">Max</td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body">Min</td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body">Max</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- ko foreach: { data: Results, as: 'row'} -->
+                        <tr>
+                            <td class="overallmetric-body" data-bind="text: row.DP"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDiagnosis, text: moment(row.DIA_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDiagnosis">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDiagnosis, text: moment(row.DIA_MAX).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasProcedure, text: moment(row.PRO_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasProcedure">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasProcedure, text: moment(row.PRO_MAX).format('MM/DD/YYYY') "></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDispensing, text: moment(row.DIS_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDispensing">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasDispensing, text: moment(row.DIS_MAX).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEncounter, text: moment(row.ENC_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEncounter">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEncounter, text: moment(row.ENC_MAX).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEnrollment, text: moment(row.ENR_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEnrollment">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="visible: $parent.hasEnrollment, text: moment(row.ENR_MAX).format('MM/DD/YYYY')"></td>
+
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="text: moment(row.DP_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="text: moment(row.DP_MAX).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="text: moment(row.MSDD_MIN).format('MM/DD/YYYY')"></td>
+                            <td class="overallmetric-body">&nbsp;</td>
+                            <td class="overallmetric-body" data-bind="text: moment(row.MSDD_MAX).format('MM/DD/YYYY')"></td>
+                        </tr>
+                        <!-- /ko -->
+                    </tbody>
+                </table>
+            </div>
+            <p class="alert alert-warning" style="text-align:center;" data-bind="visible:Results().length == 0">No results were found for the specified criteria.</p>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>

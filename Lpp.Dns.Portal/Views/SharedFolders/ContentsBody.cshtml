@@ -1,0 +1,51 @@
+@using Lpp.Utilities.Legacy
+@model SharedFolderContentsModel
+
+@{ 
+    Layout = null; 
+    this.Stylesheet( "Request.min.css" );
+    var id = Html.UniqueId();
+    Func<RequestListGetModel,string> reloadUrl = m => Url.Action( ( SharedFolderController cr ) => cr.ContentsBody( Model.Folder.ID, m ) );
+    var removeUrl = Html.Raw(
+        Url.Action( ( SharedFolderController cr ) => cr.UnshareRequest( Model.Folder.ID.ToString(), "__req__" ) )
+        .Replace( "__req__", "' + requestId + '" ) );
+} 
+
+@(Html.Render<IGrid>()
+    .From( Model.Requests.List )
+    .Attributes( new { @class = "Grid RequestsGrid " + id } )
+    .ReloadUrl( Url.Action( (SharedFolderController c) => c.ContentsBody( Model.Folder.ID, Model.Requests.List.ModelForReload() ) ) )
+    .Id( r => r.Request.ID )
+    .Column( @<a href="@(Url.Action<RequestController>( c => c.RequestView( item.Request.ID, Model.Folder.ID.ToString() ) ))" title="@item.Request.Name">@item.Request.Name</a>,
+             c => c.Title( "Name" ).Sortable( "Name" ).Class( "Name" ) )
+    .Column( r => r.Request.ID, o => o.Title( "Id" ).NotSortable().Class( "Id" ) )
+    .Column( @<text>@RequestHelpers.RequestTypeName( Model.Requests, item )</text>,
+             c => c.Title( @<text>Type @RequestHelpers.RequestTypeFilter( Html, Model.Requests, reloadUrl )</text> ).Sortable( "Type" ).Class( "Type" ) )
+    .If( Model.AllowRemove, g => g
+        .Column( @<a href="#" class="RemoveRequest">Remove</a>, o => o.Title( "Remove" ).NotSortable() )
+    )
+                     .FooterSuffix(_ => RequestHelpers.PageSizeSelector(Html, Model.Requests, reloadUrl))
+    .With( o => o.NoDataMessage = @<text>No Requests in this Folder</text> )
+    .If( Model.AllowEdit, g => g
+        .FooterSuffix( @<div class="ActionButtons">
+                            <button class="ui-standard-button"
+                                onclick="window.nav.navigate( '@Url.Action( (SharedFolderController c) => c.Edit( Model.Folder.ID, Request.Url.LocalPath ) )' )"
+                            >Edit This Folder</button>
+                        </div> )
+    )
+)
+@if( Model.AllowRemove ) {
+<script type="text/javascript">
+    $$(['@this.Resource("SharedFolders.js")'], function ($, sf) {
+        $(".@(id) a.RemoveRequest").click(function () {
+            var requestId = $(this).closest("tr").attr("id");
+            if (!requestId || !confirm("This request will be removed from this shared folder.\r\nContinue?"))
+                return;
+
+            sf.unshareRequest('@removeUrl', function () {
+                $(".@(id)").gridReload();
+            });
+        });
+    });
+</script>
+}

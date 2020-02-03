@@ -1,0 +1,1869 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Build\Lpp.Dns.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{E59FAF38-4394-4D29-837F-BAE706488021}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <SchemaVersion>2.0</SchemaVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.Portal</RootNamespace>
+    <AssemblyName>Lpp.Dns.Portal</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <NuGetPackageImportStamp>33ab7466</NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Cells, Version=7.4.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Aspose.Cells.dll</HintPath>
+    </Reference>
+    <Reference Include="C5, Version=1.1.0.0, Culture=neutral, PublicKeyToken=06a1b38866503b69, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.0.1\lib\net40\C5.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.3.1, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.3.1\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.0.1.100, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.0.1\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Renci.SshNet">
+      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Interactive, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ix-Main.1.2.5\lib\net45\System.Interactive.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Interactive.Providers, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ix-Providers.1.2.5\lib\net45\System.Interactive.Providers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Providers, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rx-Providers.2.2.5\lib\net45\System.Reactive.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="App_Code\Crud.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Crud.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="App_Code\RequestHelpers.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RequestHelpers.cshtml</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\Terms\Conditions.cs" />
+    <Content Include="App_Code\Terms\ICD9Diagnosis.cs" />
+    <Content Include="App_Code\Terms\Visits.cs" />
+    <Content Include="App_Code\Terms\AgeRange.cs" />
+    <Content Include="App_Code\Terms\ICD9Procedure.cs" />
+    <Content Include="App_Code\Terms\HCPCS.cs" />
+    <Content Include="App_Code\Terms\DrugClass.cs" />
+    <Content Include="App_Code\Terms\DrugName.cs" />
+    <Content Include="App_Code\Terms\Setting.cs" />
+    <Content Include="App_Code\Terms\Coverage.cs" />
+    <Content Include="App_Code\Terms\CodeMetricType.cs" />
+    <Content Include="App_Code\Terms\Criteria.cs" />
+    <Content Include="App_Code\Terms\Sex.cs" />
+    <Content Include="App_Code\Terms\DispensingMetricType.cs" />
+    <Content Include="App_Code\Terms\QuarterYear.cs" />
+    <Content Include="App_Code\Terms\Year.cs" />
+    <Content Include="App_Code\Terms\Race.cs" />
+    <Content Include="App_Code\Terms\Ethnicity.cs" />
+    <Content Include="App_Code\Terms\ICD9Procedure4digit.cs" />
+    <Content Include="App_Code\Terms\ICD9Diagnosis4digit.cs" />
+    <Content Include="App_Code\Terms\ICD9Diagnosis5digit.cs" />
+    <Content Include="App_Code\Terms\ObservationPeriod.cs" />
+    <Content Include="App_Code\Terms\ModularProgram.cs" />
+    <Content Include="App_Code\Terms\ZipCodes.cs" />
+    <Content Include="App_Code\Terms\TobaccoUse.cs" />
+    <Content Include="App_Code\Terms\Hispanic.cs" />
+    <Content Include="App_Code\Terms\Height.cs" />
+    <Content Include="App_Code\Terms\Weight.cs" />
+    <Content Include="App_Code\Terms\VitalMeasureDate.cs" />
+    <Content Include="App_Code\Terms\CombinedDiagnosisCodes.cs" />
+    <Content Include="App_Code\Terms\DataChecker\DataPartners.cs" />
+    <Content Include="App_Code\Terms\DataChecker\NDCCodes.cs" />
+    <Content Include="App_Code\Terms\DataChecker\Ethnicity.cs" />
+    <Content Include="App_Code\Terms\DataChecker\Race.cs" />
+    <Content Include="App_Code\Terms\DataChecker\DiagnosisPDX.cs" />
+    <Content Include="App_Code\Terms\DataChecker\MetadataCompleteness.cs" />
+    <Content Include="App_Code\Terms\DataChecker\DispensingRXAmount.cs" />
+    <Content Include="App_Code\Terms\DataChecker\DispensingRXSupply.cs" />
+    <Content Include="App_Code\Terms\DataChecker\Encounter.cs" />
+    <Content Include="App_Code\Terms\DataChecker\AgeDistribution.cs" />
+    <Content Include="App_Code\Terms\DataChecker\SexDistribution.cs" />
+    <Content Include="App_Code\Terms\DataChecker\WeightDistribution.cs" />
+    <Content Include="App_Code\Terms\DataChecker\HeightDistribution.cs" />
+    <Content Include="App_Code\Terms\DataChecker\DiagnosisCodes.cs" />
+    <Content Include="App_Code\Terms\DataChecker\ProcedureCodes.cs" />
+    <Content Include="App_Code\Terms\ESPDiagnosisCodes.cs" />
+    <Content Include="App_Code\Terms\SqlDistribution.cs" />
+    <Content Include="App_Code\Terms\FileUpload.cs" />
+    <Content Include="App_Code\Terms\ProcedureCodes.cs" />
+    <Compile Include="App_Code\UI.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UI.cshtml</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\WorkflowRequestActivities\DefaultWFNewRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DefaultWFReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SummaryQueryWFDraftRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SummaryQueryWFRequestReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SummaryQueryWFDistributeRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DefaultWFTerminateRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DefaultWFApproveResponse.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DefaultWFReviewResponses.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFDistributeRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFDraftRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFPreDistributionTesting.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFPreDistributionTestingReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFRespondToRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFReviewDataMartResponses.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFReviewRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFSpecification.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFSpecificationReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFViewStatusAndResults.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFWorkingSpecification.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFWorkingSpecificationReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\CommonActivities.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SummaryQueryWFReviewResponses.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DataCheckerWFNewRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DataCheckerWFReview.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DataCheckerWFApproveResponse.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\BaseCommonActivity.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\ModularProgramWFCompleted.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SimpleModularProgramWFDistributeRequest.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SimpleModularProgramWFViewStatusAndResults.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\SimpleModularProgramWFCompleted.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DistributedRegressionWFDistribution.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DistributedRegressionWFCompleteDistribution.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DistributedRegressionWFConductAnalysis.cs" />
+    <Content Include="App_Code\WorkflowRequestActivities\DistributedRegressionWFCompleted.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Api\ApiAreaRegistration.cs" />
+    <Compile Include="Areas\Api\Controllers\DemographicsController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFCommentsController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFDocumentsController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFFileUploadController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFHistoryController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFNotificationsController.cs" />
+    <Compile Include="Areas\Controls\Controllers\WFTrackingTableController.cs" />
+    <Compile Include="Areas\Controls\ControlsAreaRegistration.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\AgeDistributionController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\BaseController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\DiagnosisController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\EthnicityController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\HeightController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\NationalDrugCodesController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\ProcedureController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\RaceController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\DiagnosisPDXController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\MetaDataController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\RxAmtController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\RxSupController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\SexController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\SqlDistributionController.cs" />
+    <Compile Include="Areas\DataChecker\Controllers\WeightController.cs" />
+    <Compile Include="Areas\DataChecker\DataCheckerAreaRegistration.cs" />
+    <Compile Include="Areas\DataChecker\Models\AgeDistributionItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\DiagnosisItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\EthnicityItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\HeightItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\MetaDataItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\PDXItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\ProcedureItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\RaceItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\RxAmtItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\RxSupItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\SexItemData.cs" />
+    <Compile Include="Areas\DataChecker\Models\WeightItemData.cs" />
+    <Compile Include="Areas\QueryComposer\Controllers\QueryComposerController.cs" />
+    <Compile Include="Areas\QueryComposer\QueryComposerAreaRegistration.cs" />
+    <Compile Include="Areas\Tests\Controllers\TestController.cs" />
+    <Compile Include="Areas\Tests\TestsAreaRegistration.cs" />
+    <Compile Include="Areas\Workflow\Controllers\WorkflowRequestsController.cs" />
+    <Compile Include="Areas\Workflow\WorkflowAreaRegistration.cs" />
+    <Compile Include="Audit\AuditExports.cs" />
+    <Compile Include="Audit\AuditEvents.cs" />
+    <Compile Include="Audit\AuditPropertyVisualizers.cs" />
+    <Compile Include="Audit\AuditUIScope.cs" />
+    <Compile Include="Audit\Events\Crud\ProjectCrud.cs" />
+    <Compile Include="Audit\Events\Crud\RegistryCrud.cs" />
+    <Compile Include="Audit\Events\Projects\ProjectAssignment.cs" />
+    <Compile Include="Audit\Events\Registration\RegistrationStatus.cs" />
+    <Compile Include="Audit\Events\Registration\RegistrationStatusChange.cs" />
+    <Compile Include="Audit\DisplayEventVisualizers.cs" />
+    <Compile Include="Audit\EmailEventVisualizer.cs" />
+    <Compile Include="Audit\EmailChannel.cs" />
+    <Compile Include="Audit\Events\CommonProperties.cs" />
+    <Compile Include="Audit\Events\Registration\RegistrationSubmitted.cs" />
+    <Compile Include="Audit\Events\Requests\RoutingStatusChange.cs" />
+    <Compile Include="Audit\Events\Requests\RoutingEventBase.cs" />
+    <Compile Include="Audit\Events\Requests\UnresponsedRequestReminder.cs" />
+    <Compile Include="Audit\Events\Requests\RequestEventBase.cs" />
+    <Compile Include="Audit\Events\Requests\UnapprovedResultsReminder.cs" />
+    <Compile Include="Audit\Events\Requests\UnexaminedResultsReminder.cs" />
+    <Compile Include="Audit\Events\MyProfileUpdated.cs" />
+    <Compile Include="Audit\Events\Crud\DataMartCrud.cs" />
+    <Compile Include="Audit\Events\Crud\GroupCrud.cs" />
+    <Compile Include="Audit\Events\Crud\CrudEvent.cs" />
+    <Compile Include="Audit\Events\Crud\OrganizationCrud.cs" />
+    <Compile Include="Audit\Events\Crud\UserCrud.cs" />
+    <Compile Include="Audit\Events\Requests\ResultsViewed.cs" />
+    <Compile Include="Audit\Events\Requests\UnapprovedRequestReminder.cs" />
+    <Compile Include="Audit\Events\PasswordNag.cs" />
+    <Compile Include="Audit\Events\Requests\RequestStatusChange.cs" />
+    <Compile Include="Audit\Events\Requests\NewRequest.cs" />
+    <Compile Include="Authentication\AuthenticationFilter.cs" />
+    <Compile Include="Authentication\AuthenticationService.cs" />
+    <Compile Include="Authentication\DnsPrincipal.cs" />
+    <Compile Include="Code\CloneDataMartService.cs" />
+    <Compile Include="Code\CloneOrganizationService.cs" />
+    <Compile Include="Code\CloneService.cs" />
+    <Compile Include="Code\DemographicsService.cs" />
+    <Compile Include="Code\PortalExtensions.cs" />
+    <Compile Include="Code\Organizations\NetworkTokenData.cs" />
+    <Compile Include="Code\RequestMetadataCollection\IRequestMetadataCollectionProvider.cs" />
+    <Compile Include="Code\QueryPrecompileService.cs" />
+    <Compile Include="Code\GroupService.cs" />
+    <Compile Include="Code\DnsAclService.cs" />
+    <Compile Include="Code\EmailService.cs" />
+    <Compile Include="Code\EmbeddingFilter.cs" />
+    <Compile Include="Code\Requests\ResponseContext.cs" />
+    <Compile Include="Code\Sftp\SftpUploadService.cs" />
+    <Compile Include="Code\RequestMetadataCollection\RequestMetadataCollection.cs" />
+    <Compile Include="Code\RequestMetadataCollection\RequestMetadataCollectionService.cs" />
+    <Compile Include="Code\Requests\RequestSchedulerService.cs" />
+    <Compile Include="Code\Tasks\TaskService.cs" />
+    <Compile Include="Code\UsersService.cs" />
+    <Compile Include="Code\ErrorHandler.cs" />
+    <Compile Include="Code\Requests\PluginService.cs" />
+    <Compile Include="Code\Requests\MissingPluginStub.cs" />
+    <Compile Include="Code\Requests\PluginHost.cs" />
+    <Compile Include="Code\Requests\PostContext.cs" />
+    <Compile Include="Code\Requests\RequestContext.cs" />
+    <Compile Include="Code\Requests\ResponseService.cs" />
+    <Compile Include="Code\Validators\AnyDataMartsValidator.cs" />
+    <Compile Include="Code\Validators\TwoDataMartsRuleValidator.cs" />
+    <Compile Include="Code\Password.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DataMartsController.cs" />
+    <Compile Include="Controllers\DialogsController.cs" />
+    <Compile Include="Controllers\GroupsController.cs" />
+    <Compile Include="Controllers\DebugController.cs" />
+    <Compile Include="Controllers\Crud\ChildCrudController.cs" />
+    <Compile Include="Controllers\NetworkMessagesController.cs" />
+    <Compile Include="Controllers\OrganizationsController.cs" />
+    <Compile Include="Controllers\OrgChildren\ISecurityGroupAuthorityController.cs" />
+    <Compile Include="Controllers\OrgChildren\IOrgChildCrudController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\QlikTest.cs" />
+    <Compile Include="Controllers\RegistriesController.cs" />
+    <Compile Include="Controllers\RequestsController.cs" />
+    <Compile Include="Controllers\RequestTypeController.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\SecurityGroupsController.cs" />
+    <Compile Include="Controllers\SharedFolderController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\OrgChildren\OrgChildCrudController.cs" />
+    <Compile Include="Controllers\Crud\CrudListFooterModel.cs" />
+    <Compile Include="Controllers\Crud\ICrudSecObjectEditModel.cs" />
+    <Compile Include="Controllers\Crud\CrudExtensions.cs" />
+    <Compile Include="Controllers\Crud\CrudController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Code\Requests\RequestService.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
+    <Compile Include="Code\DocumentService.cs" />
+    <Compile Include="Controllers\ResponseController.cs" />
+    <Compile Include="Controllers\RequestController.cs" />
+    <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="Controllers\TemplatesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controls\PageSizeSelector.cs" />
+    <Compile Include="Controls\RootLayout.cs" />
+    <Compile Include="Controls\OrgChildSelector.cs" />
+    <Compile Include="Controls\OrgChildSelectDialog.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataMarts\DataMartMetadataModel.cs" />
+    <Compile Include="Models\Organizations\OrganizationRegistryListModel.cs" />
+    <Compile Include="Models\Projects\ActivityModel.cs" />
+    <Compile Include="Models\Reports\NetworkActivityModel.cs" />
+    <Compile Include="Models\Request\ChildLists\RequestDataMartsListModel.cs" />
+    <Compile Include="Models\Request\RequestTypeFilterItem.cs" />
+    <Compile Include="Models\Security\EditAclModel.cs" />
+    <Compile Include="Models\Sec\RequestTypesAclModel.cs" />
+    <Compile Include="Models\Crud\ChildCreateGetModel.cs" />
+    <Compile Include="Models\Crud\ChildrenListGetModel.cs" />
+    <Compile Include="Models\Crud\ChildrenListModel.cs" />
+    <Compile Include="Models\Crud\ParentsForSelectionModel.cs" />
+    <Compile Include="Models\Crud\PageSizeSelectorModel.cs" />
+    <Compile Include="Models\Sec\SecSubjectModel.cs" />
+    <Compile Include="Models\Groups\GroupListModel.cs" />
+    <Compile Include="Models\Home\NotificationsGetModel.cs" />
+    <Compile Include="Models\Home\PasswordRestorationModel.cs" />
+    <Compile Include="Models\Home\ExpiredPasswordModel.cs" />
+    <Compile Include="Models\Home\ResourcesModel.cs" />
+    <Compile Include="Models\Organizations\OrgChildrenSelectorModel.cs" />
+    <Compile Include="Models\Registration\RegistrationEmailModel.cs" />
+    <Compile Include="Models\Registration\UserSignUpPostModel.cs" />
+    <Compile Include="Models\Registration\UserSignUpModel.cs" />
+    <Compile Include="Models\Reports\EmailNotificationModel.cs" />
+    <Compile Include="Models\Reports\LegacyReportCreateModel.cs" />
+    <Compile Include="Models\Reports\LegacyReportModel.cs" />
+    <Compile Include="Models\Reports\LegacyReportGetModel.cs" />
+    <Compile Include="Models\Reports\ReportModel.cs" />
+    <Compile Include="Models\Request\SharedRequestViewModel.cs" />
+    <Compile Include="Models\Request\RequestScheduleModel.cs" />
+    <Compile Include="Models\Response\ResponseGroupPostModel.cs" />
+    <Compile Include="Models\SecurityGroups\SecurityGroupEditModel.cs" />
+    <Compile Include="Models\SecurityGroups\SecurityGroupEditPostModel.cs" />
+    <Compile Include="Models\Groups\GroupEditPostModel.cs" />
+    <Compile Include="Models\Groups\GroupEditModel.cs" />
+    <Compile Include="Models\Home\GlobalAclsModel.cs" />
+    <Compile Include="Models\Home\LoginModel.cs" />
+    <Compile Include="Models\Home\GlobalAclsPostModel.cs" />
+    <Compile Include="Models\Organizations\OrgSelectorModel.cs" />
+    <Compile Include="Models\Request\TemplateViewModel.cs" />
+    <Compile Include="Models\Organizations\OrgChildSelectorModel.cs" />
+    <Compile Include="Models\SharedFolder\SharedFolderContentsModel.cs" />
+    <Compile Include="Models\SharedFolder\SharedFolderEditModel.cs" />
+    <Compile Include="Models\SharedFolder\SharedFolderEditPostModel.cs" />
+    <Compile Include="Models\Tasks\TaskListModel.cs" />
+    <Compile Include="Models\Users\ApproveUserEditPostModel.cs" />
+    <Compile Include="PortalRootModule.cs" />
+    <Compile Include="Models\Sec\ChooseSecSubjectModel.cs" />
+    <Compile Include="Models\Sec\SecSubjectsListGetModel.cs" />
+    <Compile Include="Models\Organizations\OrgTreeModel.cs" />
+    <Compile Include="Models\DataMarts\DataMartEditModel.cs" />
+    <Compile Include="Models\DataMarts\DataMartEditPostModel.cs" />
+    <Compile Include="Models\Documents\DocumentVisual.cs" />
+    <Compile Include="Models\Home\LandingPageModel.cs" />
+    <Compile Include="Models\Documents\DocumentListModel.cs" />
+    <Compile Include="Models\Request\ChildLists\RoutingsListModel.cs" />
+    <Compile Include="Models\Request\ChildLists\ResponsesListModel.cs" />
+    <Compile Include="Models\Request\RequestHeaderViewModel.cs" />
+    <Compile Include="Models\Request\RequestResultsPostModel.cs" />
+    <Compile Include="Models\Request\ChildLists\DataMartsListModel.cs" />
+    <Compile Include="Models\Request\RequestCreateModel.cs" />
+    <Compile Include="Models\Request\RequestListModel.cs" />
+    <Compile Include="Models\Response\ResponseViewModel.cs" />
+    <Compile Include="Models\Request\RequestViewModel.cs" />
+    <Compile Include="Models\Request\RequestPostModel.cs" />
+    <Compile Include="Models\Request\ChildLists\RequestChildrenGetModel.cs" />
+    <Compile Include="Models\Request\RequestEditModel.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Security\PermissionTemplates\RegistryPermissionTemplate.cs" />
+    <Compile Include="Security\PermissionTemplates\UserPermissionTemplate.cs" />
+    <Compile Include="Security\PermissionTemplates\ProjectPermissionTemplate.cs" />
+    <Compile Include="Security\PermissionTemplates\OrgPermissionTemplate.cs" />
+    <Compile Include="Security\Providers\RequestTypeSecObjectProvider.cs" />
+    <Compile Include="Security\SecurityExtensions.cs" />
+    <Compile Include="Security\Providers\ObjectProviders.cs" />
+    <Compile Include="Security\SecTargetKinds.cs" />
+    <Compile Include="Security\SecPrivilegeSets.cs" />
+    <Compile Include="Security\SecPrivileges.cs" />
+    <Compile Include="Security\Providers\SubjectProviders.cs" />
+    <Compile Include="Security\VirtualSecObjects.cs" />
+    <Compile Include="Views\Crud\ForSelectionList.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ForSelectionList.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Crud\ListFooter.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListFooter.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Crud\ObjectSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ObjectSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Crud\PageSizeSelector.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PageSizeSelector.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Documents\NoVisualizer.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NoVisualizer.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Documents\Visualized.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Visualized.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Errors\AccessDenied.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccessDenied.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Errors\AccessDeniedEmbedded.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccessDeniedEmbedded.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Home\NotificationsBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NotificationsBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Home\WhatsNew.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WhatsNew.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Notifications\EmailNotification.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmailNotification.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Notifications\Event.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Event.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\DataMartsListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataMartsListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\EditIFrame.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditIFrame.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\History.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>History.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\List.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>List.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\ListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\RequestDataMartsListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RequestDataMartsListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\ResponsesListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResponsesListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\RoutingsListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RoutingsListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\SharedView.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SharedView.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\TemplateDataMartsListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TemplateDataMartsListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\UnassignedDataMartsListBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnassignedDataMartsListBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\ViewIFrame.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewIFrame.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Request\ViewTemplate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTemplate.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\Contents.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Contents.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\ContentsBody.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ContentsBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\Create.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Create.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\Edit.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Edit.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\Setup.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Setup.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SharedFolders\TreeNode.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TreeNode.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Routes.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Areas\DataChecker\js\DiagnosesResponse.js">
+      <DependentUpon>DiagnosisResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\DataChecker\js\ProceduresResponse.js">
+      <DependentUpon>ProcedureResponse.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Areas\DataChecker\js\datachecker.charting.js" />
+    <Content Include="Areas\QueryComposer\Views\Terms\SqlDistribution\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\SqlDistribution\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ResponseContainer.cshtml" />
+    <Content Include="Content\DataChecker\Responses.css" />
+    <Content Include="Content\DataChecker\Responses.External.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\codeSelector.js" />
+    <Content Include="Scripts\ellipsisEditor.js" />
+    <Content Include="Content\img\icons\arrow.png" />
+    <Content Include="Content\img\icons\forward.ico" />
+    <EmbeddedResource Include="Content\Registries.css">
+      <DependentUpon>Registries.less</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Content\img\icons\print.gif" />
+    <Content Include="Content\img\icons\bitmaps_folder.ico" />
+    <Content Include="Content\img\icons\copy.ico" />
+    <Content Include="Content\img\icons\datamart.png" />
+    <Content Include="Content\img\icons\folder.png" />
+    <Content Include="Content\img\icons\folder_closed.ico" />
+    <Content Include="Content\img\icons\gear_blue.ico" />
+    <Content Include="Content\img\icons\gear_blue2.ico" />
+    <Content Include="Content\img\icons\gear_folder.ico" />
+    <Content Include="Content\img\icons\group.png" />
+    <Content Include="Content\img\icons\help16.gif" />
+    <Content Include="Content\img\icons\magnifier2.ico" />
+    <Content Include="Content\img\icons\mail_folder.ico" />
+    <Content Include="Content\img\icons\mail_folder2.ico" />
+    <Content Include="Content\img\icons\multi_folder_badged.ico" />
+    <Content Include="Content\img\icons\network.png" />
+    <Content Include="Content\img\icons\organization.png" />
+    <Content Include="Content\img\icons\request.png" />
+    <Content Include="Content\img\icons\scripts_folder.ico" />
+    <Content Include="Content\img\icons\search.ico" />
+    <Content Include="Content\img\icons\search.png" />
+    <Content Include="Content\img\icons\search2.ico" />
+    <Content Include="Content\img\icons\secgroup.png" />
+    <Content Include="Content\img\icons\secgroups.png" />
+    <Content Include="Content\img\icons\securitygroup_alt.ico" />
+    <Content Include="Content\img\icons\shared.png" />
+    <Content Include="Content\img\icons\user.png" />
+    <Content Include="Content\img\icons\users.ico" />
+    <Content Include="Content\img\icons\users.png" />
+    <Content Include="Areas\Api\Views\Web.config" />
+    <Content Include="Areas\Controls\Views\Web.config" />
+    <Content Include="Areas\DataChecker\Views\Web.config" />
+    <Content Include="Areas\Tests\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Tests\Views\Test\Index.cshtml" />
+    <Content Include="Areas\Tests\Views\Test\LocationSelector.cshtml" />
+    <Content Include="Areas\Tests\Views\Web.config" />
+    <Content Include="Aspose.Cells.lic" />
+    <Content Include="Areas\QueryComposer\Views\web.config" />
+    <Content Include="Areas\QueryComposer\Views\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Conditions\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Conditions\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Test.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Visits\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Visits\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\AgeRange\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\AgeRange\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\SaveCriteriaGroup.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Default\DefaultCreateRequest.cshtml" />
+    <Content Include="Areas\Controls\Views\WFDocuments\Index.cshtml" />
+    <Content Include="Areas\Controls\Views\WFDocuments\Upload-Dialog.cshtml" />
+    <Content Include="Areas\Controls\Views\WFComments\Index.cshtml" />
+    <Content Include="Areas\Controls\Views\WFHistory\Test.cshtml" />
+    <Content Include="Areas\Controls\Views\WFHistory\Index.cshtml" />
+    <Content Include="Areas\Controls\Views\WFComments\AddComment-Dialog.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\AgeRange\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Conditions\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Visits\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\HCPCS\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\HCPCS\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\HCPCS\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugClass\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugClass\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugClass\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugName\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugName\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugName\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Setting\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Setting\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Setting\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Coverage\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Coverage\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Coverage\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Criteria\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Criteria\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CodeMetric\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CodeMetric\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CodeMetric\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Sex\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Sex\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Sex\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DispensingMetric\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DispensingMetric\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DispensingMetric\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Year\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Year\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Year\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\QuarterYear\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\QuarterYear\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\QuarterYear\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Default\DefaultRequestReview.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SummaryQuery\SummaryQueryDraftRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SummaryQuery\SummaryQueryRequestReview.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Default\DefaultApproveResponse.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SummaryQuery\SummaryQueryResponseApproval.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Default\DefaultResponseApproval.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Default\DefaultTerminateRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramDistributeRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramDraftRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramPreDistributionTesting.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramPreDistributionTestingReview.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramRespondToRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramReviewDataMartResponses.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramReviewRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramSpecification.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramSpecificationReview.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramViewStatusAndResults.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramWorkingSpecification.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramWorkingSpecificationReview.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Race\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Race\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Race\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Ethnicity\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Ethnicity\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Ethnicity\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure4digit\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure4digit\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure4digit\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis4digit\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis4digit\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis4digit\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis5digit\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis5digit\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis5digit\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\DataMartRouting.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ObservationPeriod\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ObservationPeriod\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ObservationPeriod\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ModularProgram\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ModularProgram\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ModularProgram\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\AgeRange\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\HCPCS\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Race\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CodeMetric\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Conditions\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Coverage\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Ethnicity\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Year\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Visits\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Setting\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\QuarterYear\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ObservationPeriod\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ModularProgram\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure4digit\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Procedure\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis5digit\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis4digit\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ICD9Diagnosis\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Sex\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugName\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DrugClass\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DispensingMetric\StratifierView.cshtml" />
+    <Content Include="Areas\Controls\Views\WFFileUpload\Index.cshtml" />
+    <Content Include="Areas\Controls\Views\WFFileUpload\ForTask.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SummaryQuery\SummaryQueryDistributeRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonSubmitDraftReport.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonReviewDraftReport.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonSubmitFinalReport.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonReviewFinalReport.cshtml" />
+    <Content Include="Areas\Controls\Views\WFComments\SimpleComment-Dialog.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ZipCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ZipCodes\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ZipCodes\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ZipCodes\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\TobaccoUse\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\TobaccoUse\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\TobaccoUse\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\TobaccoUse\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\AddRequestUserDialog.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonListRoutings.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramResponseDetails.cshtml" />
+    <Content Include="Areas\Tests\Views\Test\TestSignalR.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\SummaryView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Hispanic\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Hispanic\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Hispanic\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Hispanic\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Height\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Height\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Height\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Height\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Weight\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Weight\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Weight\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Weight\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\VitalMeasureDate\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\VitalMeasureDate\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\VitalMeasureDate\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\VitalMeasureDate\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommoRequestForm.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CombinedDiagnosisCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CombinedDiagnosisCodes\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CombinedDiagnosisCodes\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\CombinedDiagnosisCodes\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\MSRequestIDEditDialog.cshtml" />
+    <Content Include="Areas\Tests\Views\Test\AddRequestObservers.cshtml" />
+    <Content Include="Areas\Controls\Views\WFNotifications\Index.cshtml" />
+    <Content Include="Areas\Controls\Views\WFNotifications\AddUsers.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\EditWFRequestMetadataDialog.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DataPartners\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DataPartners\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DataPartners\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DataPartners\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\NDCCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\NDCCodes\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\NDCCodes\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\NDCCodes\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Ethnicity\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Ethnicity\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Ethnicity\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Ethnicity\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Race\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Race\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Race\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Race\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisPDX\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisPDX\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisPDX\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisPDX\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\MetadataCompleteness\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\MetadataCompleteness\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\MetadataCompleteness\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\MetadataCompleteness\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXAmount\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXAmount\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXAmount\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXAmount\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXSupply\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXSupply\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXSupply\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DispensingRXSupply\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Encounter\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Encounter\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Encounter\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\Encounter\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DataChecker\DataCheckerCreateRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DataChecker\DataCheckerRequestReview.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DataChecker\DataCheckerApproveResponse.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\AgeDistribution\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\AgeDistribution\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\AgeDistribution\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\AgeDistribution\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\SexDistribution\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\SexDistribution\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\SexDistribution\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\SexDistribution\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\WeightDistribution\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\WeightDistribution\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\WeightDistribution\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\WeightDistribution\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\HeightDistribution\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\HeightDistribution\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\HeightDistribution\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\HeightDistribution\View.cshtml" />
+    <Content Include="Areas\DataChecker\Views\DiagnosisPDX\DiagnosisPDXResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Diagnosis\DiagnosisResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Metadata\MetadataResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\NationalDrugCodes\NDCResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Procedure\ProcedureResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\RxAmt\RxAmtResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\RxSup\RxSupResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Race\RaceResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Ethnicity\EthnicityResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Sex\SexResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\AgeDistribution\AgeDistributionResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Weight\WeightResponse.cshtml" />
+    <Content Include="Areas\DataChecker\Views\Height\HeightResponse.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\AddDataMartDialog.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\DiagnosisCodes\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\ProcedureCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\DataChecker\ProcedureCodes\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ESPDiagnosisCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ESPDiagnosisCodes\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ESPDiagnosisCodes\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ESPDiagnosisCodes\View.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\Common\CommonCompleted.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\ModularProgram\ModularProgramCompleted.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\CommonResponseDetail.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\ModularProgramResponseDetails.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\DataCheckerResponseDetails.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\DataCheckerExternalResponseDetails.cshtml" />
+    <Content Include="Areas\DataChecker\Views\SqlDistribution\SqlResponse.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SimpleModularProgram\SimpleModularProgramCompleted.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SimpleModularProgram\SimpleModularProgramDistributeRequest.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\SimpleModularProgram\SimpleModularProgramViewStatusAndResults.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\SimpleModularProgramResponseDetails.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DistributedRegression\DistributedRegressionDistribution.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DistributedRegression\DistributedRegressionCompleteDistribution.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DistributedRegression\DistributedRegressionConductAnalysis.cshtml" />
+    <Content Include="Areas\Workflow\Views\Requests\DistributedRegression\DistributedRegressionCompleted.cshtml" />
+    <Content Include="Areas\Workflow\Views\Response\DistributedRegressionResponseDetails.cshtml" />
+    <Content Include="Areas\Controls\Views\WFFileUpload\ResponseForDataPartner.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\FileUpload\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\FileUpload\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\MDQ.cshtml" />
+    <Content Include="Areas\Controls\Views\WFTrackingTable\Index.cshtml" />
+    <Content Include="Areas\Tests\Views\Test\KendoGridFilteringTest.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ProcedureCodes\View.cshtml" />
+    <None Include="Content\ChildSelectDialog.css.map">
+      <DependentUpon>ChildSelectDialog.css</DependentUpon>
+    </None>
+    <None Include="Content\DataMarts.css.map">
+      <DependentUpon>DataMarts.css</DependentUpon>
+    </None>
+    <Content Include="Content\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Content\forms.less" />
+    <Content Include="Content\forms.css.map">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Layout.css">
+      <DependentUpon>Layout.less</DependentUpon>
+    </Content>
+    <Content Include="Content\Layout.less" />
+    <Content Include="Content\Layout.css.map">
+      <DependentUpon>Layout.css</DependentUpon>
+    </Content>
+    <Content Include="images\shared\popmednet-logo.png" />
+    <Content Include="images\shared\powered-by-lincolnpeak.png" />
+    <Content Include="Scripts\FormChangeWarning.js" />
+    <Content Include="Content\print.css">
+      <DependentUpon>print.less</DependentUpon>
+    </Content>
+    <Content Include="Content\print.less" />
+    <Content Include="Content\print.css.map">
+      <DependentUpon>print.css</DependentUpon>
+    </Content>
+    <None Include="Content\Registries.css.map">
+      <DependentUpon>Registries.css</DependentUpon>
+    </None>
+    <None Include="Content\Request.css.map">
+      <DependentUpon>Request.css</DependentUpon>
+    </None>
+    <None Include="Content\SecurityGroups.css.map">
+      <DependentUpon>SecurityGroups.css</DependentUpon>
+    </None>
+    <None Include="Content\Users.css.map">
+      <DependentUpon>Users.css</DependentUpon>
+    </None>
+    <Content Include="DataMartSampleData\DataMartClientDBSetup.msi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Common.js.map">
+      <DependentUpon>Common.ts</DependentUpon>
+    </Content>
+    <None Include="Content\ChildSelectDialog.css.map">
+      <DependentUpon>ChildSelectDialog.css</DependentUpon>
+    </None>
+    <None Include="Content\DataMarts.css.map">
+      <DependentUpon>DataMarts.css</DependentUpon>
+    </None>
+    <Content Include="Content\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Content\forms.less" />
+    <Content Include="Content\forms.css.map">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Layout.css">
+      <DependentUpon>Layout.less</DependentUpon>
+    </Content>
+    <Content Include="Content\Layout.less" />
+    <Content Include="Content\Layout.css.map">
+      <DependentUpon>Layout.css</DependentUpon>
+    </Content>
+    <Content Include="images\shared\popmednet-logo.png" />
+    <Content Include="images\shared\powered-by-lincolnpeak.png" />
+    <Content Include="Scripts\FormChangeWarning.js" />
+    <Content Include="Content\print.css">
+      <DependentUpon>print.less</DependentUpon>
+    </Content>
+    <Content Include="Content\print.less" />
+    <Content Include="Content\print.css.map">
+      <DependentUpon>print.css</DependentUpon>
+    </Content>
+    <None Include="Content\Registries.css.map">
+      <DependentUpon>Registries.css</DependentUpon>
+    </None>
+    <None Include="Content\Request.css.map">
+      <DependentUpon>Request.css</DependentUpon>
+    </None>
+    <None Include="Content\SecurityGroups.css.map">
+      <DependentUpon>SecurityGroups.css</DependentUpon>
+    </None>
+    <None Include="Content\Users.css.map">
+      <DependentUpon>Users.css</DependentUpon>
+    </None>
+    <Content Include="DataMartSampleData\DataMartClientDBSetup.msi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Common.js.map">
+      <DependentUpon>Common.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\utilities.js">
+      <DependentUpon>utilities.ts</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\ForgotPassword.cshtml" />
+    <Content Include="Views\DataMarts\Index.cshtml" />
+    <Content Include="Views\DataMarts\Details.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Groups\Index.cshtml" />
+    <None Include="Views\QlikTest\DivIntegration.cshtml" />
+    <None Include="Views\QlikTest\Index.cshtml" />
+    <None Include="Views\QlikTest\Qlik ReadMe.txt" />
+    <Content Include="Views\Registries\Index.cshtml" />
+    <Content Include="Views\Organizations\Index.cshtml" />
+    <Content Include="Views\Home\DefaultSecurityPermissions.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Events\EditEventPermissions.cshtml" />
+    <Content Include="Scripts\utilities.js.map">
+      <DependentUpon>utilities.ts</DependentUpon>
+    </Content>
+    <Content Include="Views\Organizations\Details.cshtml" />
+    <Content Include="Views\Groups\Details.cshtml" />
+    <Content Include="Views\Home\UserRegistration.cshtml" />
+    <Content Include="Views\Registries\Details.cshtml" />
+    <Content Include="Views\NetworkMessages\Create.cshtml" />
+    <Content Include="Views\Dialogs\CodeSelector.cshtml" />
+    <Content Include="Views\Reports\NetworkActivityReport.cshtml" />
+    <Content Include="Content\forms.min.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\img\arrow-down.png" />
+    <EmbeddedResource Include="Content\img\arrow-up.png" />
+    <EmbeddedResource Include="Content\img\bigbox_bg.png" />
+    <EmbeddedResource Include="Content\img\demaximize.png" />
+    <EmbeddedResource Include="Content\img\filter-active.png" />
+    <EmbeddedResource Include="Content\img\filter.png" />
+    <EmbeddedResource Include="Content\img\grid-loading.gif" />
+    <EmbeddedResource Include="Content\img\help.png" />
+    <Content Include="Content\img\icons\open_in_new_window.png" />
+    <EmbeddedResource Include="Content\img\maximize.png" />
+    <EmbeddedResource Include="Content\img\minimize.png" />
+    <EmbeddedResource Include="Content\img\minus.png" />
+    <EmbeddedResource Include="Content\img\plus.png" />
+    <Content Include="Content\Layout.min.css">
+      <DependentUpon>Layout.less</DependentUpon>
+    </Content>
+    <Content Include="Content\print.min.css">
+      <DependentUpon>print.less</DependentUpon>
+    </Content>
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\Common.js">
+      <DependentUpon>Common.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\excanvas.js" />
+    <Content Include="Scripts\excanvas.min.js" />
+    <Content Include="Scripts\jqplot\jquery.jqplot.css" />
+    <Content Include="Scripts\jqplot\jquery.jqplot.js" />
+    <Content Include="Scripts\jqplot\jquery.jqplot.min.css" />
+    <Content Include="Scripts\jqplot\jquery.jqplot.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.barRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.barRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasAxisLabelRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasAxisLabelRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasAxisTickRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasAxisTickRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasTextRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.canvasTextRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.categoryAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.categoryAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.highlighter.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.highlighter.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.pieRenderer.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.pieRenderer.min.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.pointLabels.js" />
+    <Content Include="Scripts\jqplot\plugins\jqplot.pointLabels.min.js" />
+    <Content Include="Views\Response\External.cshtml" />
+    <Content Include="Views\Response\ExternalLayout.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_RootLayout.cshtml" />
+    <Content Include="Views\_DialogLayout.cshtml" />
+    <Content Include="Views\Requests\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Security\EditAcl.cshtml" />
+    <Content Include="Views\Requests\CreateDialog.cshtml" />
+    <Content Include="Views\Request\SelectProjectDialog.cshtml" />
+    <Content Include="Views\_NetworkBrowser.cshtml" />
+    <Content Include="Views\Request\SelectDataMartDialog.cshtml" />
+    <Content Include="Views\Security\EditRequestTypesAcl.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\ChangePassword.cshtml" />
+    <Content Include="Views\SecurityGroups\Details.cshtml" />
+    <Content Include="Views\Tasks\Details.cshtml" />
+    <Content Include="Views\Users\RejectRegistration.cshtml" />
+    <Content Include="Views\Users\Deactivate.cshtml" />
+    <Content Include="Views\Home\MetadataList.cshtml" />
+    <Content Include="Views\Templates\Index.cshtml" />
+    <Content Include="Views\Templates\Details.cshtml" />
+    <Content Include="Views\RequestType\Index.cshtml" />
+    <Content Include="Views\RequestType\Details.cshtml" />
+    <Content Include="Views\Requests\Details.cshtml" />
+    <Content Include="Views\Security\SecurityGroupWindow.cshtml" />
+    <Content Include="Views\Request\EditRequestMetadataDialog.cshtml" />
+    <Content Include="Views\Security\EditFieldOptionAcl.cshtml" />
+    <Content Include="Views\Dialogs\EditRoutingStatus.cshtml" />
+    <Content Include="Views\Dialogs\PredefinedLocationSelector.cshtml" />
+    <Content Include="Views\Requests\BulkEdit.cshtml" />
+    <Content Include="Views\Dialogs\MetadataBulkEditPropertiesEditor.cshtml" />
+    <Content Include="Views\Requests\BulkEditRoutes.cshtml" />
+    <Content Include="Views\Dialogs\RoutingHistory.cshtml" />
+    <None Include="Views\QlikTest\Requests.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <TypeScriptCompile Include="Areas\Controls\js\WFComments\Index.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFComments\AddComment.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFComments\SimpleComment.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFDocuments\Index.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFDocuments\Upload.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Common.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ForTask.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\Index.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFFileUpload\ResponseForDataPartner.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFHistory\Index.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFHistory\Test.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFNotifications\AddUsers.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFNotifications\Index.ts" />
+    <TypeScriptCompile Include="Areas\Controls\js\WFTrackingTable\Index.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\AgeDistributionResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\Common.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\EthnicityResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\DiagnosisResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\DiagnosisPDXResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\HeightResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\MetadataResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\NDCResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\ProcedureResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\RaceResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\RxAmtResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\RxSupResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\SexResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\SqlResponse.ts" />
+    <TypeScriptCompile Include="Areas\DataChecker\js\WeightResponse.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\DataMartRouting.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\edit.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\MDQ.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\SaveCriteriaGroup.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\SummaryView.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\TermValueFilter.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\View.ts" />
+    <TypeScriptCompile Include="Areas\Tests\Scripts\AddRequestObservers.ts" />
+    <TypeScriptCompile Include="Areas\Tests\Scripts\Index.ts" />
+    <TypeScriptCompile Include="Areas\Tests\Scripts\KendoGridFilteringTest.ts" />
+    <TypeScriptCompile Include="Areas\Tests\Scripts\LocationSelector.ts" />
+    <TypeScriptCompile Include="Areas\Tests\Scripts\TestSignalR.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\AddDataMartDialog.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\AddRequestUserDialog.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\Completed.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\EditWFRequestMetadataDialog.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\MSRequestIDEditDialog.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\ListRoutings.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\ReviewDraftReport.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\ReviewFinalReport.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\SubmitDraftReport.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Common\SubmitFinalReport.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DataChecker\ApproveResonse.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DataChecker\CreateRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DataChecker\RequestReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\CreateRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\ApproveResonse.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\RequestReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\ResponseApproval.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\ReviewRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\Default\TerminateRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DistributedRegression\Completed.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DistributedRegression\CompleteDistribution.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DistributedRegression\ConductAnalysis.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\DistributedRegression\Distribution.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\Completed.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\DistributeRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\DraftRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\PreDistributionTesting.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\PreDistributionTestingReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\RequestFormDialog.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\RespondToRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\ResponseDetails.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\ReviewDataMartResponses.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\ReviewRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\Specification.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\SpecificationReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\ViewStatusAndResults.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\WorkingSpecification.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\ModularProgram\WorkingSpecificationReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SimpleModularProgram\Completed.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SimpleModularProgram\DistributeRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Response\DistributedRegression\ResponseDetails.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Response\SimpleModularProgram\ResponseDetails.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SimpleModularProgram\ViewStatusAndResults.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SummaryQuery\DistributeRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SummaryQuery\DraftRequest.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SummaryQuery\RequestReview.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Requests\SummaryQuery\ResponseApproval.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Response\DataChecker\ResponseDetails.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Response\DataChecker\ResponseDetailsExternal.ts" />
+    <TypeScriptCompile Include="Areas\Workflow\js\Response\ResponseDetail.ts" />
+    <TypeScriptCompile Include="Content\Organizations\edit.ts" />
+    <EmbeddedResource Include="Content\Organizations\edit.js">
+      <DependentUpon>edit.ts</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Content\Registries.min.css">
+      <DependentUpon>Registries.less</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\Dialogs\CodeSelector.ts" />
+    <TypeScriptCompile Include="js\Dialogs\EditRoutingStatus.ts" />
+    <TypeScriptCompile Include="js\Dialogs\MetadataBulkEditPropertiesEditor.ts" />
+    <TypeScriptCompile Include="js\Dialogs\PredefinedLocationSelector.ts" />
+    <TypeScriptCompile Include="js\Dialogs\RoutingHistory.ts" />
+    <TypeScriptCompile Include="js\Home\Info.ts" />
+    <TypeScriptCompile Include="js\Home\MetadataList.ts" />
+    <TypeScriptCompile Include="js\Home\Resources.ts" />
+    <TypeScriptCompile Include="js\Home\TermsAndConditions.ts" />
+    <TypeScriptCompile Include="js\Reports\NewActivityReport.ts" />
+    <TypeScriptCompile Include="js\DataMarts\Details.ts" />
+    <TypeScriptCompile Include="js\DataMarts\Index.ts" />
+    <TypeScriptCompile Include="js\Events\EditEventPermissions.ts" />
+    <TypeScriptCompile Include="js\Groups\Details.ts" />
+    <TypeScriptCompile Include="js\Groups\Index.ts" />
+    <TypeScriptCompile Include="js\Home\DefaultSecurityPermissions.ts" />
+    <TypeScriptCompile Include="js\Home\ExpiredPassword.ts" />
+    <TypeScriptCompile Include="js\Home\ForgotPassword.ts" />
+    <TypeScriptCompile Include="js\Home\index.ts" />
+    <TypeScriptCompile Include="js\Home\login.ts" />
+    <TypeScriptCompile Include="js\Home\RestorePassword.ts" />
+    <TypeScriptCompile Include="js\Home\UserRegistration.ts" />
+    <TypeScriptCompile Include="js\NetworkMessages\Create.ts" />
+    <TypeScriptCompile Include="js\Organizations\Details.ts" />
+    <TypeScriptCompile Include="js\Organizations\Index.ts" />
+    <TypeScriptCompile Include="js\Projects\Details.ts" />
+    <TypeScriptCompile Include="js\Projects\Index.ts" />
+    <TypeScriptCompile Include="js\Registries\Details.ts" />
+    <TypeScriptCompile Include="js\Registries\Index.ts" />
+    <TypeScriptCompile Include="js\Requests\BulkEdit.ts" />
+    <TypeScriptCompile Include="js\Requests\Details.ts" />
+    <TypeScriptCompile Include="js\Requests\Index.ts" />
+    <TypeScriptCompile Include="js\RequestType\Details.ts" />
+    <TypeScriptCompile Include="js\RequestType\Index.ts" />
+    <TypeScriptCompile Include="js\Requests\BulkEditRoutes.ts" />
+    <TypeScriptCompile Include="js\Request\EditRequestMetadataDialog.ts" />
+    <TypeScriptCompile Include="js\Request\SelectDataMartDialog.ts" />
+    <TypeScriptCompile Include="js\Request\View.ts" />
+    <TypeScriptCompile Include="js\Response\Detail.ts" />
+    <TypeScriptCompile Include="js\SecurityGroups\Details.ts" />
+    <TypeScriptCompile Include="js\Security\AclFieldOptionViewModel.ts" />
+    <TypeScriptCompile Include="js\Security\AclRequestTypeViewModel.ts" />
+    <TypeScriptCompile Include="js\Security\AclViewModel.ts" />
+    <TypeScriptCompile Include="js\Requests\CreateDialog.ts" />
+    <TypeScriptCompile Include="js\Request\Edit.ts" />
+    <TypeScriptCompile Include="js\Request\SelectProjectDialog.ts" />
+    <TypeScriptCompile Include="js\Security\SecurityGroupWindow.ts" />
+    <TypeScriptCompile Include="js\Tasks\details.ts" />
+    <TypeScriptCompile Include="js\Templates\Details.ts" />
+    <TypeScriptCompile Include="js\Templates\Index.ts" />
+    <TypeScriptCompile Include="js\Users\ChangePassword.ts" />
+    <TypeScriptCompile Include="js\Users\Deactivate.ts" />
+    <TypeScriptCompile Include="js\Users\Details.ts" />
+    <TypeScriptCompile Include="js\Users\Index.ts" />
+    <TypeScriptCompile Include="js\Users\RejectRegistration.ts" />
+    <TypeScriptCompile Include="js\_Layout.ts" />
+    <TypeScriptCompile Include="js\_NetworkBrowser.ts" />
+    <Content Include="Content\SecurityGroups.css">
+      <DependentUpon>SecurityGroups.less</DependentUpon>
+    </Content>
+    <Content Include="Content\SecurityGroups.less" />
+    <EmbeddedResource Include="Code\RequestMetadataCollection\RequestMetadataCollection.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Content\Organizations\edit.js.map">
+      <DependentUpon>edit.ts</DependentUpon>
+    </None>
+    <None Include="Content\Registries.less" />
+    <None Include="Content\Request.less" />
+    <Content Include="Content\img\pmn-logo.png" />
+    <Content Include="Content\img\lpp-logo.png" />
+    <EmbeddedResource Include="Content\Export.css" />
+    <Content Include="App_Code\Crud.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <CustomToolNamespace>Lpp.Dns.Portal</CustomToolNamespace>
+      <LastGenOutput>Crud.generated.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="App_Code\RequestHelpers.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <CustomToolNamespace>Lpp.Dns.Portal</CustomToolNamespace>
+      <LastGenOutput>RequestHelpers.generated.cs</LastGenOutput>
+    </Content>
+    <None Include="Content\Users.less" />
+    <None Include="Content\DataMarts.less" />
+    <None Include="Content\ChildSelectDialog.less" />
+    <EmbeddedResource Include="Content\Groups.css">
+      <LastGenOutput>Organizations.css</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Report.css" />
+    <EmbeddedResource Include="Scripts\requireCss.js" />
+    <Content Include="Scripts\ChildSelectDialog.js" />
+    <Content Include="Scripts\SharedFolders.js" />
+    <EmbeddedResource Include="Content\SharedFolders.css" />
+    <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\loading-large.gif" />
+    <Content Include="Content\img\icons\network.ico" />
+    <Content Include="Content\img\icons\folder.ico" />
+    <Content Include="Content\img\icons\user.ico" />
+    <Content Include="Content\img\icons\user_folder.ico" />
+    <Content Include="Content\img\icons\request.ico" />
+    <Content Include="Content\img\icons\DataMart.ico" />
+    <Content Include="Content\img\icons\request_folder.ico" />
+    <Content Include="Content\img\icons\datamarts_folder.ico" />
+    <Content Include="Content\img\icons\securitygroup.ico" />
+    <Content Include="Content\img\icons\group_folder.ico" />
+    <Content Include="Content\img\icons\organization_folder.ico" />
+    <Content Include="Content\img\icons\organization.ico" />
+    <Content Include="Content\img\icons\securitygroup_folder.ico" />
+    <Content Include="Content\img\icons\group.ico" />
+    <Content Include="Content\img\icons\users_folder_alt.ico" />
+    <Content Include="Content\img\icons\user_folder_alt.ico" />
+    <Content Include="Content\ChildSelectDialog.css">
+      <DependentUpon>ChildSelectDialog.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\ChildSelectDialog.min.css">
+      <DependentUpon>ChildSelectDialog.less</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Scripts\ObjectSelector.js" />
+    <Content Include="Content\DataMarts.css">
+      <DependentUpon>DataMarts.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\DataMarts.min.css">
+      <DependentUpon>DataMarts.less</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Content\Request.css">
+      <DependentUpon>Request.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\Request.min.css">
+      <DependentUpon>Request.less</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\SecurityGroups.min.css">
+      <DependentUpon>SecurityGroups.less</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Content\Users.css">
+      <DependentUpon>Users.less</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Content\Users.min.css">
+      <DependentUpon>Users.less</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\require\cs.js" />
+    <EmbeddedResource Include="Content\require\domReady.js" />
+    <EmbeddedResource Include="Content\require\i18n.js" />
+    <EmbeddedResource Include="Content\require\r.js" />
+    <EmbeddedResource Include="Content\require\require.js" />
+    <EmbeddedResource Include="Content\require\require.min.js">
+      <DependentUpon>require.js</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\require\text.js" />
+    <EmbeddedResource Include="Content\Task.css" />
+    <Content Include="Views\Errors\AccessDenied.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>AccessDenied.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\ViewTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ViewTemplate.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\TemplateDataMartsListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>TemplateDataMartsListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Crud\ListFooter.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ListFooter.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Errors\AccessDeniedEmbedded.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>AccessDeniedEmbedded.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Crud\ObjectSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ObjectSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Reports\Create.cshtml" />
+    <Content Include="Views\Reports\Result.cshtml" />
+    <Content Include="Views\Crud\ForSelectionList.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ForSelectionList.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Reports\DataMartAuditReport.cshtml" />
+    <Content Include="Views\Reports\DataMartAuditResult.cshtml" />
+    <Content Include="Views\Notifications\EmailNotification.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EmailNotification.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Reports\ResultBody.cshtml" />
+    <Content Include="Views\Home\NotificationsBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>NotificationsBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\ExpiredPassword.cshtml" />
+    <Content Include="Views\Home\RestorePassword.cshtml" />
+    <Content Include="Views\Documents\ListBody.cshtml" />
+    <Content Include="Views\Home\WhatsNew.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>WhatsNew.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\Resources.cshtml" />
+    <Content Include="Views\Notifications\Event.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Event.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\Scheduler.cshtml" />
+    <Content Include="Views\_Layout.cshtml" />
+    <Content Include="Views\SharedFolders\Contents.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Contents.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\SharedFolders\ContentsBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ContentsBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\SharedFolders\Edit.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Edit.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\SharedFolders\Create.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Create.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\SharedFolders\TreeNode.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>TreeNode.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\SharedFolders\Setup.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Setup.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\SharedView.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>SharedView.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\NotYetImplemented.cshtml" />
+    <Content Include="Views\Home\RestorePasswordCompleted.cshtml" />
+    <Content Include="Views\Crud\PageSizeSelector.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>PageSizeSelector.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\History.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>History.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Response\History.cshtml" />
+    <Content Include="Views\Request\EditIFrame.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EditIFrame.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\ViewIFrame.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ViewIFrame.generated.cs</LastGenOutput>
+    </Content>
+    <TypeScriptCompile Include="js\_RootLayout.ts" />
+    <TypeScriptCompile Include="Scripts\Common.ts" />
+    <TypeScriptCompile Include="Scripts\utilities.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Code\UI.cshtml">
+      <CustomToolNamespace>Lpp.Dns.Portal</CustomToolNamespace>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>UI.generated.cs</LastGenOutput>
+    </Content>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Request\Edit.cshtml" />
+    <Content Include="Views\Response\Detail.cshtml" />
+    <Content Include="Views\Request\View.cshtml" />
+    <Content Include="Views\Request\DataMartsListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>DataMartsListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\List.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>List.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\ListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\RoutingsListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>RoutingsListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Documents\List.cshtml" />
+    <Content Include="Views\Documents\NoVisualizer.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>NoVisualizer.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Documents\Visualized.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Visualized.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\RequestDataMartsListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>RequestDataMartsListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Request\ResponsesListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ResponsesListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Request\RequestHeader.cshtml" />
+    <Content Include="Views\Request\UnassignedDataMartsListBody.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>UnassignedDataMartsListBody.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Home\TermsAndConditions.cshtml" />
+    <Content Include="Views\Home\Info.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Dns.ApiClient\Lpp.Dns.ApiClient.csproj">
+      <Project>{335b59e5-6c48-4ba8-a427-97b4812e6c42}</Project>
+      <Name>Lpp.Dns.ApiClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Data\Lpp.Dns.Data.csproj">
+      <Project>{4b69bf41-5231-417b-9841-f2092c24b1d1}</Project>
+      <Name>Lpp.Dns.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.HealthCare.Helpers\Lpp.Dns.General.Helpers.csproj">
+      <Project>{f202438b-27ab-4e58-b137-856363d29b16}</Project>
+      <Name>Lpp.Dns.General.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.LocalDataMart\Lpp.Dns.LocalDataMart.csproj">
+      <Project>{925b80b3-6850-431f-ab5e-d6959b9c5dbb}</Project>
+      <Name>Lpp.Dns.LocalDataMart</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Mvc.Interfaces\Lpp.Dns.Mvc.Interfaces.csproj">
+      <Project>{45DCB2B5-186D-4B7D-917C-E3780A9B8A19}</Project>
+      <Name>Lpp.Dns.Mvc.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Portal.Interfaces\Lpp.Dns.Portal.Interfaces.csproj">
+      <Project>{B43A1F32-8301-4B0B-877D-1570C6A06674}</Project>
+      <Name>Lpp.Dns.Portal.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.Scheduler.Jobs\Lpp.Dns.Scheduler.Jobs.csproj">
+      <Project>{a6b520b9-e5a9-40a0-ad89-46c387480644}</Project>
+      <Name>Lpp.Dns.Scheduler.Jobs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.WebSites\Lpp.Dns.WebSites.csproj">
+      <Project>{bc2d0954-5a4c-4c7a-828c-cfab4920e155}</Project>
+      <Name>Lpp.Dns.WebSites</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Audit.UI\Lpp.Audit.UI.csproj">
+      <Project>{4EC1AE43-C7F6-445C-9A33-2A9D19B7F3E0}</Project>
+      <Name>Lpp.Audit.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Audit\Lpp.Audit.csproj">
+      <Project>{76B912C7-386A-4579-8AD6-62ED2E658A78}</Project>
+      <Name>Lpp.Audit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Auth\Lpp.Auth.csproj">
+      <Project>{22116aa2-d508-43fd-ab00-12a383d02c6b}</Project>
+      <Name>Lpp.Auth</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Boilerplate\Lpp.Mvc.Boilerplate.csproj">
+      <Project>{4ffe4c8f-f9f5-44be-a21f-c44f6087dfb1}</Project>
+      <Name>Lpp.Mvc.Boilerplate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Composition\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849F-D962-4034-94E5-5A4A727C2B01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Controls.Interfaces\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Controls\Lpp.Mvc.Controls.csproj">
+      <Project>{39a1b5d5-583a-4735-b897-9b5352c20e7e}</Project>
+      <Name>Lpp.Mvc.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc\Lpp.Mvc.csproj">
+      <Project>{CFE8BE40-6DC0-44DE-BE79-F1C667CE0AC3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Security.UI\Lpp.Security.UI.csproj">
+      <Project>{DCED1EA8-6345-461C-A986-BE44318E99ED}</Project>
+      <Name>Lpp.Security.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Security\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Utilities.Legacy\Lpp.Utilities.Legacy.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities.Legacy</Name>
+    </ProjectReference>
+    
+    
+    
+    
+    
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.CriteriaGroupCommon\Lpp.Dns.General.CriteriaGroupCommon.csproj">
+      <Project>{a7557304-001b-4cae-a05f-196bff7dbaeb}</Project>
+      <Name>Lpp.Dns.General.CriteriaGroupCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.CriteriaGroup\Lpp.Dns.General.CriteriaGroup.csproj">
+      <Project>{e383f358-c6e0-44cb-bae2-14454e4d8d18}</Project>
+      <Name>Lpp.Dns.General.CriteriaGroup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.Metadata\Lpp.Dns.General.Metadata.csproj">
+      <Project>{7a0ce541-ddfa-44ad-8d53-32ae5b306978}</Project>
+      <Name>Lpp.Dns.General.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.General.Sql\Lpp.Dns.General.SqDistribution.csproj">
+      <Project>{3de91b41-16c5-4fc3-87cd-363f9bb10d96}</Project>
+      <Name>Lpp.Dns.General.SqDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Conditions\Lpp.Dns.HealthCare.Conditions.csproj">
+      <Project>{b8de912f-6691-4d6f-aa52-595d7ba31274}</Project>
+      <Name>Lpp.Dns.HealthCare.Conditions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Controls.Codes\Lpp.Dns.HealthCare.Controls.Codes.csproj">
+      <Project>{ec8dc49f-bc5d-4c2c-adad-cfe70cd90d1a}</Project>
+      <Name>Lpp.Dns.HealthCare.Controls.Codes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Controls\Lpp.Dns.HealthCare.Controls.csproj">
+      <Project>{96239d23-8094-4649-8b29-edc7c04dafba}</Project>
+      <Name>Lpp.Dns.HealthCare.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.DataChecker\Lpp.Dns.HealthCare.DataChecker.csproj">
+      <Project>{f89a0460-73a4-4e0a-9367-d554bfbec0b9}</Project>
+      <Name>Lpp.Dns.HealthCare.DataChecker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.ESPQueryBuilder\Lpp.Dns.HealthCare.ESPQueryBuilder.csproj">
+      <Project>{1f1f4a79-265a-4fb1-8a9d-19ccafb48b2c}</Project>
+      <Name>Lpp.Dns.HealthCare.ESPQueryBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.FileDistribution\Lpp.Dns.HealthCare.FileDistribution.csproj">
+      <Project>{6e789e66-e658-44ec-9431-6fbc6b8d99f0}</Project>
+      <Name>Lpp.Dns.HealthCare.FileDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.I2B2\Lpp.Dns.HealthCare.I2B2.csproj">
+      <Project>{953d2d42-a8e5-4059-a80f-891dd38b22d9}</Project>
+      <Name>Lpp.Dns.HealthCare.I2B2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.ModularProgram\Lpp.Dns.HealthCare.ModularProgram.csproj">
+      <Project>{4f40ce06-1468-48ad-b1c4-76d3008e8a44}</Project>
+      <Name>Lpp.Dns.HealthCare.ModularProgram</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.SASDistribution\Lpp.Dns.HealthCare.SASDistribution.csproj">
+      <Project>{bfa89fc0-784b-4eb9-9162-cc818a5f8605}</Project>
+      <Name>Lpp.Dns.HealthCare.SASDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.SPANQueryBuilder\Lpp.Dns.HealthCare.SPANQueryBuilder.csproj">
+      <Project>{e2c06a29-e40a-4675-a166-1165f3ff4347}</Project>
+      <Name>Lpp.Dns.HealthCare.SPANQueryBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Lpp.Dns.HealthCare.Summary\Lpp.Dns.HealthCare.Summary.csproj">
+      <Project>{af5d4930-bb9a-4232-bf15-f7a798ba73c0}</Project>
+      <Name>Lpp.Dns.HealthCare.Summary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SchedulerRestService\Lpp.Dns.SchedulerService.Interfaces.csproj">
+      <Project>{F806249D-2AC8-473D-9F5B-2DC17C06BC3B}</Project>
+      <Name>Lpp.Dns.SchedulerService.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Api\Models\" />
+    <Folder Include="Areas\Api\Views\Shared\" />
+    <Folder Include="Areas\DataChecker\Views\Default\" />
+    <Folder Include="Areas\Tests\Models\" />
+    <Folder Include="Code\LocalDataMart\" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60338/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+</Project>

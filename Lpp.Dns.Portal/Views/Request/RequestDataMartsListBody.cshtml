@@ -1,0 +1,19 @@
+@model RequestDataMartsListModel
+@using Lpp.Dns.Portal.Views.Request
+@using Lpp.Utilities.Legacy
+@{ Layout = null; } 
+
+@(Html.Partial<DataMartsListBody>().WithModel( new DataMartsListModel
+{
+    DataMarts = Model.List,
+    HiddenFieldName = "SelectedDataMarts",
+    AllDataMartIdsExpression = "allDataMarts",
+    ReloadUrl = Url.Action<RequestController>( c => c.DataMartsListBody( Model.List.ModelForReload() ) ),
+    Suffix = @<div>
+        @{ var m = Model.List.ModelForReload(); }
+        @foreach( var p in Model.ProjectIDs.EmptyIfNull() ) {
+            m.ProjectID = p;
+            <a href="@Url.Action( (RequestController c) => c.DataMartsListBody( m ) )" class="GridReloadLink Project@(p)" style="display: none">_</a> 
+        }
+    </div>
+} ))

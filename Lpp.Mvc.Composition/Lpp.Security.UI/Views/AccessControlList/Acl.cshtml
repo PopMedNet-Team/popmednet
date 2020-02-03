@@ -1,0 +1,62 @@
+﻿@model AccessControlListModel
+@using Lpp.Security
+@using Lpp
+@using Lpp.Utilities
+
+@{ this.Stylesheet( "security.min.css" );
+   var subjectSelectorHandle = Html.UniqueId();
+   var noRecordsMessage = "No access control records found";
+   var pEditors = Model.PrivilegeEditors.Select( e => new { e, handle = Html.UniqueId() } ).ToList();
+   var id = Html.UniqueId();
+}
+@Model.Parameters.SubjectSelector.Render( Html, subjectSelectorHandle )
+
+<div class="Acl" id="@id">
+    <input type="hidden" name="@Model.Parameters.FieldName" class="ValueField"
+           value="@string.Join( ",", from s in Model.InitialEntries
+                                     from e in s.OwnEntries
+                                     select string.Format( "{0}:{1}:{2}", s.Subject.ID, e.First.SerializedId, e.Second ) )" />
+    @(Html.Render<IGrid>()
+        .From( Model.InitialEntries.Select( e => e.Subject ).OrderBy( s => s.DisplayName ) )
+        .Attributes( new { @class = "Grid Subjects" } )
+        .Column( @<a class="Remove" data-id="@item.ID" href="#">[remove]</a>, c => { } )
+        .ClientSideSortColumn( s => s.DisplayName, setOptions: c => c.Title( "Subject" ).Class( "Subject" ) )
+        .With( o => o.NoDataMessage = @<text>@noRecordsMessage</text> )
+        .FooterPrefix( @<div class="ActionButtons">
+                            <button class="ui-standard-button Add">Add...</button>
+                        </div>
+        )
+    )
+
+    <div class="PrivilegesBox">
+        @foreach ( var e in pEditors )
+        {
+            <text>@e.e.Render( Html, e.handle )</text>
+        }
+    </div>
+
+</div>
+<script type="text/javascript">
+    require(['jQuery','@Html.Raw( this.Resource( "acl.min.js" ) )','@subjectSelectorHandle',
+        @Html.Raw( string.Join( ",", pEditors.Select( e => "'" + e.handle + "'" ) ) )], 
+        function ($, bind, subjSelector) {
+
+            var acl = @Html.Raw( Json.Encode(
+                Model.InitialEntries.DistinctBy(pl => pl.Subject.ID).ToDictionary(
+                    pl => pl.Subject.ID.ToString(),
+                    pl => new
+                    {
+                        own = pl.OwnEntries.DistinctBy(e => e.First.SerializedId).ToDictionary( e => e.First.SerializedId, e => e.Second == AclEntryKind.Allow ),
+                        inherited = pl.InheritedEntries.DistinctBy(e => e.First.SerializedId).ToDictionary( e => e.First.SerializedId, e => new
+                            {
+                                allow = e.Second.Kind == AclEntryKind.Allow,
+                                inheritedFrom = string.Join( " x ", e.Second.InheritedFrom.Elements )
+                            } )
+                    }
+                )
+            ) );
+
+            bind(acl, "@id", subjSelector, "@noRecordsMessage", $.makeArray(arguments).slice(3)); 
+        }
+    );
+</script>

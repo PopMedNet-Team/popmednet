@@ -1,0 +1,15 @@
+﻿@model GridClientSortColumnModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+<span id="@id">@Model.InnerTitle</span>
+<script type="text/javascript">
+    //@@ sourceURL=http://lpp/GridClientSortColumnTitle.cshtml
+    require(['jQuery', '@this.Resource("gridClientSortColumn.js")'], function($, clientSortColumn) { 
+        $("#@(id)").closest("td, th")
+            .gridClientSideSortColumn( 
+                clientSortColumn.defaultComparer("sort-value"), 
+                @( Model.AscendingByDefault ? "true" : "false" ) ); 
+    });
+</script>
