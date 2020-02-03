@@ -2317,20 +2317,6 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.ICommonResponseDetailDTO[]>('Response/GetDetails' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static GetResponseContentForWorkflowRequest(requestID: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IQueryComposerResponseDTO[]>{
-	 	 	 var params = '';
-	 	 	 if (requestID != null) params += '&requestID=' + requestID;
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IQueryComposerResponseDTO[]>('Response/GetResponseContentForWorkflowRequest' + params, doNotHandleFail);
-	 	 }
-
 	 	 public static GetWorkflowResponseContent(id: any[], view: Dns.Enums.TaskItemTypes,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IQueryComposerResponseDTO[]>{
 	 	 	 var params = '';
 	 	 	 if (id != null)
@@ -3573,7 +3559,8 @@ module Dns.WebApi {
                     url: url,
                     dataType: 'json',
                     data: value == null ? null : JSON.stringify(value),
-                    contentType: 'application/json; charset=utf-8'
+                    contentType: 'application/json; charset=utf-8',
+					timeout: 60000
                 }).done((result) => {
                     if (result == null) {
                         d.resolve();

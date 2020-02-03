@@ -29,13 +29,19 @@ namespace Lpp.Dns.DataMart.Client
 {
     public partial class RequestDetailForm : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly Guid FileDistributionProcessorID = new Guid("C8BC0BD9-A50D-4B9C-9A25-472827C8640A");
+        static readonly Guid ModularProgramModelID = new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154");
+        static readonly Guid FileDistributionModelID = new Guid("00BF515F-6539-405B-A617-CA9F8AA12970");
+        static readonly Guid DistributedRegressionModelID = new Guid("4C8A25DC-6816-4202-88F4-6D17E72A43BC");
 
-        Lpp.Dns.DataMart.Client.DomainManger.DomainManager _domainManager = new DomainManger.DomainManager(Configuration.PackagesFolderPath);
-        readonly IModelProcessor Processor;        
+        DomainManger.DomainManager _domainManager = new DomainManger.DomainManager(Configuration.PackagesFolderPath);
+        readonly IModelProcessor Processor;
         readonly HubRequest Request;
         readonly ModelDescription ModelDesc;
-        private Boolean wasRejected;
+        bool wasRejected;
+        DTO.DataMartClient.Enums.DMCRoutingStatus _initialStatusOnRun = DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted;
+
         public RequestDetailForm()
         {
             InitializeComponent();
@@ -82,7 +88,8 @@ namespace Lpp.Dns.DataMart.Client
 
             descriptionBrowser.DocumentText = newDesc;
 
-            queryStatusTypeIdTextBox.DataBindings[0].Format += (o, e) => {
+            queryStatusTypeIdTextBox.DataBindings[0].Format += (o, e) =>
+            {
                 if (e.DesiredType != typeof(string))
                     return;
                 //format the routing status enum description based on the value's description attribute.
@@ -93,7 +100,7 @@ namespace Lpp.Dns.DataMart.Client
         public string RequestId
         {
             get { return Request.Source.ID.ToString(); }
-        }        
+        }
 
 
         private void RequestDetailForm_Load(object sender, EventArgs e)
@@ -101,7 +108,7 @@ namespace Lpp.Dns.DataMart.Client
             try
             {
                 if (ModelDesc == null)
-                {                    
+                {
                     MessageBox.Show(this.ParentForm, "The configuration settings for " + Request.Source.RequestTypeName + " have not been completed.", Application.ProductName + " - Unable to Process Request", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
@@ -123,16 +130,34 @@ namespace Lpp.Dns.DataMart.Client
 
                 Lpp.Dns.DataMart.Model.Document[] requestDocuments = Request.Documents.Select(d => new Lpp.Dns.DataMart.Model.Document(d.ID.ToString("D"), d.Document.MimeType, d.Document.Name) { IsViewable = d.Document.IsViewable, Size = Convert.ToInt32(d.Document.Size), Kind = d.Document.Kind }).ToArray();
 
-                if(Processor is IEarlyInitializeModelProcessor)
+                if (Processor is IEarlyInitializeModelProcessor)
                 {
                     ((IEarlyInitializeModelProcessor)Processor).Initialize(ModelDesc.ModelId, Request.Documents.Select(d => new DocumentWithStream(d.ID, new Document(d.ID, d.Document.MimeType, d.Document.Name, d.Document.IsViewable, Convert.ToInt32(d.Document.Size), d.Document.Kind), new DocumentChunkStream(d.ID, netWorkSetting))).ToArray());
                 }
 
-                vpRequest.SetRequestDocuments(requestDocuments, netWorkSetting, Processor);
-                
+                vpRequest.Initialize(netWorkSetting, Processor, RequestId, true);
+                vpRequest.SetRequestDocuments(requestDocuments);
+
                 //set the initial value of the view request file list checkbox and then hook up the checked change event
                 cbRequestFileList.Checked = vpRequest.ShowView == Lpp.Dns.DataMart.Client.Controls.ViewPanel.DisplayType.FILELIST;
                 cbRequestFileList.CheckedChanged += new System.EventHandler(this.cbRequestFileList_CheckedChanged);
+
+                vpResponse.Initialize(netWorkSetting, Processor, RequestId, false);
+                vpResponse.DataSource = null;
+                cbResponseFileList.Checked = vpResponse.ShowView == ViewPanel.DisplayType.FILELIST;
+                cbResponseFileList.CheckedChanged += new EventHandler(cbResponseFileList_CheckedChanged);
+
+                bool isFileDistributionRequest = (Processor.ModelProcessorId == FileDistributionProcessorID ||
+                                                  Request.Source.ModelID == FileDistributionModelID ||
+                                                  Request.Source.ModelID == ModularProgramModelID ||
+                                                  Request.Source.ModelID == DistributedRegressionModelID ||
+                                                  //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
+                                                  (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]));
+                if (isFileDistributionRequest)
+                {
+                    cbRequestFileList.Checked = true;
+                    cbResponseFileList.Checked = true;
+                }
 
                 EnableDisableButtons();
 
@@ -152,7 +177,7 @@ namespace Lpp.Dns.DataMart.Client
                 if (Request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.ResponseRejectedAfterUpload || Request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected || Request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.ResponseRejectedBeforeUpload)
                 {
                     wasRejected = true;
-                }   
+                }
 
             }
             catch (ModelProcessorError ex)
@@ -174,7 +199,7 @@ namespace Lpp.Dns.DataMart.Client
             {
                 EnableDisableButtons();
             }
-            
+
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -182,12 +207,13 @@ namespace Lpp.Dns.DataMart.Client
             // Warn that result may be different from completed run.
             if (Request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
             {
-                DialogResult d = MessageBox.Show("This request has been previously run and uploaded.\nRe-running it may produce different results due to changed data\nand cannot be re-uploaded.\n\nPress [OK} to run, [Cancel] to return.", 
+                DialogResult d = MessageBox.Show("This request has been previously run and uploaded.\nRe-running it may produce different results due to changed data\nand cannot be re-uploaded.\n\nPress [OK} to run, [Cancel] to return.",
                     Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                 if (d == DialogResult.Cancel)
                     return;
             }
 
+            _initialStatusOnRun = Request.RoutingStatus;
             btnRun.Enabled = false;
             btnRun.Text = "Running...";
             vpResponse.ShowProcessingMessage();
@@ -204,62 +230,62 @@ namespace Lpp.Dns.DataMart.Client
                 ButtonText = "Upload",
                 FormText = "Enter comments below if additional information should be provided about your results. The comments below will be returned to the originator of the query along with the results."
             };
-            if ( rejectReasonForm.ShowDialog() != DialogResult.OK ) return;
+            if (rejectReasonForm.ShowDialog() != DialogResult.OK) return;
             var rejectReason = rejectReasonForm.RejectReason;
 
             this.Cursor = Cursors.WaitCursor;
-            var responseDocuments = Processor.Response( RequestId );
+            var responseDocuments = Processor.Response(RequestId);
 
             if (responseDocuments.NullOrEmpty())
             {
-                responseDocuments=new Document[1]{new Document(new Guid().ToString(),"Text","")};
+                responseDocuments = new Document[1] { new Document(new Guid().ToString(), "Text", "") };
             }
-            var progress = new ProgressForm( "Uploading the result", "Uploading the request results..." ) { Indeteminate = false };
-            var postDocuments = 
+            var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
+            var postDocuments =
                 responseDocuments.NullOrEmpty()
-                ? Observable.Return( 100 )
+                ? Observable.Return(100)
                 : Observable.Start<Guid[]>(
-                    () => DnsServiceManager.PostResponseDocuments( RequestId, Request.DataMartId, responseDocuments, netWorkSetting ),
-                    Scheduler.Default )
-                .SelectMany( docIds =>
-                    docIds.Zip( responseDocuments, (srvId,localDoc) => new { srvId, localDoc } )
-                    .Select( ( doc, index ) => Observable.Using(
-                        () =>
-                        {
-                            Stream contentStream;
-                            Processor.ResponseDocument( RequestId, doc.localDoc.DocumentID.ToString(), out contentStream, 0x100000 );
-                            return contentStream;
-                        },
-                        inStream => inStream == null ? Observable.Return( 100*(index+1) / docIds.Length ) :
-                            DnsServiceManager.PostResponseDocumentContent( doc.srvId, inStream, netWorkSetting )
-                            .Select( bytes => (100*index + bytes*100/Math.Max( 1, doc.localDoc.Size ))/ docIds.Length )
-                    ) )
-                    .Concat()
+                    () => DnsServiceManager.PostResponseDocuments(RequestId, Request.DataMartId, responseDocuments, netWorkSetting),
+                    Scheduler.Default)
+                .SelectMany(docIds =>
+                   docIds.Zip(responseDocuments, (srvId, localDoc) => new { srvId, localDoc })
+                   .Select((doc, index) => Observable.Using(
+                      () =>
+                      {
+                           Stream contentStream;
+                           Processor.ResponseDocument(RequestId, doc.localDoc.DocumentID.ToString(), out contentStream, 0x100000);
+                           return contentStream;
+                       },
+                      inStream => inStream == null ? Observable.Return(100 * (index + 1) / docIds.Length) :
+                          DnsServiceManager.PostResponseDocumentContent(doc.srvId, inStream, netWorkSetting)
+                          .Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.localDoc.Size)) / docIds.Length)
+                  ))
+                   .Concat()
                 );
 
             postDocuments
-                .ObserveOn( this )
-                .Do( percent => progress.Progress = percent )
-                .Select( _ => Unit.Default )
-                .Concat( Observable.Defer( () => Observable.Start( () =>
-                    {
-                        DnsServiceManager.SetRequestStatus( Request, new HubRequestStatus( DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval, rejectReason ), Request.Properties, netWorkSetting );
-                        RequestCache.ForNetwork( netWorkSetting ).Release( Request );
-                    }, Scheduler.Default )
-                    .ObserveOn( this )
-                    .Do( _ => this.Close() )
-                ) )
-                .TakeUntil( progress.ShowAndWaitForCancel( this ) )
-                .Finally( progress.Dispose )
-                .LogExceptions( log.Error )
-                .Catch( (ModelProcessorError ex) => ShowPossibleTransientError( ex ) )
-                .Catch( (Exception ex) => ShowUnexpectedError( ex ) )
-                .Do( _ => {}, () =>
+                .ObserveOn(this)
+                .Do(percent => progress.Progress = percent)
+                .Select(_ => Unit.Default)
+                .Concat(Observable.Defer(() => Observable.Start(() =>
+                 {
+                     DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval, rejectReason), Request.Properties, netWorkSetting);
+                     RequestCache.ForNetwork(netWorkSetting).Release(Request);
+                 }, Scheduler.Default)
+                  .ObserveOn(this)
+                  .Do(_ => this.Close())
+                ))
+                .TakeUntil(progress.ShowAndWaitForCancel(this))
+                .Finally(progress.Dispose)
+                .LogExceptions(log.Error)
+                .Catch((ModelProcessorError ex) => ShowPossibleTransientError(ex))
+                .Catch((Exception ex) => ShowUnexpectedError(ex))
+                .Do(_ => { }, () =>
                 {
                     EnableDisableButtons();
                     RefreshRequestHeader();
                     this.Cursor = Cursors.Default;
-                } )
+                })
                 .Catch()
                 .Subscribe();
         }
@@ -336,7 +362,7 @@ namespace Lpp.Dns.DataMart.Client
                 RefreshRequestHeader();
 
                 log.Info(String.Format("User {0} put the following request {2} (ID: {1}) on hold.",
-                    netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Identifier ) );
+                    netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Identifier));
 
                 this.Close();
             }
@@ -350,30 +376,6 @@ namespace Lpp.Dns.DataMart.Client
                 EnableDisableButtons();
             }
         }
-
-        // FIXME[ddee]: Used to color some cells yellow when cells are below threshold. Need to figure a way
-        // to embed this in the XML.
-        //private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        //{
-        //    try
-        //    {
-        //        string strColumns = "dispensings members daysSupply events";
-        //    DataGridViewCell dgvc = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-        //    if (null == dgvc.Value)
-        //        return;
-        //    double d;
-        //    if (strColumns.ToLower().Contains(dataGridView1.Columns[e.ColumnIndex].HeaderText.ToLower()) &&  double.TryParse(dgvc.Value.ToString(), out d) && d < Convert.ToDouble(CellThreshHold))
-        //        dataGridView1.Rows[dgvc.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        DMClient.Util.ShowException(ex);
-        //    }
-        //    finally
-        //    {
-        //        this.Cursor = Cursors.Default;
-        //    }
-        //}
 
         private void btn_Close_Click(object sender, EventArgs e)
         {
@@ -397,15 +399,6 @@ namespace Lpp.Dns.DataMart.Client
                             results.Columns.Add(jproperty.Name, typeof(string));
                         datarow[jproperty.Name] = jproperty.Value.ToString();
                     }
-                    //if (!results.Columns.Contains("LowThreshold"))
-                    //{
-                    //    results.Columns.Add("LowThreshold", typeof(string));
-                    //    datarow["LowThreshold"] = "False";
-                    //}
-                    //if (datarow["LowThreshold"].ToString() == "")
-                    //{
-                    //    datarow["LowThreshold"] = "False";
-                    //}
                     if (results.Columns.Contains("LowThreshold"))
                     {
                         results.Columns.Remove("LowThreshold");
@@ -436,8 +429,8 @@ namespace Lpp.Dns.DataMart.Client
                     Stream contentStream = null;
                     try
                     {
-                        Processor.ResponseDocument( RequestId, responseDocument.DocumentID, out contentStream, 100 );
-                        if ( responseDocument.IsViewable )
+                        Processor.ResponseDocument(RequestId, responseDocument.DocumentID, out contentStream, 100);
+                        if (responseDocument.IsViewable)
                         {
                             if (responseDocument.MimeType != "application/json")
                             {
@@ -446,7 +439,7 @@ namespace Lpp.Dns.DataMart.Client
                             }
                             else
                             {
-                                string content = new StreamReader( contentStream ).ReadToEnd();
+                                string content = new StreamReader(contentStream).ReadToEnd();
                                 tableToExport = TransformJSONToDataTable(content);
                             }
                             break;
@@ -511,32 +504,8 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                FileDialog.Title = "Open File";
-                FileDialog.Filter = "All Files|*.*";
-                FileDialog.FileName = "";
-                try
-                {
-                    FileDialog.InitialDirectory = 
-                        Properties.Settings.Default.AddFileInitialFolder.NullOrEmpty() 
-                        ? Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments )
-                        : Properties.Settings.Default.AddFileInitialFolder;
-                }
-                catch { }
-                FileDialog.ShowDialog();
-                if (FileDialog.FileName == "") return;
-
-                Properties.Settings.Default.AddFileInitialFolder = Path.GetDirectoryName( FileDialog.FileName );
-                Properties.Settings.Default.Save();
-
-                //Cannot handle file of size greatedr than int32.MaxValue.
-                if (System.IO.File.Exists(FileDialog.FileName))
-                {
-                    System.IO.FileInfo finfo = new System.IO.FileInfo(FileDialog.FileName);
-                    if (finfo.Length > Int32.MaxValue)
-                        MessageBox.Show("The file is too large. Please select a file smaller than " + Int32.MaxValue.ToString("0,000,000,000") + " bytes.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    else
-                        AddFileToResult(FileDialog.FileName);
-                }
+                vpResponse.AddResponseDocument();
+                EnableDisableButtons();
             }
             catch (Exception ex)
             {
@@ -549,24 +518,8 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                if (vpResponse.FILELIST.SelectedRows.Count > 0)
-                {
-                    if (MessageBox.Show("Are you sure you want to delete the selected files from the response?", "Delete File") == DialogResult.OK)
-                    {
-                        foreach (Document d in vpResponse.GetSelectedFiles())
-                        {
-                            Processor.RemoveResponseDocument(RequestId, d.DocumentID);
-                        }
-                        Lpp.Dns.DataMart.Model.Document[] responseDocuments = Processor.Response(RequestId);
-                        vpResponse.SetResponseDocuments(responseDocuments, Processor, RequestId);
-                        vpResponse.ShowView = ViewPanel.DisplayType.FILELIST;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("At least one file should selected ");
-                    return;
-                }                
+                vpResponse.DeleteSelectedFiles();
+                EnableDisableButtons();
             }
             catch (Exception ex)
             {
@@ -620,11 +573,45 @@ namespace Lpp.Dns.DataMart.Client
 
                 vpResponse.ShowErrorMessage(errorMessage);
 
-                MessageBox.Show(this, string.Format("Request {0} failed to run on DataMart: {1}.{2}"+
+                MessageBox.Show(this, string.Format("Request {0} failed to run on DataMart: {1}.{2}" +
                     "There may be data in the response panel but it may be incomplete and cannot be uploaded.{2}" +
-                    "This error may be transient and you may try again.{2}Please check log for details.{2}{2}{3}", Request.Source.Identifier, Request.DataMartName, Environment.NewLine, errorMessage), "Run Request Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                    "This error may be transient and you may try again.{2}Please check log for details.{2}{2}{3}", Request.Source.Identifier, Request.DataMartName, Environment.NewLine, errorMessage), "Run Request Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void DisplayResults()
+        {
+            Lpp.Dns.DataMart.Model.Document[] documents = Processor.Response(RequestId);
+            cbResponseFileList.Checked = !documents.Any(s => s.IsViewable);
+            vpResponse.SetResponseDocuments(documents);
+        }
+
+        private void DisplayResponse(RequestStatus status)
+        {
+            try
+            {
+                if (status.Code != RequestStatus.StatusCode.Error)
+                {
+                    DisplayResults();
+                }
+                else
+                {
+                    vpResponse.ShowErrorMessage(status.Message);
+                }
+
+                if (status.Code == RequestStatus.StatusCode.CompleteWithMessage && !string.IsNullOrEmpty(status.Message))
+                {
+                    string message = !string.IsNullOrEmpty(status.Message) ? status.Message : "Model processor indicated that there is a message but no message was provided.";
+                    DialogResult dlg = MessageBox.Show(message, "Request Processing Completed Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btnPostProcess.Enabled = status.PostProcess;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw;
+            }
         }
 
         private void processRequestWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -651,7 +638,7 @@ namespace Lpp.Dns.DataMart.Client
 
             try
             {
-                Processor.SetRequestProperties( Request.Source.ID.ToString(), Request.Properties );
+                Processor.SetRequestProperties(Request.Source.ID.ToString(), Request.Properties);
                 ProcessRequest(Request, Processor, netWorkSetting, false);
 
                 RequestStatus.StatusCode statusCode;
@@ -670,7 +657,7 @@ namespace Lpp.Dns.DataMart.Client
                     Request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
                 {
                     var newStatus = DnsServiceManager.ConvertModelRequestStatus(Processor.Status(RequestId));
-                    if(!wasRejected)
+                    if (!wasRejected)
                     {
                         Request.RoutingStatus = newStatus.Code;
                     }
@@ -688,13 +675,13 @@ namespace Lpp.Dns.DataMart.Client
                     }
                 }
 
-                log.Info(String.Format("User {0} executed the following query {3} (ID: {1}):\n\n{2}", netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Name, Request.Source.Identifier ) );
+                log.Info(String.Format("User {0} executed the following query {3} (ID: {1}):\n\n{2}", netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Name, Request.Source.Identifier));
             }
             catch (ModelProcessorError ex)
             {
                 log.Debug(ex);
                 Request.RoutingStatus = Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed;
-                
+
                 throw;
             }
             catch (Exception ex)
@@ -703,7 +690,7 @@ namespace Lpp.Dns.DataMart.Client
                 try
                 {
                     Request.RoutingStatus = DnsServiceManager.ConvertModelRequestStatus(Processor.Status(RequestId)).Code;
-                    RequestCache.ForNetwork( netWorkSetting ).Lock( Request );
+                    RequestCache.ForNetwork(netWorkSetting).Lock(Request);
                 }
                 catch (Exception ex2)
                 {
@@ -716,63 +703,6 @@ namespace Lpp.Dns.DataMart.Client
             }
 
         }
-
-        private void DisplayResults()
-        {
-            Lpp.Dns.DataMart.Model.Document[] documents = Processor.Response(RequestId);
-            cbResponseFileList.Checked = !documents.Any(s => s.IsViewable);
-            vpResponse.SetResponseDocuments(documents, Processor, RequestId);
-        }
-
-        private void DisplayResponse(RequestStatus status)
-        {
-            try
-            {
-                if (status.Code != RequestStatus.StatusCode.Error)
-                {
-                    DisplayResults();
-                }
-                else
-                {
-                    vpResponse.ShowErrorMessage(status.Message);
-                }
-
-                if (status.Code == RequestStatus.StatusCode.CompleteWithMessage && !string.IsNullOrEmpty(status.Message) )
-                {
-                    string message = !string.IsNullOrEmpty(status.Message) ? status.Message : "Model processor indicated that there is a message but no message was provided.";
-                    DialogResult dlg = MessageBox.Show(message, "Request Processing Completed Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnPostProcess.Enabled = status.PostProcess;
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Add files to response document list.
-        /// </summary>
-        /// <param name="FilePath"></param>
-        private void AddFileToResult(string FilePath)
-        {
-            try
-            {
-                Processor.AddResponseDocument(RequestId, FilePath);
-                Lpp.Dns.DataMart.Model.Document[] responseDocuments = Processor.Response(RequestId);
-                vpResponse.SetResponseDocuments(responseDocuments, Processor, RequestId);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw;
-            }
-        }
-
-        static readonly Guid FileDistributionProcessorID = new Guid("C8BC0BD9-A50D-4B9C-9A25-472827C8640A");
-        static readonly Guid ModularProgramModelID = new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154");
-        static readonly Guid FileDistributionModelID = new Guid("00BF515F-6539-405B-A617-CA9F8AA12970");
 
         /// <summary>
         /// Button states:
@@ -798,7 +728,7 @@ namespace Lpp.Dns.DataMart.Client
                 RequestStatus processorStatus = Processor.Status(Request.Source.ID.ToString());
                 RequestStatus.StatusCode processorStatusCode = processorStatus.Code;
                 NetWorkSetting networkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
-                bool CanRunAndUpload = true; 
+                bool CanRunAndUpload = true;
                 bool CanUploadWithoutRun = false;
                 bool CanViewSQL = false;
 
@@ -819,7 +749,7 @@ namespace Lpp.Dns.DataMart.Client
                 {
                     CanUploadWithoutRun = true;
                 }
-                
+
                 if (Processor != null
                     && Processor.ModelMetadata != null
                     && Processor.ModelMetadata.Capabilities != null
@@ -829,34 +759,29 @@ namespace Lpp.Dns.DataMart.Client
                     CanViewSQL = true;
                 }
 
+                bool isFileBasedRequest = Processor.ModelProcessorId == FileDistributionProcessorID ||
+                                          Request.Source.ModelID == ModularProgramModelID ||
+                                          Request.Source.ModelID == FileDistributionModelID ||
+                                          Request.Source.ModelID == DistributedRegressionModelID ||
+                                          //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
+                                          (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]);
+
                 btnRun.Enabled = CanRunAndUpload && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) && processorStatusCode != RequestStatus.StatusCode.InProgress;
+
+                //can only change status to Hold when the request hasn't been run yet
                 btnHold.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Hold, networkSetting) &&
-                                  hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed &&
-                                  hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold &&
-                                  hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                                  hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled;
+                    (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted
+                    || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
+
                 btnRejectQuery.Enabled = DnsServiceManager.CheckUserRight(Request, HubRequestRights.Reject, networkSetting) &&
-                                         hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed &&
-                                         hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                                         hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled;
+                    (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted
+                    || (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified && isFileBasedRequest));
+
                 btnExportResults.Enabled = processorStatusCode != RequestStatus.StatusCode.InProgress &&
                                            hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
                                            (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete;
-                
-                //Old upload Results button enabler
-                //btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
-                //                        && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
-                //                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed &&
-                //                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                //                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
-                //                        hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                //                        (CanUploadWithoutRun ||
-                //                             (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete
-                //                         )
-                //                         && !wasRejected;
 
-                //As Per PMNDEV-4303: The upload 
-                if (Processor.ModelProcessorId == FileDistributionProcessorID || Request.Source.ModelID == ModularProgramModelID || Request.Source.ModelID == FileDistributionModelID)
+                if (isFileBasedRequest)
                 {
                     //New upload Results button enabler
                     btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
@@ -864,26 +789,39 @@ namespace Lpp.Dns.DataMart.Client
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
                                             hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                                            !wasRejected;
+                                            _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval &&
+                                            !wasRejected &&
+                                            vpResponse.HasDocuments;
 
-                    //As Per PMNDEV-4303: The text on the Upload Results button needs to be changed to "Re-Upload Results" when the request has been completed before.
-                    if (btnUploadResults.Enabled && 
-                        (hubStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified)
+                    //Per PMNDEV-4303: The text on the Upload Results button needs to be changed to "Re-Upload Results" when the request has been completed before.
+                    //Per comment on PMNDEV-6242 by Zac, if the user has the modify results permission they can re-upload if the route status is awaiting response approval.
+                    if ((hubStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed ||
+                         hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.ResultsModified ||
+                         hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval)
                         && (processorStatusCode & RequestStatus.StatusCode.Complete) != RequestStatus.StatusCode.Complete)
+                    {
+                        //Per PMNDEV-5920 the ability to modify results is independent of ability to upload results, only applicable to FD and MP requests.
+                        btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
+                                                && DnsServiceManager.CheckUserRight(Request, HubRequestRights.ModifyResults, networkSetting) &&
+                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
+                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
+                                                hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
+                                                !wasRejected &&
+                                                vpResponse.HasDocuments;
+
                         btnUploadResults.Text = "Re-Upload Results";
+                    }
                 }
                 else
                 {
                     btnUploadResults.Enabled = (CanRunAndUpload || CanUploadWithoutRun)
-                                            && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
-                                            hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed &&
-                                            hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                                            hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed &&
-                                            hubStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                                            (CanUploadWithoutRun ||
-                                                 (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete
-                                             )
-                                             && !wasRejected;
+                                                && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) &&
+                                                (hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted || hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval) &&
+                                                _initialStatusOnRun != DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval &&
+                                                (CanUploadWithoutRun ||
+                                                     (processorStatusCode & RequestStatus.StatusCode.Complete) == RequestStatus.StatusCode.Complete
+                                                 )
+                                                 && !wasRejected;
                 }
 
                 btnDeleteFile.Enabled = btnAddFile.Enabled = Processor.ModelMetadata.Capabilities.ContainsKey("AddFiles") && Processor.ModelMetadata.Capabilities["AddFiles"] == true;
@@ -892,73 +830,79 @@ namespace Lpp.Dns.DataMart.Client
 
                 btnViewSQL.Enabled = CanViewSQL;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // If hub or processor is unavailable for status, then light up only "run".
                 log.Error("Unable to reach hub or processor for status to determine button statuses.", ex);
             }
         }
 
-        public string ProcessRequest(HubRequest request, IModelProcessor processor, NetWorkSetting networkSetting, bool viewSQL)            
-        {      
-                Document[] requestDocuments = request.Documents.Select(d => new Lpp.Dns.DataMart.Model.Document(d.ID.ToString("D"), d.Document.MimeType, d.Document.Name) { IsViewable = d.Document.IsViewable, Size = Convert.ToInt32(d.Document.Size), Kind = d.Document.Kind }).ToArray();
-                Document[] desiredDocuments;
-                string requestId = request.Source.ID.ToString();
-                IDictionary<string, string> requestProperties;
-               
-                processor.Request(requestId, networkSetting.CreateInterfaceMetadata(), request.CreateInterfaceMetadata(), requestDocuments, out requestProperties, out desiredDocuments);
+        public string ProcessRequest(HubRequest request, IModelProcessor processor, NetWorkSetting networkSetting, bool viewSQL)
+        {
+            Document[] requestDocuments = request.Documents.Select(d => new Lpp.Dns.DataMart.Model.Document(d.ID.ToString("D"), d.Document.MimeType, d.Document.Name) { IsViewable = d.Document.IsViewable, Size = Convert.ToInt32(d.Document.Size), Kind = d.Document.Kind }).ToArray();
+            Document[] desiredDocuments;
+            string requestId = request.Source.ID.ToString();
+            IDictionary<string, string> requestProperties;
 
-                log.Debug("Request identifier posted: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
-                log.Debug("Number of documents available: " + requestDocuments.Length);
-                log.Debug("Number of documents desired: " + desiredDocuments.Length);
-                if (requestProperties != null && requestProperties.Count > 0)
+            processor.Request(requestId, networkSetting.CreateInterfaceMetadata(), request.CreateInterfaceMetadata(), requestDocuments, out requestProperties, out desiredDocuments);
+
+            log.Debug("Request identifier posted: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
+            log.Debug("Number of documents available: " + requestDocuments.Length);
+            log.Debug("Number of documents desired: " + desiredDocuments.Length);
+            if (requestProperties != null && requestProperties.Count > 0)
+            {
+                log.Debug("Properties: ");
+                foreach (string key in requestProperties.Keys)
                 {
-                    log.Debug("Properties: ");
-                    foreach (string key in requestProperties.Keys)
+                    log.Debug("Key: " + key + "=" + requestProperties[key]);
+                }
+            }
+
+            if (!viewSQL)
+            {
+                if (request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold &&
+                     request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
+                     request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
+                     request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed &&
+                     request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval)
+                {
+                    var newStatus = DnsServiceManager.ConvertModelRequestStatus(processor.Status(requestId));
+                    if (request.RoutingStatus != newStatus.Code && !wasRejected &&
+                        //don't update the status from resubmitted to submitted on run
+                        !(request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted && newStatus.Code == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted)
+                      )
                     {
-                        log.Debug("Key: " + key + "=" + requestProperties[key]);
+                        request.RoutingStatus = newStatus.Code;
+                        DnsServiceManager.SetRequestStatus(request, newStatus, requestProperties, networkSetting);
                     }
                 }
+            }
+            foreach (var requestDocument in desiredDocuments)
+            {
+                log.Debug("About to post desired document ID: " + requestDocument.DocumentID);
+                log.Debug("Downloading document" + requestDocument.Filename);
+                DocumentChunkStream requestDocumentStream = new DocumentChunkStream(Guid.Parse(requestDocument.DocumentID), networkSetting);
+                processor.RequestDocument(requestId, requestDocument.DocumentID, requestDocumentStream);
+                log.Debug("Successfully Downloaded document" + requestDocument.Filename);
+                log.Debug("Posted desired document ID: " + requestDocument.DocumentID);
+            }
 
-                if (!viewSQL)
-                { 
-                    if ( request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
-                    {
-                        var newStatus = DnsServiceManager.ConvertModelRequestStatus( processor.Status( requestId ) );
-                        if (request.RoutingStatus != newStatus.Code && !wasRejected)
-                        {
-                            request.RoutingStatus = newStatus.Code;
-                            DnsServiceManager.SetRequestStatus(request, newStatus, requestProperties, networkSetting);
-                        }
-                    }
-                }
-                foreach (var requestDocument in desiredDocuments)
+            log.Debug("Starting request with local request identifier: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
+
+            if (!viewSQL)
+            {
+                if (request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold &&
+                    request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
+                    request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
+                    request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
                 {
-                    log.Debug("About to post desired document ID: " + requestDocument.DocumentID);
-                    DocumentChunkStream requestDocumentStream = new DocumentChunkStream(Guid.Parse(requestDocument.DocumentID), networkSetting);
-                    processor.RequestDocument(requestId, requestDocument.DocumentID, requestDocumentStream);
-                    log.Debug("Posted desired document ID: " + requestDocument.DocumentID);
+                    processRequestWorker.ReportProgress(0, request.RoutingStatus);
                 }
+            }
+            processor.Start(requestId, viewSQL);
+            log.Debug("Start finished on request with local request identifier: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
 
-                log.Debug("Starting request with local request identifier: "+ request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
-
-                if (!viewSQL)
-                {
-                    if (request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Canceled &&
-                        request.RoutingStatus != Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Completed)
-                    {
-                        processRequestWorker.ReportProgress(0, request.RoutingStatus);
-                    }
-                }
-                processor.Start(requestId, viewSQL);
-                log.Debug("Start finished on request with local request identifier: " + request.Source.Identifier + " (ID: " + request.Source.ID.ToString("D") + ")");
-
-                return requestId;
+            return requestId;
         }
 
         private void ShowUnexpectedError(Exception ex)
@@ -1031,7 +975,7 @@ namespace Lpp.Dns.DataMart.Client
                         serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
 
                         var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>(json, serializationSettings);
-                        foreach(IEnumerable<Dictionary<string, object>> results in obj.Results)
+                        foreach (IEnumerable<Dictionary<string, object>> results in obj.Results)
                         {
                             object val = null;
                             if (results.First().TryGetValue("SQL", out val))
@@ -1050,31 +994,6 @@ namespace Lpp.Dns.DataMart.Client
             {
                 log.Error(ex);
             }
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbRequestFileList_CheckedChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblRequest_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void vpRequest_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void vpResponse_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

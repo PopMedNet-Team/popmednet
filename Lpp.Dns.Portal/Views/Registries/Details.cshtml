@@ -77,9 +77,9 @@
                 </div>
                 <span>*Categories from the Registry of Patient Registries (RoPR): patientregistry.ahrq.gov</span>
             </div>
-            <div class="tab-body">
+            <div class="tab-body overflow-visible">
                 <!-- Organizations -->
-                <div class="table-responsive">
+                @*<div class="table-responsive" style="min-height:450px;">*@
                     <table class="table table-striped table-bordered" style="width: 100%;">
                         <colgroup>
                             <col style="width: 100%; vertical-align: middle;" />
@@ -93,7 +93,7 @@
                                 <th class="bold center">X</th>
                             </tr>
                         </thead>
-                        <tbody data-bind="foreach: OrganizationRegistries">
+                        <tbody data-bind="visible:OrganizationRegistries() != null && OrganizationRegistries().length > 0, foreach: OrganizationRegistries">
                             <tr>
                                 <td style="white-space: nowrap;"> <a href="#" data-bind="text: Organization, attr: {href: '/organizations/details?ID=' + OrganizationID()}"></a></td>
                                 <td data-bind="text: Acronym"></td>
@@ -101,26 +101,28 @@
                                 <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveOrganization">Remove</button></td>
                             </tr>
                         </tbody>
+                        <tbody data-bind="visible:OrganizationRegistries() == null || OrganizationRegistries().length == 0">
+                            <tr>
+                                <td colspan="4"><p style="text-align:center;">No Organizations Associated</p></td>
+                            </tr>
+                        </tbody>
                         <tfoot class="panel-footer">
                             <tr>
                                 <td colspan="4">
-                                    <div class="pull-right">
-                                        <div class="dropdown">
-                                            <a href="#" id="btnAddOrganization" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" data-bind="disable: $root.AddableOrganizationList().length == 0"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Organzation" />&nbsp;Add Organization to Registry <strong class="caret"></strong></a>
-                                            <ul class="dropdown-menu" data-bind="foreach: $root.AddableOrganizationList">
-                                                <li>
-                                                    <a href="#" data-bind="click: $root.AddOrganization, attr: {id: ID}">
-                                                        <span data-bind="text: Name"></span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    <div class="dropdown pull-right">
+                                        <a href="#" id="btnAddOrganization" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" data-bind="disable: $root.AddableOrganizationList().length == 0"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Organzation" />&nbsp;Add Organization to Registry <strong class="caret"></strong></a>
+                                        <ul class="dropdown-menu" data-bind="foreach: $root.AddableOrganizationList">
+                                            <li role="presentation">
+                                                <a href="#" data-bind="click: $root.AddOrganization, attr: {id: ID}, text:Name"></a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
-                </div>
+                    
+                @*</div>*@
             </div>
             <div class="tab-body">
                 <!-- Permissions -->

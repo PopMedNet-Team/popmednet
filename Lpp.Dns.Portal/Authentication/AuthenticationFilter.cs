@@ -51,16 +51,7 @@ namespace Lpp.Dns.Portal
                         filterContext.HttpContext.User = new DnsPrincipal(user);
                         System.Web.Security.FormsAuthentication.SetAuthCookie(user.ID.ToString(), false);
 
-                        var cookie = new Lpp.Utilities.WebSites.Models.LoginResponseModel
-                        {
-                            UserName = user.UserName,
-                            Password = split[1],
-                            ID = user.ID,
-                            EmployerID = user.OrganizationID,
-                            Token = Crypto.EncryptStringAES(DateTime.UtcNow.AddDays(30).ToString("s"), filterContext.HttpContext.Request.Url.DnsSafeHost, Lpp.Dns.WebSites.LppDnsAuthorize.Salt),
-                            PasswordExpiration = user.PasswordExpiration,
-                            SessionExpireMinutes = -1
-                        };
+                        var cookie = new Lpp.Utilities.WebSites.Models.LoginResponseModel(user, split[1], user.OrganizationID, user.PasswordExpiration, -1);
 
                         var sModel = Newtonsoft.Json.JsonConvert.SerializeObject(cookie);
                         var authCookie = new System.Web.HttpCookie("Authorization", sModel)

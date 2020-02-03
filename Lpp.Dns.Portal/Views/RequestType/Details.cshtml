@@ -112,7 +112,7 @@
                     @Html.Partial("~/Views/Security/EditAcl.cshtml")
                 </div>
             </div>
-            <div class="tab-body">
+            <div class="tab-body overflow-visible">
                 <p class="alert alert-info">This allows you to control which terms can be added/removed from a template. Note that if you specify no terms on this screen, all terms will be available in the request's query composer.</p>
                 <table class="table table-striped table-bordered" style="width: 100%;">
                     <thead>
@@ -135,7 +135,8 @@
                         <tr>
                             <td colspan="4">
                                 <div class="dropdown pull-right">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown">Add Term <span class="caret"></span></button>
+                                    @*<button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown">Add Term <span class="caret"></span></button>*@
+                                    <a class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Term" />&nbsp;Add Term <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableTerms">
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: $root.AddRequestTypeTerm, text: Name"></a></li>
                                     </ul>

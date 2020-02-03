@@ -19,11 +19,22 @@ var Controls;
                     _this.DataPartnerExpanded = ko.observable(true);
                     var self = _this;
                     if (requestID != null) {
+                        //start the request to load the tracking table grids
                         Dns.WebApi.Response.GetTrackingTableForAnalysisCenter(requestID).done(function (r) {
                             var result = r[0];
                             if (result != null && result.Data != null && result.Data.length > 0) {
                                 self.DisplayAnalysisCenterTrackingTable(true);
-                                var columns = ko.utils.arrayMap(result.Properties, function (p) { return { field: p, title: p, width: 150 }; });
+                                var columns = ko.utils.arrayMap(result.Properties, function (p) { return { field: p.replace(/ /g, "_"), title: p.replace(/ /g, "_"), width: 150 }; });
+                                var columnsWithWhiteSpaces = result.Properties.filter(function (p) { if (p.indexOf(" ") >= 0)
+                                    return p; });
+                                if (columnsWithWhiteSpaces.length > 0) {
+                                    var rawJSON = JSON.stringify(result.Data);
+                                    columnsWithWhiteSpaces.forEach(function (colName) {
+                                        var truncated = colName.replace(/ /g, "_");
+                                        rawJSON = rawJSON.replace(colName, truncated);
+                                    });
+                                    result.Data = JSON.parse(rawJSON);
+                                }
                                 var datasource = new kendo.data.DataSource({ data: result.Data });
                                 var grid = $('#gAnalysisCenterTrackingTable').kendoGrid({
                                     autoBind: false,
@@ -49,7 +60,17 @@ var Controls;
                             var result = r[0];
                             if (result != null && result.Data != null && result.Data.length > 0) {
                                 self.DisplayDataPartnerTrackingTable(true);
-                                var columns = ko.utils.arrayMap(result.Properties, function (p) { return { field: p, title: p, width: 150 }; });
+                                var columns = ko.utils.arrayMap(result.Properties, function (p) { return { field: p.replace(/ /g, "_"), title: p.replace(/ /g, "_"), width: 150 }; });
+                                var columnsWithWhiteSpaces = result.Properties.filter(function (p) { if (p.indexOf(" ") >= 0)
+                                    return p; });
+                                if (columnsWithWhiteSpaces.length > 0) {
+                                    var rawJSON = JSON.stringify(result.Data);
+                                    columnsWithWhiteSpaces.forEach(function (colName) {
+                                        var truncated = colName.replace(/ /g, "_");
+                                        rawJSON = rawJSON.replace(colName, truncated);
+                                    });
+                                    result.Data = JSON.parse(rawJSON);
+                                }
                                 var datasource = new kendo.data.DataSource({ data: result.Data });
                                 var grid = $('#gDataPartnersTrackingTable').kendoGrid({
                                     autoBind: false,
@@ -98,3 +119,4 @@ var Controls;
         })(Display = WFTrackingTable.Display || (WFTrackingTable.Display = {}));
     })(WFTrackingTable = Controls.WFTrackingTable || (Controls.WFTrackingTable = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Index.js.map

@@ -135,7 +135,7 @@ namespace Lpp.Dns.Api.Users
         [HttpGet]
         public async Task<UserDTO> ByUserName(string userName)
         {
-            var contacts = await (from c in DataContext.Secure<User>(Identity) where c.UserName == userName select c).Map<User, UserDTO>().ToListAsync();
+            var contacts = await (from c in DataContext.Secure<User>(Identity) where c.UserName == userName && c.Deleted == false select c).Map<User, UserDTO>().ToListAsync();
             if (!contacts.Any())
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User Not Found"));
 

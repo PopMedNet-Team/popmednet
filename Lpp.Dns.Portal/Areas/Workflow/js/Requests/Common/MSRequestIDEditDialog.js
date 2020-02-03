@@ -42,3 +42,4 @@ var Workflow;
         })(MSRequestID = Common.MSRequestID || (Common.MSRequestID = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=MSRequestIDEditDialog.js.map

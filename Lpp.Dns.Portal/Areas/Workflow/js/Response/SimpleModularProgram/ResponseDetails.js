@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -140,6 +141,7 @@ var Workflow;
                     this.add = function (document) {
                         self.Revisions.unshift(document);
                         self.Revisions.sort(function (a, b) {
+                            //sort by version number - highest to lowest, and then date created - newest to oldest
                             if (a.MajorVersion === b.MajorVersion) {
                                 if (a.MinorVersion === b.MinorVersion) {
                                     if (a.BuildVersion === b.BuildVersion) {
@@ -154,6 +156,7 @@ var Workflow;
                             }
                             return b.MajorVersion - a.MajorVersion;
                         });
+                        //set the first revision after the sort
                         self.Current(self.Revisions()[0]);
                         self.TaskID = self.Current().ItemID;
                         self.TaskName = self.Current().ItemTitle;
@@ -167,6 +170,7 @@ var Workflow;
                     };
                     this.refreshGridDataSource = function () {
                         if (self.gridData) {
+                            //TODO: also need to update the main grid for the current revision name stuff
                             self.gridData.setDataSource(new kendo.data.DataSource({ data: self.Revisions() }));
                         }
                     };
@@ -190,3 +194,4 @@ var Workflow;
         })(ResponseDetail = SimpleModularProgram.ResponseDetail || (SimpleModularProgram.ResponseDetail = {}));
     })(SimpleModularProgram = Workflow.SimpleModularProgram || (Workflow.SimpleModularProgram = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=ResponseDetails.js.map

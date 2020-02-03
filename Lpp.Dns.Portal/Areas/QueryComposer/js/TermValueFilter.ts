@@ -210,7 +210,7 @@
             }
 
             if (this._containsPCORnet()) {
-                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach((i) => translations.push(i));
+                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach((i) => translations.push(i));
             }
 
             return translations;

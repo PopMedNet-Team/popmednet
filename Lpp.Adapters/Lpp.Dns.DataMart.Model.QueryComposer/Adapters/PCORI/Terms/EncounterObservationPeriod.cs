@@ -64,9 +64,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
             BinaryExpression be_encounterPatient = Expression.Equal(Expression.Property(pe_sourceQueryType, "ID"), Expression.Property(pe_encountersQueryType, "PatientID"));
 
             BinaryExpression predicate = be_encounterPatient;
-            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID)))
+            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID) || c.Criteria.Any(ci => ci.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID))))
             {
-                var observationPeriodCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID));
+                var observationPeriodCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID)).Union(Criteria.SelectMany(c => c.Criteria.SelectMany(ci => ci.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID)))); ;
                 foreach (var obpTerm in observationPeriodCriteria)
                 {
                     DateTime dateValue;

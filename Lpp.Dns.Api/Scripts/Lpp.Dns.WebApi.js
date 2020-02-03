@@ -2678,24 +2678,6 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Response/GetDetails' + params, doNotHandleFail);
             };
-            Response.GetResponseContentForWorkflowRequest = function (requestID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
-                var params = '';
-                if (requestID != null)
-                    params += '&requestID=' + requestID;
-                if ($filter)
-                    params += '&$filter=' + $filter;
-                if ($select)
-                    params += '&$select=' + $select;
-                if ($orderby)
-                    params += '&$orderby=' + $orderby;
-                if ($skip)
-                    params += '&$skip=' + $skip;
-                if ($top)
-                    params += '&$top=' + $top;
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('Response/GetResponseContentForWorkflowRequest' + params, doNotHandleFail);
-            };
             Response.GetWorkflowResponseContent = function (id, view, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if (id != null)
@@ -4147,7 +4129,8 @@ var Dns;
                     url: url,
                     dataType: 'json',
                     data: value == null ? null : JSON.stringify(value),
-                    contentType: 'application/json; charset=utf-8'
+                    contentType: 'application/json; charset=utf-8',
+                    timeout: 60000
                 }).done(function (result) {
                     if (result == null) {
                         d.resolve();

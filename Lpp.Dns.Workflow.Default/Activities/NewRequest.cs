@@ -339,11 +339,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     _entity.RejectedByID = null;
                     _entity.RejectedOn = null;
 
-                    var originalStatus = _entity.Status;
-                    await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
-
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
-
                     await MarkTaskComplete(task);
                 }
                 else

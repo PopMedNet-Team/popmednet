@@ -250,47 +250,8 @@ namespace Lpp.Dns.Workflow.Default.Activities
             }
             else if (activityResultID.Value == EditRoutingStatusResultID)
             {
-                var dataMarts = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<RequestDataMartModel>>(data);
-
-                //load up request datamart objects 
-                var requestDataMartIDs = dataMarts.Select(i => i.RequestDataMartID).ToArray();
-                var requestDataMarts = db.RequestDataMarts.Include(rdm => rdm.Responses).Where(dm => requestDataMartIDs.Contains(dm.ID)).ToArray();
-
-
-                foreach (var requestDataMart in requestDataMarts)
-                {
-                    var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, requestDataMart.RequestID, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
-
-                    if (!permissions.Any())
-                    {
-                        throw new SecurityException("You do not have permission to override the status of a routing for one or more of the specified DataMarts.");
-                    }
-
-                    foreach (var datamart in dataMarts)
-                    {
-                        if (datamart.RequestDataMartID == requestDataMart.ID)
-                        {
-                            requestDataMart.Status = datamart.NewStatus;
-                            var currentResponse = requestDataMart.Responses.OrderByDescending(r => r.Count).FirstOrDefault();
-                            currentResponse.ResponseMessage = datamart.Message;
-                            if (datamart.NewStatus == DTO.Enums.RoutingStatus.Completed)
-                            {
-                                currentResponse.ResponseTime = DateTime.UtcNow;
-                                currentResponse.RespondedByID = _workflow.Identity.ID;
-                            }
-                        }
-                    };
-
-                }
-
-                await LogTaskModified("One or more routings had their status modified.");
-                var originalStatus = _entity.Status;
-                await db.SaveChangesAsync();
-                await db.Entry(_entity).ReloadAsync();
-                if (originalStatus != DTO.Enums.RequestStatuses.Complete && _entity.Status == DTO.Enums.RequestStatuses.Complete)
-                {
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Complete);
-                }
+                var dataMarts = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<RoutingChangeRequestModel>>(data);
+                await UpdateDataMartRoutingStatus(dataMarts);
 
                 return new CompletionResult
                 {
@@ -319,12 +280,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     ).ToArrayAsync();
 
                 DateTime reSubmittedOn = DateTime.UtcNow;
-                //var revisionSetIDs = await (from a in db.Actions
-                //                            join ar in db.ActionReferences on a.ID equals ar.TaskID
-                //                            join doc in db.Documents on a.ID equals doc.ItemID
-                //                            where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete
-                //                            orderby a.EndOn descending
-                //                            select doc.RevisionSetID).ToArrayAsync();
 
 
                 var revisions = await (from rdm in db.RequestDataMarts
@@ -347,13 +302,15 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     response.SubmitMessage = resubmitModel.ResubmissionMessage;
 
                     dm.Status = DTO.Enums.RoutingStatus.Resubmitted;
-                    //foreach(var revset in revisionSetIDs)
-                    //    db.RequestDocuments.Add(new RequestDocument { RevisionSetID = revset.Value, ResponseID = response.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
-                    foreach (var revset in revisions.Where(x => x.DataMartID == dm.ID).Distinct())
-                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = revset.RevisionSetID, ResponseID = response.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                    
+                    foreach (var revset in revisions.Where(x => x.DataMartID == dm.ID).GroupBy(k => new { k.DataMartID, k.RevisionSetID }))
+                    {
+                        //need to group by the datamart and revision set since that combination can be applicable for more than one iteration, but do not want to copy to the new response more than once for successive iterations
+                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = revset.Key.RevisionSetID, ResponseID = response.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                    }
                 }
 
-                _entity.Status = DTO.Enums.RequestStatuses.Submitted;
+                _entity.Status = DTO.Enums.RequestStatuses.Resubmitted;
                 var task = await PmnTask.GetActiveTaskForRequestActivityAsync(_entity.ID, ID, db);                
 
                 await LogTaskModified();
@@ -392,18 +349,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
                 ResultID = activityResultID.Value
             };
         }
-
-        public async Task LogTaskModified(string optionalMessage = null)
-        {
-            var task = await PmnTask.GetActiveTaskForRequestActivityAsync(_entity.ID, ID, db);
-            if (task == null)
-            {
-                task = db.Actions.Add(PmnTask.CreateForWorkflowActivity(_entity.ID, ID, _workflow.ID, db));
-                return;
-            }
-
-            await task.LogAsModifiedAsync(_workflow.Identity, db, optionalMessage);
-        }
     }
 
     public class GroupingRequestModel
@@ -411,17 +356,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
         public string GroupName { get; set; }
 
         public IEnumerable<Guid> Responses { get; set; }
-    }
-
-    public class RequestDataMartModel
-    {
-        public Guid RequestDataMartID { get; set; }
-
-        public Guid DataMartID { get; set; }
-
-        public DTO.Enums.RoutingStatus NewStatus { get; set; }
-
-        public string Message { get; set; }
     }
 
     public class ResubmitRoutingsModel

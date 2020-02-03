@@ -264,7 +264,7 @@ namespace Lpp.Dns.DataMart.Client.Utils
             {
                 using (var file = new StreamReader(GetNetworkSettingsFilePath()))
                 {
-                    log.Info("Network Settings: " + file.ReadToEnd());
+                    log.Debug("Network Settings: " + file.ReadToEnd());
                 }
             }
             catch (Exception e)

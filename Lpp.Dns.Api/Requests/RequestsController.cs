@@ -614,39 +614,58 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public IQueryable<RequestDataMartDTO> GetOverrideableRequestDataMarts(Guid requestID)
         {
-            var dmRequestTypeAcls = DataContext.DataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID) ;
-            var projectRequestTypeAcls = DataContext.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-            var projectDataMartRequestTypeAcls = DataContext.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-
-            var dmAcls = DataContext.DataMartAcls.FilterAcl(Identity, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
-            var projectAcls = DataContext.ProjectAcls.FilterAcl(Identity, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
-            var projectDataMartAcls = DataContext.ProjectDataMartAcls.FilterAcl(Identity, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
-
-            var results = from dm in DataContext.Secure<DataMart>(Identity) 
-                             join rdm in DataContext.RequestDataMarts on dm.ID equals rdm.DataMartID 
-                             join r in DataContext.Secure<Request>(Identity) on rdm.RequestID equals r.ID
-                             let dmA = dmRequestTypeAcls.Where(a => a.DataMartID == dm.ID)
-                             let pA = projectRequestTypeAcls.Where(a => a.ProjectID == r.ProjectID)
-                             let pdmA = projectDataMartRequestTypeAcls.Where(a => a.ProjectID == r.ProjectID && a.DataMartID == dm.ID)
-                             let dmO = dmAcls.Where(a => a.DataMartID == dm.ID)
-                             let prjO = projectAcls.Where(a => a.ProjectID == r.ProjectID)
-                             let prjdmO = projectDataMartAcls.Where(a => a.ProjectID == r.ProjectID && a.DataMartID == dm.ID)
-                             where rdm.RequestID == requestID && 
-                             (
-                                (dmA.Any() && dmA.All(a => a.Permission > 0)) ||
-                                (pA.Any() && pA.All(a => a.Permission > 0)) ||
-                                (pdmA.Any() && pdmA.All(a => a.Permission > 0))
-                             )
-                             && !CompletedRoutingStatuses.Contains(rdm.Status)
-                             && (
-                                (dmO.Any() || prjO.Any() || prjdmO.Any())
-                                &&
-                                (dmO.All(a => a.Allowed) && prjO.All(a => a.Allowed) && prjdmO.All(a => a.Allowed))
-                             )
-                             select rdm;
-
-
-            return results.Map<RequestDataMart, RequestDataMartDTO>();
+            var routes = from rdm in DataContext.RequestDataMarts
+                         join request in DataContext.Requests on rdm.RequestID equals request.ID
+                         join dm in DataContext.DataMarts on rdm.DataMartID equals dm.ID
+                         let userID = Identity.ID
+                         let viewDataMartPermissionID = PermissionIdentifiers.DataMart.View.ID
+                         let viewDataMart = DataContext.FilteredDataMartAcls(userID, viewDataMartPermissionID, rdm.DataMartID).Select(a => a.Allowed)
+                            .Concat(DataContext.FilteredProjectAcls(userID, viewDataMartPermissionID, request.ProjectID).Where(a => request.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                            .Concat(DataContext.FilteredOrganizationAcls(userID, viewDataMartPermissionID, request.OrganizationID).Where(a => request.Organization.DataMarts.Any(dm => dm.ID == rdm.DataMartID)).Select(a => a.Allowed))
+                            .Concat(DataContext.FilteredGlobalAcls(userID, viewDataMartPermissionID).Select(a => a.Allowed))
+                         let runRequestTypePermissions = DataContext.DataMartRequestTypeAcls.Where(a => a.DataMartID == rdm.DataMartID && a.RequestTypeID == request.RequestTypeID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Permission)
+                         .Concat(DataContext.ProjectRequestTypeAcls.Where(a => a.RequestTypeID == request.RequestTypeID && a.ProjectID == request.ProjectID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Permission))
+                         .Concat(DataContext.ProjectDataMartRequestTypeAcls.Where(a => a.RequestTypeID == request.RequestTypeID && a.ProjectID == request.ProjectID && a.DataMartID == rdm.DataMartID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Permission))
+                         let overrideRoutingStatusPermissionID = PermissionIdentifiers.Request.OverrideDataMartRoutingStatus.ID
+                         let overrideRoutingStatusPermissions = DataContext.FilteredDataMartAcls(userID, overrideRoutingStatusPermissionID, rdm.DataMartID).Select(a => a.Allowed)
+                         .Concat(DataContext.FilteredProjectAcls(userID, overrideRoutingStatusPermissionID, request.ProjectID).Where(a => request.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                         .Concat(DataContext.FilteredProjectDataMartAcls(userID, overrideRoutingStatusPermissionID, request.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
+                         let currentResonse = rdm.Responses.Where(rsp => rsp.Count == rdm.Responses.Max(x => x.Count)).FirstOrDefault()
+                         where rdm.RequestID == requestID
+                         && !CompletedRoutingStatuses.Contains(rdm.Status)
+                         //enforce the user can see the datamart
+                         && (viewDataMart.Any() && viewDataMart.All(a => a))
+                         //enforce the user can see the request
+                         && DataContext.FilteredRequestList(userID).Where(r => r.ID == rdm.RequestID).Any()
+                         //enforce the user has permission to the requesttype
+                         && (runRequestTypePermissions.Any() && runRequestTypePermissions.All(a => a > 0))
+                         //enforce the user has permission to override routing status
+                         && (overrideRoutingStatusPermissions.Any() && overrideRoutingStatusPermissions.All(a => a))
+                         //select rdm;
+                         select new RequestDataMartDTO
+                         {
+                             DataMart = dm.Name,
+                             DataMartID = rdm.DataMartID,
+                             ErrorDetail = rdm.ErrorDetail,
+                             ErrorMessage = rdm.ErrorMessage,
+                             Properties = rdm.Properties,
+                             Status = rdm.Status,
+                             Priority = rdm.Priority,
+                             DueDate = rdm.DueDate,
+                             RejectReason = rdm.RejectReason,
+                             RequestID = rdm.RequestID,
+                             RequestTime = rdm.RequestTime,
+                             ResponseTime = rdm.ResponseTime,
+                             ResultsGrouped = rdm.ResultsGrouped,
+                             ID = rdm.ID,
+                             Timestamp = rdm.Timestamp,
+                             RoutingType = rdm.RoutingType,
+                             ResponseID = currentResonse.ID,
+                             ResponseGroupID = currentResonse.ResponseGroupID,
+                             ResponseGroup = currentResonse.ResponseGroup.Name,
+                             ResponseMessage = currentResonse.ResponseMessage
+                         };
+            return routes;
         }
         /// <summary>
         /// update request datamarts
@@ -656,78 +675,94 @@ namespace Lpp.Dns.Api.Requests
         [HttpPost]
         public async Task<HttpResponseMessage> UpdateRequestDataMarts(IEnumerable<UpdateRequestDataMartStatusDTO> dataMarts)
         {
-            List<Guid> responsesAltered = new List<Guid>();
+            var requestDataMartIDs = dataMarts.Select(dm => dm.RequestDataMartID).ToArray();
 
-            //load up request datamart objects 
-            var requestDataMartIDs = dataMarts.Select(i => i.RequestDataMartID).ToArray();
-            var requestDataMarts = DataContext.RequestDataMarts.Include(rdm => rdm.Responses).Where(dm => requestDataMartIDs.Contains(dm.ID)).ToArray();
+            var routes = await (from rdm in DataContext.RequestDataMarts
+                                let userID = Identity.ID
+                                let projectID = rdm.Request.ProjectID
+                                let overrideRoutingStatusPermissionID = PermissionIdentifiers.Request.OverrideDataMartRoutingStatus.ID
+                                let projectOverrideAcls = DataContext.ProjectAcls.Where(a => a.ProjectID == projectID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let datamartOverrideAcls = DataContext.DataMartAcls.Where(a => a.DataMartID == rdm.DataMartID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let projectDataMartOverrideAcls = DataContext.ProjectDataMartAcls.Where(a => a.DataMartID == rdm.DataMartID && a.ProjectID == projectID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let currentResponse = DataContext.Responses.Where(rsp => rsp.RequestDataMartID == rdm.ID && rsp.Count == rdm.Responses.Select(rr => rr.Count).Max()).FirstOrDefault()
+                                where requestDataMartIDs.Contains(rdm.ID)
+                                select new
+                                {
+                                    RequestDataMart = rdm,
+                                    canOverrideRoutingStatus = (projectOverrideAcls.Any() || datamartOverrideAcls.Any() || projectDataMartOverrideAcls.Any()) && (projectOverrideAcls.All(a => a) && datamartOverrideAcls.All(a => a) && projectDataMartOverrideAcls.All(a => a)),
+                                    CurrentResponse = currentResponse
+                                }).ToArrayAsync();
 
-            var request = DataContext.Requests.Where(r => r.DataMarts.Where(rdm => requestDataMartIDs.Contains(rdm.ID)).Any()).First();
-            var originalStatus = request.Status;
-
-            foreach (var requestDataMart in requestDataMarts)
+            if (routes.Any(rt => rt.canOverrideRoutingStatus == false))
             {
-                var filter = new ExtendedQuery
-                {
-                    DataMarts = a => a.DataMartID == requestDataMart.DataMartID,
-                    Projects = a => a.Project.Requests.Any(r => r.ID == requestDataMart.RequestID) && a.Project.DataMarts.Any(d => d.DataMartID == requestDataMart.DataMartID),
-                    ProjectDataMarts = a => a.DataMartID == requestDataMart.DataMartID && a.Project.Requests.Any(r => r.ID == requestDataMart.RequestID)
-                };
+                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, new System.Security.SecurityException("You do not have permission to override the status of a routing for one or more of the specified DataMarts."));
+            }
 
-                var permissions = await DataContext.HasGrantedPermissions<Request>(Identity, requestDataMart.RequestID, PermissionIdentifiers.Request.OverrideDataMartRoutingStatus);
+            Guid requestID = routes[0].RequestDataMart.RequestID;
 
-                if (!permissions.Any())
+            if (!routes.All(rt => rt.RequestDataMart.RequestID == requestID))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new ArgumentException("All routes being updated must belong to the same Request."));
+            }
+
+            bool hasChanges = false;
+            foreach (var detail in routes)
+            {
+                var changes = dataMarts.FirstOrDefault(dm => dm.RequestDataMartID == detail.RequestDataMart.ID);
+                if (changes == null || detail.RequestDataMart.Status == changes.NewStatus)
+                    continue;
+
+                detail.RequestDataMart.Status = changes.NewStatus;
+                detail.RequestDataMart.UpdatedOn = DateTime.UtcNow;
+                detail.CurrentResponse.ResponseMessage = changes.Message;
+
+                if (detail.RequestDataMart.Status == DTO.Enums.RoutingStatus.Submitted && detail.CurrentResponse.Count > 1)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to override the status of a routing for one or more of the specified DataMarts.");
+                    //update to automatically have status be resubmitted if not on first iteration.
+                    detail.RequestDataMart.Status = DTO.Enums.RoutingStatus.Resubmitted;
                 }
 
-                dataMarts.ForEach((d) =>
+                if (changes.NewStatus == DTO.Enums.RoutingStatus.Completed)
                 {
-                    if (d.RequestDataMartID == requestDataMart.ID)
-                    {
-                        requestDataMart.Status = d.NewStatus;
-                        var currentResponse = requestDataMart.Responses.OrderByDescending(r => r.Count).FirstOrDefault();
-                        currentResponse.ResponseMessage = d.Message;
+                    detail.CurrentResponse.ResponseTime = DateTime.UtcNow;
+                    detail.CurrentResponse.RespondedByID = Identity.ID;
+                }
 
-                        //only set the response time and ID if the response is completed
-                        if (CompletedRoutingStatuses.Contains(d.NewStatus))
-                        {
-                            currentResponse.ResponseTime = DateTime.UtcNow;
-                            currentResponse.RespondedByID = Identity.ID;
-                        }
-
-                        responsesAltered.Add(currentResponse.ID);
-                    }
-                });
+                hasChanges = true;
             }
-            
-            await DataContext.SaveChangesAsync();
 
-            await DataContext.Entry(request).ReloadAsync();
-
-            if (request.Status == RequestStatuses.Complete && originalStatus != RequestStatuses.Complete)
+            if (hasChanges)
             {
-
-                var requestStatusLogger = new Dns.Data.RequestLogConfiguration();
-                string[] emailText = await requestStatusLogger.GenerateRequestStatusChangedEmailContent(DataContext, request.ID, Identity.ID, originalStatus, request.Status);
-                var logItems = requestStatusLogger.GenerateRequestStatusEvents(DataContext, Identity, false, originalStatus, request.Status, request.ID, emailText[1], emailText[0], "Request Status Changed");
-
+                var originalStatus = await DataContext.Requests.AsNoTracking().Where(r => r.ID == requestID).Select(r => r.Status).SingleAsync();
                 await DataContext.SaveChangesAsync();
 
-                await Task.Run(() => {
+                var currentStatus = await DataContext.Requests.Where(r => r.ID == requestID).Select(r => r.Status).SingleAsync();
 
-                    List<Utilities.Logging.Notification> notifications = new List<Utilities.Logging.Notification>();
+                if (originalStatus != DTO.Enums.RequestStatuses.Complete && currentStatus == DTO.Enums.RequestStatuses.Complete)
+                {
+                    var requestStatusLogger = new Dns.Data.RequestLogConfiguration();
+                    string[] emailText = await requestStatusLogger.GenerateRequestStatusChangedEmailContent(DataContext, requestID, Identity.ID, originalStatus, currentStatus);
 
-                    foreach (Lpp.Dns.Data.Audit.RequestStatusChangedLog logitem in logItems)
+                    var logItems = requestStatusLogger.GenerateRequestStatusEvents(DataContext, Identity, false, originalStatus, currentStatus, requestID, emailText[1], emailText[0], "Request Status Changed");
+
+                    await DataContext.SaveChangesAsync();
+
+                    await Task.Run(() =>
                     {
-                        var items = requestStatusLogger.CreateNotifications(logitem, DataContext, true);
-                        if (items != null && items.Any())
-                            notifications.AddRange(items);
-                    }
 
-                    if (notifications.Any())
-                        requestStatusLogger.SendNotification(notifications);
-                });
+                        List<Utilities.Logging.Notification> notifications = new List<Utilities.Logging.Notification>();
+
+                        foreach (Lpp.Dns.Data.Audit.RequestStatusChangedLog logitem in logItems)
+                        {
+                            var items = requestStatusLogger.CreateNotifications(logitem, DataContext, true);
+                            if (items != null && items.Any())
+                                notifications.AddRange(items);
+                        }
+
+                        if (notifications.Any())
+                            requestStatusLogger.SendNotification(notifications);
+                    });
+                }
             }
 
             return Request.CreateResponse(HttpStatusCode.Accepted);
@@ -898,8 +933,9 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public async Task<Guid[]> GetRequestTypeModels(Guid requestID)
         {
-            var requestTypeID = DataContext.Requests.Where(r => r.ID == requestID).Select(r => r.RequestTypeID).First();
-            return (DataContext.RequestTypeDataModels.Where(rt => rt.RequestTypeID == requestTypeID).Select(rt => rt.DataModelID).ToArray());
+            return await (from rtdm in DataContext.RequestTypeDataModels
+                    where DataContext.Requests.Where(r => r.ID == requestID && rtdm.RequestTypeID == r.RequestTypeID).Any()
+                    select rtdm.DataModelID).ToArrayAsync();
         }
 
         /// <summary>
@@ -1204,26 +1240,5 @@ namespace Lpp.Dns.Api.Requests
 
             return r.ID;
         }
-
-
-
-        ///// <summary>
-        ///// Gets the available projects that the user has permission to manage.
-        ///// </summary>
-        ///// <param name="requestTypeID"></param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public async Task<Guid> GetGrantedProjects(Guid requestTypeID)
-        //{
-        //    var result = from p in DataContext.Secure<Project>(Identity)
-        //         where (!p.Deleted
-        //            && !p.Group.Deleted
-        //            && !p.Deleted
-        //            && (p.ProjectDataMartRequestTypeAcls.Any(a => a.RequestTypeID == requestTypeID && a.Permission > 0 && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID))
-        //            || p.ProjectRequestTypeAcls.Any(a => a.RequestTypeID == requestTypeID && a.Permission > 0 && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID))))
-        //         select p.ID;
-
-        //    return result.FirstOrDefault();
-        //}
     }
 }

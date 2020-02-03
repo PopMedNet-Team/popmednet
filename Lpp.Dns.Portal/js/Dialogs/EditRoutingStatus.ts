@@ -1,7 +1,7 @@
 ﻿
 module Dialog.EditRoutingStatus {
-    var vm: EditRoutingStatusViewModel;
-    var dvm: DataMartsViewModel;
+    let vm: EditRoutingStatusViewModel;
+    let dvm: DataMartsViewModel;
 
     export class DataMartsViewModel {
         public RequestDataMartID: any;
@@ -10,7 +10,6 @@ module Dialog.EditRoutingStatus {
         public OriginalStatus: Dns.Enums.RoutingStatus;
         public NewStatus: KnockoutObservable<Dns.Enums.RoutingStatus>; 
         public Message: KnockoutObservable<string>; 
-        public Selected: KnockoutObservable<boolean>;
 
         constructor(routing: Dns.Interfaces.IRequestDataMartDTO) {
             var self = this;
@@ -22,7 +21,6 @@ module Dialog.EditRoutingStatus {
             
             self.NewStatus = ko.observable<Dns.Enums.RoutingStatus>(null);
             self.Message = ko.observable<string>(null);
-            self.Selected = ko.observable<boolean>(false);
 
            
         }
@@ -32,8 +30,14 @@ module Dialog.EditRoutingStatus {
         
         private onCancel: () => void;
         private onContinue: () => void;
+        private canContinue: KnockoutObservable<boolean>;
+        
         private IncompleteRoutings: Dns.Interfaces.IRequestDataMartDTO[];
 
+        private onBulkChange: () => void;
+        private bulkChangeStatus: KnockoutObservable<Dns.Enums.RoutingStatus>;
+        private bulkChangeMessage: KnockoutObservable<string>;
+        private allowBulkChange: KnockoutComputed<boolean>;
 
         private ChangeStatusList: Array<any>;
 
@@ -42,7 +46,7 @@ module Dialog.EditRoutingStatus {
         constructor(bindingControl: JQuery, incompleteRoutings: Dns.Interfaces.IRequestDataMartDTO[]) {
             super(bindingControl);
 
-            var self = this;
+            let self = this;
 
             self.IncompleteRoutings = incompleteRoutings;
 
@@ -51,44 +55,66 @@ module Dialog.EditRoutingStatus {
 
             self.ChangeStatusList = new Array({ Status: "Hold", ID: "11" }, { Status: "Completed", ID: "3" }, { Status: "Rejected", ID: "12" }, { Status: "Submitted", ID: "2" });
 
+            self.bulkChangeMessage = ko.observable<string>(null);
+            self.bulkChangeStatus = ko.observable<Dns.Enums.RoutingStatus>(null);
+
+            self.allowBulkChange = ko.pureComputed(() => {
+                return self.bulkChangeStatus() != null && self.bulkChangeStatus() > 0;
+            });
+
+            self.canContinue = ko.pureComputed(() => {
+                for (let i = 0; i < self.RoutingsToChange.length; i++) {
+                    if (self.RoutingsToChange[i].NewStatus() == null || self.RoutingsToChange[i].NewStatus() <= 0) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
 
             self.onContinue = () => {
-                var results = ko.utils.arrayMap(ko.utils.arrayFilter(self.RoutingsToChange,(item: DataMartsViewModel) => { return item.Selected(); }),(item: DataMartsViewModel) => {
-                    
-                    var i = {
+                let results = ko.utils.arrayMap(self.RoutingsToChange, (item: DataMartsViewModel) => {
+                    return <Dns.Interfaces.IUpdateRequestDataMartStatusDTO> {
                         RequestDataMartID: item.RequestDataMartID,
                         DataMartID: item.DataMartID,
                         NewStatus: item.NewStatus(),
                         Message: item.Message()
                     };
-                    return i;
                 });
-                
-
-                for (var dm in results) {
-                    if (results[dm].NewStatus == null || results[dm].NewStatus.toString() == "") {
-                        Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.", 500);
-                        return;
-                    }
-                }
 
                 self.Close(results);
-            }
+            };
 
             self.onCancel = () => {
                 self.Close(null);
             };
+
+            self.onBulkChange = () => {
+
+                ko.utils.arrayForEach(self.RoutingsToChange, (r) => {
+                    r.NewStatus(self.bulkChangeStatus());
+                    r.Message(self.bulkChangeMessage());
+                });
+
+                $('#diaBulkChange').modal('hide');
+            };
+
+            $('#diaBulkChange').on('show.bs.modal', (e) => {
+                //reset the bulk change status and message values on open of bulk editor.
+                self.bulkChangeMessage(null);
+                self.bulkChangeStatus(null);
+            });
 
         }
         
     }
 
     function init() {
-        var window: kendo.ui.Window = Global.Helpers.GetDialogWindow();
-        var parameters = (<any>(window.options)).parameters;
-        var incompleteRoutings = <Dns.Interfaces.IRequestDataMartDTO[]>(parameters.IncompleteDataMartRoutings);
+        let window: kendo.ui.Window = Global.Helpers.GetDialogWindow();
+        let parameters = (<any>(window.options)).parameters;
+        let incompleteRoutings = <Dns.Interfaces.IRequestDataMartDTO[]>(parameters.IncompleteDataMartRoutings);
         $(() => {
-            var bindingControl = $("EditRoutingStatusDialog");
+            let bindingControl = $("EditRoutingStatusDialog");
             vm = new EditRoutingStatusViewModel(bindingControl, incompleteRoutings);
             ko.applyBindings(vm, bindingControl[0]);
         });

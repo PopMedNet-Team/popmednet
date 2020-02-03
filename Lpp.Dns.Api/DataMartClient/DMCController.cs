@@ -296,7 +296,11 @@ namespace Lpp.Dns.Api.DataMartClient
                                WorkPlanType = r.WorkplanType.Name,
                                ReportAggregationLevel = r.ReportAggregationLevel.Name,
                                Routings = (from rdm in r.DataMarts
-                                     let acls = DataContext.DataMartRights(Identity.ID, r.ProjectID, rdm.DataMartID)
+                                     let uploadResultsPermissionID = PermissionIdentifiers.DataMartInProject.UploadResults.ID
+                                     let holdRequestPermissionID = PermissionIdentifiers.DataMartInProject.HoldRequest.ID
+                                     let rejectRequestPermissionID = PermissionIdentifiers.DataMartInProject.RejectRequest.ID
+                                     let modifyResultsPermissionID = PermissionIdentifiers.DataMartInProject.ModifyResults.ID
+                                           let acls = DataContext.DataMartRights(Identity.ID, r.ProjectID, rdm.DataMartID)
                                     where dataMartIDs.Contains(rdm.DataMartID) 
                                     select new
                                    {
@@ -304,11 +308,13 @@ namespace Lpp.Dns.Api.DataMartClient
                                        AllowUnattendedProcessing = DataContext.DataMartAllowUnattendedProcessing(Identity.ID, r.RequestTypeID, r.ProjectID, rdm.DataMartID).Any() && DataContext.DataMartAllowUnattendedProcessing(Identity.ID, r.RequestTypeID, r.ProjectID, rdm.DataMartID).All(a => a.Permission == 2),
                                        Properties = rdm.Properties,
                                        Status = (dmc.Enums.DMCRoutingStatus)(int?)rdm.Status,
-                                       canRun = acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults.ID).Any() && acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults.ID).All(a => a.Allowed) ? dmc.RequestRights.Run : 0,
+                                       canRun = acls.Where(a => a.PermissionID == uploadResultsPermissionID).Any() && acls.Where(a => a.PermissionID == uploadResultsPermissionID).All(a => a.Allowed) ? dmc.RequestRights.Run : 0,
 
-                                       canHold = acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.HoldRequest.ID).Any() && acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.HoldRequest.ID).All(a => a.Allowed) ? dmc.RequestRights.Hold : 0,
+                                       canHold = acls.Where(a => a.PermissionID == holdRequestPermissionID).Any() && acls.Where(a => a.PermissionID == holdRequestPermissionID).All(a => a.Allowed) ? dmc.RequestRights.Hold : 0,
 
-                                       canReject = acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.RejectRequest.ID).Any() && acls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.RejectRequest.ID).All(a => a.Allowed) ? dmc.RequestRights.Reject : 0
+                                       canReject = acls.Where(a => a.PermissionID == rejectRequestPermissionID).Any() && acls.Where(a => a.PermissionID == rejectRequestPermissionID).All(a => a.Allowed) ? dmc.RequestRights.Reject : 0,
+
+                                       canModifyResults = acls.Where(a => a.PermissionID == modifyResultsPermissionID).Any() && acls.Where(a => a.PermissionID == modifyResultsPermissionID).All(a => a.Allowed) ? dmc.RequestRights.ModifyResults : 0,
                                    }),
                                Responses = r.DataMarts.Select(rdm => rdm.Responses.FirstOrDefault(response => !DataContext.Responses.Any(oReponse => oReponse.RequestDataMartID == response.RequestDataMartID && oReponse.Count > response.Count))).Select(response => new
                                {
@@ -403,7 +409,7 @@ namespace Lpp.Dns.Api.DataMartClient
                               {
                                   AllowUnattendedProcessing = routing.AllowUnattendedProcessing,
                                   DataMartID = routing.DataMartID,
-                                  Rights = routing.canHold | routing.canReject | routing.canRun,
+                                  Rights = routing.canHold | routing.canReject | routing.canRun | routing.canModifyResults,
                                   Status = routing.Status,
                                   Properties = routing.Properties == null ? null : (
                                             from root in ParseXml(routing.Properties)

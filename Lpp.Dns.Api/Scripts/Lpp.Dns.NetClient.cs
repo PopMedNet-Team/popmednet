@@ -1350,12 +1350,6 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.CommonResponseDetailDTO>(Path + "/GetDetails?" + idQueryString + "&");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
-	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>> GetResponseContentForWorkflowRequest(System.Guid requestID, string oDataQuery = null)
-	 	 {
-
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>(Path + "/GetResponseContentForWorkflowRequest?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&", oDataQuery);
-	 	 	 return result.ReturnList();
-	 	 }
 	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>> GetWorkflowResponseContent(System.Collections.Generic.IEnumerable<System.Guid> id, Lpp.Dns.DTO.Enums.TaskItemTypes view, string oDataQuery = null)
 	 	 {
 	 	 	 var idQueryString = string.Join("&", id.Select(i => string.Format("{0}={1}", "id", System.Net.WebUtility.UrlEncode(i.ToString()))));

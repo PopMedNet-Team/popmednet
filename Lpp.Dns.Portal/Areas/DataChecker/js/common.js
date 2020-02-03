@@ -1,3 +1,4 @@
+/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
 var DataChecker;
 (function (DataChecker) {
     var ResponseMetricsItem = (function () {
@@ -12,6 +13,7 @@ var DataChecker;
         function ChartSource(data, title) {
             this.xaxis_label = null;
             this.yaxis_label = null;
+            //default to 2 decimal for the point label format string
             this.pointLabelFormatString = '%.2f';
             this.showPiePointLabels = false;
             this.isPercentage = false;
@@ -42,3 +44,4 @@ var DataChecker;
     }());
     DataChecker.ChartSource = ChartSource;
 })(DataChecker || (DataChecker = {}));
+//# sourceMappingURL=common.js.map

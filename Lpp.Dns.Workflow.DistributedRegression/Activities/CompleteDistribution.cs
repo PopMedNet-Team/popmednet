@@ -429,16 +429,6 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
             }
         }
     }
-    public class RequestDataMartModel
-    {
-        public Guid RequestDataMartID { get; set; }
-
-        public Guid DataMartID { get; set; }
-
-        public DTO.Enums.RoutingStatus NewStatus { get; set; }
-
-        public string Message { get; set; }
-    }
 
     public class ResubmitRoutingsModel
     {

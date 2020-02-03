@@ -374,6 +374,14 @@ namespace Lpp.Dns.DTO.Security
                 Locations = new PermissionAclTypes[] { PermissionAclTypes.DataMarts, PermissionAclTypes.Projects, PermissionAclTypes.Organizations, PermissionAclTypes.ProjectDataMarts, PermissionAclTypes.Global }
             };
             /// <summary>
+            /// Upload results for a file distribution or modular program request after the route has been completed.
+            /// </summary>
+            public static readonly PermissionDefinition ModifyResults = new PermissionDefinition
+            {
+                ID = new Guid("80500001-D58E-4EEE-8541-A7CA010034F5"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.DataMarts, PermissionAclTypes.Projects, PermissionAclTypes.Organizations, PermissionAclTypes.ProjectDataMarts }
+            };
+            /// <summary>
             /// Hold request in datamart within project
             /// </summary>
             public static readonly PermissionDefinition HoldRequest = new PermissionDefinition
@@ -421,6 +429,7 @@ namespace Lpp.Dns.DTO.Security
                 {
                     SeeRequests,
                     UploadResults,
+                    ModifyResults,
                     HoldRequest,
                     RejectRequest,
                     ApproveResponses,

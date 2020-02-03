@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -19,9 +20,13 @@ var DataMarts;
                 self.QueryComposerAdapters.splice(0, 0, { ID: null, Name: 'None', Description: 'Adapter not selected.', QueryComposer: true, RequiresConfiguration: false, Timestamp: null });
                 self.DataModelProcessors = dmProcessors;
                 _this.CanUninstall = ko.observable(_this.HasPermission(Permissions.DataMart.UninstallModels));
+                // NOTE This is necessary because the DataMart data object requires that the Url be non-null, yet the database allows it.
+                // This forces it to be an empty string when null.
                 if (datamart != null)
                     datamart.Url = datamart.Url == null ? "" : datamart.Url;
+                // Selection lists
                 _this.Organizations = ko.observableArray(organizations);
+                //this.DataMartTypes = ko.observableArray(dmTypeList);
                 _this.Projects = ko.observableArray(projects.map(function (p) {
                     return new Dns.ViewModels.ProjectDataMartViewModel(p);
                 }));
@@ -64,6 +69,7 @@ var DataMarts;
                     }
                 });
                 _this.RequestTypes = ko.observableArray(ko.utils.arrayMap(requestTypes, function (item) { return new Dns.ViewModels.RequestTypeViewModel(item); }));
+                // Acls
                 _this.DataMartAcls = ko.observableArray(datamartPermissions.map(function (item) {
                     return new Dns.ViewModels.AclDataMartViewModel(item);
                 }));
@@ -111,6 +117,7 @@ var DataMarts;
                 return _this;
             }
             ViewModel.prototype.UpdateMetadata = function () {
+                // TODO ddee
             };
             ViewModel.prototype.InstallModel = function (dataModelViewModel) {
                 var newModel = new InstalledModelViewModel({
@@ -149,8 +156,10 @@ var DataMarts;
                 this.DataMart.StartDate((this.StartYear() == null || this.StartYear() == "") ? null : new Date(this.StartYear(), 1));
                 this.DataMart.EndDate((this.EndYear() == null || this.EndYear() == "") ? null : new Date(this.EndYear(), 1));
                 Dns.WebApi.DataMarts.InsertOrUpdate([this.DataMart.toData()]).done(function (datamart) {
+                    //Update the values for the ID and timestamp as necessary.
                     vm.DataMart.ID(datamart[0].ID);
                     vm.DataMart.Timestamp(datamart[0].Timestamp);
+                    // Save everything else
                     var installedModels = _this.InstalledDataModels.InstalledDataModels().map(function (o) {
                         o.DataMartID(vm.DataMart.ID());
                         return o.toData();
@@ -209,6 +218,7 @@ var DataMarts;
                 this.AllDataModels = allDataModels.sort(function (a, b) {
                     return a.Name == b.Name ? 0 : a.Name > b.Name ? 1 : -1;
                 });
+                //List of data models that can be added to the project
                 this.UninstalledDataModels = ko.computed(function () {
                     return self.AllDataModels.filter(function (dm) {
                         var installedModelIDs = self.InstalledDataModels().map(function (m) { return m.ModelID(); });
@@ -323,3 +333,4 @@ var DataMarts;
         init();
     })(Details = DataMarts.Details || (DataMarts.Details = {}));
 })(DataMarts || (DataMarts = {}));
+//# sourceMappingURL=Details.js.map

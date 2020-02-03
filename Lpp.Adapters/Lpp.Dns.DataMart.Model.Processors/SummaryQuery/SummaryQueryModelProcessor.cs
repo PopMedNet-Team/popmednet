@@ -119,6 +119,8 @@ namespace Lpp.Dns.DataMart.Model
         private string argsXml = null;
         private RequestStatus status = new RequestStatus();
         private DataSet viewableResultDataset;
+        private DataSet sqlResultDataset;
+
         private DataSet metadataResultDataset;
         private string styleXml;
         private bool hasCellCountAlert = false;
@@ -151,7 +153,6 @@ namespace Lpp.Dns.DataMart.Model
         public void Request( string requestId, NetworkConnectionMetadata network, RequestMetadata md, 
             Document[] requestDocuments, out IDictionary<string, string> requestProperties, out Document[] desiredDocuments )
         {
-            viewableResultDataset = new DataSet();
             datasets = new List<DataSet>();
             this.requestTypeId = new Guid(md.RequestTypeId);
             IsMetadataRequest = md.IsMetadataRequest;
@@ -189,6 +190,12 @@ namespace Lpp.Dns.DataMart.Model
         {
             try
             {
+                if (!viewSQL)
+                {
+                    viewableResultDataset = new DataSet();
+                    sqlResultDataset = null;
+                }
+
                 log.Debug("SummaryQueryModelProcessor:Start: RequestId=" + requestId + ", viewSQL=" + viewSQL.ToString());
                 if (Settings.Count == 0)
                     throw new Exception(CommonMessages.Exception_MissingSettings);
@@ -215,7 +222,15 @@ namespace Lpp.Dns.DataMart.Model
                     }
                 }
                 if (viewSQL)
-                    combinedDataset.Merge(dtSQL);
+                {
+                    sqlResultDataset = new DataSet();
+                    sqlResultDataset.Tables.Add(dtSQL);
+
+                    status.Code = RequestStatus.StatusCode.Complete;
+                    status.Message = "";
+
+                    return;
+                }
 
                 hasCellCountAlert = SummaryQueryUtil.CheckCellCountsInQueryResult(combinedDataset, CellThreshHold);
 
@@ -276,6 +291,16 @@ namespace Lpp.Dns.DataMart.Model
 
         public Document[] Response(string requestId)
         {
+            if (sqlResultDataset != null)
+            {
+                Document[] docs = new Document[1];
+                docs[0] = new Document("-1", "x-application/lpp-dns-table", "SummaryQueryResponse.xml");
+                docs[0].IsViewable = true;
+                docs[0].Size = sqlResultDataset.GetXml().Length;
+
+                return docs;
+            }
+
             BuildResponseDocuments();
             return responseDocument;
         }
@@ -307,6 +332,12 @@ namespace Lpp.Dns.DataMart.Model
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             contentStream = null;
+            if(documentId == "-1") //View SQL
+            {
+                contentStream = CreateMemoryStreamForDataSet(sqlResultDataset);
+                sqlResultDataset = null;
+                return;
+            }
             if (documentId == "0") // Viewable result
             {
                 contentStream = CreateMemoryStreamForDataSet(viewableResultDataset);

@@ -1,3 +1,5 @@
+/// <reference path="../../../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="listroutings.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -51,3 +53,4 @@ var Workflow;
         })(AddDataMartDialog = Common.AddDataMartDialog || (Common.AddDataMartDialog = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=AddDataMartDialog.js.map

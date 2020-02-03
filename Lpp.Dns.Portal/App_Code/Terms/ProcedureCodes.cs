@@ -69,7 +69,7 @@ namespace Lpp.Dns.Portal.App_Code.Terms
 
             public ProcedureCodesValues()
             {
-                CodeType = DTO.Enums.ProcedureCode.Unknown;
+                CodeType = DTO.Enums.ProcedureCode.Any;
                 CodeValues = string.Empty;
                 SearchMethodType = DTO.Enums.TextSearchMethodType.ExactMatch;
             }

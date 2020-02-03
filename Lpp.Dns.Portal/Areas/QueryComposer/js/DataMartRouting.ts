@@ -93,13 +93,13 @@
                     Request: strQuery,
                     RequestID: Global.GetQueryParam("ID")
                 }).done((dataMarts) => {
-                    var routes = [];
-                    for (var di = 0; di < dataMarts.length; di++) {
-                        var dm = dataMarts[di];
+                    let routes = [];
+                    for (let di = 0; di < dataMarts.length; di++) {
+                        let dm = dataMarts[di];
                         dm.Priority = self.DefaultPriority();
                         dm.DueDate = self.DefaultDueDate();
 
-                        var existingRoute = ko.utils.arrayFirst(self.ExistingRequestDataMarts, (r) => r.DataMartID == dm.ID);
+                        let existingRoute = ko.utils.arrayFirst(self.ExistingRequestDataMarts, (r) => r.DataMartID == dm.ID);
 
                         routes.push(new Plugins.Requests.QueryBuilder.DataMartRouting.Routings(dm, existingRoute));
                     }
@@ -110,7 +110,7 @@
             }
 
             this.DataMartsSelectAll = () => {
-                var datamartIDs = ko.utils.arrayMap(self.DataMarts(), (rt) => rt.DataMartID);
+                let datamartIDs = ko.utils.arrayMap(self.DataMarts(), (rt) => rt.DataMartID);
                 self.SelectedDataMartIDs(datamartIDs);
             };
 
@@ -119,7 +119,7 @@
             };
 
             this.SelectedRoutings = () => {
-                var dms: Dns.Interfaces.IRequestDataMartDTO[];
+                let dms: Dns.Interfaces.IRequestDataMartDTO[];
                 dms = ko.utils.arrayMap(ko.utils.arrayFilter(self.DataMarts(), (route) => {
                     return self.SelectedDataMartIDs.indexOf(route.DataMartID) > -1;
                 }), (route) => route.toRequestDataMartDTO());
@@ -128,11 +128,12 @@
             };
 
             this.DataMartsBulkEdit = () => {
-                Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: self.DefaultPriority(), defaultDueDate: new Date(self.DefaultDueDate().getTime()) })
+                let defaultDueDate = self.DefaultDueDate() != null ? new Date(self.DefaultDueDate().getTime()) : null;
+                Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: self.DefaultPriority(), defaultDueDate: defaultDueDate })
                     .done((result: any) => {
                         if (result != null) {
 
-                            var priority: Dns.Enums.Priorities = null;
+                            let priority: Dns.Enums.Priorities = null;
                             if (result.UpdatePriority) {
                                 priority = result.PriorityValue;
                             }
@@ -156,19 +157,19 @@
             self.FieldOptions = fieldOptions || [];
 
             self.IsFieldRequired = (id: string) => {
-                var options = ko.utils.arrayFirst(self.FieldOptions || [], (item) => { return item.FieldIdentifier == id; });
+                let options = ko.utils.arrayFirst(self.FieldOptions || [], (item) => { return item.FieldIdentifier == id; });
                 return options != null && options.Permission != null && options.Permission == Dns.Enums.FieldOptionPermissions.Required;
             };
 
             self.IsFieldVisible = (id: string) => {
-                var options = ko.utils.arrayFirst(self.FieldOptions || [], (item) => { return item.FieldIdentifier == id; });
+                let options = ko.utils.arrayFirst(self.FieldOptions || [], (item) => { return item.FieldIdentifier == id; });
                 return options == null || (options.Permission != null && options.Permission != Dns.Enums.FieldOptionPermissions.Hidden);
             };
         }
 
         public UpdateRoutings(updates) {
-            var newPriority = updates != null ? updates.newPriority : null;
-            var newDueDate = updates != null ? updates.newDueDate : null;
+            let newPriority = updates != null ? updates.newPriority : null;
+            let newDueDate = updates != null ? updates.newDueDate : null;
 
             this.DefaultDueDate(newDueDate);
             this.DefaultPriority(newPriority);
@@ -193,8 +194,8 @@
         defaultPriority: Dns.Enums.Priorities,
         additionalInstructions: string
     ) {
-        var bindingControl = $('#DataMartsControl');
+        //let bindingControl = $('#DataMartsControl');
         vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-        ko.applyBindings(vm, bindingControl[0]);
+        ko.applyBindings(vm, $('#DataMartsControl')[0]);
     }
 }

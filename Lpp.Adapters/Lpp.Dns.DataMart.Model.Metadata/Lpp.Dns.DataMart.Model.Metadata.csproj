@@ -129,7 +129,6 @@
         <InProject>false</InProject>
       </dlls>
     </ItemGroup>
-    <SignFile SigningTarget="%(dlls.Identity)" CertificateThumbprint="E12D1B344047B37CF741F24EE9914A6F4D180EE3" TimestampUrl="http://timestamp.verisign.com/scripts/timestamp.dll" Condition="'$(Configuration)' != 'Debug'" />
     <PropertyGroup>
       <PackageIdentifier>Lpp.Dns.DataMart.Model.Metadata</PackageIdentifier>
       <PackageFileName>$(PackageIdentifier).%(Info.FileVersion).zip</PackageFileName>
@@ -137,13 +136,8 @@
       
       <PackageDeployPath Condition=" '$(Configuration)' == 'Adapters'">C:\Checkouts\Plugins\</PackageDeployPath>
     </PropertyGroup>
-    <MSBuild.ExtensionPack.Compression.Zip Condition=" ('$(PackageDeployPath)' != '' And $(PackageDeployPath) != '*Undefined*') " TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
+    <MSBuild.ExtensionPack.Compression.Zip Condition=" '$(Configuration)' == 'Debug'" TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
   </Target>
   <Import Project="..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets'))" />
-  </Target>
+  
 </Project>

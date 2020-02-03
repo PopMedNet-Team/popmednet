@@ -106,4 +106,11 @@ ko.bindingHandlers.fadeVisible = {
         ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
     }
 };
+// Allows a checkbox to be used as tri-state.
+ko.bindingHandlers.indeterminateValue = {
+    update: function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        element.indeterminate = value;
+    }
+};
 //# sourceMappingURL=CustomKnockoutBindings.js.map

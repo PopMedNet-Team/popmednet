@@ -1,6 +1,8 @@
+/// <reference path="../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var RootLayout;
 (function (RootLayout) {
     $(function () {
+        //Set all of the items with title tags to have qtip enabled
         var title = $('img[title!=""], span[title!=""]');
         title.tooltip({
             html: true,
@@ -16,6 +18,10 @@ var RootLayout;
         });
     });
     function LoadSpinner() {
+        //var form = <any> $(".Content form");
+        //if (!form.checkValidity || form.checkValidity()) {
+        //    form.showLoadingSign({ foregroundClass: "BodyLoadingSign" });
+        //}
     }
 })(RootLayout || (RootLayout = {}));
 var Users;
@@ -214,3 +220,4 @@ var Permissions;
     Request.ChangeRoutingsAfterSubmission = 'FDEE0BA5-AC09-4580-BAA4-496362985BF7';
     Permissions.Request = Request;
 })(Permissions || (Permissions = {}));
+//# sourceMappingURL=_rootlayout.js.map

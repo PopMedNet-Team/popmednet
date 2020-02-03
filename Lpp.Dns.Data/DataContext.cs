@@ -54,12 +54,55 @@ namespace Lpp.Dns.Data
         public DbSet<AclProjectRequestTypeWorkflowActivity> ProjectRequestTypeWorkflowActivities { get; set; }
         public DbSet<AclGlobal> GlobalAcls { get; set; }
         public DbSet<AclDataMart> DataMartAcls { get; set; }
+
         [DbFunction("DataContext", "AclDataMartsFiltered")]
-        public IQueryable<FilteredAcl> FilteredDataMartAcls(Guid userID, Guid PermissionIdentifiers, Guid dataMartID)
+        public IQueryable<FilteredAcl> FilteredDataMartAcls(Guid userID, Guid permissionID, Guid dataMartID)
         {
             return
                 ((IObjectContextAdapter) this).ObjectContext.CreateQuery<FilteredAcl>(
-                    "dbo.AclDataMartsFiltered(@UserID, @PermissionIdentifiers, @DataMartID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionIdentifiers", PermissionIdentifiers), new ObjectParameter("DataMartID", dataMartID));
+                    "dbo.AclDataMartsFiltered(@UserID, @PermissionID, @DataMartID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("DataMartID", dataMartID));
+        }
+
+        [DbFunction("DataContext", "AclGlobalFiltered")]
+        public IQueryable<FilteredAcl> FilteredGlobalAcls(Guid userID, Guid permissionID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclGlobalFiltered(@UserID, @PermissionID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID));
+        }
+
+        [DbFunction("DataContext", "AclOrganizationsFiltered")]
+        public IQueryable<FilteredAcl> FilteredOrganizationAcls(Guid userID, Guid permissionID, Guid organizationID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclOrganizationsFiltered(@UserID, @PermissionID, @OrganizationID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("OriganizationID", organizationID));
+        }
+
+        [DbFunction("DataContext", "AclProjectDataMartsFiltered")]
+        public IQueryable<FilteredAcl> FilteredProjectDataMartAcls(Guid userID, Guid permissionID, Guid projectID, Guid datamartID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclProjectDataMartsFiltered(@UserID, @PermissionID, @ProjectID, @DataMartID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("ProjectID", projectID), new ObjectParameter("DataMartID", datamartID));
+        }
+
+        [DbFunction("DataContext", "AclProjectOrganizationsFiltered")]
+        public IQueryable<FilteredAcl> FilteredProjectOrganizationsAcls(Guid userID, Guid permissionID, Guid projectID, Guid organizationID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclProjectOrganizationsFiltered(@UserID, @PermissionID, @ProjectID, @OrganizationID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("ProjectID", projectID), new ObjectParameter("OrganizationID", organizationID));
+        }
+
+        [DbFunction("DataContext", "AclProjectsFiltered")]
+        public IQueryable<FilteredAcl> FilteredProjectAcls(Guid userID, Guid permissionID, Guid projectID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclProjectsFiltered(@UserID, @PermissionID, @ProjectID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("ProjectID", projectID));
+        }
+
+        [DbFunction("DataContext", "AclRequestSharedFoldersFiltered")]
+        public IQueryable<FilteredAcl> FilteredRequestSharedFoldersAcls(Guid userID, Guid permissionID, Guid sharedFolderID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclRequestSharedFoldersFiltered(@UserID, @PermissionID, @RequestSharedFolderID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("RequestSharedFolderID", sharedFolderID));
+        }
+
+        [DbFunction("DataContext", "AclUsersFiltered")]
+        public IQueryable<FilteredAcl> FilteredUsersAcls(Guid userID, Guid permissionID, Guid targetUserID)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<FilteredAcl>("dbo.AclUsersFiltered(@UserID, @PermissionID, @TargetUserID)", new ObjectParameter("UserID", userID), new ObjectParameter("PermissionID", permissionID), new ObjectParameter("TargetUserID", targetUserID));
         }
 
         [DbFunction("DataContext", "FilteredRequestList")]

@@ -88,9 +88,11 @@ module Requests.Details {
 
         public CompletedRoutings: KnockoutComputed<VirtualRoutingViewModel[]>;
         public IncompleteRoutings: KnockoutComputed<VirtualRoutingViewModel[]>;
+        public AllRoutings: KnockoutComputed<VirtualRoutingViewModel[]>;
         public VirtualRoutings: KnockoutObservableArray<VirtualRoutingViewModel>;
         public SelectedCompleteResponses: KnockoutObservableArray<any>;
         public HasSelectedCompleteRoutings: KnockoutComputed<boolean>;
+        public onToggleCompleteRoutes: KnockoutComputed<boolean>;
         public onViewAggregatedResults: () => void;
         public onViewIndividualResults: () => void;
         private responseIndex: number = 0;
@@ -375,6 +377,10 @@ module Requests.Details {
 					}
 				);
             });            
+
+            self.AllRoutings = ko.pureComputed(() => {
+                return $.Enumerable.From(self.VirtualRoutings()).OrderBy(x => x.Status).ThenBy(x => x.Name).ToArray();
+            });
             
             //Workflow
             this.WorkflowActivity = new Dns.ViewModels.WorkflowActivityViewModel(workFlowActivity);
@@ -621,6 +627,20 @@ module Requests.Details {
 
                 $('#tabs').append(tl);
             };
+
+            self.onToggleCompleteRoutes = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.CompletedRoutings().length > 0 && self.SelectedCompleteResponses().length === self.CompletedRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.CompletedRoutings(), (i) => { return i.ID; });
+                        self.SelectedCompleteResponses(allID);
+                    } else {
+                        self.SelectedCompleteResponses([]);
+                    }
+                }
+            });
 
             self.onViewAggregatedResults = () => {
                 setupResponseTabView(Dns.Enums.TaskItemTypes.AggregateResponse);

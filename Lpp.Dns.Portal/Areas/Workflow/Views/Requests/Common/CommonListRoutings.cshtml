@@ -40,7 +40,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;"></a></td>
+                    <td>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:completeRoutesSelectAll, indeterminateValue:SelectedCompleteResponses().length > 0 && SelectedCompleteResponses().length < VirtualRoutings().length" />
+                    </td>
                     <td>DataMart</td>
                     <td>Status</td>
                     <td>Message</td>
@@ -50,7 +52,7 @@
             <tbody data-bind="foreach: VirtualRoutings">
                 <tr>
                     <td><input type="checkbox" id="chkRoutingSelect" data-bind="value: ID, checked:$root.SelectedCompleteResponses" /></td>
-                    <td><i class="k-icon k-plus" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                    <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
                     <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
                     <td data-bind="html: Messages "></td>
                     <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
@@ -110,7 +112,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;"></a></td>
+                    <td>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedIncompleteRoutings().length > 0 && SelectedIncompleteRoutings().length < IncompleteRoutings().length" />
+                    </td>
                     <td>DataMart</td>
                     <td>Status</td>
                     <td>Priority</td>
@@ -142,7 +146,7 @@
         </table>
         <nav style="margin:15px 0px;">
             <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: HasSelectedIncompleteRoutings, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" style="margin-left:5px;">Bulk Edit</button>
-            <button class="btn btn-default pull-right" data-bind="click: onEditRoutingStatusDialog , visible:CanOverrideRoutingStatus" style="margin-right:15px;display:none;">Edit Routing Status</button>
+            <button class="btn btn-default pull-right" data-bind="click: onEditRoutingStatusDialog , visible:CanOverrideRoutingStatus, enable: HasSelectedIncompleteRoutings" style="margin-right:15px;display:none;">Edit Routing Status</button>
             <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Remove DataMart</button>
             <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Add DataMart</button>
             <div class="clearfix"></div>

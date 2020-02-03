@@ -190,10 +190,6 @@
       <Project>{AF5D4930-BB9A-4232-BF15-F7A798BA73C0}</Project>
       <Name>Lpp.Dns.HealthCare.Summary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SchedulerRestService\Lpp.Dns.SchedulerService.Interfaces.csproj">
-      <Project>{f806249d-2ac8-473d-9f5b-2dc17c06bc3b}</Project>
-      <Name>Lpp.Dns.SchedulerService.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lpp.Dns.Tests\Lpp.Dns.Tests.csproj">
       <Project>{8AB06E5A-4025-41D8-98E2-60B271508317}</Project>
       <Name>Lpp.Dns.Tests</Name>

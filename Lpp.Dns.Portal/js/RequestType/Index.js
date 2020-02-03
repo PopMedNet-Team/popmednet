@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../_rootlayout.ts" />
 var RequestType;
 (function (RequestType) {
     var Index;
@@ -71,3 +72,4 @@ var RequestType;
         init();
     })(Index = RequestType.Index || (RequestType.Index = {}));
 })(RequestType || (RequestType = {}));
+//# sourceMappingURL=Index.js.map

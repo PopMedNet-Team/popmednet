@@ -1,3 +1,6 @@
+/// <reference path="../_rootlayout.ts" />
+/// <reference path="../security/aclviewmodel.ts" />
+/// <reference path="../events/editeventpermissions.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -18,6 +21,7 @@ var Home;
                 _this.EventAcls = ko.observableArray(eventAcls.map(function (e) {
                     return new Dns.ViewModels.BaseEventPermissionViewModel(e);
                 }));
+                //Permissions
                 _this.Global = new Security.Acl.AclEditViewModel(permissions.filter(function (p) {
                     return (p.Locations.length == 1 || p.Locations.indexOf(Dns.Enums.PermissionAclTypes.RequestTypes) > -1 || p.Locations.indexOf(Dns.Enums.PermissionAclTypes.Templates) > -1) && p.Locations[0] == Dns.Enums.PermissionAclTypes.Global;
                 }), securityGroups, _this.Acls, [], Dns.ViewModels.AclViewModel, "Global");
@@ -40,6 +44,7 @@ var Home;
                     return new Dns.ViewModels.AclGlobalFieldOptionViewModel(e);
                 }));
                 _this.FieldOptions = new Security.Acl.FieldOption.AclFieldOptionEditViewModel(fieldOptions, securityGroups, _this.FieldOptionAcl, [], Dns.ViewModels.AclGlobalFieldOptionViewModel);
+                //Events
                 _this.GlobalEvents = new Events.Acl.EventAclEditViewModel(events.filter(function (p) {
                     return p.Locations.length == 1 && p.Locations[0] == Dns.Enums.PermissionAclTypes.Global;
                 }), securityGroups, _this.EventAcls, [], Dns.ViewModels.BaseEventPermissionViewModel, "GlobalEvents");
@@ -93,3 +98,4 @@ var Home;
         init();
     })(DefaultSecurityPermissions = Home.DefaultSecurityPermissions || (Home.DefaultSecurityPermissions = {}));
 })(Home || (Home = {}));
+//# sourceMappingURL=DefaultSecurityPermissions.js.map

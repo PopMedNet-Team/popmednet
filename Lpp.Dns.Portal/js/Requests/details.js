@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../_rootlayout.ts" />
 var Requests;
 (function (Requests) {
     var Details;
@@ -30,9 +31,11 @@ var Requests;
                 _this.ReadOnly = ko.observable(false);
                 _this.VisualTerms = visualTerms || [];
                 _this.SaveRequestID = ko.observable("");
+                //Lists
                 _this.RequestType = requestType;
                 _this.RequesterCenterList = requesterCenterList;
                 _this.WorkPlanTypeList = workPlanTypeList;
+                //remove RALs that have been deleted
                 _this.ReportAggregationLevelList = reportAggregationLevelList.filter(function (ral) { return ((ral.DeletedOn == undefined) || (ral.DeletedOn == null)); });
                 _this.Priority_Display = ko.computed(function () {
                     var pair = ko.utils.arrayFirst(Dns.Enums.PrioritiesTranslation, function (i) { return i.value == self.Request.Priority(); });
@@ -99,6 +102,7 @@ var Requests;
                 _this.ActivityProjectName = ko.observable();
                 _this.RefreshBudgetActivities = function () {
                     if (self.Request.ActivityID()) {
+                        //determine what the current budget activity is
                         var findActivity = function (id) {
                             if (id == null)
                                 return null;
@@ -125,17 +129,20 @@ var Requests;
                         var currentBudgetActivity = findActivity(self.Request.ActivityID());
                         if (currentBudgetActivity != null) {
                             if (currentBudgetActivity.TaskLevel == 1) {
+                                //task order
                                 self.TaskOrderName(currentBudgetActivity.Name);
                                 self.ActivityName('');
                                 self.ActivityProjectName('');
                             }
                             else if (currentBudgetActivity.TaskLevel == 2) {
+                                //activity
                                 var taskOrder = findActivity(currentBudgetActivity.ParentActivityID);
                                 self.TaskOrderName(taskOrder.Name);
                                 self.ActivityName(currentBudgetActivity.Name);
                                 self.ActivityProjectName('');
                             }
                             else {
+                                //activity project
                                 self.ActivityProjectName(currentBudgetActivity.Name);
                                 currentBudgetActivity = findActivity(currentBudgetActivity.ParentActivityID);
                                 self.ActivityName(currentBudgetActivity.Name);
@@ -195,6 +202,7 @@ var Requests;
                         }
                     });
                 });
+                ////may need edits to not hide rejected?
                 self.IncompleteRoutings = ko.computed(function () {
                     return ko.utils.arrayFilter(self.VirtualRoutings(), function (routing) {
                         return routing.Status != Dns.Enums.RoutingStatus.Completed &&
@@ -215,7 +223,12 @@ var Requests;
                         }
                     });
                 });
+                self.AllRoutings = ko.pureComputed(function () {
+                    return $.Enumerable.From(self.VirtualRoutings()).OrderBy(function (x) { return x.Status; }).ThenBy(function (x) { return x.Name; }).ToArray();
+                });
+                //Workflow
                 _this.WorkflowActivity = new Dns.ViewModels.WorkflowActivityViewModel(workFlowActivity);
+                //Boolean to hide Edit Metadata button if activity is "Terminate Request"
                 _this.IsNotTerminatedRequest = ko.computed(function () {
                     if (self.WorkflowActivity.ID() == "cc2e0001-9b99-4c67-8ded-a3b600e1c696")
                         return false;
@@ -273,6 +286,7 @@ var Requests;
                 _this.onAddRequestUser = function () {
                     var action = null;
                     if (!self.Request.ID()) {
+                        //save the request in current state   
                         if (!_this.Validate())
                             return;
                         if (!_this.ValidateRequest())
@@ -303,9 +317,11 @@ var Requests;
                 var editidpermission = _this.HasPermission(Permissions.Project.EditRequestID);
                 _this.onEditWFRequestMetadata = function () {
                     if (!self.Validate()) {
+                        //trigger validation on the form before allowing edit of metadata
                         Global.Helpers.ShowErrorAlert('Validation Error', '<p class="alert alert-warning" role="alert">One or more validation errors were found in the current task editor, and need to be addressed before continuing Metadata edit.</p>');
                         return;
                     }
+                    //save current Priority and Due Date settings in order to monitor changes after metadata has been edited
                     var oldRequestPriority = self.Request.Priority();
                     var oldRequestDueDate = self.Request.DueDate();
                     Global.Helpers.ShowDialog("Edit Request Metadata", "/workflow/workflowrequests/editwfrequestmetadatadialog", [], 700, 700, { DetailsViewModel: self, AllowEditRequestID: editidpermission, NewRequest: false, OldRequestPriority: oldRequestPriority, OldRequestDueDate: oldRequestDueDate })
@@ -320,6 +336,7 @@ var Requests;
                 }
                 _this.onCopy = function () {
                     Dns.WebApi.Requests.CopyRequest(self.Request.ID()).done(function (reqID) {
+                        //load new request page using the new request ID
                         var q = '//' + window.location.host + '/requests/details?ID=' + reqID[0];
                         window.location.assign(q);
                     }).fail(function (ex) {
@@ -329,6 +346,7 @@ var Requests;
                     self.RoutingsChanged.notifySubscribers(item);
                 };
                 _this.NotifyReloadRoutes = function () {
+                    //notify subscribers that the routes have changed and should be reloaded
                     self.ReloadRoutingsRequired.notifySubscribers();
                 };
                 _this.onRequestUserRowSelected = function (e) {
@@ -397,6 +415,20 @@ var Requests;
                     tl.append(ta);
                     $('#tabs').append(tl);
                 };
+                self.onToggleCompleteRoutes = ko.pureComputed({
+                    read: function () {
+                        return self.CompletedRoutings().length > 0 && self.SelectedCompleteResponses().length === self.CompletedRoutings().length;
+                    },
+                    write: function (value) {
+                        if (value) {
+                            var allID = ko.utils.arrayMap(self.CompletedRoutings(), function (i) { return i.ID; });
+                            self.SelectedCompleteResponses(allID);
+                        }
+                        else {
+                            self.SelectedCompleteResponses([]);
+                        }
+                    }
+                });
                 self.onViewAggregatedResults = function () {
                     setupResponseTabView(Dns.Enums.TaskItemTypes.AggregateResponse);
                 };
@@ -437,6 +469,7 @@ var Requests;
                 }).done(function (results) {
                     var result = results[0];
                     if (result.Uri) {
+                        //// Need to Go back to API cause results dont return back FULL DTO info
                         $.when(Dns.WebApi.Requests.Get(result.Entity.ID), Dns.WebApi.Tasks.ByRequestID(result.Entity.ID))
                             .done(function (res, tasks) {
                             self.Request.update(res[0]);
@@ -451,6 +484,7 @@ var Requests;
                         });
                     }
                     else {
+                        //Update the request etc. here 
                         self.Request.ID(result.Entity.ID);
                         self.Request.Timestamp(result.Entity.Timestamp);
                         Global.Helpers.HistoryReplaceState(self.Request.Name(), '/requests/details?ID=' + self.Request.ID());
@@ -497,6 +531,7 @@ var Requests;
                     return deferred.reject();
                 if (!this.SaveRequest(false))
                     return deferred.reject();
+                //Post the request as is to the server
                 return this.PostSave(showMessage);
             };
             RequestOverviewViewModel.prototype.Cancel = function () {
@@ -521,6 +556,7 @@ var Requests;
                     if (!this.SaveFunctions[i](this.Request))
                         return false;
                 }
+                //Do whatever other common save stuff happens here.
                 return true;
             };
             RequestOverviewViewModel.prototype.SaveFormRequest = function (submit) {
@@ -528,15 +564,20 @@ var Requests;
                     if (!this.SaveFormFunctions[i](this.SaveFormDTO))
                         return false;
                 }
+                //Do whatever other common save stuff happens here.
                 return true;
             };
             RequestOverviewViewModel.prototype.PostSave = function (showMessage) {
                 var deferred = $.Deferred();
                 var request = this.Request.toData();
+                //Post it as a save
                 Dns.WebApi.Requests.InsertOrUpdate([request]).done(function (results) {
                     Details.rovm.Request.ID(results[0].ID);
                     Details.rovm.Request.Timestamp(results[0].Timestamp);
+                    //Update the history
                     window.history.replaceState(null, window.document.title, "/requests/details?ID=" + results[0].ID);
+                    //Save the datamarts here
+                    //Save anything else here if you want.
                     if (showMessage)
                         Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>").done(function () {
                             deferred.resolve(true);
@@ -590,13 +631,17 @@ var Requests;
                 Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata,
                 Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable
             ];
-            $.when(Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListWorkPlanTypes(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListReportAggregationLevels(null, "ID,Name,DeletedOn", "Name"), GetVisualTerms()).done(function (requesterCenterList, workPlanTypeList, reportAggregationLevelList, visualTerms) {
+            $.when(Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListWorkPlanTypes(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListReportAggregationLevels(null, "ID,Name,DeletedOn", "Name"), 
+            //Dns.WebApi.Projects.GetFieldOptions(pid),
+            GetVisualTerms()).done(function (requesterCenterList, workPlanTypeList, reportAggregationLevelList, visualTerms) {
                 if (!id) {
+                    //Get the starting workflow activity
                     requestTypeID = Global.GetQueryParam("requestTypeID");
                     var projectID = Global.GetQueryParam("ProjectID");
                     var templateID = Global.GetQueryParam("templateID");
                     var parentRequestID = Global.GetQueryParam("ParentRequestID");
                     var userID = Global.GetQueryParam("UserID");
+                    //This is new, we need to get extensive information about the workflow, request type, etc.
                     $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.RequestTypes.Get(requestTypeID), Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID), templateID == null ? null : Dns.WebApi.Templates.Get(templateID), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse]), Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID)).done(function (parentRequests, requestTypes, workflowActivities, templates, fieldOptions, projPermissions, activityTree) {
                         if (parentRequests.length != 0) {
                             parentRequest = new Dns.ViewModels.RequestViewModel(parentRequests[0]);
@@ -630,6 +675,7 @@ var Requests;
                     });
                 }
                 else {
+                    //This is an existing request, need to look for the task and workflowactivity id and display accordingly.
                     $.when(Dns.WebApi.Requests.Get(id), Dns.WebApi.Tasks.ByRequestID(id)).done(function (requests, tasks) {
                         request = new Dns.ViewModels.RequestViewModel(requests[0]);
                         var projectID = request.ProjectID();
@@ -659,6 +705,7 @@ var Requests;
         Details.init = init;
         function bind(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, screenPermissions, visualTerms, responseGroups, canViewResponses) {
             $(function () {
+                //Load the activity into the task panel.
                 var activity = ko.utils.arrayFirst(WorkflowActivityList, function (item) {
                     return item.WorkflowID.toLowerCase() == request.WorkflowID().toLowerCase() && item.ID.toLowerCase() == workFlowActivity.ID.toLowerCase();
                 });
@@ -675,7 +722,9 @@ var Requests;
                 var bindingControl = $("#ContentWrapper");
                 Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewResponses, currentTask);
                 var taskID = Global.GetQueryParam("TaskID");
+                //If new, or TaskID passed, set the tab to the Task tab
                 if (workFlowActivity.End) {
+                    //$("#tabs #aTask").remove();
                     $('#tabs #aDocuments').remove();
                 }
                 else if (!request.ID() || taskID) {
@@ -688,23 +737,30 @@ var Requests;
                 var viewDocuments = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments.toLowerCase(); }) != null;
                 var assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.Request.AssignRequestLevelNotifications.toLowerCase(); }) != null;
                 var viewTrackingTable = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase(); }) != null;
+                // Load the view of the criteria only if #viewQueryComposer element is present
                 if (viewOverview && $('#viewQueryComposer').length) {
                     Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(JSON.parse(request.Query()), visualTerms, $('#overview-queryview'));
                 }
+                //Notifications
                 if (assignRequestNotifications) {
                     Controls.WFNotifications.List.init($('#WFNotifications'), screenPermissions, Details.rovm.Request.ID(), request.CurrentWorkFlowActivity(), request.CurrentWorkFlowActivityID());
                 }
+                //history
                 Controls.WFHistory.List.init(request.ID() || Constants.GuidEmpty);
                 Controls.WFHistory.List.HistoryItemsChanged.subscribe(function (hasHistory) { Details.rovm.HasHistory(hasHistory); });
+                //init activity specific comments
                 var activityCommentsVM = viewComments ? Controls.WFComments.List.init($('#Comments'), screenPermissions, Details.rovm.Request.ID(), request.CurrentWorkFlowActivity(), request.CurrentWorkFlowActivityID()) : null;
+                //init all comments for request; user needs to have permission to view the overview
                 var overallCommentsVM = (viewOverview) ? Controls.WFComments.List.init($('#OverallComments'), screenPermissions, Details.rovm.Request.ID(), null, null) : null;
                 if (viewComments) {
                     activityCommentsVM.OnNewCommentAdded.subscribe(function (newComments) {
+                        //there will never be document references for new comments from the comment control.
                         activityCommentsVM.AddCommentToDataSource(newComments, null);
                     });
                 }
                 if (overallCommentsVM) {
                     overallCommentsVM.OnNewCommentAdded.subscribe(function (newComments) {
+                        //there will never be document references for new comments from the comment control.
                         overallCommentsVM.AddCommentToDataSource(newComments, null);
                     });
                 }
@@ -724,11 +780,14 @@ var Requests;
                 }
                 if (viewDocuments) {
                     var activityDocumentsVM = null;
+                    //task specific documents                
                     if (currentTask != null) {
                         activityDocumentsVM = Controls.WFDocuments.List.init(currentTask, tasks.map(function (m) { return m.ID; }), $('#TaskDocuments'), screenPermissions);
                         Details.rovm.SetTaskDocumentsViewModel(activityDocumentsVM);
                         activityDocumentsVM.NewDocumentUploaded.subscribe(function (newDocument) {
+                            //get comments for the document
                             Dns.WebApi.Comments.ByDocumentID(newDocument.ID).done(function (comments) {
+                                //create the document references
                                 var documentReferences = ko.utils.arrayMap(comments, function (c) {
                                     return {
                                         CommentID: c.ID,
@@ -738,6 +797,7 @@ var Requests;
                                         RevisionSetID: newDocument.RevisionSetID
                                     };
                                 });
+                                //add the new document to the comment grids.
                                 if (viewOverview) {
                                     overallCommentsVM.AddCommentToDataSource(comments, documentReferences);
                                 }
@@ -752,10 +812,13 @@ var Requests;
                         });
                     }
                     var overallDocumentsVM = null;
+                    //non-task specific documents (request documents)
                     if (viewOverview) {
                         overallDocumentsVM = Controls.WFDocuments.List.initForRequest(request.ID(), $('#OverviewDocuments'), screenPermissions);
                         overallDocumentsVM.NewDocumentUploaded.subscribe(function (newDocument) {
+                            //get comments for the document
                             Dns.WebApi.Comments.ByDocumentID(newDocument.ID).done(function (comments) {
+                                //create the document references
                                 var documentReferences = ko.utils.arrayMap(comments, function (c) {
                                     return {
                                         CommentID: c.ID,
@@ -765,6 +828,7 @@ var Requests;
                                         RevisionSetID: newDocument.RevisionSetID
                                     };
                                 });
+                                //refresh the comment grids
                                 if (viewOverview) {
                                     overallCommentsVM.AddCommentToDataSource(comments, documentReferences);
                                 }
@@ -778,15 +842,23 @@ var Requests;
                             });
                         });
                     }
-                }
+                } //end view documents permission
                 if (viewTask && Controls.WFTrackingTable && Controls.WFTrackingTable.Display) {
                     Controls.WFTrackingTable.Display.init(request.ID(), screenPermissions);
                 }
+                //Load other tabs here.
+                //Use the workflow to use jquery load to load the partial for the task view as required
+                //If new request, open Edit Request Metadata Dialog automatically
                 var alloweditrequestpermission = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.Project.EditRequestID.toLowerCase(); }) != null;
                 ;
                 if (request.ID() == null) {
                     Global.Helpers.ShowDialog("Edit Request Metadata", "/workflow/workflowrequests/editwfrequestmetadatadialog", [], 700, 700, { DetailsViewModel: Details.rovm, AllowEditRequestID: alloweditrequestpermission || false, NewRequest: true })
                         .done(function (result) {
+                        //if (Plugins.Requests.QueryBuilder.Edit != undefined) {
+                        //    Plugins.Requests.QueryBuilder.Edit.vm.Priority(rovm.Request.Priority());
+                        //    Plugins.Requests.QueryBuilder.Edit.vm.DueDate(rovm.Request.DueDate());
+                        //}
+                        //if a template was specified need to refresh the datamarts available
                         if (Plugins.Requests.QueryBuilder.MDQ != undefined && typeof Plugins.Requests.QueryBuilder.MDQ.vm !== "undefined") {
                             Plugins.Requests.QueryBuilder.MDQ.vm.GetCompatibleDataMarts();
                         }
@@ -810,6 +882,7 @@ var Requests;
             return RequestDataMartViewModel;
         }(Dns.ViewModels.RequestDataMartViewModel));
         Details.RequestDataMartViewModel = RequestDataMartViewModel;
+        /** Shows a dialog that allows the user to enter a comment. The comment entered will be returned as the result. */
         function PromptForComment() {
             return Global.Helpers.ShowDialog('Enter a Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null).promise();
         }
@@ -865,3 +938,4 @@ var Requests;
         Details.VirtualRoutingViewModel = VirtualRoutingViewModel;
     })(Details = Requests.Details || (Requests.Details = {}));
 })(Requests || (Requests = {}));
+//# sourceMappingURL=details.js.map

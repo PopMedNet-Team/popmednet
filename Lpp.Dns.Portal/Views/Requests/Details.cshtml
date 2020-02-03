@@ -179,7 +179,7 @@
 
 
                     <div class="row">
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-4 form-group" data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')">
                             <label for="Header_ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">* </em>: <img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" /></label>
                         <span data-bind="text: ReportAggregationLevel_Display" style="white-space:pre;"></span>
                         </div>
@@ -187,7 +187,7 @@
                             <label for="Header_WorkplanTypeID">Workplan Type<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">* </em>: </label>
                             <span data-bind="text: Request.WorkplanType" style="white-space:pre;"></span>
                         </div>
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-4 form-group" data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')">
                             <label for="Header_AdditionalInstructions">Additional Instructions: </label>
                             <span data-bind="text: Request.AdditionalInstructions()" style="white-space: pre-wrap;"></span>
                         </div>
@@ -231,32 +231,23 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <td><i class="glyphicon glyphicon-ok"></i></td>
+                                <td>
+                                    <input type="checkbox" title="Select All/None" data-bind="checked:onToggleCompleteRoutes, indeterminateValue:$root.SelectedCompleteResponses().length > 0 && $root.SelectedCompleteResponses().length < $root.CompletedRoutings().length" />
+                                </td>
                                 <td>DataMart</td>
                                 <td>Status</td>
                                 <td>Message</td>
                                 <td>History</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- ko foreach: IncompleteRoutings-->
+                        <tbody data-bind="foreach: AllRoutings">
                             <tr>
-                                <td></td>
-                                <td><a href="#" data-bind="text: Name, href: '/datamarts/details?ID=' + DataMartID"></a></td>
-                                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
-                                <td data-bind="html: Messages">
-                                <td><a data-bind="click:$root.onShowRoutingHistory">[History]</a></td>
-                            </tr>
-                            <!-- /ko -->
-                            <!-- ko foreach: CompletedRoutings -->
-                            <tr>
-                                <td><input type="checkbox" data-bind="value:ID, checked:$root.SelectedCompleteResponses, visible:$root.CanViewResponses" /></td>
+                                <td><input type="checkbox" data-bind="value:ID, checked:$root.SelectedCompleteResponses, visible:$root.CanViewResponses && Status === Dns.Enums.RoutingStatus.Completed" /></td>
                                 <td><a href="#" data-bind="text: Name, href: '/datamarts/details?ID=' + DataMartID, visible:IsGroup == false"></a><a href="#" data-bind="text: Name, visible:IsGroup"></a></td>
                                 <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
                                 <td data-bind="html: Messages">
                                 <td><a data-bind="hidden:IsGroup, click: $root.onShowRoutingHistory">[History]</a></td>
                             </tr>
-                            <!-- /ko -->
                         </tbody>
                     </table>
                     <nav style="margin:15px 0px;display:none;" data-bind="visible:$root.CanViewResponses">

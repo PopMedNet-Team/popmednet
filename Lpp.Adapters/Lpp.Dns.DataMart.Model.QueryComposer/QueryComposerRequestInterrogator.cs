@@ -153,5 +153,34 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             return ranges;
         }
 
+        public List<string> ParagraphEncounterTypes(DTO.QueryComposer.QueryComposerCriteriaDTO paragraph)
+        {
+            var terms = paragraph.Terms.Where(t => t.Type == ModelTermsFactory.SettingID).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.SettingID)));
+
+            List<string> values = new List<string>();
+            if (terms != null || terms.Any())
+            {
+                foreach (var term in terms)
+                {
+                    string value = term.GetStringValue("Setting");
+                    DTO.Enums.Settings enumValue;
+                    if (Enum.TryParse<DTO.Enums.Settings>(value, out enumValue))
+                    {
+                        value = enumValue.ToString("G");
+                    }
+
+                    if (enumValue == DTO.Enums.Settings.AN)
+                    {
+                        values.Add("AN");
+                    }
+                    else
+                    {
+                        values.Add(value);
+                    }
+                }
+            }
+            return values.Distinct().ToList();
+        }
+
     }
 }

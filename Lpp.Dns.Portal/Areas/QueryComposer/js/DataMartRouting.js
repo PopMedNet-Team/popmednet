@@ -24,6 +24,7 @@ var Plugins;
                         self.toRequestDataMartDTO = function () {
                             var route = null;
                             if (self._existingRequestDataMart != null) {
+                                //do a deep copy clone of the existing routing information;
                                 route = jQuery.extend(true, {}, self._existingRequestDataMart);
                             }
                             else {
@@ -60,12 +61,15 @@ var Plugins;
                                 RequestID: Global.GetQueryParam("ID")
                             }).done(function (dataMarts) {
                                 var routes = [];
-                                for (var di = 0; di < dataMarts.length; di++) {
+                                var _loop_1 = function (di) {
                                     var dm = dataMarts[di];
                                     dm.Priority = self.DefaultPriority();
                                     dm.DueDate = self.DefaultDueDate();
                                     var existingRoute = ko.utils.arrayFirst(self.ExistingRequestDataMarts, function (r) { return r.DataMartID == dm.ID; });
                                     routes.push(new Plugins.Requests.QueryBuilder.DataMartRouting.Routings(dm, existingRoute));
+                                };
+                                for (var di = 0; di < dataMarts.length; di++) {
+                                    _loop_1(di);
                                 }
                                 self.DataMarts(routes);
                             });
@@ -85,19 +89,20 @@ var Plugins;
                             return dms;
                         };
                         _this.DataMartsBulkEdit = function () {
-                            Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: self.DefaultPriority(), defaultDueDate: new Date(self.DefaultDueDate().getTime()) })
+                            var defaultDueDate = self.DefaultDueDate() != null ? new Date(self.DefaultDueDate().getTime()) : null;
+                            Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: self.DefaultPriority(), defaultDueDate: defaultDueDate })
                                 .done(function (result) {
                                 if (result != null) {
-                                    var priority = null;
+                                    var priority_1 = null;
                                     if (result.UpdatePriority) {
-                                        priority = result.PriorityValue;
+                                        priority_1 = result.PriorityValue;
                                     }
                                     if (result.UpdatePriority || result.UpdateDueDate) {
                                         ko.utils.arrayFilter(self.DataMarts(), function (route) {
                                             return self.SelectedDataMartIDs.indexOf(route.DataMartID) > -1;
                                         }).forEach(function (route) {
-                                            if (priority != null)
-                                                route.Priority(priority);
+                                            if (priority_1 != null)
+                                                route.Priority(priority_1);
                                             if (result.UpdateDueDate)
                                                 route.DueDate(new Date(result.stringDate));
                                         });
@@ -134,12 +139,13 @@ var Plugins;
                 }(Global.PageViewModel));
                 DataMartRouting.ViewModel = ViewModel;
                 function init(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
-                    var bindingControl = $('#DataMartsControl');
+                    //let bindingControl = $('#DataMartsControl');
                     DataMartRouting.vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-                    ko.applyBindings(DataMartRouting.vm, bindingControl[0]);
+                    ko.applyBindings(DataMartRouting.vm, $('#DataMartsControl')[0]);
                 }
                 DataMartRouting.init = init;
             })(DataMartRouting = QueryBuilder.DataMartRouting || (QueryBuilder.DataMartRouting = {}));
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
+//# sourceMappingURL=DataMartRouting.js.map

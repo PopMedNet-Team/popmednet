@@ -29,7 +29,7 @@
   </PropertyGroup>
   
   <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
-  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -204,8 +204,6 @@
       </PluginFiles>
     </ItemGroup>
     
-    <Copy SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="$(SolutionDir)Lpp.Adapters\Lpp.Wbd.AdapterService\$(OutputPath)Plugins" />
-    
   </Target>
   <Target Name="CreateVersionedZip" AfterTargets="AfterBuild">
     <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(OutputPath)$(AssemblyName).dll">
@@ -217,15 +215,14 @@
         <InProject>false</InProject>
       </dlls>
     </ItemGroup>
-    <SignFile SigningTarget="%(dlls.Identity)" CertificateThumbprint="E12D1B344047B37CF741F24EE9914A6F4D180EE3" TimestampUrl="http://timestamp.verisign.com/scripts/timestamp.dll" Condition="'$(Configuration)' != 'Debug'" />
     <PropertyGroup>
       <PackageIdentifier>Lpp.Dns.DataMart.Model.QueryComposer</PackageIdentifier>
       <PackageFileName>$(PackageIdentifier).%(Info.FileVersion).zip</PackageFileName>
-      <PackageDeployPath Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Dev' Or '$(Configuration)' == 'Release'">$(SolutionDir)Lpp.Dns.Api\App_Data\</PackageDeployPath>
+      <PackageDeployPath Condition=" '$(Configuration)' == 'Debug'">$(SolutionDir)Lpp.Dns.Api\App_Data\</PackageDeployPath>
       
       <PackageDeployPath Condition=" '$(Configuration)' == 'Adapters'">C:\Checkouts\Plugins\</PackageDeployPath>
     </PropertyGroup>
-    <MSBuild.ExtensionPack.Compression.Zip Condition=" ('$(PackageDeployPath)' != '' And $(PackageDeployPath) != '*Undefined*') " TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
+    <MSBuild.ExtensionPack.Compression.Zip Condition="'$(Configuration)' == 'Debug' " TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
   </Target>
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

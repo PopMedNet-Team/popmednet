@@ -70,6 +70,10 @@
         public OverrideableRoutings: KnockoutComputed<Dns.Interfaces.IRequestDataMartDTO[]>;
         public CanOverrideRoutingStatus: KnockoutComputed<boolean>;
 
+        public onIncompleteRoutingsDataBound: (e: any) => void;
+        public IncompleteRoutingGridConfig: any;
+        private incompleteRoutesSelectAll: KnockoutComputed<boolean>;
+
 
         constructor(modelData: IRoutingsViewModelData, overrideableRoutingIDs: any[], request: Dns.Interfaces.IRequestDTO) {
             var self = this;
@@ -103,6 +107,44 @@
             self.CanOverrideRoutingStatus = ko.computed(() => self.OverrideableRoutings().length > 0);
 
             //this.AggregationModes = [{ ID: 'proj', Name: 'Projected View' }, { ID: 'dont', Name: 'Individual View' }, { ID: 'do', Name: 'Aggregate View' }]; 
+
+            self.incompleteRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.IncompleteRoutings().length > 0 && self.SelectedRoutings().length === self.IncompleteRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.IncompleteRoutings(), (i) => { return i.ID; });
+                        self.SelectedRoutings(allID);
+                    } else {
+                        self.SelectedRoutings([]);
+                    }
+                }
+            });
+            
+
+            self.onIncompleteRoutingsDataBound = (e) => {
+                let header = e.sender.thead[0];
+                ko.cleanNode(header);
+                ko.applyBindings(self, header);
+            };
+
+            self.IncompleteRoutingGridConfig = {
+                data: self.Routings,
+                rowTemplate: 'routings-row-template',
+                altRowTemplate: 'routings-altrow-template',
+                useKOTemplates: true,
+                dataBound: self.onIncompleteRoutingsDataBound,
+                columns: [
+                    { title: ' ', width: 35, headerTemplate: '<input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedRoutings().length > 0 && SelectedRoutings().length < IncompleteRoutings().length" />' },
+                    { field: 'DataMartName', title: 'DataMart' },
+                    { field: 'Status', title: 'Status' },
+                    { field: 'Priority', title: 'Priority' },
+                    { field: 'DueDate', title: 'Due Date' },
+                    { field: 'Message', title: 'Message' },
+                    { title: ' ', width: 80 }
+                ]
+            };
         }
         
         public onAddDataMart() {
@@ -116,22 +158,47 @@
         }
 
         public onEditRoutingStatus() {
-            Global.Helpers.ShowDialog("Edit Routing Status", "/dialogs/editroutingstatus", ["Close"], 750, 310, { IncompleteDataMartRoutings: this.OverrideableRoutings()})
-                .done((result: any) => {
+            
+            let invalidRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+            let validRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+
+            ko.utils.arrayForEach(this.SelectedRoutings(), (id) => {
+                let route = ko.utils.arrayFirst(this.IncompleteRoutings(), (r) => { return r.ID == id; });
+                if (route) {
+                    if (ko.utils.arrayFirst(this.OverrideableRoutingIDs, (or) => route.ID == or.ID) == null) {
+                        invalidRoutes.push(route);
+                    } else {
+                        validRoutes.push(route);
+                    }
+                }
+            });
+
+            if (invalidRoutes.length > 0) {
+                //show warning message that invalid routes have been selected.
+                let msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
+                msg = msg + invalidRoutes.map(ir => ir.DataMart).join();
+                msg = msg + "</p></div>";
+                Global.Helpers.ShowErrorAlert("Invalid DataMarts Selected", msg);
+                return;
+            }
+
+            Global.Helpers.ShowDialog("Edit Routing Status", "/dialogs/editroutingstatus", ["Close"], 950, 475, { IncompleteDataMartRoutings: validRoutes })
+                .done((result: Dns.Interfaces.IUpdateRequestDataMartStatusDTO[]) => {
+
                     for (var dm in result) { 
-                        if (result[dm].NewStatus == null) {
+                        if (result[dm].NewStatus == null || result[dm].NewStatus <= 0) {
                             Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.");
                             return;
                         } 
                     }
-                    var dataMarts = <Dns.Interfaces.IUpdateRequestDataMartStatusDTO[]> result;
-
+                    
                     if (dm == undefined) { return; } else {
-                        Dns.WebApi.Requests.UpdateRequestDataMarts(dataMarts).done(() => {
+                        Dns.WebApi.Requests.UpdateRequestDataMarts(result).done(() => {
                             window.location.reload();
                         });
                     }
                 });
+
         }
 
         public onBulkEdit() {

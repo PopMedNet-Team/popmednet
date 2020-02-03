@@ -19,7 +19,7 @@ namespace Theme.Default {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Theme {
@@ -89,10 +89,7 @@ namespace Theme.Default {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;row&quot;&gt;
-        ///                &lt;div class=&quot;col-sm-12 form-group&quot;&gt;&lt;b&gt;Mini-Sentinel Operations Center Contact:&lt;/b&gt;&amp;nbsp;&lt;a href=&quot;mailto:support@popmednet.org&quot;&gt;support@popmednet.org&lt;/a&gt;&lt;/div&gt;                
-        ///            &lt;/div&gt;
-        ///            &lt;div class=&quot;row&quot;&gt;
-        ///                &lt;div class=&quot;col-sm-12 form-group&quot;&gt;&lt;b&gt;Lincoln Peak Partners Contact:&lt;/b&gt;&amp;nbsp;&lt;a href=&quot;mailto:support@lincolnpeak.com&quot;&gt;support@lincolnpeak.com&lt;/a&gt;&lt;/div&gt;
+        ///                &lt;div class=&quot;col-sm-12 form-group&quot;&gt;&lt;b&gt; Network Support Contact:&lt;/b&gt;&amp;nbsp;&lt;a target=&quot;_blank&quot; href=&quot;https://popmednet.atlassian.net/servicedesk/customer/portal/1/group/7&quot;&gt;PopMedNet Support Service Desk&lt;/a&gt;&lt;/div&gt;                
         ///            &lt;/div&gt;.
         /// </summary>
         internal static string Resources {

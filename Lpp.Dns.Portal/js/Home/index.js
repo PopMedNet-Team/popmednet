@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -28,6 +29,7 @@ var Home;
                 }
                 _this.SelectedRequests = ko.observableArray();
                 _this.EnableRequestBulkEdit = ko.computed(function () {
+                    //at least one row selected and all the rows are allowed to edit metadata
                     return self.SelectedRequests().length > 0 && ko.utils.arrayFirst(self.SelectedRequests(), function (rq) { return rq.CanEditMetadata == false; }) == null;
                 }, _this, { pure: true });
                 _this.InvalidSelectedRequests = ko.computed(function () { return ko.utils.arrayFilter(self.SelectedRequests(), function (rq) { return rq.CanEditMetadata == false; }); }, _this, { pure: true });
@@ -43,7 +45,7 @@ var Home;
                     pageSize: 100,
                     transport: {
                         read: {
-                            url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID),
+                            url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID /*+ "&$top=5"*/),
                         }
                     },
                     schema: {
@@ -110,7 +112,7 @@ var Home;
                     serverFiltering: true,
                     transport: {
                         read: {
-                            url: Global.Helpers.GetServiceUrl("/networkmessages/list/"),
+                            url: Global.Helpers.GetServiceUrl("/networkmessages/list/" /*lastdays?days=15"*/),
                         }
                     },
                     schema: {
@@ -197,12 +199,15 @@ var Home;
                         return;
                     var url;
                     if (!result.TemplateID && !result.WorkflowID) {
+                        // Legacy Non-workflow request types
                         url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + project.ID();
                     }
                     else if (!result.TemplateID) {
+                        // Workflow based non-QueryComposer request types
                         url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + project.ID() + "&WorkflowID=" + result.WorkflowID;
                     }
                     else {
+                        // QueryComposer request types
                         url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + project.ID() + "&templateID=" + result.TemplateID + "&WorkflowID=" + result.WorkflowID;
                     }
                     window.location.href = url;
@@ -257,7 +262,9 @@ var Home;
                     columnMenuInit: function (e) {
                         var menu = e.container.find(".k-menu").data("kendoMenu");
                         menu.bind("close", function (e) {
+                            //update the local grid settings
                             vm.gDataMartsRoutesSetting = Global.Helpers.GetGridSettings(grid.data('kendoGrid'));
+                            //save the grid settings
                             Users.SetSetting("Home.Index.gDataMartsRoutes.User:" + User.ID, _this.gDataMartsRoutesSetting);
                         });
                     },
@@ -422,3 +429,4 @@ var Home;
         init();
     })(Index = Home.Index || (Home.Index = {}));
 })(Home || (Home = {}));
+//# sourceMappingURL=index.js.map

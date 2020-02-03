@@ -45,6 +45,16 @@ namespace Lpp.Dns.DTO.Enums
         [EnumMember, Description("Non-Acute Institutional Stay")]
         IS = 6,
         /// <summary>
+        /// Observation Stay
+        /// </summary>
+        [EnumMember, Description("Observation Stay")]
+        OS = 11,
+        /// <summary>
+        /// Institutional Professional Consult
+        /// </summary>
+        [EnumMember, Description("Institutional Professional Consult")]
+        IC = 12,
+        /// <summary>
         /// Other Ambulatory Visit
         /// </summary>
         [EnumMember, Description("Other Ambulatory Visit")]

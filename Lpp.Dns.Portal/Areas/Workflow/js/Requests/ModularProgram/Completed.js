@@ -1,3 +1,4 @@
+/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -29,3 +30,4 @@ var Workflow;
         })(Completed = ModularProgram.Completed || (ModularProgram.Completed = {}));
     })(ModularProgram = Workflow.ModularProgram || (Workflow.ModularProgram = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=Completed.js.map

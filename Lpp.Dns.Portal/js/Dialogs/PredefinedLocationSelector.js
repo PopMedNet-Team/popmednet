@@ -1,3 +1,4 @@
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -64,6 +65,7 @@ var Dialog;
                     self.SelectedState('');
                     if (self.queryTimer > -1)
                         clearTimeout(self.queryTimer);
+                    //Set a timer that gets cancelled so that we can time it out.
                     self.queryTimer = setTimeout(function () {
                         var grid = $("#gResults").data("kendoGrid");
                         var lookup = self.Query();
@@ -132,3 +134,4 @@ var Dialog;
         init();
     })(PredefinedLocationSelector = Dialog.PredefinedLocationSelector || (Dialog.PredefinedLocationSelector = {}));
 })(Dialog || (Dialog = {}));
+//# sourceMappingURL=PredefinedLocationSelector.js.map

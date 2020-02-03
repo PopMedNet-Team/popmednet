@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../_rootlayout.ts" />
 var Tasks;
 (function (Tasks) {
     var Details;
@@ -92,3 +93,4 @@ var Tasks;
         init();
     })(Details = Tasks.Details || (Tasks.Details = {}));
 })(Tasks || (Tasks = {}));
+//# sourceMappingURL=details.js.map

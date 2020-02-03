@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Net;
 using System.IO;
 using log4net;
 using log4net.Appender;
-using log4net.Config;
 using log4net.Core;
-using Newtonsoft.Json;
+using System.Xml;
+
 namespace Lpp.Dns.DataMart.Client.Utils
 {
     public class EventLogFilterAppender : AppenderSkeleton
@@ -60,10 +58,24 @@ namespace Lpp.Dns.DataMart.Client.Utils
 
         public void SetLogLevel(string logLevel)
         {
-            log4net.Repository.Hierarchy.Hierarchy hierachy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
-            hierachy.Threshold = GetLevel(logLevel);
-            hierachy.RaiseConfigurationChanged(EventArgs.Empty);
-            //log4net.Config.BasicConfigurator.Configure();
+            log4net.Repository.ILoggerRepository[] repositories = log4net.LogManager.GetAllRepositories();
+
+            foreach (log4net.Repository.ILoggerRepository repository in repositories)
+            {
+                repository.Threshold = repository.LevelMap[logLevel.ToUpper()];
+                log4net.Repository.Hierarchy.Hierarchy hier = (log4net.Repository.Hierarchy.Hierarchy)repository;
+                log4net.Core.ILogger[] loggers = hier.GetCurrentLoggers();
+                foreach (log4net.Core.ILogger logger in loggers)
+                {
+                    ((log4net.Repository.Hierarchy.Logger)logger).Level = hier.LevelMap[logLevel.ToUpper()];
+                }
+
+                hier.Root.Level = GetLevel(logLevel);
+            }
+
+            log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.GetRepository();
+            log4net.Repository.Hierarchy.Logger rootLogger = h.Root;
+            rootLogger.Level = h.LevelMap[logLevel.ToUpper()];
         }
 
         private Level GetLevel(string logLevel)

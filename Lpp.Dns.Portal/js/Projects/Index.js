@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -71,3 +72,4 @@ var Projects;
         init();
     })(Index = Projects.Index || (Projects.Index = {}));
 })(Projects || (Projects = {}));
+//# sourceMappingURL=Index.js.map

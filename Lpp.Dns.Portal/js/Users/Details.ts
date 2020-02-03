@@ -164,7 +164,7 @@ module Users.Details {
             }));
 			
             //Lists
-			debugger;
+			
             this.OrganizationList = organizationList
 			this.OrganizationList.sort(
 				function(a,b)

@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -64,10 +65,12 @@ var Organization;
                 _this.SecurityGroups = ko.observableArray(securityGroups.map(function (sg) {
                     return new Dns.ViewModels.SecurityGroupViewModel(sg);
                 }));
+                //Permissions
                 _this.OrgAcls = ko.observableArray(orgAcls.map(function (a) {
                     return new Dns.ViewModels.AclOrganizationViewModel(a);
                 }));
                 _this.Security = new Security.Acl.AclEditViewModel(permissionList, securityGroupTree, _this.OrgAcls, [{ Field: "OrganizationID", Value: _this.Organization.ID() }], Dns.ViewModels.AclOrganizationViewModel);
+                //Events
                 _this.OrgEvents = ko.observableArray(orgEvents.map(function (e) {
                     return new Dns.ViewModels.OrganizationEventViewModel(e);
                 }));
@@ -259,3 +262,4 @@ var Organization;
         init();
     })(Details = Organization.Details || (Organization.Details = {}));
 })(Organization || (Organization = {}));
+//# sourceMappingURL=Details.js.map

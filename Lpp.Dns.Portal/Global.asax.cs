@@ -30,7 +30,8 @@ namespace Lpp.Dns.Portal.Root
         {
             base.BaseApplication_Start();
             DbConfiguration.SetConfiguration(new DatabaseConfiguration());
-            XmlConfigurator.Configure();
+            log4net.Config.XmlConfigurator.Configure(new System.IO.FileInfo(Server.MapPath("~/Web.config")));
+
             AreaRegistration.RegisterAllAreas();
 
 #if !DEBUG 

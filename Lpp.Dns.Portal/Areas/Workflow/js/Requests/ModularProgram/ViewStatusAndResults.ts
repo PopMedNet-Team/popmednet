@@ -142,6 +142,8 @@ module Workflow.ModularProgram.ViewStatusAndResults {
         public RoutingHistory: KnockoutObservableArray<IHistoryResponseData> = ko.observableArray([]);
         private onShowRoutingHistory: (item: VirtualRoutingViewModel) => void;
         private onShowIncompleteRoutingHistory: (item: Dns.Interfaces.IRequestDataMartDTO) => void;
+        private completedRoutesSelectAll: KnockoutComputed<boolean>;
+        private incompleteRoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], responses: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], responseSearchTerms: Dns.Interfaces.IRequestSearchTermDTO[], viewResponseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) {
             super(bindingControl, screenPermissions);
@@ -441,6 +443,33 @@ module Workflow.ModularProgram.ViewStatusAndResults {
                 this.UpdateRoutings(info);
 
             });
+
+            self.completedRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.CompletedRoutings().length > 0 && self.SelectedCompleteRoutings().length === self.CompletedRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.VirtualRoutings, (i) => { return i.ID; });
+                        self.SelectedCompleteRoutings(allID);
+                    } else {
+                        self.SelectedCompleteRoutings([]);
+                    }
+                }
+            });
+            self.incompleteRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.IncompleteRoutings().length > 0 && self.SelectedIncompleteRoutings().length === self.IncompleteRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.IncompleteRoutings(), (i) => { return i.ID; });
+                        self.SelectedIncompleteRoutings(allID);
+                    } else {
+                        self.SelectedIncompleteRoutings([]);
+                    }
+                }
+            }); 
         }
 
         public ApproveResponses() {
@@ -578,14 +607,14 @@ module Workflow.ModularProgram.ViewStatusAndResults {
         public OpenChildDetail(id: string) {
             var img = $('#img-' + id);
             var child = $('#response-' + id);
-            if (img.hasClass('k-plus')) {
-                img.removeClass('k-plus');
-                img.addClass('k-minus');
+            if (img.hasClass('k-i-plus-sm')) {
+                img.removeClass('k-i-plus-sm');
+                img.addClass('k-i-minus-sm');
                 child.show();
             }
             else {
-                img.addClass('k-plus');
-                img.removeClass('k-minus');
+                img.addClass('k-i-plus-sm');
+                img.removeClass('k-i-minus-sm');
                 child.hide();
             }
         }

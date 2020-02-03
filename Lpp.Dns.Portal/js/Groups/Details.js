@@ -1,3 +1,4 @@
+/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -17,6 +18,9 @@ var Groups;
                 _this.AllOrganizations = ko.observableArray(allOrganizations.map(function (item) {
                     return new Dns.ViewModels.OrganizationViewModel(item);
                 }));
+                //this.OrganizationGroups = ko.observableArray(organizationGroups.map((item) => {
+                //    return new Dns.ViewModels.OrganizationGroupViewModel(item);
+                //}));
                 _this.OrganizationGroups = ko.observableArray(ko.utils.arrayMap(organizationGroups, function (item) { return new Dns.ViewModels.OrganizationGroupViewModel(item); }));
                 _this.AddableOrganizationList = ko.computed(function () {
                     var results = self.AllOrganizations().filter(function (o) {
@@ -40,6 +44,7 @@ var Groups;
                     }
                 ], Dns.ViewModels.AclGroupViewModel);
                 _this.WatchTitle(_this.Group.Name, "Group: ");
+                //Events
                 _this.GroupEvents = ko.observableArray(events != null ? events.map(function (e) {
                     return new Dns.ViewModels.GroupEventViewModel(e);
                 }) : null);
@@ -74,8 +79,10 @@ var Groups;
                 if (!_super.prototype.Validate.call(this))
                     return;
                 Dns.WebApi.Groups.InsertOrUpdate([this.Group.toData()]).done(function (group) {
+                    //Update the values for the ID and timestamp as necessary.
                     _this.Group.ID(group[0].ID);
                     _this.Group.Timestamp(group[0].Timestamp);
+                    // Save everything else
                     var organizations = _this.OrganizationGroups().map(function (o) {
                         o.GroupID(_this.Group.ID());
                         return o.toData();
@@ -121,3 +128,4 @@ var Groups;
         init();
     })(Details = Groups.Details || (Groups.Details = {}));
 })(Groups || (Groups = {}));
+//# sourceMappingURL=Details.js.map

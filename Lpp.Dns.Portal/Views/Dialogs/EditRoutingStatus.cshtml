@@ -9,7 +9,6 @@
     <article>
         <table class="table table-stripped table-bordered table-hover">
             <colgroup>
-                <col style="width: 30px;" />
                 <col style="width: 170px;" />
                 <col style="width: 180px;" />
                 <col style="width: 180px;" />
@@ -17,7 +16,6 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td><a href="#" class="glyphicon glyphicon-ok" style="text-decoration: none; color: black;"></a></td>
                     <td>Name</td>
                     <td>Current Routing Status</td>
                     <td>New Routing Status</td>
@@ -26,23 +24,54 @@
             </thead>
             <tbody data-bind="foreach: RoutingsToChange">
                 <tr>
-                    <td><input type="checkbox" data-bind="value: 'true', checked:Selected " /></td>
                     <td data-bind="text: DataMartName"></td>
                     <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, OriginalStatus)"></td>
                     <td>
-                        <input data-bind=" kendoDropDownList: { enabled:Selected, value: NewStatus, data: $root.ChangeStatusList, dataTextField: 'Status', dataValueField: 'ID', optionLabel: { Status: '<not specified>', ID: '' }}">
+                        <input data-bind="kendoDropDownList: { value: NewStatus, data: $root.ChangeStatusList, dataTextField: 'Status', dataValueField: 'ID', optionLabel: { Status: '<not specified>', ID: '' }}" />
                     </td>
                     <td>
-                        <input class="form-control" data-bind="value: Message, enable:Selected">
+                        <input class="form-control" data-bind="value: Message" />
                     </td>
                 </tr>
             </tbody>
         </table>
-        <nav style="margin:15px 0px;">
+        <nav class="footer" >
             <button class="btn btn-default pull-right" data-bind="click: onCancel" style="margin-right:15px; width:100px;">Cancel</button>
-            <button class="btn btn-default pull-right" data-bind="click: onContinue" style="margin-right:15px; width:100px;">Continue</button>
+            <button class="btn btn-default pull-right" data-bind="click: onContinue, enable:canContinue" style="margin-right:15px; width:100px;">Continue</button>
+            <button class="btn btn-default pull-left" type="button" data-toggle="modal" data-target="#diaBulkChange" style="margin-left:15px;">Bulk Change</button>
         </nav>
     </article>
+
+
+    <div class="modal fade" id="diaBulkChange" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document" style="background-color:#fff;">
+            <div class="modal-header">
+                <h4 class="modal-title">Bulk Routing Status Change</h4>
+            </div>
+            <div class="modal-body">
+                <div style="margin:10px;">
+                    <p class="alert alert-info">Select the routing status and message to apply to the selected routes:</p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="#blkNewStatus">New Routing Status: </label>
+                            <input id="blkNewStatus" data-bind="kendoDropDownList:{value:bulkChangeStatus, data:ChangeStatusList, dataTextField:'Status', dataValueField:'ID', optionLabel:{ Status:'<not specified>', ID:''}}" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="#blkMessage" style="display:inline-block;">Message</label>
+                            <textarea id="blkMessage" rows="3" class="form-control" data-bind="value:bulkChangeMessage"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default pull-right" style="margin-right:15px;width:100px;" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-default pull-right" style="margin-right:15px;width:100px;" data-bind="click:onBulkChange, enable:allowBulkChange">Apply</button>
+            </div>
+        </div>
+    </div>
 </section>
 
 

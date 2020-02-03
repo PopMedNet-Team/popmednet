@@ -30,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.PLAIN = new System.Windows.Forms.RichTextBox();
             this.DATASET = new System.Windows.Forms.DataGridView();
             this.HTML = new System.Windows.Forms.WebBrowser();
@@ -37,20 +38,27 @@
             this.JSON = new System.Windows.Forms.DataGridView();
             this.XSLXML = new System.Windows.Forms.WebBrowser();
             this.FILELIST = new System.Windows.Forms.DataGridView();
-            this.ReulstFileName = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.bsDocumentList = new System.Windows.Forms.BindingSource(this.components);
             this.XML = new System.Windows.Forms.TreeView();
-            this.lblNoResults = new System.Windows.Forms.Label();
+            this.lblNoResults = new Lpp.Dns.DataMart.Client.Controls.TransparentLabel();
+            this.colDocumentSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Filename = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDocumentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MimeType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sizeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.JSON)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FILELIST)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsDocumentList)).BeginInit();
             this.SuspendLayout();
             // 
             // PLAIN
             // 
-            this.PLAIN.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PLAIN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PLAIN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PLAIN.Location = new System.Drawing.Point(0, 0);
             this.PLAIN.Name = "PLAIN";
+            this.PLAIN.ReadOnly = true;
             this.PLAIN.Size = new System.Drawing.Size(782, 333);
             this.PLAIN.TabIndex = 0;
             this.PLAIN.Text = "";
@@ -123,11 +131,17 @@
             // 
             // FILELIST
             // 
+            this.FILELIST.AutoGenerateColumns = false;
             this.FILELIST.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.FILELIST.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.FILELIST.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.FILELIST.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ReulstFileName});
+            this.colDocumentSelected,
+            this.Filename,
+            this.colDocumentID,
+            this.MimeType,
+            this.sizeDataGridViewTextBoxColumn});
+            this.FILELIST.DataSource = this.bsDocumentList;
             this.FILELIST.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FILELIST.Location = new System.Drawing.Point(0, 0);
             this.FILELIST.Name = "FILELIST";
@@ -140,14 +154,13 @@
             this.FILELIST.TabIndex = 52;
             this.FILELIST.Visible = false;
             // 
-            // ReulstFileName
+            // bsDocumentList
             // 
-            this.ReulstFileName.DataPropertyName = "FileName";
-            this.ReulstFileName.HeaderText = "File Name";
-            this.ReulstFileName.Name = "ReulstFileName";
+            this.bsDocumentList.DataSource = typeof(Lpp.Dns.DataMart.Model.Document);
             // 
             // XML
             // 
+            this.XML.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.XML.Dock = System.Windows.Forms.DockStyle.Fill;
             this.XML.Location = new System.Drawing.Point(0, 0);
             this.XML.MinimumSize = new System.Drawing.Size(20, 20);
@@ -161,19 +174,58 @@
             this.lblNoResults.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNoResults.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblNoResults.CausesValidation = false;
             this.lblNoResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNoResults.Location = new System.Drawing.Point(237, 72);
             this.lblNoResults.Name = "lblNoResults";
             this.lblNoResults.Size = new System.Drawing.Size(323, 20);
             this.lblNoResults.TabIndex = 54;
+            this.lblNoResults.TabStop = false;
             this.lblNoResults.Text = "No Results";
             this.lblNoResults.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblNoResults.Visible = false;
+            // 
+            // colDocumentSelected
+            // 
+            this.colDocumentSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colDocumentSelected.HeaderText = "Select";
+            this.colDocumentSelected.Name = "colDocumentSelected";
+            this.colDocumentSelected.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colDocumentSelected.Width = 55;
+            // 
+            // Filename
+            // 
+            this.Filename.DataPropertyName = "Filename";
+            this.Filename.HeaderText = "File Name";
+            this.Filename.Name = "Filename";
+            this.Filename.ReadOnly = true;
+            // 
+            // colDocumentID
+            // 
+            this.colDocumentID.DataPropertyName = "DocumentID";
+            this.colDocumentID.HeaderText = "Document ID";
+            this.colDocumentID.Name = "colDocumentID";
+            this.colDocumentID.ReadOnly = true;
+            // 
+            // MimeType
+            // 
+            this.MimeType.DataPropertyName = "MimeType";
+            this.MimeType.HeaderText = "File Type";
+            this.MimeType.Name = "MimeType";
+            this.MimeType.ReadOnly = true;
+            // 
+            // sizeDataGridViewTextBoxColumn
+            // 
+            this.sizeDataGridViewTextBoxColumn.DataPropertyName = "Size";
+            this.sizeDataGridViewTextBoxColumn.HeaderText = "Size";
+            this.sizeDataGridViewTextBoxColumn.Name = "sizeDataGridViewTextBoxColumn";
+            this.sizeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // ViewPanel
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.lblNoResults);
             this.Controls.Add(this.FILELIST);
+            this.Controls.Add(this.lblNoResults);
             this.Controls.Add(this.HTML);
             this.Controls.Add(this.URL);
             this.Controls.Add(this.JSON);
@@ -186,6 +238,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.JSON)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FILELIST)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsDocumentList)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -200,7 +253,13 @@
         private System.Windows.Forms.TreeView XML;
         private System.Windows.Forms.WebBrowser XSLXML;
         public System.Windows.Forms.DataGridView FILELIST;
-        private System.Windows.Forms.Label lblNoResults;
-        private System.Windows.Forms.DataGridViewLinkColumn ReulstFileName;
+        private System.Windows.Forms.BindingSource bsDocumentList;
+        private System.Windows.Forms.DataGridViewLinkColumn ResulstFileName;
+        protected TransparentLabel lblNoResults;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colDocumentSelected;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Filename;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDocumentID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MimeType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sizeDataGridViewTextBoxColumn;
     }
 }

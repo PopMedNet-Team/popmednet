@@ -126,13 +126,15 @@
                                     <li data-bind="visible: $root.IsTemplateEdit || $data.Allowed">
                                         <span data-bind="text: $data.Name"></span>
                                         <ul data-bind="foreach: $root.FilterTermsForCriteria(Terms)">
-                                            <li data-bind="visible: $root.IsTemplateEdit || $data.Allowed, text: $data.Name, click: function(data, event) { $root.AddTerm($root, $data, $parents[1], event); }" style="padding: 11px; width: 250px">
-                                                <div>
-                                                    <!--<span data-bind="text: $data.Name, click: function(data, event) { $root.AddTerm($root, $data, $parents[1], event); }"></span>-->
-                                                    <!--ko if: $root.IsTemplateEdit-->
-                                                    <input type="checkbox" data-bind="checked: $data.Allowed" style="float:right;" />
-                                                    <!--/ko-->
+                                            <li data-bind="visible: $root.IsTemplateEdit || $data.Allowed, " style="padding: 11px; width: 250px">
+                                                <div style="float:right;" data-bind="visible: $root.IsTemplateEdit">
+                                                    <input type="checkbox" data-bind="checked: $data.Allowed" />
                                                 </div>
+                                                <div style="width:200px;" data-bind="click: function(data, event) { $root.AddTerm($root, data, $parents[1], event); event.stopPropagation(); }">
+                                                    <span data-bind="text:$data.Name"></span>
+                                                </div>
+                                                    
+                                                
                                             </li>
                                         </ul>
                                     </li>
@@ -140,7 +142,7 @@
                                     <!--ko if: (Terms == null || Terms.length == 0) && TermID != null -->
                                     <li data-bind="visible: $root.IsTemplateEdit || $data.Allowed" style="padding: 11px;">
                                         <div>
-                                            <span data-bind="text: $data.Name, click: function($data, event){ $root.AddTerm($root, $data, $parent, event); }"></span>
+                                            <span data-bind="text: $data.Name, click: function(data, event){ $root.AddTerm($root, data, $parent, event); }"></span>
                                             <!--ko if: $root.IsTemplateEdit-->
                                             <input type="checkbox" data-bind="checked:$data.Allowed" style="float: right;" />
                                             <!--/ko-->

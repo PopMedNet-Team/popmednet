@@ -1,3 +1,4 @@
+/// <reference path="../../../scripts/common.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -30,6 +31,7 @@ var Tests;
                         vm.Towns(results.Towns);
                     }).fail(function (error) {
                     });
+                    //Get the census data here
                     vm.UpdateCensus();
                 }
                 else {
@@ -39,6 +41,7 @@ var Tests;
             };
             ViewModel.prototype.UpdateCensus = function () {
                 if (vm.Location()) {
+                    //Selected, go look it up, first determine if it's a region or a town.
                     var selected = $(":selected", $("#cboLocation"));
                     var optGroup = selected.closest("optgroup").attr("label");
                     switch (optGroup) {
@@ -57,6 +60,7 @@ var Tests;
                     });
                 }
                 else {
+                    //Nothing selected, hide projection data.
                     vm.CensusData.removeAll();
                 }
             };
@@ -73,3 +77,4 @@ var Tests;
         init();
     })(LocationSelector = Tests.LocationSelector || (Tests.LocationSelector = {}));
 })(Tests || (Tests = {}));
+//# sourceMappingURL=LocationSelector.js.map

@@ -1,3 +1,4 @@
+/// <reference path="../../lpp.mvc.composition/lpp.mvc.controls.interfaces/utilities.d.ts" />
 $(function utilities() {
     $.fn.alternateClasses = function jQuery$alternateClasses(arrayClasses) {
         if (typeof arrayClasses != "Array")
@@ -46,3 +47,4 @@ $(function utilities() {
             gate.release();
     }
 });
+//# sourceMappingURL=utilities.js.map

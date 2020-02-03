@@ -1,3 +1,5 @@
+/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
+/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var DCDiagnosis;
@@ -42,6 +44,7 @@ var DataChecker;
                     $('#OverallMetricsCountChart').width(Math.max($('#OverallMetricsCountChart').width(), self.OverallMetrics.length * 55));
                     var codeTypeChart = new DataChecker.ChartSource($.Enumerable.From(self.OverallMetrics).Select(function (x) { return [x.Code_Type]; }).ToArray());
                     self.codeType = codeTypeChart.data[0][0];
+                    //overall metrics charts
                     var overallCountBarSrc = new DataChecker.ChartSource($.Enumerable.From(self.OverallMetrics).Select(function (x) { return [x.Diagnosis_Display + ' (' + x.Code_Type + ')  ', x.n]; }).ToArray());
                     overallCountBarSrc.yaxis_label = 'n';
                     overallCountBarSrc.xaxis_label = 'Diagnosis Code';
@@ -59,19 +62,23 @@ var DataChecker;
                     overallPercentPieSrc.title = 'Diagnosis Code Distribution among Selected Data Partners*';
                     plotArr.push(DataChecker.Charting.plotPieChart($('#OverallMetricsPieChart'), overallPercentPieSrc));
                     var index = 1;
+                    //percent within data partners charts
                     var chartContainer = $('#DataPartnerMetrics');
                     var percentByDataPartnerContainer = $('#DataPartnerMetricsPercent');
                     var percentByDataPartnerContainerPie = $('#DataPartnersMetricsPie');
                     self.CodesByPartner.forEach(function (item) {
                         var id = 'diagnosis_' + index++;
                         var d = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
+                        //$(d).width(Math.max($(d).width(), codes.length * 55));
                         $(chartContainer).append(d);
                         var id = 'procedures_' + index++;
                         var d2 = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
+                        //$(d2).width(Math.max($(d2).width(), codes.length * 55));
                         $(percentByDataPartnerContainer).append(d2);
                         id = 'procedures_' + index++;
                         var p = $('<div class="halfwidth-piechart-dpp">').attr('id', id);
                         $(percentByDataPartnerContainerPie).append(p);
+                        //
                         var source = new DataChecker.ChartSource($.Enumerable.From(item.Codes)
                             .Select(function (x) { return [x.Code_Display + ' (' + x.Code_Type + ') ', x.Count]; }).ToArray(), item.Partner);
                         source.xaxis_label = 'Diagnosis Code';
@@ -92,11 +99,13 @@ var DataChecker;
                         s3.title = 'Diagnosis Code Distribution within ' + item.Partner;
                         plotArr.push(DataChecker.Charting.plotPieChart(p, s3));
                     });
+                    //percent data partner contribution charts
                     var contributionContainerBar = $('#PercentDataPartnerContribution');
                     var contributionContainerPie = $('#PercentDataPartnerContribution_Pie');
                     self.PartnersByCode.forEach(function (item) {
                         var id = 'contrib_percent_' + index++;
                         var d = $('<div>').attr('id', id).addClass("fullwidth-barchart-dpc");
+                        //$(d).width(Math.max((self.DataPartners.length * 80), 450));
                         $(contributionContainerBar).append(d);
                         id = 'contrib_percent_' + index++;
                         var p = $('<div>').attr('id', id).addClass(self.DataPartners.length > 11 ? "fullwidth-piechart-dpc" : "halfwidth-piechart-dpc");
@@ -131,10 +140,12 @@ var DataChecker;
                         self.chartPlots.forEach(function (chart) {
                             chart.replot({ resetAxes: true });
                         });
+                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     });
                     if (self.HasResults) {
                         self.chartPlots = self.buildCharts(rxDiagnosises);
+                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     }
                 }).fail(function (error) {
@@ -147,3 +158,4 @@ var DataChecker;
         DCDiagnosis.ViewModel = ViewModel;
     })(DCDiagnosis = DataChecker.DCDiagnosis || (DataChecker.DCDiagnosis = {}));
 })(DataChecker || (DataChecker = {}));
+//# sourceMappingURL=DiagnosisResponse.js.map

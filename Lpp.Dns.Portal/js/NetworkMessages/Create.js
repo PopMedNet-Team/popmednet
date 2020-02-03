@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../_rootlayout.ts" />
 var NetworkMessages;
 (function (NetworkMessages) {
     var Create;
@@ -48,3 +49,4 @@ var NetworkMessages;
         init();
     })(Create = NetworkMessages.Create || (NetworkMessages.Create = {}));
 })(NetworkMessages || (NetworkMessages = {}));
+//# sourceMappingURL=Create.js.map

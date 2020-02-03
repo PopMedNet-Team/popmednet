@@ -26,11 +26,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             : base(new Guid("85EE982E-F017-4BC4-9ACD-EE6EE55D2446"))
         {
             ParagraphPredicateBuilders.Add(ApplyVitalsTerms);
-            ParagraphPredicateBuilders.Add(ApplyCombinedDiagnosisCodeTerms);
-            ParagraphPredicateBuilders.Add(ApplyProcedureCodeTerms);
+            ParagraphPredicateBuilders.Add(ApplyCombinedDiagnosisAndProcedureCodeTerms);
             ParagraphPredicateBuilders.Add(ApplySexTerms);
             ParagraphPredicateBuilders.Add(ApplyVisitsTerms);
             ParagraphPredicateBuilders.Add(ApplyAgeRangeTerms);
+			ParagraphPredicateBuilders.Add(ApplyRaceTerms);
+            ParagraphPredicateBuilders.Add(ApplyHispanicTerms);
         }
         
 
@@ -774,6 +775,69 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             return Enumerable.Empty<string>();
         }        
+		
+		Expression<Func<pcori.Patient, bool>> ApplyHispanicTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
+        {
+            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.HispanicID).ToArray();
+
+            if (!terms.Any(t => t.Type == ModelTermsFactory.HispanicID))
+            {
+                //only apply if there are any terms that act
+                return patientPredicate;
+            }
+
+            Expression<Func<pcori.Patient, bool>> hispanicGroupingPredicate = null;
+            foreach (var term in terms)
+            {
+                string value = term.GetStringValue("Hispanic");
+
+                switch (value)
+                {
+                    case "0":
+                        value = "UN";
+                        break;
+                    case "1":
+                        value = "Y";
+                        break;
+                    case "2":
+                        value = "N";
+                        break;
+                    case "3":
+                        value = "R";
+                        break;
+                    case "4":
+                        value = "NI";
+                        break;
+                    case "5":
+                        value = "OT";
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (hispanicGroupingPredicate == null)
+                    {
+                        hispanicGroupingPredicate = (p) => p.Hispanic == value;
+                    }
+                    else
+                    {
+                        hispanicGroupingPredicate = hispanicGroupingPredicate.Or((p) => p.Hispanic == value);
+                    }
+                }
+                else
+                {
+                    throw new Exception("Value for Hispanic Term is not Valid");
+                }
+            }
+            
+            if (hispanicGroupingPredicate != null)
+            {
+                return patientPredicate.And(hispanicGroupingPredicate);
+            }
+
+            //hispanic term specified but no value.
+            return (p) => false;
+        }
 
         protected override System.Linq.Expressions.Expression<Func<pcori.Patient, bool>> ApplyHispanicTerm(QueryComposerCriteriaDTO paragraph, QueryComposerTermDTO term)
         {
@@ -952,47 +1016,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             List<Expression<Func<pcori.Vital, bool>>> predicates = new List<Expression<Func<pcori.Vital, bool>>>();
 
-            List<DateRangeValues> observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph);
-            if (observationPeriodRanges != null && observationPeriodRanges.Any())
-            {
-                Expression<Func<pcori.Vital, bool>> observationPeriodPredicate = null;
-
-                foreach (var range in observationPeriodRanges)
-                {
-                    DateTime? start = null;
-                    if (range.StartDate.HasValue)
-                        start = range.StartDate.Value.DateTime.Date;
-
-                    DateTime? end = null;
-                    if (range.EndDate.HasValue)
-                        end = range.EndDate.Value.Date;
-
-                    if (start.HasValue && end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (v) => v.Encounter.AdmittedOn >= start && v.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(v => v.Encounter.AdmittedOn >= start && v.Encounter.AdmittedOn <= end);
-                    }
-                    else if (start.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (v) => v.Encounter.AdmittedOn >= start;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(v => v.Encounter.AdmittedOn >= start);
-                    }
-                    else if (end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (v) => v.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(v => v.Encounter.AdmittedOn <= end);
-                    }
-                }
-
-                if (observationPeriodPredicate != null)
-                    predicates.Add(observationPeriodPredicate);
-            }
+            /*
+             * Note: the following Age Range calculations may not be applicable for Vitals, as encounters may or may not be defined/linked for vital entries.
+             * For more information, refer to PMNDEV-5959.
+             */
 
             //limit to the encounters where the patient age falls within the specified range.
             DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] { 
@@ -1152,6 +1179,55 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
             }
             
+            //As per PMNDEV-5959, Vitals are not to be joined with the Encounter table.
+            //This is due to the fact that the EncounterID field in the Vitals table is optional and usually unpopulated.
+            //So, given this, if we are applying any critera against vitals, then we should check for Observation Period Ranges
+            //and apply the observation period against the patientPredicate itself looking for patients that have encounters within the date range.
+            //This filter is independent of the record in Vitals itself.
+            if((predicates.Count == 0 && hasVitalsMeasureTerm) || predicates.Count > 0)
+            {
+                List<DateRangeValues> observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph);
+                if (observationPeriodRanges != null && observationPeriodRanges.Any())
+                {
+                    Expression<Func<pcori.Patient, bool>> observationPeriodPredicate = null;
+
+                    foreach (var range in observationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (p) => p.Encounters.Any((enc) => enc.AdmittedOn >= start && enc.AdmittedOn <= end);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(p => p.Encounters.Any((enc) => enc.AdmittedOn >= start && enc.AdmittedOn <= end));
+                        }
+                        else if (start.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (p) => p.Encounters.Any((enc) => enc.AdmittedOn >= start);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(p => p.Encounters.Any((enc) => enc.AdmittedOn >= start));
+                        }
+                        else if (end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (p) => p.Encounters.Any((enc) => enc.AdmittedOn <= end);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(p => p.Encounters.Any((enc) => enc.AdmittedOn <= end));
+                        }
+                    }
+
+                    if (observationPeriodPredicate != null)
+                        patientPredicate = patientPredicate.And(observationPeriodPredicate);
+                }
+            }
 
             if (predicates.Count == 0)
             {
@@ -1187,6 +1263,77 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return null;
         }
 
+        Expression<Func<pcori.Patient, bool>> ApplyRaceTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
+        {
+            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.RaceID).ToArray();
+
+            if (!terms.Any(t => t.Type == ModelTermsFactory.RaceID))
+            {
+                //only apply if there are any terms that act
+                return patientPredicate;
+            }
+
+            Expression<Func<pcori.Patient, bool>> raceGroupingPredicate = null;
+            foreach (var term in terms)
+            {
+                IEnumerable<string> values = term.GetStringCollection("Race").ToArray();
+
+                if (values == null && !values.Any())
+                    throw new Exception("Value for Race Term is not Valid");
+
+                foreach (string value in values)
+                {
+                    string translatedValue = TranslateRace(value);
+                    if (raceGroupingPredicate == null)
+                    {
+                        raceGroupingPredicate = (p) => p.Race == translatedValue;
+                    }
+                    else
+                    {
+                        raceGroupingPredicate = raceGroupingPredicate.Or((p) => p.Race == translatedValue);
+                    }
+                }
+            }
+
+            if (raceGroupingPredicate != null)
+            {
+                return patientPredicate.And(raceGroupingPredicate);
+            }
+
+            //hispanic term specified but no value.
+            return (p) => false;
+        }
+
+        static string TranslateRace(string raw)
+        {
+            switch (raw)
+            {
+                case "0":
+                    return "UN";
+                case "1":
+                    return "01";
+                case "2":
+                    return "02";
+                case "3":
+                    return "03";
+                case "4":
+                    return "04";
+                case "5":
+                    return "05";
+                case "6":
+                    return "06";
+                case "7":
+                    return "07";
+                case "8":
+                    return "NI";
+                case "9":
+                    return "OT";
+                default:
+                    throw new Exception("Value for Race Term is not Valid");
+
+            }
+        }
+
         protected override Expression<Func<pcori.Patient, bool>> ApplyRaceTerm(QueryComposerCriteriaDTO paragraph, QueryComposerTermDTO term)
         {
             var innerPredicate = PredicateBuilder.False<pcori.Patient>();
@@ -1198,39 +1345,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             foreach (string value in values)
             {
-                switch (value)
-                {
-                    case "0":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "UN");
-                        break;
-                    case "1":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "01");
-                        break;
-                    case "2":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "02");
-                        break;
-                    case "3":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "03");
-                        break;
-                    case "4":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "04");
-                        break;
-                    case "5":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "05");
-                        break;
-                    case "6":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "06");
-                        break;
-                    case "7":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "07");
-                        break;
-                    case "8":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "NI");
-                        break;
-                    case "9":
-                        innerPredicate = innerPredicate.Or(r => r.Race == "OT");
-                        break;
-                }
+                string translatedValue = TranslateRace(value);
+                innerPredicate = innerPredicate.Or(r => r.Race == translatedValue);
             }
 
             return innerPredicate;
@@ -1253,63 +1369,104 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return (p) => p.Encounters.Any(e => e.EncounterType == value);
         }
 
-        Expression<Func<pcori.Patient, bool>> ApplyCombinedDiagnosisCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
+        Expression<Func<pcori.Encounter, bool>> GetParagraphEncounterPredicate(QueryComposerCriteriaDTO paragraph)
+        {
+            Expression<Func<pcori.Encounter, bool>> observationPeriodPredicate = null;
+            Expression<Func<pcori.Encounter, bool>> settingPredicate = null;
+
+            List<DateRangeValues> observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph);
+            List<string> settingValues = _queryInterrogator.ParagraphEncounterTypes(paragraph);
+
+            foreach (var range in observationPeriodRanges)
+            {
+                DateTime? start = null;
+                if (range.StartDate.HasValue)
+                    start = range.StartDate.Value.DateTime.Date;
+
+                DateTime? end = null;
+                if (range.EndDate.HasValue)
+                    end = range.EndDate.Value.Date;
+
+                if (start.HasValue && end.HasValue)
+                {
+                    if (observationPeriodPredicate == null)
+                        observationPeriodPredicate = (d) => d.AdmittedOn >= start && d.AdmittedOn <= end;
+                    else
+                        observationPeriodPredicate = observationPeriodPredicate.Or(d => d.AdmittedOn >= start && d.AdmittedOn <= end);
+                }
+                else if (start.HasValue)
+                {
+                    if (observationPeriodPredicate == null)
+                        observationPeriodPredicate = (d) => d.AdmittedOn >= start;
+                    else
+                        observationPeriodPredicate = observationPeriodPredicate.Or(d => d.AdmittedOn >= start);
+                }
+                else if (end.HasValue)
+                {
+                    if (observationPeriodPredicate == null)
+                        observationPeriodPredicate = (d) => d.AdmittedOn <= end;
+                    else
+                        observationPeriodPredicate = observationPeriodPredicate.Or(d => d.AdmittedOn <= end);
+                }
+            }
+
+            foreach(var value in settingValues)
+            {
+                if (settingPredicate == null)
+                {
+                    if (value == "AN")
+                        settingPredicate = (enc) => !string.IsNullOrEmpty(enc.EncounterType);
+                    else
+                        settingPredicate = (enc) => enc.EncounterType == value;
+                }
+                else
+                {
+                    if (value == "AN")
+                        settingPredicate = settingPredicate.Or(enc => !string.IsNullOrEmpty(enc.EncounterType));
+                    else
+                        settingPredicate = settingPredicate.Or(enc => enc.EncounterType == value);
+                }
+            }
+
+            if (settingPredicate == null && observationPeriodPredicate == null)
+            {
+                return null;
+            }
+            else if (settingPredicate != null && observationPeriodPredicate == null)
+            {
+                return settingPredicate;
+            }
+            else if (settingPredicate == null && observationPeriodPredicate != null)
+            {
+                return observationPeriodPredicate;
+            }
+            else
+            {
+                return settingPredicate.And(observationPeriodPredicate.Expand());
+            }
+        }
+
+        Expression<Func<pcori.Patient, bool>> ApplyCombinedDiagnosisAndProcedureCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
             //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
+            var diagnosisTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
+            var procedureTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.ProcedureCodesID).ToArray();
 
-            if(!terms.Any())
+            //The encounter predicate
+            //This starts off with any criteria in the paragraph dictated by the Settings + Observation Period terms, if any.
+            Expression<Func<pcori.Encounter, bool>> encounterPredicate = GetParagraphEncounterPredicate(paragraph);
+
+            //Return the patient predicate if neither the diagnosis and procedure terms exist in the paragraph, and the encounter predicate is not defined.
+            if (!diagnosisTerms.Any() && !procedureTerms.Any() && encounterPredicate == null)
             {
                 return patientPredicate;
             }
 
-            List<Expression<Func<pcori.Diagnosis, bool>>> predicates = new List<Expression<Func<pcori.Diagnosis, bool>>>();
-
-            List<DateRangeValues> observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph);
-            if (observationPeriodRanges != null && observationPeriodRanges.Any())
-            {
-                Expression<Func<pcori.Diagnosis, bool>> observationPeriodPredicate = null;
-
-                foreach(var range in observationPeriodRanges)
-                {
-                    DateTime? start = null;
-                    if (range.StartDate.HasValue)
-                        start = range.StartDate.Value.DateTime.Date;
-
-                    DateTime? end = null;
-                    if (range.EndDate.HasValue)
-                        end = range.EndDate.Value.Date;
-
-                    if (start.HasValue && end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn >= start && d.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn >= start && d.Encounter.AdmittedOn <= end);
-                    }
-                    else if (start.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn >= start;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn >= start);
-                    }
-                    else if (end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn <= end);
-                    }
-                }
-
-                if (observationPeriodPredicate != null)
-                    predicates.Add(observationPeriodPredicate);
-            }
-
-            Expression<Func<pcori.Diagnosis, bool>> termGroupingPredicate = null;
+            #region "Diagnosis"
+            //Start processing of Combined Diagnosis term here.
+            Expression<Func<pcori.Diagnosis, bool>> diagnosisTermGroupingPredicate = null;
             //each term should be OR'd together, and each code value OR'd within the term
-            foreach (var term in terms)
+            foreach (var term in diagnosisTerms)
             {
                 DTO.Enums.DiagnosisCodeTypes codeType;
                 if (!Enum.TryParse<DTO.Enums.DiagnosisCodeTypes>(term.GetStringValue("CodeType"), out codeType))
@@ -1325,7 +1482,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
                 var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Select(s => s.Trim()).Distinct().ToArray();
                 if (codes.Length == 0)
-                    continue;               
+                    continue;
 
                 Expression<Func<pcori.Diagnosis, bool>> codeTypePredicate;
                 if (codeType == DTO.Enums.DiagnosisCodeTypes.Any)
@@ -1340,11 +1497,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
 
                 //limit to the encounters where the patient age falls within the specified range.
-                DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] { 
+                DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] {
                     DTO.Enums.AgeRangeCalculationType.AtFirstMatchingEncounterWithinCriteriaGroup,
                     DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
                 };
-                
+
                 AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
                 if (ageRanges.Length > 0)
@@ -1397,7 +1554,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     codeTypePredicate = codeTypePredicate.And(ageGroupingPredicate);
                 }
 
-                    
+
                 Expression<Func<pcori.Diagnosis, bool>> valuesPredicate = null;
 
                 if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
@@ -1431,92 +1588,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 codeTypePredicate = codeTypePredicate.And(valuesPredicate);
 
                 //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
-                if (termGroupingPredicate == null)
+                if (diagnosisTermGroupingPredicate == null)
                 {
-                    termGroupingPredicate = codeTypePredicate;                    
+                    diagnosisTermGroupingPredicate = codeTypePredicate;
                 }
                 else
                 {
-                    termGroupingPredicate = termGroupingPredicate.Or(codeTypePredicate);
+                    diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.Or(codeTypePredicate);
                 }
             }
+            #endregion
 
-            if (termGroupingPredicate != null)
-            {
-                predicates.Add(termGroupingPredicate);
-            }
-
-            if (predicates.Count == 0)
-            {
-                return patientPredicate;
-            }
-
-            var diagnosisPredicate = predicates[0];
-            for (int i = 1; i <= predicates.Count - 1; i++)
-            {
-                diagnosisPredicate = diagnosisPredicate.And(predicates[i]);
-            }
-
-            return patientPredicate.And((p) => p.Diagnoses.AsQueryable().Any(diagnosisPredicate));
-        }
-
-        Expression<Func<pcori.Patient, bool>> ApplyProcedureCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
-        {
-            //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.ProcedureCodesID).ToArray();
-
-            if (!terms.Any())
-            {
-                return patientPredicate;
-            }
-
-            List<Expression<Func<pcori.Procedure, bool>>> predicates = new List<Expression<Func<pcori.Procedure, bool>>>();
-
-            List<DateRangeValues> observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph);
-            if (observationPeriodRanges != null && observationPeriodRanges.Any())
-            {
-                Expression<Func<pcori.Procedure, bool>> observationPeriodPredicate = null;
-
-                foreach (var range in observationPeriodRanges)
-                {
-                    DateTime? start = null;
-                    if (range.StartDate.HasValue)
-                        start = range.StartDate.Value.DateTime.Date;
-
-                    DateTime? end = null;
-                    if (range.EndDate.HasValue)
-                        end = range.EndDate.Value.Date;
-
-                    if (start.HasValue && end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn >= start && d.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn >= start && d.Encounter.AdmittedOn <= end);
-                    }
-                    else if (start.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn >= start;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn >= start);
-                    }
-                    else if (end.HasValue)
-                    {
-                        if (observationPeriodPredicate == null)
-                            observationPeriodPredicate = (d) => d.Encounter.AdmittedOn <= end;
-                        else
-                            observationPeriodPredicate = observationPeriodPredicate.Or(d => d.Encounter.AdmittedOn <= end);
-                    }
-                }
-
-                if (observationPeriodPredicate != null)
-                    predicates.Add(observationPeriodPredicate);
-            }
-
-            Expression<Func<pcori.Procedure, bool>> termGroupingPredicate = null;
+            #region "Procedures"
+            //Now process the Procedure terms.
+            Expression<Func<pcori.Procedure, bool>> procedureTermGroupingPredicate = null;
             //each term should be OR'd together, and each code value OR'd within the term
-            foreach (var term in terms)
+            foreach (var term in procedureTerms)
             {
                 DTO.Enums.ProcedureCode codeType;
                 if (!Enum.TryParse<DTO.Enums.ProcedureCode>(term.GetStringValue("CodeType"), out codeType))
@@ -1537,7 +1624,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 Expression<Func<pcori.Procedure, bool>> codeTypePredicate;
                 if (codeType == DTO.Enums.ProcedureCode.Any)
                 {
-                    codeTypePredicate = (d) => true;
+                    codeTypePredicate = (d) => d.CodeType != null;
                 }
                 else
                 {
@@ -1638,36 +1725,76 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 codeTypePredicate = codeTypePredicate.And(valuesPredicate);
 
                 //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
-                if (termGroupingPredicate == null)
+                if (procedureTermGroupingPredicate == null)
                 {
-                    termGroupingPredicate = codeTypePredicate;
+                    procedureTermGroupingPredicate = codeTypePredicate;
                 }
                 else
                 {
-                    termGroupingPredicate = termGroupingPredicate.Or(codeTypePredicate);
+                    procedureTermGroupingPredicate = procedureTermGroupingPredicate.Or(codeTypePredicate);
                 }
             }
+            #endregion
 
-            if (termGroupingPredicate != null)
+            //PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
+            //Since Oracle 11 doesn't support lateral inline views or cross joins, we had to update the implementation below to apply the encounter
+            //predicate separately to both procedures and diagnosis.
+            if (diagnosisTermGroupingPredicate != null && procedureTermGroupingPredicate != null)
             {
-                predicates.Add(termGroupingPredicate);
+                //Combine and OR the diagnosis and procedure predicates, as per PMNDEV-6184
+                if (encounterPredicate == null)
+                {
+                    return patientPredicate.And((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate) || p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                }
+                else
+                {
+                    diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
+                    procedureTermGroupingPredicate = procedureTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
+                    return patientPredicate.And((p) =>
+                        p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate)
+                        ||
+                        p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate)
+                        );
+                }
             }
-
-            if (predicates.Count == 0)
+            else if (diagnosisTermGroupingPredicate != null)
             {
+                if (encounterPredicate == null)
+                {
+                    return patientPredicate.And((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate));
+                }
+                else
+                {
+                    diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
+                    return patientPredicate.And((p) =>
+                        p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate)
+                        );
+
+                }
+            }
+            else if (procedureTermGroupingPredicate != null)
+            {
+                if (encounterPredicate == null)
+                {
+                    return patientPredicate.And((p) => p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                }
+                else
+                {
+                    procedureTermGroupingPredicate = procedureTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
+                    return patientPredicate.And((p) =>
+                        p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate)
+                        );
+                }
+            }
+            else if (encounterPredicate == null)
+            {
+                //No diagnosis or procedure criteria was defined.
+                //Check if the encounter predicate was defined. If yes, then apply that.
                 return patientPredicate;
             }
 
-            var procedurePredicate = predicates[0];
-            for (int i = 1; i <= predicates.Count - 1; i++)
-            {
-                procedurePredicate = procedurePredicate.And(predicates[i]);
-            }
-
-            return patientPredicate.And((p) => p.Procedures.AsQueryable().Any(procedurePredicate));
+            //Procedure & Diagnosis predicate not defined. Apply Encounter predicate.
+            return patientPredicate.And((p) => p.Encounters.AsQueryable().Any(encounterPredicate));
         }
-
-
-
     }
 }

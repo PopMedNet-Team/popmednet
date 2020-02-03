@@ -18,6 +18,8 @@ namespace Lpp.Dns.DTO.DataMartClient
         [EnumMember]
         Reject = 0x04,
         [EnumMember]
-        All = Run | Hold | Reject
+        ModifyResults = 0x08,
+        [EnumMember]
+        All = Run | Hold | Reject | ModifyResults
     }
 }

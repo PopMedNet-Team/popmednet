@@ -16,7 +16,7 @@ module Workflow.Common.ListRoutings {
         public Children: KnockoutObservableArray<IExpandedResponseDTO>;
 
         constructor(routing: Dns.Interfaces.IRequestDataMartDTO, group: Dns.Interfaces.IResponseGroupDTO, responses?: Dns.Interfaces.IResponseDTO[]) {
-
+            
             this.Routings = [];
             this.Routings.push(routing);
             this.Children = ko.observableArray([]);
@@ -98,8 +98,7 @@ module Workflow.Common.ListRoutings {
         private HasSelectedIncompleteRoutings: KnockoutComputed<boolean>;
         private NewGroupingName: string = null;
 
-        public DataMartsToChange: KnockoutObservableArray<string>;
-        public strDataMartsToChange: string;
+        public DataMartsToChangeRoutingStatus: KnockoutObservableArray<Dns.Interfaces.IUpdateRequestDataMartStatusDTO>;
         public DataMartsToAdd: KnockoutObservableArray<string>;
         public strDataMartsToAdd: string;
         public strDataMartsToCancel: string;
@@ -137,6 +136,9 @@ module Workflow.Common.ListRoutings {
         private AllowViewRoutingHistory: boolean;
         private ShowReportingOptions: boolean = false;
 
+        private completeRoutesSelectAll: KnockoutComputed<boolean>;
+        private incompleteRoutesSelectAll: KnockoutComputed<boolean>;
+
         constructor(bindingControl: JQuery, responses: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], overrideableRoutingIDs: any[], canViewResponses: boolean, requestTypeModels: any[], requestPermissions: any[]) {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions);
             var self = this;
@@ -162,8 +164,7 @@ module Workflow.Common.ListRoutings {
             self.strDataMartsToAdd = '';
             self.strDataMartsToCancel = '';
 
-            self.DataMartsToChange = ko.observableArray([]);
-            self.strDataMartsToChange = '';
+            self.DataMartsToChangeRoutingStatus = ko.observableArray<Dns.Interfaces.IUpdateRequestDataMartStatusDTO>([]);
 
             this.ShowReportingOptions = (Requests.Details.rovm.RequestType.WorkflowID || '').toUpperCase() == '7A82FE34-BE6B-40E5-AABF-B40A3DBE73B8' || (Requests.Details.rovm.RequestType.WorkflowID || '').toUpperCase() == '5CE55AF8-9737-4E7A-8E0A-8C483B23EA1D';
 
@@ -221,7 +222,7 @@ module Workflow.Common.ListRoutings {
 								return 0;
 							}
 						}
-					)
+					);
             });
 
             //may need edits to not hide rejected?
@@ -376,20 +377,51 @@ module Workflow.Common.ListRoutings {
             };
 
             self.onEditRoutingStatusDialog = () => {
-                Global.Helpers.ShowDialog("Select DataMarts to Edit", "/Dialogs/EditRoutingStatus", ["Close"], 750, 400, {IncompleteDataMartRoutings: self.OverrideableRoutings()})
-                    .done((result: any) => {
+                //only pass the routes that are selected and overrideable
+                let invalidRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+                let validRoutes: Dns.Interfaces.IRequestDataMartDTO[] = [];
+
+                ko.utils.arrayForEach(self.SelectedIncompleteRoutings(), (r) => {
+                    let route = ko.utils.arrayFirst(self.IncompleteRoutings(), (ir) => ir.ID == r);
+                    if (route) {
+                        if (ko.utils.arrayFirst(self.OverrideableRoutingIDs, (or) => route.ID == or.ID) == null) {
+                            invalidRoutes.push(route);
+                        } else {
+                            validRoutes.push(route);
+                        }
+                    }
+                });
+
+                if (invalidRoutes.length > 0) {
+                    //show warning message that invalid routes have been selected.
+                    let msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
+                    msg = msg + invalidRoutes.map(ir => ir.DataMart).join();
+                    msg = msg + "</p></div>";
+                    Global.Helpers.ShowErrorAlert("Invalid DataMarts Selected", msg);
+                    return;
+                }
+                
+                
+
+                Global.Helpers.ShowDialog("Edit DataMart Routing Status", "/Dialogs/EditRoutingStatus", ["Close"], 950, 475, { IncompleteDataMartRoutings: validRoutes })
+                    .done((result: Dns.Interfaces.IUpdateRequestDataMartStatusDTO[]) => {
+
                         for (var dm in result) {
                             //code in this loop should never be hit, handled in EditRoutingStatus.
-                            if (result[dm].NewStatus == null || result[dm].NewStatus == "") {
+                            if (result[dm].NewStatus == null || result[dm].NewStatus <= 0) {
                                 Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.");
                                 return;
                             }
                         }
-                        if (dm == undefined) { return; } else {
-                            self.DataMartsToChange(result);
-                            self.strDataMartsToChange = JSON.stringify(self.DataMartsToChange());
+
+                        if (dm == undefined) {
+                            return;
+                        } else {
+                            self.DataMartsToChangeRoutingStatus(result);
                             self.PostComplete('3CF0FEA0-26B9-4042-91F3-7192D44F6F7C');
                         }
+
+
                     });
             };
            
@@ -489,7 +521,7 @@ module Workflow.Common.ListRoutings {
             };
 
             self.onViewResponses = (data: any, evt: any) => {
-                
+
                 var ctl = $(evt.target);
                 var resultID = ctl.attr("data-ResultID");
 
@@ -539,7 +571,34 @@ module Workflow.Common.ListRoutings {
 
                 $('#tabs').append(tl);
 
-            }   
+            };
+
+            self.completeRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.CompletedRoutings().length > 0 && self.SelectedCompleteResponses().length === self.CompletedRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.VirtualRoutings(), (i) => { return i.ID; });
+                        self.SelectedCompleteResponses(allID);
+                    } else {
+                        self.SelectedCompleteResponses([]);
+                    }
+                }
+            });  
+            self.incompleteRoutesSelectAll = ko.pureComputed<boolean>({
+                read: () => {
+                    return self.IncompleteRoutings().length > 0 && self.SelectedIncompleteRoutings().length === self.IncompleteRoutings().length;
+                },
+                write: (value) => {
+                    if (value) {
+                        let allID = ko.utils.arrayMap(self.IncompleteRoutings(), (i) => { return i.ID; });
+                        self.SelectedIncompleteRoutings(allID);
+                    } else {
+                        self.SelectedIncompleteRoutings([]);
+                    }
+                }
+            });  
         }
 
         public UpdateRoutings(updates) {
@@ -571,21 +630,21 @@ module Workflow.Common.ListRoutings {
             if (!Requests.Details.rovm.Validate())
                 return;
 
-            var triggerRefresh: boolean = true;
-            var groupResultID = '49F9C682-9FAD-4AE5-A2C5-19157E227186';
-            var ungroupResultID = '7821FC45-9FD5-4597-A405-B021E5ED14FA';
+            let triggerRefresh: boolean = true;
+            let groupResultID = '49F9C682-9FAD-4AE5-A2C5-19157E227186';
+            let ungroupResultID = '7821FC45-9FD5-4597-A405-B021E5ED14FA';
 
             //The viewResponseID is not directly called by the viewing button but used when calling the PostComplete. The Individual and Aggregate ID's are on the view result buttons.
-            var viewResponseID = '1C1D0001-65F4-4E02-9BB7-A3B600E27A2F';
-            var viewIndiviualResultsID = '8BB67F67-764F-433B-9B61-0307836E61D8';
-            var viewAggregateResultsID = '354A8015-5C1D-42F7-BE31-B9FCEF4A8798';
-            var addDataMartsResultID = '15BDEF13-6E86-4E0F-8790-C07AE5B798A8';
-            var removeDataMartsResultID = '5E010001-1353-44E9-9204-A3B600E263E9';
-            var editRoutingStatusResultID = '3CF0FEA0-26B9-4042-91F3-7192D44F6F7C';
-            var resubmitRoutingsResultID = '22AE0001-0B5A-4BA9-BB55-A3B600E2728C';
-            var routingsBulkEditID = '4F7E1762-E453-4D12-8037-BAE8A95523F7';
+            let viewResponseID = '1C1D0001-65F4-4E02-9BB7-A3B600E27A2F';
+            let viewIndiviualResultsID = '8BB67F67-764F-433B-9B61-0307836E61D8';
+            let viewAggregateResultsID = '354A8015-5C1D-42F7-BE31-B9FCEF4A8798';
+            let addDataMartsResultID = '15BDEF13-6E86-4E0F-8790-C07AE5B798A8';
+            let removeDataMartsResultID = '5E010001-1353-44E9-9204-A3B600E263E9';
+            let editRoutingStatusResultID = '3CF0FEA0-26B9-4042-91F3-7192D44F6F7C';
+            let resubmitRoutingsResultID = '22AE0001-0B5A-4BA9-BB55-A3B600E2728C';
+            let routingsBulkEditID = '4F7E1762-E453-4D12-8037-BAE8A95523F7';
 
-            var data = null;
+            let data = null;
             if (resultID.toUpperCase() == viewIndiviualResultsID || resultID.toUpperCase() == viewAggregateResultsID) {
 
 
@@ -615,7 +674,7 @@ module Workflow.Common.ListRoutings {
                 data = this.strDataMartsToCancel.toUpperCase();
                 triggerRefresh = false;
             } else if (resultID.toUpperCase() == editRoutingStatusResultID) {
-                data = this.strDataMartsToChange;
+                data = JSON.stringify(this.DataMartsToChangeRoutingStatus());
             } else if (resultID.toUpperCase() == routingsBulkEditID) {
                 data = this.IncompleteRoutings;
             } else if (resultID.toUpperCase() == resubmitRoutingsResultID) {
@@ -630,7 +689,7 @@ module Workflow.Common.ListRoutings {
             this.NewGroupingName = null;
             this.ResubmissionMessage = null;
 
-            var datamarts = this.Routings();
+            let datamarts = this.Routings();
 
             Requests.Details.PromptForComment()
                 .done((comment) => {
@@ -642,7 +701,7 @@ module Workflow.Common.ListRoutings {
                         Comment: comment
                     }).done((results) => {
 
-                        var result = results[0];
+                        let result = results[0];
                         if (triggerRefresh) {
                             if (result.Uri) {
                                 Global.Helpers.RedirectTo(result.Uri);
@@ -682,15 +741,15 @@ module Workflow.Common.ListRoutings {
         public OpenChildDetail(id: string) {
             var img = $('#img-' + id);
             var child = $('#response-' + id);
-            if (img.hasClass('k-plus')) {
-                img.removeClass('k-plus');
-                img.addClass('k-minus');
+            if (img.hasClass('k-i-plus-sm')) {
+                img.removeClass('k-i-plus-sm');
+                img.addClass('k-i-minus-sm');
                 child.show();
             }
             else
             {
-                img.addClass('k-plus');
-                img.removeClass('k-minus');
+                img.addClass('k-i-plus-sm');
+                img.removeClass('k-i-minus-sm');
                 child.hide();
             }
         }

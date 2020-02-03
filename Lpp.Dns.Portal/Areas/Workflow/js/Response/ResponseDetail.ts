@@ -22,15 +22,17 @@ module Workflow.Response.Common.ResponseDetail {
         public showApproveReject: KnockoutObservable<boolean>;
 
         public IsResponseVisible: KnockoutObservable<boolean>;
+		public IsResponseLoadFailed: KnockoutObservable<boolean>;
 
         public hasResponseResultsContent: boolean = false;
 
         constructor(bindingControl: JQuery, routings: Dns.Interfaces.IRequestDataMartDTO[], responses: Dns.Interfaces.IResponseDTO[], documents: Dns.Interfaces.IExtendedDocumentDTO[], canViewPendingApprovalResponses: boolean, exportForFileDistribution: boolean) {
             super(bindingControl, rootVM.ScreenPermissions);
             var self = this;
-            
+            debugger;
             this.IsResponseVisible = ko.observable(null);
             this.ResponseContentComplete = ko.observable(false);
+			this.IsResponseLoadFailed = ko.observable(false);
             this.Routings = routings;
             this.Responses = responses;
             this.Documents = documents;
@@ -41,7 +43,7 @@ module Workflow.Response.Common.ResponseDetail {
             this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
             this.ExportExcelUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=xlsx&authToken=' + User.AuthToken;
             this.ExportDownloadAllUrl = '/workflow/WorkflowRequests/ExportAllResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&authToken=' + User.AuthToken;
-            this.isDownloadAllVisible = exportForFileDistribution;
+            this.isDownloadAllVisible = exportForFileDistribution && (ko.utils.arrayFirst(documents, (d) => { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null);
             
             this.showApproveReject = ko.observable(false);
 
@@ -55,7 +57,7 @@ module Workflow.Response.Common.ResponseDetail {
 
             self.IsResponseVisible(canViewPendingApprovalResponses);
 
-            self.hasResponseResultsContent = ko.utils.arrayFirst(documents, (d) => { return d.FileName.toLowerCase() == 'response.json'; }) != null;
+            self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, (d) => { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, (d) => { return d.ResponseGroupID != null }) != null;
 
             if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                 Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done((responses: Dns.Interfaces.IQueryComposerResponseDTO[]) => {
@@ -175,6 +177,10 @@ module Workflow.Response.Common.ResponseDetail {
 
                     //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
+				}).fail(() => {
+					self.IsResponseLoadFailed(true);
+                    self.ResponseContentComplete(true);
+                    $(window.frameElement).height($('html').height());
                 });
             } else {
                 self.ResponseContentComplete(true);
@@ -228,8 +234,9 @@ module Workflow.Response.Common.ResponseDetail {
         rootVM = (<any>parent).Requests.Details.rovm;
         var id: any = Global.GetQueryParam("ID");
         var responseIDs = id.split(',');
+        debugger;
         Dns.WebApi.Response.GetDetails(responseIDs).done((details) => {
-            
+            debugger;
             var ss = details[0];
             var bindingControl = $('#DefaultResponseDetail');
             vm = new ViewModel(bindingControl, ss.RequestDataMarts, ss.Responses, ss.Documents, ss.CanViewPendingApprovalResponses, ss.ExportForFileDistribution);

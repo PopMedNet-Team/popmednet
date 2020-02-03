@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -208,6 +209,7 @@ var Workflow;
                         Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: Requests.Details.rovm.Request.Priority(), defaultDueDate: Requests.Details.rovm.Request.DueDate() })
                             .done(function (result) {
                             if (result != null) {
+                                //update values for selected incomplete routings
                                 var routings = self.IncompleteRoutings();
                                 var updatedRoutings = [];
                                 self.IncompleteRoutings([]);
@@ -224,6 +226,7 @@ var Workflow;
                                     updatedRoutings.push(dm);
                                 });
                                 self.IncompleteRoutings(updatedRoutings);
+                                //save values for selected incomplete routings
                                 self.PostComplete('4F7E1762-E453-4D12-8037-BAE8A95523F7');
                             }
                         });
@@ -256,10 +259,12 @@ var Workflow;
                             Request: "",
                             RequestID: Requests.Details.rovm.Request.ID()
                         }).done(function (dataMarts) {
+                            //compatible datamarts
                             var newDataMarts = dataMarts;
                             var i = 0;
                             while (i < 100) {
                                 var dm = self.Routings()[i];
+                                //removing already submitted DMs from the list of available DMs
                                 if (dm != null || undefined) {
                                     var exisitngDataMarts = ko.utils.arrayFirst(newDataMarts, function (datamart) { return datamart.ID == dm.DataMartID; });
                                     ko.utils.arrayRemoveItem(newDataMarts, exisitngDataMarts);
@@ -313,6 +318,7 @@ var Workflow;
                         showRoutingHistory(item.ID, item.RequestID);
                     };
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
+                        //call function on the composer to update routing info
                         _this.UpdateRoutings(info);
                     });
                     self.onCompleteRouting = function () {
@@ -339,6 +345,34 @@ var Workflow;
                             });
                         });
                     };
+                    self.completedRoutesSelectAll = ko.pureComputed({
+                        read: function () {
+                            return self.CompletedRoutings().length > 0 && self.SelectedCompleteRoutings().length === self.CompletedRoutings().length;
+                        },
+                        write: function (value) {
+                            if (value) {
+                                var allID = ko.utils.arrayMap(self.VirtualRoutings, function (i) { return i.ID; });
+                                self.SelectedCompleteRoutings(allID);
+                            }
+                            else {
+                                self.SelectedCompleteRoutings([]);
+                            }
+                        }
+                    });
+                    self.incompleteRoutesSelectAll = ko.pureComputed({
+                        read: function () {
+                            return self.IncompleteRoutings().length > 0 && self.SelectedIncompleteRoutings().length === self.IncompleteRoutings().length;
+                        },
+                        write: function (value) {
+                            if (value) {
+                                var allID = ko.utils.arrayMap(self.IncompleteRoutings(), function (i) { return i.ID; });
+                                self.SelectedIncompleteRoutings(allID);
+                            }
+                            else {
+                                self.SelectedIncompleteRoutings([]);
+                            }
+                        }
+                    });
                     return _this;
                 }
                 ViewModel.prototype.UpdateRoutings = function (updates) {
@@ -418,12 +452,14 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
+                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
                             }
                         }
                         else {
+                            //Need to go back to the endpoint cause the results information doesnt contain anything about DM Statuses
                             Dns.WebApi.Requests.RequestDataMarts(result.Entity.ID, "Status ne Lpp.Dns.DTO.Enums.RoutingStatus'" + Dns.Enums.RoutingStatus.Canceled + "'").done(function (response) {
                                 if (response.length == 0) {
                                     Dns.WebApi.Requests.TerminateRequest(result.Entity.ID).done(function () {
@@ -435,6 +471,7 @@ var Workflow;
                                         Global.Helpers.RedirectTo(result.Uri);
                                     }
                                     else {
+                                        //Update the request etc. here 
                                         Requests.Details.rovm.Request.ID(result.Entity.ID);
                                         Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                         Requests.Details.rovm.UpdateUrl();
@@ -447,14 +484,14 @@ var Workflow;
                 ViewModel.prototype.OpenChildDetail = function (id) {
                     var img = $('#img-' + id);
                     var child = $('#response-' + id);
-                    if (img.hasClass('k-plus')) {
-                        img.removeClass('k-plus');
-                        img.addClass('k-minus');
+                    if (img.hasClass('k-i-plus-sm')) {
+                        img.removeClass('k-i-plus-sm');
+                        img.addClass('k-i-minus-sm');
                         child.show();
                     }
                     else {
-                        img.addClass('k-plus');
-                        img.removeClass('k-minus');
+                        img.addClass('k-i-plus-sm');
+                        img.removeClass('k-i-minus-sm');
                         child.hide();
                     }
                 };
@@ -496,6 +533,7 @@ var Workflow;
             CompleteDistribution.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
+                //get the permissions for the view response detail, use to control the dialog view showing the result files
                 var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
                 $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), getResponseDetailPermissions, Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])).done(function (responses, responseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
@@ -511,3 +549,4 @@ var Workflow;
         })(CompleteDistribution = DistributedRegression.CompleteDistribution || (DistributedRegression.CompleteDistribution = {}));
     })(DistributedRegression = Workflow.DistributedRegression || (Workflow.DistributedRegression = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=CompleteDistribution.js.map

@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
 var Request;
 (function (Request) {
     var Utility;
@@ -41,3 +42,4 @@ var Request;
         })(SelectDataMarts = Utility.SelectDataMarts || (Utility.SelectDataMarts = {}));
     })(Utility = Request.Utility || (Request.Utility = {}));
 })(Request || (Request = {}));
+//# sourceMappingURL=SelectDataMartDialog.js.map

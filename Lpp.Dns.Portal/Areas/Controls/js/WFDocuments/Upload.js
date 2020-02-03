@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
     var WFDocuments;
@@ -39,6 +40,8 @@ var Controls;
                         };
                     };
                     _this.onSuccess = function (e) {
+                        //fires when upload is complete with or without errors
+                        //on success should close the dialog with the document information
                         var result = JSON.parse(e.response.content);
                         self.Close(result.results[0]);
                     };
@@ -67,3 +70,4 @@ var Controls;
         })(Upload = WFDocuments.Upload || (WFDocuments.Upload = {}));
     })(WFDocuments = Controls.WFDocuments || (Controls.WFDocuments = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Upload.js.map

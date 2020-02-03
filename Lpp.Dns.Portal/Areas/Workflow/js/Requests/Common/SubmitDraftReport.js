@@ -3,6 +3,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../controls/js/wffileupload/fortask.ts" />
+/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var Common;
@@ -60,6 +62,7 @@ var Workflow;
                                         location.reload();
                                     }
                                     else {
+                                        //Update the request etc. here 
                                         Requests.Details.rovm.Request.ID(result.Entity.ID);
                                         Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                         Requests.Details.rovm.UpdateUrl();
@@ -84,3 +87,4 @@ var Workflow;
         })(SubmitDraftReport = Common.SubmitDraftReport || (Common.SubmitDraftReport = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
+//# sourceMappingURL=SubmitDraftReport.js.map

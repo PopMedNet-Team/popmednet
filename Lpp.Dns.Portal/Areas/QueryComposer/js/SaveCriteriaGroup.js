@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../js/_rootlayout.ts" />
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -55,3 +56,4 @@ var Plugins;
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
+//# sourceMappingURL=SaveCriteriaGroup.js.map

@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../../../../js/_rootlayout.ts" />
 var Controls;
 (function (Controls) {
     var WFComments;
@@ -25,11 +26,13 @@ var Controls;
                         _this.DataSource.group({ field: 'WorkflowActivity' });
                     }
                     var self = _this;
+                    //replaces the existing datasource with the provided comments and document references.
                     _this.RefreshDataSource = function (comments, documentReferences) {
                         self.Documents = documentReferences || [];
                         ko.utils.arrayForEach(comments || [], function (comment) { self.Comments.push(comment); });
                         self.DataSource.read();
                     };
+                    //add comments and document references to existing datasource.
                     _this.AddCommentToDataSource = function (comments, documentReferences) {
                         if (documentReferences) {
                             documentReferences.forEach(function (d) {
@@ -59,6 +62,7 @@ var Controls;
                             comment += '<div class="comment-documents">';
                             comment += '<span>Attachment:</span>';
                             documents.forEach(function (d) {
+                                //if the document ID is null then the document has been deleted, can't allow download.
                                 if (d.DocumentID) {
                                     if (self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)) {
                                         comment += Controls.WFDocuments.List.Utils.buildDownloadLink(d.DocumentID, d.FileName, d.DocumentName);
@@ -92,3 +96,4 @@ var Controls;
         })(List = WFComments.List || (WFComments.List = {}));
     })(WFComments = Controls.WFComments || (Controls.WFComments = {}));
 })(Controls || (Controls = {}));
+//# sourceMappingURL=Index.js.map

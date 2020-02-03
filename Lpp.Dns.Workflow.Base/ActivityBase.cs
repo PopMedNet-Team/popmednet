@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Lpp.Objects;
 using System.Data.Entity;
 using Lpp.Utilities;
+using System.Security;
 
 namespace Lpp.Dns.Workflow
 {
@@ -323,6 +324,96 @@ namespace Lpp.Dns.Workflow
                         select dm;
 
             return await query.Select(dm => dm.ID).ToArrayAsync();
+        }
+
+        /// <summary>
+        /// Updates the routing status of the specified datamarts.
+        /// </summary>
+        /// <param name="changes">The collection of status change requetss for the datamarts.</param>
+        /// <returns>A boolean indicating if any of the datamarts where changed.</returns>
+        protected async Task<bool> UpdateDataMartRoutingStatus(IEnumerable<RoutingChangeRequestModel> routeChanges)
+        {
+            var requestDataMartIDs = routeChanges.Select(i => i.RequestDataMartID).ToArray();
+
+            var routes = await (from rdm in db.RequestDataMarts
+                                let userID = _workflow.Identity.ID
+                                let projectID = _entity.ProjectID
+                                let overrideRoutingStatusPermissionID = PermissionIdentifiers.Request.OverrideDataMartRoutingStatus.ID
+                                let projectOverrideAcls = db.ProjectAcls.Where(a => a.ProjectID == projectID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let datamartOverrideAcls = db.DataMartAcls.Where(a => a.DataMartID == rdm.DataMartID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let projectDataMartOverrideAcls = db.ProjectDataMartAcls.Where(a => a.DataMartID == rdm.DataMartID && a.ProjectID == projectID && a.PermissionID == overrideRoutingStatusPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed)
+                                let currentResponse = db.Responses.Where(rsp => rsp.RequestDataMartID == rdm.ID && rsp.Count == rdm.Responses.Select(rr => rr.Count).Max()).FirstOrDefault()
+                                where requestDataMartIDs.Contains(rdm.ID)
+                                select new
+                                {
+                                    RequestDataMart = rdm,
+                                    canOverrideRoutingStatus = (projectOverrideAcls.Any() || datamartOverrideAcls.Any() || projectDataMartOverrideAcls.Any()) && (projectOverrideAcls.All(a => a) && datamartOverrideAcls.All(a => a) && projectDataMartOverrideAcls.All(a => a)),
+                                    CurrentResponse = currentResponse
+                                }).ToArrayAsync();
+
+            if (routes.Any(rt => rt.canOverrideRoutingStatus == false))
+            {
+                throw new SecurityException("You do not have permission to override the status of a routing for one or more of the specified DataMarts.");
+            }
+
+            bool hasChanges = false;
+            foreach (var detail in routes)
+            {
+                var changes = routeChanges.FirstOrDefault(dm => dm.RequestDataMartID == detail.RequestDataMart.ID);
+                if (changes == null || detail.RequestDataMart.Status == changes.NewStatus)
+                    continue;
+
+                detail.RequestDataMart.Status = changes.NewStatus;
+                detail.RequestDataMart.UpdatedOn = DateTime.UtcNow;
+                detail.CurrentResponse.ResponseMessage = changes.Message;
+
+                if(detail.RequestDataMart.Status == DTO.Enums.RoutingStatus.Submitted && detail.CurrentResponse.Count > 1)
+                {
+                    //update to automatically have status be resubmitted if not on first iteration.
+                    detail.RequestDataMart.Status = DTO.Enums.RoutingStatus.Resubmitted;
+                }
+
+                if (changes.NewStatus == DTO.Enums.RoutingStatus.Completed)
+                {
+                    detail.CurrentResponse.ResponseTime = DateTime.UtcNow;
+                    detail.CurrentResponse.RespondedByID = _workflow.Identity.ID;
+                }
+
+                hasChanges = true;
+            }
+
+            if (hasChanges)
+            {
+                await LogTaskModified("One or more routings had their status modified.");
+                var originalStatus = _entity.Status;
+                await db.SaveChangesAsync();
+
+                await db.Entry(_entity).ReloadAsync();
+
+                if (originalStatus != DTO.Enums.RequestStatuses.Complete && _entity.Status == DTO.Enums.RequestStatuses.Complete)
+                {
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Complete);
+                }
+            }
+
+            return hasChanges;
+        }
+
+        /// <summary>
+        /// Marks the current activity's task as modified.
+        /// </summary>
+        /// <param name="optionalMessage"></param>
+        /// <returns></returns>
+        protected async Task LogTaskModified(string optionalMessage = null)
+        {
+            var task = await PmnTask.GetActiveTaskForRequestActivityAsync(_entity.ID, ID, db);
+            if (task == null)
+            {
+                task = db.Actions.Add(PmnTask.CreateForWorkflowActivity(_entity.ID, ID, _workflow.ID, db));
+                return;
+            }
+
+            await task.LogAsModifiedAsync(_workflow.Identity, db, optionalMessage);
         }
 
     }

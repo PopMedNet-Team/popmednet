@@ -18,8 +18,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
 {
     public class DataMartViewPanel : ViewPanel
     {
-        static readonly ILog _log = LogManager.GetLogger( "DataMartViewPanel" );
-        private SaveFileDialog SaveFile;
+        static readonly ILog log = LogManager.GetLogger( "DataMartViewPanel" );
+        private SaveFileDialog saveFileDialog;
+        private OpenFileDialog openFileDialog;
 
         // For viewing request documents
         private Document[] documents;
@@ -33,8 +34,51 @@ namespace Lpp.Dns.DataMart.Client.Controls
         public DataMartViewPanel()
             : base()
         {
-            this.SaveFile = new System.Windows.Forms.SaveFileDialog();
+            InitializeComponent();
+
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.Filter = "Text file (*.txt)|*.txt|XML file (*.xml)|*.xml|All files (*.*)|*.*";
+
+            openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Open File";
+            openFileDialog.Filter = "All Files|*.*";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+            try
+            {
+                openFileDialog.InitialDirectory = Properties.Settings.Default.AddFileInitialFolder.NullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) : Properties.Settings.Default.AddFileInitialFolder;
+            }
+            catch { };
+        }
+
+        void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // DataMartViewPanel
+            // 
+            this.Name = "DataMartViewPanel";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
             FILELIST.CellContentClick += FILELIST_CellContentClick;
+        }
+
+        public void Initialize(NetWorkSetting networkSetting, IModelProcessor processor, string requestID, bool isRequestView)
+        {
+            this.networkSetting = networkSetting;
+            this.processor = processor;
+            this.requestId = requestID;
+            this.isRequestView = isRequestView;
+
+            if (isRequestView)
+            {
+                RemoveSelectColumn();
+            }
+
+            this.lblNoResults.Visible = false;
         }
 
         /// <summary>
@@ -42,13 +86,12 @@ namespace Lpp.Dns.DataMart.Client.Controls
         /// </summary>
         /// <param name="documents"></param>
         /// <param name="networkSetting"></param>
-        public void SetRequestDocuments(Document[] documents, NetWorkSetting networkSetting, IModelProcessor processor)
+        public void SetRequestDocuments(Document[] documents)
         {
-            this.processor = processor;
             this.documents = documents;
-            this.networkSetting = networkSetting;
+
             FileListDataSource = documents;
-            isRequestView = true;
+
             foreach (Lpp.Dns.DataMart.Model.Document document in documents)
             {
                 Guid documentID = Guid.Parse(document.DocumentID);
@@ -122,12 +165,10 @@ namespace Lpp.Dns.DataMart.Client.Controls
         /// <param name="documents"></param>
         /// <param name="processor"></param>
         /// <param name="requestId"></param>
-        public void SetResponseDocuments(Document[] documents, IModelProcessor processor, string requestId)
+        public void SetResponseDocuments(Document[] documents)
         {
-            this.processor = processor;
             this.documents = documents;
-            this.requestId = requestId;
-            isRequestView = false;
+
             var processorStatus = processor.Status(requestId);
             if (processorStatus.Code == RequestStatus.StatusCode.Error)
             {
@@ -135,21 +176,22 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 return;
             }
 
+            FileListDataSource = documents ?? new Document[0];
+
             // If "documents" is null, then no document is available, show a message.
-            if (documents == null)
+            if (documents == null || documents.Length == 0)
             {
                 ShowView = DisplayType.HTML;
                 DataSource = "<html><body><p style='text-align:center;color:gray;font-family:arial'>No Result Documents Available.</p></body></html>";
                 return;
             }
 
-            FileListDataSource = documents;
-
             Document d = documents.Where(f => f.IsViewable).FirstOrDefault();
-            Document s = documents.Where(f => f.Filename == "ViewableDocumentStyle.xml").FirstOrDefault();
-            Document j = documents.Where(f => f.Filename == "response.json").FirstOrDefault();
             if (d != null)
             {
+                Document s = documents.Where(f => f.Filename == "ViewableDocumentStyle.xml").FirstOrDefault();
+                Document j = documents.Where(f => f.Filename == "response.json").FirstOrDefault();
+
                 Stream contentStream = null;
                 processor.ResponseDocument(requestId, d.DocumentID, out contentStream, 100);
                 ShowMimeType = d.MimeType;
@@ -187,13 +229,6 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        public void AddDocument(Document document, Stream stream)
-        {
-            IList<Document> documentList = documents.ToList<Document>();
-            documentList.Add(document);
-            FileListDataSource = documentList.ToArray<Document>();
-        }
-
 
         /// <summary>
         /// Handle cellContentClick event (saving the document to disk)
@@ -205,27 +240,18 @@ namespace Lpp.Dns.DataMart.Client.Controls
             this.Cursor = Cursors.WaitCursor;
             try
             {
-                if (e.RowIndex >= 0)
+                if(FILELIST.Columns[e.ColumnIndex].Name != "colDocumentSelected")
                 {
-                    bool IsCheckBoxColumn = false;
-                    IsCheckBoxColumn = (FILELIST.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell != null);
-                    if (IsCheckBoxColumn)
+                    object documentID = FILELIST.Rows[e.RowIndex].Cells["colDocumentID"].Value;
+                    if(documentID != null)
                     {
-                        bool IsSelected = !(bool)(FILELIST.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell).Value;
-                        (FILELIST.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell).Value = IsSelected;
-                        FILELIST.Rows[e.RowIndex].Selected = IsSelected;
-                        FILELIST.MultiSelect = true;
-                    }
-                    else
-                    {
-                        Document document = documents[e.RowIndex];
-                        Savefile(document);
+                        Document document = documents.FirstOrDefault(d => d.DocumentID == documentID.ToString());
+                        if (document != null)
+                        {
+                            Savefile(document);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
@@ -233,33 +259,55 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        public List<Document> GetSelectedFiles()
+        public void DeleteSelectedFiles()
         {
-            List<Document> SelectedFiles = new List<Document>();
+            var selectedDocuments = GetSelectedFiles();
+            if (selectedDocuments.Count > 0)
+            {
+                if(MessageBox.Show(this, "Are you sure you want to delete the selected file(s)?", "Delete File", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    foreach(var document in selectedDocuments)
+                    {
+                        processor.RemoveResponseDocument(requestId, document.DocumentID);
+                    }
+
+                    documents = processor.Response(requestId);
+                    FileListDataSource = documents;
+                    ShowView = DisplayType.FILELIST;
+                }
+
+            }else
+            {
+                MessageBox.Show(this.ParentForm, "Please select at least one file first.", "Delete File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        List<Document> GetSelectedFiles()
+        {
+            List<Document> selectedFiles = new List<Document>();
 
             if (FILELIST.Rows.Count > 0)
             {
+                object cellValue = null;
                 foreach (DataGridViewRow row in FILELIST.Rows)
                 {
-                    foreach (DataGridViewColumn col in FILELIST.Columns)
+                    cellValue = row.Cells["colDocumentSelected"].Value;
+                    if (cellValue != null && (bool)cellValue)
                     {
-                        bool IsCheckBoxColumn = false;
-                        IsCheckBoxColumn = (FILELIST.Rows[row.Index].Cells[col.Index] as DataGridViewCheckBoxCell != null);
-                        if (IsCheckBoxColumn)
+                        object documentID = row.Cells["colDocumentID"].Value;
+                        if (documentID != null)
                         {
-                            bool IsSelected = (bool)(FILELIST.Rows[row.Index].Cells[col.Index] as DataGridViewCheckBoxCell).Value;
-                            if (IsSelected)
+                            Document document = documents.FirstOrDefault(d => d.DocumentID == documentID.ToString());
+                            if (document != null)
                             {
-                                Document document = documents[row.Index];
-                                SelectedFiles.Add(document);
+                                selectedFiles.Add(document);
                             }
-                            break;
                         }
                     }
                 }
             }
 
-            return SelectedFiles;
+            return selectedFiles;
         }
 
         /// <summary>
@@ -268,13 +316,11 @@ namespace Lpp.Dns.DataMart.Client.Controls
         /// <param name="doc">Document object </param>
         private void Savefile(Document doc)
         {
-            SaveFile.FileName = Path.GetFileName(doc.Filename);
-            SaveFile.RestoreDirectory = true;
-            SaveFile.Filter = "Text file (*.txt)|*.txt|XML file (*.xml)|*.xml|All files (*.*)|*.*";
+            saveFileDialog.FileName = Path.GetFileName(doc.Filename);
 
             if (doc.Filename.EndsWith("xml", StringComparison.OrdinalIgnoreCase))
             {
-                SaveFile.FilterIndex = 2;
+                saveFileDialog.FilterIndex = 2;
             }
             else if(!doc.Filename.EndsWith("txt", StringComparison.OrdinalIgnoreCase))
             {
@@ -284,18 +330,17 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     if (!doc.MimeType.NullOrEmpty() && doc.MimeType.IndexOf("/") >= 0)
                     {
                         fileExtension = "." + doc.MimeType.Substring(doc.MimeType.IndexOf('/')+1);
-                        SaveFile.Filter = string.Format("{1} files (*{0})|*{0}|{2}", fileExtension, fileExtension.Substring(1, 1).ToUpper() + fileExtension.Substring(2), SaveFile.Filter);
+                        saveFileDialog.Filter = string.Format("{1} files (*{0})|*{0}|{2}", fileExtension, fileExtension.Substring(1, 1).ToUpper() + fileExtension.Substring(2), saveFileDialog.Filter);
                     }
                 }
                 else
-                    SaveFile.Filter = string.Format("{1} files (*{0})|*{0}|{2}", fileExtension, fileExtension.Substring(1, 1).ToUpper() + fileExtension.Substring(2), SaveFile.Filter);
+                    saveFileDialog.Filter = string.Format("{1} files (*{0})|*{0}|{2}", fileExtension, fileExtension.Substring(1, 1).ToUpper() + fileExtension.Substring(2), saveFileDialog.Filter);
             }
 
-            if (SaveFile.ShowDialog() != DialogResult.OK) return;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            var sSaveLocation = SaveFile.FileName;
-
-            SFTPClient sftpClient = null;
+            var sSaveLocation = saveFileDialog.FileName;
+            
             var progress = new ProgressForm( "Saving File", "Transferring the File from the Portal..." ) { Indeteminate = doc.Size <= 0 };
             byte[] buffer = new byte[0x100000];
             Observable.Using( () => File.Create( sSaveLocation ),
@@ -327,7 +372,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         return dcStream;
                     },
                     inStream => 
-                        Observable.Return(0, Scheduler.ThreadPool).Repeat()
+                        Observable.Return(0, Scheduler.Default).Repeat()
                         .Select(_ => inStream.Read(buffer, 0, buffer.Length))
                         .TakeWhile(bytesRead => bytesRead > 0)
                         .Do(bytesRead => outStream.Write(buffer, 0, bytesRead))
@@ -337,11 +382,11 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         .Do(totalTransferred => progress.Progress = totalTransferred * 100 / Math.Max((int)inStream.Length, 1))
                    ) 
             )
-            .SubscribeOn(Scheduler.ThreadPool)
+            .SubscribeOn(Scheduler.Default)
             .TakeUntil( progress.ShowAndWaitForCancel( this ) )
             .ObserveOn(this)
             .Finally( progress.Dispose )
-            .LogExceptions( _log.Error )
+            .LogExceptions( log.Error )
             .Do( _ => {},
                 ex => { MessageBox.Show(this, "There was an error saving the file: \r\n\r\n" + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); },
                 () => { MessageBox.Show(this, "File downloaded successfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information); })
@@ -349,16 +394,32 @@ namespace Lpp.Dns.DataMart.Client.Controls
             .Subscribe();
         }
 
-        private void InitializeComponent()
+        public void AddResponseDocument()
         {
-            this.SuspendLayout();
-            // 
-            // DataMartViewPanel
-            // 
-            this.Name = "DataMartViewPanel";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filepath = openFileDialog.FileName;
+                if (!filepath.NullOrEmpty() && File.Exists(filepath))
+                {
+                    FileInfo fi = new FileInfo(filepath);
+                    if(fi.Length > int.MaxValue)
+                    {
+                        MessageBox.Show("The file is too large. Please select a file smaller than " + Int32.MaxValue.ToString("0,000,000,000") + " bytes.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        Properties.Settings.Default.AddFileInitialFolder = fi.DirectoryName;
+                        Properties.Settings.Default.Save();
+                        
+                        processor.AddResponseDocument(requestId, filepath);
+                        documents = processor.Response(requestId);
+                        FileListDataSource = documents;
+                        ShowView = DisplayType.FILELIST;
+                    }
+                }
+            }
         }
+
+
     }
 }

@@ -137,25 +137,17 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
             using (var web = new System.Net.Http.HttpClient())
             {
                 web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authToken);
-                try
-                {
-                    HttpResponseMessage stream = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
-                    var cd = new ContentDisposition(stream.Content.Headers.ContentDisposition.ToString());
-                    var contentDisposition = new System.Net.Mime.ContentDisposition
-                    {
-                        FileName = cd.FileName,
-                        Inline = false
-                    };
-                    Response.AppendHeader("Content-Disposition", contentDisposition.ToString());
 
-                    return File(stream.Content.ReadAsStreamAsync().Result, "application/zip");
-                }
-                catch(Exception ex)
+                HttpResponseMessage stream = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
+                var cd = new ContentDisposition(stream.Content.Headers.ContentDisposition.ToString());
+                var contentDisposition = new System.Net.Mime.ContentDisposition
                 {
-                    throw;
-                }
-               
+                    FileName = cd.FileName,
+                    Inline = false
+                };
+                Response.AppendHeader("Content-Disposition", contentDisposition.ToString());
 
+                return File(stream.Content.ReadAsStreamAsync().Result, "application/zip");
                 
             }
         }

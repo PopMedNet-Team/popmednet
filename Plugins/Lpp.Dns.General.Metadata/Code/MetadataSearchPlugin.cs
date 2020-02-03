@@ -878,7 +878,7 @@ namespace Lpp.Dns.General.Metadata
                                         if ((term as RequestStatusData).RequestStatus != null) //changed this to use RequestStatuses Enum
                                         {
                                             RequestQueryCondition condition = null;
-                                            var requestStatus = ((RequestStatusData)term).RequestStatus;
+											var requestStatus = ((RequestStatusData)term).RequestStatus;
 											condition = r => r.Status == requestStatus;
 
 											// It is decided in PMNDEV-5785 that query on request status should filter on requests' status and not the routing statuses.
@@ -2217,7 +2217,7 @@ namespace Lpp.Dns.General.Metadata
                                                                     ReportAggregationLevel = r.ReportAggregationLevel.Name,
                                                                     MSRequestID = r.MSRequestID,
 																	Status = r.Status
-																}).ToList();
+                                                                }).ToList();
 
             List<ExportedRequestSearchRoutingResult> routingResults = (from dm in DataContext.RequestDataMarts.AsNoTracking()
                                                                        join rsp in DataContext.Responses.AsNoTracking() on dm.ID equals rsp.RequestDataMartID

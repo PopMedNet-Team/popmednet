@@ -39,14 +39,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
             //apply all the applicable criteria to the inner value select as well.
             List<Expression> predicates = new List<Expression>();
 
-            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID)))
+            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID) || c.Criteria.Any(ci => ci.Terms.Any(t => t.Type == ModelTermsFactory.ObservationPeriodID))))
             {
                 Expression prop_Encounter = Expression.Property(pe_vitalsQueryType, "Encounter");
                 Expression proper_Encounter_AdmittedOn = Expression.Property(prop_Encounter, "AdmittedOn");
 
                 BinaryExpression observationPeriodPredicate = null;
 
-                var observationPeriodCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID));
+                var observationPeriodCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID)).Union(Criteria.SelectMany(c => c.Criteria.SelectMany(ci => ci.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID))));
                 foreach (var obpTerm in observationPeriodCriteria)
                 {
                     BinaryExpression obp_predicate = null;
@@ -86,12 +86,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                     predicates.Add(observationPeriodPredicate);
             }
 
-            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.HeightID)))
+            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.HeightID) || c.Criteria.Any(ci => ci.Terms.Any(t => t.Type == ModelTermsFactory.HeightID))))
             {
                 //if the height term is included in critieria it enforces that the height value cannot be null
                 predicates.Add(Expression.Equal(Expression.Property(heightSelector, "HasValue"), Expression.Constant(true)));
 
-                var heightCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.HeightID));
+                var heightCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.HeightID)).Union(Criteria.SelectMany(c => c.Criteria.SelectMany(ci => ci.Terms.Where(t => t.Type == ModelTermsFactory.HeightID))));
                 foreach (var heightTerm in heightCriteria)
                 {
                     var heightRange = AdapterHelpers.ParseHeightValues(heightTerm);
@@ -112,14 +112,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                 }
             }
 
-            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.WeightID)))
+            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.WeightID) || c.Criteria.Any(ci => ci.Terms.Any(t => t.Type == ModelTermsFactory.WeightID))))
             {
                 Expression weightExp = Expression.Property(pe_vitalsQueryType, "Weight");
                 predicates.Add(Expression.Equal(Expression.Property(weightExp, "HasValue"), Expression.Constant(true)));
 
                 Expression weightSelector = Expression.Property(weightExp, "Value");
 
-                var weightCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.WeightID));
+                var weightCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.WeightID)).Union(Criteria.SelectMany(c => c.Criteria.SelectMany(ci => ci.Terms.Where(t => t.Type == ModelTermsFactory.WeightID))));
                 foreach (var weightTerm in weightCriteria)
                 {
                     var weightRange = AdapterHelpers.ParseWeightValues(weightTerm);
@@ -140,11 +140,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                 }
             }
 
-            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.VitalsMeasureDateID)))
+            if (Criteria.Any(c => c.Terms.Any(t => t.Type == ModelTermsFactory.VitalsMeasureDateID) || c.Criteria.Any(ci => ci.Terms.Any(t => t.Type == ModelTermsFactory.VitalsMeasureDateID))))
             {
                 Expression measuredOnSelector = Expression.Property(pe_vitalsQueryType, "MeasuredOn");
 
-                var measureDateCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.VitalsMeasureDateID));
+                var measureDateCriteria = Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.VitalsMeasureDateID)).Union(Criteria.SelectMany(c => c.Criteria.SelectMany(ci => ci.Terms.Where(t => t.Type == ModelTermsFactory.VitalsMeasureDateID))));
                 foreach (var measureDateTerm in measureDateCriteria)
                 {
 

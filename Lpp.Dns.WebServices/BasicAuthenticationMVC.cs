@@ -77,7 +77,7 @@ namespace Lpp.Dns.WebServices
         {
             var res = filterContext.HttpContext.Response;
             res.StatusCode = 401;
-            res.AddHeader("WWW-Authenticate", "Basic realm=\"Lincoln Peak\"");
+            res.AddHeader("WWW-Authenticate", "Basic realm=\"PopMedNet\"");
             res.End();
         }
     }

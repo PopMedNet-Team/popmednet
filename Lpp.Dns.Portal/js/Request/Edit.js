@@ -1,3 +1,5 @@
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/knockout/knockout.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -58,6 +60,7 @@ var Request;
                 _this.dsTaskOrders = new kendo.data.DataSource({
                     data: []
                 });
+                //Source Task/Activity/ActivityProject
                 _this.SourceActivityProjectID = ko.observable(rawModel.Request.SourceActivityProjectID);
                 _this.dsSourceActivityProjects = new kendo.data.DataSource({
                     data: []
@@ -76,6 +79,7 @@ var Request;
                     self.BudgetActivityID(self.SourceActivityID());
                     self.BudgetActivityProjectID(self.SourceActivityProjectID());
                 };
+                //set the initial values of the task order, activity, and activity project based on the activity ID saved to the request.
                 var currentActivityID = rawModel.Request.ActivityID;
                 if (currentActivityID) {
                     var activity = ko.utils.arrayFirst(self.AllActivitiesFlat, function (a) { return a.ID.toLowerCase() == currentActivityID.toLowerCase(); });
@@ -96,6 +100,8 @@ var Request;
                     }
                 }
                 _this.SelectedActivityID = ko.computed(function () {
+                    //the selected activity will be the first one available in the following order: activity project, activity, task order
+                    //this is the value that actually gets posted back on save
                     if (self.BudgetActivityProjectID() != null) {
                         return self.BudgetActivityProjectID();
                     }
@@ -311,12 +317,14 @@ var Request;
                         d.Organization = 'N/A';
                     var dm = new Dns.ViewModels.DataMartListViewModel(d);
                     var dataMart = new Request.Edit.Routings(dm);
+                    //if the dataMart is a selected datamart, set the saved due date and priority
                     self.SelectedRequestDataMarts().forEach(function (sdm) {
                         if (sdm.DataMartID == d.ID) {
                             dataMart.DueDate(moment(sdm.DueDate).toDate());
                             dataMart.Priority(sdm.Priority);
                         }
                     });
+                    //if the dataMart has not been selected, set the default due date and Priority as the request's due date and Priority
                     if (self.SelectedDataMartIDs.indexOf(d.ID) == -1) {
                         dataMart.DueDate(_this.RequestDueDate());
                         dataMart.Priority(_this.RequestPriority());
@@ -352,6 +360,7 @@ var Request;
                             if (!result.UpdateDueDate) {
                                 newDueDate = null;
                             }
+                            // update selected datamarts here
                             self.DataMarts().forEach(function (dm) {
                                 if (self.SelectedDataMartIDs().indexOf(dm.ID) != -1) {
                                     if (result.UpdatePriority) {
@@ -406,3 +415,4 @@ var Request;
         Edit.init = init;
     })(Edit = Request.Edit || (Request.Edit = {}));
 })(Request || (Request = {}));
+//# sourceMappingURL=Edit.js.map

@@ -1,3 +1,5 @@
+/// <reference path="../_rootlayout.ts" />
+/// <reference path="../../areas/querycomposer/js/edit.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -131,6 +133,7 @@ var Templates;
                 else {
                     jTemplate = json;
                 }
+                //may need to be changed to Plugins.Requests.QueryBuilder.Edit.init(..
                 Plugins.Requests.QueryBuilder.MDQ.init(jTemplate, [], null, null, '', [], null, visualTerms, true, template.ID);
                 $(function () {
                     var bindingControl = $('#Content');
@@ -142,3 +145,4 @@ var Templates;
         init();
     })(Details = Templates.Details || (Templates.Details = {}));
 })(Templates || (Templates = {}));
+//# sourceMappingURL=Details.js.map

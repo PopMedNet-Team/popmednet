@@ -28,7 +28,7 @@
             {
                 <a href="/logout" data-bind="click: Logout">Log Off</a>
             }
-            <a href="mailto://support@popmednet.org">Contact Us</a>&nbsp;
+            <a target="_blank" href="https://popmednet.atlassian.net/servicedesk/customer/portal/1">Contact Us</a>&nbsp;
         </nav>
     </header>
 
@@ -99,7 +99,6 @@
     <footer id="footer" class="noprint">
         <pre>Version @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString(4)</pre>
         <nav>|&nbsp;<a href="#" id="TermsAndConditionsFooterLink" data-bind="click: ShowTerms">Terms and Conditions</a>&nbsp;|&nbsp;<a href="#" id="InfoFooterLink" data-bind="click: ShowInfo">Info</a></nav>
-        <img id="lpplogo" src="@this.ResourceUrl("/images/lpp-logo.png")" alt="Lincoln Peak" />
         @*&copy; @DateTime.Today.Year PopMedNet, All Rights Reserved*@
         <span data-bind="text:Theme.Footer"></span>
     </footer>
