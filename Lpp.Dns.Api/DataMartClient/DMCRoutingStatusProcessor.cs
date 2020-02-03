@@ -215,7 +215,7 @@ namespace Lpp.Dns.Api.DataMartClient
                          && (
                             (globalAcls.Any(a => a.Allowed) || orgAcls.Any(a => a.Allowed) || projectAcls.Any(a => a.Allowed) || datamartAcls.Any(a => a.Allowed) || projectDataMartAcls.Any(a => a.Allowed))
                             &&
-                            (globalAcls.All(a => a.Allowed) || orgAcls.All(a => a.Allowed) || projectAcls.All(a => a.Allowed) || datamartAcls.All(a => a.Allowed) || projectDataMartAcls.All(a => a.Allowed))
+                            (globalAcls.All(a => a.Allowed) && orgAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && datamartAcls.All(a => a.Allowed) && projectDataMartAcls.All(a => a.Allowed))
                          )
                          select rdm;
 

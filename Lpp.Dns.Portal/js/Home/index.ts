@@ -74,8 +74,11 @@ module Home.Index {
                     vm.gNotificationsHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                 }
             });
-            if (settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID })[0] !== null)
-              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID })[0].Setting, ["Timestamp"]); 
+
+            let gNotificationsSettings = settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID });
+            if (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) {
+                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, gNotificationsSettings[0].Setting, ["Timestamp"]);
+            }
 
             this.dsRequest = new kendo.data.DataSource({
                 type: "webapi",
@@ -96,8 +99,11 @@ module Home.Index {
                     vm.gRequestsHeight(e.items != null && e.items.length > 0 ? "600px" : "34px");
                 }
             });
-            if (settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID })[0] !== null)
-              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsRequest, settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID })[0].Setting, ["SubmittedOn", "DueDate"]);
+
+            let dsRequestSettings = settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID });
+            if (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) {
+                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsRequest, dsRequestSettings[0].Setting, ["SubmittedOn", "DueDate"]);
+            }
 
             self.onRequestRowSelectionChange = (e) => {
                 var selectedRequests: Dns.Interfaces.IHomepageRequestDetailDTO[] = [];
@@ -152,8 +158,11 @@ module Home.Index {
                     vm.gMessagesHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                 }
             }); 
-            if (settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })[0] !== null)
-              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsMessages, settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })[0].Setting, ["CreatedOn"]);
+
+            let dsMessagesSettings = settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })
+            if (dsMessagesSettings.length > 0 && dsMessagesSettings[0] !== null) {
+                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsMessages, dsMessagesSettings[0].Setting, ["CreatedOn"]);
+            }
 
             this.dsTasks = new kendo.data.DataSource({
                 type: "webapi",
@@ -176,11 +185,14 @@ module Home.Index {
                   vm.gTasksHeight(e.items != null && e.items.length > 0 ? "300px" : "34px");
                 }
             });
-            if (settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID })[0] !== null)
-              Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsTasks, settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID })[0].Setting, ["CreatedOn", "StartOn", "EndOn"]); 
 
-            var now = moment().add(5, 'days');
-            var userdate = moment(User.PasswordExpiration);
+            let dsTasksSettings = settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID });
+            if (dsTasksSettings.length > 0 && dsTasksSettings[0] !== null) {
+                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsTasks, dsTasksSettings[0].Setting, ["CreatedOn", "StartOn", "EndOn"]);
+            }
+
+            let now = moment().add(5, 'days');
+            let userdate = moment(User.PasswordExpiration);
             if (userdate <= now)
                 Global.Helpers.ShowToast("Your Password is Expiring soon.  Please update your password.");
 
@@ -202,8 +214,11 @@ module Home.Index {
                     field: "Name", dir: "asc"
                 }
             });
-            if (settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID }).length > 0 && settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID })[0] !== null)
-              Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID })[0].Setting);
+
+            let dsDataMartsSettings = settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID });
+            if (dsDataMartsSettings.length > 0 && dsDataMartsSettings[0] !== null) {
+                Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, dsDataMartsSettings[0].Setting);
+            }
 
         }
 

@@ -60,8 +60,10 @@ var Home;
                         vm.gNotificationsHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                     }
                 });
-                if (settings.filter(function (item) { return item.Key === "Home.Index.gNotifications.User:" + User.ID; }).length > 0 && settings.filter(function (item) { return item.Key === "Home.Index.gNotifications.User:" + User.ID; })[0] !== null)
-                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsNotifications, settings.filter(function (item) { return item.Key === "Home.Index.gNotifications.User:" + User.ID; })[0].Setting, ["Timestamp"]);
+                var gNotificationsSettings = settings.filter(function (item) { return item.Key === "Home.Index.gNotifications.User:" + User.ID; });
+                if (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) {
+                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsNotifications, gNotificationsSettings[0].Setting, ["Timestamp"]);
+                }
                 _this.dsRequest = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -81,8 +83,10 @@ var Home;
                         vm.gRequestsHeight(e.items != null && e.items.length > 0 ? "600px" : "34px");
                     }
                 });
-                if (settings.filter(function (item) { return item.Key === "Home.Index.gRequests.User:" + User.ID; }).length > 0 && settings.filter(function (item) { return item.Key === "Home.Index.gRequests.User:" + User.ID; })[0] !== null)
-                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsRequest, settings.filter(function (item) { return item.Key === "Home.Index.gRequests.User:" + User.ID; })[0].Setting, ["SubmittedOn", "DueDate"]);
+                var dsRequestSettings = settings.filter(function (item) { return item.Key === "Home.Index.gRequests.User:" + User.ID; });
+                if (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) {
+                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsRequest, dsRequestSettings[0].Setting, ["SubmittedOn", "DueDate"]);
+                }
                 self.onRequestRowSelectionChange = function (e) {
                     var selectedRequests = [];
                     var grid = $(e.sender.wrapper).data('kendoGrid');
@@ -126,8 +130,10 @@ var Home;
                         vm.gMessagesHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                     }
                 });
-                if (settings.filter(function (item) { return item.Key === "Home.Index.gMessages.User:" + User.ID; }).length > 0 && settings.filter(function (item) { return item.Key === "Home.Index.gMessages.User:" + User.ID; })[0] !== null)
-                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsMessages, settings.filter(function (item) { return item.Key === "Home.Index.gMessages.User:" + User.ID; })[0].Setting, ["CreatedOn"]);
+                var dsMessagesSettings = settings.filter(function (item) { return item.Key === "Home.Index.gMessages.User:" + User.ID; });
+                if (dsMessagesSettings.length > 0 && dsMessagesSettings[0] !== null) {
+                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsMessages, dsMessagesSettings[0].Setting, ["CreatedOn"]);
+                }
                 _this.dsTasks = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: false,
@@ -149,8 +155,10 @@ var Home;
                         vm.gTasksHeight(e.items != null && e.items.length > 0 ? "300px" : "34px");
                     }
                 });
-                if (settings.filter(function (item) { return item.Key === "Home.Index.gTasks.User:" + User.ID; }).length > 0 && settings.filter(function (item) { return item.Key === "Home.Index.gTasks.User:" + User.ID; })[0] !== null)
-                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsTasks, settings.filter(function (item) { return item.Key === "Home.Index.gTasks.User:" + User.ID; })[0].Setting, ["CreatedOn", "StartOn", "EndOn"]);
+                var dsTasksSettings = settings.filter(function (item) { return item.Key === "Home.Index.gTasks.User:" + User.ID; });
+                if (dsTasksSettings.length > 0 && dsTasksSettings[0] !== null) {
+                    Global.Helpers.SetDataSourceFromSettingsWithDates(_this.dsTasks, dsTasksSettings[0].Setting, ["CreatedOn", "StartOn", "EndOn"]);
+                }
                 var now = moment().add(5, 'days');
                 var userdate = moment(User.PasswordExpiration);
                 if (userdate <= now)
@@ -173,8 +181,10 @@ var Home;
                         field: "Name", dir: "asc"
                     }
                 });
-                if (settings.filter(function (item) { return item.Key === "Home.Index.gDataMarts.User:" + User.ID; }).length > 0 && settings.filter(function (item) { return item.Key === "Home.Index.gDataMarts.User:" + User.ID; })[0] !== null)
-                    Global.Helpers.SetDataSourceFromSettings(_this.dsDataMarts, settings.filter(function (item) { return item.Key === "Home.Index.gDataMarts.User:" + User.ID; })[0].Setting);
+                var dsDataMartsSettings = settings.filter(function (item) { return item.Key === "Home.Index.gDataMarts.User:" + User.ID; });
+                if (dsDataMartsSettings.length > 0 && dsDataMartsSettings[0] !== null) {
+                    Global.Helpers.SetDataSourceFromSettings(_this.dsDataMarts, dsDataMartsSettings[0].Setting);
+                }
                 return _this;
             }
             ViewModel.prototype.RequestsGrid = function () {

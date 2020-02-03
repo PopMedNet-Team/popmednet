@@ -573,7 +573,7 @@ var Global;
         };
         Helpers.GetServiceUrl = function (relativeUrl) {
             if ($.support.cors) {
-                return ServiceUrl + relativeUrl;
+                return ServiceUrl + ((ServiceUrl[ServiceUrl.length - 1] === '/' && relativeUrl[0] === '/') ? relativeUrl.slice(1) : relativeUrl);
             }
             else {
                 return "/api/get?Url=" + encodeURIComponent(relativeUrl);

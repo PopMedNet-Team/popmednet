@@ -23,7 +23,7 @@
                 { field: 'DataMartName', title: 'Data Mart' },
                 { field: 'ResponseFile.Name', title: 'Name' },
                 { field: 'ResponseFile.MimeType', title: 'Type', width:200 },
-                { field: 'ResponseFile.Length', title: 'Size', width: 150 },
+                { field: 'ResponseFile.Length', title: 'Size', width: 150, template: function (d) { return Global.Helpers.formatFileSize(d.ResponseFile.Length); }  },
                 { field: 'ResponseFile.ID', title: ' ', width: 110, attributes: { style: 'text-align:center;' }, template: function (item) { return '<a href="/document/' + item.ResponseFile.ID + '/download">[download]</a>'; } }
             ],
             dataSource: dataSource
