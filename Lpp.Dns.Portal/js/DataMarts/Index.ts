@@ -47,7 +47,6 @@ module DataMarts.Index {
         $.when<any>(Users.GetSetting("DataMarts.Index.gDataMarts.User:" + User.ID),
         Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.CreateDataMarts)).done((gDataMartsSetting, canAdd) => {
             $(() => {
-
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateDataMarts] : []);
                 ko.applyBindings(vm, bindingControl[0]);
@@ -55,6 +54,7 @@ module DataMarts.Index {
                 vm.DataMartsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("DataMarts.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
                 });
+                vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });        
     }

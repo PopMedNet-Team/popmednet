@@ -55,7 +55,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            _adapter = new Adapters.DistributedRegression.DistributedRegressionModelAdapter();
+            _adapter = new Adapters.DistributedRegression.DistributedRegressionModelAdapter(new RequestMetadata {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
 
             CleanoutMonitorFolders();
         }

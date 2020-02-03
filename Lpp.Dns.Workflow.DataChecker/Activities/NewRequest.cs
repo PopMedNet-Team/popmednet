@@ -114,11 +114,10 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
             await db.Entry(_entity).ReloadAsync();
 
+            var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
+
             if (activityResultID.Value == SubmitResultID) //Submit
-            {
-               
-                await db.Entry(_entity).ReloadAsync();
-                var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
+            {                
                 await db.LoadCollection(_entity, (r) => r.DataMarts);
                 var filters = new ExtendedQuery
                 {
@@ -299,31 +298,14 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             }
             else if (activityResultID.Value == SaveResultID) //Save
             {
-                var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+                if (_entity.Private)
                 {
                     await db.Entry(_entity).ReloadAsync();
+
                     _entity.Private = false;
-                    _entity.SubmittedByID = _workflow.Identity.ID;
 
-                    //Reset reject for resubmit.
-                    _entity.RejectedByID = null;
-                    _entity.RejectedOn = null;
-
-                    var originalStatus = _entity.Status;
-                    await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
-
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
-
-                    await MarkTaskComplete(task);
-                }
-                else
-                {
-                    if (task != null)
-                    {
-                        await task.LogAsModifiedAsync(_workflow.Identity, db);
-                        await db.SaveChangesAsync();
-                    }
+                    await task.LogAsModifiedAsync(_workflow.Identity, db);
+                    await db.SaveChangesAsync();
                 }
 
                 return new CompletionResult
@@ -335,7 +317,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             {
                 _workflow.DataContext.Requests.Remove(_workflow.Entity);
 
-                var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
                 if (task != null)
                 {
                     db.Actions.Remove(task);

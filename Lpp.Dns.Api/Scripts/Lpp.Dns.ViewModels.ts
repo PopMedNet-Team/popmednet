@@ -1,4 +1,4 @@
-/// <reference path='../../Lpp.Pmn.Resources/node_modules/@types/knockout.mapping/index.d.ts' />
+/// <reference path='../../node_modules/@types/knockout.mapping/index.d.ts' />
 /// <reference path='Lpp.Dns.Interfaces.ts' />
 module Dns.ViewModels {
 	 export class ViewModel<D>{
@@ -7177,6 +7177,8 @@ module Dns.ViewModels {
 	 	 public Length: KnockoutObservable<number>;
 	 	 public ItemID: KnockoutObservable<any>;
 	 	 public CreatedOn: KnockoutObservable<Date>;
+	 	 public ContentModifiedOn: KnockoutObservable<Date>;
+	 	 public ContentCreatedOn: KnockoutObservable<Date>;
 	 	 public ItemTitle: KnockoutObservable<string>;
 	 	 public Description: KnockoutObservable<string>;
 	 	 public ParentDocumentID: KnockoutObservable<any>;
@@ -7202,6 +7204,8 @@ module Dns.ViewModels {
 	 	 	 	 this.Length = ko.observable<any>();
 	 	 	 	 this.ItemID = ko.observable<any>();
 	 	 	 	 this.CreatedOn = ko.observable<any>();
+	 	 	 	 this.ContentModifiedOn = ko.observable<any>();
+	 	 	 	 this.ContentCreatedOn = ko.observable<any>();
 	 	 	 	 this.ItemTitle = ko.observable<any>();
 	 	 	 	 this.Description = ko.observable<any>();
 	 	 	 	 this.ParentDocumentID = ko.observable<any>();
@@ -7226,6 +7230,8 @@ module Dns.ViewModels {
 	 	 	 	 this.Length = ko.observable(ExtendedDocumentDTO.Length);
 	 	 	 	 this.ItemID = ko.observable(ExtendedDocumentDTO.ItemID);
 	 	 	 	 this.CreatedOn = ko.observable(ExtendedDocumentDTO.CreatedOn);
+	 	 	 	 this.ContentModifiedOn = ko.observable(ExtendedDocumentDTO.ContentModifiedOn);
+	 	 	 	 this.ContentCreatedOn = ko.observable(ExtendedDocumentDTO.ContentCreatedOn);
 	 	 	 	 this.ItemTitle = ko.observable(ExtendedDocumentDTO.ItemTitle);
 	 	 	 	 this.Description = ko.observable(ExtendedDocumentDTO.Description);
 	 	 	 	 this.ParentDocumentID = ko.observable(ExtendedDocumentDTO.ParentDocumentID);
@@ -7254,6 +7260,8 @@ module Dns.ViewModels {
 	 	 	 	Length: this.Length(),
 	 	 	 	ItemID: this.ItemID(),
 	 	 	 	CreatedOn: this.CreatedOn(),
+	 	 	 	ContentModifiedOn: this.ContentModifiedOn(),
+	 	 	 	ContentCreatedOn: this.ContentCreatedOn(),
 	 	 	 	ItemTitle: this.ItemTitle(),
 	 	 	 	Description: this.Description(),
 	 	 	 	ParentDocumentID: this.ParentDocumentID(),

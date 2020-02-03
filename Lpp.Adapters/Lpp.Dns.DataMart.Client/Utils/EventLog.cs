@@ -21,8 +21,6 @@ namespace Lpp.Dns.DataMart.Client.Utils
 
     public class LogWatcher
     {
-        private string logContent;
-        public event EventHandler Updated;
         private System.Collections.Generic.Queue<string> events = new Queue<string>();
         public String DataMartClientId { get; set; }
 
@@ -97,10 +95,7 @@ namespace Lpp.Dns.DataMart.Client.Utils
                 logEvent.Event = Event;
                 logEvent.DataMartClientId = DataMartClientId;
             }
-            catch (Exception e)
-            {
-                
-            }
+            catch {}
         }
 
         public IList<string> GetAllEvents

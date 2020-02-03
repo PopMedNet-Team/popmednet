@@ -75,6 +75,11 @@ namespace Lpp.Dns.Data
         public DateTime? ContentModifiedOn { get; set; }
 
         /// <summary>
+        /// Gets or sets the first time the document content was created.
+        /// </summary>
+        public DateTime? ContentCreatedOn { get; set; }
+
+        /// <summary>
         /// Gets or set the length of the document in bytes.
         /// </summary>
         public long Length { get; set; }
@@ -182,11 +187,12 @@ namespace Lpp.Dns.Data
                 stream.Write(data, 0, data.Length);
             }
 
-            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = '{ this.ID.ToString("D") }'");
+            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = CASE WHEN ContentCreatedOn IS NULL THEN GETUTCDATE() ELSE ContentCreatedOn END WHERE ID = '{ this.ID.ToString("D") }'");
         }
 
         public void CopyData(DataContext db, Guid sourceDocumentID)
         {
+            DateTime contentCreated = DateTime.UtcNow;
             using (var sourceStream = new DocumentStream(db, sourceDocumentID))
             {
                 using (var destinationStream = new DocumentStream(db, this.ID))
@@ -198,7 +204,7 @@ namespace Lpp.Dns.Data
                 sourceStream.Flush();
             }
 
-            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = '{ this.ID.ToString("D") }'");
+            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = '{ contentCreated }' WHERE ID = '{ this.ID.ToString("D") }'");
         }        
     }
 
@@ -581,6 +587,8 @@ namespace Lpp.Dns.Data
                     Kind = d.Kind,
                     Length = d.Length,
                     CreatedOn = d.CreatedOn,
+                    ContentCreatedOn = d.ContentCreatedOn,
+                    ContentModifiedOn = d.ContentModifiedOn,
                     ParentDocumentID = d.ParentDocumentID,
                     RevisionDescription = d.RevisionDescription,
                     RevisionSetID = d.RevisionSetID,

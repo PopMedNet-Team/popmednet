@@ -87,7 +87,7 @@ namespace Lpp.Dns.DataMart.Lib
                 .SelectMany( rs => rs );
         }
 
-        public static IObservable<RequestList> GetRequestList( NetWorkSetting ns, int startIndex, int count, RequestFilter filter, RequestSortColumn? sortColumn, bool? sortAscending )
+        public static IObservable<RequestList> GetRequestList(string queryDescription, NetWorkSetting ns, int startIndex, int count, RequestFilter filter, RequestSortColumn? sortColumn, bool? sortAscending )
         {
             var nullReqs = new RequestList();
             var noError = (Exception) null;
@@ -96,19 +96,29 @@ namespace Lpp.Dns.DataMart.Lib
                 count = int.MaxValue;
 
             return
-                Observable.Generate(
-                    new { reqs = nullReqs, nextIndex = startIndex, pageSize = _lastSucessfulPageSize, count, finish = false, error = noError },
+                Observable.Generate(new
+                    {
+                        reqs = nullReqs,
+                        nextIndex = startIndex,
+                        pageSize = 100,
+                        count,
+                        finish = false,
+                        error = noError
+                    },
                     st => !st.finish,
                     st =>
                     {
                         try
                         {
-                            if ( st.error != null || st.count == 0 ) return new { st.reqs, st.nextIndex, st.pageSize, st.count, finish = true, st.error };
+                            if (st.error != null || st.count == 0)
+                            {
+                                return new { st.reqs, st.nextIndex, st.pageSize, st.count, finish = true, st.error };
+                            }
 
                             Lpp.Dns.DTO.DataMartClient.RequestList list = null;
                             using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                             {
-                                list = AsyncHelpers.RunSync<Lpp.Dns.DTO.DataMartClient.RequestList>(() => web.GetRequestList(filter.EffectiveFromDate, filter.EffectiveToDate, filter.DataMartIds, filter.Statuses,  (Lpp.Dns.DTO.DataMartClient.RequestSortColumn?)(int?)sortColumn, sortAscending, st.nextIndex, Math.Min(st.count, st.pageSize)));
+                                list = Task.Run(() => web.GetRequestList(queryDescription, filter.EffectiveFromDate, filter.EffectiveToDate, filter.DataMartIds, filter.Statuses, (Lpp.Dns.DTO.DataMartClient.RequestSortColumn?)(int?)sortColumn, sortAscending, st.nextIndex, Math.Min(st.count, st.pageSize))).Result;
                             }
 
                             RequestList reqs = null;
@@ -138,9 +148,15 @@ namespace Lpp.Dns.DataMart.Lib
                             _lastSucessfulPageSize = st.pageSize;
                             
                             
-                            return new { reqs, nextIndex = st.nextIndex + reqs.Segment.Count(), st.pageSize, 
+                            return new
+                            {
+                                reqs,
+                                nextIndex = st.nextIndex + reqs.Segment.Count(),
+                                st.pageSize, 
                                 count = Math.Min( st.count, reqs.TotalCount - reqs.StartIndex ) - reqs.Segment.Count(), 
-                                finish = false, error = noError };
+                                finish = false,
+                                error = noError
+                            };
                         }
                         catch ( CommunicationException ex )
                         {
@@ -273,8 +289,8 @@ namespace Lpp.Dns.DataMart.Lib
             try
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
-                {                    
-                    var datamarts = AsyncHelpers.RunSync<IQueryable<Lpp.Dns.DTO.DataMartClient.DataMart>>(() => web.GetDataMarts());
+                {
+                    var datamarts = Task.Run(() => web.GetDataMarts()).Result;
                     return datamarts.Select(dm => new HubDataMart { 
                         DataMartId = dm.ID,
                         DataMartName = dm.Name,
@@ -290,28 +306,26 @@ namespace Lpp.Dns.DataMart.Lib
             }
         }
 
-        public static HubModel[] GetModels( Guid dataMartID, NetWorkSetting ns )
+        /// <summary>
+        /// Gets the model information for all DataMarts.
+        /// </summary>
+        /// <param name="ns">The network setting to use.</param>
+        /// <returns>IDictionary<Guid, HubModel[]> where the key value is the DataMart ID, and the value is the collection of models for the DataMart.</Guid></returns>
+        public static IDictionary<Guid, HubModel[]> GetModels(NetWorkSetting ns)
         {
             try
             {
-                using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
+                using(var web = new Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    var datamarts = AsyncHelpers.RunSync<IQueryable<Lpp.Dns.DTO.DataMartClient.DataMart>>(() => web.GetDataMarts());
+                    var datamarts = Task.Run(() => web.GetDataMarts()).Result;
 
-                    var models = datamarts.Where(dm => dm.ID == dataMartID && dm.Models != null)
-                        .Select(dm => dm.Models.Select(m => new HubModel
-                        {
-                            Id = m.ID,
-                            Name = m.Name,
-                            ModelProcessorId = m.ProcessorID
-                        })).FirstOrDefault();
-
-                    return models.ToArray();
+                    var models = datamarts.ToDictionary(k => k.ID, v => v.Models.Select(m => new HubModel { Id = m.ID, Name = m.Name, ModelProcessorId = m.ProcessorID }).ToArray());
+                    return models;
                 }
-            }
-            catch (Exception ex)
+
+            }catch(Exception ex)
             {
-                _log.Error(string.Format("Unable to get Models for DatamartID {1} for Network: {0}.", ns.NetworkName, dataMartID), ex);
+                _log.Error($"Unable to get Models for all DataMarts for Network: { ns.NetworkName }.", ex);
                 throw new GetModelsFailed(ex);
             }
         }
@@ -327,7 +341,7 @@ namespace Lpp.Dns.DataMart.Lib
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    var datamarts = AsyncHelpers.RunSync<IQueryable<Lpp.Dns.DTO.DataMartClient.DataMart>>(() => web.GetDataMarts());
+                    var datamarts = Task.Run(() => web.GetDataMarts()).Result;
                     var models = datamarts.Where(dm => dm.Models != null)
                         .SelectMany(dm => dm.Models.Select(m => new HubConfiguration
                         {
@@ -354,7 +368,6 @@ namespace Lpp.Dns.DataMart.Lib
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    //var buffer = AsyncHelpers.RunSync<IEnumerable<byte>>(() => web.GetDocumentChunk(documentID, offset, size));
                     var buffer = Task.Run(() => web.GetDocumentChunk(documentID, offset, size)).Result;
                     return buffer.ToArray();
                 }
@@ -366,22 +379,26 @@ namespace Lpp.Dns.DataMart.Lib
             }
         }
 
-        public static Guid[] PostResponseDocuments( string requestId, Guid dataMartId, Lpp.Dns.DataMart.Model.Document[] documents, NetWorkSetting ns )
+        public static Guid[] PostResponseDocuments( string uploadIdentifier, string requestId, Guid dataMartId, Lpp.Dns.DataMart.Model.Document[] documents, NetWorkSetting ns )
         {
+            string docString = string.Join(", ", documents.Select(x => string.Format("'{0:D}'", x.Filename)));
+
             try
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    string docString = string.Join(", ", documents.Select(x => string.Format("'{0:D}'", x.Filename)));
-                    _log.Debug("Uploading the following documents to Portal: " + docString + " for RequestID:" + requestId + ", DataMartID:" + dataMartId.ToString("D"));
-                    var result = AsyncHelpers.RunSync<IEnumerable<Guid>>(() => web.PostResponseDocuments(new Guid(requestId), dataMartId, documents.Select(d => new Lpp.Dns.DTO.DataMartClient.Document { Name = d.Filename, MimeType = d.MimeType, Size = d.Size, IsViewable = d.IsViewable, Kind = d.Kind })));
-                    _log.Debug("Uploading complete for the following documents to Portal: " + docString + " for RequestID:" + requestId + ", DataMartID:" + dataMartId.ToString("D"));
+
+                    _log.Debug($"{uploadIdentifier} - Posting metadata for the following documents to API: {docString} for RequestID: {requestId}, DataMartID: {dataMartId.ToString("D")}");
+                    
+                    var result = Task.Run(() => web.PostResponseDocuments(new Guid(requestId), dataMartId, documents.Select(d => new Lpp.Dns.DTO.DataMartClient.Document { Name = d.Filename, MimeType = d.MimeType, Size = d.Size, IsViewable = d.IsViewable, Kind = d.Kind }).ToArray())).Result;
+
+                    _log.Debug($"{uploadIdentifier} - Posting metadata complete for the following documents to API: {docString} for RequestID: {requestId}, DataMartID: {dataMartId.ToString("D")}");
                     return result.ToArray();
                 }
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Unable to post Response for Request: {0}.", requestId), ex);
+                _log.Error(string.Format("{2} - Unable to post document metadata for the following documents: {1} for RequestID: {0}.", requestId, docString, uploadIdentifier), ex);
                 throw new PostResponseDocumentsFailed(ex);
             }
         }
@@ -390,8 +407,10 @@ namespace Lpp.Dns.DataMart.Lib
         /// Starts sending the document data to the portal and returns a stream of "bytes written so far" values
         /// TODO: Replace IObservable[int] with a specific type that would reflect the semantics
         /// </summary>
-        public static IObservable<int> PostResponseDocumentContent( Guid documentId, Stream stream, NetWorkSetting ns )
+        public static IObservable<int> PostResponseDocumentContent(string uploadIdentifier, string requestID, Guid dataMartID, Guid documentId, string documentName, Stream stream, NetWorkSetting ns )
         {
+            _log.Debug($"{uploadIdentifier} - Posting document content to API for: {documentName} (ID: {documentId.ToString("D") }); RequestID: {requestID}, DataMartID: {dataMartID.ToString("D")}");
+
             byte[] buffer = new byte[0x400000];
             return Observable.Generate( 
                 new { offset = 0, finish = false },
@@ -399,7 +418,11 @@ namespace Lpp.Dns.DataMart.Lib
                 st =>
                 {
                     int bytesRead = stream.Read( buffer, 0, buffer.Length );
-                    if ( bytesRead == 0 ) return new { st.offset, finish = true };
+                    if (bytesRead == 0)
+                    {
+                        _log.Debug($"{uploadIdentifier} - Finished posting document content to API for: {documentName} (ID: {documentId.ToString("D") }); RequestID: {requestID}, DataMartID: {dataMartID.ToString("D")}");
+                        return new { st.offset, finish = true };
+                    }
 
                     byte[] data = buffer;
                     if ( bytesRead < data.Length )
@@ -412,7 +435,7 @@ namespace Lpp.Dns.DataMart.Lib
                     {
                         using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                         {
-                            AsyncHelpers.RunSync(() => web.PostResponseDocumentChunk(documentId, data));
+                            Task.Run(() => web.PostResponseDocumentChunk(documentId, data)).Wait();
                         }
                     }
                     catch (Exception ex)
@@ -429,17 +452,11 @@ namespace Lpp.Dns.DataMart.Lib
 
         public static void SetRequestStatus( HubRequest request, HubRequestStatus status, IDictionary<string, string> requestProperties, NetWorkSetting ns )
         {
-            // BMS: Don't report inprocess or awaitingresponseapproval until portal can display status in routings.
-            //if (status.Code == DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval)
-            //{
-            //    return;
-            //}
-
             try
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    AsyncHelpers.RunSync(() => web.SetRequestStatus(request.Source.ID, request.DataMartId, status.Code, status.Message, requestProperties.EmptyIfNull().Select(p => new DTO.DataMartClient.RoutingProperty { Name = p.Key, Value = p.Value }).ToArray()));
+                    Task.Run(() => web.SetRequestStatus(request.Source.ID, request.DataMartId, status.Code, status.Message, requestProperties.EmptyIfNull().Select(p => new DTO.DataMartClient.RoutingProperty { Name = p.Key, Value = p.Value }).ToArray())).Wait();
                 }
             }
             catch (Exception ex)
@@ -460,7 +477,7 @@ namespace Lpp.Dns.DataMart.Lib
             {
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
-                    return AsyncHelpers.RunSync<Lpp.Dns.DTO.DataMartClient.RequestTypeIdentifier>(() => web.GetRequestTypeIdentifier(modelID, processorID));
+                    return Task.Run(() => web.GetRequestTypeIdentifier(modelID, processorID)).Result;
                 }
             }
             catch (Exception ex)
@@ -477,7 +494,7 @@ namespace Lpp.Dns.DataMart.Lib
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
                     string filepath = System.IO.Path.Combine(Lpp.Dns.DataMart.Client.Utils.Configuration.PackagesFolderPath, packageIdentifier.PackageName());
-                    using (var stream = AsyncHelpers.RunSync<System.IO.Stream>(() => web.GetPackage(packageIdentifier)))
+                    using (var stream = Task.Run(() => web.GetPackage(packageIdentifier)).Result)
                     {
                         using (var filestream = new System.IO.FileStream(filepath, System.IO.FileMode.Create))
                         {

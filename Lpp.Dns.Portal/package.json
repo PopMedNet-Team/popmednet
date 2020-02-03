@@ -1,0 +1,29 @@
+{
+  "name": "lpp.dns.portal",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "jquery": "2.2.3",
+    "bootstrap": "3.3.7",
+    "bootstrapvalidator": "^0.5.4",
+    "es6-shim": "^0.15.1",
+    "formvalidation": "^0.6.2-dev",
+    "history.js": "^1.8.0",
+    "jqplot": "^1.0.9",
+    "jquery-form": "^3.50.0",
+    "jquery-migrate": "^1.2.1",
+    "jquery.cookie": "^1.4.1",
+    "knockout": "^3.4.2",
+    "knockout-kendo": "^0.9.7",
+    "knockout-mapping": "^2.6.0",
+    "knockout.validation": "^2.0.3",
+    "ko-reactor": "^1.3.7",
+    "moment": "2.22.1",
+    "signalr": "^2.2.1"
+  }
+}

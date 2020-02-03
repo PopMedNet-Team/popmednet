@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Quer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.Database", "Lpp.Adapters\Lpp.Dns.DataMart.Client.Database\Lpp.Dns.DataMart.Client.Database.csproj", "{BA4D9E91-641A-4080-9A92-5E3DE53C8360}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Client.Tests\Lpp.Dns.DataMart.Client.Tests.csproj", "{C21F1A05-3615-4375-AD60-D820B206A2A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Adapters|Any CPU = Adapters|Any CPU
@@ -210,6 +212,12 @@ Global
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

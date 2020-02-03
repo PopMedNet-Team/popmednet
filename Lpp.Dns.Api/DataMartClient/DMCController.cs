@@ -751,7 +751,7 @@ namespace Lpp.Dns.Api.DataMartClient
                     byte[] buffer = fs.Length < chunkSize ? new byte[fs.Length] : new byte[chunkSize];
                     while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        using (var cmd = new SqlCommand("UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @newData ELSE Data + @newData END, ContentModifiedOn = GETUTCDATE() WHERE ID = @ID", conn))
+                        using (var cmd = new SqlCommand("UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @newData ELSE Data + @newData END, ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = CASE WHEN ContentCreatedOn IS NULL THEN GETUTCDATE() ELSE ContentCreatedOn END WHERE ID = @ID", conn))
                         {
                             try
                             {

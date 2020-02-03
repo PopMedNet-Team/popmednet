@@ -5,6 +5,8 @@
     var idFileLinks = Html.UniqueId();
     var idPrograms = Html.UniqueId();
 }
+
+<!-- ko stopBinding:true -->
 <div id="DisplayPanel" class="MedicalRequest ui-form">
     <div class="ui-form">
         <div id='errorLocation' style="font-size: small; color: Gray;"></div>
@@ -39,3 +41,4 @@
         ModularProgram.Display.init(hasResponses, $.parseJSON(json), $('#DisplayPanel'));
     });
 </script>
+<!-- /ko -->

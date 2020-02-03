@@ -178,7 +178,7 @@ namespace Lpp.Dns.HealthCare.DataChecker
         public IEnumerable<IDnsResponseExportFormat> GetExportFormats(IDnsResponseContext context)
         {
             return new[] {
-                Dns.ExportFormat( "xls", "Excel" ),
+                Dns.ExportFormat( "xlsx", "Excel" ),
                 Dns.ExportFormat( "csv", "CSV" )
             };
         }
@@ -195,7 +195,7 @@ namespace Lpp.Dns.HealthCare.DataChecker
 
                     switch (format.ID)
                     {
-                        case "xls":
+                        case "xlsx":
                             ExcelHelper.ToExcel(ds, filename, HttpContext.Current.Response);
                             break;
                         case "csv":

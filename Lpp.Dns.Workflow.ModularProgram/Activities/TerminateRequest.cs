@@ -20,7 +20,7 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
 
         public Guid ID
         {
-            get { return ModularProgramWorkflowConfiguration.TerminateRequestID; }
+            get { return SimpleModularProgramWorkflowConfiguration.TerminateRequestID; }
         }
 
         public string Uri

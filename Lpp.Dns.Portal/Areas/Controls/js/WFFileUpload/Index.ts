@@ -91,7 +91,7 @@ module Controls.WFFileUpload.Index {
             self.onFileUploadCompleted = (evt: any) => {
                 try {
 
-                    self.Documents.push((<any>evt.response).Document);
+                    self.Documents.push((<any>evt.response).Result);
 
                     Requests.Details.rovm.Save(false).done(() => { Requests.Details.rovm.RefreshTaskDocuments(); });
 
@@ -143,7 +143,7 @@ module Controls.WFFileUpload.Index {
                     data: JSON.stringify({
                         credentials: data.Credentials,
                         paths: paths,
-                        comments: 'Modular Program specification document added.',
+                        comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
                         requestID: Requests.Details.rovm.Request.ID(),
                         taskID: Requests.Details.rovm.CurrentTask.ID,
                         taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument,
@@ -189,7 +189,7 @@ module Controls.WFFileUpload.Index {
                 }
             });
             evt.data = {
-                comments: 'Modular Program specification document added.',
+                comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
                 requestID: Requests.Details.rovm.Request.ID(),
                 taskID: Requests.Details.rovm.CurrentTask.ID,
                 taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument

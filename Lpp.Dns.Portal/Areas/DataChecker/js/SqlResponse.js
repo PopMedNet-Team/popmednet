@@ -87,4 +87,3 @@ var DataChecker;
         Sql.ViewModel = ViewModel;
     })(Sql = DataChecker.Sql || (DataChecker.Sql = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=SqlResponse.js.map

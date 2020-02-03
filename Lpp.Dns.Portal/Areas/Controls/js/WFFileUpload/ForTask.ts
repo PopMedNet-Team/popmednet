@@ -59,7 +59,7 @@ module Controls.WFFileUpload.ForTask {
             self.onFileUploadCompleted = (evt) => {
                 try {
 
-                    self.Documents.push((<any>evt.response).Document);
+                    self.Documents.push((<any>evt.response).Result);
 
                     Requests.Details.rovm.Save(false).done(() => { Requests.Details.rovm.RefreshTaskDocuments(); });
 

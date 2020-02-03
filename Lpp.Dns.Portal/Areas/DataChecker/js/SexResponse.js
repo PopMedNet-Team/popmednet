@@ -171,4 +171,3 @@ var DataChecker;
         Sex.ViewModel = ViewModel;
     })(Sex = DataChecker.Sex || (DataChecker.Sex = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=SexResponse.js.map

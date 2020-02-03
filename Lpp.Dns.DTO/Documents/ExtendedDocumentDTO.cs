@@ -58,6 +58,16 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public DateTimeOffset CreatedOn { get; set; }
         /// <summary>
+        /// The time the content of the document was last modified.
+        /// </summary>
+        [DataMember]
+        public DateTimeOffset? ContentModifiedOn { get; set; }
+        /// <summary>
+        /// The time the content of the document was first persisted to the database.
+        /// </summary>
+        [DataMember]
+        public DateTimeOffset? ContentCreatedOn { get; set; }
+        /// <summary>
         /// Item Title
         /// </summary>
         [DataMember]

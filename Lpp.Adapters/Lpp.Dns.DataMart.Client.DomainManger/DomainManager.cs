@@ -16,9 +16,17 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
         readonly ISet<LifetimeSponsor> Sponsors;
         AppDomain _appDomain = null;
         AssemblyLoadProxy _loadProxy = null;
+        LifetimeSponsor _loadProxySponsor = null;
         string _packagePath = null;
         string _appDomainName = string.Empty;
         bool _isDisposed = false;
+
+        static DomainManager()
+        {
+            //THIS IS KEY! The lease time and renew on call time must be set prior to any remoting is done. The default lease time is like 5min, we are bumping to 12hr.
+            System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseTime = TimeSpan.FromHours(12);
+            System.Runtime.Remoting.Lifetime.LifetimeServices.RenewOnCallTime = TimeSpan.FromHours(4);
+        }
 
         public DomainManager(string rootFolder)
         {
@@ -65,12 +73,7 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
                 Type proxyType = typeof(AssemblyLoadProxy);
                 _loadProxy = (AssemblyLoadProxy)_appDomain.CreateInstanceFrom(proxyType.Assembly.Location, proxyType.FullName).Unwrap();
 
-                //System.Runtime.Remoting.Lifetime.ILease leaseObj = System.Runtime.Remoting.RemotingServices.GetLifetimeService(_loadProxy) as System.Runtime.Remoting.Lifetime.ILease;
-                //if (leaseObj != null)
-                //{
-                //    Sponsors.Add(new LifetimeSponsor(leaseObj));
-                    
-                //}
+                _loadProxySponsor = new LifetimeSponsor(_loadProxy);
 
                 //load the domain proxy with the assemblies for the package
                 log.Debug("Loading the package: " + _packagePath + " into the AppDomain: " + _appDomainName);
@@ -93,15 +96,17 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             log.Debug("Begin GetProcessor for ProcessorID: " + processorID.ToString("D"));
             
             Lpp.Dns.DataMart.Model.IModelProcessor processor = _loadProxy.GetProcessor(processorID);
+
+            if(processor == null)
+            {
+                throw new NullReferenceException("The model processor proxy did not load correctly and is null.");
+            }
+
             
             log.Debug("End GetProcessor for ProcessorID: " + processorID.ToString("D"));
 
-            System.Runtime.Remoting.Lifetime.ILease leaseObj = System.Runtime.Remoting.RemotingServices.GetLifetimeService((MarshalByRefObject)processor) as System.Runtime.Remoting.Lifetime.ILease;
-            if (leaseObj != null)
-            {
-                Sponsors.Add(new LifetimeSponsor(leaseObj));
-            }
-            
+            Sponsors.Add(new LifetimeSponsor((MarshalByRefObject)processor));
+
             return processor;
         }
 
@@ -151,6 +156,11 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
                     }
                     catch { }
                     _loadProxy = null;
+                }
+                if (_loadProxySponsor != null)
+                {
+                    _loadProxySponsor.Dispose();
+                    _loadProxySponsor = null;
                 }
                 if (_appDomain != null)
                 {

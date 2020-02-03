@@ -2945,6 +2945,8 @@ var Dns;
                 'Length': { type: 'number', nullable: false },
                 'ItemID': { type: 'any', nullable: false },
                 'CreatedOn': { type: 'date', nullable: false },
+                'ContentModifiedOn': { type: 'date', nullable: true },
+                'ContentCreatedOn': { type: 'date', nullable: true },
                 'ItemTitle': { type: 'string', nullable: false },
                 'Description': { type: 'string', nullable: false },
                 'ParentDocumentID': { type: 'any', nullable: true },
@@ -3988,4 +3990,3 @@ var Dns;
         };
     })(Interfaces = Dns.Interfaces || (Dns.Interfaces = {}));
 })(Dns || (Dns = {}));
-//# sourceMappingURL=Lpp.Dns.Interfaces.js.map

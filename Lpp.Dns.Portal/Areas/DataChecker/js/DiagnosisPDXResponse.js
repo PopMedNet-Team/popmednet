@@ -83,4 +83,3 @@ var DataChecker;
         };
     })(DiagnosesPDX = DataChecker.DiagnosesPDX || (DataChecker.DiagnosesPDX = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=DiagnosisPDXResponse.js.map

@@ -23,7 +23,7 @@ module Home.Index {
         public onColumnMenuInit: (e: any) => void;
         public onRequestRowSelectionChange: (e) => void;
         public onRequestBulkEdit: (data, evt) => void;
-				public onClickRequestsFooter: (data, evt) => void;
+        public onClickRequestsFooter: (data, evt) => void;
 
         static editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO;
         private gRequestsRowSelector: any = 'multiple,row';
@@ -79,7 +79,6 @@ module Home.Index {
             if (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) {
                 Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, gNotificationsSettings[0].Setting, ["Timestamp"]);
             }
-
             this.dsRequest = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -219,7 +218,6 @@ module Home.Index {
             if (dsDataMartsSettings.length > 0 && dsDataMartsSettings[0] !== null) {
                 Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, dsDataMartsSettings[0].Setting);
             }
-
         }
 
         public RequestsGrid(): kendo.ui.Grid {
@@ -502,19 +500,24 @@ module Home.Index {
                 ko.applyBindings(vm, bindingControl[0]);
                 vm.TasksGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gTasks.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TasksGrid()));
-                });
+              });
+                vm.TasksGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 vm.MessagesGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gMessages.User:" + User.ID, Global.Helpers.GetGridSettings(vm.MessagesGrid()));
-                });
+              });
+                vm.MessagesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 vm.NotificationsGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(vm.NotificationsGrid()));
-                });
+              });
+                vm.NotificationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 vm.RequestsGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gRequests.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestsGrid()));
-                });
+              });
+                vm.RequestsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 vm.DataMartsGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
-                });
+              });
+                vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
 
                 for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
                   var tasksGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());

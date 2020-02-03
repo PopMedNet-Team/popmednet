@@ -167,4 +167,3 @@ var DataChecker;
         Race.ViewModel = ViewModel;
     })(Race = DataChecker.Race || (DataChecker.Race = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=RaceResponse.js.map

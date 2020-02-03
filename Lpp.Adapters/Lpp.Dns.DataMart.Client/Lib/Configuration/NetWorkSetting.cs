@@ -275,6 +275,8 @@ namespace Lpp.Dns.DataMart.Lib
 
                 if (_DataMartList != null)
                 {
+                    var models = DnsServiceManager.GetModels(this);
+
                     foreach (DataMartDescription dd in TempDatamartList)
                     {
                         foreach (DataMartDescription ddExisting in _DataMartList)
@@ -288,15 +290,19 @@ namespace Lpp.Dns.DataMart.Lib
                                 dd.ProcessQueriesAndUploadAutomatically = ddExisting.ProcessQueriesAndUploadAutomatically;
                                 dd.ThreshHoldCellCount = ddExisting.ThreshHoldCellCount;
                                 dd.NotifyOfNewQueries = ddExisting.NotifyOfNewQueries;
-                                dd.ModelList = (from model in DnsServiceManager.GetModels( dd.DataMartId, this ).EmptyIfNull()
-                                                join e in ddExisting.ModelList on model.Id equals e.ModelId into exts
-                                                from ex in exts.DefaultIfEmpty()
-                                                let e = ex ?? new ModelDescription { ModelId = model.Id }
-                                                let _1 = e.ProcessorId = model.ModelProcessorId
-                                                let _2 = e.ModelName = model.Name
-                                                select e
-                                                ).ToList();
-                            }
+                                dd.EnableExplictCacheRemoval = ddExisting.EnableExplictCacheRemoval;
+                                dd.EnableResponseCaching = ddExisting.EnableResponseCaching;
+                                dd.EncryptCacheItems = ddExisting.EncryptCacheItems;
+                                dd.DaysToRetainCacheItems = ddExisting.DaysToRetainCacheItems;
+
+								dd.ModelList = (ddExisting.ModelList != null && !ddExisting.ModelList.IsEmpty()) ?
+													 (from model in models[dd.DataMartId].EmptyIfNull()
+													  join e in ddExisting.ModelList on model.Id equals e.ModelId into exts
+													  from ex in exts.DefaultIfEmpty()
+													  let e = ex ?? new ModelDescription { ModelId = model.Id, ModelName = model.Name, ModelDisplayName = model.Name, ProcessorId = model.ModelProcessorId }
+													  select e).ToList() : new List<ModelDescription>();
+
+							}
 
                         }         
                     }

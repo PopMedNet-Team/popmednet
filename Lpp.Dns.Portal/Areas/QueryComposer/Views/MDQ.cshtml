@@ -1,5 +1,6 @@
 ﻿@using Lpp.Dns.Portal.Areas.QueryComposer;
 @using Lpp.QueryComposer;
+<script src="/Areas/QueryComposer/js/ImportCodeListHelper.js"></script>
 <script src="/Areas/QueryComposer/js/MDQ.js"></script>
 
 <div id="QueryComposer">
@@ -75,6 +76,13 @@
     <div style="margin-bottom:1em;display:none;" data-bind="visible: !IsPresetQuery && !IsCriteriaGroupEdit">
         <h2>
             Criteria Groups
+            <div class="dropdown pull-right" style="margin-left: 15px;">
+                <button id="btnOtherDropdown" type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">...</button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="btnOtherDropdown">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="btnExportJSON" download="request.json" style="margin-right:15px;" data-bind="attr: {href: $root.onExportJSON() }"><span class="glyphicon glyphicon-export"></span>Export JSON</a></li>
+                    <li role="presentation" data-bind="visible: showCodeListUpload"><a role="menuitem" tabindex="-1" href="#" id="btnImportCodes" data-bind="click: onUploadCodeList"><span class="glyphicon glyphicon-open"></span>Import Codes</a></li>
+                </ul>
+            </div>
             <button id="btnAddCriteriaGroup" class="btn btn-primary btn-sm pull-right" data-bind="click: btnAddCriteriaGroup_Click" style="margin-left: 15px;"><span class="glyphicon glyphicon-plus"></span> New Group</button>
             <div class="dropdown pull-right">
                 <button id="btnCriteriaGroupDropDown" type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><span class="glyphicon glyphicon-plus"></span> Add Existing Group <span class="caret"></span></button>
@@ -82,7 +90,6 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="text: Name, click: $root.AddCriteriaGroupTemplate"></a></li>
                 </ul>
             </div>
-            <a id="btnExportJSON" class="btn btn-primary btn-sm pull-right" download="request.json" style="margin-right:15px;" data-bind="attr: {href: $root.onExportJSON() }"><span class="glyphicon glyphicon-export"></span> Export JSON</a>
         </h2>
 
         <p>Click the [+] sign to add criteria groups. Criteria groups form cohorts that are determined by terms within each group. ICD9 Diagnosis and Disease terms within a criteria groups are OR-ed, whereas demographic terms (Gender, Race, Age) and Visit terms are AND-ed. Multiple Criteria Groups are AND-ed to determine the final cohort which will display a single or stratified patient count based on the Report Selector options selected. You may negate a Criteria Group by checking "Exclude Criteria Group" box which will filter out the group's cohort from the final cohort.</p>

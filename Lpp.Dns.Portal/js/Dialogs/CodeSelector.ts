@@ -1,4 +1,4 @@
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 
 module Dialog.CodeSelector {
     var vm: CodeSelectorViewModel;

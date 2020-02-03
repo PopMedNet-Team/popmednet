@@ -4,9 +4,11 @@
     export class ViewModel extends Global.PageViewModel {
         public RequestID: KnockoutObservable<any>;
         public HistoryItems: Dns.Interfaces.IWorkflowHistoryItemDTO[];
-        public DataSource: any;
+        public DataSource: kendo.data.DataSource;
 
         public formatTaskGroupHeader: (e: any) => string;
+
+        public refresh: () => void;
 
         constructor(bindingControl: JQuery, screenPermissions: any, requestID: any[], items: Dns.Interfaces.IWorkflowHistoryItemDTO[]) {
             super(bindingControl, screenPermissions);
@@ -20,19 +22,9 @@
             this.DataSource = kendo.data.DataSource.create({ data: this.HistoryItems });
             this.DataSource.group({ field: 'WorkflowActivityID' });
             self.DataSource.sort({ field: 'Date', dir: 'desc' });
-
+            
             this.RequestID.subscribe((newValue) => {
-                Dns.WebApi.Requests.GetWorkflowHistory(newValue)
-                    .done((items) => {
-                        self.HistoryItems = items;
-                        self.DataSource = kendo.data.DataSource.create({ data: vm.HistoryItems });
-                        self.DataSource.group({ field: 'TaskID' });
-                        self.DataSource.sort({ field: 'Date', dir: 'desc' });
-
-                        $('#gWorkflowHistory').data('kendoGrid').setDataSource(self.DataSource);
-
-                        HistoryItemsChanged.notifySubscribers(items != null && items.length > 0);
-                    });
+                self.refresh();
             });
 
             this.formatTaskGroupHeader = (e: any) => {
@@ -48,6 +40,19 @@
                     }
                 }
             }
+
+            this.refresh = () => {
+                if (self.RequestID() == null)
+                    return;
+
+                Dns.WebApi.Requests.GetWorkflowHistory(self.RequestID())
+                    .done((items) => {
+                        self.HistoryItems = items;
+                        self.DataSource.data(self.HistoryItems);
+                        HistoryItemsChanged.notifySubscribers(items != null && items.length > 0);
+                    });
+            };
+            
         }
     }
 
@@ -55,7 +60,13 @@
     export var HistoryItemsChanged: KnockoutSubscribable<boolean> = new ko.subscribable();
 
     export function setRequestID(requestID: any) {
-        vm.RequestID(requestID);
+        if (vm.RequestID) {
+            vm.RequestID(requestID);
+        }
+    }
+
+    export function refreshHistory() {
+        vm.refresh();
     }
 
     export function init(requestID: any) {

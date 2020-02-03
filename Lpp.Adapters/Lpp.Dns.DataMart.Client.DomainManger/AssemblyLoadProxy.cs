@@ -74,7 +74,6 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             archive = new ZipFile(packagePath);
 
             ResolveEventHandler resolveHandler = new ResolveEventHandler((sender, e) => {
-                
                 string[] filename = e.Name.Split(',');
 
                 var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -135,14 +134,26 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
                                  where interfaces.Any(i => i == typeof(Lpp.Dns.DataMart.Model.IModelProcessor) || i == typeof(Lpp.Dns.DataMart.Model.IEarlyInitializeModelProcessor))
                                  && t.GetConstructor(Type.EmptyTypes) != null
                                  && !t.IsInterface
-                                 && t != typeof(ProxyModelProcessor) && t != typeof(ProxyModelProcessorWithEarlyInitialize)
-                                 select interfaces.Any(i => i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Lpp.Dns.DataMart.Model.IModelProcessor).ToArray();
+                                 && t != typeof(ProxyModelProcessor) && t != typeof(ProxyModelProcessorWithEarlyInitialize) && t != typeof(ProxyModelProcessorWithPatientIdentifierCapabilities)
+                                  select interfaces.Any(i =>  i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Lpp.Dns.DataMart.Model.IModelProcessor).ToArray();
+
+            if(processorTypes == null || processorTypes.Length == 0)
+            {
+                throw new ProcessorNotFoundException("No processor types implementing IPatientIdentifierProcessor, IEarlyInitializeModelProcessor, or IModelProcessor found.");
+            }
 
             var processor = processorTypes.FirstOrDefault(p => p.ModelProcessorId == processorID);
             if (processor == null)
-                return null;
+            {
+                throw new ProcessorNotFoundException("No processor types with Model Processor ID: " + processorID.ToString("D") + " were found.");
+            }
 
-            if(processor is Model.IEarlyInitializeModelProcessor)
+            if (processor is Model.IPatientIdentifierProcessor)
+            {
+                return new ProxyModelProcessorWithPatientIdentifierCapabilities((Model.IPatientIdentifierProcessor)processor);
+            }
+
+            if (processor is Model.IEarlyInitializeModelProcessor)
             {
                 return new ProxyModelProcessorWithEarlyInitialize((Model.IEarlyInitializeModelProcessor)processor);
             }
@@ -175,5 +186,16 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             return buffer;
         }
 
+    }
+
+    public class ProcessorNotFoundException : Exception
+    {
+        public ProcessorNotFoundException() : base() { }
+
+        public ProcessorNotFoundException(string message) : base(message) { }
+
+        public ProcessorNotFoundException(string message, Exception innerException) : base(message, innerException) { }
+
+        public ProcessorNotFoundException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

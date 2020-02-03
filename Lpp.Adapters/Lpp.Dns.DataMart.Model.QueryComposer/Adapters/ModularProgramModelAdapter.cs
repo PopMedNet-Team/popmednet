@@ -10,7 +10,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ModularProgram
     {
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ModularProgramModelAdapter() : base(new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154")) { }
+        public ModularProgramModelAdapter(RequestMetadata requestMetadata) : base(new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154"), requestMetadata) { }
 
         public override bool CanRunAndUpload
         {

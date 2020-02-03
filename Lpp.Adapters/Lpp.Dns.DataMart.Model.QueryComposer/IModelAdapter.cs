@@ -34,6 +34,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         bool CanAddResponseFiles { get; }
 
         /// <summary>
+        /// Gets if the adapter supports generating patient identifier lists.
+        /// </summary>
+        bool CanGeneratePatientIdentifierLists { get; }
+
+        /// <summary>
         /// Initializes the adapter with the provided settings.
         /// </summary>
         /// <param name="settings"></param>
@@ -58,6 +63,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         /// Performs any post-processing required on the specified response.
         /// </summary>
         /// <param name="response"></param>
-        void PostProcess(QueryComposerResponseDTO response);        
+        void PostProcess(QueryComposerResponseDTO response);
+
+        /// <summary>
+        /// Executes the current queries to generate Patient Identifier Lists and save to the specified file paths.
+        /// </summary>
+        /// <param name="outputPaths"></param>
+        void GeneratePatientIdentifierLists(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<Guid, string> outputPaths, string format);
     }
 }

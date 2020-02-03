@@ -156,4 +156,3 @@ var DataChecker;
         RxSup.ViewModel = ViewModel;
     })(RxSup = DataChecker.RxSup || (DataChecker.RxSup = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=RxSupResponse.js.map

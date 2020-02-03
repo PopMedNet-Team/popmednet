@@ -69,6 +69,7 @@ module Registries.Index {
                 vm.RegistriesGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Registries.Index.gRegistries.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RegistriesGrid()));
                 });
+                vm.RegistriesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

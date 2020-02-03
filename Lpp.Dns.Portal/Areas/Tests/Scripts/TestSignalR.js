@@ -1,9 +1,8 @@
-/// <reference path="../../../../lpp.pmn.resources/scripts/typings/jquery/jquery.d.ts" />
-/// <reference path="../../../../lpp.pmn.resources/scripts/typings/signalr/signalr.d.ts" />
+/// <reference path="../../../../node_modules/@types/jquery/index.d.ts" />
+/// <reference path="../../../../node_modules/@types/signalr/index.d.ts" />
 var CrudFunction;
 $(function () {
     Dns.WebApi.RequestsHub.NotifyCrud(function (data) {
         console.log(data);
     });
 });
-//# sourceMappingURL=TestSignalR.js.map

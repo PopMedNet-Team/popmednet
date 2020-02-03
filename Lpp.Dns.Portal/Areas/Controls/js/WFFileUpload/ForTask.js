@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -47,7 +50,7 @@ var Controls;
                     _this.sFtpFolders = ko.observableArray([_this.sFtpRoot]);
                     self.onFileUploadCompleted = function (evt) {
                         try {
-                            self.Documents.push(evt.response.Document);
+                            self.Documents.push(evt.response.Result);
                             Requests.Details.rovm.Save(false).done(function () { Requests.Details.rovm.RefreshTaskDocuments(); });
                         }
                         catch (e) {
@@ -231,4 +234,3 @@ var Controls;
         })(ForTask = WFFileUpload.ForTask || (WFFileUpload.ForTask = {}));
     })(WFFileUpload = Controls.WFFileUpload || (Controls.WFFileUpload = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=ForTask.js.map

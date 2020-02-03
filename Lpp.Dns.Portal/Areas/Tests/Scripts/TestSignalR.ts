@@ -1,5 +1,6 @@
-﻿/// <reference path="../../../../lpp.pmn.resources/scripts/typings/jquery/jquery.d.ts" />
-/// <reference path="../../../../lpp.pmn.resources/scripts/typings/signalr/signalr.d.ts" />
+﻿/// <reference path="../../../../node_modules/@types/jquery/index.d.ts" />
+/// <reference path="../../../../node_modules/@types/signalr/index.d.ts" />
+
 
 var CrudFunction: (data) => void;
 

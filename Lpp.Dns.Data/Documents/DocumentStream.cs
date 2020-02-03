@@ -90,9 +90,7 @@ namespace Lpp.Dns.Data.Documents
                 if (read <= 0)
                 {
                     if (canSeek)
-                        throw new EndOfStreamException(
-                            string.Format("End of stream reached, but { 0 } remained to be read.",
-                              remaining));
+                        throw new EndOfStreamException(string.Format("End of stream reached, but {0} remained to be read.", remaining));
                     else
                         break;
                 }
@@ -213,7 +211,7 @@ namespace Lpp.Dns.Data.Documents
             using (
     var cmd =
         new SqlCommand(
-            "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END WHERE ID = @id",
+            "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END, ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = CASE WHEN ContentCreatedOn IS NULL THEN GETUTCDATE() ELSE ContentCreatedOn END WHERE ID = @id",
             (SqlConnection)context.Database.Connection))
             {
 
@@ -244,7 +242,7 @@ namespace Lpp.Dns.Data.Documents
             using (
                 var cmd =
                     new SqlCommand(
-                        "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END WHERE ID = @id",
+                        "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END, ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = CASE WHEN ContentCreatedOn IS NULL THEN GETUTCDATE() ELSE ContentCreatedOn END WHERE ID = @id",
                         (SqlConnection) context.Database.Connection))
             {
 
@@ -272,7 +270,7 @@ namespace Lpp.Dns.Data.Documents
             if (context.Database.Connection.State != ConnectionState.Open)
                 await context.Database.Connection.OpenAsync();
 
-            using (var cmd = new SqlCommand("UPDATE Documents SET Data = @data WHERE ID = @id",
+            using (var cmd = new SqlCommand("UPDATE Documents SET Data = @data, ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = GETUTCDATE() WHERE ID = @id",
                 (SqlConnection) context.Database.Connection))
             {
 
@@ -303,7 +301,7 @@ namespace Lpp.Dns.Data.Documents
             using (
                 var cmd =
                     new SqlCommand(
-                        "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END WHERE ID = @id",
+                        "UPDATE Documents SET Data = CASE WHEN Data IS NULL THEN @data ELSE Data + @data END, ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = CASE WHEN ContentCreatedOn IS NULL THEN GETUTCDATE() ELSE ContentCreatedOn END WHERE ID = @id",
                         (SqlConnection) context.Database.Connection))
             {
 

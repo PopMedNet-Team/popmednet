@@ -182,25 +182,12 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             
             if (activityResultID.Value == SaveResultID)
             {
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+                if (_entity.Private)
                 {
                     await db.Entry(_entity).ReloadAsync();
+
                     _entity.Private = false;
-                    _entity.SubmittedByID = _workflow.Identity.ID;
 
-                    //Reset reject for resubmit.
-                    _entity.RejectedByID = null;
-                    _entity.RejectedOn = null;
-
-                    var originalStatus = _entity.Status;
-                    await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
-
-                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
-
-                    await MarkTaskComplete(task);
-                }
-                else
-                {
                     await task.LogAsModifiedAsync(_workflow.Identity, db);
                     await db.SaveChangesAsync();
                 }

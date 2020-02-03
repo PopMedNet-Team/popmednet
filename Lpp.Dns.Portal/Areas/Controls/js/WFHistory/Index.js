@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -27,15 +30,7 @@ var Controls;
                     _this.DataSource.group({ field: 'WorkflowActivityID' });
                     self.DataSource.sort({ field: 'Date', dir: 'desc' });
                     _this.RequestID.subscribe(function (newValue) {
-                        Dns.WebApi.Requests.GetWorkflowHistory(newValue)
-                            .done(function (items) {
-                            self.HistoryItems = items;
-                            self.DataSource = kendo.data.DataSource.create({ data: vm.HistoryItems });
-                            self.DataSource.group({ field: 'TaskID' });
-                            self.DataSource.sort({ field: 'Date', dir: 'desc' });
-                            $('#gWorkflowHistory').data('kendoGrid').setDataSource(self.DataSource);
-                            List.HistoryItemsChanged.notifySubscribers(items != null && items.length > 0);
-                        });
+                        self.refresh();
                     });
                     _this.formatTaskGroupHeader = function (e) {
                         if (e.field === 'WorkflowActivityID') {
@@ -52,6 +47,16 @@ var Controls;
                             }
                         }
                     };
+                    _this.refresh = function () {
+                        if (self.RequestID() == null)
+                            return;
+                        Dns.WebApi.Requests.GetWorkflowHistory(self.RequestID())
+                            .done(function (items) {
+                            self.HistoryItems = items;
+                            self.DataSource.data(self.HistoryItems);
+                            List.HistoryItemsChanged.notifySubscribers(items != null && items.length > 0);
+                        });
+                    };
                     return _this;
                 }
                 return ViewModel;
@@ -60,9 +65,15 @@ var Controls;
             /*subscribable event that notifies if the history collection has any items. */
             List.HistoryItemsChanged = new ko.subscribable();
             function setRequestID(requestID) {
-                vm.RequestID(requestID);
+                if (vm.RequestID) {
+                    vm.RequestID(requestID);
+                }
             }
             List.setRequestID = setRequestID;
+            function refreshHistory() {
+                vm.refresh();
+            }
+            List.refreshHistory = refreshHistory;
             function init(requestID) {
                 $.when(Dns.WebApi.Requests.GetWorkflowHistory(requestID))
                     .done(function (items) {
@@ -77,4 +88,3 @@ var Controls;
         })(List = WFHistory.List || (WFHistory.List = {}));
     })(WFHistory = Controls.WFHistory || (Controls.WFHistory = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=Index.js.map

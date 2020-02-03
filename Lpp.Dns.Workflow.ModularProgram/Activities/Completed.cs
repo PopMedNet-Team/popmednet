@@ -15,7 +15,7 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
 
         public override Guid ID
         {
-            get { return ModularProgramWorkflowConfiguration.CompletedID; }
+            get { return SimpleModularProgramWorkflowConfiguration.CompletedID; }
         }
 
         public override string ActivityName

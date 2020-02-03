@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/linq/linq.d.ts" />
+/// <reference path="../../../lpp.dns.portal/Scripts/page/Page.ts" />
+/// <reference path="../../../lpp.dns.portal/Scripts/typings/linq/linq.d.ts" />
 
 
 

@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" /> 
+﻿/// <reference path="../../Scripts/page/Page.ts" /> 
 
 module Requests.Index {
     var vm: ViewModel;
@@ -79,8 +79,29 @@ module Requests.Index {
             vm.dataSource.filter(filter.filters);
 
             return false;
-        }
+      }
 
+        public AddClearAllFiltersMenuItem(e: any): void {
+            let self = this;
+            let popup = e.container.data('kendoPopup');
+            let menu = e.container.find(".k-menu").data("kendoMenu");
+            let grid: kendo.ui.Grid = e.sender;
+            menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
+            menu.bind("select", function (e) {
+              if ($(e.item).text() == "Clear All Filters") {
+                //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
+                if (vm.SelectedProjectID() != Constants.GuidEmpty) {
+                  grid.dataSource.filter({ field: "ProjectID", operator: "equals", value: vm.SelectedProjectID() });
+                }
+                else {
+                  grid.dataSource.filter({ field: "ProjectID", operator: "notequals", value: Constants.GuidEmpty });
+                }
+                menu.close();
+                popup.close();
+              }
+            });
+          }
+  
         public ResultsGrid(): kendo.ui.Grid {
             return $("#gResults").data("kendoGrid");
         }
@@ -159,6 +180,7 @@ module Requests.Index {
                 vm.ResultsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
                 });
+                vm.ResultsGrid().bind("columnMenuInit", vm.AddClearAllFiltersMenuItem);
             });
         });
     }

@@ -5,7 +5,6 @@ using System.Text;
 using Lpp.Dns.DataMart.Model.Settings;
 using System.Linq.Expressions;
 using System.ComponentModel;
-using MySql.Data.Entity;
 using System.Data.Entity.Core.Objects;
 //using Oracle.ManagedDataAccess.Client;
 //using Oracle.ManagedDataAccess.Types;
@@ -169,9 +168,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
                     break;
                 case SQLProvider.PostgreSQL:
                     conn = new Npgsql.NpgsqlConnection(connectionString);
-                    break;
-                case SQLProvider.MySQL:
-                    conn = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
                     break;
                 case SQLProvider.Oracle:
                     conn = new Oracle.ManagedDataAccess.Client.OracleConnection(connectionString);

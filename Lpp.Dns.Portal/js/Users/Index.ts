@@ -72,6 +72,7 @@ module Users.Index {
                 vm.UsersGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Users.Index.gUsers.User:" + User.ID, Global.Helpers.GetGridSettings(vm.UsersGrid()));
                 });
+                vm.UsersGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

@@ -1,5 +1,5 @@
 ﻿/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
-/// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../../Lpp.Dns.Portal/Scripts/page/Page.ts" />
 
 module SPAN.Create {
     export var RawModel: IViewModelData = null;

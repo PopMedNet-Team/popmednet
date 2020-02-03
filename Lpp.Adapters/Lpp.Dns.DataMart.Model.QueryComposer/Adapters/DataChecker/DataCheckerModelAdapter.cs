@@ -16,7 +16,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
         string _connectionString = string.Empty;        
         DataContext db = null;
 
-        public DataCheckerModelAdapter() : base(new Guid("321ADAA1-A350-4DD0-93DE-5DE658A507DF")) { }
+        public DataCheckerModelAdapter(RequestMetadata requestMetadata) : base(new Guid("321ADAA1-A350-4DD0-93DE-5DE658A507DF"), requestMetadata) { }
 
         public override void Initialize(IDictionary<string, object> settings)
         {

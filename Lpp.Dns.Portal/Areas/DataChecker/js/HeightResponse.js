@@ -192,4 +192,3 @@ var DataChecker;
         Height.ViewModel = ViewModel;
     })(Height = DataChecker.Height || (DataChecker.Height = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=HeightResponse.js.map

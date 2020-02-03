@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
+﻿/// <reference path="../../Scripts/typings/bootstrap.dns.d.ts" />
 
 module Requests.Edit {
     export var RawModel: any = null;

@@ -205,14 +205,31 @@ namespace Lpp.Dns.DataMart.Client.Utils
 
         public void LoadModels( NetWorkSetting ns )
         {
+            //Get the current model information from the API.
+            var models = DnsServiceManager.GetModels(ns);
+
             foreach ( var d in ns.DataMartList )
             {
-                d.ModelList = (from m in DnsServiceManager.GetModels( d.DataMartId, ns ).EmptyIfNull()
-                               join existing in d.ModelList.EmptyIfNull() on m.Id equals existing.ModelId into exts
-                               from existing in exts.DefaultIfEmpty()
-                               select existing ?? new ModelDescription { ModelId = m.Id, ModelName = m.Name, ProcessorId = m.ModelProcessorId }
-                              ).ToList();
-            }
+                HubModel[] m = models[d.DataMartId];
+
+				if (d.ModelList != null && !d.ModelList.IsEmpty())
+					try
+					{
+						//add missing models
+						var newModels = m.Where(x => !d.ModelList.Any(a => a.ModelId == x.Id)).ToArray();
+						if (newModels.Length > 0)
+						{
+							d.ModelList.AddRange(newModels.Select(nm => new ModelDescription { ModelId = nm.Id, ModelName = nm.Name, ModelDisplayName = nm.Name, ProcessorId = nm.ModelProcessorId }));
+						}
+
+						//remove old models
+						d.ModelList.RemoveAll(rm => !m.Any(a => a.Id == rm.ModelId));
+					}
+					catch (ArgumentNullException ex)
+					{
+						// Ignore if nothing to remove, which will throw an exception.
+					}
+			}
         }
 
         #endregion
@@ -267,9 +284,7 @@ namespace Lpp.Dns.DataMart.Client.Utils
                     log.Debug("Network Settings: " + file.ReadToEnd());
                 }
             }
-            catch (Exception e)
-            {
-            }
+            catch {}
         }
         #endregion
 

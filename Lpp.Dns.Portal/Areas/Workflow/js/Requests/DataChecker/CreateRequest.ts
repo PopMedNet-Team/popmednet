@@ -28,12 +28,52 @@ module Workflow.WFDataChecker.CreateRequest {
                 }
                 deleteFilesDeferred.done(() => {
 
-                    if (!Requests.Details.rovm.Validate())
-                        return;
-                    var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
-                    if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                  if (!Requests.Details.rovm.Validate())
+                      return;
+
+                  if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0) {
+                    Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(() => {
+                      var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
+                      if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
                         Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
                         return;
+                      }
+
+                      var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
+
+                      var uploadCriteria = Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.serializeCriteria();
+                      Requests.Details.rovm.Request.Query(uploadCriteria);
+
+                      var AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val()
+                      var dto = Requests.Details.rovm.Request.toData()
+                      dto.AdditionalInstructions = AdditionalInstructions;
+
+                      Requests.Details.PromptForComment().done((comment) => {
+                        Dns.WebApi.Requests.CompleteActivity({
+                          DemandActivityResultID: resultID,
+                          Dto: dto,
+                          DataMarts: selectedDataMarts,
+                          Data: JSON.stringify(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
+                          Comment: comment
+                        }).done((results) => {
+                          var result = results[0];
+                          if (result.Uri) {
+                            Global.Helpers.RedirectTo(result.Uri);
+                          } else {
+                            //Update the request etc. here 
+                            Requests.Details.rovm.Request.ID(result.Entity.ID);
+                            Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                            Requests.Details.rovm.UpdateUrl();
+                          }
+                        });
+                      });
+                    }).fail(() => { return; });
+                  }
+                  else {
+                    var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
+                    if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                      Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
+                      return;
                     }
 
                     var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
@@ -46,24 +86,25 @@ module Workflow.WFDataChecker.CreateRequest {
                     dto.AdditionalInstructions = AdditionalInstructions;
 
                     Requests.Details.PromptForComment().done((comment) => {
-                        Dns.WebApi.Requests.CompleteActivity({
-                            DemandActivityResultID: resultID,
-                            Dto: dto,
-                            DataMarts: selectedDataMarts,
-                            Data: JSON.stringify(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
-                            Comment: comment
-                        }).done((results) => {
-                            var result = results[0];
-                            if (result.Uri) {
-                                Global.Helpers.RedirectTo(result.Uri);
-                            } else {
-                                //Update the request etc. here 
-                                Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                Requests.Details.rovm.UpdateUrl();
-                            }
-                        });
+                      Dns.WebApi.Requests.CompleteActivity({
+                        DemandActivityResultID: resultID,
+                        Dto: dto,
+                        DataMarts: selectedDataMarts,
+                        Data: JSON.stringify(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
+                        Comment: comment
+                      }).done((results) => {
+                        var result = results[0];
+                        if (result.Uri) {
+                          Global.Helpers.RedirectTo(result.Uri);
+                        } else {
+                          //Update the request etc. here 
+                          Requests.Details.rovm.Request.ID(result.Entity.ID);
+                          Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                          Requests.Details.rovm.UpdateUrl();
+                        }
+                      });
                     });
+                  }
                 });
 
             } else {

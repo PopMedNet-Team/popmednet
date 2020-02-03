@@ -31,4 +31,3 @@ var Controls;
         })(Test = WFHistory.Test || (WFHistory.Test = {}));
     })(WFHistory = Controls.WFHistory || (Controls.WFHistory = {}));
 })(Controls || (Controls = {}));
-//# sourceMappingURL=Test.js.map

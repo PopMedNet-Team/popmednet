@@ -216,4 +216,3 @@ var DataChecker;
         Weight.ViewModel = ViewModel;
     })(Weight = DataChecker.Weight || (DataChecker.Weight = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=WeightResponse.js.map

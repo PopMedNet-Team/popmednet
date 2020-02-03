@@ -70,6 +70,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
 		public CurrentlySelectedModels: any = [];
 
         public onExportJSON: () => string;
+        public onUploadCodeList: () => void;
+        public showCodeListUpload: KnockoutComputed<boolean>;
 
         public static DataCheckerProcedureCodeTypes = new Array(
             { Name: 'Any', Value: '' },
@@ -132,7 +134,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
                     csub.Terms = ko.utils.arrayFilter(csub.Terms, (tt) => { return !Terms.Compare(tt.Type, Terms.DataCheckerQueryTypeID) });
                 });
             });
-			//check out options.Models
+			      //check out options.Models
             var termValueFilter = new Plugins.Requests.QueryBuilder.MDQ.TermValueFilter(ko.utils.arrayMap(options.Models, (m) => m.DataModelID));
             this.SexForCritieria =  ko.observableArray(termValueFilter.SexValues());
             this.SettingForCritieria =  ko.observableArray( termValueFilter.SettingsValues());
@@ -611,6 +613,41 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 return 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(self.Request.toData()));
             };
 
+            self.onUploadCodeList = () => {
+                Global.Helpers.ShowDialog("Import Code Values", "/QueryComposer/UploadCodeList", [], 670, 450, null).done((importResponse: Plugins.Requests.QueryBuilder.UploadCodeList.ResponseDTO) => {
+                    
+                    if (importResponse.Status === "Complete" && importResponse.Result != null && importResponse.Result.length > 0) {
+                       
+                        let helper = new Plugins.Requests.QueryBuilder.MDQ.ImportCodeListHelper(self);
+                        helper.ImportCodeList(importResponse.Result, importResponse.Criteria === 'Append' ? false : true);
+
+                        self.GetCompatibleDataMarts();
+
+                    }//end of successful parsing response guard clause
+                }).fail((err) => {
+                    debugger;
+                    });//end of the import promise
+            };//end of on upload action
+
+            self.showCodeListUpload = ko.pureComputed<boolean>(() => {
+                var diagTerm = ko.utils.arrayFirst(self.CriteriaTermList(), (item) => {
+                    return item.TermID === "86110001-4bab-4183-b0ea-a4bc0125a6a7"
+                });
+                var procedureTerm = ko.utils.arrayFirst(self.CriteriaTermList(), (item) => {
+                    return item.TermID === "f81ae5de-7b35-4d7a-b398-a72200ce7419"
+                });
+
+                if (diagTerm !== null && procedureTerm !== null) {
+                    return true;
+                }
+                else if (diagTerm !== null || procedureTerm !== null) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+
             self.TermsColumnVisible = ko.computed(() => {
                 var isVis: boolean = false;
                 if (self.IsTemplateEdit)
@@ -662,7 +699,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 return isVis;
             });
         }
-
+        
         public AreTermsValid(): boolean {
             var areTermsValid: boolean = true;
             $.each(this.TermValidators, function (key, value) {
@@ -730,7 +767,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
             self.Request.Where.Criteria.remove(data);
             itemArr = null;
-			this.GetCompatibleDataMarts();
+            this.GetCompatibleDataMarts();
         }
 
         public btnSaveCriteriaGroup_Click(criteriaGroup: Dns.ViewModels.QueryComposerCriteriaViewModel) {

@@ -1,5 +1,5 @@
 ﻿/// <reference path="../../../../lpp.dns.portal/scripts/common.ts" />
-/// <reference path="../../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../../../../lpp.dns.portal/Scripts/page/Page.ts" />
 
 module ESPQueryBuilder.Create {
     export var RawModel: IViewModelData = null;

@@ -1,4 +1,4 @@
-/// <reference path='../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.d.ts' />
+/// <reference path='../../node_modules/@types/jquery/index.d.ts' />
 /// <reference path='Lpp.Dns.ViewModels.ts' />
 declare var ServiceUrl: string;
 declare var User
@@ -613,6 +613,10 @@ module Dns.WebApi {
 	 	 	 	 params = '?' + params.substr(1);
 
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.ITemplateTermDTO[]>('Terms/ListTemplateTerms' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static ParseCodeList( doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('Terms/ParseCodeList', doNotHandleFail);
 	 	 }
 
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
@@ -3622,7 +3626,7 @@ module Dns.WebApi {
                         }
                     }
 
-                    d.resolve(result);
+                    d.resolve(<any>result);
                 }).fail((e) => {
                     if (this.failMethod && !doNotHandleFail)
                         this.failMethod(e);
@@ -3667,7 +3671,7 @@ module Dns.WebApi {
                         }
                     }
 
-                    d.resolve(result);
+                    d.resolve(<any>result);
                 }).fail((e) => {
                     if (this.failMethod && !doNotHandleFail)
                         this.failMethod(e);

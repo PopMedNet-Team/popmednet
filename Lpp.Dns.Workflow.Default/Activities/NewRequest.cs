@@ -18,13 +18,15 @@ namespace Lpp.Dns.Workflow.Default.Activities
 {
     public class NewRequest : ActivityBase<Request>
     {
-        private Guid SubmitResultID = new Guid("48B20001-BD0B-425D-8D49-A3B5015A2258");
-        private Guid ReviewResultID = new Guid("C4FB25F8-8521-427E-8FB1-78A84311BF1C");
-        private Guid DeleteResultID = new Guid("61110001-1708-4869-BDCF-A3B600E24AA3");
-        private Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+        private static readonly Guid SubmitResultID = new Guid("48B20001-BD0B-425D-8D49-A3B5015A2258");
+        private static readonly Guid ReviewResultID = new Guid("C4FB25F8-8521-427E-8FB1-78A84311BF1C");
+        private static readonly Guid DeleteResultID = new Guid("61110001-1708-4869-BDCF-A3B600E24AA3");
+        private static readonly Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
 
         private const string DocumentKind = "Lpp.Dns.Workflow.Default.Activities.Request";
-        
+
+        public static readonly Guid FileUploadTermID = new Guid("2F60504D-9B2F-4DB1-A961-6390117D3CAC");
+
         public override Guid ID
         {
             get
@@ -138,7 +140,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                 var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, _entity, filters, PermissionIdentifiers.Request.SkipSubmissionApproval);
                 await db.Entry(_entity).ReloadAsync();
 
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type == FileUploadTermID) || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type == FileUploadTermID))))
                 {
                     await db.LoadCollection(_entity, (r) => r.DataMarts);
 
@@ -329,30 +331,14 @@ namespace Lpp.Dns.Workflow.Default.Activities
             else if (activityResultID.Value == SaveResultID) //Save
             {
 
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+                if (_entity.Private)
                 {
                     await db.Entry(_entity).ReloadAsync();
+
                     _entity.Private = false;
-                    _entity.SubmittedByID = _workflow.Identity.ID;
 
-                    //Reset reject for resubmit.
-                    _entity.RejectedByID = null;
-                    _entity.RejectedOn = null;
-
-                    await MarkTaskComplete(task);
-                }
-                else
-                {
-
-                    if (_entity.Private)
-                    {
-                        await db.Entry(_entity).ReloadAsync();
-
-                        _entity.Private = false;
-
-                        await task.LogAsModifiedAsync(_workflow.Identity, db);
-                        await db.SaveChangesAsync();
-                    }
+                    await task.LogAsModifiedAsync(_workflow.Identity, db);
+                    await db.SaveChangesAsync();
                 }
 
                 return new CompletionResult
@@ -380,7 +366,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
             }
         }
 
-        public static readonly Guid FileUploadTermID = new Guid("2F60504D-9B2F-4DB1-A961-6390117D3CAC");
+        
         internal class FileUploadValues
         {
             public IList<Document> Documents { get; set; }

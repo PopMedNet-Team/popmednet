@@ -11,7 +11,7 @@ namespace Lpp.Mvc
     {
         public static string ResourceUrl(this WebViewPage page, string url)
         {
-            return string.Format("{0}{1}", System.Web.Configuration.WebConfigurationManager.AppSettings["ResourceUrl"], url);
+            return string.Format("{0}{1}", System.Web.Configuration.WebConfigurationManager.AppSettings["ResourceUrl"].Trim('/'), url);
         }
 
         public static string UniqueId( this HtmlHelper html )

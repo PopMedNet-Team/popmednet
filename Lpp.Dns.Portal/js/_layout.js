@@ -1,4 +1,4 @@
-/// <reference path="../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
+/// <reference path="../Scripts/page/Page.ts" />
 var Layout;
 (function (Layout) {
     var FooterViewModel = /** @class */ (function () {
@@ -80,4 +80,3 @@ var Layout;
     }
     init();
 })(Layout || (Layout = {}));
-//# sourceMappingURL=_Layout.js.map

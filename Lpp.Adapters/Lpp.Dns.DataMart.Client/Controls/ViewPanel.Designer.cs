@@ -254,7 +254,6 @@
         private System.Windows.Forms.WebBrowser XSLXML;
         public System.Windows.Forms.DataGridView FILELIST;
         private System.Windows.Forms.BindingSource bsDocumentList;
-        private System.Windows.Forms.DataGridViewLinkColumn ResulstFileName;
         protected TransparentLabel lblNoResults;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colDocumentSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn Filename;

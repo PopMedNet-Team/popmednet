@@ -1,8 +1,11 @@
 /// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -429,18 +432,23 @@ var Home;
                     vm.TasksGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Home.Index.gTasks.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TasksGrid()));
                     });
+                    vm.TasksGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                     vm.MessagesGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Home.Index.gMessages.User:" + User.ID, Global.Helpers.GetGridSettings(vm.MessagesGrid()));
                     });
+                    vm.MessagesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                     vm.NotificationsGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Home.Index.gNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(vm.NotificationsGrid()));
                     });
+                    vm.NotificationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                     vm.RequestsGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Home.Index.gRequests.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestsGrid()));
                     });
+                    vm.RequestsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                     vm.DataMartsGrid().bind("dataBound", function (e) {
                         Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
                     });
+                    vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                     for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
                         var tasksGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
                         if (vm.NotificationsGrid().columns[i].title == 'Date') {
@@ -1003,4 +1011,3 @@ var Home;
         init();
     })(Index = Home.Index || (Home.Index = {}));
 })(Home || (Home = {}));
-//# sourceMappingURL=index.js.map

@@ -49,4 +49,3 @@ var DataChecker;
         NDC.ViewModel = ViewModel;
     })(NDC = DataChecker.NDC || (DataChecker.NDC = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=NDCResponse.js.map

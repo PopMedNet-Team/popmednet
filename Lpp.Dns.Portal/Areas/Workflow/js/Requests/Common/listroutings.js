@@ -1,8 +1,11 @@
 /// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -126,16 +129,16 @@ var Workflow;
                     self.OverrideableRoutingIDs = overrideableRoutingIDs || [];
                     self.SelectedCompleteResponses = ko.observableArray([]);
                     self.SelectedIncompleteRoutings = ko.observableArray([]);
-                    self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
-                    self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
+                    self.AllowViewIndividualResults = canViewIndividualResponses;
+                    self.AllowViewAggregateResults = canViewAggregateResponses;
                     self.isDefault = (Requests.Details.rovm.Request.WorkflowID().toUpperCase() == 'F64E0001-4F9A-49F0-BF75-A3B501396946');
                     self.AllowCopy = Requests.Details.rovm.AllowCopy();
                     self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == Permissions.Request.ViewHistory; }) != null;
-                    self.AllowAggregateView = ko.observable(true);
+                    self.AllowAggregateView = true;
                     //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                     requestTypeModels.forEach(function (rt) {
                         if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
-                            self.AllowAggregateView(false);
+                            self.AllowAggregateView = false;
                     });
                     self.DataMartsToAdd = ko.observableArray([]);
                     self.strDataMartsToAdd = '';
@@ -669,4 +672,3 @@ var Workflow;
         })(ListRoutings = Common.ListRoutings || (Common.ListRoutings = {}));
     })(Common = Workflow.Common || (Workflow.Common = {}));
 })(Workflow || (Workflow = {}));
-//# sourceMappingURL=listroutings.js.map

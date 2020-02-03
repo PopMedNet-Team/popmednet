@@ -58,11 +58,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 defaultSchema = "dbo";
                 connection = new Npgsql.NpgsqlConnection(connectionString);
             }
-            else if (dbProvider == Settings.SQLProvider.MySQL)
-            {
-                defaultSchema = "dbo";
-                connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
-            }
             else if (dbProvider == Settings.SQLProvider.Oracle)
             {
                 defaultSchema = "C##PCORNETUSER";
@@ -156,26 +151,16 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     }
                 }
             }
-            else if (sqlProvider == Settings.SQLProvider.MySQL)
-            {
-                var mysqlConnectionStringBuilder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connectionString);
-                adapterSettings = new Dictionary<string, object>(){
-                    {"Server", mysqlConnectionStringBuilder.Server },
-                    {"Port", mysqlConnectionStringBuilder.Port.ToString() },
-                    {"UserID", mysqlConnectionStringBuilder.UserID },
-                    {"Password", mysqlConnectionStringBuilder.Password },
-                    {"Database", mysqlConnectionStringBuilder.Database },
-                    {"ConnectionTimeout", mysqlConnectionStringBuilder.ConnectionTimeout.ToString() },
-                    {"CommandTimeout", mysqlConnectionStringBuilder.DefaultCommandTimeout.ToString()},
-                    {"DataProvider", sqlProvider.ToString()}
-                };
-            }
             else
             {
                 throw new NotImplementedException("Support for parsing configuration string into adapter settings not completed yet.");
             }
 
-            var adapter = new QueryComposer.Adapters.PCORI.PCORIModelAdapter();
+            var adapter = new QueryComposer.Adapters.PCORI.PCORIModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -214,7 +199,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.PostgreSQL.ToString()}
                 };
 
-            var adapter = new QueryComposer.Adapters.ESP.ESPModelAdapter();
+            var adapter = new QueryComposer.Adapters.ESP.ESPModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -232,7 +221,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
                 };
 
-            var adapter = new QueryComposer.Adapters.SummaryQuery.IncidenceModelAdapter();
+            var adapter = new QueryComposer.Adapters.SummaryQuery.IncidenceModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -248,7 +241,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
                 };
 
-            var adapter = new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter();
+            var adapter = new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -264,7 +261,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
                 };
 
-            var adapter = new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter();
+            var adapter = new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -286,7 +287,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                     {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
                 };
 
-            var adapter = new QueryComposer.Adapters.DataChecker.DataCheckerModelAdapter();
+            var adapter = new QueryComposer.Adapters.DataChecker.DataCheckerModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
             adapter.Initialize(adapterSettings);
             return adapter;
         }
@@ -313,11 +318,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             {
                 defaultSchema = "dbo";
                 connection = new Npgsql.NpgsqlConnection(connectionString);
-            }
-            else if (dbProvider == Settings.SQLProvider.MySQL)
-            {
-                defaultSchema = "dbo";
-                connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
             }
             else if (dbProvider == Settings.SQLProvider.Oracle)
             {

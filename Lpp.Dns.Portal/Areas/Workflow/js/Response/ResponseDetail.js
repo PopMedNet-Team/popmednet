@@ -1,8 +1,11 @@
 /// <reference path="../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -138,11 +141,31 @@ var Workflow;
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 $('#gResults').append(bucket);
                                 //resize the iframe to the contents plus padding for the export dropdown menu
-                                $(window.frameElement).height($('html').height() + 70);
+                                var prevHeight = $('html').height();
+                                var interval = setInterval(function () {
+                                    var newVal = $('html').height();
+                                    if (newVal > prevHeight) {
+                                        prevHeight = newVal;
+                                        $(window.frameElement).height($('html').height() + 70);
+                                    }
+                                    else if (newVal === prevHeight && prevHeight !== 0) {
+                                        clearInterval(interval);
+                                    }
+                                }, 10);
                             }).fail(function () {
                                 self.IsResponseLoadFailed(true);
                                 self.ResponseContentComplete(true);
-                                $(window.frameElement).height($('html').height());
+                                var prevHeight = $('html').height();
+                                var interval = setInterval(function () {
+                                    var newVal = $('html').height();
+                                    if (newVal > prevHeight) {
+                                        prevHeight = newVal;
+                                        $(window.frameElement).height($('html').height() + 70);
+                                    }
+                                    else if (newVal === prevHeight && prevHeight !== 0) {
+                                        clearInterval(interval);
+                                    }
+                                }, 10);
                             });
                         }
                         else {
@@ -225,4 +248,3 @@ var Workflow;
         })(Common = Response.Common || (Response.Common = {}));
     })(Response = Workflow.Response || (Workflow.Response = {}));
 })(Workflow || (Workflow = {}));
-//# sourceMappingURL=ResponseDetail.js.map

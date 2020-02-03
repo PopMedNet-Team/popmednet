@@ -143,4 +143,3 @@ var DataChecker;
         Ethnicity.ViewModel = ViewModel;
     })(Ethnicity = DataChecker.Ethnicity || (DataChecker.Ethnicity = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=EthnicityResponse.js.map

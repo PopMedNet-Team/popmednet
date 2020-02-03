@@ -35,28 +35,52 @@ module Workflow.SummaryQuery.DraftRequest {
                         return;
                     }
 
-                    var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
+                  var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
 
-
-                    Requests.Details.PromptForComment().done((comment) => {
+                  if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0) {
+                    Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(() => {
+                      Requests.Details.PromptForComment().done((comment) => {
                         Dns.WebApi.Requests.CompleteActivity({
-                            DemandActivityResultID: resultID,
-                            Dto: Requests.Details.rovm.Request.toData(),
-                            DataMarts: selectedDataMarts,
-                            Data: JSON.stringify(null),
-                            Comment: comment
+                          DemandActivityResultID: resultID,
+                          Dto: Requests.Details.rovm.Request.toData(),
+                          DataMarts: selectedDataMarts,
+                          Data: JSON.stringify(null),
+                          Comment: comment
                         }).done((results) => {
-                            var result = results[0];
-                            if (result.Uri) {
-                                Global.Helpers.RedirectTo(result.Uri);
-                            } else {
-                                //Update the request etc. here 
-                                Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                Requests.Details.rovm.UpdateUrl();
-                            }
+                          var result = results[0];
+                          if (result.Uri) {
+                            Global.Helpers.RedirectTo(result.Uri);
+                          } else {
+                            //Update the request etc. here 
+                            Requests.Details.rovm.Request.ID(result.Entity.ID);
+                            Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                            Requests.Details.rovm.UpdateUrl();
+                          }
                         });
+                      });
+                    }).fail(() => { return; });
+                  }
+                  else {
+                    Requests.Details.PromptForComment().done((comment) => {
+                      Dns.WebApi.Requests.CompleteActivity({
+                        DemandActivityResultID: resultID,
+                        Dto: Requests.Details.rovm.Request.toData(),
+                        DataMarts: selectedDataMarts,
+                        Data: JSON.stringify(null),
+                        Comment: comment
+                      }).done((results) => {
+                        var result = results[0];
+                        if (result.Uri) {
+                          Global.Helpers.RedirectTo(result.Uri);
+                        } else {
+                          //Update the request etc. here 
+                          Requests.Details.rovm.Request.ID(result.Entity.ID);
+                          Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                          Requests.Details.rovm.UpdateUrl();
+                        }
+                      });
                     });
+                  }
                 });
             } else {
                 if (!Requests.Details.rovm.Validate())

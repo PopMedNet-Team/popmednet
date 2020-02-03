@@ -1,14 +1,17 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path='../../Lpp.Pmn.Resources/node_modules/@types/knockout.mapping/index.d.ts' />
+/// <reference path='../../node_modules/@types/knockout.mapping/index.d.ts' />
 /// <reference path='Lpp.Dns.Interfaces.ts' />
 var Dns;
 (function (Dns) {
@@ -5890,6 +5893,8 @@ var Dns;
                     _this.Length = ko.observable();
                     _this.ItemID = ko.observable();
                     _this.CreatedOn = ko.observable();
+                    _this.ContentModifiedOn = ko.observable();
+                    _this.ContentCreatedOn = ko.observable();
                     _this.ItemTitle = ko.observable();
                     _this.Description = ko.observable();
                     _this.ParentDocumentID = ko.observable();
@@ -5915,6 +5920,8 @@ var Dns;
                     _this.Length = ko.observable(ExtendedDocumentDTO.Length);
                     _this.ItemID = ko.observable(ExtendedDocumentDTO.ItemID);
                     _this.CreatedOn = ko.observable(ExtendedDocumentDTO.CreatedOn);
+                    _this.ContentModifiedOn = ko.observable(ExtendedDocumentDTO.ContentModifiedOn);
+                    _this.ContentCreatedOn = ko.observable(ExtendedDocumentDTO.ContentCreatedOn);
                     _this.ItemTitle = ko.observable(ExtendedDocumentDTO.ItemTitle);
                     _this.Description = ko.observable(ExtendedDocumentDTO.Description);
                     _this.ParentDocumentID = ko.observable(ExtendedDocumentDTO.ParentDocumentID);
@@ -5943,6 +5950,8 @@ var Dns;
                     Length: this.Length(),
                     ItemID: this.ItemID(),
                     CreatedOn: this.CreatedOn(),
+                    ContentModifiedOn: this.ContentModifiedOn(),
+                    ContentCreatedOn: this.ContentCreatedOn(),
                     ItemTitle: this.ItemTitle(),
                     Description: this.Description(),
                     ParentDocumentID: this.ParentDocumentID(),
@@ -9342,4 +9351,3 @@ var Dns;
         ViewModels.AclProjectDataMartRequestTypeViewModel = AclProjectDataMartRequestTypeViewModel;
     })(ViewModels = Dns.ViewModels || (Dns.ViewModels = {}));
 })(Dns || (Dns = {}));
-//# sourceMappingURL=Lpp.Dns.ViewModels.js.map
