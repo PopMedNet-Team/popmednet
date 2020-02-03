@@ -1,4 +1,4 @@
-﻿module Request.View {
+﻿module Requests.View {
     export var ResponseHistoryUrlTemplate: string = '';
     export var RawModel: any = null;
     export var RequestID: any = null; 
@@ -329,8 +329,8 @@
             EditRequestIDBool = true;
         }
 
-        var oldPriority = Request.View.vmRoutings.Request.Priority;
-        var oldDueDate = Request.View.vmRoutings.Request.DueDate;
+        var oldPriority = Requests.View.vmRoutings.Request.Priority;
+        var oldDueDate = Requests.View.vmRoutings.Request.DueDate;
         Global.Helpers.ShowDialog("Edit Request Metadata", "/request/editrequestmetadatadialog", ["Close"], 1000, 570, { Requestid: RequestID, allowEditRequestID: EditRequestIDBool })
             .done((
                 result: any
@@ -353,7 +353,7 @@
                 $('#Source_Task_Activity').val(result.sourceactivityname);
                 $('#Source_Task_Activity_Project').val(result.sourceactivityprojectname);
 
-                Request.View.vmRoutings.Routings().forEach((r) => {
+                Requests.View.vmRoutings.Routings().forEach((r) => {
                     if (oldDueDate != result.dueDate) {
                         r.DueDate = result.dueDate;
                     }
@@ -361,15 +361,15 @@
                         r.Priority = result.priority;
                     }
                 });
-                Request.View.vmRoutings.IncompleteRoutings().forEach((dm) => {
-                    Request.View.vmRoutings.Routings().forEach((r) => {
+                Requests.View.vmRoutings.IncompleteRoutings().forEach((dm) => {
+                    Requests.View.vmRoutings.Routings().forEach((r) => {
                         if (dm.ID == r.RequestDataMartID) {
                             dm.DueDate = r.DueDate;
                             dm.Priority = r.Priority;
                         }
                     });
                 });
-                Dns.WebApi.Requests.UpdateRequestDataMartsMetadata(Request.View.vmRoutings.IncompleteRoutings()).done(() => {
+                Dns.WebApi.Requests.UpdateRequestDataMartsMetadata(Requests.View.vmRoutings.IncompleteRoutings()).done(() => {
                     window.location.reload();
                 });
             }
@@ -381,9 +381,9 @@
     export function init() {
         
         $.when<any>(
-            Dns.WebApi.Projects.GetFieldOptions(Request.View.RawModel.ProjectID, User.ID),
-            Dns.WebApi.Requests.GetOverrideableRequestDataMarts(Request.View.RequestID, null, 'ID'),
-            Dns.WebApi.Requests.Get(Request.View.RequestID)
+            Dns.WebApi.Projects.GetFieldOptions(Requests.View.RawModel.ProjectID, User.ID),
+            Dns.WebApi.Requests.GetOverrideableRequestDataMarts(Requests.View.RequestID, null, 'ID'),
+            Dns.WebApi.Requests.Get(Requests.View.RequestID)
         ).done((fieldOptions, overrideableRoutingIDs: any[], request: Dns.Interfaces.IRequestDTO[]) => {
             $(() => {
                 var bindingControl = $("#routings");

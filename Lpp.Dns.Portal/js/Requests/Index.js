@@ -1,9 +1,14 @@
 /// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" /> 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Requests;
 (function (Requests) {
     var Index;
@@ -11,7 +16,6 @@ var Requests;
         var vm;
         var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
-            //public onColumnChanged: (e: any) => void;
             function ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjecs) {
                 var _this = _super.call(this, bindingControl) || this;
                 var self = _this;
@@ -50,23 +54,13 @@ var Requests;
                     //
                     if (arguments.length > 0) {
                         //Saving filter chnages right back to the DB.  
-                        vm.Save();
+                        Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings($("#gResults").data("kendoGrid")));
                     }
                     // Call the original filter function.
                     var result = originalFilter.apply(this, arguments);
                     return result;
                 };
-                _this.onColumnMenuInit = function (e) {
-                    var menu = e.container.find(".k-menu").data("kendoMenu");
-                    menu.bind("close", function (e) {
-                        self.Save();
-                    });
-                };
                 return _this;
-                //this.onColumnChanged = (e) => {
-                //    alert('gwell');
-                //    self.Save();
-                //};
             }
             ViewModel.prototype.SelectProject = function (project) {
                 vm.SelectedProjectID(project.ID());
@@ -112,9 +106,6 @@ var Requests;
                     window.location.href = url;
                 });
             };
-            ViewModel.prototype.Save = function () {
-                Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(this.ResultsGrid()));
-            };
             return ViewModel;
         }(Global.PageViewModel));
         Index.ViewModel = ViewModel;
@@ -137,12 +128,14 @@ var Requests;
                         projectID = Constants.GuidEmpty;
                     vm = new ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjects);
                     ko.applyBindings(vm, bindingControl[0]);
-                    $(window).unload(function () { return vm.Save(); });
                     //The collection of Date type columns in the grid.
                     var arrDateColumns = [];
                     arrDateColumns.push("SubmittedOn", "DueDate");
                     //This specific method ensures that date filters are processed accordingly.
                     Global.Helpers.SetGridFromSettingsWithDates(vm.ResultsGrid(), gResultsSettings, arrDateColumns);
+                    vm.ResultsGrid().bind("dataBound", function (e) {
+                        Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
+                    });
                 });
             });
         }

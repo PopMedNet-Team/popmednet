@@ -199,4 +199,4 @@ var Security;
         Acl.PermissionListViewModel = PermissionListViewModel;
     })(Acl = Security.Acl || (Security.Acl = {}));
 })(Security || (Security = {}));
-//# sourceMappingURL=aclviewmodel.js.map
+//# sourceMappingURL=AclViewModel.js.map

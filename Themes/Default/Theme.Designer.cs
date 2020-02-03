@@ -61,7 +61,7 @@ namespace Theme.Default {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2015 PopMedNet, All Rights Reserved.
+        ///   Looks up a localized string similar to © 2018 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {
             get {
@@ -119,7 +119,7 @@ namespace Theme.Default {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p&gt;You are accessing a U.S. government information system. Your use of this system indicates consent to monitoring and recording. Usage of this system may be monitored, recorded, and subject to audit. Unauthorized use of this system is prohibited and subject to criminal and civil penalties.&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p&gt;This tool is for use by authorized users for demonstration purposes only. All use must be related to authorized demonstration projects. Use of the tool is monitored and audited. User privileges may be revoked at any time.&lt;/p&gt;.
         /// </summary>
         internal static string Terms {
             get {

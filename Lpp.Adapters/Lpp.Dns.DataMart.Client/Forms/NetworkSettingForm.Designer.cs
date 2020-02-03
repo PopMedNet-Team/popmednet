@@ -76,19 +76,22 @@ namespace Lpp.Dns.DataMart.Client
             this.tbHost = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.numBoxRefreshRate = new System.Windows.Forms.NumericUpDown();
+            this.lblRefreshRate = new System.Windows.Forms.Label();
             btnCancel = new System.Windows.Forms.Button();
             this.QuerySourceContainer.SuspendLayout();
             this.DataMartsContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataMarts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.netWorkSettingBindingSource)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numBoxRefreshRate)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(342, 493);
+            btnCancel.Location = new System.Drawing.Point(342, 540);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 42);
             btnCancel.TabIndex = 4;
@@ -100,6 +103,8 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.QuerySourceContainer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.QuerySourceContainer.Controls.Add(this.numBoxRefreshRate);
+            this.QuerySourceContainer.Controls.Add(this.lblRefreshRate);
             this.QuerySourceContainer.Controls.Add(this.tbReceiveTimeout);
             this.QuerySourceContainer.Controls.Add(this.lblStatusMessage);
             this.QuerySourceContainer.Controls.Add(this.label7);
@@ -119,7 +124,7 @@ namespace Lpp.Dns.DataMart.Client
             this.QuerySourceContainer.Controls.Add(this.txtNetworkname);
             this.QuerySourceContainer.Location = new System.Drawing.Point(13, 2);
             this.QuerySourceContainer.Name = "QuerySourceContainer";
-            this.QuerySourceContainer.Size = new System.Drawing.Size(406, 236);
+            this.QuerySourceContainer.Size = new System.Drawing.Size(406, 256);
             this.QuerySourceContainer.TabIndex = 0;
             this.QuerySourceContainer.TabStop = false;
             this.QuerySourceContainer.Text = "Query Source";
@@ -128,7 +133,7 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.tbReceiveTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbReceiveTimeout.Location = new System.Drawing.Point(106, 175);
+            this.tbReceiveTimeout.Location = new System.Drawing.Point(108, 207);
             this.tbReceiveTimeout.Name = "tbReceiveTimeout";
             this.tbReceiveTimeout.Size = new System.Drawing.Size(30, 20);
             this.tbReceiveTimeout.TabIndex = 17;
@@ -140,7 +145,7 @@ namespace Lpp.Dns.DataMart.Client
             this.lblStatusMessage.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.lblStatusMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMessage.ForeColor = System.Drawing.Color.Red;
-            this.lblStatusMessage.Location = new System.Drawing.Point(14, 204);
+            this.lblStatusMessage.Location = new System.Drawing.Point(9, 230);
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size(386, 23);
             this.lblStatusMessage.TabIndex = 3;
@@ -150,7 +155,7 @@ namespace Lpp.Dns.DataMart.Client
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.Location = new System.Drawing.Point(4, 175);
+            this.label7.Location = new System.Drawing.Point(6, 207);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(96, 20);
             this.label7.TabIndex = 16;
@@ -182,7 +187,7 @@ namespace Lpp.Dns.DataMart.Client
             // chkAutoLogin
             // 
             this.chkAutoLogin.AutoSize = true;
-            this.chkAutoLogin.Location = new System.Drawing.Point(151, 198);
+            this.chkAutoLogin.Location = new System.Drawing.Point(157, 209);
             this.chkAutoLogin.Name = "chkAutoLogin";
             this.chkAutoLogin.Size = new System.Drawing.Size(117, 17);
             this.chkAutoLogin.TabIndex = 11;
@@ -314,9 +319,9 @@ namespace Lpp.Dns.DataMart.Client
             this.DataMartsContainer.Controls.Add(this.btnRefreshDMlist);
             this.DataMartsContainer.Controls.Add(this.btnEdit);
             this.DataMartsContainer.Controls.Add(this.dgvDataMarts);
-            this.DataMartsContainer.Location = new System.Drawing.Point(13, 244);
+            this.DataMartsContainer.Location = new System.Drawing.Point(13, 264);
             this.DataMartsContainer.Name = "DataMartsContainer";
-            this.DataMartsContainer.Size = new System.Drawing.Size(406, 243);
+            this.DataMartsContainer.Size = new System.Drawing.Size(406, 270);
             this.DataMartsContainer.TabIndex = 1;
             this.DataMartsContainer.TabStop = false;
             this.DataMartsContainer.Text = "DataMarts";
@@ -324,7 +329,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnRefreshDMlist
             // 
             this.btnRefreshDMlist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshDMlist.Location = new System.Drawing.Point(199, 214);
+            this.btnRefreshDMlist.Location = new System.Drawing.Point(199, 241);
             this.btnRefreshDMlist.Name = "btnRefreshDMlist";
             this.btnRefreshDMlist.Size = new System.Drawing.Size(117, 23);
             this.btnRefreshDMlist.TabIndex = 2;
@@ -335,7 +340,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnEdit
             // 
             this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEdit.Location = new System.Drawing.Point(321, 214);
+            this.btnEdit.Location = new System.Drawing.Point(321, 241);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(81, 23);
             this.btnEdit.TabIndex = 1;
@@ -373,7 +378,7 @@ namespace Lpp.Dns.DataMart.Client
             this.dgvDataMarts.Name = "dgvDataMarts";
             this.dgvDataMarts.RowHeadersVisible = false;
             this.dgvDataMarts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDataMarts.Size = new System.Drawing.Size(394, 189);
+            this.dgvDataMarts.Size = new System.Drawing.Size(394, 216);
             this.dgvDataMarts.TabIndex = 0;
             this.dgvDataMarts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDataMarts_CellClick);
             // 
@@ -475,7 +480,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnApply
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApply.Location = new System.Drawing.Point(179, 493);
+            this.btnApply.Location = new System.Drawing.Point(179, 540);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(75, 42);
             this.btnApply.TabIndex = 2;
@@ -486,7 +491,7 @@ namespace Lpp.Dns.DataMart.Client
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(261, 493);
+            this.btnOk.Location = new System.Drawing.Point(261, 540);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 42);
             this.btnOk.TabIndex = 3;
@@ -567,6 +572,27 @@ namespace Lpp.Dns.DataMart.Client
             this.label5.TabIndex = 2;
             this.label5.Text = "Host:";
             // 
+            // numBoxRefreshRate
+            // 
+            this.numBoxRefreshRate.Location = new System.Drawing.Point(107, 178);
+            this.numBoxRefreshRate.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numBoxRefreshRate.Name = "numBoxRefreshRate";
+            this.numBoxRefreshRate.Size = new System.Drawing.Size(201, 20);
+            this.numBoxRefreshRate.TabIndex = 19;
+            // 
+            // lblRefreshRate
+            // 
+            this.lblRefreshRate.AutoSize = true;
+            this.lblRefreshRate.Location = new System.Drawing.Point(28, 175);
+            this.lblRefreshRate.Name = "lblRefreshRate";
+            this.lblRefreshRate.Size = new System.Drawing.Size(73, 26);
+            this.lblRefreshRate.TabIndex = 18;
+            this.lblRefreshRate.Text = "Refresh Rate:\r\n(In seconds)";
+            // 
             // NetworkSettingForm
             // 
             this.AcceptButton = this.btnOk;
@@ -574,7 +600,7 @@ namespace Lpp.Dns.DataMart.Client
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CancelButton = btnCancel;
-            this.ClientSize = new System.Drawing.Size(431, 539);
+            this.ClientSize = new System.Drawing.Size(431, 586);
             this.Controls.Add(this.DataMartsContainer);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(btnCancel);
@@ -596,6 +622,7 @@ namespace Lpp.Dns.DataMart.Client
             ((System.ComponentModel.ISupportInitialize)(this.netWorkSettingBindingSource)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numBoxRefreshRate)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -647,6 +674,8 @@ namespace Lpp.Dns.DataMart.Client
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbReceiveTimeout;
-        private System.Windows.Forms.Label label7;        
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numBoxRefreshRate;
+        private System.Windows.Forms.Label lblRefreshRate;
     }
 }

@@ -240,4 +240,4 @@ var Events;
         Acl.EventListViewModel = EventListViewModel;
     })(Acl = Events.Acl || (Events.Acl = {}));
 })(Events || (Events = {}));
-//# sourceMappingURL=EditEventPermissions.js.map
+//# sourceMappingURL=editeventpermissions.js.map

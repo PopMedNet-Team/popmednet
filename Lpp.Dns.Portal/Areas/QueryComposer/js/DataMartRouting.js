@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -74,13 +79,6 @@ var Plugins;
                                 self.DataMarts(routes);
                             });
                         };
-                        _this.DataMartsSelectAll = function () {
-                            var datamartIDs = ko.utils.arrayMap(self.DataMarts(), function (rt) { return rt.DataMartID; });
-                            self.SelectedDataMartIDs(datamartIDs);
-                        };
-                        _this.DataMartsClearAll = function () {
-                            self.SelectedDataMartIDs.removeAll();
-                        };
                         _this.SelectedRoutings = function () {
                             var dms;
                             dms = ko.utils.arrayMap(ko.utils.arrayFilter(self.DataMarts(), function (route) {
@@ -119,6 +117,20 @@ var Plugins;
                             var options = ko.utils.arrayFirst(self.FieldOptions || [], function (item) { return item.FieldIdentifier == id; });
                             return options == null || (options.Permission != null && options.Permission != Dns.Enums.FieldOptionPermissions.Hidden);
                         };
+                        self.RoutesSelectAll = ko.pureComputed({
+                            read: function () {
+                                return self.DataMarts().length > 0 && self.SelectedDataMartIDs().length === self.DataMarts().length;
+                            },
+                            write: function (value) {
+                                if (value) {
+                                    var allID = ko.utils.arrayMap(self.DataMarts(), function (i) { return i.DataMartID; });
+                                    self.SelectedDataMartIDs(allID);
+                                }
+                                else {
+                                    self.SelectedDataMartIDs([]);
+                                }
+                            }
+                        });
                         return _this;
                     }
                     ViewModel.prototype.UpdateRoutings = function (updates) {

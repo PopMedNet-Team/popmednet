@@ -1,6 +1,6 @@
-﻿/// <reference path="../../Lpp.Mvc.Controls.Interfaces/jquery.d.ts" />
-/// <reference path="../../Lpp.Mvc.Controls.Interfaces/jqueryui.d.ts" />
-/// <reference path="../../Lpp.Mvc.Controls.Interfaces/require.d.ts" />
+﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/jquery/jquery.d.ts" />
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/requirejs/require.d.ts" />
 /// <reference path="../../Lpp.Mvc.Controls.Interfaces/utilities.d.ts" />
 /// <reference path="acl.d.ts" />
 
@@ -19,7 +19,7 @@ module Acl {
 				function updateHiddenField() {
 					var newValue =
 						$.map( acl, ( pp: SubjectAcl, subjectId: string ) =>
-							$.map( pp.own, ( allow: bool, privilegeId: string ) =>
+							$.map( pp.own, ( allow: boolean, privilegeId: string ) =>
 								( allow === null || allow === undefined ) ? undefined :
 								( subjectId + ':' + privilegeId + ':' + ( allow ? "allow" : "deny" ) )
 								)

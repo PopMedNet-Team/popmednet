@@ -70,6 +70,11 @@ namespace Lpp.Dns.Data
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
+        /// Gets or sets the last time the document content was modified.
+        /// </summary>
+        public DateTime? ContentModifiedOn { get; set; }
+
+        /// <summary>
         /// Gets or set the length of the document in bytes.
         /// </summary>
         public long Length { get; set; }
@@ -176,7 +181,8 @@ namespace Lpp.Dns.Data
                 //this.Length = data.Length;
                 stream.Write(data, 0, data.Length);
             }
-            
+
+            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = '{ this.ID.ToString("D") }'");
         }
 
         public void CopyData(DataContext db, Guid sourceDocumentID)
@@ -191,6 +197,8 @@ namespace Lpp.Dns.Data
                 }
                 sourceStream.Flush();
             }
+
+            db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE() WHERE ID = '{ this.ID.ToString("D") }'");
         }        
     }
 

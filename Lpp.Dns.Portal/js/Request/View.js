@@ -1,5 +1,5 @@
-var Request;
-(function (Request) {
+var Requests;
+(function (Requests) {
     var View;
     (function (View) {
         View.ResponseHistoryUrlTemplate = '';
@@ -263,8 +263,8 @@ var Request;
             if (View.AllowEditRequestID.toLowerCase() == "true") {
                 EditRequestIDBool = true;
             }
-            var oldPriority = Request.View.vmRoutings.Request.Priority;
-            var oldDueDate = Request.View.vmRoutings.Request.DueDate;
+            var oldPriority = Requests.View.vmRoutings.Request.Priority;
+            var oldDueDate = Requests.View.vmRoutings.Request.DueDate;
             Global.Helpers.ShowDialog("Edit Request Metadata", "/request/editrequestmetadatadialog", ["Close"], 1000, 570, { Requestid: View.RequestID, allowEditRequestID: EditRequestIDBool })
                 .done(function (result) {
                 if (result != null) {
@@ -284,7 +284,7 @@ var Request;
                     $('#Source_Task_Order').val(result.sourcetaskordername);
                     $('#Source_Task_Activity').val(result.sourceactivityname);
                     $('#Source_Task_Activity_Project').val(result.sourceactivityprojectname);
-                    Request.View.vmRoutings.Routings().forEach(function (r) {
+                    Requests.View.vmRoutings.Routings().forEach(function (r) {
                         if (oldDueDate != result.dueDate) {
                             r.DueDate = result.dueDate;
                         }
@@ -292,15 +292,15 @@ var Request;
                             r.Priority = result.priority;
                         }
                     });
-                    Request.View.vmRoutings.IncompleteRoutings().forEach(function (dm) {
-                        Request.View.vmRoutings.Routings().forEach(function (r) {
+                    Requests.View.vmRoutings.IncompleteRoutings().forEach(function (dm) {
+                        Requests.View.vmRoutings.Routings().forEach(function (r) {
                             if (dm.ID == r.RequestDataMartID) {
                                 dm.DueDate = r.DueDate;
                                 dm.Priority = r.Priority;
                             }
                         });
                     });
-                    Dns.WebApi.Requests.UpdateRequestDataMartsMetadata(Request.View.vmRoutings.IncompleteRoutings()).done(function () {
+                    Dns.WebApi.Requests.UpdateRequestDataMartsMetadata(Requests.View.vmRoutings.IncompleteRoutings()).done(function () {
                         window.location.reload();
                     });
                 }
@@ -308,7 +308,7 @@ var Request;
         }
         View.onEditRequestMetadata = onEditRequestMetadata;
         function init() {
-            $.when(Dns.WebApi.Projects.GetFieldOptions(Request.View.RawModel.ProjectID, User.ID), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(Request.View.RequestID, null, 'ID'), Dns.WebApi.Requests.Get(Request.View.RequestID)).done(function (fieldOptions, overrideableRoutingIDs, request) {
+            $.when(Dns.WebApi.Projects.GetFieldOptions(Requests.View.RawModel.ProjectID, User.ID), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(Requests.View.RequestID, null, 'ID'), Dns.WebApi.Requests.Get(Requests.View.RequestID)).done(function (fieldOptions, overrideableRoutingIDs, request) {
                 $(function () {
                     var bindingControl = $("#routings");
                     View.vmRoutings = new RoutingsViewModel(View.RawModel, overrideableRoutingIDs, request[0]);
@@ -355,6 +355,6 @@ var Request;
             return VirtualResponseViewModel;
         }());
         View.VirtualResponseViewModel = VirtualResponseViewModel;
-    })(View = Request.View || (Request.View = {}));
-})(Request || (Request = {}));
+    })(View = Requests.View || (Requests.View = {}));
+})(Requests || (Requests = {}));
 //# sourceMappingURL=View.js.map

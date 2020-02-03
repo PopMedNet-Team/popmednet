@@ -558,10 +558,22 @@ var Dns;
             Users.SaveSetting = function (setting, doNotHandleFail) {
                 return Helpers.PostAPIValue('Users/SaveSetting', setting, doNotHandleFail);
             };
-            Users.GetSetting = function (Key, doNotHandleFail) {
+            Users.GetSetting = function (key, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
-                if (Key != null)
-                    params += '&Key=' + encodeURIComponent(Key);
+                if (key != null)
+                    for (var j = 0; j < key.length; j++) {
+                        params += '&key=' + encodeURIComponent(key[j]);
+                    }
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
                 if (params.length > 0)
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Users/GetSetting' + params, doNotHandleFail);
@@ -2376,6 +2388,18 @@ var Dns;
             return Tasks;
         }());
         WebApi.Tasks = Tasks;
+        var LegacyRequests = (function () {
+            function LegacyRequests() {
+            }
+            LegacyRequests.ScheduleLegacyRequest = function (dto, doNotHandleFail) {
+                return Helpers.PostAPIValue('LegacyRequests/ScheduleLegacyRequest', dto, doNotHandleFail);
+            };
+            LegacyRequests.DeleteRequestSchedules = function (requestID, doNotHandleFail) {
+                return Helpers.PostAPIValue('LegacyRequests/DeleteRequestSchedules', requestID, doNotHandleFail);
+            };
+            return LegacyRequests;
+        }());
+        WebApi.LegacyRequests = LegacyRequests;
         var ReportAggregationLevel = (function () {
             function ReportAggregationLevel() {
             }
@@ -2627,6 +2651,9 @@ var Dns;
             Response.RejectResponses = function (responses, doNotHandleFail) {
                 return Helpers.PostAPIValue('Response/RejectResponses', responses, doNotHandleFail);
             };
+            Response.RejectAndReSubmitResponses = function (responses, doNotHandleFail) {
+                return Helpers.PostAPIValue('Response/RejectAndReSubmitResponses', responses, doNotHandleFail);
+            };
             Response.GetByWorkflowActivity = function (requestID, workflowActivityID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if (requestID != null)
@@ -2647,13 +2674,21 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Response/GetByWorkflowActivity' + params, doNotHandleFail);
             };
-            Response.CanViewResponses = function (requestID, doNotHandleFail) {
+            Response.CanViewIndividualResponses = function (requestID, doNotHandleFail) {
                 var params = '';
                 if (requestID != null)
                     params += '&requestID=' + requestID;
                 if (params.length > 0)
                     params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('Response/CanViewResponses' + params, doNotHandleFail);
+                return Helpers.GetAPIResult('Response/CanViewIndividualResponses' + params, doNotHandleFail);
+            };
+            Response.CanViewAggregateResponses = function (requestID, doNotHandleFail) {
+                var params = '';
+                if (requestID != null)
+                    params += '&requestID=' + requestID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Response/CanViewAggregateResponses' + params, doNotHandleFail);
             };
             Response.CanViewPendingApprovalResponses = function (responses, doNotHandleFail) {
                 return Helpers.PostAPIValue('Response/CanViewPendingApprovalResponses', responses, doNotHandleFail);
@@ -2787,6 +2822,18 @@ var Dns;
                 if (params.length > 0)
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Response/GetTrackingTableForDataPartners' + params, doNotHandleFail);
+            };
+            Response.GetEnhancedEventLog = function (requestID, format, download, doNotHandleFail) {
+                var params = '';
+                if (requestID != null)
+                    params += '&requestID=' + requestID;
+                if (format != null)
+                    params += '&format=' + encodeURIComponent(format);
+                if (download != null)
+                    params += '&download=' + download;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Response/GetEnhancedEventLog' + params, doNotHandleFail);
             };
             Response.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
@@ -3911,6 +3958,9 @@ var Dns;
             };
             Documents.Upload = function (doNotHandleFail) {
                 return Helpers.PostAPIValue('Documents/Upload', doNotHandleFail);
+            };
+            Documents.UploadChunked = function (doNotHandleFail) {
+                return Helpers.PostAPIValue('Documents/UploadChunked', doNotHandleFail);
             };
             Documents.Delete = function (id, doNotHandleFail) {
                 var params = '';

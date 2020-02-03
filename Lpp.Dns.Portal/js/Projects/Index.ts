@@ -6,8 +6,6 @@ module Projects.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gProjectsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -29,14 +27,6 @@ module Projects.Index {
 
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gProjectsSetting);  
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
         }
 
         public btnNewProject_Click() {
@@ -48,7 +38,7 @@ module Projects.Index {
         }
 
         public Save() {
-            Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(this.ProjectsGrid()));
+            
         }
     }
 
@@ -67,9 +57,10 @@ module Projects.Index {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gProjectsSetting, bindingControl, canAdd[0] ? [Permissions.Group.CreateProject] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.ProjectsGrid(), gProjectsSetting);
-
+                vm.ProjectsGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ProjectsGrid()));
+                });
             });
         });
     }

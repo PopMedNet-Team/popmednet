@@ -4,8 +4,6 @@
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gTemplatesSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -34,22 +32,10 @@
 
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gTemplatesSetting);
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
         }
 
         public TemplatesGrid(): kendo.ui.Grid {
             return $("#gTemplates").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("Templates.Index.gTemplates.User:" + User.ID, Global.Helpers.GetGridSettings(this.TemplatesGrid()));
         }
     }
 
@@ -74,8 +60,10 @@
                 var bindingControl = $('#Content');
                 vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateTemplate] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.TemplatesGrid(), gTemplatesSetting);
+                vm.TemplatesGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Templates.Index.gTemplates.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TemplatesGrid()));
+                });
             });
         });
     }

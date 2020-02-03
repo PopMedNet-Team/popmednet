@@ -115,7 +115,7 @@ namespace Lpp.Dns.Api.Events
         /// <summary>
         /// Updates Group Event Permissions subject to security
         /// </summary>
-        /// <param name="?"></param>
+        /// <param name="permissions"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<HttpResponseMessage> UpdateGroupEventPermissions(IEnumerable<GroupEventDTO> permissions)
@@ -221,7 +221,7 @@ namespace Lpp.Dns.Api.Events
         /// <summary>
         /// Updates Project Event Permissions subject to security
         /// </summary>
-        /// <param name="?"></param>
+        /// <param name="permissions"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<HttpResponseMessage> UpdateProjectEventPermissions(IEnumerable<ProjectEventDTO> permissions)

@@ -40,8 +40,14 @@
                 <div class="panel-body">
                     <input name="files" id="files" type="file" data-bind="kendoUpload: {
                         async: {
+						    withCredentials: false,
                             autoUpload: false,
-                            saveUrl: '/controls/wffileupload/UploadResponseDocuments'},
+                            saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
+						    chunkSize: 25000000,
+						    concurrent: false, 
+							autoRetryAfter: 300, 
+							maxAutoRetries: 5
+						},
                         success: onFileUploadCompleted,
                         upload: onFileUpload,
                         error: onFileUploadError,

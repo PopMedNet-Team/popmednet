@@ -64,9 +64,9 @@
                             <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
                             <td data-bind="text: Name"></td>
                             <td data-bind="text: Organization"></td>
-                            <td><input id="Priority" type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}"></td>
-                            <td><input type="text" aria-labelledby="lblSetting" id="cboSetting" name="Setting" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1}}" validationmessage="DataMart Type is required" /></td>
-                            <td><input id="DueDate" type="text" data-bind="kendoDatePicker: DueDate"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + DataMartID }"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1}}, attr:{ id:'RouteType_' + DataMartID }" validationmessage="DataMart Type is required" /></td>
+                            <td><input type="text" data-bind="kendoDatePicker: DueDate, attr:{ id:'RouteDueDate_' + DataMartID }"></td>
                         </tr>
                     </script>
                     <script id="dataMartsAltRowTmpl" type="text/html">
@@ -74,9 +74,9 @@
                             <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
                             <td data-bind="text: Name"></td>
                             <td data-bind="text: Organization"></td>
-                            <td><input id="Priority" type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}"></td>
-                            <td><input type="text" aria-labelledby="lblSetting" id="cboSetting" name="Setting" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1} }" validationmessage="DataMart Type is required" /></td>
-                            <td><input id="DueDate" type="text" data-bind="kendoDatePicker: DueDate"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + DataMartID }"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1} }, attr:{ id:'RouteType_' + DataMartID }" validationmessage="DataMart Type is required" /></td>
+                            <td><input type="text" data-bind="kendoDatePicker: DueDate, attr:{ id:'RouteDueDate_' + DataMartID }"></td>
                         </tr>
                     </script>
                 </div>

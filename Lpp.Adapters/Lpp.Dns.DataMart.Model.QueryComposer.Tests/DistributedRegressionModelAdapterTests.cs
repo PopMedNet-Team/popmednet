@@ -264,6 +264,48 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             //assert that only the documents listed in the file manifest got uploaded
 
         }
+
+
+        [TestMethod]
+        public void SerializeEventLogItems()
+        {
+            List<QueryComposer.Adapters.DistributedRegression.EventLogItem> events = new List<Adapters.DistributedRegression.EventLogItem>();
+            events.Add(new Adapters.DistributedRegression.EventLogItem(Adapters.DistributedRegression.EventLogItemTypes.DownloadPayload, "Payload downloaded."));
+            System.Threading.Thread.Sleep(950);
+            events.Add(new Adapters.DistributedRegression.EventLogItem(Adapters.DistributedRegression.EventLogItemTypes.OutputFilesCreated, "Output files created."));
+            System.Threading.Thread.Sleep(950);
+            events.Add(new Adapters.DistributedRegression.EventLogItem(Adapters.DistributedRegression.EventLogItemTypes.TriggerFileCreated, "A trigger file was created."));
+
+
+            var content = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(events, Newtonsoft.Json.Formatting.None));
+
+            System.IO.File.WriteAllBytes("DR_AdapterEventLog.json", content);
+
+        }
+
+        [TestMethod]
+        public void DeserializeEventLogItems()
+        {
+            if (!File.Exists("DR_AdapterEventLog.json"))
+            {
+                SerializeEventLogItems();
+            }
+
+            List<QueryComposer.Adapters.DistributedRegression.EventLogItem> events = null;
+            using (var fs = File.OpenText("DR_AdapterEventLog.json"))
+            using(Newtonsoft.Json.JsonReader reader = new Newtonsoft.Json.JsonTextReader(fs))
+            {
+                var serializer = new Newtonsoft.Json.JsonSerializer();
+                events = serializer.Deserialize<List<QueryComposer.Adapters.DistributedRegression.EventLogItem>>(reader);
+            }
+            
+            Assert.IsTrue(events != null && events.Count > 0, "Events not deserialized correctly!");
+
+            foreach(var evt in events)
+            {
+                Console.WriteLine("{0:o}\t{1}\t{2}", evt.Timestamp, evt.Type, evt.Description);
+            }
+        }
         
     }
 }

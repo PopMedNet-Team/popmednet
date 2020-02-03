@@ -238,6 +238,16 @@ namespace Lpp.Dns.ApiClient
                                     return _Tasks;
                                 }
                             }
+	 	LegacyRequests _LegacyRequests = null;
+        public LegacyRequests LegacyRequests
+                            {
+                                get {
+                                    if (_LegacyRequests == null)
+                                        _LegacyRequests = new LegacyRequests(this);
+
+                                    return _LegacyRequests;
+                                }
+                            }
 	 	ReportAggregationLevel _ReportAggregationLevel = null;
         public ReportAggregationLevel ReportAggregationLevel
                             {
@@ -615,11 +625,12 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Post<Lpp.Dns.DTO.UserSettingDTO>(Path + "/SaveSetting", setting);
 	 	 	 return result;
 	 	 }
-	 	 public async Task<Lpp.Dns.DTO.UserSettingDTO> GetSetting(string Key)
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.UserSettingDTO>> GetSetting(System.Collections.Generic.IEnumerable<System.String> key, string oDataQuery = null)
 	 	 {
+	 	 	 var keyQueryString = string.Join("&", key.Select(i => string.Format("{0}={1}", "key", System.Net.WebUtility.UrlEncode(i.ToString()))));
 
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.UserSettingDTO>(Path + "/GetSetting?Key=" + (Key == null ? "" : System.Net.WebUtility.UrlEncode(Key.ToString())) + "&");
-	 	 	 return result.ReturnSingleItem();
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.UserSettingDTO>(Path + "/GetSetting?" + keyQueryString + "&", oDataQuery);
+	 	 	 return result.ReturnList();
 	 	 }
 	 	 public async Task<System.Boolean> AllowApproveRejectRequest(System.Guid requestID)
 	 	 {
@@ -1251,6 +1262,26 @@ namespace Lpp.Dns.ApiClient
 	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/GetWorkflowActivityDataForRequest?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&workflowActivityID=" + System.Net.WebUtility.UrlEncode(workflowActivityID.ToString()) + "&");
 	 	 }
 	 }
+	 public class LegacyRequests
+	 {
+	 	 readonly DnsClient Client;
+	 	 readonly string Path;
+	 	 public LegacyRequests(DnsClient client)
+	 	 {
+	 	 	 this.Client = client;
+	 	 	 this.Path = "/LegacyRequests";
+	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> ScheduleLegacyRequest(Lpp.Dns.DTO.Schedule.LegacySchedulerRequestDTO dto)
+	 	 {
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.Schedule.LegacySchedulerRequestDTO>(Path + "/ScheduleLegacyRequest", dto);
+	 	 	 return result;
+	 	 }
+	 	 public async Task DeleteRequestSchedules(System.Guid requestID)
+	 	 {
+	 	 	 var result = await Client.Post(Path + "/DeleteRequestSchedules", requestID);
+	 	 	 return;
+	 	 }
+	 }
 	 public class ReportAggregationLevel : HttpClientDataEndpoint<DnsClient, ReportAggregationLevelDTO>
 	 {
 	 	 public ReportAggregationLevel(DnsClient client) : base(client, "/ReportAggregationLevel") {}
@@ -1320,16 +1351,27 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Post<Lpp.Dns.DTO.RejectResponseDTO>(Path + "/RejectResponses", responses);
 	 	 	 return result;
 	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> RejectAndReSubmitResponses(Lpp.Dns.DTO.RejectResponseDTO responses)
+	 	 {
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.RejectResponseDTO>(Path + "/RejectAndReSubmitResponses", responses);
+	 	 	 return result;
+	 	 }
 	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.ResponseDTO>> GetByWorkflowActivity(System.Guid requestID, System.Guid workflowActivityID, string oDataQuery = null)
 	 	 {
 
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.ResponseDTO>(Path + "/GetByWorkflowActivity?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&workflowActivityID=" + System.Net.WebUtility.UrlEncode(workflowActivityID.ToString()) + "&", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
-	 	 public async Task<System.Boolean> CanViewResponses(System.Guid requestID)
+	 	 public async Task<System.Boolean> CanViewIndividualResponses(System.Guid requestID)
 	 	 {
 
-	 	 	 var result = await Client.Get<System.Boolean>(Path + "/CanViewResponses?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
+	 	 	 var result = await Client.Get<System.Boolean>(Path + "/CanViewIndividualResponses?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
+	 	 	 return result.ReturnSingleItem();
+	 	 }
+	 	 public async Task<System.Boolean> CanViewAggregateResponses(System.Guid requestID)
+	 	 {
+
+	 	 	 var result = await Client.Get<System.Boolean>(Path + "/CanViewAggregateResponses?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
 	 	 public async Task<System.Boolean> CanViewPendingApprovalResponses(Lpp.Dns.DTO.ApproveResponseDTO responses)
@@ -1396,6 +1438,11 @@ namespace Lpp.Dns.ApiClient
 	 	 {
 
 	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/GetTrackingTableForDataPartners?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
+	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> GetEnhancedEventLog(System.Guid requestID, string format, System.Boolean download)
+	 	 {
+
+	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/GetEnhancedEventLog?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&format=" + (format == null ? "" : System.Net.WebUtility.UrlEncode(format.ToString())) + "&download=" + System.Net.WebUtility.UrlEncode(download.ToString()) + "&");
 	 	 }
 	 }
 	 public class Requests
@@ -1836,6 +1883,11 @@ namespace Lpp.Dns.ApiClient
 	 	 public async Task<System.Net.Http.HttpResponseMessage> Upload()
 	 	 {
 	 	 	 var result = await Client.Post(Path + "/Upload");
+	 	 	 return result;
+	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> UploadChunked()
+	 	 {
+	 	 	 var result = await Client.Post(Path + "/UploadChunked");
 	 	 	 return result;
 	 	 }
 	 	 public async Task Delete(System.Collections.Generic.IEnumerable<System.Guid> id)

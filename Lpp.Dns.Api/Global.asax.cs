@@ -113,8 +113,31 @@ namespace Lpp.Dns.Api
                 {
                     mgr.Run();
                 }
+
+                string uploadPath = System.Web.Configuration.WebConfigurationManager.AppSettings["DocumentsUploadFolder"] ?? string.Empty;
+
+                if (string.IsNullOrEmpty(uploadPath))
+                    uploadPath = Path.Combine(HttpRuntime.AppDomainAppPath, "App_Data\\Uploads\\");
+
+                if (Directory.Exists(uploadPath))
+                {
+                    var files = Directory.GetFiles(uploadPath, "*.*", SearchOption.AllDirectories);
+                    foreach(var file in files)
+                    {
+                        FileInfo fi = new FileInfo(file);
+                        if (fi.LastAccessTime < DateTime.Now.AddHours(-12))
+                            fi.Delete();
+                    }
+                }
             });
 
+
+            HangfireBootstrapper.Instance.Start();
+        }
+
+        protected void Application_End(object sender, EventArgs e)
+        {
+            HangfireBootstrapper.Instance.Stop();
         }
 
 #if(!DEBUG)

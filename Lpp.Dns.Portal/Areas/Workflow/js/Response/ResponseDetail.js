@@ -1,9 +1,14 @@
 /// <reference path="../../../../js/requests/details.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Workflow;
 (function (Workflow) {
     var Response;
@@ -20,7 +25,6 @@ var Workflow;
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
                         _this.hasResponseResultsContent = false;
                         var self = _this;
-                        debugger;
                         _this.IsResponseVisible = ko.observable(null);
                         _this.ResponseContentComplete = ko.observable(false);
                         _this.IsResponseLoadFailed = ko.observable(false);
@@ -45,7 +49,7 @@ var Workflow;
                         self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
                         if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
                             Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done(function (responses) {
-                                if (responses == null || responses == null)
+                                if (responses == null || responses.length == 0)
                                     return;
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var bucket = $('<div class="panel panel-default"></div>');
@@ -64,7 +68,7 @@ var Workflow;
                                         //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
                                         var resultID = (resp.ID || 'aggregate') + '-' + i;
                                         var suppressedValues = false;
-                                        bucket.append($('<div class="panel-heading" style="margin-bottom:0px;"><h4 class="panel-title" > ' + datamartName + ' </h4 ></div>'));
+                                        bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
                                         var kendoColumnNames = [];
                                         var kendoColumnFields = [];
                                         var table = resp.Results[i];
@@ -111,6 +115,15 @@ var Workflow;
                                             groupable: false,
                                             pageable: false,
                                             scrollable: true
+                                            //dataBound: function () {
+                                            //    var grid = this;
+                                            //    grid.tbody.find('>tr').each(function () {
+                                            //        var dataItem = grid.dataItem(this);
+                                            //        if (dataItem.LowThreshold) {
+                                            //            $(this).addClass('Highlight');
+                                            //        }
+                                            //    })
+                                            //}
                                         }).data('kendoGrid');
                                         var gridContainer = $('<div class="panel-body"></div>');
                                         if (suppressedValues) {
@@ -168,6 +181,19 @@ var Workflow;
                                 });
                             });
                         };
+                        self.onResubmit = function () {
+                            Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
+                                .done(function (comment) {
+                                var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
+                                Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                                    .done(function () {
+                                    Global.Helpers.RedirectTo(window.top.location.href);
+                                }).fail(function (err) {
+                                    var errorMessage = err.responseJSON.errors[0].Description;
+                                    Global.Helpers.ShowErrorAlert('Access Denied to Reject and Resubmit Responses', errorMessage);
+                                });
+                            });
+                        };
                         return _this;
                     }
                     return ViewModel;
@@ -177,9 +203,7 @@ var Workflow;
                     rootVM = parent.Requests.Details.rovm;
                     var id = Global.GetQueryParam("ID");
                     var responseIDs = id.split(',');
-                    debugger;
                     Dns.WebApi.Response.GetDetails(responseIDs).done(function (details) {
-                        debugger;
                         var ss = details[0];
                         var bindingControl = $('#DefaultResponseDetail');
                         vm = new ViewModel(bindingControl, ss.RequestDataMarts, ss.Responses, ss.Documents, ss.CanViewPendingApprovalResponses, ss.ExportForFileDistribution);

@@ -162,6 +162,17 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
 
                 await LogTaskModified();
                 await db.SaveChangesAsync();
+
+                var originalStatus = _entity.Status;
+                await db.SaveChangesAsync();
+
+                await db.Entry(_entity).ReloadAsync();
+
+                if (originalStatus != DTO.Enums.RequestStatuses.Complete && _entity.Status == DTO.Enums.RequestStatuses.Complete)
+                {
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Complete);
+                }
+
             }
 
             var respondToRequestDestination = new[] { RemoveDatamartResultID, AddDatamartResultID };

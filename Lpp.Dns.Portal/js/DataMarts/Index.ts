@@ -6,8 +6,6 @@ module DataMarts.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gDataMartsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -29,14 +27,7 @@ module DataMarts.Index {
 
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gDataMartsSetting);       
-            
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
 
-                    self.Save();
-                });
-            };
         }
 
         public btnNewDataMart_Click() {            
@@ -45,10 +36,6 @@ module DataMarts.Index {
 
         public DataMartsGrid(): kendo.ui.Grid {
             return $("#gDataMarts").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("DataMarts.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(this.DataMartsGrid()));
         }
     }
 
@@ -63,9 +50,11 @@ module DataMarts.Index {
 
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateDataMarts] : []);
-                $(window).unload(() => vm.Save());
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.DataMartsGrid(), gDataMartsSetting);
+                vm.DataMartsGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("DataMarts.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
+                });
             });
         });        
     }

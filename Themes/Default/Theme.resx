@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Footer" xml:space="preserve">
-    <value>© 2015 PopMedNet, All Rights Reserved</value>
+    <value>© 2018 PopMedNet, All Rights Reserved</value>
     <comment>This is the footer information in the Footer of Lpp.Dns.Portal/Views/_RootLayout.cshtml </comment>
   </data>
   <data name="Info" xml:space="preserve">
@@ -151,7 +151,7 @@
     <value>Confirmation Required</value>
   </data>
   <data name="Terms" xml:space="preserve">
-    <value>&lt;p&gt;You are accessing a U.S. government information system. Your use of this system indicates consent to monitoring and recording. Usage of this system may be monitored, recorded, and subject to audit. Unauthorized use of this system is prohibited and subject to criminal and civil penalties.&lt;/p&gt;</value>
+    <value>&lt;p&gt;This tool is for use by authorized users for demonstration purposes only. All use must be related to authorized demonstration projects. Use of the tool is monitored and audited. User privileges may be revoked at any time.&lt;/p&gt;</value>
     <comment>This is the Terms and Conditions in the Lpp.Dns.Portal/Views/Home/TermsAndConditions.cshtml</comment>
   </data>
   <data name="Title" xml:space="preserve">

@@ -6,6 +6,7 @@ using Lpp.Dns.DataMart.Model.Settings;
 using System.Linq.Expressions;
 using System.ComponentModel;
 using MySql.Data.Entity;
+using System.Data.Entity.Core.Objects;
 //using Oracle.ManagedDataAccess.Client;
 //using Oracle.ManagedDataAccess.Types;
 
@@ -417,6 +418,61 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
                 return Enumerable.Empty<Dns.DTO.CodeSelectorValueDTO>();
 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dns.DTO.CodeSelectorValueDTO>>(token.ToString());
+        }
+    }
+
+    public static class IQueryableExtensions
+    {
+        /// <summary>
+        /// For an Entity Framework IQueryable, returns the SQL with inlined Parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static string ToTraceQuery(this IQueryable query)
+        {
+            ObjectQuery objectQuery = GetQueryFromQueryable(query);
+
+            var result = objectQuery.ToTraceString();
+            foreach (var parameter in objectQuery.Parameters)
+            {
+                var name = "@" + parameter.Name;
+                var value = "'" + parameter.Value.ToString() + "'";
+                result = result.Replace(name, value);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// For an Entity Framework IQueryable, returns the SQL and Parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static string ToTraceString(this IQueryable query)
+        {
+            ObjectQuery objectQuery = GetQueryFromQueryable(query);
+
+            var traceString = new StringBuilder();
+
+            traceString.AppendLine(objectQuery.ToTraceString());
+            traceString.AppendLine();
+
+            foreach (var parameter in objectQuery.Parameters)
+            {
+                traceString.AppendLine(parameter.Name + " [" + parameter.ParameterType.FullName + "] = " + parameter.Value);
+            }
+
+            return traceString.ToString();
+        }
+
+        private static System.Data.Entity.Core.Objects.ObjectQuery GetQueryFromQueryable(IQueryable query)
+        {
+            var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
+            var internalQuery = internalQueryField.GetValue(query);
+            var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();
+            return objectQueryField.GetValue(internalQuery) as System.Data.Entity.Core.Objects.ObjectQuery;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace Lpp.Dns.DataMart.Lib
         private Guid _NetworkUserId = Guid.Empty;
         private bool _IsAuthenticated = false;
         private string _wcfReceiveTimeout = "120";
+        private int _networkRefreshRate = 300;
         private List<DataMartDescription> _DataMartList = new List<DataMartDescription>();
         [NonSerialized]
         private HubRequest[] _QueriesDataMart = null;
@@ -85,6 +86,16 @@ namespace Lpp.Dns.DataMart.Lib
 
         [XmlAttribute]
         public int Port { get; set; }
+
+        /// <summary>
+        /// The refresh rate in seconds.
+        /// </summary>
+        [XmlAttribute]
+        public int RefreshRate
+        {
+            get { return _networkRefreshRate; }
+            set { _networkRefreshRate = value; }
+        }
 
         [XmlIgnore]
         public string Username

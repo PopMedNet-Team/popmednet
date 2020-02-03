@@ -13,7 +13,7 @@
                         <caption data-bind="text:DataMartName"></caption>
                         <tbody data-bind="foreach:HistoryItems">
                             <tr>
-                                <td data-bind="text: moment(moment(DateTime).format('M/D/YYYY h:mm:ss A UTC')).local().format('M/D/YYYY h:mm:ss A')"></td>
+                                <td data-bind="text:moment(DateTime).format('M/D/YYYY h:mm:ss A')"></td>
                                 <td>
                                     <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span><span data-bind="visible:$.trim(Message || '') != ''">;</span>
                                     <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>

@@ -15,11 +15,16 @@
         <div id="upload-panel" class="row">
             <div class="col-md-12">
                 <input type="file" name="files" id="files" data-bind="kendoUpload:{
-                    async: {
-                        saveUrl: '/controls/wfdocuments/upload',
-                        autoUpload: false
-                    },
-                    multiple: false,
+					async: {
+						withCredentials: false,
+					    autoUpload: false,
+                        saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
+						chunkSize: 25000000,
+						concurrent: false, 
+						autoRetryAfter: 300, 
+						maxAutoRetries: 5
+					},
+					multiple: false,
                     localization: {
                         select: 'Select file...'
                     },

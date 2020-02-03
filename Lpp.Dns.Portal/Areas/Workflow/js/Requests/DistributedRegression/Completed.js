@@ -1,9 +1,14 @@
 /// <reference path="../../../../../js/requests/details.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -76,7 +81,7 @@ var Workflow;
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
             var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
-                function ViewModel(bindingControl, routings, responseGroups, canViewResponses) {
+                function ViewModel(bindingControl, routings, responseGroups, canViewIndividualResponses, canViewAggregateResponses) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
                     _this.RoutingHistory = ko.observableArray([]);
                     _this.responseIndex = 0;
@@ -115,7 +120,8 @@ var Workflow;
                     };
                     var self = _this;
                     self.Routings = ko.observableArray(routings.RequestDataMarts || []);
-                    self.AllowViewResults = ko.observable(canViewResponses);
+                    self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
+                    self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
                     self.AnalysisCenterRoutings = ko.computed(function () {
                         return ko.utils.arrayFilter(self.Routings(), function (routing) {
                             return routing.RoutingType == Dns.Enums.RoutingType.AnalysisCenter;
@@ -254,11 +260,11 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
-                $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise()).done(function (routings, canViewResponses, responseGroups) {
+                $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewIndividualResponses(id).promise(), Dns.WebApi.Response.CanViewAggregateResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise()).done(function (routings, canViewIndividualResponses, canViewAggregateResponses, responseGroups) {
                     $(function () {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                         var bindingControl = $('#DRCompleted');
-                        vm = new ViewModel(bindingControl, routings[0], responseGroups || [], canViewResponses[0]);
+                        vm = new ViewModel(bindingControl, routings[0], responseGroups || [], canViewIndividualResponses[0], canViewAggregateResponses[0]);
                         if (bindingControl[0]) {
                             ko.applyBindings(vm, bindingControl[0]);
                         }

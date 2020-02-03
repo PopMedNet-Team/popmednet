@@ -10,6 +10,7 @@ using Lpp.Dns.DTO.Enums;
 using Lpp.Objects;
 using Lpp.Utilities;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace Lpp.Dns.Data
 {
@@ -185,16 +186,21 @@ namespace Lpp.Dns.Data
                 }
                 else
                 {
-                    DB.RequestDocuments.AddRange(dpDocuments.Select(d => new RequestDocument { DocumentType = RequestDocumentType.Input, ResponseID = analysisCenterResponse.ID, RevisionSetID = d.RevisionSetID }).ToArray());
-                    manifestItems.AddRange(dpDocuments.Select(d=> new DTO.QueryComposer.DistributedRegressionAnalysisCenterManifestItem {
-                        DocumentID = d.DocumentID,
-                        DataMart = d.DataMart,
-                        DataMartID = d.DataMartID,
-                        DataPartnerIdentifier = d.DataPartnerIdentifier,
-                        RequestDataMartID = d.RequestDataMartID,
-                        ResponseID = d.ResponseID,
-                        RevisionSetID = d.RevisionSetID
-                    }).ToArray());
+                    var inputDocuments = dpDocuments.Where(d => d.DocumentKind != "DistributedRegression.AdapterEventLog" && d.DocumentKind != "DistributedRegression.TrackingTable");
+                    if (inputDocuments.Count() > 0)
+                    {
+                        DB.RequestDocuments.AddRange(inputDocuments.Select(d => new RequestDocument { DocumentType = RequestDocumentType.Input, ResponseID = analysisCenterResponse.ID, RevisionSetID = d.RevisionSetID }).ToArray());
+                        manifestItems.AddRange(inputDocuments.Select(d => new DTO.QueryComposer.DistributedRegressionAnalysisCenterManifestItem
+                        {
+                            DocumentID = d.DocumentID,
+                            DataMart = d.DataMart,
+                            DataMartID = d.DataMartID,
+                            DataPartnerIdentifier = d.DataPartnerIdentifier,
+                            RequestDataMartID = d.RequestDataMartID,
+                            ResponseID = d.ResponseID,
+                            RevisionSetID = d.RevisionSetID
+                        }).ToArray());
+                    }
                 }
             }
 
@@ -328,6 +334,36 @@ namespace Lpp.Dns.Data
             }
             else
             {
+                
+                if (documents.Length > 0)
+                {//ASPE-605: change the association of the document owner from the analysis center response to the complete distribution task (current task).
+                 //This is to support showing the AC documents in the task documents tab.
+
+                    //add a reference to the response to the current task so that we can track back to the source.
+                    try
+                    {
+                        Guid currentResponseID = await DB.Responses.Where(rsp => rsp.RequestDataMartID == reqDM.ID && rsp == rsp.RequestDataMart.Responses.OrderByDescending(rrsp => rrsp.Count).FirstOrDefault()).Select(rsp => rsp.ID).FirstAsync();
+                        if (DB.Entry(currentTask).Collection(t => t.References).IsLoaded == false)
+                        {
+                            await DB.Entry(currentTask).Collection(t => t.References).LoadAsync();
+                        }
+                        if (currentTask.References.Any(tr => tr.ItemID == currentResponseID) == false)
+                        {
+                            task.References.Add(new TaskReference { TaskID = currentTask.ID, ItemID = currentResponseID, Type = TaskItemTypes.Response });
+                        }
+                    }catch
+                    {
+                        //do not kill processing if this fails, eventlog builder has contingencies to handle if the task reference to the response is not set.
+                    }
+
+                    StringBuilder query = new StringBuilder();
+                    query.Append("UPDATE Documents SET ItemID='" + currentTask.ID.ToString("D") + "'");
+                    query.Append(" WHERE ID IN (");
+                    query.Append(string.Join(",", documents.Select(d => string.Format("'{0:D}'", d.DocumentID))));
+                    query.Append(")");
+                    await DB.Database.ExecuteSqlCommandAsync(query.ToString());
+                }
+
                 //the output files from the analysis center will now become the input files for each active dataparter route
                 List<Guid> responseIDs = new List<Guid>();
 
@@ -388,16 +424,20 @@ namespace Lpp.Dns.Data
                 }
                 else
                 {
-                    var requestDocuments = from d in documents
+                    var requestDocuments = (from d in documents
                                            from responseID in responseIDs
+                                           where d.DocumentKind != "DistributedRegression.AdapterEventLog" && d.DocumentKind != "DistributedRegression.TrackingTable"
                                            select new RequestDocument
                                            {
                                                DocumentType = RequestDocumentType.Input,
                                                ResponseID = responseID,
                                                RevisionSetID = d.RevisionSetID
-                                           };
+                                           }).ToArray();
 
-                    DB.RequestDocuments.AddRange(requestDocuments);
+                    if (requestDocuments.Length > 0)
+                    {
+                        DB.RequestDocuments.AddRange(requestDocuments);
+                    }
                 }
 
             }

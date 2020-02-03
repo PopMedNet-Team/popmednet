@@ -169,6 +169,17 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     analysisCenterResponse = analysisCenterRouting.AddResponse(_workflow.Identity.ID);
                 }
 
+                if(db.Entry(task).Collection(t => t.References).IsLoaded == false)
+                {
+                    await db.Entry(task).Collection(t => t.References).LoadAsync();
+                }
+
+                if(task.References.Any(tr => tr.ItemID == analysisCenterResponse.ID) == false)
+                {
+                    //add a reference to the response to be able to link task to iteration
+                    task.References.Add(new TaskReference { ItemID = analysisCenterResponse.ID, TaskID = task.ID, Type = TaskItemTypes.Response });
+                }
+
                 //use all the dp output documents to be the input documents for the AC routing
                 //build a manifest for where the documents are coming from
                 List<Lpp.Dns.DTO.QueryComposer.DistributedRegressionAnalysisCenterManifestItem> manifestItems = new List<DTO.QueryComposer.DistributedRegressionAnalysisCenterManifestItem>();

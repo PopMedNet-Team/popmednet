@@ -18,6 +18,7 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
         AssemblyLoadProxy _loadProxy = null;
         string _packagePath = null;
         string _appDomainName = string.Empty;
+        bool _isDisposed = false;
 
         public DomainManager(string rootFolder)
         {
@@ -112,8 +113,12 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (_isDisposed == false)
+            {
+                Dispose(true);
+                _isDisposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         ~DomainManager()

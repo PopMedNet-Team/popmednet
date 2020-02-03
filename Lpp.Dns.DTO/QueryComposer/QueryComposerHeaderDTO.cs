@@ -48,5 +48,11 @@ namespace Lpp.Dns.DTO.QueryComposer
         /// </summary>
         [DataMember]
         public Enums.QueryComposerQueryTypes? QueryType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request submission date.
+        /// </summary>
+        [DataMember]
+        public DateTime? SubmittedOn { get; set; }
     }
 }

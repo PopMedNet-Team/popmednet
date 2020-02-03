@@ -230,7 +230,7 @@ namespace Lpp.Dns.Api.Users
 
         private IQueryable<ProjectDTO> ReturnAvailableProjects()
         {
-            var projects = DataContext.Secure<Project>(Identity, PermissionIdentifiers.Request.ViewRequest, PermissionIdentifiers.Request.ApproveRejectSubmission, /*PermissionIdentifiers.Project.ListRequests,*/ PermissionIdentifiers.Project.Edit, PermissionIdentifiers.DataMartInProject.ApproveResponses, PermissionIdentifiers.DataMartInProject.GroupResponses, PermissionIdentifiers.DataMartInProject.HoldRequest, PermissionIdentifiers.DataMartInProject.RejectRequest, PermissionIdentifiers.DataMartInProject.SeeRequests, /*PermissionIdentifiers.DataMartInProject.SkipResponseApproval,*/ PermissionIdentifiers.Request.ChangeRoutings, PermissionIdentifiers.Request.ViewResults, PermissionIdentifiers.Request.ViewStatus);
+            var projects = DataContext.Secure<Project>(Identity, PermissionIdentifiers.Request.ViewRequest, PermissionIdentifiers.Request.ApproveRejectSubmission, /*PermissionIdentifiers.Project.ListRequests,*/ PermissionIdentifiers.Project.Edit, PermissionIdentifiers.DataMartInProject.ApproveResponses, PermissionIdentifiers.DataMartInProject.GroupResponses, PermissionIdentifiers.DataMartInProject.HoldRequest, PermissionIdentifiers.DataMartInProject.RejectRequest, PermissionIdentifiers.DataMartInProject.SeeRequests, /*PermissionIdentifiers.DataMartInProject.SkipResponseApproval,*/ PermissionIdentifiers.Request.ChangeRoutings, PermissionIdentifiers.Request.ViewResults, PermissionIdentifiers.Request.ViewIndividualResults, PermissionIdentifiers.Request.ViewStatus);
 
             var projSubmit = from p in DataContext.Secure<Project>(Identity) where DataContext.ProjectRequestTypeAcls.Any(a => a.ProjectID == p.ID && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID) && a.Permission != RequestTypePermissions.Deny) || DataContext.DataMartRequestTypeAcls.Any(a => p.DataMarts.Any(dm => a.DataMartID == dm.DataMartID) && a.Permission != RequestTypePermissions.Deny && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID)) select p;
 
@@ -748,6 +748,7 @@ namespace Lpp.Dns.Api.Users
                 PermissionIdentifiers.Request.ViewRequest,
                 PermissionIdentifiers.Request.ViewHistory,
                 PermissionIdentifiers.Request.ViewResults,
+                PermissionIdentifiers.Request.ViewIndividualResults,
                 PermissionIdentifiers.Request.ViewStatus,
                 PermissionIdentifiers.Request.Edit,
                 PermissionIdentifiers.Request.ApproveRejectSubmission,
@@ -851,6 +852,7 @@ namespace Lpp.Dns.Api.Users
             if (permissions.Contains(PermissionIdentifiers.Project.View) ||
                 permissions.Contains(PermissionIdentifiers.Project.Edit) ||
                 permissions.Contains(PermissionIdentifiers.Request.ViewHistory) ||
+                permissions.Contains(PermissionIdentifiers.Request.ViewIndividualResults) ||
                 permissions.Contains(PermissionIdentifiers.Request.ViewResults) ||
                 permissions.Contains(PermissionIdentifiers.Request.ViewStatus) ||
                 permissions.Contains(PermissionIdentifiers.Request.Edit) ||
@@ -1093,11 +1095,16 @@ namespace Lpp.Dns.Api.Users
         /// <summary>
         /// Returns a list of settings based on the key
         /// </summary>
-        /// <param name="Key">The key of the settings to retrieve. You may specify more than one.</param>
+        /// <param name="key">The array of keys of the settings to retrieve. You may specify more than one.</param>
         /// <returns>A list of settings by key</returns>
         [HttpGet]
-        public async Task<UserSettingDTO> GetSetting(string Key) {
-            var setting = await (from s in DataContext.UserSettings where s.UserID == Identity.ID && Key == s.Key select s).Map<UserSetting, UserSettingDTO>().SingleOrDefaultAsync();
+        public async Task<IEnumerable<UserSettingDTO>> GetSetting([FromUri]IEnumerable<string> key) {
+            var setting = await (from s in DataContext.UserSettings where s.UserID == Identity.ID && key.Contains(s.Key) select new UserSettingDTO
+            {
+                Key = s.Key,
+                Setting = s.Setting,
+                UserID = s.UserID
+            }).ToArrayAsync();
 
             return setting;
         }

@@ -16,10 +16,10 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>9b88918f</NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
   <Import Project="..\..\Build\Lpp.Dns.Targets" />
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Aspose.Cells, Version=7.4.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\External\Aspose.Cells.dll</HintPath>
@@ -39,9 +39,8 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
@@ -56,9 +55,8 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

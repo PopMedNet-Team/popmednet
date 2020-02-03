@@ -1,10 +1,15 @@
 /// <reference path="../../../js/_rootlayout.ts" />
 /// <reference path="termvaluefilter.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -21,6 +26,7 @@ var Plugins;
                         var _this = _super.call(this, options.BindingControl) || this;
                         _this.TemplateTerms = [];
                         _this.TermListUpdateDummy = ko.observable();
+                        _this.TermValidators = {}; // Validation functions for criteria tab concepts
                         _this.CurrentlySelectedModels = [];
                         var self = _this;
                         _this.options = options;
@@ -336,6 +342,7 @@ var Plugins;
                                     term.Values(termValues);
                                     if (codeTerms.indexOf(term.Type().toUpperCase()) >= 0) {
                                         if (term.Values != null && term.Values().CodeValues != null) {
+                                            //Do not re-map as the CodeValues property already exists...
                                         }
                                         else {
                                             _this.TermList.forEach(function (item) {
@@ -471,6 +478,19 @@ var Plugins;
                         });
                         return _this;
                     }
+                    ViewModel.prototype.AreTermsValid = function () {
+                        var areTermsValid = true;
+                        $.each(this.TermValidators, function (key, value) {
+                            if (!value()) {
+                                areTermsValid = false;
+                            }
+                        });
+                        if (!areTermsValid) {
+                            Global.Helpers.ShowAlert("Validation Error", "One or more terms contain invalid or insufficient information.");
+                            return false;
+                        }
+                        return true;
+                    };
                     ViewModel.prototype.FilterTermsForCriteria = function (terms) {
                         return ko.utils.arrayFilter(terms, function (t) { return t.IncludeInCriteria; });
                     };
@@ -548,6 +568,7 @@ var Plugins;
                                     term.Values(termValues);
                                     if (codeTerms.indexOf(term.Type().toUpperCase()) >= 0) {
                                         if (term.Values != null && term.Values().CodeValues != null) {
+                                            //Do not re-map as the CodeValues property already exists...
                                         }
                                         else {
                                             _this.TermList.forEach(function (item) {
@@ -1048,6 +1069,7 @@ var Plugins;
                             });
                         }
                         if (templateID == null) {
+                            //Do nothing here. The request is being loaded, and RawRequestData has already been populated.
                         }
                         else {
                             var queryTemplate = queryTemplates == null ? {
@@ -1067,7 +1089,7 @@ var Plugins;
                             var jTemplate;
                             if (queryTemplate.Type == Dns.Enums.TemplateTypes.CriteriaGroup) {
                                 jTemplate = {
-                                    Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType },
+                                    Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType, SubmittedOn: null },
                                     Where: { Criteria: [json] },
                                     Select: { Fields: [json] }
                                 };

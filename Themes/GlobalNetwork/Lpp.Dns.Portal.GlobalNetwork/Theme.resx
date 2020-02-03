@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Footer" xml:space="preserve">
-    <value>© 2015 PopMedNet, All Rights Reserved</value>
+    <value>© 2018 PopMedNet, All Rights Reserved</value>
     <comment>This is the footer information in the Footer of Lpp.Dns.Portal/Views/_RootLayout.cshtml </comment>
   </data>
   <data name="Info" xml:space="preserve">

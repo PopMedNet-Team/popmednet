@@ -1,9 +1,14 @@
 /// <reference path="../_rootlayout.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var DataMarts;
 (function (DataMarts) {
     var Details;
@@ -150,8 +155,13 @@ var DataMarts;
                     Global.Helpers.ShowAlert('Data Partner Identifier Required', '<p>A Data Partner Identifier is required when the adapter is for Distributed Regression.</p><p>This identifier is used to map to the input folders used by the Analysis Center.</p><p>An identifier is required even if this datamart is going to be an analysis center.</p>', 650, ['Close']).always(function () { $('#txtDataPartnerIdentifier').focus(); });
                     return;
                 }
+                if ((this.DataMart.AdapterID() || '').toUpperCase() == DistributedRegressionModelID && (this.DataMart.DataPartnerCode() || '').length == 0) {
+                    Global.Helpers.ShowAlert('Data Partner Code Required', '<p>A Data Partner Code is required when the adapter is for Distributed Regression.</p><p>This identifier is used to map to the data partner in the tracking tables.</p><p>An code is required even if this datamart is going to be an analysis center.</p>', 650, ['Close']).always(function () { $('#txtDataPartnerCode').focus(); });
+                    return;
+                }
                 if (this.DataMart.AdapterID() == null || this.DataMart.AdapterID().toUpperCase() != DistributedRegressionModelID) {
                     this.DataMart.DataPartnerIdentifier('');
+                    this.DataMart.DataPartnerCode('');
                 }
                 this.DataMart.StartDate((this.StartYear() == null || this.StartYear() == "") ? null : new Date(this.StartYear(), 1));
                 this.DataMart.EndDate((this.EndYear() == null || this.EndYear() == "") ? null : new Date(this.EndYear(), 1));

@@ -1,0 +1,15 @@
+{
+  "name": "Lpp.Pmn.Resources",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/knockout": "^3.4.47",
+    "@types/knockout.mapping": "^2.0.30",
+    "@types/knockout.validation": "0.0.35"
+  },
+  "dependencies": {}
+}

@@ -5,8 +5,6 @@ module Groups.Index {
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
 
-        public onColumnMenuInit: (e: any) => void;
-
         constructor(gGroupsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
@@ -29,14 +27,6 @@ module Groups.Index {
             });
             Global.Helpers.SetDataSourceFromSettings(this.ds, gGroupsSetting);  
 
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-
-                    self.Save();
-                });
-            };
         }
 
         public btnNewGroup_Click() {
@@ -45,11 +35,6 @@ module Groups.Index {
 
         public GroupsGrid(): kendo.ui.Grid {
             return $("#gGroups").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("Groups.Index.gGroups.User:" + User.ID, Global.Helpers.GetGridSettings(this.GroupsGrid()));
-
         }
     }
 
@@ -64,8 +49,10 @@ module Groups.Index {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gGroupsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateGroup] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
                 Global.Helpers.SetGridFromSettings(vm.GroupsGrid(), gGroupsSetting);
+                vm.GroupsGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Groups.Index.gGroups.User:" + User.ID, Global.Helpers.GetGridSettings(vm.GroupsGrid()));
+                });
             });
         });
     }

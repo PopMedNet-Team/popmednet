@@ -106,8 +106,8 @@
                         <legend style="display: none;">Criteria Group Details</legend>
                         <div class="row" data-bind="visible: !$root.IsPresetQuery">
                             <div class="col-sm-6 form-group">
-                                <label id="lblGroupName" for="txtGroupName">Group Name<em>*</em></label>
-                                <input class="form-control" id="txtGroupName" maxlength="150" data-bind="enable: true, value: Name" name="GroupName" validationmessage="Criteria Group Name is Required" style="width: 100%;" required />
+                                <label data-bind="attr:{'for':'txtGroupName' + $index() }, 'id':'lblGroupName' + $index()">Group Name<em>*</em></label>
+                                <input class="form-control" maxlength="150" data-bind="enable: true, value: Name, attr:{id: 'txtGroupName' + $index(), 'name':'txtGroupName' + $index() }" validationmessage="Criteria Group Name is Required" style="width: 100%;" required />
                             </div>
                         </div>
                         <div class="row">

@@ -96,7 +96,9 @@ module Requests.Details {
         public onViewAggregatedResults: () => void;
         public onViewIndividualResults: () => void;
         private responseIndex: number = 0;
-        public CanViewResponses: boolean;
+        public CanViewIndividualResponses: boolean;
+        public CanViewAggregateResponses: boolean;
+        public AllowAggregateView: boolean;
         public RequestIsComplete: KnockoutComputed<boolean>;
 
         constructor(
@@ -115,8 +117,10 @@ module Requests.Details {
             screenPermissions: any[],
             visualTerms: IVisualTerm[],
             responseGroups: Dns.Interfaces.IResponseGroupDTO[],
-            canViewResponses: boolean,
-            currentTask: Dns.Interfaces.ITaskDTO
+            canViewIndividualResponses: boolean,
+            canViewAggregateResponses: boolean,
+            currentTask: Dns.Interfaces.ITaskDTO,
+            requestTypeModels: any[]
         ) {
             super(bindingControl, screenPermissions);
 
@@ -124,7 +128,6 @@ module Requests.Details {
 
             this.RoutingsChanged = new ko.subscribable();
             this.ReloadRoutingsRequired = new ko.subscribable();
-
             this.Request = request;
             this.ParentRequest = parentRequest;
             this.CurrentTask = currentTask;
@@ -299,7 +302,16 @@ module Requests.Details {
                 return new RequestDataMartViewModel(rdm);
             }));
 
-            self.CanViewResponses = canViewResponses;
+            self.CanViewIndividualResponses = canViewIndividualResponses;
+            self.CanViewAggregateResponses = canViewAggregateResponses;
+
+            self.AllowAggregateView = true;
+
+            //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
+            requestTypeModels.forEach((rt) => {
+                if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
+                    self.AllowAggregateView = false;
+            });
 
             self.SelectedCompleteResponses = ko.observableArray([]);
             self.HasSelectedCompleteRoutings = ko.pureComputed(() => self.SelectedCompleteResponses().length > 0);
@@ -472,7 +484,7 @@ module Requests.Details {
                     action = self.DefaultSave(false);
 
                 } else {
-                    action = $.Deferred().resolve();
+                    action = $.Deferred<boolean>().resolve();
                 }
 
                 action.done(() => {
@@ -581,7 +593,7 @@ module Requests.Details {
 
             self.onShowRoutingHistory = (routing: VirtualRoutingViewModel) => {
                 Dns.WebApi.Requests.GetResponseHistory(routing.RequestDataMartID, routing.RequestID).done((responseHistory) => {
-                    Global.Helpers.ShowDialog("History", "/dialogs/routinghistory", ['close'], 500, 300, { responseHistory: responseHistory[0] })
+                    Global.Helpers.ShowDialog("History", "/dialogs/routinghistory", ['close'], 600, 300, { responseHistory: responseHistory[0] })
                         .done(() => {
                         });
                 });   
@@ -654,7 +666,7 @@ module Requests.Details {
 
         public DefaultSave(reload: boolean, isNewRequest: boolean = null, errorHandler: (err: any) => void = null): JQueryDeferred<boolean> {
             var self = this;
-            var deferred = $.Deferred();
+            var deferred = $.Deferred<boolean>();
             if (isNewRequest == null) {
                 isNewRequest = false;
             }
@@ -756,7 +768,7 @@ module Requests.Details {
         }
 
         public Save(showMessage: boolean = true): JQueryDeferred<boolean> {
-            var deferred = $.Deferred();
+            var deferred = $.Deferred<boolean>();
 
             if (!this.Validate())
                 return deferred.reject();
@@ -817,7 +829,7 @@ module Requests.Details {
         }
 
         private PostSave(showMessage: boolean): JQueryDeferred<boolean> {
-            var deferred = $.Deferred();
+            var deferred = $.Deferred<boolean>();
             var request = this.Request.toData();
 
             //Post it as a save
@@ -955,7 +967,7 @@ module Requests.Details {
                         projPermissions.forEach((pItem) => {
                             permissions.push(pItem);
                         });
-                        bind(request, parentRequest, [], requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, [], [], fieldOptions, permissions, visualTerms, null, false);
+                        bind(request, parentRequest, [], requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, [], [], fieldOptions, permissions, visualTerms, null, false, false, []);
 
 
                     });
@@ -983,7 +995,9 @@ module Requests.Details {
                         Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.ChangeRoutingsAfterSubmission, Permissions.Project.ResubmitRequests]),
                         Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Request.ChangeRoutingsAfterSubmission]),
                         Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()),
-                        Dns.WebApi.Response.CanViewResponses(request.ID())
+                        Dns.WebApi.Response.CanViewIndividualResponses(request.ID()),
+                        Dns.WebApi.Response.CanViewAggregateResponses(request.ID()),
+                        Dns.WebApi.Requests.GetRequestTypeModels(request.ID())
                     //Get the work flow activity that it's on
                         ).done((
                         parentRequests: Dns.Interfaces.IRequestDTO[],
@@ -996,7 +1010,9 @@ module Requests.Details {
                         projPermissions: any[],
                         reqTypePermissions: any[],
                         responseGroups: Dns.Interfaces.IResponseGroupDTO[],
-                        canViewResponses: boolean[]
+                        canViewIndividualResponses: boolean[],
+                        canViewAggregateResponses: boolean[],
+                        requestTypeModels: any[]
                         ) => {
                         if (parentRequests.length != 0) {
                             parentRequest = new Dns.ViewModels.RequestViewModel(parentRequests[0]);
@@ -1013,7 +1029,7 @@ module Requests.Details {
                                     permissions.push(pItem);
                                 }
                             });
-                            bind(request, parentRequest, requestDataMarts, requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, permissions, visualTerms, responseGroups, canViewResponses[0]);
+                            bind(request, parentRequest, requestDataMarts, requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, permissions, visualTerms, responseGroups, canViewIndividualResponses[0], canViewAggregateResponses[0], requestTypeModels);
                         });
 
                     });
@@ -1038,7 +1054,9 @@ module Requests.Details {
         screenPermissions: any[],
         visualTerms: IVisualTerm[],
         responseGroups: Dns.Interfaces.IResponseGroupDTO[],
-        canViewResponses: boolean
+        canViewIndividualResponses: boolean,
+        canViewAggregateResonses: boolean,
+        requestTypeModels: any[]
         ) { //Add Params here after data is retrieved
         $(() => {
             
@@ -1060,13 +1078,12 @@ module Requests.Details {
             let currentTask: Dns.Interfaces.ITaskDTO = ko.utils.arrayFirst(tasks, (item) => { return item.WorkflowActivityID == request.CurrentWorkFlowActivityID() && item.EndOn == null; });
             let bindingControl = $("#ContentWrapper");
 
-            rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewResponses, currentTask);
+            rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels);
 
             let taskID: any = Global.GetQueryParam("TaskID");
             //If new, or TaskID passed, set the tab to the Task tab
             if (workFlowActivity.End) {
-                //$("#tabs #aTask").remove();
-                $('#tabs #aDocuments').remove();
+
             } else if (!request.ID() || taskID) {
                 $("#tabs #aTask").tab('show');
             }
@@ -1171,6 +1188,19 @@ module Requests.Details {
 
                         });
                     });
+                } else {
+
+                    //on the completed step, need to list the previous task documents, but do not allow or expect upload
+                    //create a dummy complete task to pass the documents view model.
+                    let tt = new Dns.ViewModels.TaskViewModel();
+                    tt.ID(null);
+                    tt.PercentComplete(100);
+                    tt.Status(Dns.Enums.TaskStatuses.Complete);
+                    tt.Type(Dns.Enums.TaskTypes.Task);
+
+                    activityDocumentsVM = Controls.WFDocuments.List.init(tt.toData(), tasks.map(m => m.ID), $('#TaskDocuments'), screenPermissions);
+                    rovm.SetTaskDocumentsViewModel(activityDocumentsVM);
+
                 }
 
 
@@ -1217,6 +1247,10 @@ module Requests.Details {
                 Controls.WFTrackingTable.Display.init(request.ID(), screenPermissions);
             }
 
+            if (viewTask && Controls.WFEnhancedEventLog && Controls.WFEnhancedEventLog.Display) {
+                Controls.WFEnhancedEventLog.Display.init(request.ID(), screenPermissions);
+            }
+
             //Load other tabs here.
 
             //Use the workflow to use jquery load to load the partial for the task view as required
@@ -1241,6 +1275,15 @@ module Requests.Details {
             }
 
 
+            // ===== Scroll to Top ==== 
+            $(window).scroll(() => {
+                if ($(this).scrollTop() >= 450) {
+                    $('#return-to-top').fadeIn(200);
+                } else {
+                    $('#return-to-top').fadeOut(200);
+                }
+            });
+            $('#return-to-top').click(() => { $('body,html').animate({ scrollTop: 0 }, 500); });
         });
     }
 

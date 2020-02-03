@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../Lpp.Pmn.Resources/Scripts/typings/bootstrap.dns.d.ts" />
 
-module Response.Detail{
+module Responses.Detail{
     export var InitialGroupName: string = '';
     var vm: ViewModel;
     var vmHeader: HeaderViewModel = null;
@@ -53,7 +53,7 @@ module Response.Detail{
         constructor() {
             var self = this;
 
-            this.GroupName = ko.observable(Response.Detail.InitialGroupName || '');
+            this.GroupName = ko.observable(Responses.Detail.InitialGroupName || '');
             this.RejectMessage = ko.observable('');
             this.ShowGroupNamePrompt = ko.observable(false);
             this.ShowMessagePrompt = ko.observable(false);

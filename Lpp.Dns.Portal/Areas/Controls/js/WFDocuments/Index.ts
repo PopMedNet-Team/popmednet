@@ -75,6 +75,12 @@ module Controls.WFDocuments.List {
             };
 
             self.onNewRevision = () => {
+
+                if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                    //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                    return;
+                }
+
                 var revisionSet = self.SelectedRevisionSet();
                 var options = {
                     RequestID: self.RequestID,
@@ -93,6 +99,12 @@ module Controls.WFDocuments.List {
             };
 
             self.onNewDocument = () => {
+
+                if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                    //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                    return;
+                }
+
                 //if request ID is null, show prompt that explains the request needs to be saved first
                 //if user approves trigger a save, this will cause the page to get reloaded
                 if (self.RequestID == null && self.CurrentTask == null) {
@@ -125,6 +137,12 @@ module Controls.WFDocuments.List {
             };
 
             self.onDeleteDocument = () => {
+
+                if (self.CurrentTask != null && self.CurrentTask.ID == null) {
+                    //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
+                    return;
+                }
+
                 var revisionSet = vm.SelectedRevisionSet();
                 var document = revisionSet.Current();
 
@@ -144,33 +162,6 @@ module Controls.WFDocuments.List {
                                 var index = vm.DataSource.indexOf(revisionSet);
                                 if (index > -1) {
                                     vm.DataSource.remove(revisionSet);
-                                }
-                            }
-
-                        });
-                });
-            };
-
-            self.onDeleteDocument = () => {
-                var revisionSet = self.SelectedRevisionSet();
-                var document = revisionSet.Current();
-
-                var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the document</p>' + '<p><strong>' + document.Name + '</strong>?</p></div>';
-
-                //if (confirm('Are you sure you want to delete ' + document.FileName + '?')) {
-                Global.Helpers.ShowConfirm("Delete document", message).done(() => {
-                    Dns.WebApi.Documents.Delete([document.ID])
-                        .done(() => {
-                            self.SelectedRevisionSet(null);
-
-                            //remove the document from the revision set
-                            revisionSet.removeCurrent();
-
-                            if (revisionSet.Current() == null) {
-                                //the set has no documents remove from the main grid
-                                var index = self.DataSource.indexOf(revisionSet);
-                                if (index > -1) {
-                                    self.DataSource.remove(revisionSet);
                                 }
                             }
 

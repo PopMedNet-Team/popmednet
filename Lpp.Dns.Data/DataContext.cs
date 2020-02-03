@@ -337,6 +337,7 @@ namespace Lpp.Dns.Data
         public DbSet<EventLocation> EventLocations { get; set; }
 
         public DbSet<Request> Requests { get; set; }
+        public DbSet<RequestSchedule> RequestSchedules { get; set; }
         public DbSet<RequestUser> RequestUsers { get; set; }
         public DbSet<RequestDataMart> RequestDataMarts { get; set; }
         public DbSet<RequestSharedFolder> RequestSharedFolders { get; set; }

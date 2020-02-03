@@ -9,9 +9,6 @@ module Requests.Index {
         public Projects: KnockoutObservableArray<Dns.ViewModels.ProjectViewModel>;
         public RequestableProjects: Dns.Interfaces.IProjectDTO[];
 
-        public onColumnMenuInit: (e: any) => void;
-        //public onColumnChanged: (e: any) => void;
-
         constructor(gResultsSettings: string, bindingControl: JQuery, projects: Dns.Interfaces.IProjectDTO[], projectID: any, requestableProjecs: Dns.Interfaces.IProjectDTO[]) {
             super(bindingControl);
             var self = this;
@@ -58,26 +55,13 @@ module Requests.Index {
                 //
                 if (arguments.length > 0) {
                     //Saving filter chnages right back to the DB.  
-                    vm.Save();
+                  Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings($("#gResults").data("kendoGrid")));
                 }
                 // Call the original filter function.
                 var result = originalFilter.apply(this, arguments);
 
                 return result;
             }
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close",(e) => {
-                    self.Save();
-                });
-            };
-
-            //this.onColumnChanged = (e) => {
-            //    alert('gwell');
-            //    self.Save();
-            //};
-
         }
 
         public SelectProject(project: Dns.ViewModels.ProjectViewModel) {
@@ -128,10 +112,6 @@ module Requests.Index {
                 window.location.href = url;
             });
         }
-
-        public Save() {
-            Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(this.ResultsGrid()));
-        }
     }
 
     export function NameAchor(dataItem: Dns.Interfaces.IRequestDTO): string {
@@ -158,14 +138,15 @@ module Requests.Index {
 
                 vm = new ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjects);
                 ko.applyBindings(vm, bindingControl[0]);
-                $(window).unload(() => vm.Save());
 
                 //The collection of Date type columns in the grid.
                 var arrDateColumns = [];
                 arrDateColumns.push("SubmittedOn", "DueDate");
                 //This specific method ensures that date filters are processed accordingly.
                 Global.Helpers.SetGridFromSettingsWithDates(vm.ResultsGrid(), gResultsSettings, arrDateColumns);
-
+                vm.ResultsGrid().bind("dataBound", function (e) {
+                  Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
+                });
             });
         });
     }

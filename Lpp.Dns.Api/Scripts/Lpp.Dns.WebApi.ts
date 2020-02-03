@@ -499,9 +499,15 @@ module Dns.WebApi {
 	 	 	 return Helpers.PostAPIValue<any[]>('Users/SaveSetting', setting, doNotHandleFail);
 	 	 }
 
-	 	 public static GetSetting(Key: string, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IUserSettingDTO[]>{
+	 	 public static GetSetting(key: string[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IUserSettingDTO[]>{
 	 	 	 var params = '';
-	 	 	 if (Key != null) params += '&Key=' + encodeURIComponent(Key);
+	 	 	 if (key != null)
+	 	 	 	 for(var j = 0; j < key.length; j++) { params += '&key=' + encodeURIComponent(key[j]); }
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
 	 	 	 if (params.length > 0)
 	 	 	 	 params = '?' + params.substr(1);
 
@@ -2052,6 +2058,16 @@ module Dns.WebApi {
 	 	 }
 
 	 }
+	 export class LegacyRequests{
+	 	 public static ScheduleLegacyRequest(dto: Dns.Interfaces.ILegacySchedulerRequestDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('LegacyRequests/ScheduleLegacyRequest', dto, doNotHandleFail);
+	 	 }
+
+	 	 public static DeleteRequestSchedules(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('LegacyRequests/DeleteRequestSchedules', requestID, doNotHandleFail);
+	 	 }
+
+	 }
 	 export class ReportAggregationLevel{
 	 	 public static Delete(ID: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
@@ -2269,6 +2285,10 @@ module Dns.WebApi {
 	 	 	 return Helpers.PostAPIValue<any[]>('Response/RejectResponses', responses, doNotHandleFail);
 	 	 }
 
+	 	 public static RejectAndReSubmitResponses(responses: Dns.Interfaces.IRejectResponseDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('Response/RejectAndReSubmitResponses', responses, doNotHandleFail);
+	 	 }
+
 	 	 public static GetByWorkflowActivity(requestID: any, workflowActivityID: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IResponseDTO[]>{
 	 	 	 var params = '';
 	 	 	 if (requestID != null) params += '&requestID=' + requestID;
@@ -2284,13 +2304,22 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IResponseDTO[]>('Response/GetByWorkflowActivity' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static CanViewResponses(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<boolean[]>{
+	 	 public static CanViewIndividualResponses(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<boolean[]>{
 	 	 	 var params = '';
 	 	 	 if (requestID != null) params += '&requestID=' + requestID;
 	 	 	 if (params.length > 0)
 	 	 	 	 params = '?' + params.substr(1);
 
-	 	 	 return Helpers.GetAPIResult<boolean[]>('Response/CanViewResponses' + params, doNotHandleFail);
+	 	 	 return Helpers.GetAPIResult<boolean[]>('Response/CanViewIndividualResponses' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static CanViewAggregateResponses(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<boolean[]>{
+	 	 	 var params = '';
+	 	 	 if (requestID != null) params += '&requestID=' + requestID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<boolean[]>('Response/CanViewAggregateResponses' + params, doNotHandleFail);
 	 	 }
 
 	 	 public static CanViewPendingApprovalResponses(responses: Dns.Interfaces.IApproveResponseDTO, doNotHandleFail?: boolean):JQueryDeferred<boolean[]>{
@@ -2410,6 +2439,17 @@ module Dns.WebApi {
 	 	 	 	 params = '?' + params.substr(1);
 
 	 	 	 return Helpers.GetAPIResult<any[]>('Response/GetTrackingTableForDataPartners' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static GetEnhancedEventLog(requestID: any, format: string, download: boolean, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (requestID != null) params += '&requestID=' + requestID;
+	 	 	 if (format != null) params += '&format=' + encodeURIComponent(format);
+	 	 	 if (download != null) params += '&download=' + download;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('Response/GetEnhancedEventLog' + params, doNotHandleFail);
 	 	 }
 
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
@@ -3365,6 +3405,10 @@ module Dns.WebApi {
 	 	 	 return Helpers.PostAPIValue<any[]>('Documents/Upload', doNotHandleFail);
 	 	 }
 
+	 	 public static UploadChunked( doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('Documents/UploadChunked', doNotHandleFail);
+	 	 }
+
 	 	 public static Delete(id: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (id != null)
@@ -3547,7 +3591,7 @@ module Dns.WebApi {
             }
 
             static PostAPIValue<T>(url: string, value: any, doNotHandleFail?: boolean): JQueryDeferred<T> {
-                var d = jQuery.Deferred();
+                var d = jQuery.Deferred<T>();
                 if (!jQuery.support.cors) {
                     url = '/api/post?Url=' + encodeURIComponent(url);
                 } else {
@@ -3560,7 +3604,7 @@ module Dns.WebApi {
                     dataType: 'json',
                     data: value == null ? null : JSON.stringify(value),
                     contentType: 'application/json; charset=utf-8',
-					timeout: 60000
+                    timeout: 60000
                 }).done((result) => {
                     if (result == null) {
                         d.resolve();
@@ -3593,7 +3637,7 @@ module Dns.WebApi {
             }
 
             static PutAPIValue<T>(url: string, value: any, doNotHandleFail?: boolean): JQueryDeferred<T> {
-                var d = jQuery.Deferred();
+                var d = jQuery.Deferred<T>();
                 if (!jQuery.support.cors) {
                     url = '/api/put?Url=' + encodeURIComponent(url);
                 } else {

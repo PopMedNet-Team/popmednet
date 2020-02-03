@@ -32,30 +32,30 @@ module RootLayout {
 }
 
 module Users {
-    export function GetSetting(Key: string) : JQueryDeferred<string> {
-        var deferred = $.Deferred();
+    export function GetSetting(key: string) : JQueryDeferred<string> {
+        var deferred = $.Deferred<string>();
 
-        var setting = Global.Session(Key);
-
-        if (setting == null) {
-            Dns.WebApi.Users.GetSetting(Key).done((results) => {
-                if (results.length == 1) {
-                    Global.Session(Key, results[0].Setting);
-                    deferred.resolve(results[0].Setting);
-                } else {
-                    deferred.resolve(null);
-                }
-            });
-        } else {
-            
-            deferred.resolve(setting);
-        }
+				GetSettings([key]).done(results => {
+					if (results.length === 1) {
+						deferred.resolve(results[0].Setting);
+					} else {
+						deferred.resolve(null);
+					}
+				});
 
 
-        return deferred
-    }
+	    return deferred;
+	}
 
-    export function SetSetting(Key: string, setting: string): JQueryDeferred<void> {
+    export function GetSettings(key: Array<string>): JQueryDeferred<Dns.Interfaces.IUserSettingDTO[]> {
+			var deferred = $.Deferred<Dns.Interfaces.IUserSettingDTO[]>();
+      Dns.WebApi.Users.GetSetting(key).done((results) => {
+        deferred.resolve(results);
+			});
+			return deferred;
+		}
+
+	export function SetSetting(Key: string, setting: string): JQueryDeferred<void> {
         if (setting === Global.Session(Key)) {
             var deferred: JQueryDeferred<void> = $.Deferred<void>();
             deferred.resolve();

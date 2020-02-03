@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
@@ -91,17 +96,6 @@ var Workflow;
                             _this.DataMarts(updatedDataMarts);
                         }
                     });
-                    _this.DataMartsSelectAll = function () {
-                        self.DataMarts().forEach(function (dm) {
-                            if (self.SelectedDataMartIDs.indexOf(dm.DataMartID) < 0)
-                                self.SelectedDataMartIDs.push(dm.DataMartID);
-                        });
-                        return false;
-                    };
-                    _this.DataMartsClearAll = function () {
-                        self.SelectedDataMartIDs.removeAll();
-                        return false;
-                    };
                     _this.CanSubmit = ko.computed(function () {
                         return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
                     });
@@ -130,6 +124,20 @@ var Workflow;
                             var uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
                             self.UploadViewModel = uploadViewModel;
                         });
+                    });
+                    self.RoutesSelectAll = ko.pureComputed({
+                        read: function () {
+                            return self.DataMarts().length > 0 && self.SelectedDataMartIDs().length === self.DataMarts().length;
+                        },
+                        write: function (value) {
+                            if (value) {
+                                var allID = ko.utils.arrayMap(self.DataMarts(), function (i) { return i.DataMartID; });
+                                self.SelectedDataMartIDs(allID);
+                            }
+                            else {
+                                self.SelectedDataMartIDs([]);
+                            }
+                        }
                     });
                     return _this;
                 }

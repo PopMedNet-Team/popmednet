@@ -58,6 +58,8 @@ module Plugins.Requests.QueryBuilder.MDQ {
 
         public GetCompatibleDataMarts: () => void;
 
+        public TermValidators: Object = {}; // Validation functions for criteria tab concepts
+
         public SexForCritieria: KnockoutObservableArray<Dns.Structures.KeyValuePair>;
         public SettingForCritieria: KnockoutObservableArray<Dns.Structures.KeyValuePair>;
         public RaceEthnicityForCritieria: KnockoutObservableArray<Dns.Structures.KeyValuePair>;
@@ -659,6 +661,20 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 }
                 return isVis;
             });
+        }
+
+        public AreTermsValid(): boolean {
+            var areTermsValid: boolean = true;
+            $.each(this.TermValidators, function (key, value) {
+                if (!value()) {
+                    areTermsValid = false;
+                }
+            });
+            if (!areTermsValid) {
+                Global.Helpers.ShowAlert("Validation Error", "One or more terms contain invalid or insufficient information.");
+                return false;
+            }
+            return true;
         }
 
         public FilterTermsForCriteria(terms: TermVm[]): TermVm[] {
@@ -1409,7 +1425,7 @@ module Plugins.Requests.QueryBuilder.MDQ {
                 var jTemplate: Dns.Interfaces.IQueryComposerRequestDTO;
                 if (queryTemplate.Type == Dns.Enums.TemplateTypes.CriteriaGroup) {
                     jTemplate = {
-                        Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType },
+                        Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType, SubmittedOn: null },
                         Where: { Criteria: [<Dns.Interfaces.IQueryComposerCriteriaDTO>json] },
                         Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO>json] }
                     };

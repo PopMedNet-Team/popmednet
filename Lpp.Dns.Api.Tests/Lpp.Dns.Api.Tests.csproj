@@ -26,7 +26,7 @@
     <SlowCheetah_NuGetImportPath Condition=" '$(SlowCheetah_NuGetImportPath)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\Properties\SlowCheetah\SlowCheetah.Transforms.targets ))</SlowCheetah_NuGetImportPath>
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer.TermRegistration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.TermRegistration.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer.TermRegistration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.TermRegistration.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.7.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -38,9 +38,8 @@
     <Reference Include="FluentValidationNA">
       <HintPath>..\packages\FluentValidationNA.1.2.16\lib\net40\FluentValidationNA.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.OData.Core, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -67,12 +66,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -163,6 +162,7 @@
     <Compile Include="ControllerTest.cs" />
     <Compile Include="DataControllerTest.cs" />
     <Compile Include="EDMTest.cs" />
+    <Compile Include="Requests\DistributedRegression\EnhancedEventLogTests.cs" />
     <Compile Include="Requests\RequestNotificationTests.cs" />
     <Compile Include="Requests\RequestObserversTests.cs" />
     <Compile Include="Requests\RequestSecurityTests.cs" />
@@ -207,6 +207,7 @@
     <EmbeddedResource Include="Requests\Samples\request.json" />
     <EmbeddedResource Include="TaskMatrix\task_order.json" />
     <EmbeddedResource Include="TaskMatrix\PMNDEV-4121\activities_from_service_20150420.json" />
+    <None Include="Requests\DistributedRegression\AC_TrackingTable_Sample1.csv" />
     <None Include="Requests\Samples\BadRequestObserver.json" />
     <None Include="Requests\Samples\GoodRequestObserver.json" />
     <None Include="Requests\Samples\ModularProgramRequest.json" />

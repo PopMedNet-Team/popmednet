@@ -30,7 +30,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             ParagraphPredicateBuilders.Add(ApplySexTerms);
             ParagraphPredicateBuilders.Add(ApplyVisitsTerms);
             ParagraphPredicateBuilders.Add(ApplyAgeRangeTerms);
-			ParagraphPredicateBuilders.Add(ApplyRaceTerms);
+            ParagraphPredicateBuilders.Add(ApplyRaceTerms);
             ParagraphPredicateBuilders.Add(ApplyHispanicTerms);
         }
         
@@ -623,6 +623,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
                     calculateAsOf = ageRangeValues.CalculateAsOf.Value.Date;
                 }
+                else if (ageRangeValues.CalculationType.Value == DTO.Enums.AgeRangeCalculationType.AsOfDateOfRequestSubmission)
+                {
+                    if (!_queryInterrogator.HasRequestSubmissionDate)
+                        throw new ArgumentException("Missing request submission date value for applying age range criteria.");
+
+                    calculateAsOf = _queryInterrogator.RequestSubmissionDate.Value;
+                }
                 else
                 {
                     calculateAsOf = DateTime.Now.Date;
@@ -774,9 +781,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             }
 
             return Enumerable.Empty<string>();
-        }        
-		
-		Expression<Func<pcori.Patient, bool>> ApplyHispanicTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
+        }
+
+        Expression<Func<pcori.Patient, bool>> ApplyHispanicTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
             var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.HispanicID).ToArray();
 
@@ -1410,7 +1417,68 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
             }
 
-            foreach(var value in settingValues)
+            //apply any applicable age range restrictions
+            DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] {
+                DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodStartDateWithinCriteriaGroup,
+                DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodEndDateWithinCriteriaGroup
+            };
+            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+
+            if(ageRanges.Any() && observationPeriodPredicate == null)
+            {
+                throw new ArgumentException("No observation period term is defined in the criteria group for applying age range criteria.");
+            }
+            else if (ageRanges.Any() && observationPeriodPredicate != null)
+            {
+                Expression<Func<pcori.Encounter, bool>> ageGroupingPredicate = (d) => false;
+
+                foreach (var range in ageRanges.Where(r => r.MinAge.HasValue || r.MaxAge.HasValue))
+                {
+                    Expression<Func<pcori.Encounter, bool>> ageRangePredicate = (d) => true;
+                    if (range.MinAge.HasValue)
+                    {
+                        int minAge = range.MinAge.Value;
+                        if (_sqlProvider != Settings.SQLProvider.Oracle)
+                        {
+                            ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn > d.AdmittedOn) ?
+                                (DbFunctions.DiffYears(d.Patient.BornOn.Value, d.AdmittedOn).Value + ((d.Patient.BornOn.Value.Month < d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day < d.AdmittedOn.Day)) ? 1 : 0))
+                                :
+                                (DbFunctions.DiffYears(d.Patient.BornOn, d.AdmittedOn).Value - (((d.Patient.BornOn.Value.Month > d.AdmittedOn.Month) || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.AdmittedOn.Day)) ? 1 : 0))));
+                        }
+                        else
+                        {
+                            ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn.Value > d.AdmittedOn) ?
+                                (d.AdmittedOn.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day < d.AdmittedOn.Day)) ? 1 : 0))
+                                :
+                                (d.AdmittedOn.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.AdmittedOn.Month && (d.Patient.BornOn.Value.Month > d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.AdmittedOn.Day)) ? 1 : 0))));
+                        }
+                    }
+                    if (range.MinAge.HasValue)
+                    {
+                        int maxAge = range.MaxAge.Value;
+                        if (_sqlProvider != Settings.SQLProvider.Oracle)
+                        {
+                            ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn > d.AdmittedOn) ?
+                                (DbFunctions.DiffYears(d.Patient.BornOn.Value, d.AdmittedOn).Value + ((d.Patient.BornOn.Value.Month < d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day < d.AdmittedOn.Day)) ? 1 : 0))
+                                :
+                                (DbFunctions.DiffYears(d.Patient.BornOn, d.AdmittedOn).Value - (((d.Patient.BornOn.Value.Month > d.AdmittedOn.Month) || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.AdmittedOn.Day)) ? 1 : 0))) <= maxAge);
+                        }
+                        else
+                        {
+                            ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn.Value > d.AdmittedOn) ?
+                                (d.AdmittedOn.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day < d.AdmittedOn.Day)) ? 1 : 0))
+                                :
+                                (d.AdmittedOn.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.AdmittedOn.Month && (d.Patient.BornOn.Value.Month > d.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.AdmittedOn.Day)) ? 1 : 0))) <= maxAge);
+                        }
+                    }
+
+                    ageGroupingPredicate = ageGroupingPredicate.Or(ageRangePredicate);
+                }
+
+                observationPeriodPredicate = observationPeriodPredicate.And(ageGroupingPredicate.Expand());
+            }
+
+            foreach (var value in settingValues)
             {
                 if (settingPredicate == null)
                 {

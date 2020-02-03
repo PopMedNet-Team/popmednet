@@ -1,7 +1,7 @@
 /// <reference path="../../lpp.mvc.composition/lpp.mvc.controls.interfaces/utilities.d.ts" />
 $(function utilities() {
     $.fn.alternateClasses = function jQuery$alternateClasses(arrayClasses) {
-        if (typeof arrayClasses != "Array")
+        if ((arrayClasses instanceof Array) == false)
             arrayClasses = arguments;
         arrayClasses = $.makeArray(arrayClasses);
         this.removeClass(arrayClasses.join(" "));

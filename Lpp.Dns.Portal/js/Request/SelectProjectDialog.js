@@ -1,11 +1,16 @@
 /// <reference path="../../../Lpp.Pmn.Resources/Scripts/page/5.1.0/Page.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Request;
-(function (Request) {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Requests;
+(function (Requests) {
     var Utility;
     (function (Utility) {
         var vm;
@@ -33,6 +38,6 @@ var Request;
         }
         Utility.init = init;
         init();
-    })(Utility = Request.Utility || (Request.Utility = {}));
-})(Request || (Request = {}));
+    })(Utility = Requests.Utility || (Requests.Utility = {}));
+})(Requests || (Requests = {}));
 //# sourceMappingURL=SelectProjectDialog.js.map

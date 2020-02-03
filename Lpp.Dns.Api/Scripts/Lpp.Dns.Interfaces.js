@@ -79,6 +79,17 @@ var Dns;
             { value: ProcedureCode.Unknown, text: 'Unknown' },
             { value: ProcedureCode.Other, text: 'Other' },
         ];
+        var RequestScheduleTypes;
+        (function (RequestScheduleTypes) {
+            RequestScheduleTypes[RequestScheduleTypes["Activate"] = 0] = "Activate";
+            RequestScheduleTypes[RequestScheduleTypes["Deactivate"] = 1] = "Deactivate";
+            RequestScheduleTypes[RequestScheduleTypes["Recurring"] = 2] = "Recurring";
+        })(RequestScheduleTypes = Enums.RequestScheduleTypes || (Enums.RequestScheduleTypes = {}));
+        Enums.RequestScheduleTypesTranslation = [
+            { value: RequestScheduleTypes.Activate, text: 'Activate' },
+            { value: RequestScheduleTypes.Deactivate, text: 'Deactivate' },
+            { value: RequestScheduleTypes.Recurring, text: 'Recurring' },
+        ];
         var RoutingType;
         (function (RoutingType) {
             RoutingType[RoutingType["AnalysisCenter"] = 0] = "AnalysisCenter";
@@ -1268,6 +1279,15 @@ var Dns;
         Interfaces.KendoModelApproveRejectResponseDTO = {
             fields: {
                 'ResponseID': { type: 'any', nullable: false },
+            }
+        };
+        Interfaces.KendoModelEnhancedEventLogItemDTO = {
+            fields: {
+                'Step': { type: 'number', nullable: false },
+                'Timestamp': { type: 'date', nullable: false },
+                'Description': { type: 'string', nullable: false },
+                'Source': { type: 'string', nullable: false },
+                'EventType': { type: 'string', nullable: false },
             }
         };
         Interfaces.KendoModelHomepageRouteDetailDTO = {
@@ -2621,6 +2641,13 @@ var Dns;
                 'WorkflowActivityID': { type: 'any', nullable: true },
             }
         };
+        Interfaces.KendoModelLegacySchedulerRequestDTO = {
+            fields: {
+                'RequestID': { type: 'any', nullable: true },
+                'AdapterPackageVersion': { type: 'string', nullable: false },
+                'ScheduleJSON': { type: 'string', nullable: false },
+            }
+        };
         Interfaces.KendoModelDistributedRegressionAnalysisCenterManifestItem = {
             fields: {
                 'DocumentID': { type: 'any', nullable: false },
@@ -2695,6 +2722,7 @@ var Dns;
                 'Priority': { type: 'dns.enums.priorities', nullable: true },
                 'DueDate': { type: 'date', nullable: true },
                 'QueryType': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
+                'SubmittedOn': { type: 'date', nullable: true },
             }
         };
         Interfaces.KendoModelQueryComposerOrderByDTO = {
@@ -2716,6 +2744,7 @@ var Dns;
         Interfaces.KendoModelQueryComposerResponseDTO = {
             fields: {
                 'ID': { type: 'any', nullable: true },
+                'DocumentID': { type: 'any', nullable: true },
                 'ResponseDateTime': { type: 'date', nullable: false },
                 'RequestID': { type: 'any', nullable: false },
                 'Errors': { type: 'any[]', nullable: false },
@@ -3724,6 +3753,7 @@ var Dns;
                 'Adapter': { type: 'string', nullable: false },
                 'ProcessorID': { type: 'any', nullable: true },
                 'DataPartnerIdentifier': { type: 'string', nullable: false },
+                'DataPartnerCode': { type: 'string', nullable: false },
                 'Name': { type: 'string', nullable: false },
                 'Description': { type: 'string', nullable: false },
                 'Acronym': { type: 'string', nullable: false },

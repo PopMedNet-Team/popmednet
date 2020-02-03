@@ -9,6 +9,7 @@
     bool viewDocuments = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewDocuments.ID) || ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.DataMartInProject.SeeRequests.ID);
     bool canAssignRequestLevelNotifications = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.Request.AssignRequestLevelNotifications.ID);
     bool viewTrackingTable = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.ID);
+    bool viewEnhancedEventLog = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewEnhancedLogTable.ID);
 }
 
 @section Scripts {
@@ -20,7 +21,10 @@
     }
 <script src="/areas/controls/js/wffileupload/common.js"></script>
 <script src="/areas/controls/js/wffileupload/fortask.js"></script>
-@if (viewTrackingTable) {<script src="/areas/controls/js/wftrackingtable/index.js"></script>}
+@if (viewTrackingTable) {<script src="/areas/controls/js/wftrackingtable/index.js"></script>
+}
+@if (viewEnhancedEventLog) {<script src="/areas/controls/js/wfenhancedeventlog/index.js"></script>
+}
 <script src="/areas/querycomposer/js/termvaluefilter.js"></script>
 <script src="~/js/Requests/Details.js"></script>
 <style>
@@ -33,9 +37,54 @@
         border-top-right-radius:0;
     }
 
+    #return-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.7);
+        width: 50px;
+        height: 50px;
+        display: block;
+        text-decoration: none;
+        -webkit-border-radius: 35px;
+        -moz-border-radius: 35px;
+        border-radius: 35px;
+        display: none;
+        -webkit-transition: all 0.3s linear;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+    }
+
+        #return-to-top i {
+            color: #fff;
+            margin: 0;
+            position: relative;
+            left: 16px;
+            top: 13px;
+            font-size: 19px;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        #return-to-top:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+            #return-to-top:hover i {
+                color: #fff;
+                top: 5px;
+            }
+
 </style>
 }
 
+<a href="javascript:" id="return-to-top" title="return to top"><i class="glyphicon glyphicon-chevron-up"></i></a>
 <section id="ContentWrapper" class="invisible" data-bind="css: {invisible: false}">
     <section class="row">
         <div class="col-md-7">
@@ -115,6 +164,10 @@
         @if (viewTrackingTable)
         {
         <li><a href="#TrackingTable" id="aTrackingTable" role="tab" data-toggle="tab">Tracking Table</a></li>
+        }
+        @if (viewEnhancedEventLog)
+        {
+            <li><a href="#EnhancedEventLog" id="aEnhancedEventLog" role="tab" data-toggle="tab">Enhanced Event Log</a></li>
         }
         <li data-bind="visible:$root.HasHistory"><a href="#History" role="tab" data-toggle="tab">History</a></li>
     </ul>
@@ -242,7 +295,7 @@
                         </thead>
                         <tbody data-bind="foreach: AllRoutings">
                             <tr>
-                                <td><input type="checkbox" data-bind="value:ID, checked:$root.SelectedCompleteResponses, visible:$root.CanViewResponses && Status === Dns.Enums.RoutingStatus.Completed" /></td>
+                                <td><input type="checkbox" data-bind="value:ID, checked:$root.SelectedCompleteResponses, visible:($root.CanViewIndividualResponses || $root.CanViewAggregateResponses) && (Status === Dns.Enums.RoutingStatus.Completed || Status === Dns.Enums.RoutingStatus.ResultsModified)" /></td>
                                 <td><a href="#" data-bind="text: Name, href: '/datamarts/details?ID=' + DataMartID, visible:IsGroup == false"></a><a href="#" data-bind="text: Name, visible:IsGroup"></a></td>
                                 <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
                                 <td data-bind="html: Messages">
@@ -250,12 +303,12 @@
                             </tr>
                         </tbody>
                     </table>
-                    <nav style="margin:15px 0px;display:none;" data-bind="visible:$root.CanViewResponses">
+                    <nav style="margin:15px 0px;display:none;" data-bind="visible:($root.CanViewIndividualResponses || $root.CanViewAggregateResponses)">
                         <div class="btn-group pull-right">
                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings">View Results <span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a data-bind="click:onViewAggregatedResults">Aggregate View</a></li>
-                                <li><a data-bind="click:onViewIndividualResults">Individual View</a></li>
+                                <li><a data-bind="visible:$root.CanViewAggregateResponses, click:onViewAggregatedResults, visible: AllowAggregateView">Aggregate View</a></li>
+                                <li><a data-bind="visible:$root.CanViewIndividualResponses, click:onViewIndividualResults">Individual View</a></li>
                             </ul>
                         </div>
                         <div class="clearfix"></div>
@@ -362,6 +415,15 @@
             <!-- ko stopBinding: true -->
                 <div class="tab-pane fade" id="TrackingTable">
                     @Html.Partial("/areas/controls/views/wftrackingtable/index.cshtml")
+                </div>
+            <!-- /ko -->
+        }
+
+        @if (viewEnhancedEventLog)
+        {
+            <!-- ko stopBinding: true -->
+                <div class="tab-pane fade" id="EnhancedEventLog">
+                    @Html.Partial("/areas/controls/views/wfenhancedeventlog/index.cshtml")
                 </div>
             <!-- /ko -->
         }

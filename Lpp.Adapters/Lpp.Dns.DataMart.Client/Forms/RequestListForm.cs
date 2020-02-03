@@ -25,7 +25,9 @@ namespace Lpp.Dns.DataMart.Client
     public partial class RequestListForm : Form
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private IDisposable _autoRefresh;
+        private List<IDisposable> _networkRefreshList = new List<IDisposable>();
+        private bool _isFormInitialized = false;
+        List<RequestDetailForm> _openRequestDetails = new List<RequestDetailForm>();
 
         private ImageList _tabIcons;
         const string TabIcon_NewRequests = "NewRequests";
@@ -94,9 +96,15 @@ namespace Lpp.Dns.DataMart.Client
         protected override void OnClosed( EventArgs e )
         {
             base.OnClosed( e );
+
             SystemTray.HideSystemTrayIcon();
 
-            _autoRefresh.CallDispose();
+            if (_networkRefreshList != null && _networkRefreshList.Any())
+            {
+                _networkRefreshList.ForEach(p => p.CallDispose());
+                _networkRefreshList.Clear();
+            }
+                
             _tabIcons.CallDispose();
         }
 
@@ -113,6 +121,7 @@ namespace Lpp.Dns.DataMart.Client
             ShowConnectToNetworkDialog(AddNetworkStartupParamsDict);
 
             InitializeComponent();
+
             splash.Dock = tabs.Dock = noNetworks.Dock = DockStyle.Fill;
 
             tabs.ImageList = _tabIcons = new ImageList { Images = 
@@ -130,15 +139,21 @@ namespace Lpp.Dns.DataMart.Client
 
         public void RefreshAutoResponse()
         {
-            _autoRefresh.CallDispose();
-            
-            var refreshRate = TimeSpan.FromMilliseconds(Properties.Settings.Default.RefreshRate);
-            _autoRefresh = Observable
-                .Timer(DateTimeOffset.Now.Add(refreshRate), refreshRate, new ControlScheduler(this))
-                .Do(_ => { if (cbAutoRefresh.Checked) ReloadAllLists(); })
-                .LogExceptions(log.Error)
-                .Retry()
-                .Subscribe();
+            if (_networkRefreshList != null && _networkRefreshList.Any())
+            {
+                _networkRefreshList.ForEach(p => p.CallDispose());
+                _networkRefreshList.Clear();
+            }
+
+            foreach (var l in AllLists())
+            {
+                _networkRefreshList.Add(Observable
+                    .Timer(DateTimeOffset.Now.Add(TimeSpan.FromSeconds(l.Network.RefreshRate)), TimeSpan.FromSeconds(l.Network.RefreshRate), new ControlScheduler(this))
+                    .Do(_ => { if (cbAutoRefresh.Checked) l.ReloadWithNetworkCheck(); })
+                    .LogExceptions(log.Error)
+                    .Retry()
+                    .Subscribe());
+            }
         }
 
         private void RequestListForm_Load(object sender, EventArgs e)
@@ -165,6 +180,8 @@ namespace Lpp.Dns.DataMart.Client
                 cbRunAtWindowsStartup.Checked = Properties.Settings.Default.RunAtStartup;
                 cbAutoRefresh.Checked = Properties.Settings.Default.AutoRefresh;
 
+                _isFormInitialized = true;
+
                 // Delegate the rest the of time consuming (but non-UI) startup tasks to a worker thread,
                 // so the main screen get show up quickly.
                 startupWorker.RunWorkerAsync();
@@ -180,6 +197,20 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
 
+        private void startupWorker_DoWork(object sender, DoWorkEventArgs args)
+        {
+            try
+            {
+                CreateShortcutinStartup();
+                TestConnections();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         /// <summary>
         /// Perform the remaining time consuming UI tasks here since this is part of the main UI thread.
         /// </summary>
@@ -190,17 +221,33 @@ namespace Lpp.Dns.DataMart.Client
             splash.Hide();
             ToggleNoNetworksMessage();
 
-            foreach ( NetWorkSetting ns in Configuration.Instance.NetworkSettingCollection.NetWorkSettings ) CreateList( ns );
-            
-            var refreshRate = TimeSpan.FromMilliseconds( Properties.Settings.Default.RefreshRate );
-            _autoRefresh = Observable
-                .Timer( DateTimeOffset.Now.Add( refreshRate ), refreshRate, new ControlScheduler( this ) )
-                .Do( _ => { if ( cbAutoRefresh.Checked ) ReloadAllLists(); } )
-                .LogExceptions( log.Error )
-                .Retry()
-                .Subscribe();
+            foreach (NetWorkSetting ns in Configuration.Instance.NetworkSettingCollection.NetWorkSettings)
+            {
+                var requestListGridView = CreateList(ns);
 
-            GC.KeepAlive( AutoProcessingWorker.Instance );
+                if (_networkRefreshList == null)
+                    _networkRefreshList = new List<IDisposable>();
+
+                _networkRefreshList.Add(Observable
+                    .Timer(DateTimeOffset.Now.Add(TimeSpan.FromSeconds(ns.RefreshRate)), TimeSpan.FromSeconds(ns.RefreshRate), new ControlScheduler(this))
+                    .Do( _ => 
+                        {
+                            if (cbAutoRefresh.Checked)
+                            {
+                                requestListGridView.ReloadWithNetworkCheck();
+                            }
+                        })
+                    .LogExceptions(log.Error)
+                    .Retry()
+                    .Subscribe());
+            }
+
+            //if (AllLists().Any())
+            //{
+            //    AutoProcessor.RefreshRate = AllLists().Select(p => p.Network.RefreshRate).Min();
+            //}
+
+            //GC.KeepAlive( AutoProcessor.Instance );
         }
 
         private void ToggleNoNetworksMessage()
@@ -209,7 +256,13 @@ namespace Lpp.Dns.DataMart.Client
             noNetworks.Visible = Configuration.Instance.NetworkSettingCollection.NetWorkSettings.Count == 0;
         }
 
-        void ReloadAllLists() { foreach ( var l in AllLists() ) l.ReloadWithNetworkCheck(); }
+        void ReloadAllLists()
+        {
+            foreach (var l in AllLists())
+            {
+                l.ReloadWithNetworkCheck();
+            }
+        }
 
         private void ToggleDetailsButton()
         {
@@ -217,10 +270,16 @@ namespace Lpp.Dns.DataMart.Client
             btnViewDetail.Enabled = list != null && list.SelectedRequest != null;
         }
 
+        IEnumerable<RequestListGridView> AllLists()
+        {
+            return tabs.TabPages.Cast<TabPage>().Select(p => p.Controls[0]).OfType<RequestListGridView>();
+        }
+
         RequestListGridView CreateList( NetWorkSetting ns )
         {
             var existing = AllLists().FirstOrDefault( l => l.Network == ns );
-            if ( existing != null ) return existing;
+            if ( existing != null )
+                return existing;
 
             var g = new RequestListGridView( ns )
             {
@@ -230,6 +289,7 @@ namespace Lpp.Dns.DataMart.Client
                 SortColumn = ns.Sort,
                 IsSortAscending = ns.SortAscending
             };
+
             var tab = new TabPage { Text = ns.NetworkName, Controls = { g } };
             tabs.TabPages.Add( tab );
             tab.ImageKey = TabIcon_Regular;
@@ -249,11 +309,13 @@ namespace Lpp.Dns.DataMart.Client
                 ns.Sort = g.SortColumn;
                 Configuration.SaveNetworkSettings();
             };
+
             g.FilterChanged += saveGridSettings;
             g.PageSizeChanged += saveGridSettings;
             g.SortModeChanged += saveGridSettings;
 
             SetNewRequestsIndicator( tab );
+
             return g;
         }
 
@@ -262,11 +324,11 @@ namespace Lpp.Dns.DataMart.Client
             var g = tab.Controls[0] as RequestListGridView;
             
             tab.ImageKey = g.Network.NetworkStatus == Util.ConnectionOKStatus 
-                ? g.NewRequestsAvailable ? TabIcon_NewRequests : TabIcon_Regular
+                ? (g.NewRequestsAvailable ? TabIcon_NewRequests : TabIcon_Regular)
                 : TabIcon_Broken;
 
             tab.ToolTipText = g.Network.NetworkStatus == Util.ConnectionOKStatus 
-                ? g.NewRequestsAvailable ? "There are new requests available on this network" : ""
+                ? (g.NewRequestsAvailable ? "There are new requests available on this network" : "")
                 : "There is a problem with this connection";
         }
 
@@ -278,7 +340,8 @@ namespace Lpp.Dns.DataMart.Client
         void ResetNewRequestsIndicator()
         {
             var l = CurrentList();
-            if ( l != null ) l.NewRequestsAvailable = false;
+            if ( l != null )
+                l.NewRequestsAvailable = false;
         }
 
         RequestListGridView CurrentList()
@@ -290,30 +353,18 @@ namespace Lpp.Dns.DataMart.Client
         void SetReloadingStatusText()
         {
             var isReloading = AllLists().Any( l => l.IsReloading );
-            DisplayInformationalStatus( isReloading ? "Fetching requests from the network..." : "Ready", 
-                TextColor.Normal, toolStripStatusNetworkConnectivityStatus );
-        }
-
-        IEnumerable<RequestListGridView> AllLists() { return tabs.TabPages.Cast<TabPage>().Select( p => p.Controls[0] ).OfType<RequestListGridView>(); }
-         
-        private void startupWorker_DoWork(object sender, DoWorkEventArgs args)
-        {
-            try
-            {
-                CreateShortcutinStartup();
-                TestConnections();
-            }
-            catch (Exception ex)
-            {
-                log.Error( ex );
-                MessageBox.Show(ex.Message, "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            DisplayInformationalStatus( isReloading ? "Fetching requests from the network..." : "Ready", TextColor.Normal, toolStripStatusNetworkConnectivityStatus );
         }
 
         private void cbAutoRefresh_CheckedChanged( object sender, EventArgs e )
         {
+            if (!_isFormInitialized)
+                return;
+
             Properties.Settings.Default.AutoRefresh = cbAutoRefresh.Checked;
             Properties.Settings.Default.Save();
+
+            RefreshAutoResponse();
         }
 
         private void cbRunAtWindowsStartup_CheckedChanged( object sender, EventArgs e )
@@ -418,6 +469,11 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
+                if(CheckForOpenRequestDetails() == false)
+                {
+                    return;
+                }
+
                 log.Info("Logged out of DataMart Client.");
                 foreach (NetWorkSetting ns in Configuration.Instance.NetworkSettingCollection.NetWorkSettings)
                 {
@@ -435,10 +491,16 @@ namespace Lpp.Dns.DataMart.Client
             }
         }
         
+        /// <summary>
+        /// Handles notification that the specified networksetting was changed, added, or removed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="networkSetting"></param>
         private void ConfigurationChanged_EventHandler(object sender, NetWorkSetting networkSetting)
         {
             // Invalidate the request cache for network when things change on the connection since the user name or URL may have changed.  We could be more selective in when we need to invalidate, but for now this will do.
             RequestCache.ForNetwork(networkSetting).Invalidate();
+
             if (!this.Visible)
                 return;
 
@@ -446,26 +508,35 @@ namespace Lpp.Dns.DataMart.Client
             {
                 TestConnections();
 
-                foreach ( var p in tabs.TabPages.Cast<TabPage>().ToList() )
+                //determine if the networksetting was added, deleted, or changed
+                RequestListGridView gridView = tabs.TabPages.Cast<TabPage>().Select(tp => tp.Controls[0] as RequestListGridView).Where(gv => gv != null && gv.Network.CredentialKey == networkSetting.CredentialKey).FirstOrDefault();
+
+                if (gridView == null)
                 {
-                    var l = p.Controls[0] as RequestListGridView;
-                    if ( !Configuration.Instance.NetworkSettingCollection.NetWorkSettings.Contains( l.Network ) )
-                    {
-                        l.Dispose();
-                        tabs.TabPages.Remove( p );
-                    }
-                    else
-                    {
-                        l.OnConfigurationChanged();
-                    }
+                    //new network
+                    gridView = CreateList(networkSetting);
+
+                }else if(!Configuration.Instance.NetworkSettingCollection.NetWorkSettings.Cast<NetWorkSetting>().Any(n => n.CredentialKey == networkSetting.CredentialKey))
+                {
+                    //network was deleted
+                    tabs.TabPages.Remove((TabPage)gridView.Parent);
+
+                    gridView.StopAutoprocessor();
+                    gridView.Dispose();
+                    gridView = null;
                 }
-                Configuration.Instance.NetworkSettingCollection.NetWorkSettings
-                    .Cast<NetWorkSetting>()
-                    .Except( AllLists().Select( l => l.Network ) )
-                    .ForEach( ns => CreateList( ns ) );
+                else
+                {
+                    //network setting changed
+                    gridView.OnConfigurationChanged(networkSetting);
+                    
+                }
 
                 ToggleNoNetworksMessage();
+
                 ReloadAllLists();
+
+                RefreshAutoResponse();
             }
             catch (Exception ex)
             {
@@ -539,6 +610,15 @@ namespace Lpp.Dns.DataMart.Client
 
         private void ShowRequestDetailDialog(NetWorkSetting ns, Guid id, Guid dataMartId)
         {
+            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == id).FirstOrDefault();
+            if(openDetailsForm != null)
+            {
+                openDetailsForm.BringToFront();
+                openDetailsForm.Focus();
+                return;
+            }
+
+
             var progress = new ProgressForm( "Loading Request Information", "Loading full Request information from the Network..." );
             RequestCache.ForNetwork( ns )
                 .LoadRequest( id, dataMartId )
@@ -547,12 +627,23 @@ namespace Lpp.Dns.DataMart.Client
                 .Finally( progress.Dispose )
                 .Do( request =>
                 {
-                    using (var f = new RequestDetailForm(request))
+                    var f = new RequestDetailForm(request);
+                    f.FormClosed += Refresh_EventHandler;
+                    f.Shown += (_, __) =>
                     {
-                        f.FormClosed += Refresh_EventHandler;
-                        f.Shown += (_, __) => progress.Dispose();
-                        f.ShowDialog(this);
-                    }
+                        progress.Dispose();
+                        f.BringToFront();
+                        f.Activate();
+                    };
+                    f.FormClosed += DetailForm_Closed_EventHandler;
+
+                    _openRequestDetails.Add(f);
+
+                    f.Show();
+                    //not setting the owner to allow bringing the parent form to the foreground on top of the request details.
+
+                    f.BringToFront();
+                    f.Focus();
                 } )
                 .LogExceptions( log.Error )
                 .Catch( ( IncompatibleProcessorException e ) => MessageBox.Show( e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information ) )
@@ -561,6 +652,18 @@ namespace Lpp.Dns.DataMart.Client
                 .Subscribe();
         }
 
+        private void DetailForm_Closed_EventHandler(object sender, EventArgs e)
+        {
+            RequestDetailForm frm = (RequestDetailForm)sender;
+
+            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == frm.Request.Source.ID).FirstOrDefault();
+            if (openDetailsForm != null)
+            {
+                _openRequestDetails.Remove(openDetailsForm);
+            }
+
+            frm.Dispose();
+        }
 
         /// <summary>
         /// Create DM Client shortcut in startup folder for logged in (windows) user.
@@ -638,6 +741,42 @@ namespace Lpp.Dns.DataMart.Client
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+
+            e.Cancel = CheckForOpenRequestDetails() == false;
+
+            base.OnClosing(e);
+        }
+
+        bool CheckForOpenRequestDetails()
+        {
+            if (_openRequestDetails.Count > 0)
+            {
+                DialogResult dia = MessageBox.Show(this, "There are open request details, closing the request list window will close all other windows.\r\nDo you wish to continue?", "Close Open Requests", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dia == DialogResult.Yes)
+                {
+                    log.Debug(_openRequestDetails.Count + " open request detail windows, attempting to close.");
+                    RequestDetailForm frm = null;
+                    for (int i = _openRequestDetails.Count - 1; i >= 0; i--)
+                    {
+                        frm = _openRequestDetails[i];
+                        _openRequestDetails.Remove(frm);
+
+                        log.Debug("Closing request detail window: " + frm.Request.Source.MSRequestID);
+
+                        frm.Close();
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

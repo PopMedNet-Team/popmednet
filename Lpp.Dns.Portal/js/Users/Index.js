@@ -1,9 +1,14 @@
 /// <reference path="../_rootlayout.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Users;
 (function (Users) {
     var Index;
@@ -23,27 +28,14 @@ var Users;
                     transport: {
                         read: {
                             url: Global.Helpers.GetServiceUrl("/users/list"),
-                        },
-                        parameterMap: function (options, transportType) {
-                            //override the parameterMap implementation to update the odata filter value for the enum type RegistryTypes. 
-                            //By default the webapi paramter mapper does not know to include the enum typename in the filter value.
-                            var opt = Global.Helpers.UpdateKendoGridFilterOptions(options, [{ field: 'Active', format: "{0}" }]);
-                            var map = new kendo.data.transports.webapi.parameterMap(opt);
-                            return map;
                         }
                     },
                     schema: {
-                        model: kendo.data.Model.define(Dns.Interfaces.KendoModelDataMartDTO)
+                        model: kendo.data.Model.define(Dns.Interfaces.KendoModelUserDTO)
                     },
                     sort: { field: "UserName", dir: "asc" },
                 });
                 Global.Helpers.SetDataSourceFromSettings(_this.ds, gUsersSetting);
-                _this.onColumnMenuInit = function (e) {
-                    var menu = e.container.find(".k-menu").data("kendoMenu");
-                    menu.bind("close", function (e) {
-                        self.Save();
-                    });
-                };
                 return _this;
             }
             ViewModel.prototype.btnNewUser_Click = function () {
@@ -51,9 +43,6 @@ var Users;
             };
             ViewModel.prototype.UsersGrid = function () {
                 return $("#gUsers").data("kendoGrid");
-            };
-            ViewModel.prototype.Save = function () {
-                Users.SetSetting("Users.Index.gUsers.User:" + User.ID, Global.Helpers.GetGridSettings(this.UsersGrid()));
             };
             return ViewModel;
         }(Global.PageViewModel));
@@ -85,8 +74,10 @@ var Users;
                     var bindingControl = $("#Content");
                     vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateUsers] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    $(window).unload(function () { return vm.Save(); });
                     Global.Helpers.SetGridFromSettings(vm.UsersGrid(), gUsersSetting);
+                    vm.UsersGrid().bind("dataBound", function (e) {
+                        Users.SetSetting("Users.Index.gUsers.User:" + User.ID, Global.Helpers.GetGridSettings(vm.UsersGrid()));
+                    });
                 });
             });
         }

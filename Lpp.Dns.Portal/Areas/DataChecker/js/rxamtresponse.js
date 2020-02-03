@@ -162,4 +162,4 @@ var DataChecker;
         RxAmt.ViewModel = ViewModel;
     })(RxAmt = DataChecker.RxAmt || (DataChecker.RxAmt = {}));
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=rxamtresponse.js.map
+//# sourceMappingURL=RxAmtResponse.js.map

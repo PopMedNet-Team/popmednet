@@ -1,9 +1,14 @@
 /// <reference path="../../../../../js/requests/details.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Workflow;
 (function (Workflow) {
     var Common;
@@ -56,13 +61,20 @@ var Workflow;
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
             var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
-                function ViewModel(bindingControl, routings, responseGroups, canViewResponses) {
+                function ViewModel(bindingControl, routings, responseGroups, canViewIndividualResults, canViewAggregateResponses, requestTypeModels) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
                     _this.RoutingHistory = ko.observableArray([]);
                     _this.responseIndex = 0;
                     var self = _this;
                     self.Routings = routings;
-                    self.AllowViewResults = ko.observable(canViewResponses);
+                    self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
+                    self.AllowViewIndividualResults = ko.observable(canViewIndividualResults);
+                    self.AllowAggregateView = ko.observable(true);
+                    //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
+                    requestTypeModels.forEach(function (rt) {
+                        if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
+                            self.AllowAggregateView(false);
+                    });
                     self.CompletedRoutings = ko.computed(function () {
                         return ko.utils.arrayFilter(self.Routings, function (routing) {
                             return routing.Status == Dns.Enums.RoutingStatus.Completed ||
@@ -92,16 +104,23 @@ var Workflow;
                             self.VirtualRoutings.push(new VirtualRoutingViewModel(routing, null));
                         }
                     });
-                    self.onShowRoutingHistory = function (item) {
-                        $.ajax({
-                            url: '/request/history?requestID=' + item.Routings[0].RequestID + '&virtualResponseID=' + item.Routings[0].ResponseID + '&routingInstanceID=' + item.Routings[0].ID,
-                            type: 'GET',
-                            dataType: 'json'
-                        }).done(function (results) {
+                    var showRoutingHistory = function (requestDataMartID, requestID) {
+                        Dns.WebApi.Requests.GetResponseHistory(requestDataMartID, requestID).done(function (results) {
                             self.RoutingHistory.removeAll();
-                            self.RoutingHistory.push.apply(self.RoutingHistory, results);
-                            $('#responseHistoryDialog').modal('show');
+                            var errorMesssages = ko.utils.arrayMap(ko.utils.arrayFilter(results, function (r) { return (r.ErrorMessage || '').length > 0; }), function (r) {
+                                return r.ErrorMessage;
+                            });
+                            if (errorMesssages.length > 0) {
+                                Global.Helpers.ShowErrorAlert("Error Retrieving History", errorMesssages.join('<br/>'), 500);
+                            }
+                            else {
+                                self.RoutingHistory.push.apply(self.RoutingHistory, results);
+                                $('#responseHistoryDialog').modal('show');
+                            }
                         });
+                    };
+                    self.onShowRoutingHistory = function (item) {
+                        showRoutingHistory(item.Routings[0].ID, item.Routings[0].RequestID);
                     };
                     var setupResponseTabView = function (responseView) {
                         var tabID = 'responsedetail_' + self.responseIndex;
@@ -146,31 +165,13 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
-                //Dns.WebApi.Response.CanViewResponses(id)
-                //    .done((canViewResponses: boolean[]) => {
-                //        var viewResponses = canViewResponses[0];
-                //        debugger;
-                //        $.when<any>(
-                //            Dns.WebApi.Requests.RequestDataMarts(id),
-                //            Dns.WebApi.Response.GetResponseGroupsByRequestID(id)
-                //        ).done((
-                //            routings: Dns.Interfaces.IRequestDataMartDTO[],
-                //            responseGroups: Dns.Interfaces.IResponseGroupDTO[]
-                //        ) => {
-                //            console.log('done in completed init called');
-                //            Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-                //            var bindingControl = $('#CompletedTaskView');
-                //            vm = new ViewModel(bindingControl, routings, responseGroups || [], viewResponses);
-                //            ko.applyBindings(vm, bindingControl[0]);
-                //        });
-                //    });
                 //TODO: should be able to pull request datamarts from the root viewmodel
                 //TODO: look at moving canviewresponse
-                $.when(Dns.WebApi.Requests.RequestDataMarts(id).promise(), Dns.WebApi.Response.CanViewResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise()).done(function (routings, canViewResponses, responseGroups) {
+                $.when(Dns.WebApi.Requests.RequestDataMarts(id).promise(), Dns.WebApi.Response.CanViewIndividualResponses(id).promise(), Dns.WebApi.Response.CanViewAggregateResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise(), Dns.WebApi.Requests.GetRequestTypeModels(id).promise()).done(function (routings, canViewIndividualResponses, canViewAggregateResponses, responseGroups, requestTypeModels) {
                     $(function () {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                         var bindingControl = $('#CompletedTaskView');
-                        vm = new ViewModel(bindingControl, routings, responseGroups || [], canViewResponses[0]);
+                        vm = new ViewModel(bindingControl, routings, responseGroups || [], canViewIndividualResponses[0], canViewAggregateResponses[0], requestTypeModels);
                         if (bindingControl[0]) {
                             ko.applyBindings(vm, bindingControl[0]);
                         }

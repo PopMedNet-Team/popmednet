@@ -105,7 +105,8 @@ module Workflow.DistributedRegression.Completed {
         private HasSelectedCompleteRoutings: KnockoutComputed<boolean>;
         private VirtualRoutings: VirtualRoutingViewModel[];
 
-        private AllowViewResults: KnockoutObservable<boolean>;
+        private AllowViewIndividualResults: KnockoutObservable<boolean>;
+        private AllowViewAggregateResults: KnockoutObservable<boolean>;
 
         public RoutingHistory: KnockoutObservableArray<IHistoryResponseData> = ko.observableArray([]);
         private onShowRoutingHistory: (item: VirtualRoutingViewModel) => void;
@@ -114,12 +115,13 @@ module Workflow.DistributedRegression.Completed {
 
         private responseIndex: number = 0;
 
-        constructor(bindingControl: JQuery, routings: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], canViewResponses: boolean) {
+        constructor(bindingControl: JQuery, routings: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], canViewIndividualResponses: boolean, canViewAggregateResponses: boolean) {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions)
 
             var self = this;
             self.Routings = ko.observableArray(routings.RequestDataMarts || []);
-            self.AllowViewResults = ko.observable(canViewResponses);
+            self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
+            self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
             self.AnalysisCenterRoutings = ko.computed(() => {
                 return ko.utils.arrayFilter(self.Routings(), (routing) => {
                     return routing.RoutingType == Dns.Enums.RoutingType.AnalysisCenter
@@ -333,11 +335,13 @@ module Workflow.DistributedRegression.Completed {
         var id: any = Global.GetQueryParam("ID");
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
-            Dns.WebApi.Response.CanViewResponses(id).promise(),
+            Dns.WebApi.Response.CanViewIndividualResponses(id).promise(),
+            Dns.WebApi.Response.CanViewAggregateResponses(id).promise(),
             Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise()
         ).done((
             routings: Dns.Interfaces.ICommonResponseDetailDTO[],
-            canViewResponses: boolean[],
+            canViewIndividualResponses: boolean[],
+            canViewAggregateResponses: boolean[],
             responseGroups: Dns.Interfaces.IResponseGroupDTO[]
         ) => {
 
@@ -345,7 +349,7 @@ module Workflow.DistributedRegression.Completed {
             $(() => {
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 var bindingControl = $('#DRCompleted');
-                vm = new ViewModel(bindingControl, routings[0], responseGroups || [], canViewResponses[0]);
+                vm = new ViewModel(bindingControl, routings[0], responseGroups || [], canViewIndividualResponses[0], canViewAggregateResponses[0]);
 
                 if (bindingControl[0]) {
                     ko.applyBindings(vm, bindingControl[0]);

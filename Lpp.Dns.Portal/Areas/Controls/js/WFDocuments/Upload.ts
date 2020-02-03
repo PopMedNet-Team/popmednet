@@ -31,6 +31,13 @@ module Controls.WFDocuments.Upload {
                 }
             };
             this.onUploadFile = (e) => {
+                ko.utils.arrayForEach(e.files, (item: any) => {
+                    if (item.size > 2147483648) {
+                        e.preventDefault();
+                        Global.Helpers.ShowAlert("File is too Large", "<p>The file selected is too large, please upload a file less than 2GB").done(() => {
+                        });
+                    }
+                });
                 e.data = {
                     requestID: self.RequestID,
                     taskID: self.TaskID,
@@ -38,15 +45,20 @@ module Controls.WFDocuments.Upload {
                     documentName: self.DocumentName(),
                     description: self.Description(),
                     comments: self.Comments(),
-                    authToken: User.AuthToken,
                     parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null
                 };
+
+                var xhr = e.XMLHttpRequest;
+                xhr.addEventListener("readystatechange", function (e) {
+                    if (xhr.readyState == 1 /* OPENED */) {
+                        xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
+                    }
+                });
             };
             this.onSuccess = (e) => {
                 //fires when upload is complete with or without errors
                 //on success should close the dialog with the document information
-                var result = JSON.parse(e.response.content);
-                self.Close(result.results[0]);
+                self.Close(e.response.Document);
             };
             this.onCancel = () => { self.Close(); };
         }
