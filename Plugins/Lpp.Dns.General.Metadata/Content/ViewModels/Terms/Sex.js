@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../../ViewModels/Terms.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var SexTerm = (function (_super) {
+    var SexTerm = /** @class */ (function (_super) {
         __extends(SexTerm, _super);
         function SexTerm(sexData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.SexTerm) || this;
@@ -31,14 +31,14 @@ var RequestCriteriaViewModels;
             //console.log('Sex: ' + JSON.stringify(sexData));
             return sexData;
         };
+        SexTerm.SexesList = [
+            new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.SexTypes.NotSpecified),
+            new Dns.KeyValuePairData('Male', RequestCriteriaModels.SexTypes.Male),
+            new Dns.KeyValuePairData('Female', RequestCriteriaModels.SexTypes.Female),
+            new Dns.KeyValuePairData('Both', RequestCriteriaModels.SexTypes.Both),
+            new Dns.KeyValuePairData('Both Aggregated', RequestCriteriaModels.SexTypes.Aggregated)
+        ];
         return SexTerm;
     }(RequestCriteriaViewModels.Term));
-    SexTerm.SexesList = [
-        new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.SexTypes.NotSpecified),
-        new Dns.KeyValuePairData('Male', RequestCriteriaModels.SexTypes.Male),
-        new Dns.KeyValuePairData('Female', RequestCriteriaModels.SexTypes.Female),
-        new Dns.KeyValuePairData('Both', RequestCriteriaModels.SexTypes.Both),
-        new Dns.KeyValuePairData('Both Aggregated', RequestCriteriaModels.SexTypes.Aggregated)
-    ];
     RequestCriteriaViewModels.SexTerm = SexTerm;
 })(RequestCriteriaViewModels || (RequestCriteriaViewModels = {}));

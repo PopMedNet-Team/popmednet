@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var ReportAggregationLevelTerm = (function (_super) {
+    var ReportAggregationLevelTerm = /** @class */ (function (_super) {
         __extends(ReportAggregationLevelTerm, _super);
         function ReportAggregationLevelTerm(reportAggregationLevelData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.ReportAggregationLevelTerm) || this;

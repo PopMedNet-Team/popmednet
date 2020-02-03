@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 //V5.1.0
 var Global;
 (function (Global) {
-    var WorkflowActivityViewModel = (function () {
+    var WorkflowActivityViewModel = /** @class */ (function () {
         function WorkflowActivityViewModel(bindingControl, screenPermissions) {
             if (screenPermissions === void 0) { screenPermissions = null; }
             var self = this;
@@ -41,9 +41,16 @@ var Global;
         return WorkflowActivityViewModel;
     }());
     Global.WorkflowActivityViewModel = WorkflowActivityViewModel;
-    var PageViewModel = (function () {
-        function PageViewModel(bindingControl, screenPermissions) {
+    var PageViewModel = /** @class */ (function () {
+        /**
+         *
+         * @param bindingControl The control the page viewmodel is bound to.
+         * @param screenPermissions The permissions for controlling the UI the user has.
+         * @param validationContainer The container to use for validation other than the root binding container. If not specified the 'bindingControl' element is used.
+         */
+        function PageViewModel(bindingControl, screenPermissions, validationContainer) {
             if (screenPermissions === void 0) { screenPermissions = null; }
+            if (validationContainer === void 0) { validationContainer = null; }
             var _this = this;
             this._BindingControl = bindingControl;
             var self = this;
@@ -51,7 +58,7 @@ var Global;
                 return sp.toLowerCase();
             });
             this.ValidationMessage = ko.observable("");
-            this.Validator = bindingControl.kendoValidator({
+            this.Validator = (validationContainer || bindingControl).kendoValidator({
                 validate: function () {
                     var errors = "";
                     _this.Validator.errors().forEach(function (item) {
@@ -92,7 +99,7 @@ var Global;
         return PageViewModel;
     }());
     Global.PageViewModel = PageViewModel;
-    var DialogViewModel = (function (_super) {
+    var DialogViewModel = /** @class */ (function (_super) {
         __extends(DialogViewModel, _super);
         function DialogViewModel(bindingControl) {
             var _this = _super.call(this, bindingControl) || this;
@@ -117,7 +124,7 @@ var Global;
         return DialogViewModel;
     }(PageViewModel));
     Global.DialogViewModel = DialogViewModel;
-    var UserInfo = (function () {
+    var UserInfo = /** @class */ (function () {
         function UserInfo() {
             this.ID = null;
             this.AuthToken = null;
@@ -126,19 +133,14 @@ var Global;
             this.EmployerID = null;
             this.PasswordExpiration = null;
             this.SessionExpireMinutes = null;
+            this.SessionTimeout = null;
+            var self = this;
             var sAuthorization = Global.Cookies.get("Authorization");
             if (!sAuthorization)
                 return;
             this.AuthInfo = JSON.parse(sAuthorization);
             if (!this.AuthInfo)
                 return;
-            //if (!this.AuthInfo) {//Not logged in yet
-            //    //Check that the current URL isn't the login page
-            //    if (window.location.href.toLowerCase().indexOf("/account/login") >= 0 || window.location.protocol.toLowerCase() == "http")
-            //        return;  //On the login page or other insecure page before login, get out.
-            //    window.location.href = "/account/login?ReturnUrl=" + encodeURIComponent(window.location.href);
-            //    return;
-            //}
             this.ID = this.AuthInfo.ID;
             if (this.AuthInfo.UserName) {
                 this.AuthToken = this.AuthInfo.Authorization;
@@ -156,18 +158,85 @@ var Global;
             else {
                 this.AuthToken = null;
             }
-            this.SessionExpireMinutes = this.AuthInfo.SessionExpireMinutes;
+            var invalidURLs = ["/dialogs/sessionexpiring", "/login", "/account/login"];
+            if ($.inArray(window.location.pathname.toLowerCase(), invalidURLs) == -1) {
+                self.SessionExpireMinutes = self.AuthInfo.SessionExpireMinutes;
+                localStorage.setItem("SessionExpire", moment(new Date()).add((self.SessionExpireMinutes), 'm').toJSON());
+            }
             if (this.AuthToken) {
                 $.ajaxSetup({
                     headers: { "Authorization": "PopMedNet " + this.AuthToken }
                 });
             }
-            if (this.SessionExpireMinutes && this.SessionExpireMinutes > 0) {
-                setTimeout(function () {
-                    window.location.href = "/account/login?ReturnUrl=" + encodeURIComponent(window.location.href);
-                }, this.SessionExpireMinutes * 60 * 1000);
+            if (self.SessionExpireMinutes && self.SessionExpireMinutes > 0 && $.inArray(window.location.pathname.toLowerCase(), invalidURLs) == -1) {
+                self.SessionTimeout = setTimeout(function () { self.SessionExiring(); }, (self.SessionExpireMinutes - 5) * 60 * 1000);
+                setInterval(function () {
+                    self.CheckAuth();
+                }, 15000);
             }
         }
+        UserInfo.prototype.SessionExiring = function () {
+            var self = this;
+            setTimeout(function () { }, 1000);
+            ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
+            if (Helpers.DetectInternetExplorer()) {
+                localStorage.setItem("ieFix", null);
+            }
+            var exireDateTime = localStorage.getItem("SessionExpire");
+            if ((moment(exireDateTime).toDate().getTime() - moment(new Date()).toDate().getTime()) < (5 * 60 * 1000)) {
+                this.SessionExpringDialog();
+            }
+            else {
+                clearTimeout(self.SessionTimeout);
+                self.SessionTimeout = setTimeout(function () { self.SessionExiring(); }, (((moment(exireDateTime).toDate().getTime() - moment(new Date()).toDate().getTime()) - 5) * 60 * 1000));
+            }
+        };
+        UserInfo.prototype.SessionExpringDialog = function () {
+            var self = this;
+            Helpers.ShowDialog("Session Expiring", "/Dialogs/SessionExpiring", ["close"], 800, 600).done(function (response) {
+                if (response == true) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/RefreshSession",
+                        dataType: "json",
+                    }).done(function (result) {
+                        User = new UserInfo();
+                    }).fail(function (error) {
+                        window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                    });
+                }
+                else {
+                    ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
+                    if (Helpers.DetectInternetExplorer()) {
+                        localStorage.setItem("ieFix", null);
+                    }
+                    var time = moment(localStorage.getItem("SessionExpire")).toDate().getTime() - moment(new Date()).toDate().getTime();
+                    var minutes = Math.floor((time / 1000 / 60));
+                    if (moment(localStorage.getItem("SessionExpire")).isBefore(moment(new Date())) || minutes <= 0) {
+                        window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                    }
+                }
+            });
+        };
+        UserInfo.prototype.CheckAuth = function () {
+            $.ajax({
+                type: "GET",
+                url: "/Home/CheckAuth",
+                dataType: "json",
+            }).done(function (result) {
+                if (!result.IsAuthenticated) {
+                    window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                }
+            }).fail(function (error) {
+                if (moment(new Date()).toDate() > moment(localStorage.getItem("SessionExpire")).toDate()) {
+                    if (Helpers.DetectInternetExplorer()) {
+                        localStorage.removeItem("ieFix");
+                    }
+                    localStorage.removeItem("SessionExpire");
+                    window.location.href = "/account/login?Error=" + encodeURIComponent("You have been logged out due to inactivity. Please relogin.") + "&returnURL=" + encodeURIComponent(window.location.href);
+                }
+            });
+        };
         UserInfo.prototype.SetEmployer = function (employerID) {
             this.AuthInfo.EmployerID = employerID;
             this.Update();
@@ -209,7 +278,7 @@ var Global;
     }());
     Global.UserInfo = UserInfo;
     //this class is a temporary fix until jquery.cookie can handle % correctly.
-    var Cookies = (function () {
+    var Cookies = /** @class */ (function () {
         function Cookies() {
         }
         Cookies.get = function (name) {
@@ -221,7 +290,7 @@ var Global;
         return Cookies;
     }());
     Global.Cookies = Cookies;
-    var Helpers = (function () {
+    var Helpers = /** @class */ (function () {
         function Helpers() {
         }
         Helpers.ToPercent = function (count, total) {
@@ -302,6 +371,20 @@ var Global;
                 arr.unshift(add);
             }
             return arr;
+        };
+        Helpers.AddClearAllFiltersMenuItem = function (e) {
+            var popup = e.container.data('kendoPopup');
+            var menu = e.container.find(".k-menu").data("kendoMenu");
+            var grid = e.sender;
+            menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
+            menu.bind("select", function (e) {
+                if ($(e.item).text() == "Clear All Filters") {
+                    //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
+                    grid.dataSource.filter({});
+                    menu.close();
+                    popup.close();
+                }
+            });
         };
         Helpers.GetDataSourceSettings = function (ds) {
             var state = {
@@ -737,7 +820,7 @@ var Global;
         Helpers.ProcessAjaxError = function (error) {
             if (error.responseText != null && error.responseText.toLowerCase().indexOf("<body") > -1)
                 return error.responseText;
-            if (typeof error == "string")
+            if (typeof error == "string") //It's just a string of text, return it.
                 return error;
             var errorString = "Status: " + error.status + "<br/>Server Message: " + error.statusText;
             //Should parse the error text etc. from the array
@@ -895,15 +978,27 @@ var Global;
             }
             return options;
         };
+        Helpers.DetectInternetExplorer = function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf('MSIE ');
+            if (msie > 0) {
+                return true;
+            }
+            var trident = ua.indexOf('Trident/');
+            if (trident > 0) {
+                return true;
+            }
+            return false;
+        };
+        Helpers.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        Helpers.kilobyte = 1024;
+        Helpers.megabyte = 1024 * 1024;
+        Helpers.gigabyte = 1024 * 1024 * 1024;
         return Helpers;
     }());
-    Helpers.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    Helpers.kilobyte = 1024;
-    Helpers.megabyte = 1024 * 1024;
-    Helpers.gigabyte = 1024 * 1024 * 1024;
     Global.Helpers = Helpers;
     /** Custom class that overrides the default toString implementation to return the value specified using the a specific string format. */
-    var ODataCustomFilterValueFormatter = (function (_super) {
+    var ODataCustomFilterValueFormatter = /** @class */ (function (_super) {
         __extends(ODataCustomFilterValueFormatter, _super);
         function ODataCustomFilterValueFormatter(value, format) {
             var _this = _super.call(this) || this;
@@ -996,7 +1091,7 @@ var Constants;
         return kendo.toString(date, Constants.DateTimeFormat);
     }
     Constants.FormatDateTime = FormatDateTime;
-    var Guid = (function () {
+    var Guid = /** @class */ (function () {
         function Guid() {
         }
         Guid.newGuid = function () {

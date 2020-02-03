@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var RequesterCenterTerm = (function (_super) {
+    var RequesterCenterTerm = /** @class */ (function (_super) {
         __extends(RequesterCenterTerm, _super);
         function RequesterCenterTerm(requesterCenterData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.RequesterCenterTerm) || this;

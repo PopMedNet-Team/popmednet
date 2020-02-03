@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var DataPartnerTerm = (function (_super) {
+    var DataPartnerTerm = /** @class */ (function (_super) {
         __extends(DataPartnerTerm, _super);
         function DataPartnerTerm(dataPartnersData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.DataPartnerTerm) || this;

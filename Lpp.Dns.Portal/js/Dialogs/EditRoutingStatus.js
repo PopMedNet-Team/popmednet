@@ -14,7 +14,7 @@ var Dialog;
     (function (EditRoutingStatus) {
         var vm;
         var dvm;
-        var DataMartsViewModel = (function () {
+        var DataMartsViewModel = /** @class */ (function () {
             function DataMartsViewModel(routing) {
                 var self = this;
                 self.DataMartID = routing.DataMartID;
@@ -27,7 +27,7 @@ var Dialog;
             return DataMartsViewModel;
         }());
         EditRoutingStatus.DataMartsViewModel = DataMartsViewModel;
-        var EditRoutingStatusViewModel = (function (_super) {
+        var EditRoutingStatusViewModel = /** @class */ (function (_super) {
             __extends(EditRoutingStatusViewModel, _super);
             function EditRoutingStatusViewModel(bindingControl, incompleteRoutings) {
                 var _this = _super.call(this, bindingControl) || this;

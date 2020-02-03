@@ -43,6 +43,18 @@
     </script>
 }
 
+<div id="PageLoadingMessage">
+    <div style="width:350px;margin-left:auto;margin-right:auto;margin-top:50px;">
+        <div class="panel panel-default">
+            <div class="panel-body" style="text-align:center;padding:24px;">
+                <img src="@this.ResourceUrl("/images/loading.gif")" height="40" />
+                <span style="padding-left:8px;font-weight:bold;color:dimgray">Loading project details...</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
 <article class="panel panel-default" data-bind="css: {visible: true}">
     <div class="panel-heading">
         <ol class="breadcrumb">
@@ -53,7 +65,7 @@
     </div>
 
     <div class="panel-body" style="padding:10px;">
-        <form class="form" role="form">
+        <form class="form" role="form" id="frmProjectDetails">
             <div class="row">
                 <div class="col-md-5 form-group">
                     <label for="txtName">Name<em>*</em></label>

@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 ///// <reference path="../Terms.ts" />
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var RaceTerm = (function (_super) {
+    var RaceTerm = /** @class */ (function (_super) {
         __extends(RaceTerm, _super);
         function RaceTerm(raceData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.RaceTerm) || this;
@@ -31,16 +31,16 @@ var DataCheckerViewModels;
             };
             return raceData;
         };
+        RaceTerm.RacesList = [
+            new Dns.KeyValuePairData('Unknown', DataCheckerModels.RaceTypes.Unknown),
+            new Dns.KeyValuePairData('American Indian/Alaska Native', DataCheckerModels.RaceTypes.AmericanIndianOrAlaskaNative),
+            new Dns.KeyValuePairData('Asian', DataCheckerModels.RaceTypes.Asian),
+            new Dns.KeyValuePairData('Black/African American', DataCheckerModels.RaceTypes.BlackOrAfricanAmerican),
+            new Dns.KeyValuePairData('Native Hawaiian/Pacific Islander', DataCheckerModels.RaceTypes.NativeHawaiianOrOtherPacificIslander),
+            new Dns.KeyValuePairData('White', DataCheckerModels.RaceTypes.White),
+            new Dns.KeyValuePairData('Missing', DataCheckerModels.RaceTypes.Missing)
+        ];
         return RaceTerm;
     }(RequestCriteriaViewModels.Term));
-    RaceTerm.RacesList = [
-        new Dns.KeyValuePairData('Unknown', DataCheckerModels.RaceTypes.Unknown),
-        new Dns.KeyValuePairData('American Indian/Alaska Native', DataCheckerModels.RaceTypes.AmericanIndianOrAlaskaNative),
-        new Dns.KeyValuePairData('Asian', DataCheckerModels.RaceTypes.Asian),
-        new Dns.KeyValuePairData('Black/African American', DataCheckerModels.RaceTypes.BlackOrAfricanAmerican),
-        new Dns.KeyValuePairData('Native Hawaiian/Pacific Islander', DataCheckerModels.RaceTypes.NativeHawaiianOrOtherPacificIslander),
-        new Dns.KeyValuePairData('White', DataCheckerModels.RaceTypes.White),
-        new Dns.KeyValuePairData('Missing', DataCheckerModels.RaceTypes.Missing)
-    ];
     DataCheckerViewModels.RaceTerm = RaceTerm;
 })(DataCheckerViewModels || (DataCheckerViewModels = {}));

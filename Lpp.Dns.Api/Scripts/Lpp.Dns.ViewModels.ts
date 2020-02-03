@@ -1851,6 +1851,7 @@ module Dns.ViewModels {
 	 	 public LogoImage: KnockoutObservable<string>;
 	 	 public SystemUserConfirmationTitle: KnockoutObservable<string>;
 	 	 public SystemUserConfirmationContent: KnockoutObservable<string>;
+	 	 public ContactUsHref: KnockoutObservable<string>;
 	 	 constructor(ThemeDTO?: Dns.Interfaces.IThemeDTO)
 	 	  {
 	 	 	  super();
@@ -1863,6 +1864,7 @@ module Dns.ViewModels {
 	 	 	 	 this.LogoImage = ko.observable<any>();
 	 	 	 	 this.SystemUserConfirmationTitle = ko.observable<any>();
 	 	 	 	 this.SystemUserConfirmationContent = ko.observable<any>();
+	 	 	 	 this.ContactUsHref = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.Title = ko.observable(ThemeDTO.Title);
 	 	 	 	 this.Terms = ko.observable(ThemeDTO.Terms);
@@ -1872,6 +1874,7 @@ module Dns.ViewModels {
 	 	 	 	 this.LogoImage = ko.observable(ThemeDTO.LogoImage);
 	 	 	 	 this.SystemUserConfirmationTitle = ko.observable(ThemeDTO.SystemUserConfirmationTitle);
 	 	 	 	 this.SystemUserConfirmationContent = ko.observable(ThemeDTO.SystemUserConfirmationContent);
+	 	 	 	 this.ContactUsHref = ko.observable(ThemeDTO.ContactUsHref);
 	 	 	 }
 	 	 }
 
@@ -1885,6 +1888,7 @@ module Dns.ViewModels {
 	 	 	 	LogoImage: this.LogoImage(),
 	 	 	 	SystemUserConfirmationTitle: this.SystemUserConfirmationTitle(),
 	 	 	 	SystemUserConfirmationContent: this.SystemUserConfirmationContent(),
+	 	 	 	ContactUsHref: this.ContactUsHref(),
 	 	 	  };
 	 	  }
 
@@ -8590,8 +8594,6 @@ module Dns.ViewModels {
 	 	 public Status: KnockoutObservable<Dns.Enums.RoutingStatus>;
 	 	 public Priority: KnockoutObservable<Dns.Enums.Priorities>;
 	 	 public DueDate: KnockoutObservable<Date>;
-	 	 public RequestTime: KnockoutObservable<Date>;
-	 	 public ResponseTime: KnockoutObservable<Date>;
 	 	 public ErrorMessage: KnockoutObservable<string>;
 	 	 public ErrorDetail: KnockoutObservable<string>;
 	 	 public RejectReason: KnockoutObservable<string>;
@@ -8612,8 +8614,6 @@ module Dns.ViewModels {
 	 	 	 	 this.Status = ko.observable<any>();
 	 	 	 	 this.Priority = ko.observable<any>();
 	 	 	 	 this.DueDate = ko.observable<any>();
-	 	 	 	 this.RequestTime = ko.observable<any>();
-	 	 	 	 this.ResponseTime = ko.observable<any>();
 	 	 	 	 this.ErrorMessage = ko.observable<any>();
 	 	 	 	 this.ErrorDetail = ko.observable<any>();
 	 	 	 	 this.RejectReason = ko.observable<any>();
@@ -8633,8 +8633,6 @@ module Dns.ViewModels {
 	 	 	 	 this.Status = ko.observable(RequestDataMartDTO.Status);
 	 	 	 	 this.Priority = ko.observable(RequestDataMartDTO.Priority);
 	 	 	 	 this.DueDate = ko.observable(RequestDataMartDTO.DueDate);
-	 	 	 	 this.RequestTime = ko.observable(RequestDataMartDTO.RequestTime);
-	 	 	 	 this.ResponseTime = ko.observable(RequestDataMartDTO.ResponseTime);
 	 	 	 	 this.ErrorMessage = ko.observable(RequestDataMartDTO.ErrorMessage);
 	 	 	 	 this.ErrorDetail = ko.observable(RequestDataMartDTO.ErrorDetail);
 	 	 	 	 this.RejectReason = ko.observable(RequestDataMartDTO.RejectReason);
@@ -8658,8 +8656,6 @@ module Dns.ViewModels {
 	 	 	 	Status: this.Status(),
 	 	 	 	Priority: this.Priority(),
 	 	 	 	DueDate: this.DueDate(),
-	 	 	 	RequestTime: this.RequestTime(),
-	 	 	 	ResponseTime: this.ResponseTime(),
 	 	 	 	ErrorMessage: this.ErrorMessage(),
 	 	 	 	ErrorDetail: this.ErrorDetail(),
 	 	 	 	RejectReason: this.RejectReason(),

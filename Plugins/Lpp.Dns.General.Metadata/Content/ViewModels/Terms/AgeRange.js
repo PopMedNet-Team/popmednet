@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var AgeRangeTerm = (function (_super) {
+    var AgeRangeTerm = /** @class */ (function (_super) {
         __extends(AgeRangeTerm, _super);
         function AgeRangeTerm(ageRangeData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.AgeRangeTerm) || this;

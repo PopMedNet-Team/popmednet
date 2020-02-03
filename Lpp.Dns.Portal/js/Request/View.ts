@@ -491,7 +491,7 @@
             this.DataMartName = data.DataMartName;
             this.Messages = data.Messages;
             this.ResponseTime = data.ResponseTime;
-            this.ResponseTimeFormatted = moment(moment(this.ResponseTime).format("M/D/YYYY h:mm:ss A UTC")).local().format('M/D/YYYY h:mm:ss A');
+            this.ResponseTimeFormatted = moment.utc(this.ResponseTime).local().format('M/D/YYYY h:mm:ss A');
             this.IsRejectedBeforeUpload = data.IsRejectedBeforeUpload;
             this.IsRejectedAfterUpload = data.IsRejectedAfterUpload;
             this.IsResultsModified = data.IsResultsModified;

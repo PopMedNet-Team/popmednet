@@ -14,7 +14,7 @@ var MetaData;
     var DisplayRegistryResponse;
     (function (DisplayRegistryResponse) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data) {
                 var _this = _super.call(this, null) || this;
@@ -35,7 +35,7 @@ var MetaData;
             });
         }
         DisplayRegistryResponse.init = init;
-        var RegistryResultViewModel = (function () {
+        var RegistryResultViewModel = /** @class */ (function () {
             function RegistryResultViewModel(data) {
                 this.Expanded = ko.observable(false);
                 this.ID = ko.observable(data.ID);

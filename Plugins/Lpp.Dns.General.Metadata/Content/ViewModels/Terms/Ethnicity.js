@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 ///// <reference path="../Terms.ts" />
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var EthnicityTerm = (function (_super) {
+    var EthnicityTerm = /** @class */ (function (_super) {
         __extends(EthnicityTerm, _super);
         function EthnicityTerm(ethnicityData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.EthnicityTerm) || this;
@@ -32,13 +32,13 @@ var DataCheckerViewModels;
             //console.log('Race: ' + JSON.stringify(ethnicityData));
             return ethnicityData;
         };
+        EthnicityTerm.EthnicitiesList = [
+            new Dns.KeyValuePairData('Unknown', DataCheckerModels.EthnicityTypes.Unknown),
+            new Dns.KeyValuePairData('Hispanic', DataCheckerModels.EthnicityTypes.Hispanic),
+            new Dns.KeyValuePairData('Not Hispanic', DataCheckerModels.EthnicityTypes.NotHispanic),
+            new Dns.KeyValuePairData('Missing', DataCheckerModels.EthnicityTypes.Missing)
+        ];
         return EthnicityTerm;
     }(RequestCriteriaViewModels.Term));
-    EthnicityTerm.EthnicitiesList = [
-        new Dns.KeyValuePairData('Unknown', DataCheckerModels.EthnicityTypes.Unknown),
-        new Dns.KeyValuePairData('Hispanic', DataCheckerModels.EthnicityTypes.Hispanic),
-        new Dns.KeyValuePairData('Not Hispanic', DataCheckerModels.EthnicityTypes.NotHispanic),
-        new Dns.KeyValuePairData('Missing', DataCheckerModels.EthnicityTypes.Missing)
-    ];
     DataCheckerViewModels.EthnicityTerm = EthnicityTerm;
 })(DataCheckerViewModels || (DataCheckerViewModels = {}));

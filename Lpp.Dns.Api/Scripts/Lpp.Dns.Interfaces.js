@@ -1626,6 +1626,7 @@ var Dns;
                 'LogoImage': { type: 'string', nullable: false },
                 'SystemUserConfirmationTitle': { type: 'string', nullable: false },
                 'SystemUserConfirmationContent': { type: 'string', nullable: false },
+                'ContactUsHref': { type: 'string', nullable: false },
             }
         };
         Interfaces.KendoModelAssignedUserNotificationDTO = {
@@ -3309,8 +3310,6 @@ var Dns;
                 'Status': { type: 'dns.enums.routingstatus', nullable: false },
                 'Priority': { type: 'dns.enums.priorities', nullable: false },
                 'DueDate': { type: 'date', nullable: true },
-                'RequestTime': { type: 'date', nullable: true },
-                'ResponseTime': { type: 'date', nullable: true },
                 'ErrorMessage': { type: 'string', nullable: false },
                 'ErrorDetail': { type: 'string', nullable: false },
                 'RejectReason': { type: 'string', nullable: false },

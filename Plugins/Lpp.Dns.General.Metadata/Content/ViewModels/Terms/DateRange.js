@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var DateRangeTerm = (function (_super) {
+    var DateRangeTerm = /** @class */ (function (_super) {
         __extends(DateRangeTerm, _super);
         function DateRangeTerm(dateRangeData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.DateRangeTerm) || this;

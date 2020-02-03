@@ -27,7 +27,7 @@ var Dns;
         });
     }
     Dns.EnableValidation = EnableValidation;
-    var PageViewModel = (function () {
+    var PageViewModel = /** @class */ (function () {
         function PageViewModel(hiddenDataControl) {
             this.validationGroup = ko.validation.group(this);
             //Store the hidden data control information here so that we can persist to it on the save
@@ -77,7 +77,7 @@ var Dns;
             var sJson = JSON.stringify(json);
             this.HiddenDataControl.val(sJson);
             var form = $(".Content form");
-            if (form && form.formChanged)
+            if (form && form.formChanged) //This is done for the places where this isn't available
                 form.formChanged(false); //This forces it to a generic variable because this is hacked into other code that cannot be pulled out right now.
             $("input[name=save]").prop("disabled", true);
             $("input[name=Copy]").prop("disabled", false);
@@ -86,7 +86,7 @@ var Dns;
         return PageViewModel;
     }());
     Dns.PageViewModel = PageViewModel;
-    var ChildViewModel = (function () {
+    var ChildViewModel = /** @class */ (function () {
         function ChildViewModel() {
             this.validationGroup = ko.validation.group(this);
             this.validationGroup.showAllMessages();
@@ -114,7 +114,7 @@ var Dns;
         return ChildViewModel;
     }());
     Dns.ChildViewModel = ChildViewModel;
-    var KeyValuePairData = (function () {
+    var KeyValuePairData = /** @class */ (function () {
         function KeyValuePairData(key, value) {
             this.Key = key;
             this.Value = value;
@@ -122,7 +122,7 @@ var Dns;
         return KeyValuePairData;
     }());
     Dns.KeyValuePairData = KeyValuePairData;
-    var KeyValuePair = (function () {
+    var KeyValuePair = /** @class */ (function () {
         function KeyValuePair(key, value) {
             this.Key = ko.observable(key);
             this.Value = ko.observable(value);
@@ -131,7 +131,7 @@ var Dns;
     }());
     Dns.KeyValuePair = KeyValuePair;
     // this class is used to create drop down lists
-    var SelectItem = (function (_super) {
+    var SelectItem = /** @class */ (function (_super) {
         __extends(SelectItem, _super);
         function SelectItem(display, value) {
             return _super.call(this, display, (typeof value === "undefined") ? display : value) || this;

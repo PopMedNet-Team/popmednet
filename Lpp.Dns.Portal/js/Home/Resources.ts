@@ -20,7 +20,7 @@ module Home.Resources {
     function init() {
         var theming: Dns.Interfaces.IThemeDTO;
         $.when<any>(
-            Dns.WebApi.Theme.GetText(theme, ["Resources"]).done((results: Dns.Interfaces.IThemeDTO[]) => { theming = results[0] })
+            Dns.WebApi.Theme.GetText(["Resources"]).done((results: Dns.Interfaces.IThemeDTO[]) => { theming = results[0] })
             ).then(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(theming, bindingControl);

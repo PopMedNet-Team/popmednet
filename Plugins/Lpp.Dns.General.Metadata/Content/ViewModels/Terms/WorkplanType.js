@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var WorkplanTypeTerm = (function (_super) {
+    var WorkplanTypeTerm = /** @class */ (function (_super) {
         __extends(WorkplanTypeTerm, _super);
         function WorkplanTypeTerm(workplanTypeData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.WorkplanTypeTerm) || this;

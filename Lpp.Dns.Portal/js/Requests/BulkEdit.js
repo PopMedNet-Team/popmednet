@@ -12,7 +12,7 @@ var Requests;
 (function (Requests) {
     var BulkEdit;
     (function (BulkEdit) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestID, bindingControl, screenPermissions, gridSetting) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -23,9 +23,10 @@ var Requests;
                     data: [],
                     schema: {
                         model: kendo.data.Model.define(Dns.Interfaces.KendoModelRequestDTO)
-                    },
+                    }
                 });
                 _this.BulkEditEnabled = ko.observable(false);
+                _this.SaveEnabled = ko.observable(false);
                 _this.onRowSelectionChange = function (e) {
                     var grid = $(e.sender.wrapper).data('kendoGrid');
                     var rows = grid.select();
@@ -37,6 +38,9 @@ var Requests;
                         return;
                     var models = ko.utils.arrayMap(requests, function (r) { return new Request(r); });
                     self.dsRequest.data(models);
+                });
+                $(document).on("RequestChanged", function () {
+                    self.SaveEnabled(true);
                 });
                 self.formatDueDateCell = function (item) { return self.DueDateTemplate(item); };
                 self.formatPriorityCell = function (item) { return self.PriorityTemplate(item); };
@@ -110,7 +114,7 @@ var Requests;
             return ViewModel;
         }(Global.PageViewModel));
         BulkEdit.ViewModel = ViewModel;
-        var Request = (function () {
+        var Request = /** @class */ (function () {
             function Request(request) {
                 var self = this;
                 this._request = request;
@@ -129,6 +133,10 @@ var Requests;
                 this.Changed = ko.computed(function () {
                     return self.Priority() != self._request.Priority || self.DueDate() != self._request.DueDate;
                 }, this, { pure: true });
+                this.Changed.subscribe(function (val) {
+                    if (val)
+                        $(document).trigger("RequestChanged");
+                });
                 this.ApplyChangesToRoutings = ko.observable(false);
             }
             return Request;

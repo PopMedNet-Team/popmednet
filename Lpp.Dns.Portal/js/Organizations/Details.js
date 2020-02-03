@@ -14,7 +14,7 @@ var Organization;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, organization, orgAcls, orgEvents, organizations, securityGroupTree, permissionList, eventList, registries, registryList, orgEHRS, users, datamarts, securityGroups, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;

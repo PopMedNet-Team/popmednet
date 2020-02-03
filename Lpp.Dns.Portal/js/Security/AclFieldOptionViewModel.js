@@ -5,7 +5,7 @@ var Security;
     (function (Acl) {
         var FieldOption;
         (function (FieldOption) {
-            var AclFieldOptionEditViewModel = (function () {
+            var AclFieldOptionEditViewModel = /** @class */ (function () {
                 function AclFieldOptionEditViewModel(fieldoptions, securityGroupTree, acls, targets, aclType) {
                     var _this = this;
                     this.IsGlobalEdit = true;
@@ -154,7 +154,7 @@ var Security;
                 return AclFieldOptionEditViewModel;
             }());
             FieldOption.AclFieldOptionEditViewModel = AclFieldOptionEditViewModel;
-            var FieldOptionAclViewModel = (function () {
+            var FieldOptionAclViewModel = /** @class */ (function () {
                 function FieldOptionAclViewModel(vm, fieldOption) {
                     var _this = this;
                     var self = this;

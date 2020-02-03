@@ -15,7 +15,7 @@ var Controls;
     (function (WFComments) {
         var List;
         (function (List) {
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID, workflowActivity, workflowActivityID) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

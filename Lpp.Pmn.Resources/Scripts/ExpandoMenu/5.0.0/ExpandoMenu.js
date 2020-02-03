@@ -47,7 +47,7 @@ var Controls;
                 var expSiblings = expando.siblings("section.ExpandoFrame");
                 var state = expando.data("state") || "normal";
                 switch (state) {
-                    case "maximized":
+                    case "maximized": //Return the others to normal state
                         expSiblings.children("article").slideDown("slow");
                         expSiblings.children("nav").slideDown("slow");
                         expSiblings.data("state", "normal");

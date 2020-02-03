@@ -17,7 +17,7 @@ var Workflow;
         var Specification;
         (function (Specification) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

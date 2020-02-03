@@ -16,7 +16,7 @@ var Home;
     var DefaultSecurityPermissions;
     (function (DefaultSecurityPermissions) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(permissions, acls, securityGroups, events, eventAcls, fieldOptions, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

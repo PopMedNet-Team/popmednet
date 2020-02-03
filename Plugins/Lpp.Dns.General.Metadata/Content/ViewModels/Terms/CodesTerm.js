@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var CodesTerm = (function (_super) {
+    var CodesTerm = /** @class */ (function (_super) {
         __extends(CodesTerm, _super);
         function CodesTerm(codesData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.CodesTerm) || this;

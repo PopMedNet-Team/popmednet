@@ -23,12 +23,6 @@ module Requests.Index {
             //requestable project are the ones that the user can create new requests for.
             this.RequestableProjects = requestableProjecs;
 
-            var filters = [];
-            //this.filters = ko.observableArray();
-            if (projectID != Constants.GuidEmpty)
-                filters.push({ field: "ProjectID", operator: "equals", value: projectID });
-
-
             this.dataSource = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -44,7 +38,6 @@ module Requests.Index {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelRequestDTO)
                 },
                 sort: Global.Helpers.GetSortsFromUrl() || { field: "SubmittedOn", dir: "desc" },
-                filter: filters
             });
 
             // Save the reference to the original filter function.
@@ -122,6 +115,10 @@ module Requests.Index {
         }
     }
 
+    export function DueDateTemplate(dataItem: Dns.Interfaces.IRequestDTO): string {
+      return dataItem.DueDate ? moment(dataItem.DueDate).format("MM/DD/YYYY") : "";
+    }
+
 
     function init() {
         $.when<any>(Users.GetSetting("Requests.Index.gResults.User:" + User.ID),
@@ -144,6 +141,21 @@ module Requests.Index {
                 arrDateColumns.push("SubmittedOn", "DueDate");
                 //This specific method ensures that date filters are processed accordingly.
                 Global.Helpers.SetGridFromSettingsWithDates(vm.ResultsGrid(), gResultsSettings, arrDateColumns);
+                if (projectID != Constants.GuidEmpty) {
+                  vm.ResultsGrid().dataSource.filter({
+                    field: "ProjectID",
+                    operator: "equals",
+                    value: projectID
+                  });
+                }
+                else {
+                  vm.ResultsGrid().dataSource.filter({
+                    field: "ProjectID",
+                    operator: "notequals",
+                    value: projectID
+                  });
+                }
+                
                 vm.ResultsGrid().bind("dataBound", function (e) {
                   Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
                 });

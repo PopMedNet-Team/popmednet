@@ -14,7 +14,7 @@ var Templates;
 (function (Templates) {
     var Details;
     (function (Details) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl, screenPermissions, templateData, permissionList, templatePermissions, securityGroupTree, globalPermission) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;

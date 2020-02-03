@@ -610,7 +610,7 @@ namespace Lpp.Dns.DataMart.Client
 
         private void ShowRequestDetailDialog(NetWorkSetting ns, Guid id, Guid dataMartId)
         {
-            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == id).FirstOrDefault();
+            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == id && rdf.Request.DataMartId == dataMartId).FirstOrDefault();
             if(openDetailsForm != null)
             {
                 openDetailsForm.BringToFront();
@@ -656,7 +656,7 @@ namespace Lpp.Dns.DataMart.Client
         {
             RequestDetailForm frm = (RequestDetailForm)sender;
 
-            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == frm.Request.Source.ID).FirstOrDefault();
+            RequestDetailForm openDetailsForm = _openRequestDetails.Where(rdf => rdf.Request.Source.ID == frm.Request.Source.ID && rdf.Request.DataMartId == frm.Request.DataMartId).FirstOrDefault();
             if (openDetailsForm != null)
             {
                 _openRequestDetails.Remove(openDetailsForm);

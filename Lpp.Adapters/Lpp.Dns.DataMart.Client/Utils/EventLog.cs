@@ -44,7 +44,7 @@ namespace Lpp.Dns.DataMart.Client.Utils
             {
                 if (appender is RollingFileAppender)
                 {
-                    string filePath = Path.Combine(LogFilePath == null || LogFilePath == string.Empty ? Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"LincolnPeak","PMN","logs") : LogFilePath, "DataMartClient.txt");
+                    string filePath = Path.Combine(LogFilePath == null || LogFilePath == string.Empty ? Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"PopMedNet","PMN","logs") : LogFilePath, "DataMartClient.txt");
                     if (filePath.ToLower() != ((RollingFileAppender)appender).File.ToLower())
                     {
                         ((RollingFileAppender)appender).File = filePath;
@@ -96,9 +96,6 @@ namespace Lpp.Dns.DataMart.Client.Utils
                 LogEvent logEvent = new Utils.LogEvent();
                 logEvent.Event = Event;
                 logEvent.DataMartClientId = DataMartClientId;
-                //DMCRestAPI restAPI = new DMCRestAPI("accountSID", "SecretKey");
-                //DMCRestAPIResponse response = restAPI.PostLogEvent(logEvent);
-                //string result = response.Result;
             }
             catch (Exception e)
             {

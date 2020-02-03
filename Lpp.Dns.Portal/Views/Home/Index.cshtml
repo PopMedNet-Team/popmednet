@@ -44,8 +44,8 @@
             },
             pageable: false,
             columns: [
-                {field: 'Timestamp', title: 'Date', width: 100, format: Constants.DateTimeFormatter},
-                {field: 'Event', title: 'Event', encoded: false, width: 125 },
+                {field: 'Timestamp', title: 'Date', format: Constants.DateTimeFormatter},
+                {field: 'Event', title: 'Event', encoded: false},
                 {field: 'Message', title: 'Message', encoded: false, height: 20},
             ]
         }">
@@ -78,7 +78,7 @@
             scrollable: true,
             pageable: false,
             columns: [
-                {field: 'CreatedOn', title: 'Date', width: 100, format: Constants.DateTimeFormatter},
+                {field: 'CreatedOn', title: 'Date', format: Constants.DateTimeFormatter},
                 {field: 'MessageText', title: 'Message', encoded: false, height: 20 },
             ]
         }">
@@ -113,17 +113,17 @@
             pageable: false,
             columns: [
                 {field: 'TaskID', title: 'TaskID', width:150, hidden:true, menu: false},
-                {field: 'TaskName', title: 'Task', template: $root.FormatTaskName, width:150 },
-                {field: 'Name', title: 'Name', width: 180 },
-                {field: 'TaskStatusText', title: 'Task Status', width:150 },
-                {field: 'CreatedOn', title: 'Created', format: Constants.DateTimeFormatter, width: 160 },
-                {field: 'StartOn', title: 'Start Date', format: Constants.DateTimeFormatter, width: 160 },
-                {field: 'EndOn', title: 'End Date', format: Constants.DateTimeFormatter, width: 160 },
-                {field: 'AssignedResources', title: 'Assignees', width:300, template: $root.FormatAssignedResources },
-                {field: 'Type', title: 'Type', width:160 },
-                {field: 'MSRequestID', title: 'Request ID', width:120 },
-                {field: 'Identifier', title: 'System Number', width:150 },
-                {field: 'RequestStatusText', title: 'Request Status', width:150 },
+                {field: 'TaskName', title: 'Task', template: $root.FormatTaskName},
+                {field: 'Name', title: 'Name' },
+                {field: 'TaskStatusText', title: 'Task Status' },
+                {field: 'CreatedOn', title: 'Created', format: Constants.DateTimeFormatter },
+                {field: 'StartOn', title: 'Start Date', format: Constants.DateTimeFormatter },
+                {field: 'EndOn', title: 'End Date', format: Constants.DateTimeFormatter },
+                {field: 'AssignedResources', title: 'Assignees', template: $root.FormatAssignedResources },
+                {field: 'Type', title: 'Type' },
+                {field: 'MSRequestID', title: 'Request ID' },
+                {field: 'Identifier', title: 'System Number' },
+                {field: 'RequestStatusText', title: 'Request Status' },
                 {field: 'NewUserID', title: 'New User ID', width:150, hidden: true, menu: false }
             ]
         }">
@@ -168,8 +168,8 @@
             selectable: $root.gRequestsRowSelector,
             change: $root.onRequestRowSelectionChange,
             columns: [
-                {field: 'Name', title: 'Name', template: Home.Index.NameAnchor, width: 200},
-                {field: 'Identifier', title: 'System Number', width: 90, filterable: {
+                {field: 'Name', title: 'Name', template: Home.Index.NameAnchor},
+                {field: 'Identifier', title: 'System Number', filterable: {
                     ui: function (element) {
                         element.kendoNumericTextBox({
                             format: '####',
@@ -177,14 +177,14 @@
                         });
                     }
                 }  },
-                {field: 'SubmittedOn', title: 'Date Submitted', format: Constants.DateTimeFormatter, width: 165},
-                {field: 'SubmittedByName', title: 'Submitter', width: 100},
-                {field: 'StatusText', title: 'Status', width: 125},
-                {field: 'RequestType', title: 'Type', width: 175},
-                {field: 'Project', title: 'Project', width: 125},
-                {field: 'Priority', title: 'Priority', values: Dns.Enums.PrioritiesTranslation, width: 100 },
-                {field: 'DueDate', title: 'Due Date', format: Constants.DateFormatter, width: 120 },
-                {field: 'MSRequestID', title: 'Request ID', width:120 }
+                {field: 'SubmittedOn', title: 'Date Submitted', format: Constants.DateTimeFormatter},
+                {field: 'SubmittedByName', title: 'Submitter'},
+                {field: 'StatusText', title: 'Status'},
+                {field: 'RequestType', title: 'Type'},
+                {field: 'Project', title: 'Project'},
+                {field: 'Priority', title: 'Priority', values: Dns.Enums.PrioritiesTranslation},
+                {field: 'DueDate', title: 'Due Date', template: Home.Index.DueDateTemplate},
+                {field: 'MSRequestID', title: 'Request ID'}
             ]
         }">
         </div>

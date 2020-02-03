@@ -54,5 +54,11 @@ namespace Lpp.Dns.DTO
         /// </summary>
         [DataMember]
         public string SystemUserConfirmationContent { get; set; }
+
+        /// <summary>
+        /// Contact Us Link
+        /// </summary>
+        [DataMember]
+        public string ContactUsHref { get; set; }
     }
 }

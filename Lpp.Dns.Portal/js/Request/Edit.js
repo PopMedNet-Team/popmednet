@@ -18,7 +18,7 @@ var Requests;
         Edit.GetSubActivitiesUrlTemplate = '';
         var vmDataMarts;
         var vmRequestDetails;
-        var Routings = (function () {
+        var Routings = /** @class */ (function () {
             function Routings(dataMart) {
                 this.Priority = ko.observable(dataMart.Priority());
                 this.DueDate = ko.observable(dataMart.DueDate());
@@ -30,7 +30,7 @@ var Requests;
             return Routings;
         }());
         Edit.Routings = Routings;
-        var RequestDetailsViewModel = (function (_super) {
+        var RequestDetailsViewModel = /** @class */ (function (_super) {
             __extends(RequestDetailsViewModel, _super);
             function RequestDetailsViewModel(rawModel, activityTree, fieldOptions, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -299,7 +299,7 @@ var Requests;
             return RequestDetailsViewModel;
         }(Global.PageViewModel));
         Edit.RequestDetailsViewModel = RequestDetailsViewModel;
-        var RequestDataMartsViewModel = (function () {
+        var RequestDataMartsViewModel = /** @class */ (function () {
             function RequestDataMartsViewModel(model) {
                 var _this = this;
                 this.Model = model;

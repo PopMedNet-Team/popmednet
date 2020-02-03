@@ -28,7 +28,7 @@ var MetadataQuery;
     (function (Create) {
         var vm;
         Create.ProjectsList = [];
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             //public ActivityDisabled: boolean;
             function ViewModel(metadataRequestData, hiddenDataControl, activityData, workplanTypes, requesterCenters, reportAggregationLevels, taskOrderID, activityID, activityProjectID, sourceTaskOrderID, sourceActivityID, sourceActivityProjectID) {
@@ -131,16 +131,16 @@ var MetadataQuery;
                 });
                 return this.store(metadataRequestData);
             };
+            ViewModel.RequestStatusList = Dns.Enums.RequestStatusesTranslation.concat({ text: 'Not Selected', value: null });
+            ViewModel.MDQCodeSetList = [
+                new Dns.KeyValuePairData('Drug Class', RequestCriteriaModels.CodesTermTypes.DrugClassTerm),
+                new Dns.KeyValuePairData('Generic Name', RequestCriteriaModels.CodesTermTypes.GenericDrugTerm),
+                new Dns.KeyValuePairData('HCPCS', RequestCriteriaModels.CodesTermTypes.HCPCSTerm),
+                new Dns.KeyValuePairData('ICD9 Diagnosis Code (Dx)', RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term),
+                new Dns.KeyValuePairData('ICD9 Procedure Code (Px)', RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term)
+            ];
             return ViewModel;
         }(Dns.PageViewModel));
-        ViewModel.RequestStatusList = Dns.Enums.RequestStatusesTranslation.concat({ text: 'Not Selected', value: null });
-        ViewModel.MDQCodeSetList = [
-            new Dns.KeyValuePairData('Drug Class', RequestCriteriaModels.CodesTermTypes.DrugClassTerm),
-            new Dns.KeyValuePairData('Generic Name', RequestCriteriaModels.CodesTermTypes.GenericDrugTerm),
-            new Dns.KeyValuePairData('HCPCS', RequestCriteriaModels.CodesTermTypes.HCPCSTerm),
-            new Dns.KeyValuePairData('ICD9 Diagnosis Code (Dx)', RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term),
-            new Dns.KeyValuePairData('ICD9 Procedure Code (Px)', RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term)
-        ];
         Create.ViewModel = ViewModel;
         function init(metadataRequestData, bindingControl, hiddenDataControl, activityData, workplanTypes, requesterCenters, reportAggregationLevels, taskOrderID, activityID, activityProjectID, sourceTaskOrderID, sourceActivityID, sourceActivityProjectID) {
             // initialize dynamic lookup lists...???

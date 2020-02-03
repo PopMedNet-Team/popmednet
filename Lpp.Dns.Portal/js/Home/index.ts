@@ -74,7 +74,7 @@ module Home.Index {
                     vm.gNotificationsHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
                 }
             });
-
+            
             let gNotificationsSettings = settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID });
             if (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) {
                 Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, gNotificationsSettings[0].Setting, ["Timestamp"]);
@@ -478,6 +478,10 @@ module Home.Index {
         return "<a href=\"/tasks/details?ID=" + dataItem.ID + "\">" + dataItem.Subject + "</a>";
     }
 
+    export function DueDateTemplate(dataItem: Dns.Interfaces.IRequestDTO): string {
+      return dataItem.DueDate ? moment(dataItem.DueDate).format("MM/DD/YYYY") : "";
+    }
+
     function init() {
 	    $.when<any>(
 		    Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
@@ -510,6 +514,285 @@ module Home.Index {
                 });
                 vm.DataMartsGrid().bind("dataBound", function (e) {
                     Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
+                });
+
+                for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
+                  var tasksGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
+                  if (vm.NotificationsGrid().columns[i].title == 'Date') { tasksGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(tasksGridOptions);}
+                  else if (vm.NotificationsGrid().columns[i].title == 'Event') { tasksGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(tasksGridOptions); }
+                }
+                vm.NotificationsGrid().bind("columnShow", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
+                    if (vm.NotificationsGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.NotificationsGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
+                    var notificationsGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
+                    if (numAvailCol < 3) {
+                      if (vm.NotificationsGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.NotificationsGrid().table.width();
+                        notificationsGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.NotificationsGrid().setOptions(notificationsGridOptions);
+                      }
+                      else if (vm.NotificationsGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.NotificationsGrid().table.width();
+                        notificationsGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.NotificationsGrid().setOptions(notificationsGridOptions);
+                      }
+                      else { notificationsGridOptions.columns[i].hidden = true; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
+                    }
+                    else {
+                      if (vm.NotificationsGrid().columns[i].title == 'Date') { notificationsGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
+                      else if (vm.NotificationsGrid().columns[i].title == 'Event') { notificationsGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
+                    }
+                  }
+                });
+                vm.NotificationsGrid().bind("columnHide", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
+                    if (vm.NotificationsGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.NotificationsGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
+                    var taskGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
+                    if (numAvailCol < 3) {
+                      if (vm.NotificationsGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.NotificationsGrid().table.width();
+                        taskGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.NotificationsGrid().setOptions(taskGridOptions);
+                      }
+                      else if (vm.NotificationsGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.NotificationsGrid().table.width();
+                        taskGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.NotificationsGrid().setOptions(taskGridOptions);
+                      }
+                      else { taskGridOptions.columns[i].hidden = true; vm.NotificationsGrid().setOptions(taskGridOptions);}
+                    }
+                    else {
+                      if (vm.NotificationsGrid().columns[i].title == 'Date') { taskGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(taskGridOptions); }
+                      else if (vm.NotificationsGrid().columns[i].title == 'Event') { taskGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(taskGridOptions); }
+                    }
+                  }
+                });
+
+                for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
+                  var tasksGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
+                  if (vm.MessagesGrid().columns[i].title == 'Date') { tasksGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(tasksGridOptions); }
+                }
+                vm.MessagesGrid().bind("columnShow", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
+                    if (vm.MessagesGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.MessagesGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
+                    var messagesGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
+                    if (numAvailCol < 2) {
+                      if (vm.MessagesGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.MessagesGrid().table.width();
+                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
+                      }
+                      else if (vm.MessagesGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.MessagesGrid().table.width();
+                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
+                      }
+                      else { messagesGridOptions.columns[i].hidden = true; vm.MessagesGrid().setOptions(messagesGridOptions); }
+                    }
+                    else {
+                      if (vm.MessagesGrid().columns[i].title == 'Date') { messagesGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(messagesGridOptions); }
+                    }
+                  }
+                });
+                vm.MessagesGrid().bind("columnHide", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
+                    if (vm.MessagesGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.MessagesGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
+                    var messagesGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
+                    if (numAvailCol < 2) {
+                      if (vm.MessagesGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.MessagesGrid().table.width();
+                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
+                      }
+                      else if (vm.MessagesGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.MessagesGrid().table.width();
+                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
+                      }
+                      else { messagesGridOptions.columns[i].hidden = true; vm.MessagesGrid().setOptions(messagesGridOptions); }
+                    }
+                    else {
+                      if (vm.MessagesGrid().columns[i].title == 'Date') { messagesGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(messagesGridOptions); }
+                    }
+                  }
+                });
+
+                for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
+                  var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
+                  if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                  else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                }
+                vm.TasksGrid().bind("columnShow", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
+                    if (vm.TasksGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.TasksGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
+                    var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
+                    if (numAvailCol < 11) {
+                      if (vm.TasksGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.TasksGrid().table.width();
+                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.TasksGrid().setOptions(tasksGridOptions);
+                      }
+                      else if (vm.TasksGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.TasksGrid().table.width();
+                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.TasksGrid().setOptions(tasksGridOptions);
+                      }
+                      else { tasksGridOptions.columns[i].hidden = true; vm.TasksGrid().setOptions(tasksGridOptions); }
+                    }
+                    else {
+                      if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                    }
+                  }
+                });
+                vm.TasksGrid().bind("columnHide", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
+                    if (vm.TasksGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.TasksGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
+                    var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
+                    if (numAvailCol < 11) {
+                      if (vm.TasksGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.TasksGrid().table.width();
+                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.TasksGrid().setOptions(tasksGridOptions);
+                      }
+                      else if (vm.TasksGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.TasksGrid().table.width();
+                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.TasksGrid().setOptions(tasksGridOptions);
+                      }
+                      else { tasksGridOptions.columns[i].hidden = true; vm.TasksGrid().setOptions(tasksGridOptions); }
+                    }
+                    else {
+                      if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                      else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
+                    }
+                  }
+                });
+
+               
+                for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
+                  var tasksGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
+                  if (vm.RequestsGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(tasksGridOptions);}
+                  else if (vm.RequestsGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { tasksGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Submitter') { tasksGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Status') { tasksGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Project') { tasksGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Priority') { tasksGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Due Date') { tasksGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                  else if (vm.RequestsGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(tasksGridOptions); }
+                }
+                vm.RequestsGrid().bind("columnShow", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
+                    if (vm.RequestsGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.RequestsGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
+                    var requestGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
+                    if (numAvailCol < 10) {
+                      if (vm.RequestsGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.RequestsGrid().table.width();
+                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.RequestsGrid().setOptions(requestGridOptions);
+                      }
+                      else if (vm.RequestsGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.RequestsGrid().table.width();
+                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.RequestsGrid().setOptions(requestGridOptions);
+                      }
+                      else { requestGridOptions.columns[i].hidden = true; vm.RequestsGrid().setOptions(requestGridOptions); }
+                    }
+                    else {
+                      if (vm.RequestsGrid().columns[i].title == 'Name') { requestGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'System Number') { requestGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { requestGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Submitter') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Status') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Type') { requestGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Project') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Priority') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Due Date') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Request ID') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
+                    }
+                  }
+                });
+                vm.RequestsGrid().bind("columnHide", function (e) {
+                  var numAvailCol = 0;
+                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
+                    if (vm.RequestsGrid().columns[i].hidden == undefined) { numAvailCol++ }
+                    else if (vm.RequestsGrid().columns[i].hidden == false) { numAvailCol++ }
+                  }
+                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
+                    var requestGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
+                    if (numAvailCol < 10) {
+                      if (vm.RequestsGrid().columns[i].hidden == undefined) {
+                        var totalWidth = vm.RequestsGrid().table.width();
+                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.RequestsGrid().setOptions(requestGridOptions);
+                      }
+                      else if (vm.RequestsGrid().columns[i].hidden == false) {
+                        var totalWidth = vm.RequestsGrid().table.width();
+                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol);
+                        vm.RequestsGrid().setOptions(requestGridOptions);
+                      }
+                      else { requestGridOptions.columns[i].hidden = true; vm.RequestsGrid().setOptions(requestGridOptions);}
+                    }
+                    else {
+                      if (vm.RequestsGrid().columns[i].title == 'Name') { requestGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'System Number') { requestGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { requestGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Submitter') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Status') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Type') { requestGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Project') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Priority') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Due Date') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
+                      else if (vm.RequestsGrid().columns[i].title == 'Request ID') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
+                    }
+                  }
                 });
             });
         });

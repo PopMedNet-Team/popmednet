@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../ViewModels/Terms.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var Criteria = (function (_super) {
+    var Criteria = /** @class */ (function (_super) {
         __extends(Criteria, _super);
         function Criteria(criteriaData, name, isPrimary, isExclusion, terms, requestTerms) {
             if (name === void 0) { name = 'Primary'; }
@@ -132,7 +132,7 @@ var RequestCriteriaViewModels;
         return Criteria;
     }(Dns.ChildViewModel));
     RequestCriteriaViewModels.Criteria = Criteria;
-    var TaskActivities = (function () {
+    var TaskActivities = /** @class */ (function () {
         function TaskActivities(activityData) {
             this.ProjectID = ko.observable();
             this.AllActivities = activityData; //<= flat list of activities available

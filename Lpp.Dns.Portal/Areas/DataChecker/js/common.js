@@ -1,7 +1,7 @@
 /// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
 var DataChecker;
 (function (DataChecker) {
-    var ResponseMetricsItem = (function () {
+    var ResponseMetricsItem = /** @class */ (function () {
         function ResponseMetricsItem(title, value) {
             this.title = title;
             this.value = value;
@@ -9,7 +9,7 @@ var DataChecker;
         return ResponseMetricsItem;
     }());
     DataChecker.ResponseMetricsItem = ResponseMetricsItem;
-    var ChartSource = (function () {
+    var ChartSource = /** @class */ (function () {
         function ChartSource(data, title) {
             this.xaxis_label = null;
             this.yaxis_label = null;
@@ -44,4 +44,4 @@ var DataChecker;
     }());
     DataChecker.ChartSource = ChartSource;
 })(DataChecker || (DataChecker = {}));
-//# sourceMappingURL=Common.js.map
+//# sourceMappingURL=common.js.map

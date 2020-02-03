@@ -33,14 +33,14 @@ FROM
 
 				%CJC%
 
-				--WHERE en.year in (%YEARS%) AND en.sex IN (%SEX%) AND en.medcov='Y'
+				--WHERE en.year in (%YEARS%) AND en.sex IN (%SEX%) AND en.medcov='Y' AND en.drugcov='Y'
 			) AS AgeGroups
 
 			LEFT JOIN
 
 				-- Add the enrollment data to the rows (where medical coverage is Y).
 
-				(SELECT * FROM enrollment WHERE medcov='Y') AS ed
+				(SELECT * FROM enrollment WHERE medcov='Y' AND drugcov='Y') AS ed
 				ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 		)
 

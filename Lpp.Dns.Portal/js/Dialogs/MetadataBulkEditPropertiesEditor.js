@@ -15,7 +15,7 @@ var Dialog;
     (function (MetadataBulkEditPropertiesEditor) {
         var vm;
         var dvm;
-        var DataMartsViewModel = (function () {
+        var DataMartsViewModel = /** @class */ (function () {
             function DataMartsViewModel(routing) {
                 var self = this;
                 self.DataMartID = routing.DataMartID;
@@ -26,7 +26,7 @@ var Dialog;
             return DataMartsViewModel;
         }());
         MetadataBulkEditPropertiesEditor.DataMartsViewModel = DataMartsViewModel;
-        var MetadataBulkEditPropertiesEditorViewModel = (function (_super) {
+        var MetadataBulkEditPropertiesEditorViewModel = /** @class */ (function (_super) {
             __extends(MetadataBulkEditPropertiesEditorViewModel, _super);
             function MetadataBulkEditPropertiesEditorViewModel(bindingControl, defaultPriority, defaultDueDate, isRequestLevel) {
                 var _this = _super.call(this, bindingControl) || this;

@@ -13,7 +13,7 @@ var Dialog;
 (function (Dialog) {
     var PredefinedLocationSelector;
     (function (PredefinedLocationSelector) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

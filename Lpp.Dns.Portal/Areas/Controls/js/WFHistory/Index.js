@@ -15,7 +15,7 @@ var Controls;
         var List;
         (function (List) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID, items) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../../ViewModels/Terms.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var AgeStratifierTerm = (function (_super) {
+    var AgeStratifierTerm = /** @class */ (function (_super) {
         __extends(AgeStratifierTerm, _super);
         function AgeStratifierTerm(stratifierData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.AgeStratifierTerm) || this;
@@ -31,15 +31,15 @@ var RequestCriteriaViewModels;
             //console.log('Stratifier Term: ' + JSON.stringify(data));
             return data;
         };
+        AgeStratifierTerm.AgeStratifiersList = [
+            new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.AgeStratifierTypes.NotSpecified),
+            new Dns.KeyValuePairData('No Stratification', RequestCriteriaModels.AgeStratifierTypes.None),
+            new Dns.KeyValuePairData('10 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Ten),
+            new Dns.KeyValuePairData('7 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Seven),
+            new Dns.KeyValuePairData('4 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Four),
+            new Dns.KeyValuePairData('2 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Two)
+        ];
         return AgeStratifierTerm;
     }(RequestCriteriaViewModels.Term));
-    AgeStratifierTerm.AgeStratifiersList = [
-        new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.AgeStratifierTypes.NotSpecified),
-        new Dns.KeyValuePairData('No Stratification', RequestCriteriaModels.AgeStratifierTypes.None),
-        new Dns.KeyValuePairData('10 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Ten),
-        new Dns.KeyValuePairData('7 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Seven),
-        new Dns.KeyValuePairData('4 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Four),
-        new Dns.KeyValuePairData('2 Stratifications', RequestCriteriaModels.AgeStratifierTypes.Two)
-    ];
     RequestCriteriaViewModels.AgeStratifierTerm = AgeStratifierTerm;
 })(RequestCriteriaViewModels || (RequestCriteriaViewModels = {}));

@@ -530,7 +530,7 @@ namespace Lpp.Dns.Api.DataMartClient
 
                 //create the response
                 response = datamart.AddResponse(GetCurrentIdentity().ID);
-                response.SubmittedOn = datamart.RequestTime ?? DateTime.Now;
+                response.SubmittedOn = DateTime.UtcNow;
             }
 
             //As Per PMNDEV-4303: Previous documents are not wiped but versioned.

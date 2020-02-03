@@ -133,7 +133,7 @@ namespace Lpp.Dns.Api.Tests.DataMartClient
             Response response = null;
             try
             {
-                RequestDataMart routing = db.RequestDataMarts.Include(dm => dm.Responses ).Where(dm => dm.Status == DTO.Enums.RoutingStatus.Submitted && dm.Responses.Count > 0).OrderByDescending(dm => dm.RequestTime).FirstOrDefault();
+                RequestDataMart routing = db.RequestDataMarts.Include(dm => dm.Responses ).Where(dm => dm.Status == DTO.Enums.RoutingStatus.Submitted && dm.Responses.Count > 0).OrderByDescending(dm => dm.Responses.OrderByDescending(rsp => rsp.Count).FirstOrDefault().SubmittedOn).FirstOrDefault();
                 response = routing.AddResponse(db.Users.Where(u => u.UserName == TestDMCController.TestUserName).Select(u => u.ID).Single());
                 db.SaveChanges();
 
@@ -182,7 +182,7 @@ namespace Lpp.Dns.Api.Tests.DataMartClient
             Response response = null;
             try
             {
-                RequestDataMart routing = db.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Status == DTO.Enums.RoutingStatus.Submitted && dm.Responses.Count > 0).OrderByDescending(dm => dm.RequestTime).FirstOrDefault();
+                RequestDataMart routing = db.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Status == DTO.Enums.RoutingStatus.Submitted && dm.Responses.Count > 0).OrderByDescending(dm => dm.Responses.OrderByDescending(rsp => rsp.Count).FirstOrDefault().SubmittedOn).FirstOrDefault();
                 response = routing.AddResponse(db.Users.Where(u => u.UserName == TestDMCController.TestUserName).Select(u => u.ID).Single());
                 response.SubmittedOn = DateTime.Now;
                 db.SaveChanges();

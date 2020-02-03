@@ -49,10 +49,10 @@ namespace Lpp.Dns.DataMart.Model
 
         private List<string> SQLOverrides = new List<string>(new string[] {
             "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.MFU_ICD9_HCPCS.txt", /*Tested*/
-            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Inci_Pharma.txt", /*Tested - Same Error as Access*/
-            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Inci_ICD9Diag.txt", /*Tested*/
+            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Inci_Pharma.txt", /*Tested - Same Error as Access --*/
+            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Inci_ICD9Diag.txt", /*Tested --*/
             "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.MFU_Pharma.txt", /*Tested*/
-            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Prev_Enroll.txt", /*Tested*/
+            "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Prev_Enroll.txt", /*Tested --*/
             "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Prev_ICD9_HCPCS.txt", /*Tested - Same error as Access*/
             "Lpp.Dns.DataMart.Model.Processors.SummaryQuery.Queries.Prev_Pharma.txt" /*Tested - Same Error As Access*/
             /*Refresh Dates Tested*/

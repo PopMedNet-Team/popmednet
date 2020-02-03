@@ -14,7 +14,7 @@ var Controls;
     (function (WFEnhancedEventLog) {
         var Display;
         (function (Display) {
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

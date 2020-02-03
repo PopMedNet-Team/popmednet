@@ -13,7 +13,7 @@ var RequestType;
 (function (RequestType) {
     var Details;
     (function (Details) {
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestType, requestTypeModels, requestTypeTerms, bindingControl, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, template) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -27,11 +27,11 @@ var RequestType;
                     self.Template.ComposerInterface(Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery);
                 self.SelectedModels = ko.observableArray(ko.utils.arrayFilter(requestTypeModels, function (rtm) {
                     var modelID = rtm.DataModelID.toLowerCase();
-                    return modelID == '321adaa1-a350-4dd0-93de-5de658a507df' ||
-                        modelID == '7c69584a-5602-4fc0-9f3f-a27f329b1113' ||
-                        modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' ||
-                        modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' ||
-                        modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' ||
+                    return modelID == '321adaa1-a350-4dd0-93de-5de658a507df' || //Data Characterization
+                        modelID == '7c69584a-5602-4fc0-9f3f-a27f329b1113' || //ESP
+                        modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' || //PCORnet
+                        modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' || //Summary Tables
+                        modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' || //Distributed Regression
                         modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154'; //Modular Program
                 }).map(function (item) {
                     return item.DataModelID.toLowerCase();

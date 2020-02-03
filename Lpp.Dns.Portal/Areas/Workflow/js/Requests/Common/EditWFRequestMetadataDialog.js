@@ -17,7 +17,7 @@ var Workflow;
         var EditWFRequestMetadataDialog;
         (function (EditWFRequestMetadataDialog) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, detailsViewModel, fieldOptions, allowEditRequestID, isNewRequest, oldRequestDueDate, oldRequestPriority) {
                     var _this = _super.call(this, bindingControl) || this;

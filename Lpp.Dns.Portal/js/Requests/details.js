@@ -13,7 +13,7 @@ var Requests;
 (function (Requests) {
     var Details;
     (function (Details) {
-        var RequestOverviewViewModel = (function (_super) {
+        var RequestOverviewViewModel = /** @class */ (function (_super) {
             __extends(RequestOverviewViewModel, _super);
             function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -907,7 +907,7 @@ var Requests;
             });
         }
         init();
-        var RequestDataMartViewModel = (function (_super) {
+        var RequestDataMartViewModel = /** @class */ (function (_super) {
             __extends(RequestDataMartViewModel, _super);
             function RequestDataMartViewModel(requestDataMart) {
                 var _this = _super.call(this, requestDataMart) || this;
@@ -924,7 +924,7 @@ var Requests;
             return Global.Helpers.ShowDialog('Enter a Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null).promise();
         }
         Details.PromptForComment = PromptForComment;
-        var VirtualRoutingViewModel = (function () {
+        var VirtualRoutingViewModel = /** @class */ (function () {
             function VirtualRoutingViewModel(routing, group) {
                 this.DataMartID = null;
                 this.ResponseGroupID = null;
@@ -947,7 +947,6 @@ var Requests;
                 }
                 this.RequestDataMartID = routing.ID;
                 this.RequestID = routing.RequestID;
-                this.ResponseTime = routing.ResponseTime;
                 this.Status = routing.Status;
                 this.Messages = '';
                 this.addToMessages(routing.ErrorMessage);
@@ -975,4 +974,4 @@ var Requests;
         Details.VirtualRoutingViewModel = VirtualRoutingViewModel;
     })(Details = Requests.Details || (Requests.Details = {}));
 })(Requests || (Requests = {}));
-//# sourceMappingURL=details.js.map
+//# sourceMappingURL=Details.js.map

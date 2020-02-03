@@ -61,6 +61,15 @@ namespace Theme.GlobalNetwork {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://popmednet.atlassian.net/servicedesk/customer/portal/1/group/8.
+        /// </summary>
+        internal static string ContactUsHref {
+            get {
+                return ResourceManager.GetString("ContactUsHref", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to © 2018 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {

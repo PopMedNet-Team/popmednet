@@ -16,7 +16,7 @@ var Workflow;
         var Completed;
         (function (Completed) {
             var vm;
-            var VirtualRoutingViewModel = (function () {
+            var VirtualRoutingViewModel = /** @class */ (function () {
                 function VirtualRoutingViewModel(routing, group) {
                     this.Name = '';
                     this.IsGroup = false;
@@ -33,7 +33,6 @@ var Workflow;
                         this.ID = routing.ResponseID;
                         this.Name = routing.DataMart;
                     }
-                    this.ResponseTime = routing.ResponseTime;
                     this.Status = routing.Status;
                     this.Messages = '';
                     this.addToMessages(routing.ErrorMessage);
@@ -59,7 +58,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, routings, responseGroups, canViewIndividualResults, canViewAggregateResponses, requestTypeModels) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;

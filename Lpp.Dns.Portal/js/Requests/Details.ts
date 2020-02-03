@@ -1321,7 +1321,6 @@ module Requests.Details {
         public ResponseGroupID: any = null;        
         public Name: string = '';
         public IsGroup: boolean = false;
-        public ResponseTime: Date;
         public Status: Dns.Enums.RoutingStatus = Dns.Enums.RoutingStatus.AwaitingResponseApproval;
         public Messages: string = '';
         public Routings: Dns.Interfaces.IRequestDataMartDTO[];
@@ -1344,8 +1343,7 @@ module Requests.Details {
             this.RequestDataMartID = routing.ID;
             this.RequestID = routing.RequestID;
             
-
-            this.ResponseTime = routing.ResponseTime;
+            
             this.Status = routing.Status;
             this.Messages = '';
             this.addToMessages(routing.ErrorMessage);

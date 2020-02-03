@@ -6,7 +6,7 @@ var DataChecker;
     (function (DiagnosesPDX) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(model, result) {
                 var _this = this;
                 this._model = model;

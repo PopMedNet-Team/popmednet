@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 /// <reference path="../../ViewModels/Terms.ts" />
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var ClinicalSettingTerm = (function (_super) {
+    var ClinicalSettingTerm = /** @class */ (function (_super) {
         __extends(ClinicalSettingTerm, _super);
         function ClinicalSettingTerm(clinicalSettingData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.ClinicalSettingTerm) || this;
@@ -31,14 +31,14 @@ var RequestCriteriaViewModels;
             //console.log('Clinical Setting: ' + JSON.stringify(clinicalSettingData));
             return clinicalSettingData;
         };
+        ClinicalSettingTerm.ClinicalSettingsList = [
+            new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.ClinicalSettingTypes.NotSpecified),
+            new Dns.KeyValuePairData('Any', RequestCriteriaModels.ClinicalSettingTypes.Any),
+            new Dns.KeyValuePairData('In-patient', RequestCriteriaModels.ClinicalSettingTypes.InPatient),
+            new Dns.KeyValuePairData('Out-patient', RequestCriteriaModels.ClinicalSettingTypes.OutPatient),
+            new Dns.KeyValuePairData('Emergency', RequestCriteriaModels.ClinicalSettingTypes.Emergency),
+        ];
         return ClinicalSettingTerm;
     }(RequestCriteriaViewModels.Term));
-    ClinicalSettingTerm.ClinicalSettingsList = [
-        new Dns.KeyValuePairData('Not Selected', RequestCriteriaModels.ClinicalSettingTypes.NotSpecified),
-        new Dns.KeyValuePairData('Any', RequestCriteriaModels.ClinicalSettingTypes.Any),
-        new Dns.KeyValuePairData('In-patient', RequestCriteriaModels.ClinicalSettingTypes.InPatient),
-        new Dns.KeyValuePairData('Out-patient', RequestCriteriaModels.ClinicalSettingTypes.OutPatient),
-        new Dns.KeyValuePairData('Emergency', RequestCriteriaModels.ClinicalSettingTypes.Emergency),
-    ];
     RequestCriteriaViewModels.ClinicalSettingTerm = ClinicalSettingTerm;
 })(RequestCriteriaViewModels || (RequestCriteriaViewModels = {}));

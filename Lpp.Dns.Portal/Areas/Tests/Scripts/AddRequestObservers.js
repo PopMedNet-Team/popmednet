@@ -14,7 +14,7 @@ var Tests;
     var AddRequestObserver;
     (function (AddRequestObserver) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 return _super.call(this, bindingControl) || this;

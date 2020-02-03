@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Lpp.Utilities.WebSites.Filters;
 using System.Web.Mvc;
 
 namespace Lpp.Dns.Portal.Controllers
@@ -32,6 +29,11 @@ namespace Lpp.Dns.Portal.Controllers
         {
             return View();
         }
-   
+
+        [NoCookieReset, AllowAnonymous]
+        public ActionResult SessionExpiring()
+        {
+            return View();
+        }
     }
 }

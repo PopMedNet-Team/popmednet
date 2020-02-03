@@ -17,7 +17,7 @@ var Plugins;
         (function (QueryBuilder) {
             var View;
             (function (View) {
-                var ViewModel = (function (_super) {
+                var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(query, visualTerms, bindingControl) {
                         var _this = _super.call(this, bindingControl) || this;
@@ -105,32 +105,32 @@ var Plugins;
                         }
                         return true;
                     };
+                    ViewModel.CodeTerms = [
+                        //drug class
+                        "75290001-0E78-490C-9635-A3CA01550704",
+                        //drug name
+                        "0E1F0001-CA0C-42D2-A9CC-A3CA01550E84",
+                        //HCPCS Procedure Codes
+                        "096A0001-73B4-405D-B45F-A3CA014C6E7D",
+                        //ICD9 Diagnosis Codes 3 digit
+                        "5E5020DC-C0E4-487F-ADF2-45431C2B7695",
+                        //ICD9 Diagnosis Codes 4 digit
+                        "D0800001-2810-48ED-96B9-A3D40146BAAE",
+                        //ICD9 Diagnosis Codes 5 digit
+                        "80750001-6C3B-4C2D-90EC-A3D40146C26D",
+                        //ICD9 Procedure Codes 3 digit
+                        "E1CC0001-1D9A-442A-94C4-A3CA014C7B94",
+                        //ICD9 Procedure Codes 4 digit
+                        "9E870001-1D48-4AA3-8889-A3D40146CCB3",
+                        //Zip Code
+                        "8B5FAA77-4A4B-4AC7-B817-69F1297E24C5",
+                        //Combinded Diagnosis Codes
+                        "86110001-4BAB-4183-B0EA-A4BC0125A6A7"
+                    ];
+                    ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
+                    ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
                     return ViewModel;
                 }(Global.PageViewModel));
-                ViewModel.CodeTerms = [
-                    //drug class
-                    "75290001-0E78-490C-9635-A3CA01550704",
-                    //drug name
-                    "0E1F0001-CA0C-42D2-A9CC-A3CA01550E84",
-                    //HCPCS Procedure Codes
-                    "096A0001-73B4-405D-B45F-A3CA014C6E7D",
-                    //ICD9 Diagnosis Codes 3 digit
-                    "5E5020DC-C0E4-487F-ADF2-45431C2B7695",
-                    //ICD9 Diagnosis Codes 4 digit
-                    "D0800001-2810-48ED-96B9-A3D40146BAAE",
-                    //ICD9 Diagnosis Codes 5 digit
-                    "80750001-6C3B-4C2D-90EC-A3D40146C26D",
-                    //ICD9 Procedure Codes 3 digit
-                    "E1CC0001-1D9A-442A-94C4-A3CA014C7B94",
-                    //ICD9 Procedure Codes 4 digit
-                    "9E870001-1D48-4AA3-8889-A3D40146CCB3",
-                    //Zip Code
-                    "8B5FAA77-4A4B-4AC7-B817-69F1297E24C5",
-                    //Combinded Diagnosis Codes
-                    "86110001-4BAB-4183-B0EA-A4BC0125A6A7"
-                ];
-                ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
-                ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
                 View.ViewModel = ViewModel;
                 function PrepareCollectionForDisplay(value, delimiter) {
                     if (!value)

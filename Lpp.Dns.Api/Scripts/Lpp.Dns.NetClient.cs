@@ -660,17 +660,17 @@ namespace Lpp.Dns.ApiClient
 	 	 	 this.Client = client;
 	 	 	 this.Path = "/Theme";
 	 	 }
-	 	 public async Task<Lpp.Dns.DTO.ThemeDTO> GetText(string themeID, System.Collections.Generic.IEnumerable<System.String> keys)
+	 	 public async Task<Lpp.Dns.DTO.ThemeDTO> GetText(System.Collections.Generic.IEnumerable<System.String> keys)
 	 	 {
 	 	 	 var keysQueryString = string.Join("&", keys.Select(i => string.Format("{0}={1}", "keys", System.Net.WebUtility.UrlEncode(i.ToString()))));
 
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.ThemeDTO>(Path + "/GetText?themeID=" + (themeID == null ? "" : System.Net.WebUtility.UrlEncode(themeID.ToString())) + "&" + keysQueryString + "&");
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.ThemeDTO>(Path + "/GetText?" + keysQueryString + "&");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
-	 	 public async Task<Lpp.Dns.DTO.ThemeDTO> GetImagePath(string themeID)
+	 	 public async Task<Lpp.Dns.DTO.ThemeDTO> GetImagePath()
 	 	 {
 
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.ThemeDTO>(Path + "/GetImagePath?themeID=" + (themeID == null ? "" : System.Net.WebUtility.UrlEncode(themeID.ToString())) + "&");
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.ThemeDTO>(Path + "/GetImagePath");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
 	 }

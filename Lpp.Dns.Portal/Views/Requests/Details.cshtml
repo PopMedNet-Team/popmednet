@@ -232,8 +232,8 @@
 
 
                     <div class="row">
-                        <div class="col-md-4 form-group" data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')">
-                            <label for="Header_ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" style="color:red;">* </em>: <img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" /></label>
+                        <div class="col-md-4 form-group" data-bind="visible: $root.IsFieldVisible('Request-Report-Aggregation-Level')">
+                            <label for="Header_ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Report-Aggregation-Level')" style="color:red;">* </em>: <img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" /></label>
                         <span data-bind="text: ReportAggregationLevel_Display" style="white-space:pre;"></span>
                         </div>
                         <div data-bind="visible: $root.IsFieldVisible('Request-Workplan-Type')" class="col-md-4 form-group">

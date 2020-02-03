@@ -286,6 +286,8 @@ WriteLiteral(" data-bind=\"click: SelectCode\"");
 WriteLiteral(">Select...</button>\r\n                    <label>Selected Codes:&nbsp;</label>\r\n  " +
 "                  <span");
 
+WriteLiteral(" style=\"word-break:break-all;word-wrap:break-word;\"");
+
 WriteLiteral(" data-bind=\"html: Codes\"");
 
 WriteLiteral("></span>\r\n                </div> \r\n            </div>\r\n        </fieldset>\r\n     " +

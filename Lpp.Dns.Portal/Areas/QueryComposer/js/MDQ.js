@@ -20,7 +20,7 @@ var Plugins;
             (function (MDQ) {
                 //this is the filtered list of terms for the request type
                 MDQ.RequestTypeTermIDs = [];
-                var ViewModel = (function (_super) {
+                var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(options) {
                         var _this = _super.call(this, options.BindingControl) || this;
@@ -532,6 +532,7 @@ var Plugins;
                         }
                         self.Request.Where.Criteria.remove(data);
                         itemArr = null;
+                        this.GetCompatibleDataMarts();
                     };
                     ViewModel.prototype.btnSaveCriteriaGroup_Click = function (criteriaGroup) {
                         var parameters = {
@@ -920,123 +921,123 @@ var Plugins;
                         }
                         return true;
                     };
+                    ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
+                    ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
+                    ViewModel.YearlyQuarters = ko.observableArray(['Q1', 'Q2', 'Q3', 'Q4']);
+                    /**
+                    Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria.
+                    */
+                    ViewModel.GroupedTerms = [
+                        //Condition
+                        MDQ.Terms.ConditionID,
+                        //HCPCS Procedure Codes
+                        MDQ.Terms.HCPCSProcedureCodesID,
+                        //Combined Diagnosis Codes
+                        MDQ.Terms.CombinedDiagnosisCodesID,
+                        //ICD9 Diagnosis Codes 3 digit
+                        MDQ.Terms.ICD9Diagnosis3digitID,
+                        //ICD9 Diagnosis Codes 4 digit
+                        MDQ.Terms.ICD9Diagnosis4digitID,
+                        //ICD9 Diagnosis Codes 5 digit
+                        MDQ.Terms.ICD9Diagnosis5digitID,
+                        //ICD9 Procedure Codes 3 digit
+                        MDQ.Terms.ICD9Procedure3digitID,
+                        //ICD9 Procedure Codes 4 digit
+                        MDQ.Terms.ICD9Procedure4digitID,
+                        //ESP Combined Diagnosis Codes
+                        MDQ.Terms.ESPCombinedDiagnosisCodesID,
+                        //Drug Class
+                        MDQ.Terms.DrugClassID,
+                        //Drug Name
+                        MDQ.Terms.DrugNameID,
+                        //Visits
+                        MDQ.Terms.VisitsID,
+                        //Age Range
+                        MDQ.Terms.AgeRangeID,
+                        //Sex
+                        MDQ.Terms.SexID,
+                        //Code Metric
+                        MDQ.Terms.CodeMetricID,
+                        //Coverage
+                        MDQ.Terms.CoverageID,
+                        //Criteria
+                        MDQ.Terms.CriteriaID,
+                        //Dispensing Metric
+                        MDQ.Terms.DispensingMetricID,
+                        //Ethnicity
+                        MDQ.Terms.EthnicityID,
+                        //Facility
+                        MDQ.Terms.FacilityID,
+                        //Height
+                        MDQ.Terms.HeightID,
+                        //Hispanic
+                        MDQ.Terms.HispanicID,
+                        //Observation Period
+                        MDQ.Terms.ObservationPeriodID,
+                        //Quarter Year
+                        MDQ.Terms.QuarterYearID,
+                        //Race
+                        MDQ.Terms.RaceID,
+                        //Setting
+                        MDQ.Terms.SettingID,
+                        //Tobacco Use
+                        MDQ.Terms.TobaccoUseID,
+                        //Weight
+                        MDQ.Terms.WeightID,
+                        //Year
+                        MDQ.Terms.YearID,
+                        //Zip Code
+                        MDQ.Terms.ZipCodeID,
+                        //Vitals Measure Date
+                        MDQ.Terms.VitalsMeasureDateID,
+                        // Procedure Codes
+                        MDQ.Terms.ProcedureCodesID
+                    ];
+                    /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
+                    ViewModel.NonCodeGroupedTerms = [
+                        //Visits
+                        MDQ.Terms.VisitsID,
+                        //Age Range
+                        MDQ.Terms.AgeRangeID,
+                        //Sex
+                        MDQ.Terms.SexID,
+                        //Code Metric
+                        MDQ.Terms.CodeMetricID,
+                        //Coverage
+                        MDQ.Terms.CoverageID,
+                        //Criteria
+                        MDQ.Terms.CriteriaID,
+                        //Dispensing Metric
+                        MDQ.Terms.DispensingMetricID,
+                        //Ethnicity
+                        MDQ.Terms.EthnicityID,
+                        //Facility
+                        MDQ.Terms.FacilityID,
+                        //Height
+                        MDQ.Terms.HeightID,
+                        //Hispanic
+                        MDQ.Terms.HispanicID,
+                        //Observation Period
+                        MDQ.Terms.ObservationPeriodID,
+                        //Quarter Year
+                        MDQ.Terms.QuarterYearID,
+                        //Race
+                        MDQ.Terms.RaceID,
+                        //Setting
+                        MDQ.Terms.SettingID,
+                        //Tobacco Use
+                        MDQ.Terms.TobaccoUseID,
+                        //Weight
+                        MDQ.Terms.WeightID,
+                        //Year
+                        MDQ.Terms.YearID,
+                        //Zip Code
+                        MDQ.Terms.ZipCodeID,
+                        //Vitals Measure Date
+                        MDQ.Terms.VitalsMeasureDateID,
+                    ];
                     return ViewModel;
                 }(Global.PageViewModel));
-                ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
-                ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
-                ViewModel.YearlyQuarters = ko.observableArray(['Q1', 'Q2', 'Q3', 'Q4']);
-                /**
-                Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria.
-                */
-                ViewModel.GroupedTerms = [
-                    //Condition
-                    MDQ.Terms.ConditionID,
-                    //HCPCS Procedure Codes
-                    MDQ.Terms.HCPCSProcedureCodesID,
-                    //Combined Diagnosis Codes
-                    MDQ.Terms.CombinedDiagnosisCodesID,
-                    //ICD9 Diagnosis Codes 3 digit
-                    MDQ.Terms.ICD9Diagnosis3digitID,
-                    //ICD9 Diagnosis Codes 4 digit
-                    MDQ.Terms.ICD9Diagnosis4digitID,
-                    //ICD9 Diagnosis Codes 5 digit
-                    MDQ.Terms.ICD9Diagnosis5digitID,
-                    //ICD9 Procedure Codes 3 digit
-                    MDQ.Terms.ICD9Procedure3digitID,
-                    //ICD9 Procedure Codes 4 digit
-                    MDQ.Terms.ICD9Procedure4digitID,
-                    //ESP Combined Diagnosis Codes
-                    MDQ.Terms.ESPCombinedDiagnosisCodesID,
-                    //Drug Class
-                    MDQ.Terms.DrugClassID,
-                    //Drug Name
-                    MDQ.Terms.DrugNameID,
-                    //Visits
-                    MDQ.Terms.VisitsID,
-                    //Age Range
-                    MDQ.Terms.AgeRangeID,
-                    //Sex
-                    MDQ.Terms.SexID,
-                    //Code Metric
-                    MDQ.Terms.CodeMetricID,
-                    //Coverage
-                    MDQ.Terms.CoverageID,
-                    //Criteria
-                    MDQ.Terms.CriteriaID,
-                    //Dispensing Metric
-                    MDQ.Terms.DispensingMetricID,
-                    //Ethnicity
-                    MDQ.Terms.EthnicityID,
-                    //Facility
-                    MDQ.Terms.FacilityID,
-                    //Height
-                    MDQ.Terms.HeightID,
-                    //Hispanic
-                    MDQ.Terms.HispanicID,
-                    //Observation Period
-                    MDQ.Terms.ObservationPeriodID,
-                    //Quarter Year
-                    MDQ.Terms.QuarterYearID,
-                    //Race
-                    MDQ.Terms.RaceID,
-                    //Setting
-                    MDQ.Terms.SettingID,
-                    //Tobacco Use
-                    MDQ.Terms.TobaccoUseID,
-                    //Weight
-                    MDQ.Terms.WeightID,
-                    //Year
-                    MDQ.Terms.YearID,
-                    //Zip Code
-                    MDQ.Terms.ZipCodeID,
-                    //Vitals Measure Date
-                    MDQ.Terms.VitalsMeasureDateID,
-                    // Procedure Codes
-                    MDQ.Terms.ProcedureCodesID
-                ];
-                /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
-                ViewModel.NonCodeGroupedTerms = [
-                    //Visits
-                    MDQ.Terms.VisitsID,
-                    //Age Range
-                    MDQ.Terms.AgeRangeID,
-                    //Sex
-                    MDQ.Terms.SexID,
-                    //Code Metric
-                    MDQ.Terms.CodeMetricID,
-                    //Coverage
-                    MDQ.Terms.CoverageID,
-                    //Criteria
-                    MDQ.Terms.CriteriaID,
-                    //Dispensing Metric
-                    MDQ.Terms.DispensingMetricID,
-                    //Ethnicity
-                    MDQ.Terms.EthnicityID,
-                    //Facility
-                    MDQ.Terms.FacilityID,
-                    //Height
-                    MDQ.Terms.HeightID,
-                    //Hispanic
-                    MDQ.Terms.HispanicID,
-                    //Observation Period
-                    MDQ.Terms.ObservationPeriodID,
-                    //Quarter Year
-                    MDQ.Terms.QuarterYearID,
-                    //Race
-                    MDQ.Terms.RaceID,
-                    //Setting
-                    MDQ.Terms.SettingID,
-                    //Tobacco Use
-                    MDQ.Terms.TobaccoUseID,
-                    //Weight
-                    MDQ.Terms.WeightID,
-                    //Year
-                    MDQ.Terms.YearID,
-                    //Zip Code
-                    MDQ.Terms.ZipCodeID,
-                    //Vitals Measure Date
-                    MDQ.Terms.VitalsMeasureDateID,
-                ];
                 MDQ.ViewModel = ViewModel;
                 function GetVisualTerms() {
                     var d = $.Deferred();
@@ -1192,12 +1193,12 @@ var Plugins;
         })(QueryBuilder = Requests.QueryBuilder || (Requests.QueryBuilder = {}));
     })(Requests = Plugins.Requests || (Plugins.Requests = {}));
 })(Plugins || (Plugins = {}));
-var CriteriaGroupSubscription = (function () {
+var CriteriaGroupSubscription = /** @class */ (function () {
     function CriteriaGroupSubscription() {
     }
     return CriteriaGroupSubscription;
 }());
-var TermVm = (function () {
+var TermVm = /** @class */ (function () {
     function TermVm(term, childTerms, allowed) {
         this.Name = term.Name;
         this.TermID = term.TermID;

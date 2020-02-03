@@ -676,8 +676,6 @@ namespace Lpp.Dns.Api.Wbd
                                       RequestID = qdm.RequestID,
                                       Status = qdm.Status,
                                       RejectReason = qdm.RejectReason,
-                                      RequestTime = qdm.RequestTime,
-                                      ResponseTime = qdm.ResponseTime,
                                       ResultsGrouped = qdm.ResultsGrouped
                                   }).ToArrayAsync(),
 

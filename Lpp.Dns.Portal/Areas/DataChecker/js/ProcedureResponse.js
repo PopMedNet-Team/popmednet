@@ -6,7 +6,7 @@ var DataChecker;
     (function (DCProcedure) {
         var vm;
         var _bindingControl;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(parameters) {
                 this.requestID = ko.observable(null);
                 this.responseID = ko.observable(null);

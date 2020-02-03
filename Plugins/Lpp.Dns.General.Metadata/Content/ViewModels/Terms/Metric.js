@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 ///// <reference path="../Terms.ts" />
 var DataCheckerViewModels;
 (function (DataCheckerViewModels) {
-    var MetricTerm = (function (_super) {
+    var MetricTerm = /** @class */ (function (_super) {
         __extends(MetricTerm, _super);
         function MetricTerm(metricData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.MetricTerm) || this;

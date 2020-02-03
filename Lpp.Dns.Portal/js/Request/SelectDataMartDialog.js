@@ -16,7 +16,7 @@ var Requests;
         var SelectDataMarts;
         (function (SelectDataMarts) {
             var vm;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(datamarts, bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;

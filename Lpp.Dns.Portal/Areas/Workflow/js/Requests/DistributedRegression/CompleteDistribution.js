@@ -16,7 +16,7 @@ var Workflow;
         var CompleteDistribution;
         (function (CompleteDistribution) {
             var vm;
-            var VirtualRoutingViewModel = (function () {
+            var VirtualRoutingViewModel = /** @class */ (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -35,7 +35,6 @@ var Workflow;
                         this.ID = routing.ResponseID;
                         this.Name = routing.DataMart;
                     }
-                    this.ResponseTime = routing.ResponseTime;
                     this.Status = routing.Status;
                     this.Messages = '';
                     this.addToMessages(routing.ErrorMessage);
@@ -79,7 +78,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             CompleteDistribution.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, responses, viewResponseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

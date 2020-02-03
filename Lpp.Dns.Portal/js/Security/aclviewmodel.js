@@ -3,7 +3,7 @@ var Security;
 (function (Security) {
     var Acl;
     (function (Acl) {
-        var AclEditViewModel = (function () {
+        var AclEditViewModel = /** @class */ (function () {
             function AclEditViewModel(permissions, securityGroupTree, acls, targets, aclType, identifier) {
                 if (identifier === void 0) { identifier = null; }
                 var _this = this;
@@ -135,7 +135,7 @@ var Security;
             return AclEditViewModel;
         }());
         Acl.AclEditViewModel = AclEditViewModel;
-        var PermissionListViewModel = (function () {
+        var PermissionListViewModel = /** @class */ (function () {
             function PermissionListViewModel(vm, permission) {
                 var _this = this;
                 var self = this;
@@ -199,4 +199,4 @@ var Security;
         Acl.PermissionListViewModel = PermissionListViewModel;
     })(Acl = Security.Acl || (Security.Acl = {}));
 })(Security || (Security = {}));
-//# sourceMappingURL=AclViewModel.js.map
+//# sourceMappingURL=aclviewmodel.js.map

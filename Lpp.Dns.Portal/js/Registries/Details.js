@@ -14,7 +14,7 @@ var Registries;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, registry, allOrganizations, organizationRegistries, allRegistryItemDefinitions, registryItemDefinitions, permissionList, registryPermissions, securityGroupTree, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;

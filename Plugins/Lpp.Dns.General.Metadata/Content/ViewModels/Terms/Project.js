@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var RequestCriteriaViewModels;
 (function (RequestCriteriaViewModels) {
-    var ProjectTerm = (function (_super) {
+    var ProjectTerm = /** @class */ (function (_super) {
         __extends(ProjectTerm, _super);
         function ProjectTerm(projectData) {
             var _this = _super.call(this, RequestCriteriaModels.TermTypes.ProjectTerm) || this;

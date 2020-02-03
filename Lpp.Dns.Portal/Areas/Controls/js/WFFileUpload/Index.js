@@ -17,7 +17,7 @@ var Controls;
     (function (WFFileUpload) {
         var Index;
         (function (Index) {
-            var ViewModel = (function (_super) {
+            var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, query, termID) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;

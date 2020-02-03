@@ -100,7 +100,7 @@ var Workflow;
             var ResponseDetails;
             (function (ResponseDetails) {
                 var vm;
-                var ViewModel2 = (function (_super) {
+                var ViewModel2 = /** @class */ (function (_super) {
                     __extends(ViewModel2, _super);
                     function ViewModel2(bindingControl, routings, responses, documents, req, canViewPendingApprovalResponses) {
                         var _this = _super.call(this, bindingControl) || this;

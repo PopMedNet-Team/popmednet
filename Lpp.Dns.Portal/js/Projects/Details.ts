@@ -77,10 +77,11 @@ module Projects.Details {
             requestTypeList: Dns.Interfaces.IRequestTypeDTO[],
             fieldOptions: Dns.Interfaces.IAclProjectFieldOptionDTO[],
             bindingControl: JQuery) {
-            super(bindingControl, screenPermissions);
+
+            super(bindingControl, screenPermissions, $('#frmProjectDetails'));
 
             var self = this;
-
+            
             this.CanManageSecurityTypes = ko.observable(this.HasPermission(Permissions.Project.ManageRequestTypes));
 
             //Get lists
@@ -249,105 +250,116 @@ module Projects.Details {
 
             self.Save = (data, event: JQueryEventObject, showPrompt: boolean = true) => {
 
+                Global.Helpers.ShowExecuting();
+
                 var deferred = $.Deferred<void>();
 
                 if (!self.Validate()) {
                     deferred.reject();
                     if (event != null)
                         event.preventDefault();
+
                     return;
                 }
 
-                //Removed by request of HPCI
-                //if (this.ProjectAcls().length == 0) {
-                //    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have setup at least one group or user that has access to the project.</p>");
-                //    deferred.reject();
-                //    return;
-                //}
-
                 //Only save if the root project saved.
                 Dns.WebApi.Projects.InsertOrUpdate([self.Project.toData()]).done((project) => {
+
+                    let projectID = project[0].ID;
+
                     //Update the values for the ID and timestamp as necessary.
-                    self.Project.ID(project[0].ID);
+                    self.Project.ID(projectID);
                     self.Project.Timestamp(project[0].Timestamp);
-                    window.history.replaceState(null, window.document.title, "/projects/details?ID=" + project[0].ID);
+                    window.history.replaceState(null, window.document.title, "/projects/details?ID=" + projectID);
 
                     Layout.vmHeader.ReloadMenu();
 
                     //Save everything else
-                    var dataMarts = self.ProjectDataMarts().map((dm) => {
-                        dm.ProjectID(self.Project.ID());
+                    let dataMarts = self.ProjectDataMarts().map((dm) => {
+                        dm.ProjectID(projectID);
                         return dm.toData();
                     });
 
-                    var organizations = self.Organizations().map((o) => {
-                        o.ProjectID(self.Project.ID());
+                    let organizations = self.Organizations().map((o) => {
+                        o.ProjectID(projectID);
                         return o.toData();
                     });
+
+                    let dataMartAcls: Dns.Interfaces.IAclProjectDataMartDTO[] = null;
+                    let projectAcls: Dns.Interfaces.IAclProjectDTO[] = null;
+                    let projectEventAcls: Dns.Interfaces.IProjectEventDTO[] = null;
+                    let projectRequestTypeAcls: Dns.Interfaces.IAclProjectRequestTypeDTO[] = null;
+                    let projectDataMartEventAcls: Dns.Interfaces.IProjectDataMartEventDTO[] = null;
+                    let projectDataMartRequestTypeAcls: Dns.Interfaces.IAclProjectDataMartRequestTypeDTO[] = null;
+                    let organizationAcls: Dns.Interfaces.IAclProjectOrganizationDTO[] = null;
+                    let organizationEvents: Dns.Interfaces.IProjectOrganizationEventDTO[] = null;
+                    let projectRequestTypeWorkFlowActivityAcls: Dns.Interfaces.IAclProjectRequestTypeWorkflowActivityDTO[] = null;
+                    let projectFieldOptionsAcls: Dns.Interfaces.IAclProjectFieldOptionDTO[] = null;
+
                     if (self.HasPermission(Permissions.Project.ManageSecurity)) {
-                        var dataMartAcls = self.DataMartAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        dataMartAcls = self.DataMartAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectAcls = self.ProjectAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectAcls = self.ProjectAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectEventAcls = self.ProjectEvents().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectEventAcls = self.ProjectEvents().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectRequestTypeAcls = self.ProjectRequestTypeAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectRequestTypeAcls = self.ProjectRequestTypeAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectDataMartEventAcls = self.ProjectDataMartEvents().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectDataMartEventAcls = self.ProjectDataMartEvents().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectDataMartRequestTypeAcls = self.DataMartRequestTypeAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectDataMartRequestTypeAcls = self.DataMartRequestTypeAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var organizationAcls = self.OrganizationAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        organizationAcls = self.OrganizationAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var organizationEvents = self.OrganizationEvents().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        organizationEvents = self.OrganizationEvents().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectRequestTypeWorkFlowActivityAcls = self.ProjectRequestTypeWorkflowActivityAcls().map((a) => {
-                            a.ProjectID(self.Project.ID());
+                        projectRequestTypeWorkFlowActivityAcls = self.ProjectRequestTypeWorkflowActivityAcls().map((a) => {
+                            a.ProjectID(projectID);
                             return a.toData();
                         });
 
-                        var projectFieldOptionsAcls = self.FieldOptions.Acls().map((a) => <Dns.Interfaces.IAclProjectFieldOptionDTO> a.toData());                        
+                        projectFieldOptionsAcls = self.FieldOptions.Acls().map((a) => <Dns.Interfaces.IAclProjectFieldOptionDTO>a.toData());
                     }
 
-                    var projectRequestTypes: Dns.Interfaces.IUpdateProjectRequestTypesDTO = null;
+                    let projectRequestTypes: Dns.Interfaces.IUpdateProjectRequestTypesDTO = null;
 
                     if (self.HasPermission(Permissions.Project.ManageRequestTypes)) {
-                        var projectRequestTypes = {
-                            ProjectID: self.Project.ID(),
+                        projectRequestTypes = {
+                            ProjectID: projectID,
                             RequestTypes: self.ProjectRequestTypes().map((rt) => {
-                                rt.ProjectID(self.Project.ID());
+                                rt.ProjectID(projectID);
                                 return rt.toData();
                             })
                         };
                     }
 
-                    var canManageSecurity = self.HasPermission(Permissions.Project.ManageSecurity);
-                    var originalManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
-                    
+                    let canManageSecurity = self.HasPermission(Permissions.Project.ManageSecurity);
+                    let originalManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+
                     $.when<any>(
                         canManageSecurity ? Dns.WebApi.Security.UpdateProjectPermissions(projectAcls) : null,
                         canManageSecurity ? Dns.WebApi.Events.UpdateProjectEventPermissions(projectEventAcls) : null,
@@ -356,71 +368,73 @@ module Projects.Details {
                         canManageSecurity ? Dns.WebApi.Security.UpdateProjectOrganizationPermissions(organizationAcls) : null,
                         canManageSecurity ? Dns.WebApi.Security.UpdateProjectDataMartPermissions(dataMartAcls) : null,
                         canManageSecurity && (projectFieldOptionsAcls != null && projectFieldOptionsAcls.length > 0) ? Dns.WebApi.Security.UpdateProjectFieldOptionPermissions(projectFieldOptionsAcls) : null
-                        ).done(() => {
-                    
+                    ).done(() => {
+
                         //update permissions
-                        Dns.WebApi.Projects.GetPermissions([self.Project.ID()], [
+                        Dns.WebApi.Projects.GetPermissions([projectID], [
                             Permissions.Project.Copy,
                             Permissions.Project.Delete,
                             Permissions.Project.Edit,
                             Permissions.Project.ManageSecurity,
                             Permissions.Project.ManageRequestTypes]).done((perms) => {
-                        
-                            //update the screen permissions with the newly set permissions
-                            self.ScreenPermissions = perms.map((sp: string) => {
-                                return sp.toLowerCase();
-                            });
 
-                            //now update the rest of the stuff using the new permissions
-                            var canManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
-                            self.CanManageSecurityTypes(canManageRequestTypes);
+                                //update the screen permissions with the newly set permissions
+                                self.ScreenPermissions = perms.map((sp: string) => {
+                                    return sp.toLowerCase();
+                                });
 
-                            $.when<any>(
-                                canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectRequestTypePermissions(projectRequestTypeAcls) : null,
-                                canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectDataMartRequestTypePermissions(projectDataMartRequestTypeAcls) : null
-                                ).done(() => {
+                                //now update the rest of the stuff using the new permissions
+                                var canManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+                                self.CanManageSecurityTypes(canManageRequestTypes);
 
                                 $.when<any>(
-                                    Dns.WebApi.ProjectDataMarts.InsertOrUpdate({ ProjectID: self.Project.ID(), DataMarts: dataMarts }),
-                                    Dns.WebApi.ProjectOrganizations.InsertOrUpdate({ ProjectID: self.Project.ID(), Organizations: organizations }),
-                                    (canManageRequestTypes && projectRequestTypes != null) ? Dns.WebApi.Projects.UpdateProjectRequestTypes(projectRequestTypes) : null,
+                                    canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectRequestTypePermissions(projectRequestTypeAcls) : null,
+                                    canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectDataMartRequestTypePermissions(projectDataMartRequestTypeAcls) : null
+                                ).done(() => {
+
+                                    $.when<any>(
+                                        Dns.WebApi.ProjectDataMarts.InsertOrUpdate({ ProjectID: projectID, DataMarts: dataMarts }),
+                                        Dns.WebApi.ProjectOrganizations.InsertOrUpdate({ ProjectID: projectID, Organizations: organizations }),
+                                        (canManageRequestTypes && projectRequestTypes != null) ? Dns.WebApi.Projects.UpdateProjectRequestTypes(projectRequestTypes) : null,
                                         (canManageRequestTypes && projectRequestTypeWorkFlowActivityAcls != null) ? Dns.WebApi.Security.UpdateProjectRequestTypeWorkflowActivityPermissions(projectRequestTypeWorkFlowActivityAcls) : null
-                                //Add others here.
+                                        //Add others here.
                                     ).done(() => {
 
-                                    if (showPrompt) {
-                                        Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>")
-                                            .done(() => {
-                                            
-                                            if (canManageRequestTypes != originalManageRequestTypes && canManageRequestTypes) {
-                                                //if the permission to edit request types changes from denied to allowed, reload after save to make sure that all the requesttype collections are properly loaded back up.
-                                                    window.location.reload();
-                                                }
-                                            });
-                                    };
+                                        if (showPrompt) {
+                                            Global.Helpers.ShowAlert("Save", '<p style="text-align:center;">Save completed successfully!</p>')
+                                                .done(() => {
 
-                                    deferred.resolve();
+                                                    if (canManageRequestTypes != originalManageRequestTypes && canManageRequestTypes) {
+                                                        //if the permission to edit request types changes from denied to allowed, reload after save to make sure that all the requesttype collections are properly loaded back up.
+                                                        window.location.reload();
+                                                    }
+                                                });
+                                        };
+
+                                        deferred.resolve();
+
+                                    }).fail((error) => {
+                                        deferred.reject();
+                                    });
 
                                 }).fail((error) => {
                                     deferred.reject();
                                 });
 
-                            }).fail((error) => {
-                                deferred.reject();
+
+
                             });
-
-
-
-                        });
                     })
                         .fail((error) => {
-                        deferred.reject();
-                    });
+                            deferred.reject();
+                        });
 
                 }).fail((error) => {
                     //fail of initial save
                     deferred.reject();
-                });
+                    }).always(() => {
+                        Global.Helpers.HideExecuting();
+                    });
 
                 return deferred;
 
@@ -655,10 +669,12 @@ module Projects.Details {
             eventList,
             projectDataMartsEventList,
             requestTypeList,
-            fieldOptions) => {
+                fieldOptions) => {
+
             var project: Dns.Interfaces.IProjectDTO = projects == null ? null : projects[0];
             //Now have our conditional queries that need to be executed. These should be items that depend on other items that you just got back to be queried.
-            if (project != null && project.GroupID) {
+                if (project != null && project.GroupID) {
+
                 $.when<any>(
                     screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : null,
                     screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : null,
@@ -666,11 +682,12 @@ module Projects.Details {
                     .done((
                     projectRequestTypes: Dns.Interfaces.IProjectRequestTypeDTO[],
                     requestTypes: Dns.Interfaces.IRequestTypeDTO[],
-                    organizationList) => {
+                        organizationList) => {
                     $(() => {
                         //We get our binding control here because it's inside the document.ready. It cannot be assured anywhere else.
                         var bindingControl = $("#Content");
                         //Pass everything in to the view model here.
+
                         vm = new ViewModel(
                             screenPermissions || [Permissions.Project.Edit, Permissions.Project.ManageSecurity],
                             project,
@@ -702,15 +719,19 @@ module Projects.Details {
 
                         //Apply your bindings.
                         ko.applyBindings(vm, bindingControl[0]);
+                        $('#PageLoadingMessage').remove();
                     });
                 });
-            } else {
+                } else {
+
                 $.when<any>(
                     id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : [] : [],
                     id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : [] : []
                         ).done((
                         projectRequestTypes: Dns.Interfaces.IProjectRequestTypeDTO[],
-                        requestTypes: Dns.Interfaces.IRequestTypeDTO[]) => {
+                            requestTypes: Dns.Interfaces.IRequestTypeDTO[]) => {
+
+                            
                         $(() => {
                             var bindingControl = $("#Content");
 
@@ -744,10 +765,13 @@ module Projects.Details {
                                 bindingControl);
 
                             ko.applyBindings(vm, bindingControl[0]);
+                            $('#PageLoadingMessage').remove();
                         });
                     });
 
-            }
+                }
+
+                
         });
     }
 

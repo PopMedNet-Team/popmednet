@@ -67,7 +67,7 @@ FROM
 
 			-- Add the enrollment data to the rows (where drug coverage is Y).
 
-			(SELECT * FROM enrollment WHERE drugcov='Y') AS ed
+			(SELECT * FROM enrollment WHERE drugcov='Y' AND medcov='Y') AS ed
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 			
 		)
