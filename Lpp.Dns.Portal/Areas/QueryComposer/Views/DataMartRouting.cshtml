@@ -87,7 +87,7 @@
                             <td data-bind="text: Name"></td>
                             <td data-bind="text: Organization"></td>
                             <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + $index() }"></td>
-                            <td><input type="text" data-bind="kendoDatePicker: DueDate, , attr:{ id:'RouteDueDate_' + $index() }"></td>
+                            <td><input type="text" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id:'RouteDueDate_' + $index() }"></td>
                         </tr>
                     </tbody>
                 </table>

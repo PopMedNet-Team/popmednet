@@ -132,6 +132,12 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
                 if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
                 {
+                    if (!permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
+                    {
+                        //file distribution never requires review before submission, add the permission if the user does not have it.
+                        permissions = new[] { PermissionIdentifiers.Request.SkipSubmissionApproval };
+                    }
+
                     await db.LoadCollection(_entity, (r) => r.DataMarts);
 
                     if (!_entity.DataMarts.Any())

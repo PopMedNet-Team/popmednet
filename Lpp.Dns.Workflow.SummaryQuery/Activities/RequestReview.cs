@@ -17,6 +17,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
     {
         static readonly Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
         static readonly Guid TerminateResultID = new Guid("53579F36-9D20-47D9-AC33-643D9130080B");
+        static readonly Guid RejectResultID = new Guid("EA120001-7A35-4829-9F2D-A3B600E25013");
         static readonly Guid ApproveResultID = new Guid("4AE61A78-CE31-4A01-807F-DB18A535E4E0");
 
         public override Guid ID
@@ -86,21 +87,26 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     ResultID = SaveResultID
                 };
             } 
-            else if (activityResultID.Value == TerminateResultID)
+            else if (activityResultID.Value == RejectResultID)
             {
                 _entity.CancelledByID = _workflow.Identity.ID;
                 _entity.CancelledOn = DateTime.UtcNow;
-                _entity.Status = DTO.Enums.RequestStatuses.Cancelled;
+                _entity.Status = DTO.Enums.RequestStatuses.RequestRejected;
 
                 var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-                if (task != null)
-                {
-                    task.Status = DTO.Enums.TaskStatuses.Cancelled;
-                }
+
+                var originalStatus = _entity.Status;
+                await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);
+                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.RequestRejected);
+
+                await MarkTaskComplete(task);
 
                 await db.SaveChangesAsync();
 
-                return null;
+                return new CompletionResult
+                {
+                    ResultID = RejectResultID
+                };
             } else if (activityResultID.Value == ApproveResultID) {
 
                 var filters = new ExtendedQuery

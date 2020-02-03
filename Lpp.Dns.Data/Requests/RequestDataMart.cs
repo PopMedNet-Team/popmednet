@@ -283,7 +283,8 @@ namespace Lpp.Dns.Data
 
             if (((originalStatus != currentStatus && originalStatus != RoutingStatus.Draft) || 
                 (originalStatus == RoutingStatus.ResultsModified && currentStatus == RoutingStatus.ResultsModified))
-                && originalStatus != RoutingStatus.AwaitingRequestApproval)
+                && originalStatus != RoutingStatus.AwaitingRequestApproval
+                && originalStatus != RoutingStatus.RequestRejected)
             {
                 //Routing Status Changed
                 var orgUser = identity == null ? new { UserName = "", Acronym = "" } : db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();

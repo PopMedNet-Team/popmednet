@@ -25,6 +25,12 @@ namespace Lpp.Dns.Portal.Root
 {
     public class Global : Lpp.Mvc.LppMvcComposableApplication
     {
+        public static readonly string ApplicationVersion;
+
+        static Global()
+        {
+            ApplicationVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(Global).Assembly.Location).ProductVersion;
+        }
 
         protected void Application_Start(object sender, EventArgs e)
         {

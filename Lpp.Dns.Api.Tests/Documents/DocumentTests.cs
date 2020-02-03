@@ -122,6 +122,43 @@ namespace Lpp.Dns.Api.Tests.Documents
             }
         }
 
+        [TestMethod]
+        public async Task DownloadSpecificDocument()
+        {
+            Guid documentID = new Guid("12D6B147-3FA6-400A-9F9A-A9C900F6F88C");
+
+            using(var db = new DataContext())
+            {
+                string filename = db.Documents.Where(d => d.ID == documentID).Select(d => d.FileName).Single();
+
+                using (var dbStream = new Data.Documents.DocumentStream(db, documentID))
+                using (var fileStream = System.IO.File.Create(Path.Combine("Playpen", filename)))
+                {
+                    await dbStream.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
+                }
+            }
+            
+        }
+
+        [TestMethod]
+        public async Task OverwriteDocumentContent()
+        {
+            Guid documentID = new Guid("B7024973-02F7-4477-AABB-A9C900F71CDE");
+            string filename = "response.json";
+
+            using (var db = new DataContext())
+            {
+                using (var dbStream = new Data.Documents.DocumentStream(db, documentID))
+                using (var fileStream = System.IO.File.OpenRead(Path.Combine("Playpen", filename)))
+                {
+                    await dbStream.WriteStreamAsync(fileStream);
+                }
+            }
+
+            Console.WriteLine("Finished updating document content.");
+        }
+
         internal class DocumentDetails
         {
             public Guid ID { get; set; }

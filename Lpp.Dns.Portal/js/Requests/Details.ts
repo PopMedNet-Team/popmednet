@@ -411,7 +411,6 @@ module Requests.Details {
                     self.Request.Status() == Dns.Enums.RequestStatuses.CompleteWithReport ||
                     self.Request.Status() == Dns.Enums.RequestStatuses.Cancelled ||
                     self.Request.Status() == Dns.Enums.RequestStatuses.Failed ||
-                    self.Request.Status() == Dns.Enums.RequestStatuses.RequestRejected ||
                     self.Request.Status() == Dns.Enums.RequestStatuses.TerminatedPriorToDistribution;
             });
 
@@ -925,7 +924,7 @@ module Requests.Details {
                     Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID),
                     templateID == null ? null : Dns.WebApi.Templates.Get(templateID),
                     Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID),
-                    Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse]),
+                    Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.SkipSubmissionApproval]),
                     Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID)
                     ).done((
                     parentRequests: Dns.Interfaces.IRequestDTO[],
@@ -994,7 +993,7 @@ module Requests.Details {
                         Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()),
                         Dns.WebApi.RequestUsers.List('RequestID eq ' + id),
                         Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID),
-                        Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.ChangeRoutingsAfterSubmission, Permissions.Project.ResubmitRequests]),
+                        Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.ChangeRoutingsAfterSubmission, Permissions.Project.ResubmitRequests, Permissions.Request.SkipSubmissionApproval]),
                         Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Request.ChangeRoutingsAfterSubmission]),
                         Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()),
                         Dns.WebApi.Response.CanViewIndividualResponses(request.ID()),

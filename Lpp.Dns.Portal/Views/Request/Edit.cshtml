@@ -298,8 +298,8 @@
             <td><input type="checkbox" class="dataMartMetadata" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
             <td data-bind="text: Name"></td>
             <td data-bind="text: Organization"></td>
-            <td><input id="Priority" type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}"></td>
-            <td><input id="DueDate" type="text" class="dataMartMetadata" data-bind="kendoDatePicker: DueDate"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id: 'RoutePriority_' + ID }"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id: 'RouteDueDate_' + ID }"></td>
         </tr>
     </script>
     <script id="dataMartsAltRowTmpl" type="text/html">
@@ -307,8 +307,8 @@
             <td><input type="checkbox" class="dataMartMetadata" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
             <td data-bind="text: Name"></td>
             <td data-bind="text: Organization"></td>
-            <td><input id="Priority" type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}"></td>
-            <td><input id="DueDate" type="text" class="dataMartMetadata" data-bind="kendoDatePicker: DueDate"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id: 'RoutePriority_' + ID }"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id: 'RouteDueDate_' + ID }"></td>
         </tr>
     </script>
 }

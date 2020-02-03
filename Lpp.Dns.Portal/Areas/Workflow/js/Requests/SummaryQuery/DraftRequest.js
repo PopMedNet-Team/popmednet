@@ -23,7 +23,14 @@ var Workflow;
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
+                    _this.SubmitButtonText = ko.observable('Submit');
                     _this.AbortRejectMessage = ko.observable("");
+                    if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
+                        _this.SubmitButtonText = ko.observable('Submit');
+                    }
+                    else {
+                        _this.SubmitButtonText = ko.observable('Submit for Review');
+                    }
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
                         //call function on the composer to update routing info
                         Plugins.Requests.QueryBuilder.Edit.vm.UpdateRoutings(info);

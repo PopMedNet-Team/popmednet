@@ -196,7 +196,7 @@ namespace Lpp.Dns.Workflow
             if (dataMartsDueDate)
                 errors.AppendHtmlLine("The Request's DataMart Due Dates must be set in the future.");
 
-            if (_entity.SubmittedOn.HasValue)
+            if (_entity.SubmittedOn.HasValue && _entity.Status != Lpp.Dns.DTO.Enums.RequestStatuses.RequestRejected) //Rejected requests can be re-submitted.
                 errors.AppendHtmlLine("Cannot submit a request that has already been submitted");
 
             if (_entity.Template)

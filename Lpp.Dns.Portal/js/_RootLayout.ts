@@ -200,5 +200,6 @@ module Permissions {
         public static OverrideDataMartRoutingStatus: any = '7A401F1F-46C2-4F6F-9FAE-AE94A6DDB21F';
         public static ApproveRejectResponse: any = 'A58791B5-E8AF-48D0-B9CD-ED0B54E564E6';
         public static ChangeRoutingsAfterSubmission: any = 'FDEE0BA5-AC09-4580-BAA4-496362985BF7';
+        public static SkipSubmissionApproval: any = '39683790-A857-4247-85DF-A9B425AC79CC';
     }
 }

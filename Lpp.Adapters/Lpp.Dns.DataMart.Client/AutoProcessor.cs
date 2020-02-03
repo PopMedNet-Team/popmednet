@@ -275,7 +275,7 @@ namespace Lpp.Dns.DataMart.Client
                 Log.Info(string.Format("The following query {0} (ID: {3}, DataMart: {4}, Network: {5}) failed to execute on behalf of {1}:\n\n{2}", request.Source.Identifier, _networkSetting.Profile.Username, hubRequestStatus.Message, request.Source.ID, request.DataMartName, request.NetworkName));
             }
             else
-            {
+            {   
                 Log.Info(string.Format("The following query {0} (ID: {2}, DataMart: {3}, Network: {4}) was executed and results were uploaded automatically on behalf of {1}", request.Source.Identifier, _networkSetting.Profile.Username, request.Source.ID, request.DataMartName, request.NetworkName));
             }
         }
@@ -383,7 +383,6 @@ namespace Lpp.Dns.DataMart.Client
                             statusCode = request.Processor.Status(request.Source.ID.ToString()).Code;
                             hubRequestStatus = DnsServiceManager.ConvertModelRequestStatus(request.Processor.Status(request.Source.ID.ToString()));
                             hubRequestStatus.Message = request.Processor.Status(request.Source.ID.ToString()).Message;
-
                         }
                         catch (Exception ex)
                         {
@@ -403,7 +402,15 @@ namespace Lpp.Dns.DataMart.Client
 
                     Log.Info(string.Format("BackgroundProcess:  Finished Processing / Uploading results for query {0} (RequestID: {3}, DataMart: {1}, Network: {2})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID));
 
-
+                    if(statusCode == RequestStatus.StatusCode.Error || statusCode == RequestStatus.StatusCode.Complete || statusCode == RequestStatus.StatusCode.CompleteWithMessage || statusCode == RequestStatus.StatusCode.AwaitingResponseApproval)
+                    {
+                        //mark auto-processing complete in the status cache if the processing resulted in either an error or a completed status
+                        var key = MakeKey(request);
+                        if (RequestStatuses.ContainsKey(key))
+                        {
+                            RequestStatuses[key] = ProcessingStatus.Complete;
+                        }
+                    }
                 }
             };
 
@@ -420,6 +427,12 @@ namespace Lpp.Dns.DataMart.Client
 
             try
             {
+                var key = MakeKey(request);
+                if (RequestStatuses.ContainsKey(key))
+                {
+                    RequestStatuses[key] = ProcessingStatus.InProcessing;
+                }
+
                 string requestId = ProcessRequest(request, request.Processor);
 
                 RequestStatus.StatusCode statusCode = request.Processor.Status(requestId).Code;

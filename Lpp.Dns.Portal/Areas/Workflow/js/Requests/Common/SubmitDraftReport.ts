@@ -75,10 +75,9 @@ module Workflow.Common.SubmitDraftReport {
 
     $.when<any>(Dns.WebApi.Tasks.ByRequestID(Requests.Details.rovm.Request.ID(), "EndOn eq null && WorkflowActivityID eq " + Requests.Details.rovm.Request.CurrentWorkFlowActivityID()))
         .done((tasks: Dns.Interfaces.ITaskDTO[]) => {
-        Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+            Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
             var bindingControl = $("#CommonSubmitDraftReport");
             vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Controls.WFFileUpload.ForTask.init($('#draftreportupload'), tasks));
-
             $(() => {
                 ko.applyBindings(vm, bindingControl[0]);
             });

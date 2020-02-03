@@ -9,7 +9,7 @@
     <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
         <button class="btn btn-primary pull-left" data-bind="click: Requests.Details.rovm.onCopy, visible: Requests.Details.rovm.AllowCopy()">Copy</button> 
         <button class="btn btn-warning pull-right" data-bind="click: Requests.Details.rovm.Cancel">Cancel</button>
-        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="48B20001-BD0B-425D-8D49-A3B5015A2258" data-bind="click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) || true">Submit</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="48B20001-BD0B-425D-8D49-A3B5015A2258" data-bind="text: SubmitButtonText, click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) || true"></button>
         <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="click: Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) || true">Save</button>
     </div>
    <div class="clearfix"></div>

@@ -226,7 +226,7 @@ namespace Lpp.Dns.DataMart.Model
     }
 
     [Serializable]
-    public class QueryComposerModelProcessor : IEarlyInitializeModelProcessor
+    public class QueryComposerModelProcessor : IEarlyInitializeModelProcessor//, IPatientIdentifierProcessor
     {
         static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         static readonly Guid PROCESSOR_ID = new Guid("AE0DA7B0-0F73-4D06-B70B-922032B7F0EB");
@@ -504,12 +504,13 @@ namespace Lpp.Dns.DataMart.Model
                 
             }
 
+
             var adaptersTypes = (from a in AppDomain.CurrentDomain.GetAssemblies()
-                                from t in GetLoadableTypes(a).Where(i => i.FullName.StartsWith("System.") == false)
-                                let interfaces = t.GetInterfaces().DefaultIfEmpty()
-                                where interfaces.Any(i => i == typeof(QueryComposer.IModelAdapter))
-                                && !t.IsInterface
-                                select t).ToArray();
+                                 from t in GetLoadableTypes(a).Where(i => i.FullName.StartsWith("System.") == false)
+                                 let interfaces = t.GetInterfaces().DefaultIfEmpty()
+                                 where interfaces.Any(i => i == typeof(QueryComposer.IModelAdapter))
+                                 && !t.IsInterface
+                                 select t).ToArray();
 
             foreach (Type type in adaptersTypes.Where(t => t.GetConstructor(Type.EmptyTypes) != null))
             {
@@ -519,11 +520,11 @@ namespace Lpp.Dns.DataMart.Model
                     return adapter;
             }
 
-            foreach(Type type in adaptersTypes.Where(t => t.GetConstructor(new[] { typeof(RequestMetadata) }) != null))
+            foreach (Type type in adaptersTypes.Where(t => t.GetConstructor(new[] { typeof(RequestMetadata) }) != null))
             {
                 var adapter = (QueryComposer.IModelAdapter)Activator.CreateInstance(type, _requestMetadata);
 
-                if(adapter.ModelID == ModelID)
+                if (adapter.ModelID == ModelID)
                 {
                     return adapter;
                 }
@@ -675,43 +676,43 @@ namespace Lpp.Dns.DataMart.Model
             }
         }
 
-        public void Close(string requestId)
-        {
-        }
+		public void Close(string requestId)
+		{
+		}
 
-        //IDictionary<Guid, string> IPatientIdentifierProcessor.GetQueryIdentifiers()
-        //{
-        //    //TODO: interogate the current request.json to determine how many queries exist. Until multi-query implemented, will always be one.
-        //    var queries = new Dictionary<Guid, string>();
-        //    queries.Add(Guid.NewGuid(), "Default Query");
-        //    return queries;
-        //}
+		//IDictionary<Guid, string> IPatientIdentifierProcessor.GetQueryIdentifiers()
+		//{
+		//    //TODO: interogate the current request.json to determine how many queries exist. Until multi-query implemented, will always be one.
+		//    var queries = new Dictionary<Guid, string>();
+		//    queries.Add(Guid.NewGuid(), "Default Query");
+		//    return queries;
+		//}
 
-        //void IPatientIdentifierProcessor.GenerateLists(Guid requestID, NetworkConnectionMetadata network, RequestMetadata md, IDictionary<Guid, string> outputPaths, string format)
-        //{
-        //    using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
-        //    {
-        //        if (Settings.ContainsKey("MSRequestID"))
-        //        {
-        //            Settings["MSRequestID"] = md.MSRequestID;
-        //        }
-        //        else
-        //        {
-        //            Settings.Add("MSRequestID", md.MSRequestID);
-        //        }
+		//void IPatientIdentifierProcessor.GenerateLists(Guid requestID, NetworkConnectionMetadata network, RequestMetadata md, IDictionary<Guid, string> outputPaths, string format)
+		//{
+		//    using(QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
+		//    {
+		//        if (Settings.ContainsKey("MSRequestID"))
+		//        {
+		//            Settings["MSRequestID"] = md.MSRequestID;
+		//        }
+		//        else
+		//        {
+		//            Settings.Add("MSRequestID", md.MSRequestID);
+		//        }
 
-        //        adapter.Initialize(Settings);
-        //        adapter.GeneratePatientIdentifierLists(_request, outputPaths, format);
-        //    }
-        //}
+		//        adapter.Initialize(Settings);
+		//        adapter.GeneratePatientIdentifierLists(_request, outputPaths, format);
+		//    }
+		//}
 
-        //void IPatientIdentifierProcessor.SetPatientIdentifierSources(IDictionary<Guid, string> inputPaths)
-        //{
-        //    //TODO: accept the input paths and store the identifiers, to be used when the adapter queries are run.
-        //    throw new NotImplementedException();
-        //}
+		//void IPatientIdentifierProcessor.SetPatientIdentifierSources(IDictionary<Guid, string> inputPaths)
+		//{
+		//    //TODO: accept the input paths and store the identifiers, to be used when the adapter queries are run.
+		//    throw new NotImplementedException();
+		//}
 
-        public class DocumentEx
+		public class DocumentEx
         {
             public DocumentEx()
             {

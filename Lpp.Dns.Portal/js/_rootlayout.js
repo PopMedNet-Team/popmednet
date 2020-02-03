@@ -217,6 +217,7 @@ var Permissions;
         Request.OverrideDataMartRoutingStatus = '7A401F1F-46C2-4F6F-9FAE-AE94A6DDB21F';
         Request.ApproveRejectResponse = 'A58791B5-E8AF-48D0-B9CD-ED0B54E564E6';
         Request.ChangeRoutingsAfterSubmission = 'FDEE0BA5-AC09-4580-BAA4-496362985BF7';
+        Request.SkipSubmissionApproval = '39683790-A857-4247-85DF-A9B425AC79CC';
         return Request;
     }());
     Permissions.Request = Request;

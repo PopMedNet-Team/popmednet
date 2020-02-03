@@ -207,7 +207,13 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         throw new Exception("At least one routing needs to be specified when submitting a requests.");
 
                     //prepare the request documents, save created documents same as legacy
-                    IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
+                    //IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
+
+                    Guid[] documentRevisionSets = await (from d in db.Documents.AsNoTracking()
+                                                      join ar in db.ActionReferences on d.ItemID equals ar.TaskID
+                                                      where ar.ItemID == _entity.ID
+                                                      && d.RevisionSetID.HasValue
+                                                      select d.RevisionSetID.Value).Distinct().ToArrayAsync();
 
                     IEnumerable<Document> documents = await (from d in db.Documents.AsNoTracking()
                                                              join x in (
@@ -251,7 +257,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         currentResponse.SubmittedOn = DateTime.UtcNow;
 
                         //add the request document associations
-                        for (int i = 0; i < documentRevisionSets.Count; i++)
+                        for (int i = 0; i < documentRevisionSets.Count(); i++)
                         {
                             db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
                         }
@@ -268,7 +274,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     //update the request.json term value to include system generated documents revisionsetIDs
                     termValues.Documents.Clear();
 
-                    for (int i = 0; i < documentRevisionSets.Count; i++)
+                    for (int i = 0; i < documentRevisionSets.Count(); i++)
                     {
                         termValues.Documents.Add(new FileUploadValues.Document { RevisionSetID = documentRevisionSets[i] });
                     }
@@ -357,6 +363,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             }
             else if (activityResultID.Value == ModifyResultID)
             {
+                await db.Entry(_entity).ReloadAsync();
                 //moves back to Request Review
                 var originalStatus = _entity.Status;
                 await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
@@ -364,11 +371,21 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                 await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
 
                 await MarkTaskComplete(task);
-
-                return new CompletionResult
+                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
                 {
-                    ResultID = ModifyResultID
-                };
+                    return new CompletionResult
+                    {
+                        ResultID = ModifyResultID
+                    };
+                }
+                else
+                {
+
+                    return new CompletionResult
+                    {
+                        ResultID = ModifyResultID
+                    };
+                }
             }
             else if (activityResultID.Value == TerminateResultID)
             {

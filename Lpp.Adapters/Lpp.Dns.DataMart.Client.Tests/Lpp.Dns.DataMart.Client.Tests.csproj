@@ -72,6 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
     <Compile Include="CacheRetentionServiceTests.cs" />
     <Compile Include="DocumentDownloadTests.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

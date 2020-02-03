@@ -131,11 +131,11 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
             var processorTypes = (from a in AppDomain.CurrentDomain.GetAssemblies()
                                   from t in a.GetLoadableTypes()
                                   let interfaces = t.GetInterfaces().DefaultIfEmpty()
-                                 where interfaces.Any(i => i == typeof(Lpp.Dns.DataMart.Model.IModelProcessor) || i == typeof(Lpp.Dns.DataMart.Model.IEarlyInitializeModelProcessor))
+                                 where interfaces.Any(i => i == typeof(Model.IModelProcessor) || i == typeof(Model.IEarlyInitializeModelProcessor))
                                  && t.GetConstructor(Type.EmptyTypes) != null
                                  && !t.IsInterface
                                  && t != typeof(ProxyModelProcessor) && t != typeof(ProxyModelProcessorWithEarlyInitialize) && t != typeof(ProxyModelProcessorWithPatientIdentifierCapabilities)
-                                  select interfaces.Any(i =>  i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Lpp.Dns.DataMart.Model.IModelProcessor).ToArray();
+                                  select interfaces.Any(i =>  i == typeof(Model.IEarlyInitializeModelProcessor)) ? Activator.CreateInstance(t) as Model.IEarlyInitializeModelProcessor : Activator.CreateInstance(t) as Model.IModelProcessor).ToArray();
 
             if(processorTypes == null || processorTypes.Length == 0)
             {
@@ -148,12 +148,12 @@ namespace Lpp.Dns.DataMart.Client.DomainManger
                 throw new ProcessorNotFoundException("No processor types with Model Processor ID: " + processorID.ToString("D") + " were found.");
             }
 
-            if (processor is Model.IPatientIdentifierProcessor)
+            if(processor is Model.IPatientIdentifierProcessor)
             {
                 return new ProxyModelProcessorWithPatientIdentifierCapabilities((Model.IPatientIdentifierProcessor)processor);
             }
 
-            if (processor is Model.IEarlyInitializeModelProcessor)
+            if(processor is Model.IEarlyInitializeModelProcessor)
             {
                 return new ProxyModelProcessorWithEarlyInitialize((Model.IEarlyInitializeModelProcessor)processor);
             }

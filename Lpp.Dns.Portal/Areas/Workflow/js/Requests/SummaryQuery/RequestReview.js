@@ -33,33 +33,132 @@ var Workflow;
                 }
                 ViewModel.prototype.PostComplete = function (resultID) {
                     var _this = this;
-                    if (!Requests.Details.rovm.Validate())
-                        return;
-                    var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
-                    Requests.Details.PromptForComment()
-                        .done(function (comment) {
-                        Requests.Details.rovm.Request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
-                        Requests.Details.rovm.Request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions());
-                        var dto = Requests.Details.rovm.Request.toData();
-                        Dns.WebApi.Requests.CompleteActivity({
-                            DemandActivityResultID: resultID,
-                            Dto: dto,
-                            DataMarts: selectedDataMarts,
-                            Data: JSON.stringify(_this.AbortRejectMessage()),
-                            Comment: comment
-                        }).done(function (results) {
-                            var result = results[0];
-                            if (result.Uri) {
-                                Global.Helpers.RedirectTo(result.Uri);
+                    debugger;
+                    if (Plugins.Requests.QueryBuilder.Edit.vm !== undefined && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
+                        var deleteFilesDeferred = $.Deferred().resolve();
+                        if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel != null && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.DocumentsToDelete().length > 0) {
+                            deleteFilesDeferred = Dns.WebApi.Documents.Delete(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.DocumentsToDelete(), function (d) { return d.ID; }));
+                        }
+                        deleteFilesDeferred.done(function () {
+                            if (!Requests.Details.rovm.Validate())
+                                return;
+                            var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
+                            if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                                Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
+                                return;
+                            }
+                            var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
+                            if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0) {
+                                Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(function () {
+                                    Requests.Details.PromptForComment().done(function (comment) {
+                                        Dns.WebApi.Requests.CompleteActivity({
+                                            DemandActivityResultID: resultID,
+                                            Dto: Requests.Details.rovm.Request.toData(),
+                                            DataMarts: selectedDataMarts,
+                                            Data: JSON.stringify(null),
+                                            Comment: comment
+                                        }).done(function (results) {
+                                            var result = results[0];
+                                            if (result.Uri) {
+                                                Global.Helpers.RedirectTo(result.Uri);
+                                            }
+                                            else {
+                                                //Update the request etc. here 
+                                                Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                                Requests.Details.rovm.UpdateUrl();
+                                            }
+                                        });
+                                    });
+                                }).fail(function () { return; });
                             }
                             else {
-                                //Update the request etc. here 
-                                Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                Requests.Details.rovm.UpdateUrl();
+                                Requests.Details.PromptForComment().done(function (comment) {
+                                    Dns.WebApi.Requests.CompleteActivity({
+                                        DemandActivityResultID: resultID,
+                                        Dto: Requests.Details.rovm.Request.toData(),
+                                        DataMarts: selectedDataMarts,
+                                        Data: JSON.stringify(null),
+                                        Comment: comment
+                                    }).done(function (results) {
+                                        var result = results[0];
+                                        if (result.Uri) {
+                                            Global.Helpers.RedirectTo(result.Uri);
+                                        }
+                                        else {
+                                            //Update the request etc. here 
+                                            Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                            Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                            Requests.Details.rovm.UpdateUrl();
+                                        }
+                                    });
+                                });
                             }
                         });
-                    });
+                    }
+                    else if (Plugins.Requests.QueryBuilder.Edit.vm !== undefined) {
+                        if (!Requests.Details.rovm.Validate())
+                            return;
+                        var emptyCriteraGroups = false;
+                        ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Where.Criteria(), function (item) {
+                            if (item.Criteria().length === 0 && item.Terms().length === 0)
+                                emptyCriteraGroups = true;
+                        });
+                        if (emptyCriteraGroups) {
+                            Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
+                            return;
+                        }
+                        var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
+                        Requests.Details.PromptForComment()
+                            .done(function (comment) {
+                            Requests.Details.rovm.Request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
+                            Requests.Details.rovm.Request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions());
+                            var dto = Requests.Details.rovm.Request.toData();
+                            Dns.WebApi.Requests.CompleteActivity({
+                                DemandActivityResultID: resultID,
+                                Dto: dto,
+                                DataMarts: selectedDataMarts,
+                                Data: JSON.stringify(_this.AbortRejectMessage()),
+                                Comment: comment
+                            }).done(function (results) {
+                                var result = results[0];
+                                if (result.Uri) {
+                                    Global.Helpers.RedirectTo(result.Uri);
+                                }
+                                else {
+                                    //Update the request etc. here 
+                                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                    Requests.Details.rovm.UpdateUrl();
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        Requests.Details.PromptForComment()
+                            .done(function (comment) {
+                            Dns.WebApi.Requests.CompleteActivity({
+                                DemandActivityResultID: resultID,
+                                Dto: Requests.Details.rovm.Request.toData(),
+                                DataMarts: Requests.Details.rovm.RequestDataMarts().map(function (item) {
+                                    return item.toData();
+                                }),
+                                Data: JSON.stringify(_this.AbortRejectMessage()),
+                                Comment: comment
+                            }).done(function (results) {
+                                var result = results[0];
+                                if (result.Uri) {
+                                    Global.Helpers.RedirectTo(result.Uri);
+                                }
+                                else {
+                                    //Update the request etc. here 
+                                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                                    Requests.Details.rovm.UpdateUrl();
+                                }
+                            });
+                        });
+                    }
                 };
                 ViewModel.prototype.Abort = function () {
                     var _this = this;

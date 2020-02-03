@@ -19,10 +19,13 @@ var Workflow;
         var CreateRequest;
         (function (CreateRequest) {
             var vm;
+            var SaveResultID = 'DFF3000B-B076-4D07-8D83-05EDE3636F4D';
+            var SubmitResultID = '48B20001-BD0B-425D-8D49-A3B5015A2258';
             var ViewModel = /** @class */ (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
+                    _this.SubmitButtonText = ko.observable('Submit');
                     _this.Request = Requests.Details.rovm.Request;
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
                         //call function on the composer to update routing info
@@ -39,10 +42,10 @@ var Workflow;
                         deleteFilesDeferred.done(function () {
                             if (!Requests.Details.rovm.Validate())
                                 return;
-                            if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0) {
+                            if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents().length === 0 && resultID == SubmitResultID) {
                                 Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(function () {
                                     var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
-                                    if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                                    if (selectedDataMartIDs.length == 0 && resultID != SaveResultID) {
                                         Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
                                         return;
                                     }
@@ -76,7 +79,7 @@ var Workflow;
                             }
                             else {
                                 var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
-                                if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                                if (selectedDataMartIDs.length == 0 && resultID != SaveResultID) {
                                     Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
                                     return;
                                 }
@@ -124,7 +127,7 @@ var Workflow;
                         if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
                             return;
                         var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
-                        if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                        if (selectedDataMartIDs.length == 0 && resultID != SaveResultID) {
                             Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
                             return;
                         }
@@ -166,7 +169,7 @@ var Workflow;
                 var bindingControl = $("#DefaultCreateRequest");
                 vm = new ViewModel(bindingControl);
                 ko.applyBindings(vm, bindingControl[0]);
-                Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+                Requests.Details.rovm.SaveRequestID(SaveResultID);
                 //Hook up the Query Composer
                 var queryData = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                 var visualTerms = Requests.Details.rovm.VisualTerms;
@@ -178,6 +181,9 @@ var Workflow;
                             request.AdditionalInstructions(Plugins.Requests.QueryBuilder.DataMartRouting.vm.DataMartAdditionalInstructions());
                             return true;
                         });
+                        if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) < 0 && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel == null) {
+                            vm.SubmitButtonText('Submit for Review');
+                        }
                     }
                 });
             });

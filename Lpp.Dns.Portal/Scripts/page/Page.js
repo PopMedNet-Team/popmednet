@@ -754,8 +754,15 @@ var Global;
                     this.destroy();
                 },
                 parameters: parameters,
-                close: function () {
-                    deferred.resolve(kendoWindow.data("kendoWindow").options.returnResults);
+                close: function (e) {
+                    if (e.userTriggered) {
+                        //userTriggered will be true if the close action has been triggered by the user clicking the close button or escape key -> cancel.
+                        deferred.reject();
+                    }
+                    else {
+                        //close was triggered programatically by clicking an action button in the window
+                        deferred.resolve(kendoWindow.data("kendoWindow").options.returnResults);
+                    }
                 }
             });
             return deferred;

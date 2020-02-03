@@ -1,10 +1,6 @@
 ﻿<script src="/areas/controls/js/wffileupload/common.js"></script>
 <script src="/areas/controls/js/wffileupload/fortask.js"></script>
 
-@{
-    Layout = "~/Views/_DialogLayout.cshtml";
-}
-
 <style>
     #fsFTPCredentials legend {
         font-size:1em;
@@ -30,14 +26,14 @@
                 <div class="panel-body">
                     <input name="files" id="files" type="file" data-bind="kendoUpload: {
                         async: {
-						    withCredentials: false,
-                            autoUpload: false,
-                            saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
-						    chunkSize: 25000000,
-						    concurrent: false, 
-							autoRetryAfter: 300, 
-							maxAutoRetries: 5
-						},
+														withCredentials: false,
+														autoUpload: false,
+														saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
+														chunkSize: 25000000,
+														concurrent: false, 
+														autoRetryAfter: 300, 
+														maxAutoRetries: 5
+												},
                         success: onFileUploadCompleted,
                         upload: onFileUpload,
                         error: onFileUploadError

@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>3d345ed0</NuGetPackageImportStamp>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.9.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.9.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.9.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="CodeFirstStoreFunctions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.1.1\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
     </Reference>
@@ -2933,6 +2933,22 @@
     <Compile Include="Migrations\201806271937364_RemoveBigModularProgramWorkflow.Designer.cs">
       <DependentUpon>201806271937364_RemoveBigModularProgramWorkflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs" />
+    <Compile Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.Designer.cs">
+      <DependentUpon>201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809300107468_AddRejectWorkflowCompletionStepForSummarywF.cs" />
+    <Compile Include="Migrations\201809300107468_AddRejectWorkflowCompletionStepForSummarywF.Designer.cs">
+      <DependentUpon>201809300107468_AddRejectWorkflowCompletionStepForSummarywF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812071939466_BlankMigration.cs" />
+    <Compile Include="Migrations\201812071939466_BlankMigration.Designer.cs">
+      <DependentUpon>201812071939466_BlankMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.cs" />
+    <Compile Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.Designer.cs">
+      <DependentUpon>201901211640465_FixSummaryWorkflowToMatchDefault.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3687,6 +3703,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806271937364_RemoveBigModularProgramWorkflow.resx">
       <DependentUpon>201806271937364_RemoveBigModularProgramWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809300024359_ChangeDataCheckerWFRejectCompletionMap.resx">
+      <DependentUpon>201809300024359_ChangeDataCheckerWFRejectCompletionMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809300107468_AddRejectWorkflowCompletionStepForSummarywF.resx">
+      <DependentUpon>201809300107468_AddRejectWorkflowCompletionStepForSummarywF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812071939466_BlankMigration.resx">
+      <DependentUpon>201812071939466_BlankMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901211640465_FixSummaryWorkflowToMatchDefault.resx">
+      <DependentUpon>201901211640465_FixSummaryWorkflowToMatchDefault.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

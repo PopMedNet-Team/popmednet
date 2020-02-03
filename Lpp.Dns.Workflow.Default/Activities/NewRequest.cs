@@ -140,8 +140,16 @@ namespace Lpp.Dns.Workflow.Default.Activities
                 var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, _entity, filters, PermissionIdentifiers.Request.SkipSubmissionApproval);
                 await db.Entry(_entity).ReloadAsync();
 
+                var originalStatus = _entity.Status;
+
                 if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type == FileUploadTermID) || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type == FileUploadTermID))))
                 {
+                    if (!permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
+                    {
+                        //file distribution never requires review before submission, add the permission if the user does not have it.
+                        permissions = new[] { PermissionIdentifiers.Request.SkipSubmissionApproval };
+                    }
+
                     await db.LoadCollection(_entity, (r) => r.DataMarts);
 
                     if (!_entity.DataMarts.Any())
@@ -175,8 +183,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     //save the changes to the request now since the trigger for routings will change the status invalidating the object before save
                     await db.SaveChangesAsync();
                     await db.Entry(_entity).ReloadAsync();
-
-                    var originalStatus = _entity.Status;
+                    
                     await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
 
                     foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == 0 || dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval || dm.Status == DTO.Enums.RoutingStatus.Draft))
@@ -265,12 +272,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     await db.SaveChangesAsync();
 
                     document.SetData(db, documentContent);
-
-
-                    //await db.SaveChangesAsync();
-
-                    await db.Entry(_entity).ReloadAsync();
-
+                    
                     _entity.SubmittedByID = _workflow.Identity.ID;
                     _entity.SubmittedOn = DateTime.UtcNow;
                     _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
@@ -284,6 +286,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     DTO.Enums.RequestStatuses newRequestStatus = DTO.Enums.RequestStatuses.AwaitingRequestApproval;
 
                     await db.LoadCollection(_entity, (r) => r.DataMarts);
+
+                    //set the request status, but do not refresh the entity yet
+                    await SetRequestStatus(newRequestStatus, false);
 
                     if (permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
@@ -311,13 +316,11 @@ namespace Lpp.Dns.Workflow.Default.Activities
                         }
                     }
 
-                    _entity.Status = newRequestStatus;
-
                     await db.SaveChangesAsync();
 
                     await db.Entry(_entity).ReloadAsync();
-                    await SetRequestStatus(newRequestStatus);
 
+                    await NotifyRequestStatusChanged(originalStatus, newRequestStatus);
                 }
 
                 await MarkTaskComplete(task);

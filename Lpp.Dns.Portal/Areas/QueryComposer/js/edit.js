@@ -31,6 +31,7 @@ var Plugins;
                     function ViewModel(bindingControl, rawRequestData, projectID, requestID) {
                         var _this = _super.call(this, bindingControl) || this;
                         _this.MDQ = ko.observable();
+                        _this.UploadViewModel = null;
                         var self = _this;
                         _this.IsTemplateEdit = ko.observable(false);
                         _this.fileUpload = ko.observable(false);
