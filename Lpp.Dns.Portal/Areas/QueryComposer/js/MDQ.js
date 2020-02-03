@@ -439,7 +439,6 @@ var Plugins;
                                     self.GetCompatibleDataMarts();
                                 } //end of successful parsing response guard clause
                             }).fail(function (err) {
-                                debugger;
                             }); //end of the import promise
                         }; //end of on upload action
                         self.showCodeListUpload = ko.pureComputed(function () {
@@ -732,6 +731,7 @@ var Plugins;
                         }
                     };
                     ViewModel.prototype.AddField = function (data, parent, event) {
+                        var self = this;
                         SuspendDataMartTimer();
                         var fieldsToAdd = [];
                         var selectFields = parent.Fields();
@@ -763,6 +763,13 @@ var Plugins;
                             parent.Fields.push(fieldsToAdd[i]);
                             if (i < fieldsToAdd.length - 1)
                                 SuspendDataMartTimer();
+                        }
+                        if (data.TermID.toUpperCase() == MDQ.Terms.PatientReportedOutcomeEncounterID && self.Request.TemporalEvents().length == 0) {
+                            var dto = new Dns.ViewModels.QueryComposerTemporalEventViewModel();
+                            dto.IndexEventDateIdentifier("HOSPITALIZATION_DATE");
+                            dto.DaysBefore(7);
+                            dto.DaysAfter(7);
+                            self.Request.TemporalEvents.push(dto);
                         }
                     };
                     ViewModel.prototype.TemplateSelector = function (data) {
@@ -933,6 +940,7 @@ var Plugins;
                         });
                     };
                     ViewModel.prototype.DeleteField = function (data, selectFields) {
+                        var self = this;
                         SuspendDataMartTimer();
                         /** removes the count as well **/
                         var fieldsToRemove = ko.utils.arrayFilter(selectFields.Fields(), function (field) {
@@ -942,6 +950,9 @@ var Plugins;
                             selectFields.Fields.remove(fieldsToRemove[i]);
                             if (i < fieldsToRemove.length - 1)
                                 SuspendDataMartTimer();
+                        }
+                        if (data.Type().toUpperCase() == MDQ.Terms.PatientReportedOutcomeEncounterID) {
+                            self.Request.TemporalEvents.removeAll();
                         }
                     };
                     ViewModel.prototype.ShowSubCriteriaConjuction = function (parentCriteria, subCriteria) {
@@ -1022,7 +1033,11 @@ var Plugins;
                         //Vitals Measure Date
                         MDQ.Terms.VitalsMeasureDateID,
                         // Procedure Codes
-                        MDQ.Terms.ProcedureCodesID
+                        MDQ.Terms.ProcedureCodesID,
+                        //TrialID
+                        MDQ.Terms.TrialID,
+                        //PatientReportedOutcome
+                        MDQ.Terms.PatientReportedOutcomeID,
                     ];
                     /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
                     ViewModel.NonCodeGroupedTerms = [
@@ -1066,6 +1081,10 @@ var Plugins;
                         MDQ.Terms.ZipCodeID,
                         //Vitals Measure Date
                         MDQ.Terms.VitalsMeasureDateID,
+                        //TrialID
+                        MDQ.Terms.TrialID,
+                        //PatientReportedOutcome
+                        MDQ.Terms.PatientReportedOutcomeID,
                     ];
                     return ViewModel;
                 }(Global.PageViewModel));
@@ -1123,7 +1142,8 @@ var Plugins;
                                 jTemplate = {
                                     Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, DueDate: null, Priority: null, QueryType: queryTemplate.QueryType, SubmittedOn: null },
                                     Where: { Criteria: [json] },
-                                    Select: { Fields: [json] }
+                                    Select: { Fields: [json] },
+                                    TemporalEvents: []
                                 };
                             }
                             else {

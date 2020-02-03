@@ -52,6 +52,11 @@ namespace Lpp.Dns.DTO.Enums
         /// Indicates the task reference is to a Project.
         /// </summary>
         [EnumMember]
-        Project = 8
+        Project = 8,
+        /// <summary>
+        /// Indicates the task reference is to a a Request Attachment
+        /// </summary>
+        [EnumMember]
+        RequestAttachment = 9
     }
 }

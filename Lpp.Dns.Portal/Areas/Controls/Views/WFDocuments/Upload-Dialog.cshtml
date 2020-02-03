@@ -4,8 +4,11 @@
 @section Head{
     <script src="/areas/controls/js/wfdocuments/upload.js"></script>
     <style>
-        button.k-upload-selected {
+        #upload-panel button.k-upload-selected {
             display:none;
+        }
+        #upload-panel button.k-clear-selected {
+            display: none;
         }
     </style>
 }
@@ -37,13 +40,13 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <label for="txtName">Document Name<em>*</em></label>
+                <label for="txtName"><span data-bind="text:UploadDocumentType"></span> Name<em>*</em></label>
                 <input type="text" id="txtName" name="txtName" data-bind="value:DocumentName" class="form-control" maxlength="255" required />
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <label for="txtDescription">Document Description <small>(optional)</small></label>
+                <label for="txtDescription"><span data-bind="text:UploadDocumentType"></span> Description <small>(optional)</small></label>
                 <textarea id="txtDescription" name="txtDescription" rows="3" data-bind="value:Description" class="form-control"></textarea>
             </div>
         </div>

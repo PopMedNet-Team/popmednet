@@ -159,6 +159,46 @@ namespace Lpp.Dns.Api.Tests.Documents
             Console.WriteLine("Finished updating document content.");
         }
 
+        [TestMethod]
+        public void CopyRequestDocument()
+        {
+            //This is a helper method to replicate an issue where two documents were uploaded for the same route
+            Guid sourceDocumentID = new Guid("");
+
+            using(var db = new DataContext())
+            {
+                var user = db.Users.Where(u => u.UserName == "SystemAdministrator").Select(u => new { u.ID, u.UserName, Name = (u.FirstName + " " + u.LastName).Trim(), u.OrganizationID }).First();
+                var identity = new Utilities.Security.ApiIdentity(user.ID, user.UserName, user.Name, user.OrganizationID);
+                System.Threading.Thread.CurrentPrincipal = new System.Security.Principal.GenericPrincipal(identity, null);
+
+                var sourceDocument = db.Documents.Single(d => d.ID == sourceDocumentID);
+
+                var document = new Document
+                {
+                    Name = sourceDocument.Name,
+                    MimeType = sourceDocument.MimeType,
+                    FileName = sourceDocument.FileName,
+                    ItemID = sourceDocument.ItemID,
+                    Kind = sourceDocument.Kind,
+                    Length = sourceDocument.Length,
+                    UploadedByID = sourceDocument.UploadedByID,
+                    Viewable = sourceDocument.Viewable
+
+                };
+                document.RevisionSetID = document.ID;
+
+                var sourceRequestDocument = db.RequestDocuments.First(rd => rd.RevisionSetID == sourceDocument.RevisionSetID);
+
+                db.Documents.Add(document);
+                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, DocumentType = DTO.Enums.RequestDocumentType.Output, ResponseID = sourceRequestDocument.ResponseID });
+
+                db.SaveChanges();
+
+                document.CopyData(db, sourceDocumentID);
+            }
+
+        }
+
         internal class DocumentDetails
         {
             public Guid ID { get; set; }

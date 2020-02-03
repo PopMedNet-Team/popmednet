@@ -37,7 +37,7 @@ namespace Lpp.Dns.Api.Documents
         [HttpGet]
         public IEnumerable<Lpp.Dns.DTO.ExtendedDocumentDTO> ByTask([FromUri]IEnumerable<Guid> tasks, [FromUri]IEnumerable<DTO.Enums.TaskItemTypes> filterByTaskItemType = null)
         {
-            var baseAcls = DataContext.ProjectRequestTypeWorkflowActivities.FilterAcl(Identity, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewDocuments);
+            var baseAcls = DataContext.ProjectRequestTypeWorkflowActivities.FilterAcl(Identity, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewDocuments, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewAttachments);
             IEnumerable<Guid> baseA = baseAcls.Where(a => a.Allowed).Select(a => a.WorkflowActivityID);
 
            var acls = from reference in DataContext.ActionReferences

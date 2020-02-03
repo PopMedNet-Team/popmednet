@@ -166,7 +166,8 @@ module Templates.Details {
                 jTemplate = {
                     Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, SubmittedOn: null },
                     Where: { Criteria: [<Dns.Interfaces.IQueryComposerCriteriaDTO> json] },
-                    Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO> json] }
+                    Select: { Fields: [<Dns.Interfaces.IQueryComposerFieldDTO>json] },
+                    TemporalEvents:[]
                 };
             } else {
                 jTemplate = json;

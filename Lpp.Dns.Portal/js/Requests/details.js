@@ -22,6 +22,7 @@ var Requests;
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 _this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 _this.PhiDisclosureLevelOptions = new Array({ Name: 'Aggregated', Value: 'Aggregated' }, { Name: 'Limited', Value: 'Limited' }, { Name: 'De-identified', Value: 'De-identified' }, { Name: 'PHI', Value: 'PHI' });
+                _this.AttachmentsDocuments = ko.observableArray([]);
                 _this.ValidationFunctions = [];
                 _this.SaveFunctions = [];
                 _this.SaveFormFunctions = [];
@@ -635,6 +636,8 @@ var Requests;
                 Permissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
                 Permissions.ProjectRequestTypeWorkflowActivities.ViewTask,
                 Permissions.ProjectRequestTypeWorkflowActivities.EditTask,
+                Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments,
+                Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments,
                 Permissions.ProjectRequestTypeWorkflowActivities.ViewComments,
                 Permissions.ProjectRequestTypeWorkflowActivities.AddComments,
                 Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments,
@@ -751,6 +754,7 @@ var Requests;
                 var viewComments = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewComments.toLowerCase(); }) != null;
                 var viewTask = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTask.toLowerCase(); }) != null;
                 var viewDocuments = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments.toLowerCase(); }) != null;
+                var viewAttachments = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments.toLowerCase(); }) != null;
                 var assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.Request.AssignRequestLevelNotifications.toLowerCase(); }) != null;
                 var viewTrackingTable = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase(); }) != null;
                 // Load the view of the criteria only if #viewQueryComposer element is present
@@ -781,11 +785,45 @@ var Requests;
                     });
                 }
                 if (viewComments || viewOverview) {
-                    $.when(Dns.WebApi.Comments.ByRequestID(request.ID() || Constants.GuidEmpty, null), Dns.WebApi.Comments.GetDocumentReferencesByRequest(request.ID() || Constants.GuidEmpty, null)).done(function (comments, documentReferences) {
+                    $.when(Dns.WebApi.Comments.ByRequestID(request.ID() || Constants.GuidEmpty, null), Dns.WebApi.Comments.GetDocumentReferencesByRequest(request.ID() || Constants.GuidEmpty, null), Dns.WebApi.Documents.ByTask(tasks.map(function (m) { return m.ID; }), null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc')).done(function (comments, documentReferences, docs) {
                         if (viewOverview) {
                             var nonTaskComments = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID == null; });
                             var nonTaskDocumentReferences = ko.utils.arrayFilter(documentReferences, function (d) { return ko.utils.arrayFirst(nonTaskComments, function (c) { return c.ID == d.CommentID; }) != null; });
                             overallCommentsVM.RefreshDataSource(nonTaskComments, nonTaskDocumentReferences);
+                        }
+                        if (viewAttachments) {
+                            var sets_1 = [];
+                            ko.utils.arrayForEach(docs, function (item) {
+                                if (item.Kind === "Attachment.Input" || item.Kind === "Attachment.Output") {
+                                    var alreadyAdded = ko.utils.arrayFilter(sets_1, function (childItem) { return item.RevisionSetID === childItem.RevisionSetID; });
+                                    if (alreadyAdded.length === 0) {
+                                        var filtered = ko.utils.arrayFilter(docs, function (childItems) { return item.RevisionSetID === childItems.RevisionSetID; });
+                                        if (filtered.length > 1) {
+                                            filtered.sort(function (a, b) {
+                                                //sort by version number - highest to lowest, and then date created - newest to oldest
+                                                if (a.MajorVersion === b.MajorVersion) {
+                                                    if (a.MinorVersion === b.MinorVersion) {
+                                                        if (a.BuildVersion === b.BuildVersion) {
+                                                            if (a.RevisionVersion === b.RevisionVersion) {
+                                                                return b.CreatedOn - a.CreatedOn;
+                                                            }
+                                                            return b.RevisionVersion - a.RevisionVersion;
+                                                        }
+                                                        return b.BuildVersion - a.BuildVersion;
+                                                    }
+                                                    return b.MinorVersion - a.MinorVersion;
+                                                }
+                                                return b.MajorVersion - a.MajorVersion;
+                                            });
+                                            sets_1.push(filtered[0]);
+                                        }
+                                        else {
+                                            sets_1.push(item);
+                                        }
+                                    }
+                                }
+                            });
+                            Details.rovm.AttachmentsDocuments(sets_1);
                         }
                         if (viewComments) {
                             var taskComments = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID != null; });
@@ -794,7 +832,7 @@ var Requests;
                         }
                     });
                 }
-                if (viewDocuments) {
+                if (viewDocuments || viewAttachments) {
                     var activityDocumentsVM = null;
                     //task specific documents                
                     if (currentTask != null) {
@@ -840,7 +878,7 @@ var Requests;
                     }
                     var overallDocumentsVM = null;
                     //non-task specific documents (request documents)
-                    if (viewOverview) {
+                    if (viewOverview && viewDocuments) {
                         overallDocumentsVM = Controls.WFDocuments.List.initForRequest(request.ID(), $('#OverviewDocuments'), screenPermissions);
                         overallDocumentsVM.NewDocumentUploaded.subscribe(function (newDocument) {
                             //get comments for the document

@@ -71,7 +71,8 @@ namespace Lpp.Dns.DTO.DataMartClient
         public IEnumerable<RequestRouting> Routings { get; set; }
         [DataMember]
         public IEnumerable<Response> Responses { get; set; }
-
+        [DataMember]
+        public IEnumerable<DocumentWithID> Attachments { get; set; }
         [DataMember]
         public string PurposeOfUse { get; set; }
         [DataMember]

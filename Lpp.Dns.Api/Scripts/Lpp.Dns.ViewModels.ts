@@ -6050,6 +6050,39 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class QueryComposerTemporalEventViewModel extends ViewModel<Dns.Interfaces.IQueryComposerTemporalEventDTO>{
+	 	 public IndexEventDateIdentifier: KnockoutObservable<string>;
+	 	 public DaysBefore: KnockoutObservable<number>;
+	 	 public DaysAfter: KnockoutObservable<number>;
+	 	 public Criteria: KnockoutObservableArray<QueryComposerCriteriaViewModel>;
+	 	 constructor(QueryComposerTemporalEventDTO?: Dns.Interfaces.IQueryComposerTemporalEventDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerTemporalEventDTO== null) {
+	 	 	 	 this.IndexEventDateIdentifier = ko.observable<any>();
+	 	 	 	 this.DaysBefore = ko.observable<any>();
+	 	 	 	 this.DaysAfter = ko.observable<any>();
+	 	 	 	 this.Criteria = ko.observableArray<QueryComposerCriteriaViewModel>();
+	 	 	  }else{
+	 	 	 	 this.IndexEventDateIdentifier = ko.observable(QueryComposerTemporalEventDTO.IndexEventDateIdentifier);
+	 	 	 	 this.DaysBefore = ko.observable(QueryComposerTemporalEventDTO.DaysBefore);
+	 	 	 	 this.DaysAfter = ko.observable(QueryComposerTemporalEventDTO.DaysAfter);
+	 	 	 	 this.Criteria = ko.observableArray<QueryComposerCriteriaViewModel>(QueryComposerTemporalEventDTO.Criteria == null ? null : QueryComposerTemporalEventDTO.Criteria.map((item) => {return new QueryComposerCriteriaViewModel(item);}));
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerTemporalEventDTO{
+	 	 	  return {
+	 	 	 	IndexEventDateIdentifier: this.IndexEventDateIdentifier(),
+	 	 	 	DaysBefore: this.DaysBefore(),
+	 	 	 	DaysAfter: this.DaysAfter(),
+	 	 	 	Criteria: this.Criteria == null ? null : this.Criteria().map((item) => {return item.toData();}),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class SectionSpecificTermViewModel extends ViewModel<Dns.Interfaces.ISectionSpecificTermDTO>{
 	 	 public TermID: KnockoutObservable<any>;
 	 	 public Section: KnockoutObservable<Dns.Enums.QueryComposerSections>;
@@ -9646,6 +9679,7 @@ module Dns.ViewModels {
 	 	 public Header: QueryComposerHeaderViewModel;
 	 	 public Where: QueryComposerWhereViewModel;
 	 	 public Select: QueryComposerSelectViewModel;
+	 	 public TemporalEvents: KnockoutObservableArray<QueryComposerTemporalEventViewModel>;
 	 	 constructor(QueryComposerRequestDTO?: Dns.Interfaces.IQueryComposerRequestDTO)
 	 	  {
 	 	 	  super();
@@ -9653,12 +9687,14 @@ module Dns.ViewModels {
 	 	 	 	 this.Header = new QueryComposerHeaderViewModel();
 	 	 	 	 this.Where = new QueryComposerWhereViewModel();
 	 	 	 	 this.Select = new QueryComposerSelectViewModel();
+	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>();
 	 	 	 	 this.ID = ko.observable<any>();
 	 	 	 	 this.Timestamp = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.Header = new QueryComposerHeaderViewModel(QueryComposerRequestDTO.Header);
 	 	 	 	 this.Where = new QueryComposerWhereViewModel(QueryComposerRequestDTO.Where);
 	 	 	 	 this.Select = new QueryComposerSelectViewModel(QueryComposerRequestDTO.Select);
+	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>(QueryComposerRequestDTO.TemporalEvents == null ? null : QueryComposerRequestDTO.TemporalEvents.map((item) => {return new QueryComposerTemporalEventViewModel(item);}));
 	 	 	 	 this.ID = ko.observable(QueryComposerRequestDTO.ID);
 	 	 	 	 this.Timestamp = ko.observable(QueryComposerRequestDTO.Timestamp);
 	 	 	 }
@@ -9669,6 +9705,7 @@ module Dns.ViewModels {
 	 	 	 	Header: this.Header.toData(),
 	 	 	 	Where: this.Where.toData(),
 	 	 	 	Select: this.Select.toData(),
+	 	 	 	TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map((item) => {return item.toData();}),
 	 	 	 	ID: this.ID(),
 	 	 	 	Timestamp: this.Timestamp(),
 	 	 	  };

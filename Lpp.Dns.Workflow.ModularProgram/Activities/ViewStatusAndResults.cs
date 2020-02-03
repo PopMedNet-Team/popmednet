@@ -157,6 +157,22 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
 
                 string[] datamartIDs = data.Split(',');
 
+                var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                  && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                  && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                 )
+                                                 .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                var attachments = await (from doc in db.Documents.AsNoTracking()
+                                         join x in (
+                                                 db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                 .GroupBy(k => k.RevisionSetID)
+                                                 .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                             ) on doc.ID equals x
+                                         where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                         orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                         select doc).ToArrayAsync();
+
                 foreach (var guid in datamartIDs)
                 {
                     Guid dmGuid = new Guid(guid);
@@ -172,6 +188,11 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
                     foreach(var revisionSetID in termValues.Documents.Select(d => d.RevisionSetID))
                     {
                         db.RequestDocuments.Add(new RequestDocument { DocumentType = DTO.Enums.RequestDocumentType.Input, ResponseID = rsp.ID, RevisionSetID = revisionSetID });
+                    }
+
+                    foreach (var attachment in attachments)
+                    {
+                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = rsp.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
                     }
 
                 }
@@ -316,6 +337,23 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
                                                      && resubmitModel.Responses.Contains(rd.ResponseID)
                                                      select new { RequestDataMartID = rd.Response.RequestDataMartID, RevisionSetID = rd.RevisionSetID }).ToArrayAsync();
 
+                var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                  && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                  && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                 )
+                                                 .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                //attachments are associated to the task they were uploaded on, any existing attachment should be included with the routing
+                var attachments = await (from doc in db.Documents.AsNoTracking()
+                                         join x in (
+                                                 db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                 .GroupBy(k => k.RevisionSetID)
+                                                 .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                             ) on doc.ID equals x
+                                         where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                         orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                         select doc).ToArrayAsync();
+
                 DateTime reSubmittedOn = DateTime.UtcNow;
                 foreach (var dm in datamarts)
                 {
@@ -329,6 +367,11 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
                     foreach (var requestDoc in previousInputRequestDocuments.Where(rd => rd.RequestDataMartID == dm.ID))
                     {
                         db.RequestDocuments.Add(new RequestDocument { ResponseID = response.ID, RevisionSetID = requestDoc.RevisionSetID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                    }
+
+                    foreach (var attachment in attachments)
+                    {
+                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = response.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
                     }
                 }
                 

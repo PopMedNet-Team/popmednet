@@ -26,13 +26,13 @@ SUM(IIF(ISNULL(SummaryData.m180Q2), 0, SummaryData.m180Q2)) AS Members180Q2,
 SUM(IIF(ISNULL(SummaryData.m180Q3), 0, SummaryData.m180Q3)) AS Members180Q3, 
 SUM(IIF(ISNULL(SummaryData.m180Q4), 0, SummaryData.m180Q4)) AS Members180Q4, 
 SUM(IIF(ISNULL(SummaryData.m270), 0, SummaryData.m270)) AS Members270,
-SUM(IIF(ISNULL(SummaryData.e180), 0, SummaryData.e270)) AS Episodespans270, 
-SUM(IIF(ISNULL(SummaryData.d180), 0, SummaryData.d270)) AS Dispensings270, 
-SUM(IIF(ISNULL(SummaryData.ds180), 0, SummaryData.ds270)) AS DaySupply270, 
-SUM(IIF(ISNULL(SummaryData.m180Q1), 0, SummaryData.m270Q1)) AS Members270Q1, 
-SUM(IIF(ISNULL(SummaryData.m180Q2), 0, SummaryData.m270Q2)) AS Members270Q2, 
-SUM(IIF(ISNULL(SummaryData.m180Q3), 0, SummaryData.m270Q3)) AS Members270Q3, 
-SUM(IIF(ISNULL(SummaryData.m180Q4), 0, SummaryData.m270Q4)) AS Members270Q4
+SUM(IIF(ISNULL(SummaryData.e270), 0, SummaryData.e270)) AS Episodespans270, 
+SUM(IIF(ISNULL(SummaryData.d270), 0, SummaryData.d270)) AS Dispensings270, 
+SUM(IIF(ISNULL(SummaryData.ds270), 0, SummaryData.ds270)) AS DaySupply270, 
+SUM(IIF(ISNULL(SummaryData.m270Q1), 0, SummaryData.m270Q1)) AS Members270Q1, 
+SUM(IIF(ISNULL(SummaryData.m270Q2), 0, SummaryData.m270Q2)) AS Members270Q2, 
+SUM(IIF(ISNULL(SummaryData.m270Q3), 0, SummaryData.m270Q3)) AS Members270Q3, 
+SUM(IIF(ISNULL(SummaryData.m270Q4), 0, SummaryData.m270Q4)) AS Members270Q4
 
 FROM
 
@@ -67,7 +67,7 @@ FROM
 
 			-- Add the enrollment data to the rows (where drug coverage is Y).
 
-			(SELECT * FROM enrollment WHERE drugcov='Y') AS ed
+			(SELECT * FROM enrollment WHERE drugcov='Y' AND medcov='Y') AS ed
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 			
 		)
@@ -116,7 +116,7 @@ LEFT JOIN
 
 		FROM %SD_TABLE% AS sd
 		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y') > 0) 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0) 
 		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
 
 	) AS SummaryData

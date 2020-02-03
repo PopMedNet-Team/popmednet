@@ -190,7 +190,7 @@ namespace Lpp.Dns.Workflow
             var dataMartsDueDate = false;
             foreach (var dm in _entity.DataMarts)
             {
-                if (dm.DueDate.HasValue && dm.DueDate.Value < DateTime.UtcNow)
+                if (dm.DueDate.HasValue && dm.DueDate.Value.Date < DateTime.UtcNow.Date)
                     dataMartsDueDate = true;
             }
             if (dataMartsDueDate)

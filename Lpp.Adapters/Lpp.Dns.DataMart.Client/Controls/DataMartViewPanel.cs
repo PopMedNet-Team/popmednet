@@ -113,10 +113,11 @@ namespace Lpp.Dns.DataMart.Client.Controls
                             
                             if (!string.IsNullOrEmpty(viewUrl))
                             {
-                                ShowMimeType = "application/URL";
+                                
                                
                                 string token = Convert.ToBase64String(Encoding.UTF8.GetBytes(Crypto.EncryptString(string.Format("{0}:{1}:{2}", networkSetting.Username, networkSetting.DecryptedPassword, DateTime.UtcNow.ToString("s")))));
                                 string url = viewUrl + "&token=" + token;
+                                ShowMimeType = "application/URL";
                                 DataSource = url;
                                 return;
                             }
@@ -231,6 +232,22 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
+        public void SetAttachments(IEnumerable<Document> attachments)
+        {
+            this.documents = attachments.ToArray();
+            FileListDataSource = documents ?? new Document[0];
+            if(documents == null || documents.Length == 0)
+            {
+                ShowView = DisplayType.PLAIN;
+            }
+            else
+            {
+                SetColumnsForAttachments();
+                
+                ShowView = DisplayType.FILELIST;
+            }
+        }
+
         public void InitializeResponseDocumentsFromCache(Lib.Caching.DocumentCacheManager cache)
         {
             _cache = cache;
@@ -291,6 +308,12 @@ namespace Lpp.Dns.DataMart.Client.Controls
         /// <param name="e"></param>
         private void FILELIST_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if(e.RowIndex < 0)
+            {
+                //if header click raises event ignore
+                return;
+            }
+
             this.Cursor = Cursors.WaitCursor;
             try
             {
@@ -313,7 +336,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        public IEnumerable<Document> DeleteSelectedFiles()
+        public void DeleteSelectedFiles()
         {
             var selectedDocuments = GetSelectedFiles();
             if (selectedDocuments.Count > 0)
@@ -325,19 +348,25 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         processor.RemoveResponseDocument(requestId, document.DocumentID);
                     }
 
-                    documents = processor.Response(requestId);
+                    
+
+                    if (_cache.Enabled)
+                    {
+                        _cache.Remove(selectedDocuments);
+                        documents = _cache.GetResponseDocuments().ToArray();
+                    }
+                    else
+                    {
+                        documents = processor.Response(requestId);
+                    }
                     FileListDataSource = documents;
                     ShowView = DisplayType.FILELIST;
-
-                    return selectedDocuments;
                 }
 
             }else
             {
                 MessageBox.Show(this.ParentForm, "Please select at least one file first.", "Delete File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            return Array.Empty<Document>();
         }
 
         List<Document> GetSelectedFiles()
@@ -461,7 +490,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             .Subscribe();
         }
 
-        public void AddResponseDocument()
+        public void AddResponseDocument(Action<IEnumerable<Document>> addToCache = null)
         {
             if(openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -479,14 +508,22 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         Properties.Settings.Default.Save();
                         
                         processor.AddResponseDocument(requestId, filepath);
-                        documents = processor.Response(requestId);
-                        FileListDataSource = documents;
+                        var docs = processor.Response(requestId);
+                        if(addToCache != null && _cache.Enabled)
+                        {
+                            addToCache(new[] { docs.LastOrDefault() });
+                            documents = documents.Concat(docs).ToArray();
+                            FileListDataSource = _cache.GetResponseDocuments();
+                        }
+                        else
+                        {
+                            documents = docs;
+                            FileListDataSource = documents;
+                        }
                         ShowView = DisplayType.FILELIST;
                     }
                 }
             }
         }
-
-
     }
 }

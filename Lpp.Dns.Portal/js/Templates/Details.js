@@ -135,7 +135,8 @@ var Templates;
                     jTemplate = {
                         Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, SubmittedOn: null },
                         Where: { Criteria: [json] },
-                        Select: { Fields: [json] }
+                        Select: { Fields: [json] },
+                        TemporalEvents: []
                     };
                 }
                 else {

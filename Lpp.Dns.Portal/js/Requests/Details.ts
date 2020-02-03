@@ -45,6 +45,7 @@ module Requests.Details {
 
         public SetTaskDocumentsViewModel: (viewModel: Controls.WFDocuments.List.ViewModel) => void;
         public RefreshTaskDocuments: () => void;
+        public AttachmentsDocuments: KnockoutObservableArray<Dns.Interfaces.IExtendedDocumentDTO> = ko.observableArray([]);
 
         private ValidationFunctions: Array<(request: Dns.ViewModels.RequestViewModel) => boolean> = [];
         private SaveFunctions: Array<(request: Dns.ViewModels.RequestViewModel) => boolean> = [];
@@ -891,6 +892,8 @@ module Requests.Details {
             Permissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
             Permissions.ProjectRequestTypeWorkflowActivities.ViewTask,
             Permissions.ProjectRequestTypeWorkflowActivities.EditTask,
+            Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments,
+            Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments,
             Permissions.ProjectRequestTypeWorkflowActivities.ViewComments,
             Permissions.ProjectRequestTypeWorkflowActivities.AddComments,
             Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments,
@@ -1095,6 +1098,7 @@ module Requests.Details {
             let viewComments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewComments.toLowerCase()) != null;
             let viewTask = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTask.toLowerCase()) != null;
             let viewDocuments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments.toLowerCase()) != null;
+            let viewAttachments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments.toLowerCase()) != null;
             let assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.Request.AssignRequestLevelNotifications.toLowerCase()) != null;
             let viewTrackingTable = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase()) != null;
       
@@ -1134,13 +1138,55 @@ module Requests.Details {
             if (viewComments || viewOverview) {
                 $.when<any>(
                     Dns.WebApi.Comments.ByRequestID(request.ID() || Constants.GuidEmpty, null),
-                    Dns.WebApi.Comments.GetDocumentReferencesByRequest(request.ID() || Constants.GuidEmpty, null)
-                    ).done((comments: Dns.Interfaces.IWFCommentDTO[], documentReferences: Dns.Interfaces.ICommentDocumentReferenceDTO[]) => {
+                    Dns.WebApi.Comments.GetDocumentReferencesByRequest(request.ID() || Constants.GuidEmpty, null),
+                    Dns.WebApi.Documents.ByTask(tasks.map(m => { return m.ID }), null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc')
+                ).done((comments: Dns.Interfaces.IWFCommentDTO[], documentReferences: Dns.Interfaces.ICommentDocumentReferenceDTO[], docs: Dns.Interfaces.IExtendedDocumentDTO[]) => {
 
                     if (viewOverview) {
                         var nonTaskComments = ko.utils.arrayFilter(comments, c => { return c.WorkflowActivityID == null; });
                         var nonTaskDocumentReferences = ko.utils.arrayFilter(documentReferences, d => { return ko.utils.arrayFirst(nonTaskComments, c => c.ID == d.CommentID) != null });
                         overallCommentsVM.RefreshDataSource(nonTaskComments, nonTaskDocumentReferences);
+                    }
+
+                    if (viewAttachments) {
+                        let sets: Dns.Interfaces.IExtendedDocumentDTO[] = [];
+                        ko.utils.arrayForEach(docs, (item) => {
+                            if (item.Kind === "Attachment.Input" || item.Kind === "Attachment.Output") {
+                                let alreadyAdded = ko.utils.arrayFilter(sets, (childItem) => { return item.RevisionSetID === childItem.RevisionSetID });
+                                if (alreadyAdded.length === 0) {
+                                    let filtered = ko.utils.arrayFilter(docs, (childItems) => { return item.RevisionSetID === childItems.RevisionSetID });
+                                    if (filtered.length > 1) {
+                                        filtered.sort((a: Dns.Interfaces.IExtendedDocumentDTO, b: Dns.Interfaces.IExtendedDocumentDTO) => {
+                                            //sort by version number - highest to lowest, and then date created - newest to oldest
+                                            if (a.MajorVersion === b.MajorVersion) {
+
+                                                if (a.MinorVersion === b.MinorVersion) {
+
+                                                    if (a.BuildVersion === b.BuildVersion) {
+
+                                                        if (a.RevisionVersion === b.RevisionVersion) {
+                                                            return <any>b.CreatedOn - <any>a.CreatedOn;
+                                                        }
+                                                        return b.RevisionVersion - a.RevisionVersion;
+                                                    }
+                                                    return b.BuildVersion - a.BuildVersion;
+
+                                                }
+                                                return b.MinorVersion - a.MinorVersion;
+
+                                            }
+                                            return b.MajorVersion - a.MajorVersion;
+                                        });
+
+                                        sets.push(filtered[0]);
+                                    }
+                                    else {
+                                        sets.push(item);
+                                    }
+                                }
+                            }
+                        });
+                        rovm.AttachmentsDocuments(sets);
                     }
 
                     if (viewComments) {
@@ -1152,7 +1198,7 @@ module Requests.Details {
                 });
             }
 
-            if (viewDocuments) {
+            if (viewDocuments || viewAttachments) {
 
                 let activityDocumentsVM: Controls.WFDocuments.List.ViewModel = null;
                 //task specific documents                
@@ -1207,7 +1253,7 @@ module Requests.Details {
 
                 let overallDocumentsVM: Controls.WFDocuments.List.ViewModel = null;
                 //non-task specific documents (request documents)
-                if (viewOverview) {
+                if (viewOverview && viewDocuments) {
                     overallDocumentsVM = Controls.WFDocuments.List.initForRequest(request.ID(), $('#OverviewDocuments'), screenPermissions);
 
                     overallDocumentsVM.NewDocumentUploaded.subscribe((newDocument: Dns.Interfaces.IExtendedDocumentDTO) => {

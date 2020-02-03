@@ -289,12 +289,19 @@ namespace Lpp.Dns.DataMart.Model
             return status;
         }
 
+
+        const string SQLQUERYRESPONSE_DOCUMENTID = "0E5F4001-DF8E-4EA5-AE28-404C15D354E3";
+        const string VIEWABLERESPONSE_DOCUMENTID = "4A80B341-54CE-4D30-BD8B-8B5980F9DA99";
+        const string STYLES_DOCUMENTID = "AB44BD08-7F02-4BE6-AA03-C3D7DF7FAA5A";
+        const string REFRESHDATES_DOCUMENTID = "4C201DF3-56C0-4247-B144-A9BF3DC38DE4";
+
+
         public Document[] Response(string requestId)
         {
             if (sqlResultDataset != null)
             {
                 Document[] docs = new Document[1];
-                docs[0] = new Document("-1", "x-application/lpp-dns-table", "SummaryQueryResponse.xml");
+                docs[0] = new Document(SQLQUERYRESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "SummaryQueryResponse.xml");
                 docs[0].IsViewable = true;
                 docs[0].Size = sqlResultDataset.GetXml().Length;
 
@@ -309,7 +316,7 @@ namespace Lpp.Dns.DataMart.Model
         {
             BuildResponseDocuments();
             string mimeType = GetMimeType(filePath);
-            Document document = new Document(responseDocument.Length.ToString(), mimeType, filePath);
+            Document document = new Document(SASModelProcessor.NewGuid().ToString("D"), mimeType, filePath);
             IList<Document> responseDocumentList = responseDocument.ToList<Document>();
             responseDocumentList.Add(document);
             responseDocument = responseDocumentList.ToArray<Document>();
@@ -332,19 +339,19 @@ namespace Lpp.Dns.DataMart.Model
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             contentStream = null;
-            if(documentId == "-1") //View SQL
+            if(documentId == SQLQUERYRESPONSE_DOCUMENTID) //View SQL
             {
                 contentStream = CreateMemoryStreamForDataSet(sqlResultDataset);
                 sqlResultDataset = null;
                 return;
             }
-            if (documentId == "0") // Viewable result
+            if (documentId == VIEWABLERESPONSE_DOCUMENTID) // Viewable result
             {
                 contentStream = CreateMemoryStreamForDataSet(viewableResultDataset);
                 return;
             }
 
-            if (documentId == "1")
+            if (documentId == REFRESHDATES_DOCUMENTID)
             {
                 if (hasCellCountAlert)
                     contentStream = new MemoryStream(Encoding.UTF8.GetBytes(styleXml));
@@ -354,7 +361,17 @@ namespace Lpp.Dns.DataMart.Model
                 return;
             }
 
-            contentStream = new FileStream( responseDocument[Convert.ToInt32( documentId )].Filename, FileMode.Open );
+            var document = responseDocument.FirstOrDefault(d => d.DocumentID == documentId);
+            if(document != null)
+            {
+                contentStream = new FileStream(responseDocument[Convert.ToInt32(documentId)].Filename, FileMode.Open);
+            }
+            else
+            {
+                throw new FileNotFoundException("Could not find the response document with ID: " + documentId);
+            }
+
+            
         }
 
         private Stream CreateMemoryStreamForDataSet(DataSet ds)
@@ -544,7 +561,7 @@ namespace Lpp.Dns.DataMart.Model
                 // Metadata request returns two documents, a display version of the metadata result, and processable version.
                 // Summary query requests returns two documents if necessary, the query result and the style document.
                 responseDocument = new Document[IsMetadataRequest || hasCellCountAlert ? 2 : 1];
-                responseDocument[0] = new Document("0", "x-application/lpp-dns-table", "SummaryQueryResponse.xml");
+                responseDocument[0] = new Document(VIEWABLERESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "SummaryQueryResponse.xml");
                 responseDocument[0].IsViewable = true;
                 responseDocument[0].Size = viewableResultDataset.GetXml().Length;
 
@@ -566,13 +583,13 @@ namespace Lpp.Dns.DataMart.Model
                         }
                     }
 
-                    responseDocument[1] = new Document("1", "application/xml", "ViewableDocumentStyle.xml");
+                    responseDocument[1] = new Document(STYLES_DOCUMENTID, "application/xml", "ViewableDocumentStyle.xml");
                     responseDocument[1].IsViewable = false;
                     responseDocument[1].Size = styleXml.Length;
                 }
                 else if (IsMetadataRequest)
                 {
-                    responseDocument[1] = new Document("1", "application/xml", "RefreshDatesResponse.xml");
+                    responseDocument[1] = new Document(REFRESHDATES_DOCUMENTID, "application/xml", "RefreshDatesResponse.xml");
                     responseDocument[1].IsViewable = false;
                     responseDocument[1].Size = metadataResultDataset == null ? 0 : metadataResultDataset.GetXml().Length;
                 }

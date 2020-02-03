@@ -19,11 +19,11 @@
                         <div class="panel-heading">
                             <h3>Selected DataMarts: <small><span class="glyphicon glyphicon-question-sign" title="Results are stratified according to the criteria in the Primary Criteria Group. If no option is selected, a single patient count will be returned." data-html="true"></span></small></h3>
                         </div>
-                        <div class="panel-body">
-                            <div class="row" style="margin:3px;">
-                                <article class="Request-Footer-DataMarts" id="RequestDataMarts">
-                                    @*<input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />*@
-                                    <div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="kendoGrid: {
+												<div class="panel-body">
+														<div class="row" style="margin:3px;">
+																<article class="Request-Footer-DataMarts" id="RequestDataMarts">
+																		@*<input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />*@
+																		<div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="kendoGrid: {
                                         data: DataMarts,
                                         sortable: false,
                                         filterable: false,
@@ -43,20 +43,33 @@
                                             {field: 'DueDate', title: 'Due Date'}
                                             ]
                                     }">
-                                    </div>
-                                    <div style="margin-top: 5px;">
-                                        <button role="button" id="btnDataMartsSelectAll" data-bind="click: $root.DataMartsSelectAll, clickBubble:false" class="btn btn-primary">Select All</button>
-                                        <button role="button" id="btnDataMartsClearAll" data-bind="click: $root.DataMartsClearAll, clickBubble:false" class="btn btn-primary">Clear All</button>
-                                        <button id="btnBulkEdit" data-bind="click: $root.DataMartsBulkEdit, enable: $root.SelectedDataMartIDs().length > 0, clickBubble:false" class="btn btn-primary pull-right">Bulk Edit</button>
-                                    </div>
-                                </article>
-                            </div>
-                            <br />
-                            <div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="Row" style="margin:3px;">
-                                <label for="AdditionalInstructions">Additional Instructions <em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" , style="color:red;">* </em></label>
-                                <textarea name="DataMartsAdditionalInstructions" id="DataMarts_AdditionalInstructions" rows="3" class="form-control" maxlength="3000" style="margin-right:10px;" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: $root.DataMartAdditionalInstructions"></textarea>
-                            </div>
-                        </div>
+																		</div>
+																		<div style="margin-top: 5px;">
+																				<button role="button" id="btnDataMartsSelectAll" data-bind="click: $root.DataMartsSelectAll, clickBubble:false" class="btn btn-primary">Select All</button>
+																				<button role="button" id="btnDataMartsClearAll" data-bind="click: $root.DataMartsClearAll, clickBubble:false" class="btn btn-primary">Clear All</button>
+																				<button id="btnBulkEdit" data-bind="click: $root.DataMartsBulkEdit, enable: $root.SelectedDataMartIDs().length > 0, clickBubble:false" class="btn btn-primary pull-right">Bulk Edit</button>
+																		</div>
+																</article>
+														</div>
+														<br />
+														<div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="Row" style="margin:3px;">
+																<label for="AdditionalInstructions">Additional Instructions <em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" , style="color:red;">* </em></label>
+																<textarea name="DataMartsAdditionalInstructions" id="DataMarts_AdditionalInstructions" rows="3" class="form-control" maxlength="3000" style="margin-right:10px;" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: $root.DataMartAdditionalInstructions"></textarea>
+														</div>
+
+														<!-- ko stopBinding: true -->
+														<article id="attachments_upload" class="panel panel-default" data-bind="visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments) && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)">
+																<div class="panel-heading">
+																		<h3>Attachments</h3>
+																</div>
+																<div>
+																		<article>
+																				@Html.Partial("~/areas/controls/views/wffileupload/forattachments.cshtml")
+																		</article>
+																</div>
+														</article>
+														<!-- /ko-->
+												</div>
                     </article>
 
                     <script id="dataMartsRowTmpl" type="text/html">

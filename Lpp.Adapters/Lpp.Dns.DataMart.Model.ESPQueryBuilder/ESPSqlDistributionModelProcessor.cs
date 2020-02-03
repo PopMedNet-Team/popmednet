@@ -254,7 +254,7 @@ namespace Lpp.Dns.DataMart.Model
         {
             BuildResponseDocuments();
             string mimeType = GetMimeType(filePath);
-            Document document = new Document(responseDocument.Length.ToString(), mimeType, filePath);
+            Document document = new Document(Guid.NewGuid().ToString("D"), mimeType, filePath);
             IList<Document> responseDocumentList = responseDocument.ToList<Document>();
             responseDocumentList.Add(document);
             responseDocument = responseDocumentList.ToArray<Document>();
@@ -274,11 +274,12 @@ namespace Lpp.Dns.DataMart.Model
             }
         }
 
+        const string RESPONSE_DOCUMENTID = "757E51F0-9C0B-4A34-AF0A-AE80D817845B";
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             contentStream = null;
 
-            if ( documentId == "0" )
+            if ( documentId == RESPONSE_DOCUMENTID )
             {
                 var stream = new MemoryStream();
 
@@ -308,7 +309,7 @@ namespace Lpp.Dns.DataMart.Model
             if (resultDataset != null)
             {
                 responseDocument = new Document[1];
-                responseDocument[0] = new Document("0", "x-application/lpp-dns-table", "SQLResponse.xml");
+                responseDocument[0] = new Document(RESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "SQLResponse.xml");
                 responseDocument[0].IsViewable = true;
 
                 using (MemoryStream stream = new MemoryStream())

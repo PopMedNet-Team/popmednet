@@ -5,10 +5,12 @@ module Controls.WFDocuments.Upload {
     export class ViewModel extends Global.DialogViewModel {
         public TaskID: any;
         public RequestID: any;
+        public DocumentKind: string;
         public ParentDocument: Dns.Interfaces.IExtendedDocumentDTO;
         public DocumentName: KnockoutObservable<string>;
         public Description: KnockoutObservable<string>;
         public Comments: KnockoutObservable<string>;
+        public UploadDocumentType: string;
 
         public onSelectFile: (e: any) => void;
         public onUploadFile: (e: any) => void;
@@ -19,10 +21,13 @@ module Controls.WFDocuments.Upload {
             super(bindingControl);
             this.TaskID = this.Parameters.TaskID || null;
             this.RequestID = this.Parameters.RequestID || null;
+            this.DocumentKind = this.Parameters.documentKind || null;
             this.ParentDocument = <Dns.Interfaces.IExtendedDocumentDTO>this.Parameters.ParentDocument || null;
             this.DocumentName = this.ParentDocument == null ? ko.observable('') : ko.observable(this.ParentDocument.Name);
             this.Description = this.ParentDocument == null ? ko.observable('') : ko.observable(this.ParentDocument.Description);
             this.Comments = ko.observable('');
+
+            this.UploadDocumentType = ((this.DocumentKind||'').toLowerCase() === 'attachmentinput') ? 'Attachment' : 'Document';
 
             var self = this;
             this.onSelectFile = (e) => {
@@ -45,7 +50,8 @@ module Controls.WFDocuments.Upload {
                     documentName: self.DocumentName(),
                     description: self.Description(),
                     comments: self.Comments(),
-                    parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null
+                    parentDocumentID: self.ParentDocument != null ? self.ParentDocument.ID : null,
+                    documentKind: self.DocumentKind != null ? self.DocumentKind : null
                 };
 
                 var xhr = e.XMLHttpRequest;
@@ -58,7 +64,7 @@ module Controls.WFDocuments.Upload {
             this.onSuccess = (e) => {
                 //fires when upload is complete with or without errors
                 //on success should close the dialog with the document information
-                self.Close(e.response.Document);
+                self.Close(e.response.Result);
             };
             this.onCancel = () => { self.Close(); };
         }

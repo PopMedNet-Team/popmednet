@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Dns.DTO</RootNamespace>
     <AssemblyName>Lpp.Dns.DTO</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -29,7 +29,7 @@
   <PropertyGroup>
     <DocumentationFile>bin\Lpp.Dns.DTO.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.Objects, Version=6.10.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.Objects, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
@@ -131,6 +131,7 @@
     <Compile Include="Projects\ProjectOrganizationUpdateDTO.cs" />
     <Compile Include="Projects\UpdateProjectRequestTypesDTO.cs" />
     <Compile Include="QueryComposer\DistributedRegressionAnalysisCenterManifestItem.cs" />
+    <Compile Include="QueryComposer\QueryComposerTemporalEventDTO.cs" />
     <Compile Include="QueryComposer\SectionSpecificTermDTO.cs" />
     <Compile Include="QueryComposer\TemplateTermDTO.cs" />
     <Compile Include="QueryComposer\HasGlobalSecurityForTemplateDTO.cs" />

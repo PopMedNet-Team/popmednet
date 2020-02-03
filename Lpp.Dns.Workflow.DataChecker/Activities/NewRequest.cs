@@ -175,11 +175,27 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     var originalStatus = _entity.Status;
                     await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
 
+                    var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                 && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                 && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                )
+                                                .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                    var attachments = await (from doc in db.Documents.AsNoTracking()
+                                             join x in (
+                                                     db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                     .GroupBy(k => k.RevisionSetID)
+                                                     .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                 ) on doc.ID equals x
+                                             where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                             orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                             select doc).ToArrayAsync();
+
                     foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == 0 || dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval || dm.Status == DTO.Enums.RoutingStatus.Draft))
                     {
                         dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                        var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                        var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                         if (currentResponse == null)
                         {
                             currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
@@ -190,7 +206,18 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                         //add the request document associations
                         for (int i = 0; i < documentRevisionSets.Count; i++)
                         {
-                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == documentRevisionSets[i]))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            }
+                        }
+
+                        foreach (var attachment in attachments)
+                        {
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                            }
                         }
                     }
 
@@ -251,8 +278,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
                     document.SetData(db, documentContent);
 
-                    _entity.SubmittedByID = _workflow.Identity.ID;
-                    _entity.SubmittedOn = DateTime.UtcNow;
+                    
                     _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
                     //Reset reject for resubmit.
                     _entity.RejectedByID = null;
@@ -265,19 +291,52 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
                     if (permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
+                        _entity.SubmittedByID = _workflow.Identity.ID;
+                        _entity.SubmittedOn = DateTime.UtcNow;
+
+                        await db.SaveChangesAsync();
+
+                        var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                 && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                 && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                )
+                                                .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                        var attachments = await (from doc in db.Documents.AsNoTracking()
+                                                 join x in (
+                                                         db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                         .GroupBy(k => k.RevisionSetID)
+                                                         .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                     ) on doc.ID equals x
+                                                 where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                                 orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                                 select doc).ToArrayAsync();
+
                         _entity.Status = DTO.Enums.RequestStatuses.Submitted;
                         foreach (var dm in _entity.DataMarts)
                         {
                             dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                            var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                            var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                             if (currentResponse == null)
                             {
                                 currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
                             }
                             currentResponse.SubmittedByID = _workflow.Identity.ID;
                             currentResponse.SubmittedOn = DateTime.UtcNow;
-                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == document.RevisionSetID.Value))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            }
+
+                            foreach (var attachment in attachments)
+                            {
+                                if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
+                                {
+                                    db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                                }
+                            }
                         }
                     }
                     else

@@ -17,7 +17,6 @@ module Plugins.Requests.QueryBuilder.Edit {
         UploadViewModel: Controls.WFFileUpload.Index.ViewModel = null;
         rawRequestData: Dns.Interfaces.IQueryComposerRequestDTO;
         projectID: any;
-
         
         public UpdateRoutings(updates) {
             Plugins.Requests.QueryBuilder.DataMartRouting.vm.UpdateRoutings(updates);
@@ -101,6 +100,7 @@ module Plugins.Requests.QueryBuilder.Edit {
                         //vm.UploadViewModel = Controls.WFFileUpload.ForTask.init($("#FileUploadControl"), tasks);
                         vm.fileUploadDMLoad();
                         promise.resolve();
+                        
 
                         
                     } else {

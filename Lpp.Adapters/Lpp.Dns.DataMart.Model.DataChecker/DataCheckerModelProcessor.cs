@@ -1285,7 +1285,7 @@ SELECT r.DP, CASE
         {
             BuildResponseDocuments();
             string mimeType = GetMimeType(filePath);
-            Document document = new Document(responseDocument.Length.ToString(), mimeType, filePath);
+            Document document = new Document(Guid.NewGuid().ToString("D"), mimeType, filePath);
             IList<Document> responseDocumentList = responseDocument.ToList<Document>();
             responseDocumentList.Add(document);
             responseDocument = responseDocumentList.ToArray<Document>();
@@ -1310,14 +1310,14 @@ SELECT r.DP, CASE
         {
             contentStream = null;
 
-            if (documentId == "0")
+            if (documentId == RESPONSE_DOCUMENTID)
             {
                 contentStream = new MemoryStream();
                 resultDataset.WriteXml(contentStream, XmlWriteMode.WriteSchema);
                 contentStream.Flush();
                 contentStream.Position = 0;
             }
-            else if (documentId == "1" && hasCellCountAlert)
+            else if (documentId == STYLE_DOCUMENTID && hasCellCountAlert)
             {
                 contentStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(styleXml));
             }
@@ -1404,12 +1404,15 @@ SELECT r.DP, CASE
 
         #region Private Methods
 
+        const string RESPONSE_DOCUMENTID = "74827C46-7C75-4EB4-9472-91BD003B07A9";
+        const string STYLE_DOCUMENTID = "912DD77C-2DDD-4D43-8476-89A632A06F5E";
+
         private void BuildResponseDocuments()
         {
                 if (resultDataset != null && responseDocument == null)
                 {
                     responseDocument = new Document[hasCellCountAlert ? 2 : 1];
-                    responseDocument[0] = new Document("0", "x-application/lpp-dns-table", "DataCheckerResponse.xml");
+                    responseDocument[0] = new Document(RESPONSE_DOCUMENTID, "x-application/lpp-dns-table", "DataCheckerResponse.xml");
                     responseDocument[0].IsViewable = true;
 
                     using (MemoryStream stream = new MemoryStream())
@@ -1437,7 +1440,7 @@ SELECT r.DP, CASE
                             }
                         }
 
-                        responseDocument[1] = new Document("1", "application/xml", "ViewableDocumentStyle.xml");
+                        responseDocument[1] = new Document(STYLE_DOCUMENTID, "application/xml", "ViewableDocumentStyle.xml");
                         responseDocument[1].IsViewable = false;
                         responseDocument[1].Size = styleXml.Length;
                     }

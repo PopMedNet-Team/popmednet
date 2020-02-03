@@ -17,7 +17,7 @@ namespace Lpp.Dns.Api
     public class ChunkedMultipartFormDataStreamDbProvider<T> : ChunkedMultipartFormDataStreamProvider<T>
     {
         /// <summary>
-        /// Initalizes a new instance of the <see cref="ChunkedMultipartFormDataStreamDbProvider"/> class
+        /// Initalizes a new instance of the <see cref="Lpp.Dns.Api.ChunkedMultipartFormDataStreamDbProvider<typeparamref name="T"/>"/> class
         /// </summary>
         /// <param name="rootDir">The Root Directory the file chunk is to be written to</param>
         /// <param name="request">The Request Context sent by the Upload Control</param>
@@ -182,9 +182,12 @@ namespace Lpp.Dns.Api
                     Doc.Kind = "DistributedRegression.FileList";
                 else if (DocumentKind == "TrackingTable")
                     Doc.Kind = "DistributedRegression.TrackingTable";
+                else if (DocumentKind == "AttachmentInput")
+                    Doc.Kind = "Attachment.Input";
                 else
                     Doc.Kind = null;
             }
+
 
             if (Doc.ParentDocumentID.HasValue)
             {
@@ -205,8 +208,24 @@ namespace Lpp.Dns.Api
                                    };
                 var version = TaskID != Guid.Empty ? await versionQuery.Where(d => d.ItemID == TaskID).FirstOrDefaultAsync() : await versionQuery.Where(d => d.ItemID == RequestID).FirstOrDefaultAsync();
 
-                if (version != null)
+                if (version != null && versionQuery.Count() > 0)
                 {
+                    Doc.RevisionSetID = version.RevisionSetID;
+                    Doc.MajorVersion = version.MajorVersion;
+                    Doc.MinorVersion = version.MinorVersion;
+                    Doc.BuildVersion = version.BuildVersion;
+                    Doc.RevisionVersion = version.RevisionVersion + 1;
+
+                    //if the task item type has not been specified for the upload but the parent document had it specified, inhertit the type.
+                    if (_taskItemType == null && version.TaskItemType.HasValue)
+                    {
+                        _taskItemType = version.TaskItemType.Value;
+                    }
+                }
+                // Need to do this due to the possiblity a new revision is happening from a different task!
+                else if(version == null && versionQuery.Count() > 0 && TaskID != Guid.Empty)
+                {
+                    version = await versionQuery.FirstOrDefaultAsync();
                     Doc.RevisionSetID = version.RevisionSetID;
                     Doc.MajorVersion = version.MajorVersion;
                     Doc.MinorVersion = version.MinorVersion;
@@ -237,6 +256,16 @@ namespace Lpp.Dns.Api
                 };
 
                 _dataContext.RequestDocuments.Add(requestDoc);
+            }
+
+            if(_requestID != null && TaskID != null && Doc.Kind == "Attachment.Input" && !Doc.ParentDocumentID.HasValue)
+            {
+                var routes = await _dataContext.Responses.Where(x => x.RequestDataMart.RequestID == _requestID && x.RequestDataMart.Status != DTO.Enums.RoutingStatus.AwaitingRequestApproval && x.RequestDataMart.Status != DTO.Enums.RoutingStatus.Draft).Select(x => x.ID).ToArrayAsync();
+
+                foreach (var dm in routes)
+                {
+                    _dataContext.RequestDocuments.Add(new RequestDocument { RevisionSetID = Doc.RevisionSetID.Value, ResponseID = dm, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                }
             }
 
             if (_taskItemType.HasValue && TaskID != Guid.Empty)

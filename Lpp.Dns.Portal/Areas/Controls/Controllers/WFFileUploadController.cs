@@ -24,6 +24,12 @@ namespace Lpp.Dns.Portal.Areas.Controls.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult ForAttachments()
+        {
+            return View();
+        }
+
         public ActionResult ResponseForDataPartner()
         {
             return View();

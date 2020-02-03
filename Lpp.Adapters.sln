@@ -3,6 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client", "Lpp.Adapters\Lpp.Dns.DataMart.Client\Lpp.Dns.DataMart.Client.csproj", "{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A7557304-001B-4CAE-A05F-196BFF7DBAEB} = {A7557304-001B-4CAE-A05F-196BFF7DBAEB}
+		{CE2C6C17-1F54-4A17-8A07-4D840C5D8584} = {CE2C6C17-1F54-4A17-8A07-4D840C5D8584}
+		{73B93A61-7759-4662-BF50-209F8D39FC57} = {73B93A61-7759-4662-BF50-209F8D39FC57}
+		{BA4D9E91-641A-4080-9A92-5E3DE53C8360} = {BA4D9E91-641A-4080-9A92-5E3DE53C8360}
+		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {1B945FA5-035D-49AC-A901-4570A2A64C08}
+		{B22805C6-4152-400A-9567-C8F5E39FA400} = {B22805C6-4152-400A-9567-C8F5E39FA400}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO.DataMartClient", "Lpp.Dns.DTO.DataMartClient\Lpp.Dns.DTO.DataMartClient.csproj", "{3C729124-5D57-4DC2-9A83-D1947D64D0E3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{325D9B27-88F8-49D3-A347-40A22881624C} = {325D9B27-88F8-49D3-A347-40A22881624C}
+		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4} = {36193B7D-3223-42BF-8EB0-E6EAEB0097B4}
+		{F9B55285-B4B0-4AA7-A4B9-62C727D236A3} = {F9B55285-B4B0-4AA7-A4B9-62C727D236A3}
+		{BA4D9E91-641A-4080-9A92-5E3DE53C8360} = {BA4D9E91-641A-4080-9A92-5E3DE53C8360}
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Interfaces", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj", "{325D9B27-88F8-49D3-A347-40A22881624C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Processors", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Processors\Lpp.Dns.DataMart.Model.Processors.csproj", "{0B77934B-B8B5-4D33-ABA0-3B799C20BAF0}"
@@ -16,16 +34,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.ESPQueryBuilder", "Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder\Lpp.Dns.DataMart.Model.ESPQueryBuilder.csproj", "{0DA76FE3-8936-4F50-AF26-C15F3F1DD234}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.DataChecker", "Lpp.Adapters\Lpp.Dns.DataMart.Model.DataChecker\Lpp.Dns.DataMart.Model.DataChecker.csproj", "{4384E64C-35B1-4A9E-983F-38A44103C804}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client", "Lpp.Adapters\Lpp.Dns.DataMart.Client\Lpp.Dns.DataMart.Client.csproj", "{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A7557304-001B-4CAE-A05F-196BFF7DBAEB} = {A7557304-001B-4CAE-A05F-196BFF7DBAEB}
-		{CE2C6C17-1F54-4A17-8A07-4D840C5D8584} = {CE2C6C17-1F54-4A17-8A07-4D840C5D8584}
-		{73B93A61-7759-4662-BF50-209F8D39FC57} = {73B93A61-7759-4662-BF50-209F8D39FC57}
-		{BA4D9E91-641A-4080-9A92-5E3DE53C8360} = {BA4D9E91-641A-4080-9A92-5E3DE53C8360}
-		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {1B945FA5-035D-49AC-A901-4570A2A64C08}
-		{B22805C6-4152-400A-9567-C8F5E39FA400} = {B22805C6-4152-400A-9567-C8F5E39FA400}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{D2EA8084-48EE-44C8-9DCE-853C640358D8}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,8 +56,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions", "Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions.csproj", "{2DFD0D09-613B-44D1-A477-A649B341F925}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.General.CriteriaGroupCommon", "Plugins\Lpp.Dns.General.CriteriaGroupCommon\Lpp.Dns.General.CriteriaGroupCommon.csproj", "{A7557304-001B-4CAE-A05F-196BFF7DBAEB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO.DataMartClient", "Lpp.Dns.DTO.DataMartClient\Lpp.Dns.DTO.DataMartClient.csproj", "{3C729124-5D57-4DC2-9A83-D1947D64D0E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0878F6EB-4541-49FB-BCBF-9DFB674D8D99}"
 	ProjectSection(SolutionItems) = preProject
@@ -80,6 +86,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{325D9B27-88F8-49D3-A347-40A22881624C}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{325D9B27-88F8-49D3-A347-40A22881624C}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{325D9B27-88F8-49D3-A347-40A22881624C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -170,12 +182,6 @@ Global
 		{A7557304-001B-4CAE-A05F-196BFF7DBAEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7557304-001B-4CAE-A05F-196BFF7DBAEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7557304-001B-4CAE-A05F-196BFF7DBAEB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.Build.0 = Release|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

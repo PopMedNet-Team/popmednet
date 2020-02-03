@@ -42,6 +42,15 @@
         public static get ConditionID(): any {
             return 'EC593176-D0BF-4E5A-BCFF-4BBD13E88DBF';
         }
+        public static get TrialID(): any {
+            return '56A38F6D-993A-4953-BCB9-11BDD809C0B4';
+        }
+        public static get PatientReportedOutcomeID(): any {
+            return 'AE87C785-BB74-4708-B0CD-FA91D584615C';
+        }
+        public static get PatientReportedOutcomeEncounterID(): any {
+            return 'A11DCC97-4C8D-4B80-AE61-58ECB2F66C3D';
+        }
         public static get VisitsID(): any {
             return 'F01BE0A4-7D8E-4288-AE33-C65166AF8335';
         }

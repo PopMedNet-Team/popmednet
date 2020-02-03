@@ -75,9 +75,9 @@ namespace Lpp.Dns.DataMart.Client
                 ProcessorManager.UpdateProcessorSettings(ModelDesc, Processor);
                 Processor.Settings.Add("NetworkId", request.NetworkId);
 
-                Cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID);
+				Cache = new Lib.Caching.DocumentCacheManager(request.NetworkId, request.DataMartId, request.Source.ID, request.Source.Responses.SingleOrDefault(r => r.DataMartID == request.DataMartId).ResponseID);
 
-                if((Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted) && Cache.HasResponseDocuments)
+				if ((Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted || Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted) && Cache.HasResponseDocuments)
                 {
                     //if there are cached response documents and the request has not been run yet set the status to pending upload
                     Request.RoutingStatus = DTO.DataMartClient.Enums.DMCRoutingStatus.PendingUpload;
@@ -113,6 +113,31 @@ namespace Lpp.Dns.DataMart.Client
             };
 
             this.Text = "DataMart Client - " + Request.Source.MSRequestID;
+            lblStatusBarProgress.Text = string.Empty;
+
+            tlpRequestDetails.CellPaint += tlpRequestDetails_CellPaint;
+            tlpResponseDetails.CellPaint += tlpRequestDetails_CellPaint;
+
+            tlpHeaderDetails.BackColor = Color.Transparent;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            //Paint the header background, spans the layout panel and the spacer panel
+            int bottom = tabControl1.Location.Y - 1;
+            e.Graphics.FillRectangle(SystemBrushes.GradientInactiveCaption, new Rectangle(new Point(0, 0), new Size(this.ClientRectangle.Width, bottom)));
+            e.Graphics.DrawLine(SystemPens.GradientActiveCaption, new Point(0, bottom), new Point(this.ClientRectangle.Width, bottom));
+        }
+
+        void tlpRequestDetails_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            if (e.Row > 0)
+            {
+                //Draw divider line between rows for the request and response detail table layout panels
+                e.Graphics.DrawLine(SystemPens.ControlDark, e.CellBounds.Location, new Point(e.CellBounds.Right, e.CellBounds.Top));
+            }
         }
 
         public string RequestId
@@ -197,7 +222,7 @@ namespace Lpp.Dns.DataMart.Client
                 else
                 {
                     chkGeneratePATIDList.Visible = false;
-                }                
+                }
 
                 vpRequest.Initialize(netWorkSetting, Processor, RequestId, true);
                 vpRequest.SetRequestDocuments(requestDocuments);
@@ -207,6 +232,7 @@ namespace Lpp.Dns.DataMart.Client
                 cbRequestFileList.CheckedChanged += new System.EventHandler(this.cbRequestFileList_CheckedChanged);
 
                 vpResponse.Initialize(netWorkSetting, Processor, RequestId, false);
+
                 if (Cache == null)
                 {
                     vpResponse.DataSource = null;
@@ -222,16 +248,30 @@ namespace Lpp.Dns.DataMart.Client
                     vpResponse.InitializeResponseDocumentsFromCache(Cache);
                 }
 
+                //cbResponseFileList.CheckedChanged += new EventHandler(cbResponseFileList_CheckedChanged);
+
                 bool isFileDistributionRequest = (Processor.ModelProcessorId == FileDistributionProcessorID ||
                                                   Request.Source.ModelID == FileDistributionModelID ||
                                                   Request.Source.ModelID == ModularProgramModelID ||
                                                   Request.Source.ModelID == DistributedRegressionModelID ||
                                                   //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
                                                   (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]));
+
                 if (isFileDistributionRequest)
                 {
                     cbRequestFileList.Checked = true;
                     cbResponseFileList.Checked = true;
+                }
+
+                if (Request.Source.Attachments != null && Request.Source.Attachments.Any() && DnsServiceManager.CheckUserRight(Request, HubRequestRights.ViewAttachments, netWorkSetting))
+                {
+                    vpAttachments.Initialize(netWorkSetting, Processor, RequestId, true);
+                    vpAttachments.SetAttachments(Request.Source.Attachments.Select(d => new Lpp.Dns.DataMart.Model.Document(d.ID.ToString("D"), d.Document.MimeType, d.Document.Name) { IsViewable = d.Document.IsViewable, Size = Convert.ToInt32(d.Document.Size), Kind = d.Document.Kind }).ToArray());
+                }
+                else
+                {   
+                    lblInputAttachments.Visible = false;
+                    vpAttachments.Visible = false;
                 }
 
                 cbResponseFileList.CheckedChanged += new EventHandler(cbResponseFileList_CheckedChanged);
@@ -302,7 +342,9 @@ namespace Lpp.Dns.DataMart.Client
             _initialStatusOnRun = Request.RoutingStatus;
             btnRun.Enabled = false;
             btnRun.Text = "Running...";
+            tabControl1.SelectedTab = tabPageResponseDetails;
             vpResponse.ShowProcessingMessage();
+            lblStatusBarProgress.Text = "Processing Request... Started at " + DateTime.Now.ToString("MM/d/yyyy h:mm:ss tt");
 
             //on run clear the cache
             Cache.ClearCache();
@@ -540,7 +582,12 @@ namespace Lpp.Dns.DataMart.Client
             {
                 DataTable tableToExport = null;
 
-                var responseDocuments = Cache.GetResponseDocuments();
+                IEnumerable<Document> responseDocuments;
+
+                if (Cache.Enabled)
+                    responseDocuments = Cache.GetResponseDocuments();
+                else
+                    responseDocuments = Processor.Response(RequestId);
 
                 DataSet _dataSet = new DataSet();
                 foreach (Lpp.Dns.DataMart.Model.Document responseDocument in responseDocuments)
@@ -632,15 +679,15 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                vpResponse.AddResponseDocument();
-                EnableDisableButtons();
-
-                Document doc = Processor.Response(RequestId).LastOrDefault();
-                if(doc != null)
+                if(Cache == null)
                 {
-                    AddDocumentsToCache(new[] { doc });
+                    vpResponse.AddResponseDocument();
                 }
-
+                else
+                {
+                    vpResponse.AddResponseDocument(AddDocumentsToCache);
+                }
+                EnableDisableButtons();
             }
             catch (Exception ex)
             {
@@ -653,12 +700,8 @@ namespace Lpp.Dns.DataMart.Client
         {
             try
             {
-                var documentsRemoved = vpResponse.DeleteSelectedFiles();
-                if (documentsRemoved.Any())
-                {
-                    Cache.Remove(documentsRemoved);
-                }
-
+                vpResponse.DeleteSelectedFiles();
+                
                 EnableDisableButtons();
             }
             catch (Exception ex)
@@ -670,6 +713,7 @@ namespace Lpp.Dns.DataMart.Client
 
         private void processRequestWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            lblStatusBarProgress.Text = string.Empty;
             if (e.Error != null)
             {
                 vpResponse.ShowErrorMessage(e.Error.Message);

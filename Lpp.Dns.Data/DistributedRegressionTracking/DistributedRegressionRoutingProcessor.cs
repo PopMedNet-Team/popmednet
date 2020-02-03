@@ -236,8 +236,29 @@ namespace Lpp.Dns.Data
             //TODO:determine if there is a parent document to make the manifest a revision of. If there is update the revisionset id, and version numbers
             //chances are there should not be unless this is a resubmit for the same task
 
+            var allTasks = await DB.ActionReferences.Where(tr => tr.ItemID == reqDM.Request.ID
+                                                  && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                  && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                 )
+                                                 .Select(tr => tr.Task.ID).ToArrayAsync();
+
+            var attachments = await (from doc in DB.Documents.AsNoTracking()
+                                     join x in (
+                                             DB.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                             .GroupBy(k => k.RevisionSetID)
+                                             .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                         ) on doc.ID equals x
+                                     where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                     orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                     select doc).ToArrayAsync();
+
             DB.RequestDocuments.Add(new RequestDocument { DocumentType = RequestDocumentType.Input, ResponseID = analysisCenterResponse.ID, RevisionSetID = analysisCenterManifest.RevisionSetID.Value });
-                        
+
+            foreach (var attachment in attachments)
+            {
+                DB.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = analysisCenterResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+            }
+
             await DB.SaveChangesAsync();
             await DB.Entry(analysisCenterRouting).ReloadAsync();
 
@@ -367,6 +388,22 @@ namespace Lpp.Dns.Data
                 //the output files from the analysis center will now become the input files for each active dataparter route
                 List<Guid> responseIDs = new List<Guid>();
 
+                var allTasks = await DB.ActionReferences.Where(tr => tr.ItemID == reqDM.Request.ID
+                                                  && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                  && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                 )
+                                                 .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                var attachments = await (from doc in DB.Documents.AsNoTracking()
+                                         join x in (
+                                                 DB.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                 .GroupBy(k => k.RevisionSetID)
+                                                 .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                             ) on doc.ID equals x
+                                         where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                         orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                         select doc).ToArrayAsync();
+
                 var dataPartnerRoutes = await DB.RequestDataMarts.Include(rdm => rdm.Responses).Where(rdm => rdm.RequestID == reqDM.Request.ID && rdm.Status != RoutingStatus.Canceled && rdm.RoutingType == RoutingType.DataPartner).ToArrayAsync();
                 foreach (var route in dataPartnerRoutes)
                 {
@@ -374,6 +411,11 @@ namespace Lpp.Dns.Data
                     responseIDs.Add(response.ID);
 
                     route.Status = response.Count > 1 ? RoutingStatus.Resubmitted : RoutingStatus.Submitted;
+
+                    foreach (var attachment in attachments)
+                    {
+                        DB.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = response.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                    }
                 }
 
                 var filelistDocument = documents.Where(d => !string.IsNullOrEmpty(d.DocumentKind) && string.Equals("DistributedRegression.FileList", d.DocumentKind, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();

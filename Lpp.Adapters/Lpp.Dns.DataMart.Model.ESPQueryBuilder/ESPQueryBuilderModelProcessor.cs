@@ -499,12 +499,14 @@ namespace Lpp.Dns.DataMart.Model
             return status;
         }
 
+        
+
         public Document[] Response(string requestId)
         {
             if(sqlResultDataset != null)
             {
                 var documents = new List<Document>();
-                documents.Add(BuildDocument("-1", sqlResultDataset, "ESPResponse.xml", true, true));
+                documents.Add(BuildDocument(SQLRESPONSE_DOCUMENTID, sqlResultDataset, "ESPResponse.xml", true, true));
                 return documents.ToArray();
             }
 
@@ -516,7 +518,7 @@ namespace Lpp.Dns.DataMart.Model
         {
             BuildResponseDocuments();
             string mimeType = GetMimeType(filePath);
-            Document document = new Document(responseDocument.Length.ToString(), mimeType, filePath);
+            Document document = new Document(Guid.NewGuid().ToString("D"), mimeType, filePath);
             IList<Document> responseDocumentList = responseDocument.ToList<Document>();
             responseDocumentList.Add(document);
             responseDocument = responseDocumentList.ToArray<Document>();
@@ -539,7 +541,7 @@ namespace Lpp.Dns.DataMart.Model
         public void ResponseDocument(string requestId, string documentId, out Stream contentStream, int maxSize)
         {
             // Embed the schema. The schema contains column header information in case no rows are returned.
-            if(documentId == "-1")
+            if(documentId == SQLRESPONSE_DOCUMENTID)
             {
                 //View SQL
                 var stream = new MemoryStream();
@@ -550,23 +552,23 @@ namespace Lpp.Dns.DataMart.Model
                 sqlResultDataset = null;
                 return;
             }
-            else if (documentId == "0" || documentId == "2")
+            else if (documentId == RESPONSE_XML_DOCUMENTID || documentId == DEMOGRAPHIC_XML_DOCUMENTID)
             {
                 // XML file format
                 var stream = new MemoryStream();
-                if (documentId == "0")
+                if (documentId == RESPONSE_XML_DOCUMENTID)
                     resultDataset.WriteXml(stream, XmlWriteMode.WriteSchema);
                 else
                     resultDemoDataset.WriteXml(stream, XmlWriteMode.WriteSchema);
                 stream.Seek(0, SeekOrigin.Begin);
                 contentStream = stream;
             }
-            else if (documentId == "1" || documentId == "3")
+            else if (documentId == RESPONSE_JSON_DOCUMENTID || documentId == DEMOGRAPHIC_JSON_DOCUMENTID)
             {
                 // Json file format
-                contentStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(documentId == "1" ? resultDataset : resultDemoDataset)));
+                contentStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(documentId == RESPONSE_JSON_DOCUMENTID ? resultDataset : resultDemoDataset)));
             }
-            else if (documentId == "4" && hasCellCountAlert)
+            else if (documentId == RESPONSE_STYLE_DOCUMENTID && hasCellCountAlert)
             {
                 contentStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(styleXml));
             }
@@ -615,6 +617,14 @@ namespace Lpp.Dns.DataMart.Model
             return document;
         }
 
+        
+        const string SQLRESPONSE_DOCUMENTID = "1E8EB1FF-7A73-4D79-BA67-A66D7ADE874D";
+        const string RESPONSE_XML_DOCUMENTID = "C246027E-402F-47B6-9CF8-8A167C9F23C7";
+        const string RESPONSE_JSON_DOCUMENTID = "3B98F790-72A0-483F-B9D8-49F70571B42F";
+        const string DEMOGRAPHIC_XML_DOCUMENTID = "430CAA28-F2F1-476A-8565-0020CBC4D8AA";
+        const string DEMOGRAPHIC_JSON_DOCUMENTID = "45660B90-B2BF-4E09-911E-E9DD3CDB4D6D";
+        const string RESPONSE_STYLE_DOCUMENTID = "BF0ABD3E-2344-48A6-B28D-671A523EDD0A";
+
         private void BuildResponseDocuments()
         {
             if (responseDocument == null)
@@ -622,13 +632,13 @@ namespace Lpp.Dns.DataMart.Model
                 var documents = new List<Document>();
                 if (resultDataset != null)
                 {
-                    documents.Add(BuildDocument("0", resultDataset, "ESPResponse.xml", true, true));
-                    documents.Add(BuildDocument("1", resultDataset, "ESPResponse.json", false, false));
+                    documents.Add(BuildDocument(RESPONSE_XML_DOCUMENTID, resultDataset, "ESPResponse.xml", true, true));
+                    documents.Add(BuildDocument(RESPONSE_JSON_DOCUMENTID, resultDataset, "ESPResponse.json", false, false));
                 }
                 if (resultDemoDataset != null)
                 {
-                    documents.Add(BuildDocument("2", resultDemoDataset, "ESPDemographicResponse.xml", false, true));
-                    documents.Add(BuildDocument("3", resultDemoDataset, "ESPDemographicResponse.json", false, false));
+                    documents.Add(BuildDocument(DEMOGRAPHIC_XML_DOCUMENTID, resultDemoDataset, "ESPDemographicResponse.xml", false, true));
+                    documents.Add(BuildDocument(DEMOGRAPHIC_JSON_DOCUMENTID, resultDemoDataset, "ESPDemographicResponse.json", false, false));
                 }
                 if (hasCellCountAlert)
                 {
@@ -647,7 +657,7 @@ namespace Lpp.Dns.DataMart.Model
                             styleXml = sw.ToString();
                         }
                     }
-                    Document styleDoc = new Document("4", "application/xml", "ViewableDocumentStyle.xml");
+                    Document styleDoc = new Document(RESPONSE_STYLE_DOCUMENTID, "application/xml", "ViewableDocumentStyle.xml");
                     styleDoc.IsViewable = false;
                     styleDoc.Size = styleXml.Length;
                     documents.Add(styleDoc);

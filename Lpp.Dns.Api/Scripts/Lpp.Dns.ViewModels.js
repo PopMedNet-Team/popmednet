@@ -4905,6 +4905,35 @@ var Dns;
             return DistributedRegressionAnalysisCenterManifestItem;
         }(ViewModel));
         ViewModels.DistributedRegressionAnalysisCenterManifestItem = DistributedRegressionAnalysisCenterManifestItem;
+        var QueryComposerTemporalEventViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerTemporalEventViewModel, _super);
+            function QueryComposerTemporalEventViewModel(QueryComposerTemporalEventDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerTemporalEventDTO == null) {
+                    _this.IndexEventDateIdentifier = ko.observable();
+                    _this.DaysBefore = ko.observable();
+                    _this.DaysAfter = ko.observable();
+                    _this.Criteria = ko.observableArray();
+                }
+                else {
+                    _this.IndexEventDateIdentifier = ko.observable(QueryComposerTemporalEventDTO.IndexEventDateIdentifier);
+                    _this.DaysBefore = ko.observable(QueryComposerTemporalEventDTO.DaysBefore);
+                    _this.DaysAfter = ko.observable(QueryComposerTemporalEventDTO.DaysAfter);
+                    _this.Criteria = ko.observableArray(QueryComposerTemporalEventDTO.Criteria == null ? null : QueryComposerTemporalEventDTO.Criteria.map(function (item) { return new QueryComposerCriteriaViewModel(item); }));
+                }
+                return _this;
+            }
+            QueryComposerTemporalEventViewModel.prototype.toData = function () {
+                return {
+                    IndexEventDateIdentifier: this.IndexEventDateIdentifier(),
+                    DaysBefore: this.DaysBefore(),
+                    DaysAfter: this.DaysAfter(),
+                    Criteria: this.Criteria == null ? null : this.Criteria().map(function (item) { return item.toData(); }),
+                };
+            };
+            return QueryComposerTemporalEventViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerTemporalEventViewModel = QueryComposerTemporalEventViewModel;
         var SectionSpecificTermViewModel = /** @class */ (function (_super) {
             __extends(SectionSpecificTermViewModel, _super);
             function SectionSpecificTermViewModel(SectionSpecificTermDTO) {
@@ -8015,6 +8044,7 @@ var Dns;
                     _this.Header = new QueryComposerHeaderViewModel();
                     _this.Where = new QueryComposerWhereViewModel();
                     _this.Select = new QueryComposerSelectViewModel();
+                    _this.TemporalEvents = ko.observableArray();
                     _this.ID = ko.observable();
                     _this.Timestamp = ko.observable();
                 }
@@ -8022,6 +8052,7 @@ var Dns;
                     _this.Header = new QueryComposerHeaderViewModel(QueryComposerRequestDTO.Header);
                     _this.Where = new QueryComposerWhereViewModel(QueryComposerRequestDTO.Where);
                     _this.Select = new QueryComposerSelectViewModel(QueryComposerRequestDTO.Select);
+                    _this.TemporalEvents = ko.observableArray(QueryComposerRequestDTO.TemporalEvents == null ? null : QueryComposerRequestDTO.TemporalEvents.map(function (item) { return new QueryComposerTemporalEventViewModel(item); }));
                     _this.ID = ko.observable(QueryComposerRequestDTO.ID);
                     _this.Timestamp = ko.observable(QueryComposerRequestDTO.Timestamp);
                 }
@@ -8032,6 +8063,7 @@ var Dns;
                     Header: this.Header.toData(),
                     Where: this.Where.toData(),
                     Select: this.Select.toData(),
+                    TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map(function (item) { return item.toData(); }),
                     ID: this.ID(),
                     Timestamp: this.Timestamp(),
                 };

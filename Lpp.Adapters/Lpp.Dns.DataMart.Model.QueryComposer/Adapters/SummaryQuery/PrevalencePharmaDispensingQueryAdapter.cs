@@ -225,7 +225,6 @@ FROM
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 		)
 
-		--WHERE ed.drugcov='Y'
 		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%NAME_FIELD%
 	
 	) AS EnrollmentData
@@ -243,7 +242,7 @@ LEFT JOIN
 		CAST(SUM(Members) AS float) AS mb, CAST(SUM(ISNULL(Dispensings, 0)) AS float) AS dp, CAST(SUM(ISNULL(DaysSupply, 0)) AS float) AS ds
 		FROM %SD_TABLE% AS sd
 		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y') > 0)
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0)
 		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
 	) AS SummaryData
 
@@ -288,19 +287,16 @@ FROM
 
 				%CJC%
 
-				--enrollment AS en, %SD_TABLE% AS sd
-				--WHERE en.year in (%YEARS%) AND en.sex IN (%SEX%) AND en.drugcov='Y' AND sd.%NAME_FIELD% in (%CODES%)
 			) AS AgeGroups
 
 		LEFT JOIN
 
 			-- Add the enrollment data to the rows (where drug coverage is Y).
 
-			(SELECT * FROM enrollment WHERE drugcov='Y') AS ed
+			(SELECT * FROM enrollment WHERE drugcov='Y' and medcov = 'Y') AS ed
 			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
 		)
 
-		--WHERE ed.drugcov='Y'
 		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%NAME_FIELD%
 	
 	) AS EnrollmentData
@@ -318,7 +314,7 @@ LEFT JOIN
 		SUM(Members) AS mb, SUM(Dispensings) AS dp, SUM(DaysSupply) AS ds
 		FROM %SD_TABLE% AS sd
 		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y') > 0)
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0)
 		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
 	) AS SummaryData
 

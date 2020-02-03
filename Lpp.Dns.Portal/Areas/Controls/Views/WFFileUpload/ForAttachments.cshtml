@@ -1,0 +1,172 @@
+﻿<script src="/areas/controls/js/wffileupload/common.js"></script>
+<script src="~/Areas/Controls/js/WFFileUpload/ForAttachments.js"></script>
+<style scoped>
+		.fsCreds legend {
+				font-size: 1em;
+		}
+
+		#sftpSelector {
+				padding: 0px 4px;
+		}
+
+		.sFtpTree {
+				list-style: none;
+				margin: 0px;
+				margin-left: 12px;
+				padding: 0px;
+		}
+
+		div.row {
+				margin-top: 0px;
+				border-top: none;
+				padding-top: 0px;
+		}
+</style>
+<section>
+		<div class="row ">
+				<div style="padding-left:25px; padding-right:25px; margin-top:10px;">
+						<!-- Nav tabs -->
+						<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#localUpload" aria-controls="localUpload" role="tab" data-toggle="tab">Local Upload</a></li>
+								<li role="presentation"><a href="#sftpUPload" aria-controls="sftpUPload" role="tab" data-toggle="tab">FTP Upload</a></li>
+						</ul>
+
+						<!-- Tab panes -->
+						<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="localUpload" style="padding-top:5px;">
+										<article class="panel panel-default" data-bind="attr:{ id: IsForAttachments ? 'Attachment_FileUpload' : 'Normal_FileUpload'}">
+												<div class="panel-heading">
+														<label class="panel-title">Upload Local Files<img src='../Content/img/icons/help16.gif' class="helptip" title="Upload one or more files. Each file must be less than 2GB." /></label>
+												</div>
+												<div class="panel-body">
+														<input name="files" id="files" type="file" data-bind="kendoUpload: {
+																		async: {
+																				withCredentials: false,
+																				autoUpload: true,
+																				saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
+																				chunkSize: 25000000,
+																				concurrent: false,
+																				autoRetryAfter: 300,
+																				maxAutoRetries: 5
+																		},
+																		success: onFileUploadCompleted,
+																		upload: onFileUpload,
+																		error: onFileUploadError
+																}" />
+												</div>
+										</article>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="sftpUPload">
+										<article class="panel panel-default" data-bind="attr:{ id: IsForAttachments ? 'Attachment_SFTP_FileUpload' : 'SFTP_FileUpload'}" style="padding-top:5px;">
+												<div class="panel-heading">
+														<label class="panel-title">Upload from FTP<img src='../Content/img/icons/help16.gif' class="helptip" title="Transfer one or more files from an FTP Server. Each file must be less than 2GB. The FTP server must have an open port and you must have valid user credentials to connect to the FTP server." /></label>
+												</div>
+												<div class="panel-body">
+														<div class="sftpDialog" data-bind="visible: !sFtpConnected(), attr: { id: IsForAttachments ? 'Attachments_sftpCredentialsDialog' : 'sftpCredentialsDialog' }">
+																<fieldset class="fsCreds" data-bind="attr:{ id: IsForAttachments ? 'Attachments_fsFTPCredentials' : 'fsFTPCredentials'}">
+																		<legend>Please enter your FTP credentials below:</legend>
+																		<div class="row">
+																				<div class="col-sm-8 form-group">
+																						<label data-bind="attr:{ for: IsForAttachments ? 'Attachments_sftpAddress' : 'sftpAddress'}">Address<em>*</em></label>
+																						<input type="text" class="form-control" maxlength="255" placeholder="i.e. sftp.example.com" data-bind="value: sFtpAddress, attr:{ id: IsForAttachments ? 'Attachments_sftpAddress' : 'sftpAddress'}" />
+																				</div>
+																				<div class="col-sm-2 form-group">
+																						<label data-bind="attr:{ for: IsForAttachments ? 'Attachments_sftpPort' : 'sftpPort'}">Port<em>*</em></label><br />
+																						<input type="text" data-bind="kendoNumericTextBox: {value: sFtpPort, min: 0, max:64000, format: '#####'}, attr:{ id: IsForAttachments ? 'Attachments_sftpPort' : 'sftpPort'}" style="width: 100px;" />
+																				</div>
+																		</div>
+																		<div class="row">
+																				<div class="col-sm-6">
+																						<label data-bind="attr:{ for: IsForAttachments ? 'Attachments_sftpLogin' : 'sftpLogin'}">Login<em>*</em></label>
+																						<input type="text" maxlength="255" class="form-control" data-bind="value: sFtpLogin, attr:{ id: IsForAttachments ? '' : 'sftpLogin'}" />
+																				</div>
+																				<div class="col-sm-6">
+																						<label data-bind="attr:{ id: IsForAttachments ? 'Attachments_sftpPassword' : 'sftpPassword'}">Password<em>*</em></label>
+																						<input type="password" maxlength="255" class="form-control" data-bind="value: sFtpPassword, attr:{ id: IsForAttachments ? 'Attachments_sftpPassword' : 'sftpPassword'}" />
+																				</div>
+																		</div>
+																		<div class="row">
+																				<div class="col-sm-12">
+																						<br />
+																						<button class="btn btn-default" id="btnSftpConnect" data-bind="click: sFTPConnect">Connect</button>
+																				</div>
+																		</div>
+																</fieldset>
+														</div>
+
+														<div id="sftpSelector" class="row" style="display: none;" data-bind="visible: sFtpConnected">
+																<p class="alert alert-info">Please navigate the folders on the left and choose one or more files on the right.</p>
+																<div class="row">
+																		<div id="divFtpFolderWrapper" class="col-sm-6">
+																				<ul id="sftpFolders" class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: sFtpFolders }"></ul>
+																		</div>
+																		<div id="divFtpFileWrapper" class="col-sm-6">
+																				<table class="table table-striped">
+																						<tbody data-bind="foreach: sFtpCurrentPath().Files">
+																								<tr>
+																										<td>
+																												<input type="checkbox" data-bind="attr: { id: Path }, value: Path, checked: $root.sFtpSelectedFiles" />
+																												<label data-bind="text: Name, attr: { id: 'lbl' + Path(), 'for': Path, 'title': LengthFormatted }"></label>
+																										</td>
+																								</tr>
+																						</tbody>
+																				</table>
+																		</div>
+																</div>
+														</div>
+
+												</div>
+												<div class="panel-footer" data-bind="visible: sFtpSelectedFiles().length > 0">
+														<div class="col-sm-12" style="text-align: right;">
+																<button class="btn btn-default" id="btnSftpUpload" data-bind="click: sFtpAddFiles">Upload Selected Files</button>
+														</div>
+														<div class="clearfix"></div>
+												</div>
+										</article>
+								</div>
+						</div>
+				</div>
+		</div>
+
+		<br class="clear" />
+		<div class="row" style="margin-top:0px;padding-top:0px;border-top: none;">
+				<div style="padding-left:25px; padding-right:25px;">
+						<h3 class="panel-title">Previously uploaded for this activity</h3>
+						<table class="table table-striped table-bordered" style="width: 100%;">
+								<colgroup>
+										<col style="width: 60%; vertical-align: middle;" />
+										<col style="width: 90px; vertical-align: middle;" />
+										<col style="width: 80px;" />
+								</colgroup>
+								<thead>
+										<tr>
+												<th class="bold">File Name</th>
+												<th class="bold" style="text-align:center;">Size</th>
+												<th class="bold">X</th>
+										</tr>
+								</thead>
+								<tbody data-bind="foreach: { data:Documents, as:'file'}">
+										<tr>
+												<td data-bind="html: Controls.WFDocuments.List.Utils.buildDownloadLink($data.ID, $data.FileName, $data.Name)"></td>
+												<td data-bind="text:Global.Helpers.formatFileSize(file.Length)" style="text-align:right;"></td>
+												<td>
+														<button class="btn btn-danger btn-xs" data-bind="click: $root.onDeleteFile">Remove</button>
+												</td>
+										</tr>
+								</tbody>
+						</table>
+				</div>
+		</div>
+		<br class="clear" />
+</section>
+<script id="treeNode" type="text/html">
+		<li>
+				<a href="#" data-bind="click: $root.sFtpSelect">
+						<span class="glyphicon" data-bind="css: {'glyphicon-folder-open': Selected(), 'glyphicon-folder-close': !Selected() }"></span>
+						&nbsp;<span data-bind="text: Name, attr: { id: Path }"></span>
+				</a>
+				<!-- ko if: Selected() -->
+				<ul class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: Folders }, visible: Selected"></ul>
+				<!-- /ko -->
+		</li>
+</script>

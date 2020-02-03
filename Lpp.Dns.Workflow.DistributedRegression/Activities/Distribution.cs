@@ -188,6 +188,22 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                 var originalStatus = _entity.Status;
                 await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
 
+                var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                  && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                  && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                 )
+                                                 .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                var attachments = await (from doc in db.Documents.AsNoTracking()
+                                         join x in (
+                                                 db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                 .GroupBy(k => k.RevisionSetID)
+                                                 .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                             ) on doc.ID equals x
+                                         where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                         orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                         select doc).ToArrayAsync();
+
                 foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == 0 || dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval || dm.Status == DTO.Enums.RoutingStatus.Draft))
                 {
                     if (dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
@@ -195,7 +211,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     else
                         dm.Status = DTO.Enums.RoutingStatus.Draft;
 
-                    var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                    var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                     if (currentResponse == null && dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
                     {
                         currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
@@ -205,10 +221,22 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     {
                         currentResponse.SubmittedByID = _workflow.Identity.ID;
                         currentResponse.SubmittedOn = DateTime.UtcNow;
+
                         //add the request document associations
                         for (int i = 0; i < documentRevisionSets.Count; i++)
                         {
-                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == documentRevisionSets[i]))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            }
+                        }
+
+                        foreach (var attachment in attachments)
+                        {
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                            }
                         }
                     }
                 }

@@ -210,7 +210,23 @@ var Workflow;
                         }
                     }));
                     self.HasSelectedCompleteRoutings = ko.computed(function () {
-                        return self.SelectedCompleteResponses().length > 0;
+                        if (self.SelectedCompleteResponses().length === 0) {
+                            return false;
+                        }
+                        var _loop_1 = function () {
+                            var itemID = self.SelectedCompleteResponses()[i];
+                            var route = ko.utils.arrayFirst(self.VirtualRoutings(), function (route) {
+                                return route.ID === itemID;
+                            });
+                            if (route.Status === Dns.Enums.RoutingStatus.RequestRejected || route.Status === Dns.Enums.RoutingStatus.ResponseRejectedBeforeUpload)
+                                return { value: false };
+                        };
+                        for (var i = 0; i < self.SelectedCompleteResponses().length; i++) {
+                            var state_1 = _loop_1();
+                            if (typeof state_1 === "object")
+                                return state_1.value;
+                        }
+                        return true;
                     });
                     self.CanGroupCompletedRoutings = ko.computed(function () {
                         return self.SelectedCompleteResponses().length > 1;

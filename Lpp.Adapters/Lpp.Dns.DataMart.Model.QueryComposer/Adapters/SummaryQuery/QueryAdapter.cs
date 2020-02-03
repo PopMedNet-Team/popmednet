@@ -474,7 +474,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 int startQ = year == startYear ? startQuarter : 1;
                 int endQ = year == endYear ? endQuarter : 4;
 
-                for(int quarter = startQ; quarter <= endQuarter; quarter++)
+                for(int quarter = startQ; quarter <= endQ; quarter++)
                 {
                     yield return string.Format("{0}Q{1}", year, quarter);
                 }

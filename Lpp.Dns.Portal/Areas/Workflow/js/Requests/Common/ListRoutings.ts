@@ -257,8 +257,23 @@ module Workflow.Common.ListRoutings {
             
 
             self.HasSelectedCompleteRoutings = ko.computed(() => {
-                return self.SelectedCompleteResponses().length > 0;
+                
+                if (self.SelectedCompleteResponses().length === 0) { return false; }
+
+                for (var i = 0; i < self.SelectedCompleteResponses().length; i++) {
+                    let itemID = self.SelectedCompleteResponses()[i];
+
+                    let route = ko.utils.arrayFirst(self.VirtualRoutings(), (route) => {
+                        return route.ID === itemID;
+                    });
+
+                    if (route.Status === Dns.Enums.RoutingStatus.RequestRejected || route.Status === Dns.Enums.RoutingStatus.ResponseRejectedBeforeUpload)
+                        return false;
+                }
+
+                return true;
             });
+
             self.CanGroupCompletedRoutings = ko.computed(() => {
                 return self.SelectedCompleteResponses().length > 1;
             });

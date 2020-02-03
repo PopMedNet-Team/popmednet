@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
   <!--Change ID Every Release-->
 	<Product Id="B44B4AE2-3144-4D27-BAAA-0ED44673C924" 
            Name="PMN DataMart Client" 
@@ -7,7 +8,15 @@
            Version="$(var.BuildVersion)"
            Manufacturer="PopMedNet" 
            UpgradeCode="0af491a6-df04-4123-b3e6-b1856376c879">
+    
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    
+    <Binary Id='netCheckBinary' SourceFile='..\Lpp.DataMartClientChecker\bin\Lpp.DataMartClientChecker.CA.dll'/>
+    <CustomAction Id='netCheckCustomAction' BinaryKey='netCheckBinary' DllEntry='CheckDotNetVersion' Execute='immediate' Return='check'/>
+
+    <InstallExecuteSequence>
+      <Custom Action="netCheckCustomAction" Before="AppSearch"/>
+    </InstallExecuteSequence>
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate EmbedCab="yes"/>

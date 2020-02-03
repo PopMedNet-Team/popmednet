@@ -33,8 +33,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
             URL
         }
 
-        private IList<Control> views = new List<Control>();
+        IList<Control> views = new List<Control>();
         DisplayType _displayType = DisplayType.PLAIN;
+        Control _currentView = null;
 
         public Control LastView
         {
@@ -46,17 +47,14 @@ namespace Lpp.Dns.DataMart.Client.Controls
         {
             get
             {
-                foreach (Control view in views)
-                    if (view.Visible)
-                        return view;
-
-                return null;
+                return _currentView;
             }
 
             set
             {
+                _currentView = value;
                 foreach (Control view in views)
-                    view.Visible = view == value;
+                    view.Visible = view == _currentView;
             }
         }
 
@@ -70,7 +68,13 @@ namespace Lpp.Dns.DataMart.Client.Controls
             {
                 _displayType = value;
                 foreach (Control view in views)
-                    view.Visible = view.Name == value.ToString();
+                {
+                    if(view.Name.Equals(value.ToString(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        View = view;
+                        break;
+                    }
+                }
             }
         }
 
@@ -116,7 +120,13 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 }
 
                 foreach (Control view in views)
-                    view.Visible = view.Name == viewType;
+                {
+                    if(view.Name.Equals(viewType, StringComparison.OrdinalIgnoreCase))
+                    {
+                        View = view;
+                        break;
+                    }
+                }
             }
         }
 
@@ -366,9 +376,6 @@ namespace Lpp.Dns.DataMart.Client.Controls
 
                 case "JSON":
                     string JSONcontent;
-                    //using (var reader = new StreamReader(value)) {
-                    // JSONcontent = reader.ReadToEnd();
-                    //}
                     JSONcontent = new StreamReader(value).ReadToEnd();
                     DataSource = JSONcontent;
                     break;
@@ -403,7 +410,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
         }
 
-        // BMS: WHat does this do?
+        /// <summary>
+        /// Gets or sets the text content of the Plain text visual control.
+        /// </summary>
         public string ViewText
         {
             get
@@ -492,6 +501,14 @@ namespace Lpp.Dns.DataMart.Client.Controls
         protected void RemoveSelectColumn()
         {
             FILELIST.Columns.Remove(colDocumentSelected);
+        }
+
+        protected void SetColumnsForAttachments()
+        {
+            colMimeType.FillWeight = 30f;
+            colSize.FillWeight = 30f;
+            FILELIST.Columns["colDocumentID"].Visible = false;
+
         }
     }
 

@@ -10,6 +10,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.TermProviders
     public class PCORI : IModelTermProvider
     {
         static readonly Guid[] SupportTermIDs = new[] { 
+            ModelTermsFactory.TrialID,
+            ModelTermsFactory.PatientReportedOutcomeID,
+            ModelTermsFactory.PatientReportedOutcomeEncounterID,
             ModelTermsFactory.AgeRangeID,
             ModelTermsFactory.SettingID,
             ModelTermsFactory.ObservationPeriodID,

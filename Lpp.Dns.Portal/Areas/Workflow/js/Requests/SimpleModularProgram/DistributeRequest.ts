@@ -39,6 +39,8 @@ module Workflow.SimpleModularProgram.DistributeRequest {
 
         private RoutesSelectAll: KnockoutComputed<boolean>;
 
+        public AttachmentsVM: Controls.WFFileUpload.ForAttachments.ViewModel;
+
         constructor(bindingControl: JQuery, screenPermissions: any[], fieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[], datamarts: Dns.Interfaces.IDataMartListDTO[], existingRequestDataMarts: Dns.Interfaces.IRequestDataMartDTO[], uploadViewModel: Controls.WFFileUpload.Index.ViewModel) {
             super(bindingControl, screenPermissions);
 
@@ -149,6 +151,9 @@ module Workflow.SimpleModularProgram.DistributeRequest {
                     var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                     var uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
                     self.UploadViewModel = uploadViewModel;
+                    Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done((viewModel) => {
+                        self.AttachmentsVM = viewModel;
+                    })
                 });
 
             });
@@ -252,6 +257,12 @@ module Workflow.SimpleModularProgram.DistributeRequest {
             //Bind the view model for the activity
             var bindingControl = $("#MPDistributeRequest");
             vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
+
+            if (Requests.Details.rovm.Request.ID() != null) {
+                Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done((viewModel) => {
+                    vm.AttachmentsVM = viewModel;
+                });
+            }
 
         $(() => {            
             ko.applyBindings(vm, bindingControl[0]);            

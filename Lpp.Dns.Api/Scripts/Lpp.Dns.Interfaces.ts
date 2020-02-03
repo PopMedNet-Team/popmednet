@@ -188,10 +188,14 @@ module Dns.Enums
 	 export enum RequestDocumentType{
 	 	Input = 0,
 	 	Output = 1,
+	 	AttachmentInput = 2,
+	 	AttachmentOutput = 3,
 	 }
 	 export var RequestDocumentTypeTranslation: Dns.Structures.KeyValuePair[] = [
 	 	 {value:RequestDocumentType.Input , text: 'Input'},
 	 	 {value:RequestDocumentType.Output , text: 'Output'},
+	 	 {value:RequestDocumentType.AttachmentInput , text: 'AttachmentInput'},
+	 	 {value:RequestDocumentType.AttachmentOutput , text: 'AttachmentOutput'},
 	 ]
 	 export enum ConditionClassifications{
 	 	Influenza = 1,
@@ -1006,6 +1010,7 @@ module Dns.Enums
 	 	QueryTemplate = 6,
 	 	RequestType = 7,
 	 	Project = 8,
+	 	RequestAttachment = 9,
 	 }
 	 export var TaskItemTypesTranslation: Dns.Structures.KeyValuePair[] = [
 	 	 {value:TaskItemTypes.User , text: 'User'},
@@ -1016,6 +1021,7 @@ module Dns.Enums
 	 	 {value:TaskItemTypes.QueryTemplate , text: 'QueryTemplate'},
 	 	 {value:TaskItemTypes.RequestType , text: 'RequestType'},
 	 	 {value:TaskItemTypes.Project , text: 'Project'},
+	 	 {value:TaskItemTypes.RequestAttachment , text: 'RequestAttachment'},
 	 ]
 	 export enum TaskRoles{
 	 	Worker = 1,
@@ -3926,6 +3932,20 @@ module Dns.Interfaces
 	 	 	'RequestDataMartID': { type:'any', nullable: false},
 	 	 }
 	 }
+	 export interface IQueryComposerTemporalEventDTO{
+	 	 IndexEventDateIdentifier: string;
+	 	 DaysBefore: number;
+	 	 DaysAfter: number;
+	 	 Criteria: IQueryComposerCriteriaDTO[];
+	 }
+	 export var KendoModelQueryComposerTemporalEventDTO: any = {
+	 	 fields: {
+	 	 	'IndexEventDateIdentifier': { type:'string', nullable: false},
+	 	 	'DaysBefore': { type:'number', nullable: false},
+	 	 	'DaysAfter': { type:'number', nullable: false},
+	 	 	'Criteria': { type:'any[]', nullable: false},
+	 	 }
+	 }
 	 export interface ISectionSpecificTermDTO{
 	 	 TermID: any;
 	 	 Section: Dns.Enums.QueryComposerSections;
@@ -5478,12 +5498,14 @@ module Dns.Interfaces
 	 	 Header: IQueryComposerHeaderDTO;
 	 	 Where: IQueryComposerWhereDTO;
 	 	 Select: IQueryComposerSelectDTO;
+	 	 TemporalEvents: IQueryComposerTemporalEventDTO[];
 	 }
 	 export var KendoModelQueryComposerRequestDTO: any = {
 	 	 fields: {
 	 	 	'Header': { type:'any', nullable: false},
 	 	 	'Where': { type:'any', nullable: false},
 	 	 	'Select': { type:'any', nullable: false},
+	 	 	'TemporalEvents': { type:'any[]', nullable: false},
 	 	 	'ID': { type:'any', nullable: true},
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }

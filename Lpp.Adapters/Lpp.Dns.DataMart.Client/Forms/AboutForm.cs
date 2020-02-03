@@ -46,7 +46,8 @@ namespace Lpp.Dns.DataMart.Client
 
         private void AboutForm_Load(object sender, EventArgs e)
         {
-            lblVersion.Text = "Version: " + Application.ProductVersion;
+            //lblVersion.Text = "Version: " + Application.ProductVersion;
+            lblVersion.Text = "Version: " + System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(AboutForm).Assembly.Location).ProductVersion;
             lblArch.Text = GetArchitecture() + " version";
 
             //recenter labels

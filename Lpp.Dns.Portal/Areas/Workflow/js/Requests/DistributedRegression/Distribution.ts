@@ -38,6 +38,7 @@ module Workflow.DistributedRegression.Distribution {
         public FieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[];
         public IsFieldVisible: (id: string) => boolean;
         public IsFieldRequired: (id: string) => boolean;
+        public AttachmentsVM: Controls.WFFileUpload.ForAttachments.ViewModel;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], fieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[], datamarts: Dns.Interfaces.IDataMartListDTO[], existingRequestDataMarts: Dns.Interfaces.IRequestDataMartDTO[], uploadViewModel: Controls.WFFileUpload.Index.ViewModel) {
             super(bindingControl, screenPermissions);
@@ -172,6 +173,9 @@ module Workflow.DistributedRegression.Distribution {
                     var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                     var uploadViewModel = Controls.WFFileUpload.Index.init($('#DRUpload'), query, modularProgramTermID);
                     self.UploadViewModel = uploadViewModel;
+                    Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done((viewModel) => {
+                        self.AttachmentsVM = viewModel;
+                    })
                 });
 
             });
@@ -278,8 +282,15 @@ module Workflow.DistributedRegression.Distribution {
             //Bind the view model for the activity
             var bindingControl = $("#DRDistribution");
             vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
+
+            if (Requests.Details.rovm.Request.ID() != null) {
+                Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done((viewModel) => {
+                    vm.AttachmentsVM = viewModel;
+                });
+            }
+            
         $(() => {            
-            ko.applyBindings(vm, bindingControl[0]);            
+            ko.applyBindings(vm, bindingControl[0]);
         });
     });
 

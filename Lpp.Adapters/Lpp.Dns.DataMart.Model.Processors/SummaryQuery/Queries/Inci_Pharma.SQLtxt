@@ -26,13 +26,13 @@ CAST(SUM(ISNULL(SummaryData.m180Q2, 0)) AS FLOAT) AS Members180Q2,
 CAST(SUM(ISNULL(SummaryData.m180Q3, 0)) AS FLOAT) AS Members180Q3, 
 CAST(SUM(ISNULL(SummaryData.m180Q4, 0)) AS FLOAT) AS Members180Q4, 
 CAST(SUM(ISNULL(SummaryData.m270, 0)) AS FLOAT) AS Members270,
-CAST(SUM(ISNULL(SummaryData.e180, 0)) AS FLOAT) AS Episodespans270, 
-CAST(SUM(ISNULL(SummaryData.d180, 0)) AS FLOAT) AS Dispensings270, 
-CAST(SUM(ISNULL(SummaryData.ds180, 0)) AS FLOAT) AS DaySupply270, 
-CAST(SUM(ISNULL(SummaryData.m180Q1, 0)) AS FLOAT) AS Members270Q1, 
-CAST(SUM(ISNULL(SummaryData.m180Q2, 0)) AS FLOAT) AS Members270Q2, 
-CAST(SUM(ISNULL(SummaryData.m180Q3, 0)) AS FLOAT) AS Members270Q3, 
-CAST(SUM(ISNULL(SummaryData.m180Q4, 0)) AS FLOAT) AS Members270Q4
+CAST(SUM(ISNULL(SummaryData.e270, 0)) AS FLOAT) AS Episodespans270, 
+CAST(SUM(ISNULL(SummaryData.d270, 0)) AS FLOAT) AS Dispensings270, 
+CAST(SUM(ISNULL(SummaryData.ds270, 0)) AS FLOAT) AS DaySupply270, 
+CAST(SUM(ISNULL(SummaryData.m270Q1, 0)) AS FLOAT) AS Members270Q1, 
+CAST(SUM(ISNULL(SummaryData.m270Q2, 0)) AS FLOAT) AS Members270Q2, 
+CAST(SUM(ISNULL(SummaryData.m270Q3, 0)) AS FLOAT) AS Members270Q3, 
+CAST(SUM(ISNULL(SummaryData.m270Q4, 0)) AS FLOAT) AS Members270Q4
 
 FROM
 
@@ -116,7 +116,7 @@ LEFT JOIN
 
 		FROM %SD_TABLE% AS sd
 		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
-		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y') > 0) 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0) 
 		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
 
 	) AS SummaryData
