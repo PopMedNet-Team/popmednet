@@ -6,115 +6,136 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "0e2372bb-3923-421d-841d-47e8667d4332",
+            "ID": "a1e78ebf-ea68-4fa4-9d39-8e166adc5180",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
+                "Values": {
+                  "Codes": [],
+                  "CodeValues": [
+                    {
+                      "Code": "0007F",
+                      "Name": "BETA-BLOCKER THERAPY PRESCRIBED",
+                      "ExpireDate": null
+                    }
+                  ]
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "7f248d09-0d3a-4d02-8a4e-9a4a926fb715",
+            "Name": "i_Code_Metric Types",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "e39d0001-07a1-4dfd-9299-a3cb00f2474b",
+                "Values": { "Metric": "1" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "150cb758-d212-4dd9-914b-a82732a38b47",
+            "Name": "i_Output_Criteria",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "17540001-8185-41bb-be64-a3cb00f27ec2",
+                "Values": { "Criteria": "5" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "ded70bdb-7dba-496e-93b0-3819227e251c",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "1" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "d615c2c2-c426-4aa0-9172-6fa63dd0375e",
             "Name": "i_Sex",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
                 "Values": { "Sex": "3" },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "7a74a534-bd48-431b-b65d-7a6f8d96d89b",
-            "Name": "i_Settings",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "4" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "3ce3e013-5605-4388-a353-6006d67600ec",
-            "Name": "i_Code_Metric Types",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "e39d0001-07a1-4dfd-9299-a3cb00f2474b",
-                "Values": { "Metric": "2" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "24bede81-5030-4a4d-a6f7-ef5b12790fd5",
+            "ID": "0f47c5a6-dede-47b8-8824-5097bac6d07f",
             "Name": "i_Year_Observation Period",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2010
+                  "EndYear": 2018
                 },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "184f9928-ce4b-4f52-8756-5e1cc03ae42e",
-            "Name": "i_Output_Criteria",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "17540001-8185-41bb-be64-a3cb00f27ec2",
-                "Values": { "Criteria": "10" },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": [ ]
+        "Terms": []
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "HCPCS_Count",
-        "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": 1,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "HCPCS",
         "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
-        "FieldName": "Sex_Count",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "HCPCS_Count",
+        "Type": "096a0001-73b4-405d-b45f-a3ca014c6e7d",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -123,7 +144,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -132,7 +162,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -141,7 +171,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       }
     ]

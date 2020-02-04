@@ -121,7 +121,15 @@ module Workflow.Default.CreateRequest {
                     emptyCriteraGroups = true;
                 });
 
-                if (emptyCriteraGroups) {
+                let canSkipCriteriaGroupCheck: boolean = false;
+
+                ko.utils.arrayForEach(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Select.Fields(), (item) => {
+                    if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(item.Type(), Plugins.Requests.QueryBuilder.MDQ.Terms.MetadataRefreshID)) {
+                        canSkipCriteriaGroupCheck = true;
+                    }
+                });
+
+                if (emptyCriteraGroups && !canSkipCriteriaGroupCheck) {
                   Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
                   return;
                 }

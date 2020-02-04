@@ -6,109 +6,104 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "ff7084db-aa57-4454-ac58-7e002562a405",
+            "ID": "a3c61a61-f040-45c8-a865-74a15c3b984a",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
                 "Values": {
-                  "Codes": [ ],
+                  "Codes": [],
                   "CodeValues": [
                     {
-                      "Code": "250",
-                      "Name": "DIABETES MELLITUS",
+                      "Code": "162",
+                      "Name": "MALIG NEOPLASM TRACH BRONCHUS&LUNG",
                       "ExpireDate": null
                     }
                   ]
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "15ede821-8435-478b-a2ea-8fa76875e8a5",
-            "Name": "i_Sex",
-            "Operator": 0,
-            "Criteria": [ ],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-                "Values": { "Sex": "3" },
-                "Criteria": [ ]
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "74313e1d-c612-4217-af0a-27e16e8998cb",
+            "ID": "5bb5eec8-3309-4fb7-b971-af7318bdf460",
             "Name": "i_Settings",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "4" },
-                "Criteria": [ ]
+                "Values": { "Setting": "1" },
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           },
           {
-            "ID": "6663a7b2-f998-4027-a5b5-13c612f0a6bd",
+            "ID": "5c5eff02-b8c9-4882-9335-2b1674a6a8d9",
             "Name": "i_Year_Observation Period",
             "Operator": 0,
-            "Criteria": [ ],
+            "Criteria": [],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2010
+                  "EndYear": 2018
                 },
-                "Criteria": [ ]
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "0e9e6d06-0677-45ab-b929-8da5f5f5cb52",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [],
+                "Design": {}
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": [ ]
+        "Terms": []
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "ICD-9 Diagnosis (3 digit)_Count",
-        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": 1,
-        "Select": [ ],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "ICD-9 Diagnosis (3 digit)",
         "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
-        "FieldName": "Sex_Count",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "ICD-9 Diagnosis (3 digit)_Count",
+        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -117,7 +112,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -126,7 +130,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       },
       {
@@ -135,7 +139,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [ ],
+        "Select": [],
         "OrderBy": 0
       }
     ]

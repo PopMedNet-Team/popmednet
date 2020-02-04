@@ -23,14 +23,14 @@ namespace Lpp.Dns.DTO
         }
 
         /// <summary>
-        /// Name of the DataMart
+        /// Gets or Sets Name of the DataMart
         /// </summary>
         [DataMember]
         public string DataMartName { get; set; }
 
 
         /// <summary>
-        /// Response History Items
+        /// Gets or Sets Response History Items
         /// </summary>
         [DataMember]
         public IEnumerable<ResponseHistoryItemDTO> HistoryItems { get; set; }

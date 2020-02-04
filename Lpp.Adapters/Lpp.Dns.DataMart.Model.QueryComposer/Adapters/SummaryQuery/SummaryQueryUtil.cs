@@ -16,15 +16,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
     /// </summary>
     public class SummaryQueryUtil
     {
-        internal const string LOW_CELL_COUNT_COLUMNS = "dispensings members dayssupply events episodespans";
+        //internal const string LOW_CELL_COUNT_COLUMNS = "dispensings members dayssupply events episodespans days";
+        internal static readonly string[] LOW_CELL_COUNT_COLUMNS = { "dispensings", "members", "dayssupply", "events", "episodespans", "days", "total" };
 
 
         public static bool IsCheckedColumn(string columnName)
         {
-            string[] lowCellCountColumns = LOW_CELL_COUNT_COLUMNS.Split(' ');
             string lcColumnName = columnName.ToLower();
 
-            return (from c in lowCellCountColumns
+            return (from c in LOW_CELL_COUNT_COLUMNS
                     where lcColumnName.IndexOf(c) >= 0
                     select c).ToList().Count() > 0;
         }

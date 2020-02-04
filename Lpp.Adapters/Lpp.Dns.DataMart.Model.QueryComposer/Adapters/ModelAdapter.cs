@@ -11,6 +11,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
         readonly RequestMetadata _requestMetadata;
         protected IDictionary<string, object> _settings = null;
         protected double? _lowThresholdValue = null;
+        protected string _requestId = null;
 
         public ModelAdapter(Guid modelID, RequestMetadata requestMetadata)
         {
@@ -59,7 +60,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
             get { return false; }
         }
 
-        public virtual void Initialize(IDictionary<string, object> settings)
+        public virtual void Initialize(IDictionary<string, object> settings, string requestId)
         {
             _settings = settings;
 
@@ -70,9 +71,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
                 if (double.TryParse((settingValue ?? string.Empty).ToString(), out value))
                     _lowThresholdValue = value;
             }
+
+            _requestId = requestId;
         }
 
         public abstract DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL);
+
+        public abstract QueryComposerModelProcessor.DocumentEx[] OutputDocuments();
 
         public virtual void GeneratePatientIdentifierLists(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<Guid,string> outputSettings, string format)
         {
@@ -173,7 +178,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
 
         public abstract void Dispose();
 
+        protected static QueryComposerModelProcessor.DocumentEx SerializeResponse(DTO.QueryComposer.QueryComposerResponseDTO response, Guid documentID, string filename, string kind = null, bool isViewable = true)
+        {
+            string serializedResponse = Newtonsoft.Json.JsonConvert.SerializeObject(response, Newtonsoft.Json.Formatting.None);
+            byte[] resultContent = System.Text.Encoding.UTF8.GetBytes(serializedResponse);
 
-        
+            return new QueryComposerModelProcessor.DocumentEx { ID = documentID, Document = new Document(documentID, "application/json", filename, isViewable, resultContent.Length, kind), Content = resultContent };
+        }
+
     }
 }

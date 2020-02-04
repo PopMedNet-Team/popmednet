@@ -62,7 +62,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                                                  select v.Trim();
             
             model.Codes = string.Join(",", codeTermValues.Distinct().Select(c => System.Net.WebUtility.HtmlEncode(c).Replace(",", "&#44;")));
-            model.CodeNames = null;//not applicable to this query
+            IEnumerable<string> codeNameValues = from t in codeTerms
+                                                 from v in t.GetCodeNameStringCollection()
+                                                 where !string.IsNullOrWhiteSpace(v)
+                                                 select v.Trim();
+
+            model.CodeNames = codeNameValues.Distinct().ToArray();
 
             //These values are pulled from the stratification section of the request json
             var ageStratification = GetAgeField(request.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
@@ -241,14 +246,13 @@ CAST(SUM(ISNULL(SummaryData.m180Q2, 0)) AS FLOAT) AS Members180Q2,
 CAST(SUM(ISNULL(SummaryData.m180Q3, 0)) AS FLOAT) AS Members180Q3, 
 CAST(SUM(ISNULL(SummaryData.m180Q4, 0)) AS FLOAT) AS Members180Q4, 
 CAST(SUM(ISNULL(SummaryData.m270, 0)) AS FLOAT) AS Members270,
-CAST(SUM(ISNULL(SummaryData.e180, 0)) AS FLOAT) AS Episodespans270, 
-CAST(SUM(ISNULL(SummaryData.d180, 0)) AS FLOAT) AS Dispensings270, 
-CAST(SUM(ISNULL(SummaryData.ds180, 0)) AS FLOAT) AS DaySupply270, 
-CAST(SUM(ISNULL(SummaryData.m180Q1, 0)) AS FLOAT) AS Members270Q1, 
-CAST(SUM(ISNULL(SummaryData.m180Q2, 0)) AS FLOAT) AS Members270Q2, 
-CAST(SUM(ISNULL(SummaryData.m180Q3, 0)) AS FLOAT) AS Members270Q3, 
-CAST(SUM(ISNULL(SummaryData.m180Q4, 0)) AS FLOAT) AS Members270Q4
-
+CAST(SUM(ISNULL(SummaryData.e270, 0)) AS FLOAT) AS Episodespans270, 
+CAST(SUM(ISNULL(SummaryData.d270, 0)) AS FLOAT) AS Dispensings270, 
+CAST(SUM(ISNULL(SummaryData.ds270, 0)) AS FLOAT) AS DaySupply270, 
+CAST(SUM(ISNULL(SummaryData.m270Q1, 0)) AS FLOAT) AS Members270Q1, 
+CAST(SUM(ISNULL(SummaryData.m270Q2, 0)) AS FLOAT) AS Members270Q2, 
+CAST(SUM(ISNULL(SummaryData.m270Q3, 0)) AS FLOAT) AS Members270Q3, 
+CAST(SUM(ISNULL(SummaryData.m270Q4, 0)) AS FLOAT) AS Members270Q4
 FROM
 
 	--

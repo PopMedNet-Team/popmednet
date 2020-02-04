@@ -19,6 +19,7 @@ using Lpp.Utilities.Logging;
 using System.IO;
 using System.Data.SqlClient;
 using System.Data;
+using System.Web.Hosting;
 
 namespace Lpp.Dns.Api.DataMartClient
 {
@@ -29,12 +30,25 @@ namespace Lpp.Dns.Api.DataMartClient
     [ClientEntityIgnore]
     public class DMCController : LppApiController<Lpp.Dns.Data.DataContext>
     {
+        static DMCController()
+        {
+            lock (_lock)
+            {
+                var type = typeof(IPostProcessDocumentContent);
+                PostProcessorTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => type.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract);
+            }
+            
+        }
+
         static readonly Guid LegacyModularProcessorID = new Guid("C8BC0BD9-A50D-4B9C-9A25-472827C8640A");
         static readonly Guid ModularProgramTermID = new Guid("A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8");
         static readonly Guid ModularModelID = new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154");
         static readonly Guid DefaultQEAdapterProcessorID = new Guid("AE0DA7B0-0F73-4D06-B70B-922032B7F0EB");
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(DMCController));
-
+        static readonly IEnumerable<Type> PostProcessorTypes;
+        static object _lock = new object();
         /// <summary>
         /// Gets the current Utilities.Security.ApiIdentity.
         /// </summary>
@@ -715,23 +729,12 @@ namespace Lpp.Dns.Api.DataMartClient
             
             var details = await (from d in DataContext.Documents
                                  let requestDataMart = DataContext.Responses.Where(r => r.ID == d.ItemID).Select(r => r.RequestDataMart).FirstOrDefault()
-                                 let processModularProgramSearchTerms = (
-                                    from rt in DataContext.RequestTypes
-                                    //make sure the request type has modular program term
-                                    where (rt.Terms.Any(t => t.TermID == ModularProgramTermID) || rt.Models.Any(m => m.DataModelID == ModularModelID))
-                                    //make sure the request for the document is associated to the request type
-                                    && requestDataMart.Request.RequestTypeID == rt.ID
-                                    //make sure the terms have not been processed for the request yet
-                                    && !requestDataMart.Request.SearchTerms.Any()
-                                    select rt
-                                 ).Any()
                                  where d.ID == documentID 
                                  select new
                                  {
                                      Document = d,
                                      RequestID = requestDataMart.RequestID,
-                                     DataMartID = requestDataMart.DataMartID,
-                                     ProcessModularProgramSearchTerms = processModularProgramSearchTerms
+                                     DataMartID = requestDataMart.DataMartID
                                  }
                                     ).FirstOrDefaultAsync();
 
@@ -803,25 +806,32 @@ namespace Lpp.Dns.Api.DataMartClient
                     conn.Dispose();
                 }
 
-                if (details.ProcessModularProgramSearchTerms && fs.Length > 0)
-                {
-                    try
-                    {
-                        ModularProgramResponsePostProcessor postProcessor = new ModularProgramResponsePostProcessor(DataContext);
-
-                        await postProcessor.ExecuteAsync(details.RequestID, details.Document, fs);
-                    }
-                    catch
-                    {
-                        //ignore if it fails, do not cause error to upload.
-                    }
-                }
-
                 fs.Close();
                 fs.Dispose();
             }
 
-            File.Delete(Path.Combine(uploadPath, details.Document.ID + ".part"));
+            HostingEnvironment.QueueBackgroundWorkItem(async cancellationToken =>
+            {
+                using (var db = new DataContext())
+                {
+                    foreach (var item in PostProcessorTypes)
+                    {
+                        try
+                        {
+                            IPostProcessDocumentContent postProcess = Activator.CreateInstance(item) as IPostProcessDocumentContent;
+                            postProcess.Initialize(db, uploadPath);
+                            await postProcess.ExecuteAsync(details.Document);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error("Error Occured", ex);
+                        }
+                    }
+
+                    File.Delete(Path.Combine(uploadPath, details.Document.ID + ".part"));
+                }
+
+            });
 
             return this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) :  new HttpResponseMessage(HttpStatusCode.OK);
         }

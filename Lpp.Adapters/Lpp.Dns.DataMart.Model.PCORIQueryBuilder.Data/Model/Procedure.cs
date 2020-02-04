@@ -11,7 +11,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
     [Table("PROCEDURES")]
     public class Procedure : Lpp.Objects.Entity
     {
-        [Key, Column("PROCEDUREID")]
+        [Key, Column("PROCEDURESID")]
         public string ID { get; set; }
 
         [Column("PATID")]

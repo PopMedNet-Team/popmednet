@@ -45,6 +45,7 @@ namespace Lpp.Dns.DataMart.Client
         readonly Lib.Caching.DocumentCacheManager Cache;
         IPatientIdentifierProcessor _patientIdentifierProcessor = null;
         BackgroundWorker _patientIdentifierGenerationBackgroundWorker = null;
+        BackgroundWorker processRequestWorker = null;
         ProgressForm _patIDprogressForm = new ProgressForm("Generating PatID Lists", "Generating Patient Identifier lists...") { Indeteminate = true, ShowInTaskbar = false };
 
         public RequestDetailForm()
@@ -289,6 +290,12 @@ namespace Lpp.Dns.DataMart.Client
                 {
                     wasRejected = true;
                 }
+
+                processRequestWorker = new BackgroundWorker();
+                processRequestWorker.WorkerReportsProgress = true;
+                processRequestWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.processRequestWorker_ProcessRequest);
+                processRequestWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.processRequestWorker_ProgressChanged);
+                processRequestWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.processRequestWorker_RunWorkerCompleted);
 
             }
             catch (ModelProcessorError ex)

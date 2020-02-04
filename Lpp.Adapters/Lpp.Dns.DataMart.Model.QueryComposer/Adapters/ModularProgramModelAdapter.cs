@@ -50,6 +50,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ModularProgram
             throw new NotImplementedException();
         }
 
+        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Dispose()
         {
         }

@@ -1179,6 +1179,7 @@ namespace Lpp.Dns.Data
                 body += "<h3>Request Details</h3>" +
                         "Request type: <b>" + log.Request.RequestType.Name + "</b><br/>" +
                         "Request Name: <b>" + log.Request.Name + "</b><br/>" +
+                        "System ID: <b>" + log.Request.Identifier + "</b><br/>" +
                         "Request ID: <b>" + log.Request.MSRequestID + "</b><br/>" +
                         "Project: <b>" + log.Request.Project.Name + "</b><br/>" +
                         "Budget Item: <b>" + (log.Request.ActivityID != null && log.Request.Activity.ParentActivityID != null && log.Request.Activity.ParentActivity.ParentActivity != null ? log.Request.Activity.ParentActivity.ParentActivity.Name : "") +

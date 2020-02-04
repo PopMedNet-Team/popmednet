@@ -32,7 +32,7 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
-  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.12.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.12.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -52,8 +52,8 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=3.1.10.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Npgsql.3.1.10\lib\net451\Npgsql.dll</HintPath>
@@ -76,9 +76,12 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
@@ -128,12 +131,15 @@
     <Compile Include="Adapters\PCORI\Terms\Height.cs" />
     <Compile Include="Adapters\PCORI\Terms\Hispanic.cs" />
     <Compile Include="Adapters\PCORI\Terms\PatientCount.cs" />
+    <Compile Include="Adapters\PCORI\Terms\PatientReportedOutcome.cs" />
     <Compile Include="Adapters\PCORI\Terms\ProcedureCodes.cs" />
     <Compile Include="Adapters\PCORI\Terms\Race.cs" />
     <Compile Include="Adapters\PCORI\Terms\Setting.cs" />
     <Compile Include="Adapters\PCORI\Terms\Sex.cs" />
+    <Compile Include="Adapters\PCORI\Terms\Trial.cs" />
     <Compile Include="Adapters\PCORI\Terms\VitalMeasureDate.cs" />
     <Compile Include="Adapters\PCORI\Terms\Weight.cs" />
+    <Compile Include="Adapters\SummaryQuery\MetadataRefreshModelAdapter.cs" />
     <Compile Include="Adapters\SummaryQuery\SqlDistributionAdapter.cs" />
     <Compile Include="Adapters\SummaryQuery\SummarySqlQueryAdapter.cs" />
     <Compile Include="Adapters\SummaryQuery\DummyModelAdapter.cs" />

@@ -394,7 +394,7 @@ namespace Lpp.Dns.DataMart.Model
             
             using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
             {
-                adapter.Initialize(Settings);
+                adapter.Initialize(Settings, requestId);
 
                 if (viewSQL && !adapter.CanViewSQL)
                 {
@@ -431,28 +431,20 @@ namespace Lpp.Dns.DataMart.Model
                 {
                     var _tempResponse = adapter.Execute(_request, viewSQL);
 
-                    Guid requestID;
-                    if (Guid.TryParse(requestId, out requestID))
-                        _tempResponse.RequestID = requestID;
-
-                    string serializedResponse = Newtonsoft.Json.JsonConvert.SerializeObject(_tempResponse, Newtonsoft.Json.Formatting.None);
-                    byte[] resultContent = System.Text.Encoding.UTF8.GetBytes(serializedResponse);
-
-                    Guid documentID = Guid.NewGuid();
-                    Document resultDocument = new Document(documentID.ToString("D"), "application/json", "response.json");
-                    resultDocument.Size = resultContent.Length;
-                    resultDocument.IsViewable = true;
+                    var outputDocuments = adapter.OutputDocuments();
 
                     if (viewSQL)
                     {
-                        resultDocument.DocumentID = SqlResponseDocumentID.ToString("D");
-                        _SqlResponseDocument = new DocumentEx { ID = SqlResponseDocumentID, Document = resultDocument, Content = resultContent };
+                        var resultDocument = outputDocuments.First();
+                        resultDocument.Document.DocumentID = SqlResponseDocumentID.ToString("D");
+                        resultDocument.ID = SqlResponseDocumentID;
+                        _SqlResponseDocument = resultDocument;
                     }
                     else
                     {
                         _SqlResponseDocument = null;
                         _responseDocuments.Clear();
-                        _responseDocuments.Add(new DocumentEx { ID = documentID, Document = resultDocument, Content = resultContent });
+                        _responseDocuments.AddRange(outputDocuments);
 						_currentResponse = _tempResponse;
                     }
                     string message = string.Empty;
@@ -496,6 +488,8 @@ namespace Lpp.Dns.DataMart.Model
                         return new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter(_requestMetadata);
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Prevalence:
                         return new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter(_requestMetadata);
+                    case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh:
+                        return new QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter(_requestMetadata);
                     case DTO.Enums.QueryComposerQueryTypes.Sql:
                         return new QueryComposer.Adapters.SummaryQuery.SqlDistributionAdapter(_requestMetadata);
                     default:
@@ -554,7 +548,7 @@ namespace Lpp.Dns.DataMart.Model
 
             using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
             {
-                adapter.Initialize(Settings);
+                adapter.Initialize(Settings, requestId);
 
                 adapter.PostProcess(_currentResponse);
 
@@ -567,16 +561,9 @@ namespace Lpp.Dns.DataMart.Model
                     }
                 }
 
-                //replace the current response with the post-processed response.
-                string serializedResponse = Newtonsoft.Json.JsonConvert.SerializeObject(_currentResponse, Newtonsoft.Json.Formatting.None);
-                byte[] resultContent = System.Text.Encoding.UTF8.GetBytes(serializedResponse);
-                
-                Guid documentID = Guid.NewGuid();
-                Document resultDocument = new Document(documentID.ToString("D"), "application/json", "response.json");
-                resultDocument.Size = resultContent.Length;
-                resultDocument.IsViewable = true;
+                ////replace the current response with the post-processed response.
                 _responseDocuments.Clear();
-                _responseDocuments.Add(new DocumentEx { ID = documentID, Document = resultDocument, Content = resultContent });
+                _responseDocuments.AddRange(adapter.OutputDocuments());
                 
                 status.Code = RequestStatus.StatusCode.Complete;
                 status.Message = string.Empty;
@@ -701,7 +688,7 @@ namespace Lpp.Dns.DataMart.Model
                     Settings.Add("MSRequestID", md.MSRequestID);
                 }
 
-                adapter.Initialize(Settings);
+                adapter.Initialize(Settings, requestID.ToString("D"));
                 adapter.GeneratePatientIdentifierLists(_request, outputPaths, format);
             }
         }

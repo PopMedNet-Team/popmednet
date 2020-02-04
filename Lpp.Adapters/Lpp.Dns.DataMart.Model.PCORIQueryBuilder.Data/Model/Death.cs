@@ -14,10 +14,10 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string PatientID { get; set; }
         public virtual Patient Patient { get; set; }
 
-        [Key, Column("DEATH_DATE", Order = 1)]
-        public DateTime DateOfDeath { get; set; }
+        [Column("DEATH_DATE")]
+        public DateTime? DateOfDeath { get; set; }
 
-        [Key, Column("DEATH_SOURCE", Order = 2)]
+        [Key, Column("DEATH_SOURCE", Order = 1)]
         public string Source { get; set; }
 
         [Column("DEATH_DATE_IMPUTE")]

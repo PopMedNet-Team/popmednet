@@ -33,6 +33,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 logger.Debug("Sql Distribution term found, creating SummarySqlQueryAdapter.");
                 SummarySqlQueryAdapter sql = new SummarySqlQueryAdapter();
                 var result = sql.Execute(request, _settings, viewSQL);
+
+                _currentResponse = result;
+
                 return result;
             }
 
@@ -96,6 +99,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             {
                 var qcResponseDTO = queryAdapter.Execute(request, viewSQL);
                 qcResponseDTO.LowCellThrehold = _lowThresholdValue;
+
+                _currentResponse = qcResponseDTO;
+
                 return qcResponseDTO;
             }
         }

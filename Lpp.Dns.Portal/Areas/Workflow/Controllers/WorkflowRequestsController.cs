@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lpp.Utilities.WebSites.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -72,33 +73,6 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
         }
 
         /// <summary>
-        /// Exports the responses in the indicated format for the specified request.(for when response was an activity)
-        /// </summary>
-        /// <param name="id">The id of the request.</param>
-        /// <param name="format">The export format.</param>
-        /// <param name="authToken">The auth token for the requesting user.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult> Download(Guid id, string format, string authToken)
-        {
-            using (var web = new System.Net.Http.HttpClient())
-            {
-                web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authToken);
-
-                var stream = await web.GetStreamAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "/response/ExportResponse?requestID=" + id + "&format=" + format);
-
-                var contentDisposition = new System.Net.Mime.ContentDisposition
-                {
-                    FileName = "response." +format,
-                    Inline = false
-                };
-                Response.AppendHeader("Content-Disposition", contentDisposition.ToString());
-
-                return File(stream, "application/octet-stream");
-            }
-        }
-
-        /// <summary>
         /// Exports the specified responses in the indicated format.
         /// </summary>
         /// <param name="id">The collection of responses to export.</param>
@@ -110,18 +84,22 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
         {
             using (var web = new System.Net.Http.HttpClient())
             {
-                web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authToken);
+                var cookie = Request.Cookies.Get("Authorization").Value;
+                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoginResponseModel>(cookie);
 
-                var stream = await web.GetStreamAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/Export?" + string.Join("&", id.Select(r => "id=" + r).ToArray()) + "&view=" + (int)view + "&format=" + format);
-
-                var contentDisposition = new System.Net.Mime.ContentDisposition
+                web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(model.AuthenticationType, authToken);
+                var response = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/Export?" + string.Join("&", id.Select(r => "id=" + r).ToArray()) + "&view=" + (int)view + "&format=" + format);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    FileName = "response." + format,
-                    Inline = false
-                };
-                Response.AppendHeader("Content-Disposition", contentDisposition.ToString());
-
-                return File(stream, "application/octet-stream");
+                    return HttpNotFound();
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    var fileStream = await response.Content.ReadAsStreamAsync();
+                    Response.BufferOutput = false;
+                    return File(fileStream, "application/octet-stream", string.Format("response.{0}", format));
+                }
             }
         }
         /// <summary>
@@ -136,23 +114,23 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
         {
             using (var web = new System.Net.Http.HttpClient())
             {
-                web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authToken);
+                var cookie = Request.Cookies.Get("Authorization").Value;
+                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoginResponseModel>(cookie);
 
-                HttpResponseMessage stream = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
-				if(stream.StatusCode == System.Net.HttpStatusCode.NoContent)
+                web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(model.AuthenticationType, authToken);
+                var response = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    return new HttpStatusCodeResult(204, "No response documents were found to download.");
+                    return HttpNotFound();
                 }
-                var cd = new ContentDisposition(stream.Content.Headers.ContentDisposition.ToString());
-                var contentDisposition = new System.Net.Mime.ContentDisposition
+                else
                 {
-                    FileName = cd.FileName,
-                    Inline = false
-                };
-                Response.AppendHeader("Content-Disposition", contentDisposition.ToString());
-
-                return File(stream.Content.ReadAsStreamAsync().Result, "application/zip");
-                
+                    response.EnsureSuccessStatusCode();
+                    var cd = new ContentDisposition(response.Content.Headers.ContentDisposition.ToString());
+                    var fileStream = await response.Content.ReadAsStreamAsync();
+                    Response.BufferOutput = false;
+                    return File(fileStream, "application/zip", string.Format("response.{0}", cd.FileName));
+                }
             }
         }
 

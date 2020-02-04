@@ -1768,211 +1768,6 @@ module Dns.WebApi {
 	 	 }
 
 	 }
-	 export class DataModels{
-	 	 public static Get(ID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
-	 	 	 var params = '';
-	 	 	 if (ID != null) params += '&ID=' + ID;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelDTO[]>('DataModels/Get' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static List($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
-	 	 	 var params = '';
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelDTO[]>('DataModels/List' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static ListDataModelProcessors($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelProcessorDTO[]>{
-	 	 	 var params = '';
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelProcessorDTO[]>('DataModels/ListDataModelProcessors' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (IDs != null)
-	 	 	 	 for(var j = 0; j < IDs.length; j++) { params += '&IDs=' + IDs[j]; }
-	 	 	 if (permissions != null)
-	 	 	 	 for(var j = 0; j < permissions.length; j++) { params += '&permissions=' + permissions[j]; }
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<any[]>('DataModels/GetPermissions' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static InsertOrUpdate(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
-	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/InsertOrUpdate', values, doNotHandleFail);
-	 	 }
-
-	 	 public static Update(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
-	 	 	 return Helpers.PutAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/Update', values, doNotHandleFail);
-	 	 }
-
-	 	 public static Insert(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
-	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/Insert', values, doNotHandleFail);
-	 	 }
-
-	 	 public static Delete(ID: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (ID != null)
-	 	 	 	 for(var j = 0; j < ID.length; j++) { params += '&ID=' + ID[j]; }
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.DeleteAPIValue<any[]>('DataModels/Delete' + params, doNotHandleFail);
-	 	 }
-
-	 }
-	 export class DataMarts{
-	 	 public static Get(ID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 var params = '';
-	 	 	 if (ID != null) params += '&ID=' + ID;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Get' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static GetByRoute(requestDataMartID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 var params = '';
-	 	 	 if (requestDataMartID != null) params += '&requestDataMartID=' + requestDataMartID;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/GetByRoute' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static List($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 var params = '';
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/List' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static ListBasic($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartListDTO[]>{
-	 	 	 var params = '';
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartListDTO[]>('DataMarts/ListBasic' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static DataMartTypeList($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartTypeDTO[]>{
-	 	 	 var params = '';
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartTypeDTO[]>('DataMarts/DataMartTypeList' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static GetRequestTypesByDataMarts(DataMartId: any[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IRequestTypeDTO[]>{
-	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IRequestTypeDTO[]>('DataMarts/GetRequestTypesByDataMarts', DataMartId, doNotHandleFail);
-	 	 }
-
-	 	 public static GetInstalledModelsByDataMart(DataMartId: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartInstalledModelDTO[]>{
-	 	 	 var params = '';
-	 	 	 if (DataMartId != null) params += '&DataMartId=' + DataMartId;
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartInstalledModelDTO[]>('DataMarts/GetInstalledModelsByDataMart' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static UninstallModel(model: Dns.Interfaces.IDataMartInstalledModelDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 return Helpers.PostAPIValue<any[]>('DataMarts/UninstallModel', model, doNotHandleFail);
-	 	 }
-
-	 	 public static Copy(datamartID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (datamartID != null) params += '&datamartID=' + datamartID;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<any[]>('DataMarts/Copy' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static Delete(ID: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (ID != null)
-	 	 	 	 for(var j = 0; j < ID.length; j++) { params += '&ID=' + ID[j]; }
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.DeleteAPIValue<any[]>('DataMarts/Delete' + params, doNotHandleFail);
-	 	 }
-
-	 	 public static Insert(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Insert', values, doNotHandleFail);
-	 	 }
-
-	 	 public static InsertOrUpdate(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/InsertOrUpdate', values, doNotHandleFail);
-	 	 }
-
-	 	 public static Update(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
-	 	 	 return Helpers.PutAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Update', values, doNotHandleFail);
-	 	 }
-
-	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (IDs != null)
-	 	 	 	 for(var j = 0; j < IDs.length; j++) { params += '&IDs=' + IDs[j]; }
-	 	 	 if (permissions != null)
-	 	 	 	 for(var j = 0; j < permissions.length; j++) { params += '&permissions=' + permissions[j]; }
-             if($filter) params += '&$filter=' + $filter;
-			if($select) params += '&$select=' + $select;
-			if($orderby) params += '&$orderby=' + $orderby;
-			if($skip) params += '&$skip=' + $skip;
-			if($top) params += '&$top=' + $top;
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<any[]>('DataMarts/GetPermissions' + params, doNotHandleFail);
-	 	 }
-
-	 }
 	 export class Tasks{
 	 	 public static ByRequestID(requestID: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.ITaskDTO[]>{
 	 	 	 var params = '';
@@ -2720,6 +2515,21 @@ module Dns.WebApi {
 	 	 	 return Helpers.PostAPIValue<any[]>('Requests/CopyRequest', requestID, doNotHandleFail);
 	 	 }
 
+	 	 public static RetrieveBudgetInfoForRequests(ids: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IRequestBudgetInfoDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (ids != null)
+	 	 	 	 for(var j = 0; j < ids.length; j++) { params += '&ids=' + ids[j]; }
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IRequestBudgetInfoDTO[]>('Requests/RetrieveBudgetInfoForRequests' + params, doNotHandleFail);
+	 	 }
+
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (IDs != null)
@@ -3419,6 +3229,226 @@ module Dns.WebApi {
 	 	 	 	 params = '?' + params.substr(1);
 
 	 	 	 return Helpers.DeleteAPIValue<any[]>('Documents/Delete' + params, doNotHandleFail);
+	 	 }
+
+	 }
+	 export class DataMartAvailability{
+	 	 public static List($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartAvailabilityPeriodV2DTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartAvailabilityPeriodV2DTO[]>('DataMartAvailability/List' + params, doNotHandleFail);
+	 	 }
+
+	 }
+	 export class DataModels{
+	 	 public static Get(ID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (ID != null) params += '&ID=' + ID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelDTO[]>('DataModels/Get' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static List($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelDTO[]>('DataModels/List' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static ListDataModelProcessors($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelProcessorDTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataModelProcessorDTO[]>('DataModels/ListDataModelProcessors' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (IDs != null)
+	 	 	 	 for(var j = 0; j < IDs.length; j++) { params += '&IDs=' + IDs[j]; }
+	 	 	 if (permissions != null)
+	 	 	 	 for(var j = 0; j < permissions.length; j++) { params += '&permissions=' + permissions[j]; }
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('DataModels/GetPermissions' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static InsertOrUpdate(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
+	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/InsertOrUpdate', values, doNotHandleFail);
+	 	 }
+
+	 	 public static Update(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
+	 	 	 return Helpers.PutAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/Update', values, doNotHandleFail);
+	 	 }
+
+	 	 public static Insert(values: Dns.Interfaces.IDataModelDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataModelDTO[]>{
+	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataModelDTO[]>('DataModels/Insert', values, doNotHandleFail);
+	 	 }
+
+	 	 public static Delete(ID: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (ID != null)
+	 	 	 	 for(var j = 0; j < ID.length; j++) { params += '&ID=' + ID[j]; }
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.DeleteAPIValue<any[]>('DataModels/Delete' + params, doNotHandleFail);
+	 	 }
+
+	 }
+	 export class DataMarts{
+	 	 public static Get(ID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (ID != null) params += '&ID=' + ID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Get' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static GetByRoute(requestDataMartID: any, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (requestDataMartID != null) params += '&requestDataMartID=' + requestDataMartID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/GetByRoute' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static List($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartDTO[]>('DataMarts/List' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static ListBasic($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartListDTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartListDTO[]>('DataMarts/ListBasic' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static DataMartTypeList($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartTypeDTO[]>{
+	 	 	 var params = '';
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartTypeDTO[]>('DataMarts/DataMartTypeList' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static GetRequestTypesByDataMarts(DataMartId: any[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IRequestTypeDTO[]>{
+	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IRequestTypeDTO[]>('DataMarts/GetRequestTypesByDataMarts', DataMartId, doNotHandleFail);
+	 	 }
+
+	 	 public static GetInstalledModelsByDataMart(DataMartId: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartInstalledModelDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (DataMartId != null) params += '&DataMartId=' + DataMartId;
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IDataMartInstalledModelDTO[]>('DataMarts/GetInstalledModelsByDataMart' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static UninstallModel(model: Dns.Interfaces.IDataMartInstalledModelDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('DataMarts/UninstallModel', model, doNotHandleFail);
+	 	 }
+
+	 	 public static Copy(datamartID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (datamartID != null) params += '&datamartID=' + datamartID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('DataMarts/Copy' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static Delete(ID: any[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (ID != null)
+	 	 	 	 for(var j = 0; j < ID.length; j++) { params += '&ID=' + ID[j]; }
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.DeleteAPIValue<any[]>('DataMarts/Delete' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static Insert(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Insert', values, doNotHandleFail);
+	 	 }
+
+	 	 public static InsertOrUpdate(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/InsertOrUpdate', values, doNotHandleFail);
+	 	 }
+
+	 	 public static Update(values: Dns.Interfaces.IDataMartDTO[], doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IDataMartDTO[]>{
+	 	 	 return Helpers.PutAPIValue<Dns.Interfaces.IDataMartDTO[]>('DataMarts/Update', values, doNotHandleFail);
+	 	 }
+
+	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (IDs != null)
+	 	 	 	 for(var j = 0; j < IDs.length; j++) { params += '&IDs=' + IDs[j]; }
+	 	 	 if (permissions != null)
+	 	 	 	 for(var j = 0; j < permissions.length; j++) { params += '&permissions=' + permissions[j]; }
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('DataMarts/GetPermissions' + params, doNotHandleFail);
 	 	 }
 
 	 }

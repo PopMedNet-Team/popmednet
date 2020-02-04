@@ -225,7 +225,11 @@ namespace Lpp.Dns.Api.Tests.Requests
                                  ResponseID = currentResonse.ID,
                                  ResponseGroupID = currentResonse.ResponseGroupID,
                                  ResponseGroup = currentResonse.ResponseGroup.Name,
-                                 ResponseMessage = currentResonse.ResponseMessage
+                                 ResponseMessage = currentResonse.ResponseMessage,
+                                 ResponseSubmittedBy = currentResonse.SubmittedBy.UserName,
+                                 ResponseSubmittedByID = currentResonse.SubmittedByID,
+                                 ResponseSubmittedOn = currentResonse.SubmittedOn,
+                                 ResponseTime = currentResonse.ResponseTime
                              };
 
 

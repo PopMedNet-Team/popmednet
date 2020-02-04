@@ -39,6 +39,9 @@
         public static get ESPCombinedDiagnosisCodesID(): any {
             return 'A21E9775-39A4-4ECC-848B-1DC881E13689';
         }
+        public static get MetadataRefreshID(): any {
+            return '421BAC16-CAAC-4918-8760-A10FF76CC87B';
+        }
         public static get ConditionID(): any {
             return 'EC593176-D0BF-4E5A-BCFF-4BBD13E88DBF';
         }

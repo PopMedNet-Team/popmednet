@@ -6,41 +6,65 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Data.Entity;
 
 namespace Lpp.Dns.Api.DataMartClient
 {
     /// <summary>
     /// A document content upload post processsor for Modular Program.
     /// </summary>
-    public class ModularProgramResponsePostProcessor
+    public class ModularProgramResponsePostProcessor : IPostProcessDocumentContent
     {
+        static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(ModularProgramResponsePostProcessor));
         const string AllRunCSVFilename = "allrun_signature.csv";
         const string AllRunSasFilename = "allrun_signature.sas7bdat";
         static readonly string[] CommonData = new string[] { "MSReqID", "MSProjID", "MSWPType", "MSWPID", "MSVerID", "NumCycle", "NumScen",
                                             "MP1Cycles", "MP2Cycles", "MP3Cycles", "MP4Cycles", "MP5Cycles", "MP6Cycles",  "MP7Cycles", "MP8Cycles",
                                             "MP1Scenarios", "MP2Scenarios", "MP3Scenarios", "MP4Scenarios", "MP5Scenarios", "MP6Scenarios", "MP7Scenarios", "MP8Scenarios"
                                           };
-        readonly DataContext db;
 
-        /// <summary>
-        /// Initializes a new ModularProgram document upload post processor.
-        /// </summary>
-        /// <param name="db"></param>
-        public ModularProgramResponsePostProcessor(DataContext db) 
+        static readonly Guid ModularProgramTermID = new Guid("A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8");
+        static readonly Guid ModularModelID = new Guid("1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154");
+
+        private DataContext db;      
+        private string _uploadDir = string.Empty;
+        
+        public void Initialize(DataContext db, string uploadDir)
         {
             this.db = db;
+            _uploadDir = uploadDir;
         }
 
-        /// <summary>
-        /// Reads the specified response and parses out the search terms.
-        /// </summary>
-        /// <remarks>This method should be wrap with exception handling, it is possible that it is only part of the document.</remarks>
-        /// <param name="requestID">The ID of the request.</param>
-        /// <param name="document">The response document metadata.</param>
-        /// <param name="documentContent">The uploaded document content.</param>
-        /// <returns></returns>
-        public async Task ExecuteAsync(Guid requestID, Document document, Stream documentContent)
+        public async Task ExecuteAsync(Document document)
         {
+            var details = await(from d in db.Documents
+                                let requestDataMart = db.Responses.Where(r => r.ID == d.ItemID).Select(r => r.RequestDataMart).FirstOrDefault()
+                                let processModularProgramSearchTerms = (
+                                   from rt in db.RequestTypes
+                                       //make sure the request type has modular program term
+                                    where (rt.Terms.Any(t => t.TermID == ModularProgramTermID) || rt.Models.Any(m => m.DataModelID == ModularModelID))
+                                   //make sure the request for the document is associated to the request type
+                                   && requestDataMart.Request.RequestTypeID == rt.ID
+                                   //make sure the terms have not been processed for the request yet
+                                   && !requestDataMart.Request.SearchTerms.Any()
+                                   select rt
+                                ).Any()
+                                where d.ID == document.ID
+                                select new
+                                {
+                                    Document = d,
+                                    RequestID = requestDataMart.RequestID,
+                                    DataMartID = requestDataMart.DataMartID,
+                                    ProcessModularProgramSearchTerms = processModularProgramSearchTerms
+                                }
+                                   ).FirstOrDefaultAsync();
+
+            if (!details.ProcessModularProgramSearchTerms && document.Length == 0)
+            {
+                Logger.Debug("Document was not for Modular Program");
+                return;
+            }
+
             //only parse if the document either matches one of the designated filenames or is a zip and contains one of the designated files.
             if ((!document.FileName.Equals(AllRunCSVFilename, StringComparison.OrdinalIgnoreCase)
                 && !document.FileName.Equals(AllRunSasFilename, StringComparison.OrdinalIgnoreCase)
@@ -48,54 +72,57 @@ namespace Lpp.Dns.Api.DataMartClient
                 return;
 
             //only parse and add if there are no existing search terms
-            if (db.RequestSearchTerms.Any(t => t.RequestID == requestID))
+            if (db.RequestSearchTerms.Any(t => t.RequestID == details.RequestID))
                 return;
 
             ZipInputStream zf = null;
             try
             {
-
-                System.IO.StreamReader reader = null;
-                if (document.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                using (var stream = new FileStream(Path.Combine(_uploadDir, document.ID + ".part"), FileMode.Open, FileAccess.Read))
                 {
-                    zf = new ZipInputStream(documentContent);
-                    ZipEntry zipEntry = null;
-                    while ((zipEntry = zf.GetNextEntry()) != null && reader == null)
+                    System.IO.StreamReader reader = null;
+                    if (document.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!zipEntry.IsFile)
-                            continue;
+                        zf = new ZipInputStream(stream);
+                        ZipEntry zipEntry = null;
+                        while ((zipEntry = zf.GetNextEntry()) != null && reader == null)
+                        {
+                            if (!zipEntry.IsFile)
+                                continue;
 
-                        IEnumerable<RequestSearchTerm> searchTerms = null;
-                        if (zipEntry.Name.EndsWith(AllRunCSVFilename, StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Done if cvs version found.
-                            searchTerms = await ReadFile(zf, requestID);
-                            if (searchTerms.Any())
+                            IEnumerable<RequestSearchTerm> searchTerms = null;
+                            if (zipEntry.Name.EndsWith(AllRunCSVFilename, StringComparison.OrdinalIgnoreCase))
                             {
-                                db.RequestSearchTerms.AddRange(searchTerms);
+                                // Done if cvs version found.
+                                searchTerms = await ReadFile(zf, details.RequestID);
+                                if (searchTerms.Any())
+                                {
+                                    db.RequestSearchTerms.AddRange(searchTerms);
+                                }
+                                break;
                             }
-                            break;
-                        }
-                        else if (zipEntry.Name.EndsWith(AllRunSasFilename, StringComparison.OrdinalIgnoreCase))
-                        {
-                            searchTerms = await ReadFile(zf, requestID);
-                            if (searchTerms.Any())
+                            else if (zipEntry.Name.EndsWith(AllRunSasFilename, StringComparison.OrdinalIgnoreCase))
                             {
-                                db.RequestSearchTerms.AddRange(searchTerms);
+                                searchTerms = await ReadFile(zf, details.RequestID);
+                                if (searchTerms.Any())
+                                {
+                                    db.RequestSearchTerms.AddRange(searchTerms);
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    var searchTerms = await ReadFile(documentContent, requestID);
-                    if (searchTerms.Any())
+                    else
                     {
-                        db.RequestSearchTerms.AddRange(searchTerms);
+                        var searchTerms = await ReadFile(stream, details.RequestID);
+                        if (searchTerms.Any())
+                        {
+                            db.RequestSearchTerms.AddRange(searchTerms);
+                        }
                     }
+
+                    await db.SaveChangesAsync();
                 }
 
-                await db.SaveChangesAsync();
             }
             finally
             {
@@ -104,6 +131,7 @@ namespace Lpp.Dns.Api.DataMartClient
                     zf.Dispose();
                     zf = null;
                 }
+                Logger.Debug($"Finished parsing the response doucment {document.ID}");
             }
         }
 

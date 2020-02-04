@@ -58,6 +58,44 @@ var Dns;
             return EntityDtoWithIDViewModel;
         }(EntityDtoViewModel));
         ViewModels.EntityDtoWithIDViewModel = EntityDtoWithIDViewModel;
+        var DataMartAvailabilityPeriodV2ViewModel = /** @class */ (function (_super) {
+            __extends(DataMartAvailabilityPeriodV2ViewModel, _super);
+            function DataMartAvailabilityPeriodV2ViewModel(DataMartAvailabilityPeriodV2DTO) {
+                var _this = _super.call(this) || this;
+                if (DataMartAvailabilityPeriodV2DTO == null) {
+                    _this.DataMartID = ko.observable();
+                    _this.DataMart = ko.observable();
+                    _this.DataTable = ko.observable();
+                    _this.PeriodCategory = ko.observable();
+                    _this.Period = ko.observable();
+                    _this.Year = ko.observable();
+                    _this.Quarter = ko.observable();
+                }
+                else {
+                    _this.DataMartID = ko.observable(DataMartAvailabilityPeriodV2DTO.DataMartID);
+                    _this.DataMart = ko.observable(DataMartAvailabilityPeriodV2DTO.DataMart);
+                    _this.DataTable = ko.observable(DataMartAvailabilityPeriodV2DTO.DataTable);
+                    _this.PeriodCategory = ko.observable(DataMartAvailabilityPeriodV2DTO.PeriodCategory);
+                    _this.Period = ko.observable(DataMartAvailabilityPeriodV2DTO.Period);
+                    _this.Year = ko.observable(DataMartAvailabilityPeriodV2DTO.Year);
+                    _this.Quarter = ko.observable(DataMartAvailabilityPeriodV2DTO.Quarter);
+                }
+                return _this;
+            }
+            DataMartAvailabilityPeriodV2ViewModel.prototype.toData = function () {
+                return {
+                    DataMartID: this.DataMartID(),
+                    DataMart: this.DataMart(),
+                    DataTable: this.DataTable(),
+                    PeriodCategory: this.PeriodCategory(),
+                    Period: this.Period(),
+                    Year: this.Year(),
+                    Quarter: this.Quarter(),
+                };
+            };
+            return DataMartAvailabilityPeriodV2ViewModel;
+        }(ViewModel));
+        ViewModels.DataMartAvailabilityPeriodV2ViewModel = DataMartAvailabilityPeriodV2ViewModel;
         var DataModelProcessorViewModel = /** @class */ (function (_super) {
             __extends(DataModelProcessorViewModel, _super);
             function DataModelProcessorViewModel(DataModelProcessorDTO) {
@@ -477,12 +515,24 @@ var Dns;
                 var _this = _super.call(this) || this;
                 if (HomepageRouteDetailDTO == null) {
                     _this.RequestDataMartID = ko.observable();
+                    _this.DataMart = ko.observable();
                     _this.DataMartID = ko.observable();
+                    _this.RoutingType = ko.observable();
                     _this.RequestID = ko.observable();
                     _this.Name = ko.observable();
                     _this.Identifier = ko.observable();
                     _this.SubmittedOn = ko.observable();
                     _this.SubmittedByName = ko.observable();
+                    _this.ResponseID = ko.observable();
+                    _this.ResponseSubmittedOn = ko.observable();
+                    _this.ResponseSubmittedByID = ko.observable();
+                    _this.ResponseSubmittedBy = ko.observable();
+                    _this.ResponseTime = ko.observable();
+                    _this.RespondedByID = ko.observable();
+                    _this.RespondedBy = ko.observable();
+                    _this.ResponseGroupID = ko.observable();
+                    _this.ResponseGroup = ko.observable();
+                    _this.ResponseMessage = ko.observable();
                     _this.StatusText = ko.observable();
                     _this.RequestStatus = ko.observable();
                     _this.RoutingStatus = ko.observable();
@@ -497,12 +547,24 @@ var Dns;
                 }
                 else {
                     _this.RequestDataMartID = ko.observable(HomepageRouteDetailDTO.RequestDataMartID);
+                    _this.DataMart = ko.observable(HomepageRouteDetailDTO.DataMart);
                     _this.DataMartID = ko.observable(HomepageRouteDetailDTO.DataMartID);
+                    _this.RoutingType = ko.observable(HomepageRouteDetailDTO.RoutingType);
                     _this.RequestID = ko.observable(HomepageRouteDetailDTO.RequestID);
                     _this.Name = ko.observable(HomepageRouteDetailDTO.Name);
                     _this.Identifier = ko.observable(HomepageRouteDetailDTO.Identifier);
                     _this.SubmittedOn = ko.observable(HomepageRouteDetailDTO.SubmittedOn);
                     _this.SubmittedByName = ko.observable(HomepageRouteDetailDTO.SubmittedByName);
+                    _this.ResponseID = ko.observable(HomepageRouteDetailDTO.ResponseID);
+                    _this.ResponseSubmittedOn = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedOn);
+                    _this.ResponseSubmittedByID = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedByID);
+                    _this.ResponseSubmittedBy = ko.observable(HomepageRouteDetailDTO.ResponseSubmittedBy);
+                    _this.ResponseTime = ko.observable(HomepageRouteDetailDTO.ResponseTime);
+                    _this.RespondedByID = ko.observable(HomepageRouteDetailDTO.RespondedByID);
+                    _this.RespondedBy = ko.observable(HomepageRouteDetailDTO.RespondedBy);
+                    _this.ResponseGroupID = ko.observable(HomepageRouteDetailDTO.ResponseGroupID);
+                    _this.ResponseGroup = ko.observable(HomepageRouteDetailDTO.ResponseGroup);
+                    _this.ResponseMessage = ko.observable(HomepageRouteDetailDTO.ResponseMessage);
                     _this.StatusText = ko.observable(HomepageRouteDetailDTO.StatusText);
                     _this.RequestStatus = ko.observable(HomepageRouteDetailDTO.RequestStatus);
                     _this.RoutingStatus = ko.observable(HomepageRouteDetailDTO.RoutingStatus);
@@ -520,12 +582,24 @@ var Dns;
             HomepageRouteDetailViewModel.prototype.toData = function () {
                 return {
                     RequestDataMartID: this.RequestDataMartID(),
+                    DataMart: this.DataMart(),
                     DataMartID: this.DataMartID(),
+                    RoutingType: this.RoutingType(),
                     RequestID: this.RequestID(),
                     Name: this.Name(),
                     Identifier: this.Identifier(),
                     SubmittedOn: this.SubmittedOn(),
                     SubmittedByName: this.SubmittedByName(),
+                    ResponseID: this.ResponseID(),
+                    ResponseSubmittedOn: this.ResponseSubmittedOn(),
+                    ResponseSubmittedByID: this.ResponseSubmittedByID(),
+                    ResponseSubmittedBy: this.ResponseSubmittedBy(),
+                    ResponseTime: this.ResponseTime(),
+                    RespondedByID: this.RespondedByID(),
+                    RespondedBy: this.RespondedBy(),
+                    ResponseGroupID: this.ResponseGroupID(),
+                    ResponseGroup: this.ResponseGroup(),
+                    ResponseMessage: this.ResponseMessage(),
                     StatusText: this.StatusText(),
                     RequestStatus: this.RequestStatus(),
                     RoutingStatus: this.RoutingStatus(),
@@ -6233,6 +6307,47 @@ var Dns;
             return ReportAggregationLevelViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ReportAggregationLevelViewModel = ReportAggregationLevelViewModel;
+        var RequestBudgetInfoViewModel = /** @class */ (function (_super) {
+            __extends(RequestBudgetInfoViewModel, _super);
+            function RequestBudgetInfoViewModel(RequestBudgetInfoDTO) {
+                var _this = _super.call(this) || this;
+                if (RequestBudgetInfoDTO == null) {
+                    _this.BudgetActivityID = ko.observable();
+                    _this.BudgetActivityDescription = ko.observable();
+                    _this.BudgetActivityProjectID = ko.observable();
+                    _this.BudgetActivityProjectDescription = ko.observable();
+                    _this.BudgetTaskOrderID = ko.observable();
+                    _this.BudgetTaskOrderDescription = ko.observable();
+                    _this.ID = ko.observable();
+                    _this.Timestamp = ko.observable();
+                }
+                else {
+                    _this.BudgetActivityID = ko.observable(RequestBudgetInfoDTO.BudgetActivityID);
+                    _this.BudgetActivityDescription = ko.observable(RequestBudgetInfoDTO.BudgetActivityDescription);
+                    _this.BudgetActivityProjectID = ko.observable(RequestBudgetInfoDTO.BudgetActivityProjectID);
+                    _this.BudgetActivityProjectDescription = ko.observable(RequestBudgetInfoDTO.BudgetActivityProjectDescription);
+                    _this.BudgetTaskOrderID = ko.observable(RequestBudgetInfoDTO.BudgetTaskOrderID);
+                    _this.BudgetTaskOrderDescription = ko.observable(RequestBudgetInfoDTO.BudgetTaskOrderDescription);
+                    _this.ID = ko.observable(RequestBudgetInfoDTO.ID);
+                    _this.Timestamp = ko.observable(RequestBudgetInfoDTO.Timestamp);
+                }
+                return _this;
+            }
+            RequestBudgetInfoViewModel.prototype.toData = function () {
+                return {
+                    BudgetActivityID: this.BudgetActivityID(),
+                    BudgetActivityDescription: this.BudgetActivityDescription(),
+                    BudgetActivityProjectID: this.BudgetActivityProjectID(),
+                    BudgetActivityProjectDescription: this.BudgetActivityProjectDescription(),
+                    BudgetTaskOrderID: this.BudgetTaskOrderID(),
+                    BudgetTaskOrderDescription: this.BudgetTaskOrderDescription(),
+                    ID: this.ID(),
+                    Timestamp: this.Timestamp(),
+                };
+            };
+            return RequestBudgetInfoViewModel;
+        }(EntityDtoWithIDViewModel));
+        ViewModels.RequestBudgetInfoViewModel = RequestBudgetInfoViewModel;
         var RequestMetadataViewModel = /** @class */ (function (_super) {
             __extends(RequestMetadataViewModel, _super);
             function RequestMetadataViewModel(RequestMetadataDTO) {
@@ -7167,6 +7282,10 @@ var Dns;
                     _this.ResponseGroupID = ko.observable();
                     _this.ResponseGroup = ko.observable();
                     _this.ResponseMessage = ko.observable();
+                    _this.ResponseSubmittedOn = ko.observable();
+                    _this.ResponseSubmittedByID = ko.observable();
+                    _this.ResponseSubmittedBy = ko.observable();
+                    _this.ResponseTime = ko.observable();
                     _this.ID = ko.observable();
                     _this.Timestamp = ko.observable();
                 }
@@ -7187,6 +7306,10 @@ var Dns;
                     _this.ResponseGroupID = ko.observable(RequestDataMartDTO.ResponseGroupID);
                     _this.ResponseGroup = ko.observable(RequestDataMartDTO.ResponseGroup);
                     _this.ResponseMessage = ko.observable(RequestDataMartDTO.ResponseMessage);
+                    _this.ResponseSubmittedOn = ko.observable(RequestDataMartDTO.ResponseSubmittedOn);
+                    _this.ResponseSubmittedByID = ko.observable(RequestDataMartDTO.ResponseSubmittedByID);
+                    _this.ResponseSubmittedBy = ko.observable(RequestDataMartDTO.ResponseSubmittedBy);
+                    _this.ResponseTime = ko.observable(RequestDataMartDTO.ResponseTime);
                     _this.ID = ko.observable(RequestDataMartDTO.ID);
                     _this.Timestamp = ko.observable(RequestDataMartDTO.Timestamp);
                 }
@@ -7210,6 +7333,10 @@ var Dns;
                     ResponseGroupID: this.ResponseGroupID(),
                     ResponseGroup: this.ResponseGroup(),
                     ResponseMessage: this.ResponseMessage(),
+                    ResponseSubmittedOn: this.ResponseSubmittedOn(),
+                    ResponseSubmittedByID: this.ResponseSubmittedByID(),
+                    ResponseSubmittedBy: this.ResponseSubmittedBy(),
+                    ResponseTime: this.ResponseTime(),
                     ID: this.ID(),
                     Timestamp: this.Timestamp(),
                 };

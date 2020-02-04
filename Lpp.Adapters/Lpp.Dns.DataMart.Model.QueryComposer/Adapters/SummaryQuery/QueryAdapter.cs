@@ -193,7 +193,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
             // Build the cross join (zero rows) clauses and insert in the query.
             string periodCJ = BuildCrossJoinClause("Year", periods.Split(','), "en");
-            string sexCJ = BuildCrossJoinClause("Sex", SEX_STRATIFICATIONS[args.SexStratification ?? 0].Split(','), "sx");
+
+            string sexCJ = BuildCrossJoinClause("Sex", ParseSexValue(args).Split(','), "sx");
             string cjcs = periodCJ + "," + sexCJ;
 
             ApplyCrossJoinForCodes(args, ref query, ref cjcs);
@@ -205,7 +206,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
              .Replace("%SETTING%", "'" + (args.Setting ?? "") + "'")
              .Replace("%PERIODS%", periods)
              .Replace("%YEARS%", years)
-             .Replace("%SEX%", SEX_STRATIFICATIONS[args.SexStratification ?? 0]);
+             .Replace("%SEX%", ParseSexValue(args));
 
             // MFU queries have metric types.
             if (!string.IsNullOrWhiteSpace(args.MetricType))
@@ -379,11 +380,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             return BuildCrossJoinClauseWithTemplate(template, fieldName, values, asWhat);
         }
 
-        protected static string BuildCrossJoinClauseForICD9Diagnosis(string fieldName, string[] values, string asWhat)
+        private static string BuildCrossJoinClause(string fieldName, string fieldName2, string[] values, string[] values2, string asWhat)
         {
             // AGE_GROUPS is used as a dummy table here since {0} is a constant.
-            string template = "SELECT {0} AS {1}, (SELECT TOP 1 dxname FROM INCIDENT_ICD9_DIAGNOSIS WHERE code = {0}) AS name FROM AGE_GROUPS WHERE id=1";
-            return BuildCrossJoinClauseWithTemplate(template, fieldName, values, asWhat);
+            string template = "SELECT {0} AS {1}, '{2}' AS {3} FROM AGE_GROUPS WHERE id=1";
+            string crossJoinClause = "";
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                crossJoinClause += string.Format(template, values[i].Replace("%comma;", ","), fieldName,
+                                                           values2[i].Replace("%comma;", ","), fieldName2);
+                if (values[i] != values.Last())
+                    crossJoinClause += " UNION ALL ";
+            }
+
+            return "(" + crossJoinClause + ") AS " + asWhat;
+        }
+
+        protected static string BuildCrossJoinClauseForICD9Diagnosis(string fieldName, string[] values, string[] codeNames, string asWhat)
+        {
+            return BuildCrossJoinClause(fieldName, "name", values, codeNames, asWhat);
         }
 
         protected static string BuildCrossJoinClauseForICD9Diagnosis(string[] codes, string[] codeNames, string asWhat)
@@ -402,10 +418,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             return "(" + crossJoinClause + ") AS " + asWhat;
         }
 
-        protected static string BuildCrossJoinClauseForHCPCSProcedures(string fieldName, string[] values, string asWhat)
+        protected static string BuildCrossJoinClauseForHCPCSProcedures(string fieldName, string[] values, string[] codeNames, string asWhat)
         {
-            string template = "SELECT {0} AS {1}, (SELECT TOP 1 pxname FROM HCPCS WHERE px_code = {0}) AS name FROM AGE_GROUPS WHERE id=1";
-            return BuildCrossJoinClauseWithTemplate(template, fieldName, values, asWhat);
+            return BuildCrossJoinClause(fieldName, "name", values, codeNames, asWhat);
         }
 
         protected static string BuildCrossJoinClauseWithTemplate(string template, string fieldName, string[] values, string asWhat)
@@ -552,10 +567,30 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             return ageFields.Where(x => x.StratifyBy != null).FirstOrDefault();
         }
 
+        protected static string ParseSexValue(SummaryRequestModel model)
+        {
+            switch (model.SexStratification ?? 0)
+            {
+                case 0:
+                    return "";
+                case 1:
+                    return "'F'";
+                case 2:
+                    return "'M'";
+                case 3:
+                    return "'M', 'F'";
+                case 4:
+                    return "'M', 'F'";
+                case 7:
+                    return "'U'";
+                default:
+                    throw new Exception("Invalid Sex Value.");
+            }
+
+        }
+
         readonly string[] AGE_STRATIFICATIONS = { "", "strat10", "strat7", "strat4", "strat2", "strat0" };
         readonly string[] METRIC_TYPES = { "", "Events", "Members", "Dispensings", "DaysSupply" };
         readonly string[] SD_METRIC_TYPES = { "", "ev", "mb", "dp", "ds" };
-        readonly string[] SEX_STRATIFICATIONS = { "", "'F'", "'M'", "'M', 'F'", "'M', 'F'" }; // Last one if M/F aggregated
-
     }
 }

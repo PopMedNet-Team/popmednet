@@ -155,6 +155,7 @@ module Dns.Enums
 	 	SummaryTable_Prevalence = 40,
 	 	SummaryTable_Incidence = 41,
 	 	SummaryTable_MFU = 42,
+	 	SummaryTable_Metadata_Refresh = 43,
 	 	Sql = 50,
 	 }
 	 export var QueryComposerQueryTypesTranslation: Dns.Structures.KeyValuePair[] = [
@@ -175,6 +176,7 @@ module Dns.Enums
 	 	 {value:QueryComposerQueryTypes.SummaryTable_Prevalence , text: 'Summary Table: Prevalence'},
 	 	 {value:QueryComposerQueryTypes.SummaryTable_Incidence , text: 'Summary Table: Incidence'},
 	 	 {value:QueryComposerQueryTypes.SummaryTable_MFU , text: 'Summary Table: MFU'},
+	 	 {value:QueryComposerQueryTypes.SummaryTable_Metadata_Refresh , text: 'Summary Table: Metadata Refresh'},
 	 	 {value:QueryComposerQueryTypes.Sql , text: 'Sql Query'},
 	 ]
 	 export enum QueryComposerSections{
@@ -1126,6 +1128,26 @@ module Dns.Interfaces
 	 }
 	 export interface IEntityDto {
 	 }
+	 export interface IDataMartAvailabilityPeriodV2DTO{
+	 	 DataMartID: any;
+	 	 DataMart: string;
+	 	 DataTable: string;
+	 	 PeriodCategory: string;
+	 	 Period: string;
+	 	 Year: number;
+	 	 Quarter?: number;
+	 }
+	 export var KendoModelDataMartAvailabilityPeriodV2DTO: any = {
+	 	 fields: {
+	 	 	'DataMartID': { type:'any', nullable: false},
+	 	 	'DataMart': { type:'string', nullable: false},
+	 	 	'DataTable': { type:'string', nullable: false},
+	 	 	'PeriodCategory': { type:'string', nullable: false},
+	 	 	'Period': { type:'string', nullable: false},
+	 	 	'Year': { type:'number', nullable: false},
+	 	 	'Quarter': { type:'number', nullable: true},
+	 	 }
+	 }
 	 export interface IDataModelProcessorDTO{
 	 	 ModelID: any;
 	 	 Processor: string;
@@ -1318,12 +1340,24 @@ module Dns.Interfaces
 	 }
 	 export interface IHomepageRouteDetailDTO{
 	 	 RequestDataMartID: any;
+	 	 DataMart: string;
 	 	 DataMartID: any;
+	 	 RoutingType?: Dns.Enums.RoutingType;
 	 	 RequestID: any;
 	 	 Name: string;
 	 	 Identifier: number;
 	 	 SubmittedOn?: Date;
 	 	 SubmittedByName: string;
+	 	 ResponseID: any;
+	 	 ResponseSubmittedOn?: Date;
+	 	 ResponseSubmittedByID?: any;
+	 	 ResponseSubmittedBy: string;
+	 	 ResponseTime?: Date;
+	 	 RespondedByID?: any;
+	 	 RespondedBy: string;
+	 	 ResponseGroupID?: any;
+	 	 ResponseGroup: string;
+	 	 ResponseMessage: string;
 	 	 StatusText: string;
 	 	 RequestStatus: Dns.Enums.RequestStatuses;
 	 	 RoutingStatus: Dns.Enums.RoutingStatus;
@@ -1339,12 +1373,24 @@ module Dns.Interfaces
 	 export var KendoModelHomepageRouteDetailDTO: any = {
 	 	 fields: {
 	 	 	'RequestDataMartID': { type:'any', nullable: false},
+	 	 	'DataMart': { type:'string', nullable: false},
 	 	 	'DataMartID': { type:'any', nullable: false},
+	 	 	'RoutingType': { type:'dns.enums.routingtype', nullable: true},
 	 	 	'RequestID': { type:'any', nullable: false},
 	 	 	'Name': { type:'string', nullable: false},
 	 	 	'Identifier': { type:'number', nullable: false},
 	 	 	'SubmittedOn': { type:'date', nullable: true},
 	 	 	'SubmittedByName': { type:'string', nullable: false},
+	 	 	'ResponseID': { type:'any', nullable: false},
+	 	 	'ResponseSubmittedOn': { type:'date', nullable: true},
+	 	 	'ResponseSubmittedByID': { type:'any', nullable: true},
+	 	 	'ResponseSubmittedBy': { type:'string', nullable: false},
+	 	 	'ResponseTime': { type:'date', nullable: true},
+	 	 	'RespondedByID': { type:'any', nullable: true},
+	 	 	'RespondedBy': { type:'string', nullable: false},
+	 	 	'ResponseGroupID': { type:'any', nullable: true},
+	 	 	'ResponseGroup': { type:'string', nullable: false},
+	 	 	'ResponseMessage': { type:'string', nullable: false},
 	 	 	'StatusText': { type:'string', nullable: false},
 	 	 	'RequestStatus': { type:'dns.enums.requeststatuses', nullable: false},
 	 	 	'RoutingStatus': { type:'dns.enums.routingstatus', nullable: false},
@@ -4596,6 +4642,26 @@ module Dns.Interfaces
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }
 	 }
+	 export interface IRequestBudgetInfoDTO extends IEntityDtoWithID{
+	 	 BudgetActivityID?: any;
+	 	 BudgetActivityDescription: string;
+	 	 BudgetActivityProjectID?: any;
+	 	 BudgetActivityProjectDescription: string;
+	 	 BudgetTaskOrderID?: any;
+	 	 BudgetTaskOrderDescription: string;
+	 }
+	 export var KendoModelRequestBudgetInfoDTO: any = {
+	 	 fields: {
+	 	 	'BudgetActivityID': { type:'any', nullable: true},
+	 	 	'BudgetActivityDescription': { type:'string', nullable: false},
+	 	 	'BudgetActivityProjectID': { type:'any', nullable: true},
+	 	 	'BudgetActivityProjectDescription': { type:'string', nullable: false},
+	 	 	'BudgetTaskOrderID': { type:'any', nullable: true},
+	 	 	'BudgetTaskOrderDescription': { type:'string', nullable: false},
+	 	 	'ID': { type:'any', nullable: true},
+	 	 	'Timestamp': { type:'any', nullable: false},
+	 	 }
+	 }
 	 export interface IRequestMetadataDTO extends IEntityDtoWithID{
 	 	 Name: string;
 	 	 Description: string;
@@ -5052,6 +5118,10 @@ module Dns.Interfaces
 	 	 ResponseGroupID?: any;
 	 	 ResponseGroup: string;
 	 	 ResponseMessage: string;
+	 	 ResponseSubmittedOn?: Date;
+	 	 ResponseSubmittedByID?: any;
+	 	 ResponseSubmittedBy: string;
+	 	 ResponseTime?: Date;
 	 }
 	 export var KendoModelRequestDataMartDTO: any = {
 	 	 fields: {
@@ -5071,6 +5141,10 @@ module Dns.Interfaces
 	 	 	'ResponseGroupID': { type:'any', nullable: true},
 	 	 	'ResponseGroup': { type:'string', nullable: false},
 	 	 	'ResponseMessage': { type:'string', nullable: false},
+	 	 	'ResponseSubmittedOn': { type:'date', nullable: true},
+	 	 	'ResponseSubmittedByID': { type:'any', nullable: true},
+	 	 	'ResponseSubmittedBy': { type:'string', nullable: false},
+	 	 	'ResponseTime': { type:'date', nullable: true},
 	 	 	'ID': { type:'any', nullable: true},
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }

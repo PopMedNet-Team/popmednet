@@ -89,6 +89,8 @@ var RequestType;
                     }
                     if (!_super.prototype.Validate.call(_this))
                         return;
+                    if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
+                        return;
                     if (self.RequestTypeAcls().length == 0) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have added at least one security group to the Permissions tab to be able to administer this request type.</p>");
                         return;

@@ -161,7 +161,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
         #endregion PCORI
@@ -204,7 +204,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
         #endregion
@@ -226,7 +226,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -246,7 +246,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -266,7 +266,27 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            return adapter;
+        }
+
+        public static QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter CreateMetadataRefreshAdapter(string connectionString)
+        {
+            var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+            var adapterSettings = new Dictionary<string, object>(){
+                    {"Server", connectionStringBuilder.DataSource },
+                    {"UserID", connectionStringBuilder.UserID },
+                    {"Password", connectionStringBuilder.Password },
+                    {"Database", connectionStringBuilder.InitialCatalog },
+                    {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
+                };
+
+            var adapter = new QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter(new RequestMetadata
+            {
+                CreatedOn = DateTime.UtcNow,
+                MSRequestID = "Unit Test Request"
+            });
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -292,7 +312,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 

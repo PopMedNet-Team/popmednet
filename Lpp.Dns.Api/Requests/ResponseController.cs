@@ -59,7 +59,7 @@ namespace Lpp.Dns.Api.Requests
             var hasPermission = (from r in DataContext.Responses
                                  let userID = Identity.ID
                                  let permissionID = PermissionIdentifiers.DataMartInProject.ApproveResponses.ID
-                                 let globalAcls = DataContext.GlobalAcls.Where(a => a.PermissionID == permissionID && a.SecurityGroup.Users.Any( sgu => sgu.UserID == userID))
+                                 let globalAcls = DataContext.GlobalAcls.Where(a => a.PermissionID == permissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
                                  let datamartAcls = DataContext.DataMartAcls.Where(a => a.PermissionID == permissionID && a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
                                  let projectAcls = DataContext.ProjectAcls.Where(a => a.PermissionID == permissionID && a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
                                  let orgAcls = DataContext.OrganizationAcls.Where(a => a.PermissionID == permissionID && a.Organization.Requests.Any(rq => rq.ID == r.RequestDataMart.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
@@ -100,7 +100,7 @@ namespace Lpp.Dns.Api.Requests
                 }
 
                 var currentResponse = route.Responses.OrderByDescending(rsp => rsp.Count).FirstOrDefault();
-                if(currentResponse != null)
+                if (currentResponse != null)
                 {
                     currentResponse.ResponseMessage = responses.Message ?? currentResponse.ResponseMessage;
                 }
@@ -114,7 +114,7 @@ namespace Lpp.Dns.Api.Requests
 
             await DataContext.SaveChangesAsync();
 
-            await SendRequestCompleteNotifications(requests);         
+            await SendRequestCompleteNotifications(requests);
 
             return Request.CreateResponse(HttpStatusCode.Accepted);
         }
@@ -169,7 +169,7 @@ namespace Lpp.Dns.Api.Requests
                 }
             }
 
-            foreach(var req in requests)
+            foreach (var req in requests)
             {
                 req.Item1.UpdatedOn = DateTime.UtcNow;
                 req.Item1.UpdatedByID = Identity.ID;
@@ -230,19 +230,19 @@ namespace Lpp.Dns.Api.Requests
                 var response = route.AddResponse(Identity.ID);
                 response.SubmitMessage = responses.Message;
 
-                foreach(var rd in requestDocuments.Where(x => x.RequestDataMartID == route.ID).GroupBy(k => new { k.RequestDataMartID, k.RevisionSetID }))
+                foreach (var rd in requestDocuments.Where(x => x.RequestDataMartID == route.ID).GroupBy(k => new { k.RequestDataMartID, k.RevisionSetID }))
                 {
                     DataContext.RequestDocuments.Add(new RequestDocument { DocumentType = RequestDocumentType.Input, ResponseID = response.ID, RevisionSetID = rd.Key.RevisionSetID });
                 }
 
             }
 
-            foreach(var rq in requests)
+            foreach (var rq in requests)
             {
                 rq.Item1.Status = RequestStatuses.Resubmitted;
 
                 var task = await PmnTask.GetActiveTaskForRequestActivityAsync(rq.Item1.ID, rq.Item1.WorkFlowActivityID.Value, DataContext);
-                if(task != null)
+                if (task != null)
                 {
                     var logger = new ActionLogConfiguration();
                     var logItem = await logger.CreateLogItemAsync(task, EntityState.Modified, Identity, DataContext);
@@ -257,7 +257,7 @@ namespace Lpp.Dns.Api.Requests
             return Request.CreateResponse(HttpStatusCode.Accepted);
         }
 
-        IEnumerable<Tuple<Request,RequestStatuses>> GetRequests(Guid[] responseID)
+        IEnumerable<Tuple<Request, RequestStatuses>> GetRequests(Guid[] responseID)
         {
             var requests = new List<Tuple<Request, RequestStatuses>>();
             foreach (var req in DataContext.Responses.Where(r => responseID.Contains(r.ID)).Select(r => r.RequestDataMart.Request).DistinctBy(r => r.ID))
@@ -271,7 +271,7 @@ namespace Lpp.Dns.Api.Requests
             return requests;
         }
 
-        async Task SendRequestCompleteNotifications(IEnumerable<Tuple<Request,RequestStatuses>> requests)
+        async Task SendRequestCompleteNotifications(IEnumerable<Tuple<Request, RequestStatuses>> requests)
         {
             var requestStatusLogger = new Dns.Data.RequestLogConfiguration();
             List<Utilities.Logging.Notification> notifications = new List<Utilities.Logging.Notification>();
@@ -345,7 +345,7 @@ namespace Lpp.Dns.Api.Requests
 
             return results.ToArray();
         }
-        
+
 
         /// <summary>
         /// Gets if a user can view individual responses for a specific request.
@@ -367,22 +367,22 @@ namespace Lpp.Dns.Api.Requests
 
 
             var canView = await (from rri in DataContext.Responses.AsNoTracking()
-                                             join t in
-                                                 (
-                                                     from rdm in DataContext.RequestDataMarts
-                                                     where rdm.RequestID == requestID
-                                                     select rdm.ID
-                                                     ) on rri.RequestDataMartID equals t
-                                             let canViewResults = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID).Select(a => a.Allowed)
-                                                                     .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
-                                                                     .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
-                                                                     .Concat(userAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.UserID == Identity.ID).Select(a => a.Allowed))
-                                                                     .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
-                                                                     .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.ProjectID == rri.RequestDataMart.Request.ProjectID).Select(a => a.Allowed))
-                                                                     .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
-                                                                     .Concat(projectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.ProjectID == rri.RequestDataMart.Request.ProjectID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
-                                                                     .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
-                                                                     .Concat(globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID).Select(a => a.Allowed))
+                                 join t in
+                                     (
+                                         from rdm in DataContext.RequestDataMarts
+                                         where rdm.RequestID == requestID
+                                         select rdm.ID
+                                         ) on rri.RequestDataMartID equals t
+                                 let canViewResults = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID).Select(a => a.Allowed)
+                                                         .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
+                                                         .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
+                                                         .Concat(userAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewIndividualResults.ID && a.UserID == Identity.ID).Select(a => a.Allowed))
+                                                         .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
+                                                         .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.ProjectID == rri.RequestDataMart.Request.ProjectID).Select(a => a.Allowed))
+                                                         .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
+                                                         .Concat(projectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.ProjectID == rri.RequestDataMart.Request.ProjectID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
+                                                         .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
+                                                         .Concat(globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.SeeRequests.ID).Select(a => a.Allowed))
 
                                  where (
                                                  //the user can view status
@@ -393,10 +393,10 @@ namespace Lpp.Dns.Api.Requests
                                                  && (rri.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval && rri.RequestDataMart.Status != RoutingStatus.ResponseRejectedAfterUpload)
                                               )
                                               || ((rri.RequestDataMart.Request.CreatedByID == Identity.ID || rri.RequestDataMart.Request.SubmittedByID == Identity.ID) && (rri.RequestDataMart.Status == DTO.Enums.RoutingStatus.Completed || rri.RequestDataMart.Status == RoutingStatus.ResultsModified))
-                                             select new
-                                             {
-                                                 CanView = (canViewResults.Any() && canViewResults.All(a => a)) || ((rri.RequestDataMart.Request.CreatedByID == Identity.ID || rri.RequestDataMart.Request.SubmittedByID == Identity.ID) && (rri.RequestDataMart.Status == DTO.Enums.RoutingStatus.Completed || rri.RequestDataMart.Status == RoutingStatus.ResultsModified))
-                                             }).Where(a => a.CanView == true).AnyAsync();
+                                 select new
+                                 {
+                                     CanView = (canViewResults.Any() && canViewResults.All(a => a)) || ((rri.RequestDataMart.Request.CreatedByID == Identity.ID || rri.RequestDataMart.Request.SubmittedByID == Identity.ID) && (rri.RequestDataMart.Status == DTO.Enums.RoutingStatus.Completed || rri.RequestDataMart.Status == RoutingStatus.ResultsModified))
+                                 }).Where(a => a.CanView == true).AnyAsync();
 
             if (canView)
             {
@@ -436,31 +436,31 @@ namespace Lpp.Dns.Api.Requests
             }
 
             var canGroupResponses = await (from rri in DataContext.Responses.AsNoTracking()
-                                             join t in
-                                                 (
-                                                     from rdm in DataContext.RequestDataMarts
-                                                     where rdm.RequestID == requestID
-                                                     select rdm.ID
-                                                     ) on rri.RequestDataMartID equals t
-                                             let canGroup = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID).Select(a => a.Allowed)
-                                                                        .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
-                                                                        .Concat(projectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID) && a.DataMart.Requests.Any(r => r.ID == rri.RequestDataMartID && r.RequestID == requestID) && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
-                                                                        .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.DataMart.Requests.Any(r => r.ID == rri.RequestDataMartID) && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
-                                                                        .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
-                                             where (
-                                                 //the user can group
-                                                 (canGroup.Any() && canGroup.All(a => a) && rri.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval && rri.RequestDataMart.Status != RoutingStatus.ResponseRejectedAfterUpload) ||
-                                                 //the user can view status
-                                                 //If they created or submitted the request, then they can view the status.
-                                                 rri.RequestDataMart.Request.CreatedByID == Identity.ID ||
-                                                 rri.RequestDataMart.Request.SubmittedByID == Identity.ID
-                                              )
-                                              || ((rri.RequestDataMart.Request.CreatedByID == Identity.ID || rri.RequestDataMart.Request.SubmittedByID == Identity.ID) && (rri.RequestDataMart.Status == DTO.Enums.RoutingStatus.Completed || rri.RequestDataMart.Status == RoutingStatus.ResultsModified))
-                                             select new
-                                             {
-                                                 CanGroup = (canGroup.Any() && canGroup.All(a => a))
-                                             }).Where(a => a.CanGroup == true).AnyAsync();
-            
+                                           join t in
+                                               (
+                                                   from rdm in DataContext.RequestDataMarts
+                                                   where rdm.RequestID == requestID
+                                                   select rdm.ID
+                                                   ) on rri.RequestDataMartID equals t
+                                           let canGroup = globalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID).Select(a => a.Allowed)
+                                                                      .Concat(projectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID)).Select(a => a.Allowed))
+                                                                      .Concat(projectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.Project.Requests.Any(r => r.ID == requestID) && a.Project.DataMarts.Any(dm => dm.DataMartID == rri.RequestDataMart.DataMartID) && a.DataMart.Requests.Any(r => r.ID == rri.RequestDataMartID && r.RequestID == requestID) && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
+                                                                      .Concat(datamartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.DataMart.Requests.Any(r => r.ID == rri.RequestDataMartID) && a.DataMartID == rri.RequestDataMart.DataMartID).Select(a => a.Allowed))
+                                                                      .Concat(organizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.GroupResponses.ID && a.OrganizationID == rri.RequestDataMart.Request.OrganizationID).Select(a => a.Allowed))
+                                           where (
+                                               //the user can group
+                                               (canGroup.Any() && canGroup.All(a => a) && rri.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval && rri.RequestDataMart.Status != RoutingStatus.ResponseRejectedAfterUpload) ||
+                                               //the user can view status
+                                               //If they created or submitted the request, then they can view the status.
+                                               rri.RequestDataMart.Request.CreatedByID == Identity.ID ||
+                                               rri.RequestDataMart.Request.SubmittedByID == Identity.ID
+                                            )
+                                            || ((rri.RequestDataMart.Request.CreatedByID == Identity.ID || rri.RequestDataMart.Request.SubmittedByID == Identity.ID) && (rri.RequestDataMart.Status == DTO.Enums.RoutingStatus.Completed || rri.RequestDataMart.Status == RoutingStatus.ResultsModified))
+                                           select new
+                                           {
+                                               CanGroup = (canGroup.Any() && canGroup.All(a => a))
+                                           }).Where(a => a.CanGroup == true).AnyAsync();
+
             return canGroupResponses;
         }
 
@@ -600,15 +600,15 @@ namespace Lpp.Dns.Api.Requests
             if (DataContext.Responses.Any(r => responses.ResponseIDs.Contains(r.ID) && (r.RequestDataMart.Status == RoutingStatus.AwaitingResponseApproval || r.RequestDataMart.Status == RoutingStatus.ResponseRejectedAfterUpload)))
             {
                 var hasPermission = await (from r in DataContext.Responses
-                                            let datamartAcls = datamartsAclFilter.Where(a => a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID))
-                                            let projectAcls = projectAclFilter.Where(a => a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID))
-                                            let orgAcls = organizationAclFilter.Where(a => a.Organization.Requests.Any(rq => rq.ID == r.RequestDataMart.RequestID))
-                                            let projectDataMartsAcls = projectDataMartsAclFilter.Where(a => a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID) && a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID))
-                                            where responses.ResponseIDs.Contains(r.ID)
-                                            && (r.RequestDataMart.Status == RoutingStatus.AwaitingResponseApproval || r.RequestDataMart.Status == RoutingStatus.ResponseRejectedAfterUpload)
-                                            && (datamartAcls.Any() || projectAcls.Any() || projectDataMartsAcls.Any() || orgAcls.Any())
-                                            && (datamartAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && projectDataMartsAcls.All(a => a.Allowed) && orgAcls.All(a => a.Allowed))
-                                            select r.ID).ToArrayAsync();
+                                           let datamartAcls = datamartsAclFilter.Where(a => a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID))
+                                           let projectAcls = projectAclFilter.Where(a => a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID))
+                                           let orgAcls = organizationAclFilter.Where(a => a.Organization.Requests.Any(rq => rq.ID == r.RequestDataMart.RequestID))
+                                           let projectDataMartsAcls = projectDataMartsAclFilter.Where(a => a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID) && a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID))
+                                           where responses.ResponseIDs.Contains(r.ID)
+                                           && (r.RequestDataMart.Status == RoutingStatus.AwaitingResponseApproval || r.RequestDataMart.Status == RoutingStatus.ResponseRejectedAfterUpload)
+                                           && (datamartAcls.Any() || projectAcls.Any() || projectDataMartsAcls.Any() || orgAcls.Any())
+                                           && (datamartAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && projectDataMartsAcls.All(a => a.Allowed) && orgAcls.All(a => a.Allowed))
+                                           select r.ID).ToArrayAsync();
 
                 if (DataContext.Responses.Count(r => responses.ResponseIDs.Contains(r.ID) && (r.RequestDataMart.Status == RoutingStatus.AwaitingResponseApproval || r.RequestDataMart.Status == RoutingStatus.ResponseRejectedAfterUpload)) != hasPermission.Length)
                 {
@@ -635,77 +635,77 @@ namespace Lpp.Dns.Api.Requests
         public async Task<CommonResponseDetailDTO> GetForWorkflowRequest(Guid requestID, bool? viewDocuments = false)
         {
             CommonResponseDetailDTO response = new CommonResponseDetailDTO();
-            
+
             response.Responses = await (from rri in DataContext.Responses.AsNoTracking()
-                         join rdm in DataContext.RequestDataMarts on rri.RequestDataMartID equals rdm.ID
-                         join r in DataContext.Requests on rdm.RequestID equals r.ID
-                         let userID = Identity.ID
-                         let viewIndividualResultsPermissionID = PermissionIdentifiers.Request.ViewIndividualResults.ID
-                         let viewAggregateResultsPermissionID = PermissionIdentifiers.Request.ViewResults.ID
-                         let seeRequestsPermissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
-                         let viewStatusPermissionID = PermissionIdentifiers.Request.ViewStatus.ID
-                         let approveResponsesPermissionID = PermissionIdentifiers.DataMartInProject.ApproveResponses.ID
-                         let groupResponsesPermissionID = PermissionIdentifiers.DataMartInProject.GroupResponses.ID
+                                        join rdm in DataContext.RequestDataMarts on rri.RequestDataMartID equals rdm.ID
+                                        join r in DataContext.Requests on rdm.RequestID equals r.ID
+                                        let userID = Identity.ID
+                                        let viewIndividualResultsPermissionID = PermissionIdentifiers.Request.ViewIndividualResults.ID
+                                        let viewAggregateResultsPermissionID = PermissionIdentifiers.Request.ViewResults.ID
+                                        let seeRequestsPermissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
+                                        let viewStatusPermissionID = PermissionIdentifiers.Request.ViewStatus.ID
+                                        let approveResponsesPermissionID = PermissionIdentifiers.DataMartInProject.ApproveResponses.ID
+                                        let groupResponsesPermissionID = PermissionIdentifiers.DataMartInProject.GroupResponses.ID
 
-                         let canViewAggregateResults = DataContext.FilteredGlobalAcls(userID, viewAggregateResultsPermissionID).Select(a => a.Allowed)
-                                             .Concat(DataContext.FilteredProjectAcls(userID, viewAggregateResultsPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredOrganizationAcls(userID, viewAggregateResultsPermissionID, r.OrganizationID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredUsersAcls(userID, viewAggregateResultsPermissionID, userID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredProjectAcls(userID, seeRequestsPermissionID, r.ProjectID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredOrganizationAcls(userID, seeRequestsPermissionID, r.OrganizationID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeRequestsPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                                             .Concat(DataContext.FilteredGlobalAcls(userID, seeRequestsPermissionID).Select(a => a.Allowed))
+                                        let canViewAggregateResults = DataContext.FilteredGlobalAcls(userID, viewAggregateResultsPermissionID).Select(a => a.Allowed)
+                                                            .Concat(DataContext.FilteredProjectAcls(userID, viewAggregateResultsPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredOrganizationAcls(userID, viewAggregateResultsPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredUsersAcls(userID, viewAggregateResultsPermissionID, userID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredProjectAcls(userID, seeRequestsPermissionID, r.ProjectID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredOrganizationAcls(userID, seeRequestsPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeRequestsPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                                            .Concat(DataContext.FilteredGlobalAcls(userID, seeRequestsPermissionID).Select(a => a.Allowed))
 
-                          let canViewIndividualResults = DataContext.FilteredGlobalAcls(userID, viewIndividualResultsPermissionID).Select(a => a.Allowed)
-                                        .Concat(DataContext.FilteredProjectAcls(userID, viewIndividualResultsPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredOrganizationAcls(userID, viewIndividualResultsPermissionID, r.OrganizationID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredUsersAcls(userID, viewIndividualResultsPermissionID, userID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredProjectAcls(userID, seeRequestsPermissionID, r.ProjectID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredOrganizationAcls(userID, seeRequestsPermissionID, r.OrganizationID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeRequestsPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredGlobalAcls(userID, seeRequestsPermissionID).Select(a => a.Allowed))
+                                        let canViewIndividualResults = DataContext.FilteredGlobalAcls(userID, viewIndividualResultsPermissionID).Select(a => a.Allowed)
+                                                      .Concat(DataContext.FilteredProjectAcls(userID, viewIndividualResultsPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredOrganizationAcls(userID, viewIndividualResultsPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredUsersAcls(userID, viewIndividualResultsPermissionID, userID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredProjectAcls(userID, seeRequestsPermissionID, r.ProjectID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredOrganizationAcls(userID, seeRequestsPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeRequestsPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                                      .Concat(DataContext.FilteredGlobalAcls(userID, seeRequestsPermissionID).Select(a => a.Allowed))
 
-                         let canViewStatus = DataContext.FilteredGlobalAcls(userID, viewStatusPermissionID).Select(a => a.Allowed)
-                         .Concat(DataContext.FilteredProjectAcls(userID, viewStatusPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredOrganizationAcls(userID, viewStatusPermissionID, r.OrganizationID).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredProjectOrganizationsAcls(userID, viewStatusPermissionID, r.ProjectID, r.OrganizationID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID) && r.Organization.DataMarts.Any(dm => dm.ID == rdm.DataMartID)).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredUsersAcls(userID, viewStatusPermissionID, userID).Select(a => a.Allowed))
+                                        let canViewStatus = DataContext.FilteredGlobalAcls(userID, viewStatusPermissionID).Select(a => a.Allowed)
+                                        .Concat(DataContext.FilteredProjectAcls(userID, viewStatusPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredOrganizationAcls(userID, viewStatusPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredProjectOrganizationsAcls(userID, viewStatusPermissionID, r.ProjectID, r.OrganizationID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID) && r.Organization.DataMarts.Any(dm => dm.ID == rdm.DataMartID)).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredUsersAcls(userID, viewStatusPermissionID, userID).Select(a => a.Allowed))
 
-                         let canApprove = DataContext.FilteredGlobalAcls(userID, approveResponsesPermissionID).Select(a => a.Allowed)
-                         .Concat(DataContext.FilteredProjectAcls(userID, approveResponsesPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredProjectDataMartAcls(userID, approveResponsesPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredDataMartAcls(userID, approveResponsesPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredOrganizationAcls(userID, approveResponsesPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                        let canApprove = DataContext.FilteredGlobalAcls(userID, approveResponsesPermissionID).Select(a => a.Allowed)
+                                        .Concat(DataContext.FilteredProjectAcls(userID, approveResponsesPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredProjectDataMartAcls(userID, approveResponsesPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredDataMartAcls(userID, approveResponsesPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredOrganizationAcls(userID, approveResponsesPermissionID, r.OrganizationID).Select(a => a.Allowed))
 
-                         let canGroup = DataContext.FilteredGlobalAcls(userID, groupResponsesPermissionID).Select(a => a.Allowed)
-                         .Concat(DataContext.FilteredProjectAcls(userID, groupResponsesPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredProjectDataMartAcls(userID, groupResponsesPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredDataMartAcls(userID, groupResponsesPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                         .Concat(DataContext.FilteredOrganizationAcls(userID, groupResponsesPermissionID, r.OrganizationID).Select(a => a.Allowed))
+                                        let canGroup = DataContext.FilteredGlobalAcls(userID, groupResponsesPermissionID).Select(a => a.Allowed)
+                                        .Concat(DataContext.FilteredProjectAcls(userID, groupResponsesPermissionID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredProjectDataMartAcls(userID, groupResponsesPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredDataMartAcls(userID, groupResponsesPermissionID, rdm.DataMartID).Select(a => a.Allowed))
+                                        .Concat(DataContext.FilteredOrganizationAcls(userID, groupResponsesPermissionID, r.OrganizationID).Select(a => a.Allowed))
 
-                         where rri.RequestDataMart.RequestID == requestID && rri.ResponseTime != null && rri.RespondedByID != null
-                         && (
-                             (
-                                //If they created or submitted the request, then they can view the status.
-                                r.CreatedByID == Identity.ID || r.SubmittedByID == userID
-                                || (canViewAggregateResults.Any() && canViewAggregateResults.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
-                                || (canViewIndividualResults.Any() && canViewIndividualResults.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
-                                || (canViewStatus.Any() && canViewStatus.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
-                                || (canApprove.Any() && canApprove.All(a => a))
-                                || (canGroup.Any() && canGroup.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
-                             )
-                             ||
-                             (
-                                (r.CreatedByID == userID || r.SubmittedByID == userID)
-                                && (rdm.Status == DTO.Enums.RoutingStatus.Completed || rdm.Status == RoutingStatus.ResultsModified)
-                             )
-                         )
-                         select rri).Map<Response, ResponseDTO>().ToArrayAsync();
-            
+                                        where rri.RequestDataMart.RequestID == requestID && rri.ResponseTime != null && rri.RespondedByID != null
+                                        && (
+                                            (
+                                               //If they created or submitted the request, then they can view the status.
+                                               r.CreatedByID == Identity.ID || r.SubmittedByID == userID
+                                               || (canViewAggregateResults.Any() && canViewAggregateResults.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
+                                               || (canViewIndividualResults.Any() && canViewIndividualResults.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
+                                               || (canViewStatus.Any() && canViewStatus.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
+                                               || (canApprove.Any() && canApprove.All(a => a))
+                                               || (canGroup.Any() && canGroup.All(a => a) && rdm.Status != RoutingStatus.ResponseRejectedAfterUpload && rdm.Status != RoutingStatus.AwaitingResponseApproval)
+                                            )
+                                            ||
+                                            (
+                                               (r.CreatedByID == userID || r.SubmittedByID == userID)
+                                               && (rdm.Status == DTO.Enums.RoutingStatus.Completed || rdm.Status == RoutingStatus.ResultsModified)
+                                            )
+                                        )
+                                        select rri).Map<Response, ResponseDTO>().ToArrayAsync();
+
             var requestQuery = DataContext.Requests.Where(x => x.ID == requestID).Select(x => x.Query).FirstOrDefault();
 
             var query = JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(requestQuery);
@@ -732,11 +732,11 @@ namespace Lpp.Dns.Api.Requests
                                          .Concat(DataContext.FilteredProjectOrganizationsAcls(userID, seeQueueID, r.ProjectID, r.OrganizationID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID) && r.Organization.DataMarts.Any(dm => dm.ID == rdm.DataMartID)).Select(a => a.Allowed))
                                          .Concat(DataContext.FilteredDataMartAcls(userID, seeQueueID, rdm.DataMartID).Select(a => a.Allowed))
                                          .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeQueueID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                                         
+
                                          let canOverride = DataContext.FilteredGlobalAcls(userID, overrideID).Select(a => a.Allowed)
                                          .Concat(DataContext.FilteredDataMartAcls(userID, overrideID, rdm.DataMartID).Select(a => a.Allowed))
                                          .Concat(DataContext.FilteredProjectDataMartAcls(userID, overrideID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                                         
+
                                          let canChangeRoutings = DataContext.FilteredGlobalAcls(userID, changeRoutingsID).Select(a => a.Allowed)
                                          .Concat(DataContext.FilteredProjectAcls(userID, changeRoutingsID, r.ProjectID).Where(a => r.Project.DataMarts.Any(dm => dm.DataMartID == rdm.DataMartID)).Select(a => a.Allowed))
                                          .Concat(DataContext.FilteredOrganizationAcls(userID, changeRoutingsID, r.OrganizationID).Select(a => a.Allowed))
@@ -756,9 +756,9 @@ namespace Lpp.Dns.Api.Requests
                                              (canOverride.Any() && canOverride.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
                                              (canChangeRoutings.Any() && canChangeRoutings.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
                                              (canResubmit.Any() && canResubmit.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
-                                             (canViewAggregate.Any() && canViewAggregate.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) || 
+                                             (canViewAggregate.Any() && canViewAggregate.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0) ||
                                              (canViewIndividual.Any() && canViewIndividual.All(a => a) && rdm.Status != draftStatus && rdm.Status != requestApproval && rdm.Status > 0)
-                                         ) 
+                                         )
                                          || (canSeeQueue.Any() && canSeeQueue.All(a => a) && rdm.Status != RoutingStatus.Canceled)
                                           || ((r.CreatedByID == userID || r.SubmittedByID == userID))
                                          select new RequestDataMartDTO
@@ -780,9 +780,13 @@ namespace Lpp.Dns.Api.Requests
                                              ResponseID = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ID).FirstOrDefault(),
                                              ResponseGroupID = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseGroupID).FirstOrDefault(),
                                              ResponseGroup = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseGroup.Name).FirstOrDefault(),
-                                             ResponseMessage = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseMessage).FirstOrDefault()
+                                             ResponseMessage = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseMessage).FirstOrDefault(),
+                                             ResponseSubmittedBy = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedBy.UserName).FirstOrDefault(),
+                                             ResponseSubmittedByID = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedByID).FirstOrDefault(),
+                                             ResponseSubmittedOn = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.SubmittedOn).FirstOrDefault(),
+                                             ResponseTime = rdm.Responses.Where(rsp => rsp.Count == rsp.RequestDataMart.Responses.Max(x => x.Count)).Select(rsp => rsp.ResponseTime).FirstOrDefault(),
                                          });
-            
+
             if (viewDocuments.Value)
             {
                 var responseIDs = response.Responses.Where(r => r.ResponseGroupID.IsNull()).Select(r => r.ID).Distinct();
@@ -797,8 +801,8 @@ namespace Lpp.Dns.Api.Requests
                                                           Description = d.Description,
                                                           Viewable = d.Viewable,
                                                           ItemID = d.ItemID,
-                                                      //set the item title to the datamart name that responded
-                                                      ItemTitle = DataContext.Responses.Where(r => r.ID == d.ItemID).Select(r => r.RequestDataMart.DataMart.Name).FirstOrDefault(),
+                                                          //set the item title to the datamart name that responded
+                                                          ItemTitle = DataContext.Responses.Where(r => r.ID == d.ItemID).Select(r => r.RequestDataMart.DataMart.Name).FirstOrDefault(),
                                                           Kind = d.Kind,
                                                           Length = d.Length,
                                                           CreatedOn = d.CreatedOn,
@@ -815,7 +819,7 @@ namespace Lpp.Dns.Api.Requests
                                                           UploadedByID = d.UploadedByID,
                                                           UploadedBy = DataContext.Users.Where(u => u.ID == d.UploadedByID).Select(u => u.UserName).FirstOrDefault()
                                                       }).ToArrayAsync();
-                
+
             }
 
 
@@ -835,12 +839,12 @@ namespace Lpp.Dns.Api.Requests
             Guid[] IDs = id.ToArray();
 
             CommonResponseDetailDTO response = new CommonResponseDetailDTO();
-            
+
             response.Responses = await DataContext.FilteredResponseList(Identity.ID).Where(rsp => IDs.Contains(rsp.ID) || (rsp.ResponseGroupID.HasValue && IDs.Contains(rsp.ResponseGroupID.Value))).Map<Response, ResponseDTO>().ToArrayAsync();
 
             if (!response.Responses.Any())
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have the security rights to view the response."));
-            
+
             var responseIDs = response.Responses.Select(rsp => rsp.ID).ToArray();
 
             //make sure the responses all belong to the same request
@@ -850,7 +854,7 @@ namespace Lpp.Dns.Api.Requests
             {
                 throw new ArgumentOutOfRangeException("id", "All the responses must belong to the same request!");
             }
-            
+
             var requestQuery = await DataContext.Requests.Where(x => x.ID == requestID).Select(x => x.Query).FirstOrDefaultAsync();
             var query = JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(requestQuery);
             response.ExportForFileDistribution = query.Where.Criteria.FirstOrDefault().Terms.Where(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.FileUploadID || t.Type == Lpp.QueryComposer.ModelTermsFactory.ModularProgramID).Any();
@@ -861,37 +865,37 @@ namespace Lpp.Dns.Api.Requests
             var nonGroupedResponseIDs = response.Responses.Where(r => r.ResponseGroupID.IsNull()).Select(r => r.ID).Distinct();
 
             response.Documents = (from doc in DataContext.Documents
-                                        join reqDoc in DataContext.RequestDocuments on doc.RevisionSetID equals reqDoc.RevisionSetID
-                                        where nonGroupedResponseIDs.Contains(reqDoc.ResponseID) &&
-                                        doc == DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault()
+                                  join reqDoc in DataContext.RequestDocuments on doc.RevisionSetID equals reqDoc.RevisionSetID
+                                  where nonGroupedResponseIDs.Contains(reqDoc.ResponseID) &&
+                                  doc == DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault()
                                   select new ExtendedDocumentDTO
-                                        {
-                                            ID = doc.ID,
-                                            Name = doc.Name,
-                                            FileName = doc.FileName,
-                                            MimeType = doc.MimeType,
-                                            Description = doc.Description,
-                                            Viewable = doc.Viewable,
-                                            ItemID = doc.ItemID,
-                                            //set the item title to the datamart name that responded
-                                            ItemTitle = DataContext.Responses.Where(r => r.ID == doc.ItemID).Select(r => r.RequestDataMart.DataMart.Name).FirstOrDefault(),
-                                            Kind = doc.Kind,
-                                            Length = doc.Length,
-                                            CreatedOn = doc.CreatedOn,
-                                            ContentCreatedOn = doc.ContentCreatedOn,
-                                            ContentModifiedOn = doc.ContentModifiedOn,
-                                            ParentDocumentID = doc.ParentDocumentID,
-                                            RevisionDescription = doc.RevisionDescription,
-                                            RevisionSetID = doc.RevisionSetID,
-                                            MajorVersion = doc.MajorVersion,
-                                            MinorVersion = doc.MinorVersion,
-                                            BuildVersion = doc.BuildVersion,
-                                            RevisionVersion = doc.RevisionVersion,
-                                            Timestamp = doc.Timestamp,
-                                            UploadedByID = doc.UploadedByID,
-                                            UploadedBy = DataContext.Users.Where(u => u.ID == doc.UploadedByID).Select(u => u.UserName).FirstOrDefault(),
-                                            DocumentType = reqDoc.DocumentType
-                                        }).Concat(DataContext.Documents
+                                  {
+                                      ID = doc.ID,
+                                      Name = doc.Name,
+                                      FileName = doc.FileName,
+                                      MimeType = doc.MimeType,
+                                      Description = doc.Description,
+                                      Viewable = doc.Viewable,
+                                      ItemID = doc.ItemID,
+                                      //set the item title to the datamart name that responded
+                                      ItemTitle = DataContext.Responses.Where(r => r.ID == doc.ItemID).Select(r => r.RequestDataMart.DataMart.Name).FirstOrDefault(),
+                                      Kind = doc.Kind,
+                                      Length = doc.Length,
+                                      CreatedOn = doc.CreatedOn,
+                                      ContentCreatedOn = doc.ContentCreatedOn,
+                                      ContentModifiedOn = doc.ContentModifiedOn,
+                                      ParentDocumentID = doc.ParentDocumentID,
+                                      RevisionDescription = doc.RevisionDescription,
+                                      RevisionSetID = doc.RevisionSetID,
+                                      MajorVersion = doc.MajorVersion,
+                                      MinorVersion = doc.MinorVersion,
+                                      BuildVersion = doc.BuildVersion,
+                                      RevisionVersion = doc.RevisionVersion,
+                                      Timestamp = doc.Timestamp,
+                                      UploadedByID = doc.UploadedByID,
+                                      UploadedBy = DataContext.Users.Where(u => u.ID == doc.UploadedByID).Select(u => u.UserName).FirstOrDefault(),
+                                      DocumentType = reqDoc.DocumentType
+                                  }).Concat(DataContext.Documents
                                                   .Where(d => nonGroupedResponseIDs.Contains(d.ItemID) && d == DataContext.Documents.Where(dd => dd.RevisionSetID == d.RevisionSetID).OrderByDescending(o => o.MajorVersion).ThenByDescending(o => o.MinorVersion).ThenByDescending(o => o.BuildVersion).ThenByDescending(o => o.RevisionVersion).FirstOrDefault())
                                                   .Select(d => new ExtendedDocumentDTO
                                                   {
@@ -921,7 +925,7 @@ namespace Lpp.Dns.Api.Requests
                                                       UploadedBy = DataContext.Users.Where(u => u.ID == d.UploadedByID).Select(u => u.UserName).FirstOrDefault(),
                                                       DocumentType = null
                                                   })).GroupBy(doc => doc.ID).Select(grp => grp.FirstOrDefault()).OrderBy(doc => doc.ItemTitle).ToArray();
-            
+
             response.CanViewPendingApprovalResponses = await CanViewPendingApprovalResponses(new ApproveResponseDTO { Message = "", ResponseIDs = response.Responses.Where(rsp => rsp.ID.HasValue).Select(rsp => rsp.ID.Value).ToArray() });
 
             return response;
@@ -1007,7 +1011,7 @@ namespace Lpp.Dns.Api.Requests
 
                 var q = ((System.Collections.IList)items).AsQueryable();
 
-                if (aggregate.GroupBy != null && aggregate.GroupBy.Any())
+                if (aggregate.GroupBy != null && aggregate.GroupBy.Where(x => !string.IsNullOrEmpty(x)).Any())
                 {
                     string groupingStatement = "new (" + string.Join(",", aggregate.GroupBy) + ")";
                     q = q.GroupBy(groupingStatement);
@@ -1043,7 +1047,7 @@ namespace Lpp.Dns.Api.Requests
         public async Task<IEnumerable<DTO.QueryComposer.QueryComposerResponseDTO>> GetWorkflowResponseContent([FromUri]IEnumerable<Guid> id, TaskItemTypes view)
         {
             var responseID = id.ToArray();
-            
+
             //make sure the responses all belong to the same request
             var requestIDs = await DataContext.Responses.Where(rsp => responseID.Contains(rsp.ID)).Select(rsp => rsp.RequestDataMart.RequestID).ToArrayAsync();
             Guid requestID = requestIDs[0];
@@ -1065,7 +1069,7 @@ namespace Lpp.Dns.Api.Requests
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "The response for the following DataMarts is not defined: <br /><br />" + string.Join(", <br />", responseReferences.Where(x => x.Documents.ToArray().Count() == 0).Select(x => x.DataMartName))));
             }
-            
+
             var serializationSettings = new Newtonsoft.Json.JsonSerializerSettings();
             serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
             var deserializer = Newtonsoft.Json.JsonSerializer.Create(serializationSettings);
@@ -1077,32 +1081,32 @@ namespace Lpp.Dns.Api.Requests
             {
                 List<string> lstMissingDataMartResponses = new List<string>();
                 var resultsToAggregate = responseReferences.SelectMany(r =>
-                                                            {
-                                                                List<DTO.QueryComposer.QueryComposerResponseDTO> l = new List<DTO.QueryComposer.QueryComposerResponseDTO>();
+                {
+                    List<DTO.QueryComposer.QueryComposerResponseDTO> l = new List<DTO.QueryComposer.QueryComposerResponseDTO>();
 
-                                                                bool hasResponseData = false;
-                                                                var document = r.Documents.ToArray().OrderByDescending(d => d.ContentModifiedOn).First();
-                                                                
-                                                                using (var documentStream = new Data.Documents.DocumentStream(DataContext, document.ID))
-                                                                using (var streamReader = new System.IO.StreamReader(documentStream))
-                                                                {
-                                                                    DTO.QueryComposer.QueryComposerResponseDTO rsp = (DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
-                                                                    if(rsp != null)
-                                                                    {
-                                                                        rsp.ID = r.ResponseID;
-                                                                        rsp.DocumentID = document.ID;
-                                                                        rsp.RequestID = requestID;
-                                                                        l.Add(rsp);
+                    bool hasResponseData = false;
+                    var document = r.Documents.ToArray().OrderByDescending(d => d.ContentModifiedOn).First();
 
-                                                                        hasResponseData = true;
-                                                                    }
-                                                                }
-                                                                
-                                                                if (!hasResponseData)
-                                                                    lstMissingDataMartResponses.Add(DataContext.Responses.Where(p => p.ID == r.ResponseID).Select(p => p.RequestDataMart.DataMart.Name).FirstOrDefault());
+                    using (var documentStream = new Data.Documents.DocumentStream(DataContext, document.ID))
+                    using (var streamReader = new System.IO.StreamReader(documentStream))
+                    {
+                        DTO.QueryComposer.QueryComposerResponseDTO rsp = (DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
+                        if (rsp != null)
+                        {
+                            rsp.ID = r.ResponseID;
+                            rsp.DocumentID = document.ID;
+                            rsp.RequestID = requestID;
+                            l.Add(rsp);
 
-                                                                return l;
-                                                            }).ToList();
+                            hasResponseData = true;
+                        }
+                    }
+
+                    if (!hasResponseData)
+                        lstMissingDataMartResponses.Add(DataContext.Responses.Where(p => p.ID == r.ResponseID).Select(p => p.RequestDataMart.DataMart.Name).FirstOrDefault());
+
+                    return l;
+                }).Where(x => x.Aggregation != null && x.Aggregation.GroupBy.Any(y => !string.IsNullOrEmpty(y))).ToList();
 
                 if (lstMissingDataMartResponses.Any())
                 {
@@ -1132,7 +1136,7 @@ namespace Lpp.Dns.Api.Requests
                             using (var streamReader = new System.IO.StreamReader(documentStream))
                             {
                                 DTO.QueryComposer.QueryComposerResponseDTO rsp = (DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
-                                if(rsp != null)
+                                if (rsp != null)
                                 {
                                     rsp.ID = vrsp.ResponseID;
                                     rsp.DocumentID = documentID;
@@ -1246,6 +1250,7 @@ namespace Lpp.Dns.Api.Requests
                 MemoryStream ms = new MemoryStream();
                 StreamWriter writer = new StreamWriter(ms);
                 List<string> columns = new List<string>();
+                IEnumerable<string> headerOrder = new string[] { };
 
                 for (int i = 0; i < requestResponses.Length; i++)
                 {
@@ -1271,8 +1276,8 @@ namespace Lpp.Dns.Api.Requests
 
                         //do not include the low threshold column in the results
                         columns.AddRange(response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => EscapeForCsv(p.As)));
-
-                        writer.WriteLine(string.Join(",", columns.ToArray()));
+                        headerOrder = response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => p.Name);
+                        writer.WriteLine(string.Join(",", columns));
                     }
 
                     List<string> rowValues = new List<string>();
@@ -1295,7 +1300,15 @@ namespace Lpp.Dns.Api.Requests
                                 {
                                     row.Remove("LowThreshold");
                                 }
-                                rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
+
+                                foreach (var head in headerOrder)
+                                {
+                                    object obj;
+                                    if (row.TryGetValue(head, out obj))
+                                    {
+                                        rowValues.Add(EscapeForCsv(obj.ToStringEx()));
+                                    }
+                                }
 
                                 await writer.WriteLineAsync(string.Join(",", rowValues.ToArray()));
                             }
@@ -1305,7 +1318,7 @@ namespace Lpp.Dns.Api.Requests
                     else
                     {
                         string row = string.Empty;
-                        foreach(var col in columns)
+                        foreach (var col in columns)
                         {
                             if (!string.IsNullOrEmpty(row))
                             {
@@ -1314,7 +1327,7 @@ namespace Lpp.Dns.Api.Requests
                             else
                             {
                                 row += tableName;
-                            }                            
+                            }
                         }
                         await writer.WriteLineAsync(row);
                     }
@@ -1335,7 +1348,7 @@ namespace Lpp.Dns.Api.Requests
             #endregion csv
 
             else if (format.ToLower() == "xlsx")
-            {               
+            {
 
                 MemoryStream stream = new MemoryStream();
                 using (SpreadsheetDocument s = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))
@@ -1380,11 +1393,14 @@ namespace Lpp.Dns.Api.Requests
                                 headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
                             }
 
+                            List<string> headerOrder = new List<string>();
+
                             foreach (var property in response.Properties)
                             {
                                 if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
                                 {
                                     headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
+                                    headerOrder.Add(property.Name);
                                 }
                             }
                             sheetData.AppendChild(headerRow);
@@ -1404,14 +1420,15 @@ namespace Lpp.Dns.Api.Requests
                                             dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(responseSourceName) });
                                         }
 
-                                        foreach (var column in row)
+                                        foreach (var head in headerOrder)
                                         {
-                                            if (column.Key != "LowThreshold")
+                                            object obj;
+                                            if (row.TryGetValue(head, out obj))
                                             {
-                                                dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(column.Value.ToStringEx()) });
+                                                dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(obj.ToStringEx()) });
                                             }
-                                        }
 
+                                        }
                                         sheetData.AppendChild(dataRow);
                                     }
 
@@ -1475,26 +1492,26 @@ namespace Lpp.Dns.Api.Requests
             var DMDocs = new SortedDictionary<string, List<Document>>();
 
             var lDocs = await (from r in DataContext.Responses
-                         join rdoc in DataContext.RequestDocuments on r.ID equals rdoc.ResponseID
-                         join doc in DataContext.Documents on rdoc.RevisionSetID equals doc.RevisionSetID
-                         where id.Contains(r.ID) && rdoc.DocumentType == RequestDocumentType.Output
-                         && r.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval
-                         orderby r.RequestDataMart.DataMart.ID
-                         select new
-                         {
-                             Doc = doc,
-                             Name = doc.Name,
-                             RequestID = r.RequestDataMart.RequestID,
-                             ID = doc.ID,
-                             DataMartName = r.RequestDataMart.DataMart.Name,
-                             RevisionVersion = doc.RevisionVersion,
-                             RevisionSetID = doc.RevisionSetID,
-                             MajorVersion = doc.MajorVersion,
-                             MinorVersion = doc.MinorVersion,
-                             BuildVersion = doc.BuildVersion
-                         }).ToArrayAsync();
+                               join rdoc in DataContext.RequestDocuments on r.ID equals rdoc.ResponseID
+                               join doc in DataContext.Documents on rdoc.RevisionSetID equals doc.RevisionSetID
+                               where id.Contains(r.ID) && rdoc.DocumentType == RequestDocumentType.Output
+                               && r.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval
+                               orderby r.RequestDataMart.DataMart.ID
+                               select new
+                               {
+                                   Doc = doc,
+                                   Name = doc.Name,
+                                   RequestID = r.RequestDataMart.RequestID,
+                                   ID = doc.ID,
+                                   DataMartName = r.RequestDataMart.DataMart.Name,
+                                   RevisionVersion = doc.RevisionVersion,
+                                   RevisionSetID = doc.RevisionSetID,
+                                   MajorVersion = doc.MajorVersion,
+                                   MinorVersion = doc.MinorVersion,
+                                   BuildVersion = doc.BuildVersion
+                               }).ToArrayAsync();
 
-            if(lDocs.Length == 0)
+            if (lDocs.Length == 0)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "No response documents were found.");
             }
@@ -1502,10 +1519,10 @@ namespace Lpp.Dns.Api.Requests
             //Sort and return only the most recent revisions
             lDocs = lDocs.GroupBy(p => p.RevisionSetID).Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.RevisionVersion).Select(p => p).FirstOrDefault()).ToArray();
             var docs = from r in lDocs
-                   select new KeyValuePair<string, Document>(
-                       r.DataMartName,
-                       r.Doc
-                       );
+                       select new KeyValuePair<string, Document>(
+                           r.DataMartName,
+                           r.Doc
+                           );
 
             HttpResponseMessage result2 = new HttpResponseMessage(HttpStatusCode.OK);
 
@@ -1530,233 +1547,6 @@ namespace Lpp.Dns.Api.Requests
         }
 
         /// <summary>
-        /// Exports the selected responses for the request.
-        /// </summary>
-        /// <param name="requestID"></param>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<HttpResponseMessage> ExportResponse(Guid requestID, string format)
-        {
-            
-            DTO.QueryComposer.QueryComposerResponseDTO[] requestResponses = (await GetWorkflowResponseContent(new[] { requestID }, TaskItemTypes.Response)).ToArray();
-
-            var responseDataMarts = await GetForWorkflowRequest(requestID);
-
-            string filename = (DataContext.Requests.Where(r => r.ID == requestID).Select(r => r.Name).FirstOrDefault() ?? "response");
-            char[] invalidFileNameChars = System.IO.Path.GetInvalidFileNameChars();
-            filename = string.Join("", filename.Select(c => invalidFileNameChars.Contains(c) ? '_' : c).ToArray());
-
-            HttpResponseMessage result2 = new HttpResponseMessage(HttpStatusCode.OK);
-
-            #region csv
-            if (format.ToLower() == "csv")
-            {
-                MemoryStream ms = new MemoryStream();
-                StreamWriter writer = new StreamWriter(ms);
-                List<string> columns = new List<string>();
-
-                for (int i = 0; i < requestResponses.Length; i++)
-                {
-                    DTO.QueryComposer.QueryComposerResponseDTO response = requestResponses[i];
-                    var datamartName = (from dm in responseDataMarts.Documents where dm.ItemID == response.ID select dm.ItemTitle).FirstOrDefault().ToStringEx();
-                    var tableName = datamartName;
-                    if (response.Aggregation != null)
-                    {
-                        if (response.Aggregation.Name != null)
-                        {
-                            tableName = response.Aggregation.Name;
-                        }
-                    }
-
-                    
-                    if (i == 0)
-                    {
-                        if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace())
-                        {
-                            columns.Add("DataMart");
-                        }
-
-                        //do not include the low threshold column in the results
-                        columns.AddRange(response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => EscapeForCsv(p.As)));
-
-                        writer.WriteLine(string.Join(",", columns.ToArray()));
-                    }
-
-                    List<string> rowValues = new List<string>();
-                    //check if the response contains any results that have at least one row
-                    var resultTables = response.Results.ToArray();
-                    if (resultTables.Length > 0 && resultTables[0].Any())
-                    {
-                        foreach (var table in response.Results)
-                        {
-
-                            foreach (var row in table)
-                            {
-                                rowValues.Clear();
-
-                                if (!tableName.IsNullOrEmpty() && !tableName.IsNullOrWhiteSpace())
-                                {
-                                    rowValues.Add(tableName);
-                                }
-                                if (row.ContainsKey("LowThreshold"))
-                                {
-                                    row.Remove("LowThreshold");
-                                }
-                                rowValues.AddRange(row.Select(k => EscapeForCsv(k.Value.ToStringEx())).ToArray());
-
-                                await writer.WriteLineAsync(string.Join(",", rowValues.ToArray()));
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        string row = string.Empty;
-                        foreach (var col in columns)
-                        {
-                            if (!string.IsNullOrEmpty(row))
-                            {
-                                row += ",";
-                            }
-                            else
-                            {
-                                row += tableName;
-                            }
-                        }
-                        await writer.WriteLineAsync(row);
-                    }
-
-                }
-
-                writer.Flush();
-                ms.Position = 0;
-
-                result2.Content = new StreamContent(ms);
-                result2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                result2.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = string.Format("{0}.{1}", filename, format.ToLower())
-                };
-
-            }
-            #endregion csv
-
-            else if (format.ToLower() == "xlsx")
-            {
-                IEnumerable<Guid> responseIDs = requestResponses.Where(r => r.ID.HasValue).Select(r => r.ID.Value);
-                var sheetTitles = await (from rsp in DataContext.Responses
-                                         let groups = rsp.ResponseGroup
-                                         let datamart = rsp.RequestDataMart.DataMart
-                                         where responseIDs.Contains(rsp.ID)
-                                         select new { ResponseID = rsp.ID, Title = groups != null ? groups.Name : datamart.Name }).ToArrayAsync();
-
-                MemoryStream stream = new MemoryStream();
-                using (SpreadsheetDocument s = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))
-                {
-                    //Each response will be on a separate worksheet, default name of the worksheet will be the datamart/group falling back to indexed "Sheet {X}" format
-                    WorkbookPart workbookPart = s.AddWorkbookPart();
-                    workbookPart.Workbook = new Workbook();
-                    s.WorkbookPart.Workbook.Sheets = new Sheets();
-                    Sheets sheets = s.WorkbookPart.Workbook.GetFirstChild<Sheets>();
-
-                    for (uint sheetID = 1; sheetID <= requestResponses.Length; sheetID++)
-                    {
-                        var response = requestResponses[sheetID - 1];
-
-                        string responseSourceName = sheetTitles.Where(t => t.ResponseID == response.ID).Select(t => t.Title).FirstOrDefault();
-                        if (string.IsNullOrWhiteSpace(responseSourceName))
-                        {
-                            var aggregationDefinition = requestResponses[sheetID - 1].Aggregation;
-                            if (aggregationDefinition != null && !string.IsNullOrWhiteSpace(aggregationDefinition.Name))
-                                responseSourceName = aggregationDefinition.Name;
-                        }
-
-                        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-                        Sheet sheet = new Sheet() { Id = s.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = sheetID, Name = string.IsNullOrWhiteSpace(responseSourceName) ? "Sheet " + sheetID : responseSourceName };
-                        sheets.Append(sheet);
-
-                        SheetData sheetData = new SheetData();
-                        worksheetPart.Worksheet = new Worksheet(sheetData);
-
-                        //foreach resultset create a header row, each set of results for a datamart/grouping will be on the same sheet
-
-                        Row headerRow = new Row();
-                        if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName))
-                        {
-                            headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
-                        }
-
-                        foreach (var property in response.Properties)
-                        {
-                            if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
-                            {
-                                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
-                            }
-                        }
-                        sheetData.AppendChild(headerRow);
-
-                        int totalResultSets = response.Results.Count();
-                        int resultSetIndex = 0;
-                        foreach (var table in response.Results)
-                        {
-                            Row dataRow;
-                            foreach (var row in table)
-                            {
-                                dataRow = new Row();
-                                if (requestResponses.Length == 1 && !string.IsNullOrWhiteSpace(responseSourceName))
-                                {
-                                    dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(responseSourceName) });
-                                }
-
-                                foreach (var column in row)
-                                {
-                                    if (column.Key != "LowThreshold")
-                                    {
-                                        dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(column.Value.ToStringEx()) });
-                                    }
-                                }
-
-                                sheetData.AppendChild(dataRow);
-                            }
-
-                            resultSetIndex++;
-
-                            if (resultSetIndex < totalResultSets)
-                            {
-                                //add an empty row between resultsets
-                                var emptyRow = new Row();
-                                emptyRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("") });
-                                sheetData.AppendChild(emptyRow);
-                            }
-                        }
-
-                        worksheetPart.Worksheet.Save();
-
-                    }
-
-                    workbookPart.Workbook.Save();
-                    s.Close();
-                }
-
-                stream.Position = 0;
-                result2.Content = new StreamContent(stream);
-                result2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                result2.Content.Headers.ContentLength = stream.Length;
-                result2.Content.Headers.Expires = DateTimeOffset.UtcNow;
-                result2.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = string.Format("{0}.{1}", filename, format.ToLower())
-                };
-
-
-            }
-
-            return result2;
-
-        }
-
-        /// <summary>
         /// Gets the tracking table for the analysis center for the specified request.
         /// </summary>
         /// <param name="requestID">The ID of the request.</param>
@@ -1765,24 +1555,24 @@ namespace Lpp.Dns.Api.Requests
         public async Task<HttpResponseMessage> GetTrackingTableForAnalysisCenter(Guid requestID)
         {
             var hasPermission = await (from r in DataContext.Secure<Request>(Identity)
-                                let acl = DataContext.ProjectRequestTypeWorkflowActivities.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.ID 
-                                                                                                    && a.ProjectID == r.ProjectID && a.RequestTypeID == r.RequestTypeID && a.WorkflowActivityID == r.WorkFlowActivityID
-                                                                                                    && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID && u.User.Active && u.User.Deleted == false && u.User.Organization.Deleted == false)).Select(a => a.Allowed)
-                                where r.ID == requestID && r.WorkFlowActivityID.HasValue
-                                      && acl.Any() && acl.All(a => a)
-                                select r.ID).AnyAsync();
+                                       let acl = DataContext.ProjectRequestTypeWorkflowActivities.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.ID
+                                                                                                           && a.ProjectID == r.ProjectID && a.RequestTypeID == r.RequestTypeID && a.WorkflowActivityID == r.WorkFlowActivityID
+                                                                                                           && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID && u.User.Active && u.User.Deleted == false && u.User.Organization.Deleted == false)).Select(a => a.Allowed)
+                                       where r.ID == requestID && r.WorkFlowActivityID.HasValue
+                                             && acl.Any() && acl.All(a => a)
+                                       select r.ID).AnyAsync();
 
-            if(hasPermission == false)
+            if (hasPermission == false)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "The current user does not have permission to view tracking tables for this request's current activity.");
             }
 
             string trackingTableData = await (from rsp in DataContext.Responses
-                                    join rdm in DataContext.RequestDataMarts on rsp.RequestDataMartID equals rdm.ID
-                                    where rdm.RequestID == requestID && rdm.RoutingType == RoutingType.AnalysisCenter
-                                    && string.IsNullOrEmpty(rsp.ResponseData) == false
-                                    orderby rsp.Count descending
-                                    select rsp.ResponseData).FirstOrDefaultAsync() ?? string.Empty;
+                                              join rdm in DataContext.RequestDataMarts on rsp.RequestDataMartID equals rdm.ID
+                                              where rdm.RequestID == requestID && rdm.RoutingType == RoutingType.AnalysisCenter
+                                              && string.IsNullOrEmpty(rsp.ResponseData) == false
+                                              orderby rsp.Count descending
+                                              select rsp.ResponseData).FirstOrDefaultAsync() ?? string.Empty;
 
 
             if (string.IsNullOrWhiteSpace(trackingTableData))
@@ -1792,18 +1582,19 @@ namespace Lpp.Dns.Api.Requests
             }
 
             IEnumerable<IDictionary<string, string>> data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(trackingTableData);
-            if(data == null)
+            if (data == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadGateway, "Unable to deserialize the tracking table data.");
             }
 
             HashSet<string> columns = new HashSet<string>();
-            foreach(Dictionary<string,string> row in data)
+            foreach (Dictionary<string, string> row in data)
             {
                 columns.UnionWith(row.Keys);
             }
 
-            var obj = new TrackingTableResponse {
+            var obj = new TrackingTableResponse
+            {
                 Properties = columns,
                 Data = data
             };
@@ -1834,11 +1625,11 @@ namespace Lpp.Dns.Api.Requests
             }
 
             string[] trackingTableData = await (from rsp in DataContext.Responses
-                                              join rdm in DataContext.RequestDataMarts on rsp.RequestDataMartID equals rdm.ID
-                                              where rdm.RequestID == requestID && rdm.RoutingType == RoutingType.DataPartner
-                                              && (rdm.Status == RoutingStatus.Completed || rdm.Status == RoutingStatus.ResultsModified)
-                                              && rsp.Count == rdm.Responses.Max(rrsp => rrsp.Count)
-                                              select rsp.ResponseData).ToArrayAsync();
+                                                join rdm in DataContext.RequestDataMarts on rsp.RequestDataMartID equals rdm.ID
+                                                where rdm.RequestID == requestID && rdm.RoutingType == RoutingType.DataPartner
+                                                && (rdm.Status == RoutingStatus.Completed || rdm.Status == RoutingStatus.ResultsModified)
+                                                && rsp.Count == rdm.Responses.Max(rrsp => rrsp.Count)
+                                                select rsp.ResponseData).ToArrayAsync();
 
 
             if (trackingTableData == null || trackingTableData.Length == 0)
@@ -1850,7 +1641,7 @@ namespace Lpp.Dns.Api.Requests
             HashSet<string> columns = new HashSet<string>();
             List<IDictionary<string, string>> combinedData = new List<IDictionary<string, string>>();
 
-            foreach(string responseSet in trackingTableData)
+            foreach (string responseSet in trackingTableData)
             {
                 if (string.IsNullOrWhiteSpace(responseSet))
                     continue;
@@ -1858,7 +1649,7 @@ namespace Lpp.Dns.Api.Requests
                 IEnumerable<IDictionary<string, string>> data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(responseSet);
                 if (data.Any())
                 {
-                    foreach(var row in data)
+                    foreach (var row in data)
                     {
                         columns.UnionWith(row.Keys);
                         combinedData.AddRange(data);
@@ -1875,7 +1666,8 @@ namespace Lpp.Dns.Api.Requests
             return Request.CreateResponse(obj);
         }
 
-        public class TrackingTableResponse {
+        public class TrackingTableResponse
+        {
 
             public TrackingTableResponse()
             {
@@ -1884,7 +1676,7 @@ namespace Lpp.Dns.Api.Requests
             }
 
             public IEnumerable<string> Properties { get; set; }
-            public IEnumerable<IDictionary<string,string>> Data { get; set; }
+            public IEnumerable<IDictionary<string, string>> Data { get; set; }
         }
 
         /// <summary>
@@ -1897,7 +1689,7 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public async Task<HttpResponseMessage> GetEnhancedEventLog(Guid requestID, string format = "json", bool download = false)
         {
-            if((await DataContext.Secure<Request>(Identity).AnyAsync(r => r.ID == requestID)) == false)
+            if ((await DataContext.Secure<Request>(Identity).AnyAsync(r => r.ID == requestID)) == false)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to view the specified request.");
             }
@@ -1913,7 +1705,7 @@ namespace Lpp.Dns.Api.Requests
                                   select new
                                   {
                                       l.TimeStamp,
-                                      Step = 0, 
+                                      Step = 0,
                                       l.Description
                                   }).ToArrayAsync();
 
@@ -1921,7 +1713,7 @@ namespace Lpp.Dns.Api.Requests
                 {
                     Timestamp = l.TimeStamp.DateTime,
                     Source = string.Empty,
-                    Step = ( routingSteps.Length == 0 ) ? 0m : Math.Max(( routingSteps.Where(rs => rs.SubmittedOn <= l.TimeStamp.DateTime).Select(rs => (decimal?)rs.Count).Max() ?? 0m  ) - 1m, 0m),
+                    Step = (routingSteps.Length == 0) ? 0m : Math.Max((routingSteps.Where(rs => rs.SubmittedOn <= l.TimeStamp.DateTime).Select(rs => (decimal?)rs.Count).Max() ?? 0m) - 1m, 0m),
                     Description = l.Description,
                     EventType = "Request Status Change"
                 });
@@ -1971,21 +1763,21 @@ namespace Lpp.Dns.Api.Requests
                                                 }).ToArrayAsync();
 
                 var documentDetails = await (from doc in DataContext.Documents
-                                       join rsp in DataContext.Responses on doc.ItemID equals rsp.ID
-                                       let currentRevision = DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(d => d.MajorVersion).OrderByDescending(d => d.MinorVersion).OrderByDescending(d => d.RevisionVersion).OrderByDescending(d => d.BuildVersion).FirstOrDefault()
-                                       where rsp.RequestDataMart.RequestID == requestID
-                                       && rsp.ResponseTime != null
-                                       && currentRevision.ID == doc.ID
-                                       select new
-                                       {
-                                           Iteration = rsp.Count,
-                                           DataMart = rsp.RequestDataMart.DataMart.Name,
-                                           doc.CreatedOn,
-                                           doc.ContentCreatedOn,
-                                           doc.ContentModifiedOn,
-                                           doc.FileName,
-                                           doc.Length
-                                       }).ToArrayAsync();
+                                             join rsp in DataContext.Responses on doc.ItemID equals rsp.ID
+                                             let currentRevision = DataContext.Documents.Where(d => d.RevisionSetID == doc.RevisionSetID).OrderByDescending(d => d.MajorVersion).OrderByDescending(d => d.MinorVersion).OrderByDescending(d => d.RevisionVersion).OrderByDescending(d => d.BuildVersion).FirstOrDefault()
+                                             where rsp.RequestDataMart.RequestID == requestID
+                                             && rsp.ResponseTime != null
+                                             && currentRevision.ID == doc.ID
+                                             select new
+                                             {
+                                                 Iteration = rsp.Count,
+                                                 DataMart = rsp.RequestDataMart.DataMart.Name,
+                                                 doc.CreatedOn,
+                                                 doc.ContentCreatedOn,
+                                                 doc.ContentModifiedOn,
+                                                 doc.FileName,
+                                                 doc.Length
+                                             }).ToArrayAsync();
 
 
                 return lastDocumentUpload.Select(l => new EnhancedEventLogItemDTO
@@ -1995,7 +1787,8 @@ namespace Lpp.Dns.Api.Requests
                     Step = Math.Max(l.Iteration - 1m, 0m),
                     Description = "Files finished uploading",
                     EventType = "Document Upload Complete"
-                }).Concat(documentDetails.Select(l => new EnhancedEventLogItemDTO {
+                }).Concat(documentDetails.Select(l => new EnhancedEventLogItemDTO
+                {
                     Timestamp = l.ContentModifiedOn.HasValue ? l.ContentModifiedOn.Value : (l.ContentCreatedOn.HasValue ? l.ContentCreatedOn.Value : l.CreatedOn),
                     Source = l.DataMart,
                     Step = Math.Max(l.Iteration - 1, 0m),
@@ -2059,7 +1852,8 @@ namespace Lpp.Dns.Api.Requests
                         if (iteration.Key == 0 || iteration.Key == lastIteration)
                         {
                             //read from the last start time
-                            logItems.Add(new EnhancedEventLogItemDTO {
+                            logItems.Add(new EnhancedEventLogItemDTO
+                            {
                                 Step = iteration.Key,
                                 Description = "SAS program execution begin",
                                 Source = dataPartnerName,
@@ -2078,7 +1872,7 @@ namespace Lpp.Dns.Api.Requests
                              * PMN considers an iteration to be a "response".
                              * To align the desired logging the step number needs to me modified unless it is the first or last entry of the tracking table.
                              * */
-                            
+
                             logItems.Add(new EnhancedEventLogItemDTO
                             {
                                 Step = iteration.Key - 1,
@@ -2090,7 +1884,8 @@ namespace Lpp.Dns.Api.Requests
 
                         }
                         //read the last end time
-                        logItems.Add(new EnhancedEventLogItemDTO {
+                        logItems.Add(new EnhancedEventLogItemDTO
+                        {
                             Step = iteration.Key,
                             Description = "SAS program execution complete, output files written.",
                             Source = dataPartnerName,
@@ -2146,7 +1941,7 @@ namespace Lpp.Dns.Api.Requests
                 {
                     //get the log content
                     using (var db = new DataContext())
-                    using(var streamReader = new StreamReader(new Data.Documents.DocumentStream(db, log.DocumentID)))
+                    using (var streamReader = new StreamReader(new Data.Documents.DocumentStream(db, log.DocumentID)))
                     using (var reader = new Newtonsoft.Json.JsonTextReader(streamReader))
                     {
                         if (db.Database.SqlQuery<long>("SELECT TOP 1 ISNULL(DATALENGTH(DATA), 0) FROM Documents WHERE ID = @documentID", new System.Data.SqlClient.SqlParameter("@documentID", log.DocumentID)).FirstOrDefault() > 0)
@@ -2182,7 +1977,7 @@ namespace Lpp.Dns.Api.Requests
                     {
                         StreamWriter writer = new StreamWriter(ouputStream);
                         List<string> rowValues = new List<string>();
-                        
+
                         //header
                         rowValues.Add("Iteration");
                         rowValues.Add("Source");
@@ -2192,7 +1987,7 @@ namespace Lpp.Dns.Api.Requests
                         await writer.WriteLineAsync(string.Join(",", rowValues));
 
                         //events
-                        foreach(var item in await builder.GetItems())
+                        foreach (var item in await builder.GetItems())
                         {
                             rowValues.Clear();
                             rowValues.Add(item.Step.ToString());
@@ -2221,7 +2016,7 @@ namespace Lpp.Dns.Api.Requests
             {
 
                 MemoryStream ms = new MemoryStream();
-                using(SpreadsheetDocument s = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
+                using (SpreadsheetDocument s = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
                 {
                     WorkbookPart workbookPart = s.AddWorkbookPart();
                     workbookPart.Workbook = new Workbook();
@@ -2369,13 +2164,15 @@ namespace Lpp.Dns.Api.Requests
         const long Gigabyte = 1024 * 1024 * 1024;
         static string FormatDocumentLength(long length)
         {
-            if(length > Gigabyte)
+            if (length > Gigabyte)
             {
                 return (length / Gigabyte).ToString("0.00") + " Gb";
-            }else if(length > Megabyte)
+            }
+            else if (length > Megabyte)
             {
                 return (length / Megabyte).ToString("0.00") + " Mb";
-            }else if(length > Kilobyte)
+            }
+            else if (length > Kilobyte)
             {
                 return (length / Kilobyte).ToString("0.00") + " Kb";
             }

@@ -351,7 +351,7 @@ namespace Lpp.Dns.DataMart.Model
                 return;
             }
 
-            if (documentId == REFRESHDATES_DOCUMENTID)
+            if (documentId == REFRESHDATES_DOCUMENTID || documentId == STYLES_DOCUMENTID)
             {
                 if (hasCellCountAlert)
                     contentStream = new MemoryStream(Encoding.UTF8.GetBytes(styleXml));
@@ -364,7 +364,7 @@ namespace Lpp.Dns.DataMart.Model
             var document = responseDocument.FirstOrDefault(d => d.DocumentID == documentId);
             if(document != null)
             {
-                contentStream = new FileStream(responseDocument[Convert.ToInt32(documentId)].Filename, FileMode.Open);
+                contentStream = new FileStream(document.Filename, FileMode.Open);
             }
             else
             {

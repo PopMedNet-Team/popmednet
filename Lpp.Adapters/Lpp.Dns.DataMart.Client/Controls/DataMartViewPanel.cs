@@ -456,7 +456,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         }
                         else
                         {
-                            if(_cache != null)
+                            if(_cache != null && _cache.Enabled)
                             {
                                 dcStream = _cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
                             }

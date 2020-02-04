@@ -1,0 +1,35 @@
+{
+  "Header": { "QueryType": "43" },
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Metadata_Refresh",
+        "Type": "421bac16-caac-4918-8760-a10ff76cc87b",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Metadata_Refresh_Count",
+        "Type": "421bac16-caac-4918-8760-a10ff76cc87b",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  },
+  "TemporalEvents": []
+}

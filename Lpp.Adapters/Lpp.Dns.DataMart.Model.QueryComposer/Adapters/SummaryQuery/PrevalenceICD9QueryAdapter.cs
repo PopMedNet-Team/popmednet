@@ -49,16 +49,20 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 model.Period = string.Join(",", QueryAdapter.ExpandYears(model).Select(y => "'" + y + "'"));//used in query
             }
 
-            IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> codeTerms = criteria.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == TermID)).Concat(criteria.Terms.Where(t => t.Type == TermID));
+            var codeTerms = criteria.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == TermID)).Concat(criteria.Terms.Where(t => t.Type == TermID));
+            IEnumerable<string> codeTermValues = from t in codeTerms
+                                                 from v in t.GetCodeStringCollection()
+                                                 where !string.IsNullOrWhiteSpace(v)
+                                                 select v.Trim();
 
-            var codeTermValues = (from t in codeTerms
-                                 let v = t.GetCodeSelectorValues()
-                                 from c in v
-                                 where c != null && !string.IsNullOrWhiteSpace(c.Code)                                 
-                                 select c).GroupBy(k => k.Code.Trim()).Select(k => new { Code = k.Key, Name = k.Select(c => c.Name).FirstOrDefault() ?? k.Key }).ToArray();
+            model.Codes = string.Join(",", codeTermValues.Distinct());
 
-            model.Codes = string.Join(",", codeTermValues.Select(c => c.Code));
-            model.CodeNames = codeTermValues.Select(c => c.Name).ToArray();
+            IEnumerable<string> codeNameValues = from t in codeTerms
+                                                 from v in t.GetCodeNameStringCollection()
+                                                 where !string.IsNullOrWhiteSpace(v)
+                                                 select v.Trim();
+
+            model.CodeNames = codeNameValues.Distinct().ToArray();
 
             DTO.Enums.Settings settingValue;
             var set = GetAllCriteriaTerms(criteria, ModelTermsFactory.SettingID).FirstOrDefault();
@@ -97,15 +101,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
 
             string[] codes = ParseCodeValues(args, true).ToArray();
-            string codeCJ;
-            if (args.CodeNames == null || args.CodeNames.Length == 0)
-            {
-                codeCJ = QueryAdapter.BuildCrossJoinClauseForICD9Diagnosis("code", codes, "sd");
-            }
-            else
-            {
-                codeCJ = QueryAdapter.BuildCrossJoinClauseForICD9Diagnosis(codes, args.CodeNames, "sd");
-            }
+
+            string codeCJ = QueryAdapter.BuildCrossJoinClauseForICD9Diagnosis("code", codes, args.CodeNames, "sd");
 
             cjcs += "," + codeCJ;
             query = query.Replace("%CODES%", string.Join(",", codes).Replace("%comma;", ","));
