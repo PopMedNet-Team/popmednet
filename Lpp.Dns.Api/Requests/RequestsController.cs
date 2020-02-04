@@ -1337,37 +1337,40 @@ namespace Lpp.Dns.Api.Requests
                     ID = request.ID,
                 };
 
-                var firstActivity = activities.Where(x => x.ID == request.ActivityID).FirstOrDefault();
-
-                if(firstActivity.TaskLevel == 3)
+                if (request.ActivityID.HasValue)
                 {
-                    addDTO.BudgetActivityProjectID = firstActivity.ID;
-                    addDTO.BudgetActivityProjectDescription = firstActivity.Name;
+                    var firstActivity = activities.Where(x => x.ID == request.ActivityID).FirstOrDefault();
 
-                    var budgetActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
+                    if (firstActivity.TaskLevel == 3)
+                    {
+                        addDTO.BudgetActivityProjectID = firstActivity.ID;
+                        addDTO.BudgetActivityProjectDescription = firstActivity.Name;
 
-                    addDTO.BudgetActivityID = budgetActivity.ID;
-                    addDTO.BudgetActivityDescription = budgetActivity.Name;
+                        var budgetActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
 
-                    var budgetTaskOrderActivity = activities.Where(x => x.ID == budgetActivity.ParentActivityID.Value).FirstOrDefault();
+                        addDTO.BudgetActivityID = budgetActivity.ID;
+                        addDTO.BudgetActivityDescription = budgetActivity.Name;
 
-                    addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
-                    addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
-                }
-                else if(firstActivity.TaskLevel == 2)
-                {
-                    addDTO.BudgetActivityID = firstActivity.ID;
-                    addDTO.BudgetActivityDescription = firstActivity.Name;
+                        var budgetTaskOrderActivity = activities.Where(x => x.ID == budgetActivity.ParentActivityID.Value).FirstOrDefault();
 
-                    var budgetTaskOrderActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
+                        addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                        addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                    }
+                    else if (firstActivity.TaskLevel == 2)
+                    {
+                        addDTO.BudgetActivityID = firstActivity.ID;
+                        addDTO.BudgetActivityDescription = firstActivity.Name;
 
-                    addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
-                    addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
-                }
-                else if(firstActivity.TaskLevel == 1)
-                {
-                    addDTO.BudgetTaskOrderID = firstActivity.ID;
-                    addDTO.BudgetTaskOrderDescription = firstActivity.Name;
+                        var budgetTaskOrderActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
+
+                        addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                        addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                    }
+                    else if (firstActivity.TaskLevel == 1)
+                    {
+                        addDTO.BudgetTaskOrderID = firstActivity.ID;
+                        addDTO.BudgetTaskOrderDescription = firstActivity.Name;
+                    } 
                 }
 
                 dto.Add(addDTO);

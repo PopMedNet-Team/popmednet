@@ -241,8 +241,30 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                     row.Add("DataTable", res.Key);
                     row.Add("DataAvailabilityAnnualFrom", res.Min(x => x.Period));
                     row.Add("DataAvailabilityAnnualTo", res.Max(x => x.Period));
-                    row.Add("DataAvailabilityQuarterlyFrom", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Min(x => x.Raw_Period) : "N/A");
-                    row.Add("DataAvailabilityQuarterlyTo", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Max(x => x.Raw_Period) : "N/A");
+                    switch (res.Key)
+                    {
+                        
+                        case "HCPCS":
+                        case "ICD9 Diagnosis":
+                        case "ICD9 Diagnosis 4 Digit":
+                        case "ICD9 Diagnosis 5 Digit":
+                        case "ICD9 Procedure":
+                        case "ICD9 Procedure 4 Digit":
+                        case "Incident Drug Class":
+                        case "Incident Generic Name":
+                        case "Incident ICD9 Diagnosis":
+                            row.Add("DataAvailabilityQuarterlyFrom", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Min(x => x.Raw_Period) : "N/A");
+                            row.Add("DataAvailabilityQuarterlyTo", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Max(x => x.Raw_Period) : "N/A");
+                            break;
+                        case "Enrollment":
+                        case "Generic Name":
+                        case "Drug Class":
+                            row.Add("DataAvailabilityQuarterlyFrom", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Min(x => x.Raw_Period) : "");
+                            row.Add("DataAvailabilityQuarterlyTo", res.Any(x => x.Raw_Period.Contains("Q")) ? res.Where(x => x.Raw_Period.Contains("Q")).Max(x => x.Raw_Period) : "");
+                            break;
+                        default:
+                            break;
+                    }
                     formattedResults.Add(row);
                 }
 

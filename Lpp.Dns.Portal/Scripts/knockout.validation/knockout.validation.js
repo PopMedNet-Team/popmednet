@@ -3,7 +3,7 @@
 	License:		MIT (http://opensource.org/licenses/mit-license.php)		
 																				
 	Description:	Validation Library for KnockoutJS							
-	Version:		2.0.3											
+	Version:		2.0.4											
 ===============================================================================
 */
 /*globals require: false, exports: false, define: false, ko: false */
@@ -18,7 +18,7 @@
 		// AMD anonymous module with hard-coded dependency on "knockout"
 		define(["knockout", "exports"], factory);
 	} else {
-		// <script> tag: use the global `ko` object, attaching a `mapping` property
+		// <script> tag: use the global `ko` object, attaching a `validation` property
 		factory(ko, ko.validation = {});
 	}
 }(function ( ko, exports ) {
@@ -87,7 +87,7 @@ kv.configuration = configuration;
 			return o !== null && typeof o === 'object';
 		},
 		isNumber: function(o) {
-			return !isNaN(o);	
+			return !isNaN(o);
 		},
 		isObservableArray: function(instance) {
 			return !!instance &&
@@ -172,6 +172,7 @@ kv.configuration = configuration;
 			if (val === "") {
 				return true;
 			}
+			return false;
 		},
 		getOriginalElementTitle: function (element) {
 			var savedOriginalTitle = kv.utils.getAttribute(element, 'data-orig-title'),
@@ -196,7 +197,8 @@ kv.configuration = configuration;
 			}
 		}
 	};
-}());;var api = (function () {
+}());
+;var api = (function () {
 
 	var isInitialized = 0,
 		configuration = kv.configuration,
@@ -220,13 +222,6 @@ kv.configuration = configuration;
 		if (!context.options.live) {
 			cleanUpSubscriptions(context);
 		}
-	}
-
-	function runTraversal(obj, context) {
-		context.validatables = [];
-		cleanUpSubscriptions(context);
-		traverseGraph(obj, context);
-		dispose(context);
 	}
 
 	function traverseGraph(obj, context, level) {
@@ -281,6 +276,13 @@ kv.configuration = configuration;
 				}
 			});
 		}
+	}
+
+	function runTraversal(obj, context) {
+		context.validatables = [];
+		cleanUpSubscriptions(context);
+		traverseGraph(obj, context);
+		dispose(context);
 	}
 
 	function collectErrors(array) {
@@ -443,9 +445,9 @@ kv.configuration = configuration;
 				return message(params, observable);
 			}
 			var replacements = unwrap(params);
-            if (replacements == null) {
-                replacements = [];
-            }
+			if (replacements == null) {
+				replacements = [];
+			}
 			if (!utils.isArray(replacements)) {
 				replacements = [replacements];
 			}
@@ -519,8 +521,8 @@ kv.configuration = configuration;
 				//		  message: 'This special field has a Max of {0}',
 				//		  params: 2,
 				//		  onlyIf: function() {
-				//					  return specialField.IsVisible();
-				//				  }
+				//			return specialField.IsVisible();
+				//		  }
 				//	  }
 				//  )};
 				//
@@ -756,97 +758,97 @@ kv.rules['required'] = {
 };
 
 function minMaxValidatorFactory(validatorName) {
-    var isMaxValidation = validatorName === "max";
+	var isMaxValidation = validatorName === "max";
 
-    return function (val, options) {
-        if (kv.utils.isEmptyVal(val)) {
-            return true;
-        }
+	return function (val, options) {
+		if (kv.utils.isEmptyVal(val)) {
+			return true;
+		}
 
-        var comparisonValue, type;
-        if (options.typeAttr === undefined) {
-            // This validator is being called from javascript rather than
-            // being bound from markup
-            type = "text";
-            comparisonValue = options;
-        } else {
-            type = options.typeAttr;
-            comparisonValue = options.value;
-        }
+		var comparisonValue, type;
+		if (options.typeAttr === undefined) {
+			// This validator is being called from javascript rather than
+			// being bound from markup
+			type = "text";
+			comparisonValue = options;
+		} else {
+			type = options.typeAttr;
+			comparisonValue = options.value;
+		}
 
-        // From http://www.w3.org/TR/2012/WD-html5-20121025/common-input-element-attributes.html#attr-input-min,
-        // if the value is parseable to a number, then the minimum should be numeric
-        if (!isNaN(comparisonValue) && !(comparisonValue instanceof Date)) {
-            type = "number";
-        }
+		// From http://www.w3.org/TR/2012/WD-html5-20121025/common-input-element-attributes.html#attr-input-min,
+		// if the value is parseable to a number, then the minimum should be numeric
+		if (!isNaN(comparisonValue) && !(comparisonValue instanceof Date)) {
+			type = "number";
+		}
 
-        var regex, valMatches, comparisonValueMatches;
-        switch (type.toLowerCase()) {
-            case "week":
-                regex = /^(\d{4})-W(\d{2})$/;
-                valMatches = val.match(regex);
-                if (valMatches === null) {
-                    throw new Error("Invalid value for " + validatorName + " attribute for week input.  Should look like " +
-                        "'2000-W33' http://www.w3.org/TR/html-markup/input.week.html#input.week.attrs.min");
-                }
-                comparisonValueMatches = comparisonValue.match(regex);
-                // If no regex matches were found, validation fails
-                if (!comparisonValueMatches) {
-                    return false;
-                }
+		var regex, valMatches, comparisonValueMatches;
+		switch (type.toLowerCase()) {
+			case "week":
+				regex = /^(\d{4})-W(\d{2})$/;
+				valMatches = val.match(regex);
+				if (valMatches === null) {
+					throw new Error("Invalid value for " + validatorName + " attribute for week input.  Should look like " +
+						"'2000-W33' http://www.w3.org/TR/html-markup/input.week.html#input.week.attrs.min");
+				}
+				comparisonValueMatches = comparisonValue.match(regex);
+				// If no regex matches were found, validation fails
+				if (!comparisonValueMatches) {
+					return false;
+				}
 
-                if (isMaxValidation) {
-                    return (valMatches[1] < comparisonValueMatches[1]) || // older year
-                        // same year, older week
-                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2]));
-                } else {
-                    return (valMatches[1] > comparisonValueMatches[1]) || // newer year
-                        // same year, newer week
-                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
-                }
-                break;
+				if (isMaxValidation) {
+					return (valMatches[1] < comparisonValueMatches[1]) || // older year
+						// same year, older week
+						((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2]));
+				} else {
+					return (valMatches[1] > comparisonValueMatches[1]) || // newer year
+						// same year, newer week
+						((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
+				}
+				break;
 
-            case "month":
-                regex = /^(\d{4})-(\d{2})$/;
-                valMatches = val.match(regex);
-                if (valMatches === null) {
-                    throw new Error("Invalid value for " + validatorName + " attribute for month input.  Should look like " +
-                        "'2000-03' http://www.w3.org/TR/html-markup/input.month.html#input.month.attrs.min");
-                }
-                comparisonValueMatches = comparisonValue.match(regex);
-                // If no regex matches were found, validation fails
-                if (!comparisonValueMatches) {
-                    return false;
-                }
+			case "month":
+				regex = /^(\d{4})-(\d{2})$/;
+				valMatches = val.match(regex);
+				if (valMatches === null) {
+					throw new Error("Invalid value for " + validatorName + " attribute for month input.  Should look like " +
+						"'2000-03' http://www.w3.org/TR/html-markup/input.month.html#input.month.attrs.min");
+				}
+				comparisonValueMatches = comparisonValue.match(regex);
+				// If no regex matches were found, validation fails
+				if (!comparisonValueMatches) {
+					return false;
+				}
 
-                if (isMaxValidation) {
-                    return ((valMatches[1] < comparisonValueMatches[1]) || // older year
-                        // same year, older month
-                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2])));
-                } else {
-                    return (valMatches[1] > comparisonValueMatches[1]) || // newer year
-                        // same year, newer month
-                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
-                }
-                break;
+				if (isMaxValidation) {
+					return ((valMatches[1] < comparisonValueMatches[1]) || // older year
+						// same year, older month
+						((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2])));
+				} else {
+					return (valMatches[1] > comparisonValueMatches[1]) || // newer year
+						// same year, newer month
+						((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
+				}
+				break;
 
-            case "number":
-            case "range":
-                if (isMaxValidation) {
-                    return (!isNaN(val) && parseFloat(val) <= parseFloat(comparisonValue));
-                } else {
-                    return (!isNaN(val) && parseFloat(val) >= parseFloat(comparisonValue));
-                }
-                break;
+			case "number":
+			case "range":
+				if (isMaxValidation) {
+					return (!isNaN(val) && parseFloat(val) <= parseFloat(comparisonValue));
+				} else {
+					return (!isNaN(val) && parseFloat(val) >= parseFloat(comparisonValue));
+				}
+				break;
 
-            default:
-                if (isMaxValidation) {
-                    return val <= comparisonValue;
-                } else {
-                    return val >= comparisonValue;
-                }
-        }
-    };
+			default:
+				if (isMaxValidation) {
+					return val <= comparisonValue;
+				} else {
+					return val >= comparisonValue;
+				}
+		}
+	};
 }
 
 kv.rules['min'] = {
@@ -1465,11 +1467,9 @@ ko.applyBindingsWithValidation = function (viewModel, rootNode, options) {
 
 //override the original applyBindings so that we can ensure all new rules and what not are correctly registered
 var origApplyBindings = ko.applyBindings;
-ko.applyBindings = function (viewModel, rootNode) {
-
+ko.applyBindings = function () {
 	kv.init();
-
-	origApplyBindings(viewModel, rootNode);
+	origApplyBindings.apply(this, arguments);
 };
 
 ko.validatedObservable = function (initialValue, options) {
