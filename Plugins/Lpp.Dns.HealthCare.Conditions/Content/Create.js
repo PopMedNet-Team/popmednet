@@ -1,10 +1,11 @@
+/// <reference path="../../../lpp.dns.portal/Scripts/typings/bootstrap.dns.d.ts" />
 var Conditions;
 (function (Conditions) {
     var Create;
     (function (Create) {
         Create.RawModel = null;
         var vm;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(rawModel) {
                 this.StartPeriodDate = ko.observable(rawModel.StartPeriodDate == '' || rawModel.StartPeriodDate == null ? new Date() : new Date(rawModel.StartPeriodDate));
                 this.EndPeriodDate = ko.observable(rawModel.EndPeriodDate == '' || rawModel.EndPeriodDate == null ? new Date() : new Date(rawModel.EndPeriodDate));
@@ -68,3 +69,4 @@ var Conditions;
         Create.init = init;
     })(Create = Conditions.Create || (Conditions.Create = {}));
 })(Conditions || (Conditions = {}));
+//# sourceMappingURL=Create.js.map

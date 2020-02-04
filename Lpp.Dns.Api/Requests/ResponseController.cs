@@ -1250,7 +1250,7 @@ namespace Lpp.Dns.Api.Requests
                 MemoryStream ms = new MemoryStream();
                 StreamWriter writer = new StreamWriter(ms);
                 List<string> columns = new List<string>();
-                IEnumerable<string> headerOrder = new string[] { };
+                //IEnumerable<string> headerOrder = new string[] { };
 
                 for (int i = 0; i < requestResponses.Length; i++)
                 {
@@ -1276,7 +1276,7 @@ namespace Lpp.Dns.Api.Requests
 
                         //do not include the low threshold column in the results
                         columns.AddRange(response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => EscapeForCsv(p.As)));
-                        headerOrder = response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => p.Name);
+                        //headerOrder = response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)).Select(p => p.As);
                         writer.WriteLine(string.Join(",", columns));
                     }
 
@@ -1301,13 +1301,14 @@ namespace Lpp.Dns.Api.Requests
                                     row.Remove("LowThreshold");
                                 }
 
-                                foreach (var head in headerOrder)
+                                foreach (var prop in response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)))
                                 {
                                     object obj;
-                                    if (row.TryGetValue(head, out obj))
+                                    if (row.TryGetValue((row.ContainsKey(prop.As) ? prop.As : prop.Name), out obj))
                                     {
                                         rowValues.Add(EscapeForCsv(obj.ToStringEx()));
                                     }
+
                                 }
 
                                 await writer.WriteLineAsync(string.Join(",", rowValues.ToArray()));
@@ -1393,15 +1394,16 @@ namespace Lpp.Dns.Api.Requests
                                 headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DataMart") });
                             }
 
-                            List<string> headerOrder = new List<string>();
+                            //List<string> headerOrder = new List<string>();
 
-                            foreach (var property in response.Properties)
+                            foreach (var property in response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)))
                             {
-                                if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
-                                    headerOrder.Add(property.Name);
-                                }
+                                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
+                                //if (!property.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
+                                //{
+                                //    headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(property.As) });
+                                //    //headerOrder.Add(property.As);
+                                //}
                             }
                             sheetData.AppendChild(headerRow);
 
@@ -1420,10 +1422,10 @@ namespace Lpp.Dns.Api.Requests
                                             dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(responseSourceName) });
                                         }
 
-                                        foreach (var head in headerOrder)
+                                        foreach (var prop in response.Properties.Where(p => !p.Name.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase)))
                                         {
                                             object obj;
-                                            if (row.TryGetValue(head, out obj))
+                                            if (row.TryGetValue((row.ContainsKey(prop.As) ? prop.As : prop.Name), out obj))
                                             {
                                                 dataRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(obj.ToStringEx()) });
                                             }

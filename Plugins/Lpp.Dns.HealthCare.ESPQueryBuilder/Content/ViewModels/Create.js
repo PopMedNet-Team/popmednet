@@ -1,10 +1,12 @@
+/// <reference path="../../../../lpp.dns.portal/scripts/common.ts" />
+/// <reference path="../../../../lpp.dns.portal/Scripts/page/Page.ts" />
 var ESPQueryBuilder;
 (function (ESPQueryBuilder) {
     var Create;
     (function (Create) {
         Create.RawModel = null;
         var vm;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(rawModel) {
                 this.StartPeriodDate = ko.observable(rawModel.StartPeriodDate == '' || rawModel.StartPeriodDate == null ? new Date() : new Date(rawModel.StartPeriodDate));
                 this.EndPeriodDate = ko.observable(rawModel.EndPeriodDate == '' || rawModel.EndPeriodDate == null ? new Date() : new Date(rawModel.EndPeriodDate));
@@ -101,3 +103,4 @@ var ESPQueryBuilder;
         init();
     })(Create = ESPQueryBuilder.Create || (ESPQueryBuilder.Create = {}));
 })(ESPQueryBuilder || (ESPQueryBuilder = {}));
+//# sourceMappingURL=Create.js.map

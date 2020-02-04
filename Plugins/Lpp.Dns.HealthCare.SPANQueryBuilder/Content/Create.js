@@ -1,3 +1,5 @@
+/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
+/// <reference path="../../../Lpp.Dns.Portal/Scripts/page/Page.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17,7 +19,7 @@ var SPAN;
     (function (Create) {
         Create.RawModel = null;
         var vm;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(rawModel, bindingControl, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
@@ -41,7 +43,7 @@ var SPAN;
                     Codes: codes
                 }).done(function (results) {
                     if (!results)
-                        return;
+                        return; //User clicked cancel
                     _this.Codes(results.map(function (i) { return i.Code; }).join(", "));
                     $("form").formChanged(true);
                 });
@@ -79,6 +81,7 @@ var SPAN;
         }(Dns.PageViewModel));
         Create.ViewModel = ViewModel;
         function init() {
+            // initialize dynamic lookup lists...???
             $(function () {
                 var bindingControl = $("#fsCriteria");
                 var hiddenDataControl = $("#hiddenDataControl");
@@ -90,3 +93,4 @@ var SPAN;
         init();
     })(Create = SPAN.Create || (SPAN.Create = {}));
 })(SPAN || (SPAN = {}));
+//# sourceMappingURL=Create.js.map

@@ -451,7 +451,16 @@ namespace Lpp.Dns.DataMart.Model
                     status.PostProcess = !viewSQL && adapter.CanPostProcess(_tempResponse, out message);
                     status.Message = message;
                     //May have to alter this cause _currentResponse May be empty
-                    status.Code = (_tempResponse.Errors != null && _tempResponse.Errors.Any()) ? RequestStatus.StatusCode.Error : string.IsNullOrWhiteSpace(status.Message) ? RequestStatus.StatusCode.Complete : RequestStatus.StatusCode.CompleteWithMessage;
+                    if(_tempResponse.Errors != null && _tempResponse.Errors.Any())
+                    {
+                        status.Code = RequestStatus.StatusCode.Error;
+                        status.Message = string.Join(Environment.NewLine, _tempResponse.Errors.Select(err => err.Description));
+                    }
+                    else
+                    {
+                        status.Code = string.IsNullOrWhiteSpace(status.Message) ? RequestStatus.StatusCode.Complete : RequestStatus.StatusCode.CompleteWithMessage;
+                    }
+                    
                 }
 
                 

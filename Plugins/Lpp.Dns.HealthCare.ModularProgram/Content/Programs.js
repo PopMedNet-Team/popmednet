@@ -1,3 +1,4 @@
+/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17,7 +18,7 @@ var ModularProgram;
     (function (Create) {
         var vm;
         var ProgramTypes;
-        var ViewModel = (function (_super) {
+        var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
@@ -30,6 +31,7 @@ var ModularProgram;
                         _this.Programs.push(p);
                     }
                 });
+                //Now go through and back fill any new ones that have just been added.
                 ProgramTypes.forEach(function (programType) {
                     if (!_this.ProgramExists(programType)) {
                         var p = new Program({
@@ -47,11 +49,21 @@ var ModularProgram;
                 });
                 _this.SelectAll = ko.observable(false);
                 return _this;
+                //this.SelectAll.subscribe((value) => {
+                //    this.Programs().forEach((program) => {
+                //        program.Selected(value);
+                //    });
+                //});
             }
             ViewModel.prototype.save = function () {
                 if (!this.isValid())
                     return;
                 var data = [];
+                //this.Programs().forEach((program) => {
+                //    if (!program.Selected())
+                //        return;
+                //    data.push(program.toData());
+                //});
                 return _super.prototype.store.call(this, data);
             };
             ViewModel.prototype.ProgramExists = function (programType) {
@@ -78,17 +90,28 @@ var ModularProgram;
         }(Dns.PageViewModel));
         Create.ViewModel = ViewModel;
         function init(data, programTypes, bindingControl, hiddenDataControl) {
+            //ProgramTypes = programTypes;
+            //vm = new ViewModel(data, hiddenDataControl);
+            //ko.applyBindings(vm, bindingControl[0]);
+            //bindingControl.fadeIn(100);
             Dns.EnableValidation();
         }
         Create.init = init;
-        var Program = (function (_super) {
+        var Program = /** @class */ (function (_super) {
             __extends(Program, _super);
             function Program(program, selected) {
                 var _this = _super.call(this) || this;
-                _this.name = ko.observable(program == null ? null : program.name);
+                _this.name = ko.observable(program == null ? null : program.name); //Validation pulled from input control's HTML 5.
                 _this.type = ko.observable(program == null ? null : program.type);
-                _this.description = ko.observable(program == null ? null : program.description);
-                _this.scenarios = ko.observable(program == null ? null : program.scenarios);
+                _this.description = ko.observable(program == null ? null : program.description); //Validation pulled from input control's HTML 5.
+                _this.scenarios = ko.observable(program == null ? null : program.scenarios); //Validation pulled from input control's HTML 5. Example of inline would be: .extend({ maxLength: 255 })
+                //this.Selected = ko.observable(selected);
+                //this.Selected.subscribe((value) => {
+                //    if (!value) {
+                //        this.description(null);
+                //        this.name(this.programTypeName());
+                //    }
+                //});
                 _super.prototype.subscribeObservables.call(_this);
                 _this.programTypeName = ko.observable(null);
                 return _this;
@@ -111,7 +134,7 @@ var ModularProgram;
     var Display;
     (function (Display) {
         var vm;
-        var ViewModel = (function () {
+        var ViewModel = /** @class */ (function () {
             function ViewModel(hasResponses, data) {
                 this.HasResponses = ko.observable(hasResponses);
                 this.SignatureData = ko.observableArray(data);
@@ -128,3 +151,4 @@ var ModularProgram;
         Display.init = init;
     })(Display = ModularProgram.Display || (ModularProgram.Display = {}));
 })(ModularProgram || (ModularProgram = {}));
+//# sourceMappingURL=Programs.js.map
