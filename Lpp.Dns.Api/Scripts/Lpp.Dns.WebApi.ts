@@ -2210,16 +2210,6 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<any[]>('Response/ExportAllAsZip' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static ExportResponse(requestID: any, format: string, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
-	 	 	 var params = '';
-	 	 	 if (requestID != null) params += '&requestID=' + requestID;
-	 	 	 if (format != null) params += '&format=' + encodeURIComponent(format);
-	 	 	 if (params.length > 0)
-	 	 	 	 params = '?' + params.substr(1);
-
-	 	 	 return Helpers.GetAPIResult<any[]>('Response/ExportResponse' + params, doNotHandleFail);
-	 	 }
-
 	 	 public static GetTrackingTableForAnalysisCenter(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (requestID != null) params += '&requestID=' + requestID;

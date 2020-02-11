@@ -122,18 +122,18 @@
                     </div>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <div class="row" data-bind="visible: (HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels))">
+                    <div class="row" data-bind="visible: (HasPermission(PMNPermissions.DataMart.InstallModels) || HasPermission(PMNPermissions.DataMart.UninstallModels))">
                         <label for="cboAdapter" style="width:90%">Adapter Supported</label>
                         <input type="text" id="cboAdapter" data-bind="kendoDropDownList: {value: DataMart.AdapterID, data: QueryComposerAdapters, dataTextField:'Name', dataValueField:'ID', change: onAdapterChange }" style="width:90%;" />
                     </div>
-                    <div class="row" data-bind="visible: (HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels)) && DataPartnerIdentifier_Display">
+                    <div class="row" data-bind="visible: (HasPermission(PMNPermissions.DataMart.InstallModels) || HasPermission(PMNPermissions.DataMart.UninstallModels)) && DataPartnerIdentifier_Display">
                         <label style="margin-top:12px;" for="txtDataPartnerIdentifier">Data Partner Identifier<em>*</em></label>
                         <input type="text" id="txtDataPartnerIdentifier" title="Please enter the Identifier for the DataPartner" data-bind="value: DataMart.DataPartnerIdentifier" class="form-control" />
                         <label for="DataPartnerCode">Data Partner Code<em>*</em></label>
                         <input type="text" id="txtDataPartnerCode" title="Please enter the tracking table code for the DataPartner" data-bind="value: DataMart.DataPartnerCode" class="form-control" />
                         <p style="font-style:italic"><small>An identifier and code are required for both the Analysis Center and Data Partners.</small></p>
                     </div>
-                    <div class="row" data-bind="visible: !(HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels))">
+                    <div class="row" data-bind="visible: !(HasPermission(PMNPermissions.DataMart.InstallModels) || HasPermission(PMNPermissions.DataMart.UninstallModels))">
                         <label style="width:90%">Adapter Supported</label>
                         <span data-bind="text: AdapterSupported_Display"></span>
                     </div>
@@ -174,7 +174,7 @@
                     </div>  
                     <div class="row">
                         <div class="col-sm-12 checkbox" style="margin-top: 10px;">
-                            <div><label><input id="chkIsLocal" type="checkbox" data-bind="checked: DataMart.IsLocal, enable: (HasPermission(Permissions.DataMart.InstallModels) || HasPermission(Permissions.DataMart.UninstallModels)) && HasMetadataModelInstalled" /> Local DataMart</label></div>
+                            <div><label><input id="chkIsLocal" type="checkbox" data-bind="checked: DataMart.IsLocal, enable: (HasPermission(PMNPermissions.DataMart.InstallModels) || HasPermission(PMNPermissions.DataMart.UninstallModels)) && HasMetadataModelInstalled" /> Local DataMart</label></div>
                         </div>
                     </div>                  
                 </div>
@@ -183,10 +183,10 @@
         <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height: 500px;">
             <ul>
                 <li class="k-state-active">Data Domains </li>
-                <li data-bind="visible: HasPermission(Permissions.DataMart.ManageSecurity)">DataMart Permissions</li>
-                <li data-bind="visible: HasPermission(Permissions.DataMart.ManageSecurity)">Request Type Permissions</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.DataMart.ManageSecurity)">DataMart Permissions</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.DataMart.ManageSecurity)">Request Type Permissions</li>
                 <li>Installed Models</li>
-                <li data-bind="visible: HasPermission(Permissions.DataMart.ManageProjects)">Projects</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.DataMart.ManageProjects)">Projects</li>
             </ul>
             <div class="tab-body" style="height:1600px;">
                 <article>
@@ -691,7 +691,7 @@
                             <td style="white-space: nowrap;" data-bind="text: Model"></td>
                             <td></td>
                             <td></td>
-                            <td><button class="btn btn-danger btn-xs" data-bind="visible: $root.HasPermission(Permissions.DataMart.UninstallModels), click: $root.UninstallModel">Uninstall</button></td>
+                            <td><button class="btn btn-danger btn-xs" data-bind="visible: $root.HasPermission(PMNPermissions.DataMart.UninstallModels), click: $root.UninstallModel">Uninstall</button></td>
                         </tr>
                         <tr data-bind="visible: ShowConfig">
                             <td style="border-right: 0;">&nbsp;</td>
@@ -703,7 +703,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="5">
-                                <div class="pull-right" style="margin-right: 4px;" data-bind="visible:$root.HasPermission(Permissions.DataMart.InstallModels)">
+                                <div class="pull-right" style="margin-right: 4px;" data-bind="visible:$root.HasPermission(PMNPermissions.DataMart.InstallModels)">
                                     <div class="dropdown" id="select-model-container">
                                         <a href="#" id="btnInstallModel" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Install Model" />&nbsp;Install Model <strong class="caret"></strong></a>
                                         <ul class="dropdown-menu" data-bind="foreach: InstalledDataModels.UninstalledDataModels">
@@ -750,10 +750,10 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(Permissions.DataMart.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.DataMart.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
-        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(Permissions.DataMart.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.DataMart.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(PMNPermissions.DataMart.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.DataMart.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.DataMart.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.DataMart.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

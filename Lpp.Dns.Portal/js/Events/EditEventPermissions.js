@@ -5,8 +5,8 @@ var Events;
     (function (Acl) {
         var EventAclEditViewModel = /** @class */ (function () {
             function EventAclEditViewModel(events, securityGroupTree, acls, targets, aclType, identifier) {
-                if (identifier === void 0) { identifier = null; }
                 var _this = this;
+                if (identifier === void 0) { identifier = null; }
                 var self = this;
                 this.SecurityGroupTree = securityGroupTree;
                 this.AclType = aclType;

@@ -58,7 +58,7 @@
             <ul>
                 <li class="k-state-active">Items</li>
                 <li>Organizations</li>
-                <li data-bind="visible: HasPermission(Permissions.Registry.ManageSecurity)">Permissions</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.Registry.ManageSecurity)">Permissions</li>
             </ul>
             <div class="tab-body">
                 <!-- Items -->
@@ -133,9 +133,9 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.Registry.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.Registry.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Registry.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.Registry.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

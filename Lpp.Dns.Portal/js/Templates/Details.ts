@@ -129,7 +129,7 @@ module Templates.Details {
 
         $.when<any>(
                 id == null ? null : Dns.WebApi.Templates.Get(id),
-                id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [Permissions.Templates.Delete, Permissions.Templates.Edit, Permissions.Templates.ManageSecurity]),
+                id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity]),
                 Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Templates]),
                 Dns.WebApi.Security.GetTemplatePermissions(id ? id : Constants.GuidEmpty),
                 Dns.WebApi.Templates.GetGlobalTemplatePermissions(),
@@ -178,7 +178,7 @@ module Templates.Details {
 
             $(() => {
                 var bindingControl = $('#Content');
-                vm = new ViewModel(bindingControl, screenPermissions || [Permissions.Templates.Delete, Permissions.Templates.Edit, Permissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0]);
+                vm = new ViewModel(bindingControl, screenPermissions || [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0]);
                 ko.applyBindings(vm, bindingControl[0]);
             });
 

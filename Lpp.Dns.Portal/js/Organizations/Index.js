@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -63,10 +63,10 @@ var Organizations;
         }
         Index.ParentNameAchor = ParentNameAchor;
         function init() {
-            $.when(Users.GetSetting("Organizations.Index.gOrganizations.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateOrganization)).done(function (gOrganizationsSetting, canAdd) {
+            $.when(Users.GetSetting("Organizations.Index.gOrganizations.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateOrganization)).done(function (gOrganizationsSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateOrganization] : []);
+                    vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateOrganization] : []);
                     ko.applyBindings(vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(vm.OrganizationsGrid(), gOrganizationsSetting);
                     vm.OrganizationsGrid().bind("dataBound", function (e) {

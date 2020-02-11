@@ -44,10 +44,10 @@ module Groups.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("Groups.Index.gGroups.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateGroup)).done((gGroupsSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateGroup)).done((gGroupsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gGroupsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateGroup] : []);
+                vm = new ViewModel(gGroupsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateGroup] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.GroupsGrid(), gGroupsSetting);
                 vm.GroupsGrid().bind("dataBound", function (e) {

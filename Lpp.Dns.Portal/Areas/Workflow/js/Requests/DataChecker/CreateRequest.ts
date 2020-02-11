@@ -187,7 +187,7 @@ module Workflow.WFDataChecker.CreateRequest {
                         return true;
                     });
 
-                    if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) < 0 && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel == null) {
+                    if (Requests.Details.rovm.ScreenPermissions.indexOf(PMNPermissions.Request.SkipSubmissionApproval.toLowerCase()) < 0 && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel == null) {
                         vm.SubmitButtonText('Submit for Review');
                     }
                 }

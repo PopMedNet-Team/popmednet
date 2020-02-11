@@ -1,0 +1,143 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:27:28.8371607+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<7>. Actual:<11>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": null,
+        "Race": "03",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "01",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "04",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Jose",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Kirk",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tony",
+        "Race": "02",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "02",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Bret",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Florence",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Rina",
+        "Age": "60 - 69",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Vince",
+        "Age": "60 - 69",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "Age",
+      "Type": "System.String",
+      "As": "Age",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race",
+      "Age"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "Age",
+        "Type": "System.String",
+        "As": "Age",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

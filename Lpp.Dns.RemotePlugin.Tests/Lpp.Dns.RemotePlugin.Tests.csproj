@@ -36,7 +36,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\Build\Lpp.Dns.Targets" />
-  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -115,8 +115,14 @@
       <Project>{fccb5726-d818-4816-9714-d323834cebc9}</Project>
       <Name>Lpp.Security</Name>
     </ProjectReference>
-    
-    
+    <ProjectReference Include="..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RemotePlugin\Lpp.Dns.RemotePlugin.Interfaces\Lpp.Dns.RemotePlugin.Interfaces.csproj">
       <Project>{926AE5F2-B2A6-4C29-BCC3-77B1A4C12DAE}</Project>
       <Name>Lpp.Dns.RemotePlugin.Interfaces</Name>
@@ -156,5 +162,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
-  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

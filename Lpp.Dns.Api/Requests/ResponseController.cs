@@ -931,6 +931,9 @@ namespace Lpp.Dns.Api.Requests
             return response;
         }
 
+
+        const string DefaultGroupingKey = "__DefaultGroupingKey";
+        const string DefaultGroupingKeyValue = "__DefaultGroupingKeyValue";
         /// <summary>
         /// Aggregates content of respones
         /// </summary>
@@ -943,25 +946,10 @@ namespace Lpp.Dns.Api.Requests
             combinedResponse.RequestID = requestID;
             combinedResponse.ResponseDateTime = DateTime.UtcNow;//TODO: should this be based on a response date? the most recent or earlies?
 
-            //merge results
-            if (responsesToAggregate.Count == 1)
-            {
-                combinedResponse = responsesToAggregate[0];
-            }
-            else
-            {
-                IEnumerable<Dictionary<string, object>> combined = Enumerable.Empty<Dictionary<string, object>>();
-                foreach (var r in responsesToAggregate.SelectMany(rr => rr.Results))
-                {
-                    combined = combined.Concat(r);
-                }
-                combinedResponse.Results = new[] { combined };
-            }
-
-            IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Properties.Any()).Select(r => r.Properties).FirstOrDefault();
-
+            //get the aggregatable properties, assume that all the responses have the same aggregation definition
+            IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Aggregation.Select.Any()).Select(r => r.Aggregation.Select).FirstOrDefault();
             //add a default groupingkey, this is needed for when there is only a single property in the response and it is getting aggregated
-            propertyDefinitions = propertyDefinitions.Union(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = "__DefaultGroupingKey", Type = typeof(string).FullName } });
+            propertyDefinitions = propertyDefinitions.Union(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = DefaultGroupingKey, Type = typeof(string).FullName } });
 
             //convert to typed objects so that we can work with the results using reflection, all responses must have the same property and aggregation definition.
             Type resultType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("ResponseItem", propertyDefinitions);
@@ -974,10 +962,27 @@ namespace Lpp.Dns.Api.Requests
             //build a map of the property info to the dictionary key values
             IDictionary<string, System.Reflection.PropertyInfo> propertyInfoMap = Lpp.Objects.Dynamic.TypeBuilderHelper.CreatePropertyInfoMap(resultType, propertyDefinitions);
 
+            //merge results
+            if (responsesToAggregate.Count == 1)
+            {
+                combinedResponse = responsesToAggregate[0];
+            }
+            else
+            {
+                IEnumerable<Dictionary<string, object>> combined = Enumerable.Empty<Dictionary<string, object>>();
+                foreach (var r in responsesToAggregate.SelectMany(rr => rr.Results))
+                {
+                    //include only the properties that are defined in the aggregation select definition, and are not the low threshhold column's standard name
+                    var filtered = r.Select(d => d.Where(k => !string.Equals(k.Key, "LowThreshold", StringComparison.OrdinalIgnoreCase) && propertyDefinitions.Any(p => p.As == k.Key)).ToDictionary(dd => dd.Key, dd => dd.Value));
+                    combined = combined.Concat(filtered); ;
+                }
+                combinedResponse.Results = new[] { combined };
+            }
+
             foreach (var dic in combinedResponse.Results.First())
             {
                 //add the default grouping value to the existing result item
-                dic.Add("__DefaultGroupingKey", "__DefaultGroupingKeyValue");
+                dic.Add(DefaultGroupingKey, DefaultGroupingKeyValue);
 
                 //create and add the populated object to the collection
                 var obj = Lpp.Objects.Dynamic.TypeBuilderHelper.FlattenDictionaryToType(resultType, dic, propertyInfoMap);
@@ -996,6 +1001,12 @@ namespace Lpp.Dns.Api.Requests
                 foreach (Lpp.Dns.DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO prop in aggregate.Select)
                 {
                     string s = (aggregate.GroupBy.Contains(prop.Name, StringComparer.OrdinalIgnoreCase) ? "Key." : "") + prop.As;
+
+                    //don't add LowThreshold to the select
+                    if (s.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    
                     if (!string.IsNullOrWhiteSpace(prop.Aggregate))
                     {
                         s = prop.Aggregate + "(" + Lpp.Objects.Dynamic.TypeBuilderHelper.CleanString(s) + ")";
@@ -1005,12 +1016,13 @@ namespace Lpp.Dns.Api.Requests
                     {
                         s += " as " + Lpp.Objects.Dynamic.TypeBuilderHelper.CleanString(prop.As);
                     }
-                    if (s != "LowThreshold") //dont add LowThreshold to the select
-                        selectBy.Add(s);
+                    
+                    selectBy.Add(s);
                 }
 
                 var q = ((System.Collections.IList)items).AsQueryable();
 
+                //group by the specified properties, else fall back to the default grouping key
                 if (aggregate.GroupBy != null && aggregate.GroupBy.Where(x => !string.IsNullOrEmpty(x)).Any())
                 {
                     string groupingStatement = "new (" + string.Join(",", aggregate.GroupBy) + ")";
@@ -1018,8 +1030,7 @@ namespace Lpp.Dns.Api.Requests
                 }
                 else
                 {
-                    //since no fields were specified for grouping use the default grouping key
-                    q = q.GroupBy("new (__DefaultGroupingKey)");
+                    q = q.GroupBy($"new ({DefaultGroupingKey})");
                 }
 
                 string selectStatement = "new (" + string.Join(",", selectBy) + ")";
@@ -1027,7 +1038,7 @@ namespace Lpp.Dns.Api.Requests
 
                 //convert results back to IEnumerable<Dictionary<string,object>>, and add to the results being returned
                 //dont include LowThreshold as an aggregation
-                IEnumerable<Dictionary<string, object>> aggregatedResults = Lpp.Objects.Dynamic.TypeBuilderHelper.ConvertToDictionary(((IQueryable)q).AsEnumerable(), aggregate.Select.Where(s => s.Name != "LowThreshold"));
+                IEnumerable<Dictionary<string, object>> aggregatedResults = Lpp.Objects.Dynamic.TypeBuilderHelper.ConvertToDictionary(((IQueryable)q).AsEnumerable(), aggregate.Select);
                 combinedResponse.Results = new[] { aggregatedResults.ToArray() };
                 combinedResponse.Properties = responsesToAggregate.First().Properties.ToArray();
                 combinedResponse.Aggregation = aggregate;
@@ -1098,6 +1109,13 @@ namespace Lpp.Dns.Api.Requests
                             rsp.RequestID = requestID;
                             l.Add(rsp);
 
+                            //if no aggregations are specified but property definitions are use the properties that do not have any aggregation action specified as the grouping key
+                            if (rsp.Aggregation != null && (rsp.Aggregation.GroupBy == null || rsp.Aggregation.GroupBy.Any() == false) && rsp.Aggregation.Select.Any())
+                            {
+                                //group by only the properties that do not have any aggregation action specified
+                                rsp.Aggregation.GroupBy = rsp.Aggregation.Select.Where(p => string.IsNullOrEmpty(p.Aggregate)).Select(p => p.As).ToArray();
+                            }
+
                             hasResponseData = true;
                         }
                     }
@@ -1106,7 +1124,9 @@ namespace Lpp.Dns.Api.Requests
                         lstMissingDataMartResponses.Add(DataContext.Responses.Where(p => p.ID == r.ResponseID).Select(p => p.RequestDataMart.DataMart.Name).FirstOrDefault());
 
                     return l;
-                }).Where(x => x.Aggregation != null && x.Aggregation.GroupBy.Any(y => !string.IsNullOrEmpty(y))).ToList();
+                }).Where(x => 
+                        //only aggregate if there is an aggregation section specified, the GroupBy could be empty
+                        x.Aggregation != null).ToList();
 
                 if (lstMissingDataMartResponses.Any())
                 {

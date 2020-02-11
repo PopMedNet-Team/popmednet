@@ -510,7 +510,7 @@ module Requests.Details {
                 });
             };
 
-            var editidpermission = this.HasPermission(Permissions.Project.EditRequestID);
+            var editidpermission = this.HasPermission(PMNPermissions.Project.EditRequestID);
 
             this.onEditWFRequestMetadata = () => {
 
@@ -889,21 +889,21 @@ module Requests.Details {
         var parentRequest: Dns.ViewModels.RequestViewModel;
         var workFlowActivity: Dns.Interfaces.IWorkflowActivityDTO;
         var requestTypeWorkflowActivityPermissions = [
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewTask,
-            Permissions.ProjectRequestTypeWorkflowActivities.EditTask,
-            Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewComments,
-            Permissions.ProjectRequestTypeWorkflowActivities.AddComments,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments,
-            Permissions.ProjectRequestTypeWorkflowActivities.AddDocuments,
-            Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments,
-            Permissions.ProjectRequestTypeWorkflowActivities.CloseTask,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
-            Permissions.ProjectRequestTypeWorkflowActivities.TerminateWorkflow,
-            Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata,
-            Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewComments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.AddComments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewDocuments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.AddDocuments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.TerminateWorkflow,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata,
+            PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable
         ];
         $.when<any>(
             Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"),
@@ -927,7 +927,7 @@ module Requests.Details {
                     Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID),
                     templateID == null ? null : Dns.WebApi.Templates.Get(templateID),
                     Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID),
-                    Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.SkipSubmissionApproval]),
+                    Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.SkipSubmissionApproval]),
                     Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID)
                     ).done((
                     parentRequests: Dns.Interfaces.IRequestDTO[],
@@ -996,8 +996,8 @@ module Requests.Details {
                         Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()),
                         Dns.WebApi.RequestUsers.List('RequestID eq ' + id),
                         Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID),
-                        Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Project.EditRequestID, Permissions.Request.OverrideDataMartRoutingStatus, Permissions.Request.ApproveRejectResponse, Permissions.Request.ChangeRoutingsAfterSubmission, Permissions.Project.ResubmitRequests, Permissions.Request.SkipSubmissionApproval]),
-                        Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [Permissions.Request.AssignRequestLevelNotifications, Permissions.Request.ChangeRoutingsAfterSubmission]),
+                        Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.ChangeRoutingsAfterSubmission, PMNPermissions.Project.ResubmitRequests, PMNPermissions.Request.SkipSubmissionApproval]),
+                        Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Request.ChangeRoutingsAfterSubmission]),
                         Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()),
                         Dns.WebApi.Response.CanViewIndividualResponses(request.ID()),
                         Dns.WebApi.Response.CanViewAggregateResponses(request.ID()),
@@ -1094,13 +1094,13 @@ module Requests.Details {
 
             ko.applyBindings(rovm, bindingControl[0]);
 
-            let viewOverview = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview.toLowerCase()) != null;
-            let viewComments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewComments.toLowerCase()) != null;
-            let viewTask = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTask.toLowerCase()) != null;
-            let viewDocuments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments.toLowerCase()) != null;
-            let viewAttachments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments.toLowerCase()) != null;
-            let assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.Request.AssignRequestLevelNotifications.toLowerCase()) != null;
-            let viewTrackingTable = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase()) != null;
+            let viewOverview = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewRequestOverview.toLowerCase()) != null;
+            let viewComments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewComments.toLowerCase()) != null;
+            let viewTask = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask.toLowerCase()) != null;
+            let viewDocuments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewDocuments.toLowerCase()) != null;
+            let viewAttachments = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments.toLowerCase()) != null;
+            let assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.Request.AssignRequestLevelNotifications.toLowerCase()) != null;
+            let viewTrackingTable = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase()) != null;
       
             // Load the view of the criteria only if #viewQueryComposer element is present
             if (viewOverview && $('#viewQueryComposer').length) {
@@ -1303,7 +1303,7 @@ module Requests.Details {
             //Use the workflow to use jquery load to load the partial for the task view as required
 
             //If new request, open Edit Request Metadata Dialog automatically
-            var alloweditrequestpermission = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == Permissions.Project.EditRequestID.toLowerCase()) != null;;
+            var alloweditrequestpermission = ko.utils.arrayFirst(screenPermissions, p => p.toLowerCase() == PMNPermissions.Project.EditRequestID.toLowerCase()) != null;;
             if (request.ID() == null) {
                 Global.Helpers.ShowDialog("Edit Request Metadata", "/workflow/workflowrequests/editwfrequestmetadatadialog", [], 700, 700, { DetailsViewModel: rovm, AllowEditRequestID: alloweditrequestpermission || false, NewRequest: true })
                     .done((result: any) => {

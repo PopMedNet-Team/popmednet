@@ -34,7 +34,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\..\Build\Lpp.Dns.Targets" />
-  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -147,8 +147,14 @@
       <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
       <Name>Lpp.Utilities.Legacy</Name>
     </ProjectReference>
-    
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RedirectBridge\Lpp.Dns.RedirectBridge\Lpp.Dns.RedirectBridge.csproj">
       <Project>{04A1CD2E-08DF-4D45-AA77-D924DD7ACEB7}</Project>
       <Name>Lpp.Dns.RedirectBridge</Name>

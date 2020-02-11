@@ -93,7 +93,7 @@ module Users {
     }
 }
 
-module Permissions {
+module PMNPermissions {
     export class Group {
         public static CreateProject: any = '93623C60-6425-40A0-91A0-01FA34920913';
         public static Edit: any = '3B42D2D7-F7A7-4119-9CC5-22991DC12AD3';

@@ -1,7 +1,7 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client", "Lpp.Adapters\Lpp.Dns.DataMart.Client\Lpp.Dns.DataMart.Client.csproj", "{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -43,11 +43,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{D2EA8084
 		Build\Lpp.Dns.targets = Build\Lpp.Dns.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Utilities", "Lpp.Utilities\Lpp.Utilities.csproj", "{F042377F-933E-4178-A871-AAB43006E351}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModelProcessorRestService", "Lpp.Adapters\SampleModelProcessorRestService\SampleModelProcessorRestService.csproj", "{C030CDF1-CF46-4C7D-A087-69400E0E86C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Processors.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Processors.Tests\Lpp.Dns.DataMart.Model.Processors.Tests.csproj", "{FD48D3B9-169B-4621-9023-B7A4BB48AE01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.QueryComposer", "Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer\Lpp.Dns.DataMart.Model.QueryComposer.csproj", "{B22805C6-4152-400A-9567-C8F5E39FA400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Objects", "Lpp.Objects\Lpp.Objects.csproj", "{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.ClientInstallCleanUp", "Lpp.Adapters\Lpp.Dns.DataMart.ClientInstallCleanUp\Lpp.Dns.DataMart.ClientInstallCleanUp.csproj", "{F9B55285-B4B0-4AA7-A4B9-62C727D236A3}"
 EndProject
@@ -64,6 +68,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0878F6
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.DomainManger", "Lpp.Adapters\Lpp.Dns.DataMart.Client.DomainManger\Lpp.Dns.DataMart.Client.DomainManger.csproj", "{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.QueryComposer", "Lpp.QueryComposer\Lpp.QueryComposer.csproj", "{B3374F4B-88A0-412D-90E5-79F2014D7721}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data", "Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data.csproj", "{1B945FA5-035D-49AC-A901-4570A2A64C08}"
 EndProject
@@ -86,6 +92,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -134,12 +146,12 @@ Global
 		{4384E64C-35B1-4A9E-983F-38A44103C804}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4384E64C-35B1-4A9E-983F-38A44103C804}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4384E64C-35B1-4A9E-983F-38A44103C804}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Adapters|Any CPU.Build.0 = Release|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10A0E71C-DBA0-40C0-8B7C-EA8A83B072BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -158,6 +170,12 @@ Global
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F9B55285-B4B0-4AA7-A4B9-62C727D236A3}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{F9B55285-B4B0-4AA7-A4B9-62C727D236A3}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{F9B55285-B4B0-4AA7-A4B9-62C727D236A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -188,6 +206,12 @@ Global
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36193B7D-3223-42BF-8EB0-E6EAEB0097B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -230,6 +254,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B22805C6-4152-400A-9567-C8F5E39FA400} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
+		{B3374F4B-88A0-412D-90E5-79F2014D7721} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{1BCE7532-35EF-4875-A26D-FE690516983E} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}

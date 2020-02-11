@@ -46,9 +46,9 @@
         @* Improvement would be to allow membership add on this screen. *@
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity) && SecurityGroup.ID() != null" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
-        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Project.ManageSecurity) || HasPermission(Permissions.Organization.ManageSecurity)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.Project.ManageSecurity) || HasPermission(PMNPermissions.Organization.ManageSecurity) && SecurityGroup.ID() != null" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.Project.ManageSecurity) || HasPermission(PMNPermissions.Organization.ManageSecurity)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.Project.ManageSecurity) || HasPermission(PMNPermissions.Organization.ManageSecurity)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

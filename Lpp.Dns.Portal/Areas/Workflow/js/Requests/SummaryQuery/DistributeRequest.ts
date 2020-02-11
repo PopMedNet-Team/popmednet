@@ -123,7 +123,7 @@ module Workflow.SummaryQuery.DistributeRequest {
             });
 
             this.CanSubmit = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
             }); 
 
             self.FieldOptions = fieldOptions || [];

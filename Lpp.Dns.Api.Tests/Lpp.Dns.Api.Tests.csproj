@@ -26,7 +26,7 @@
     <SlowCheetah_NuGetImportPath Condition=" '$(SlowCheetah_NuGetImportPath)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\Properties\SlowCheetah\SlowCheetah.Transforms.targets ))</SlowCheetah_NuGetImportPath>
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.WorkFlow.Engine, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.WorkFlow.Engine.dll</HintPath></Reference><Reference Include="Lpp.Utilities, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Utilities.WebSites, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Utilities.WebSites.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.QueryComposer.TermRegistration, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.QueryComposer.TermRegistration.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -170,7 +170,6 @@
     <Compile Include="Requests\ResponseAggregationTests.cs" />
     <Compile Include="Security\SecurityGroups.cs" />
     <Compile Include="Security\Permissions.cs" />
-    <Compile Include="TaskMatrix\ImportTests.cs" />
     <Compile Include="Terms\CodeUploadTests.cs" />
     <Compile Include="Users\SsoEndpointControllerTests.cs" />
     <Compile Include="Users\UsersControllerTests.cs" />
@@ -207,13 +206,10 @@
     <EmbeddedResource Include="Requests\Samples\DM1-response.json" />
     <EmbeddedResource Include="Requests\Samples\DM2-response.json" />
     <EmbeddedResource Include="Requests\Samples\request.json" />
-    <EmbeddedResource Include="TaskMatrix\task_order.json" />
-    <EmbeddedResource Include="TaskMatrix\PMNDEV-4121\activities_from_service_20150420.json" />
     <None Include="Requests\DistributedRegression\AC_TrackingTable_Sample1.csv" />
     <None Include="Requests\Samples\BadRequestObserver.json" />
     <None Include="Requests\Samples\GoodRequestObserver.json" />
     <None Include="Requests\Samples\ModularProgramRequest.json" />
-    <None Include="TaskMatrix\PMNDEV-4121\PMN_Activities_Export_20150420.json" />
     <None Include="Terms\Example01_DIAGNOSIS_Acute Kidney Failure.csv" />
     <None Include="Terms\Example01_DIAGNOSIS_Acute Kidney Failure.xlsx" />
     <None Include="Terms\Example02_PROCEDURE_Dialysis.csv" />
@@ -254,16 +250,40 @@
       <Project>{55d64bff-0afb-4878-b0ac-971fee5b1bad}</Project>
       <Name>Lpp.Dns.WebServices</Name>
     </ProjectReference>
-    
-    
-    
-    
-    
-    
+    <ProjectReference Include="..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.QueryComposer.TermRegistration\Lpp.QueryComposer.TermRegistration.csproj">
+      <Project>{5c31a0e6-e749-4e93-a370-c78623ab5c9f}</Project>
+      <Name>Lpp.QueryComposer.TermRegistration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.QueryComposer\Lpp.QueryComposer.csproj">
+      <Project>{b3374f4b-88a0-412d-90e5-79f2014d7721}</Project>
+      <Name>Lpp.QueryComposer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities.WebSites\Lpp.Utilities.WebSites.csproj">
+      <Project>{d3b148ed-522f-4737-8228-aab5e7de684e}</Project>
+      <Name>Lpp.Utilities.WebSites</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.WorkFlow.Engine\Lpp.WorkFlow.Engine.csproj">
+      <Project>{ea3e3eb5-0d93-4a9a-ab0a-797e8d1ad009}</Project>
+      <Name>Lpp.WorkFlow.Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

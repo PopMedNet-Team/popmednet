@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-sm-3 form-group">
                     <label for="txtUserName">User Name<em>*</em></label>
-                    <input type="text" id="txtUserName" name="UserName" required title="Please enter a valid and unique user name" class="form-control" maxlength="50" data-bind="value: User.UserName, enabled: HasPermission(Permissions.User.ChangeLogin)" />
+                    <input type="text" id="txtUserName" name="UserName" required title="Please enter a valid and unique user name" class="form-control" maxlength="50" data-bind="value: User.UserName, enabled: HasPermission(PMNPermissions.User.ChangeLogin)" />
                 </div>
                 <div class="col-sm-3 form-group" data-bind="visible: AccountStatus() == 'Pending'">
                     <label for="txtUserName">Requested Role</label>
@@ -98,28 +98,28 @@
                 @if (!canChangePassword)
                 {
                 <!-- ko if: IsProfile -->
-                    <div class="col-sm-3 form-group pull-right right" style="margin-top: .8em;" data-bind="visible: HasPermission(Permissions.User.ChangePassword) || IsProfile">
+                    <div class="col-sm-3 form-group pull-right right" style="margin-top: .8em;" data-bind="visible: HasPermission(PMNPermissions.User.ChangePassword) || IsProfile">
                         <button class="btn btn-info" id="btnChangePassword" type="button" data-bind="click: ChangePassword, text: User.ID() == null ? 'Set Password' : 'Change Password'"></button>
                     </div>
                 <!-- /ko --> 
                 }
                 @if (canChangePassword)
                 {
-                <div class="col-sm-3 form-group pull-right right" style="margin-top: .8em;" data-bind="visible: HasPermission(Permissions.User.ChangePassword) || IsProfile">
+                <div class="col-sm-3 form-group pull-right right" style="margin-top: .8em;" data-bind="visible: HasPermission(PMNPermissions.User.ChangePassword) || IsProfile">
                     <button class="btn btn-info" id="btnChangePassword" type="button" data-bind="click: ChangePassword, text: User.ID() == null ? 'Set Password' : 'Change Password'"></button>
                 </div>
                 }
             </div>
         </form>
-        <div id="tabs" data-bind="kendoTabStrip: {activate: onActivate}, visible: HasPermission(Permissions.User.ManageSecurity) || HasPermission(Permissions.User.ManageNotifications)" style="min-height: 500px;">
+        <div id="tabs" data-bind="kendoTabStrip: {activate: onActivate}, visible: HasPermission(PMNPermissions.User.ManageSecurity) || HasPermission(PMNPermissions.User.ManageNotifications)" style="min-height: 500px;">
             <ul>
-                <li class="k-state-active" data-bind="visible: HasPermission(Permissions.User.ManageSecurity), css: {'k-state-active': HasPermission(Permissions.User.ManageSecurity)}">Security Groups</li>
-                <li data-bind="visible: HasPermission(Permissions.User.ManageSecurity)">Permissions</li>
-                <li data-bind="visible: HasPermission(Permissions.User.ManageSecurity)">Events</li>
-                <li data-bind="visible: HasPermission(Permissions.User.ManageNotifications), css: {'k-state-active': HasPermission(Permissions.User.ManageNotifications) && !HasPermission(Permissions.User.ManageSecurity)}">Notifications</li>
+                <li class="k-state-active" data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity), css: {'k-state-active': HasPermission(PMNPermissions.User.ManageSecurity)}">Security Groups</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">Permissions</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">Events</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.User.ManageNotifications), css: {'k-state-active': HasPermission(PMNPermissions.User.ManageNotifications) && !HasPermission(PMNPermissions.User.ManageSecurity)}">Notifications</li>
                 <li id="tbAuthentication">Authentication History</li>
             </ul>
-            <div class="tab-body" data-bind="visible: HasPermission(Permissions.User.ManageSecurity)">
+            <div class="tab-body" data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">
                 <br />
                 <p class="alert alert-info">
                     These security groups control the membership for this user. By selecting a security group, you are adding this user to the security group and the user will automatically get the permissions assigned to that security group.
@@ -156,7 +156,7 @@
                     </table>
                 </div>
             </div>
-            <div class="tab-body" data-bind="visible: HasPermission(Permissions.User.ManageSecurity)">
+            <div class="tab-body" data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">
                 <br />
                 <!--Permissions-->
                 <p class="alert alert-info">
@@ -166,7 +166,7 @@
                     @Html.Partial("~/Views/Security/EditAcl.cshtml")
                 </div>
             </div>
-            <div class="tab-body" data-bind="visible: HasPermission(Permissions.User.ManageSecurity)">
+            <div class="tab-body" data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">
                 <!--Events-->
                 <br />
                 <p class="alert alert-info">
@@ -176,7 +176,7 @@
                     @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
                 </div>
             </div>
-            <div class="tab-body" data-bind="visible: HasPermission(Permissions.User.ManageNotifications)">
+            <div class="tab-body" data-bind="visible: HasPermission(PMNPermissions.User.ManageNotifications)">
                 <!--Notifications-->
                 <table class="table table-striped table-bordered" style="width: 100%;">
                     <thead>
@@ -249,9 +249,9 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" type="button" data-bind="click: Delete, visible: HasPermission(Permissions.User.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
-        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" type="button" data-bind="click: Cancel, visible: HasPermission(Permissions.User.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" type="button" data-bind="click: Save, visible: HasPermission(Permissions.User.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" type="button" data-bind="click: Delete, visible: HasPermission(PMNPermissions.User.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" type="button" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.User.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" type="button" data-bind="click: Save, visible: HasPermission(PMNPermissions.User.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 

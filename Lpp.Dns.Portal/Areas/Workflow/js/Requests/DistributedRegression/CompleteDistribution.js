@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -134,7 +134,7 @@ var Workflow;
                     self.strDataMartsToCancel = '';
                     self.DataMartsToChange = ko.observableArray([]);
                     self.strDataMartsToChange = '';
-                    self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == Permissions.Request.ViewHistory; }) != null;
+                    self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == PMNPermissions.Request.ViewHistory; }) != null;
                     self.CompletedRoutings = ko.computed(function () {
                         return ko.utils.arrayFilter(self.Routings(), function (routing) {
                             return routing.RoutingType != Dns.Enums.RoutingType.AnalysisCenter &&
@@ -186,7 +186,7 @@ var Workflow;
                         self.AnalysisCenters.push(new VirtualRoutingViewModel(routing, null, resp));
                     });
                     self.CanCompleteActivity = ko.computed(function () {
-                        return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && ko.utils.arrayFilter(self.IncompleteRoutings(), function (r) { return r.Status != Dns.Enums.RoutingStatus.Canceled; }).length == 0;
+                        return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && ko.utils.arrayFilter(self.IncompleteRoutings(), function (r) { return r.Status != Dns.Enums.RoutingStatus.Canceled; }).length == 0;
                     });
                     self.HasViewResponseDetailPermission = function (permissionID) {
                         return ko.utils.arrayFirst(self.ViewResponseDetailPermissions, function (item) {
@@ -541,8 +541,8 @@ var Workflow;
             function init() {
                 var id = Global.GetQueryParam("ID");
                 //get the permissions for the view response detail, use to control the dialog view showing the result files
-                var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
-                $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), getResponseDetailPermissions, Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])).done(function (responses, responseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
+                var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
+                $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), getResponseDetailPermissions, Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])).done(function (responses, responseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                     var bindingControl = $("#DRCompleteDistribution");
                     vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, responses[0], responseDetailPermissions, overrideableRoutingIDs, requestPermissions || []);

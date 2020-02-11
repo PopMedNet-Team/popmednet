@@ -153,7 +153,7 @@ module Workflow.Common.ListRoutings {
             self.AllowViewAggregateResults = canViewAggregateResponses;
             self.isDefault = (Requests.Details.rovm.Request.WorkflowID().toUpperCase() == 'F64E0001-4F9A-49F0-BF75-A3B501396946');
             self.AllowCopy = Requests.Details.rovm.AllowCopy();
-            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == Permissions.Request.ViewHistory) != null;
+            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == PMNPermissions.Request.ViewHistory) != null;
 
             self.AllowAggregateView = true;
 
@@ -827,7 +827,7 @@ module Workflow.Common.ListRoutings {
                 Dns.WebApi.Response.GetResponseGroupsByRequestID(id),
                 Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'),
                 Dns.WebApi.Requests.GetRequestTypeModels(id),
-                Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory, Permissions])
+                Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory, PMNPermissions])
                 )
                 .done((
                     responses: Dns.Interfaces.ICommonResponseDetailDTO[],

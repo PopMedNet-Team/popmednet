@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -54,10 +54,10 @@ var Groups;
         }
         Index.NameAchor = NameAchor;
         function init() {
-            $.when(Users.GetSetting("Groups.Index.gGroups.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateGroup)).done(function (gGroupsSetting, canAdd) {
+            $.when(Users.GetSetting("Groups.Index.gGroups.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateGroup)).done(function (gGroupsSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(gGroupsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateGroup] : []);
+                    vm = new ViewModel(gGroupsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateGroup] : []);
                     ko.applyBindings(vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(vm.GroupsGrid(), gGroupsSetting);
                     vm.GroupsGrid().bind("dataBound", function (e) {

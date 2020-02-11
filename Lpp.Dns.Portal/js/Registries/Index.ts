@@ -60,10 +60,10 @@ module Registries.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("Registries.Index.gRegistries.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateRegistry)).done((gRegistriesSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRegistry)).done((gRegistriesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRegistry] : []);
+                vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRegistry] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.RegistriesGrid(), gRegistriesSetting);
                 vm.RegistriesGrid().bind("dataBound", function (e) {

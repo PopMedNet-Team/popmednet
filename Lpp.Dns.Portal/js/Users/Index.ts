@@ -63,10 +63,10 @@ module Users.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("Users.Index.gUsers.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.CreateUsers)).done((gUsersSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateUsers)).done((gUsersSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateUsers] : []);
+                vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateUsers] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.UsersGrid(), gUsersSetting);
                 vm.UsersGrid().bind("dataBound", function (e) {

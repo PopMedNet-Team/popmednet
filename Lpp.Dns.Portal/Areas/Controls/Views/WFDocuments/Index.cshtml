@@ -1,4 +1,4 @@
-﻿<section class="panel panel-default tabPanel" data-bind="visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)">
+﻿<section class="panel panel-default tabPanel" data-bind="visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)">
 				<div class="panel-heading">
 						Documents
 				</div>
@@ -37,15 +37,15 @@
     </div>
     <nav class="panel-footer" style="display:none;" data-bind="visible:CurrentTask() == null || (CurrentTask() != null && CurrentTask().ID != null)">
         <p>Files added by clicking "New Document" <strong><u>are not</u></strong> distributed to Data Partners. They are only visible on the query tool.</p>
-        <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteDocument, visible: SelectedRevisionSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
+        <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteDocument, visible: SelectedRevisionSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
         <button class="btn btn-default pull-right" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"><span class="glyphicon glyphicon-refresh"></span></button>
-        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewDocument, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.AddDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>
-        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewRevision, visible:SelectedRevisionSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewDocument, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.AddDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>
+        <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewRevision, visible:SelectedRevisionSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
         <button class="btn btn-default pull-right" type="button" data-bind="click: onDownload, visible: SelectedRevisionSet() != null"><span class="glyphicon glyphicon-download-alt"></span> Download Current Revision</button>
         <div class="clear"></div>
     </nav>
 </section>
-<section data-bind="visible:AttachmentsViewable() && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewAttachments)" class="panel panel-default">
+<section data-bind="visible:AttachmentsViewable() && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments)" class="panel panel-default">
 		<div class="panel-heading">
 				Attachments
 		</div>
@@ -84,10 +84,10 @@
 		</div>
         <nav class="panel-footer" style="display:none;" data-bind="visible:CurrentTask() == null || (CurrentTask() != null && CurrentTask().ID != null)">
             <p>Files added by clicking "New Attachment" <strong><u>are</u></strong> distributed to Data Partners.</p>
-            <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteAttachment, visible: SelectedAttachmentSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
+            <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteAttachment, visible: SelectedAttachmentSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
             <button class="btn btn-default pull-right" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"><span class="glyphicon glyphicon-refresh"></span></button>
-            <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewAttachment, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Attachment</button>
-            <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewAttachmentRevision, visible:SelectedAttachmentSet() != null && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
+            <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewAttachment, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Attachment</button>
+            <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewAttachmentRevision, visible:SelectedAttachmentSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
             <button class="btn btn-default pull-right" type="button" data-bind="click: onDownloadAttachment, visible: SelectedAttachmentSet() != null"><span class="glyphicon glyphicon-download-alt"></span> Download Current Revision</button>
             <div class="clear"></div>
         </nav>

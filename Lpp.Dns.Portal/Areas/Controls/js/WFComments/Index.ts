@@ -92,7 +92,7 @@ module Controls.WFComments.List {
                     documents.forEach(d => {
                         //if the document ID is null then the document has been deleted, can't allow download.
                         if (d.DocumentID) {
-                            if (self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)) {
+                            if (self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)) {
                                 comment += Controls.WFDocuments.List.Utils.buildDownloadLink(d.DocumentID, d.FileName, d.DocumentName);
                             }
                             else

@@ -90,8 +90,8 @@
             </tbody>
         </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="5C5E0001-10A6-4992-A8BE-A3F4012D5FEB" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Resubmit</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="visible:HasViewResponseDetailPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) || HasViewResponseDetailPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewTask),click:onViewResponses,enable:HasSelectedCompleteRoutings">View Results</button>
+            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="5C5E0001-10A6-4992-A8BE-A3F4012D5FEB" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Resubmit</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="visible:HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) || HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask),click:onViewResponses,enable:HasSelectedCompleteRoutings">View Results</button>
             <div class="clearfix"></div>
         </nav>
 
@@ -146,10 +146,10 @@
             </tbody>
         </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: $root.SelectedIncompleteRoutings().length > 0, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" , style="margin-left:5px">Bulk Edit</button>
-            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Remove DataMart</button>
-            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Add DataMart</button>
-            <button class="btn btn-default pull-right" data-bind="click:onCompleteRouting, enable:HasSelectedIncompleteRoutings && SelectedIncompleteRoutings().length == 1, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Complete Routing</button>
+            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: $root.SelectedIncompleteRoutings().length > 0, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" , style="margin-left:5px">Bulk Edit</button>
+            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Remove DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Add DataMart</button>
+            <button class="btn btn-default pull-right" data-bind="click:onCompleteRouting, enable:HasSelectedIncompleteRoutings && SelectedIncompleteRoutings().length == 1, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Complete Routing</button>
             <div class="clearfix"></div>
         </nav>
     </article>

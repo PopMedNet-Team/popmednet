@@ -11,7 +11,7 @@ module Workflow.SummaryQuery.DraftRequest {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions);
             this.AbortRejectMessage = ko.observable("");
 
-            if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
+            if (Requests.Details.rovm.ScreenPermissions.indexOf(PMNPermissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
                 this.SubmitButtonText = ko.observable('Submit');
             }
             else {

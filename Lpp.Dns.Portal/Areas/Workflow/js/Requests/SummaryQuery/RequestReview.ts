@@ -186,7 +186,7 @@ module Workflow.SummaryQuery.RequestReview {
             //Hook up the Query Composer
             var queryData = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
             var visualTerms = Requests.Details.rovm.VisualTerms;
-            if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.ProjectRequestTypeWorkflowActivities.EditTask.toLowerCase()) > -1) {
+            if (Requests.Details.rovm.ScreenPermissions.indexOf(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask.toLowerCase()) > -1) {
 
                 Plugins.Requests.QueryBuilder.Edit.init(
                     queryData,

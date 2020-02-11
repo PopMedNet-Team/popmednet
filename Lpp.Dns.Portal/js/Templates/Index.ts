@@ -55,10 +55,10 @@
     function init() {
         //TODO: get the screen permissions and then bind the screen
         $.when<any>(Users.GetSetting("Templates.Index.gTemplates.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateTemplate)).done((gTemplatesSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done((gTemplatesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $('#Content');
-                vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateTemplate] : []);
+                vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateTemplate] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.TemplatesGrid(), gTemplatesSetting);
                 vm.TemplatesGrid().bind("dataBound", function (e) {

@@ -23,6 +23,12 @@ namespace Lpp.Dns.DTO.Enums
         /// Indicates the Statification block of the query composer
         /// </summary>
         [EnumMember]
-        Stratification = 1
+        Stratification = 1,
+
+        /// <summary>
+        /// Indicates the Criteria for Temporal Events.
+        /// </summary>
+        [EnumMember]
+        TemportalEvents = 2,
     }
 }

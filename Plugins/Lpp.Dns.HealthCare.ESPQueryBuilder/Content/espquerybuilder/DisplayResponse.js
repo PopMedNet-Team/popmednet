@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -63,9 +63,9 @@ var ESPQueryBuilder;
     ESPQueryBuilder.ViewModel = ViewModel;
     var SimpleResultViewModel = /** @class */ (function () {
         function SimpleResultViewModel(model, StratificationFlags, AgeGroupTitle) {
+            var _this = this;
             if (StratificationFlags === void 0) { StratificationFlags = Stratifications.None; }
             if (AgeGroupTitle === void 0) { AgeGroupTitle = ''; }
-            var _this = this;
             this.model = model;
             this.StratificationFlags = StratificationFlags;
             this.AgeGroupTitle = AgeGroupTitle;

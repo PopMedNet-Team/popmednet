@@ -1,0 +1,331 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-12-31T15:46:58.2591952+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<69>. Actual:<70>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Race": null,
+        "Patients": 1
+      },
+      {
+        "Race": "01",
+        "Patients": 7
+      },
+      {
+        "Race": "02",
+        "Patients": 8
+      },
+      {
+        "Race": "03",
+        "Patients": 12
+      },
+      {
+        "Race": "04",
+        "Patients": 12
+      },
+      {
+        "Race": "05",
+        "Patients": 8
+      },
+      {
+        "Race": "06",
+        "Patients": 8
+      },
+      {
+        "Race": "07",
+        "Patients": 13
+      },
+      {
+        "Race": "Alberto",
+        "Patients": 1
+      },
+      {
+        "Race": "Ana",
+        "Patients": 1
+      },
+      {
+        "Race": "Arlene",
+        "Patients": 1
+      },
+      {
+        "Race": "Arthur",
+        "Patients": 1
+      },
+      {
+        "Race": "Bertha",
+        "Patients": 1
+      },
+      {
+        "Race": "Beryl",
+        "Patients": 1
+      },
+      {
+        "Race": "Bret",
+        "Patients": 1
+      },
+      {
+        "Race": "Chantal",
+        "Patients": 1
+      },
+      {
+        "Race": "Chris",
+        "Patients": 1
+      },
+      {
+        "Race": "Cindy",
+        "Patients": 1
+      },
+      {
+        "Race": "Debby",
+        "Patients": 1
+      },
+      {
+        "Race": "Don",
+        "Patients": 1
+      },
+      {
+        "Race": "Dorian",
+        "Patients": 1
+      },
+      {
+        "Race": "Emily",
+        "Patients": 1
+      },
+      {
+        "Race": "Erin",
+        "Patients": 1
+      },
+      {
+        "Race": "Ernesto",
+        "Patients": 1
+      },
+      {
+        "Race": "Florence",
+        "Patients": 1
+      },
+      {
+        "Race": "Franklin",
+        "Patients": 1
+      },
+      {
+        "Race": "Gert",
+        "Patients": 1
+      },
+      {
+        "Race": "Gordon",
+        "Patients": 1
+      },
+      {
+        "Race": "Hanna",
+        "Patients": 1
+      },
+      {
+        "Race": "Harvey",
+        "Patients": 1
+      },
+      {
+        "Race": "Helene",
+        "Patients": 1
+      },
+      {
+        "Race": "Irma",
+        "Patients": 1
+      },
+      {
+        "Race": "Isaac",
+        "Patients": 1
+      },
+      {
+        "Race": "Isaias",
+        "Patients": 1
+      },
+      {
+        "Race": "Jose",
+        "Patients": 1
+      },
+      {
+        "Race": "Josephine",
+        "Patients": 1
+      },
+      {
+        "Race": "Joyce",
+        "Patients": 1
+      },
+      {
+        "Race": "Katia",
+        "Patients": 1
+      },
+      {
+        "Race": "Kirk",
+        "Patients": 1
+      },
+      {
+        "Race": "Kyle",
+        "Patients": 1
+      },
+      {
+        "Race": "Laura",
+        "Patients": 1
+      },
+      {
+        "Race": "Lee",
+        "Patients": 1
+      },
+      {
+        "Race": "Leslie",
+        "Patients": 1
+      },
+      {
+        "Race": "Marco",
+        "Patients": 1
+      },
+      {
+        "Race": "Maria",
+        "Patients": 1
+      },
+      {
+        "Race": "Michael",
+        "Patients": 1
+      },
+      {
+        "Race": "Nadine",
+        "Patients": 1
+      },
+      {
+        "Race": "Nana",
+        "Patients": 1
+      },
+      {
+        "Race": "Nate",
+        "Patients": 1
+      },
+      {
+        "Race": "Omar",
+        "Patients": 1
+      },
+      {
+        "Race": "Ophelia",
+        "Patients": 1
+      },
+      {
+        "Race": "Oscar",
+        "Patients": 1
+      },
+      {
+        "Race": "OT",
+        "Patients": 5
+      },
+      {
+        "Race": "Patty",
+        "Patients": 1
+      },
+      {
+        "Race": "Paulette",
+        "Patients": 1
+      },
+      {
+        "Race": "Philippe",
+        "Patients": 1
+      },
+      {
+        "Race": "Rafael",
+        "Patients": 1
+      },
+      {
+        "Race": "Rene",
+        "Patients": 1
+      },
+      {
+        "Race": "Rina",
+        "Patients": 1
+      },
+      {
+        "Race": "Sally",
+        "Patients": 1
+      },
+      {
+        "Race": "Sam",
+        "Patients": 1
+      },
+      {
+        "Race": "Sean",
+        "Patients": 1
+      },
+      {
+        "Race": "Tammy",
+        "Patients": 1
+      },
+      {
+        "Race": "Teddy",
+        "Patients": 1
+      },
+      {
+        "Race": "Teresa",
+        "Patients": 1
+      },
+      {
+        "Race": "Vicky",
+        "Patients": 1
+      },
+      {
+        "Race": "Vince",
+        "Patients": 1
+      },
+      {
+        "Race": "Wendy",
+        "Patients": 1
+      },
+      {
+        "Race": "Whitney",
+        "Patients": 1
+      },
+      {
+        "Race": "Wilfred",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

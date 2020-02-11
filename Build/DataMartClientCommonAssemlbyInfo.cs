@@ -7,6 +7,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © PopMedNet 2011-2019")]
 [assembly: ComVisible(false)]
 //Please Also update The Click Once version under Lpp.Dns.DataMartClient Properties > publish > Version Number 
-[assembly: AssemblyVersion( /*<VERSION>*/ "6.14.0.0" /*</VERSION>*/ )]
-[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.14.0.0" /*</VERSION>*/ )]   
-[assembly: AssemblyInformationalVersion("2019.5")]
+[assembly: AssemblyVersion( /*<VERSION>*/ "6.15.0.0" /*</VERSION>*/ )]
+[assembly: AssemblyFileVersion( /*<VERSION>*/ "6.15.0.0" /*</VERSION>*/ )]   
+[assembly: AssemblyInformationalVersion("2020.1")]

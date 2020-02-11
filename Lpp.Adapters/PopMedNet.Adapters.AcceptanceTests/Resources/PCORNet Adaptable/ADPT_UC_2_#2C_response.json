@@ -1,0 +1,36 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-06-19T17:35:18.9861447+00:00",
+  "RequestID": "5c83cd21-2070-4ce8-a443-aa7100bf864d",
+  "Errors": null,
+  "Results": [
+    [
+      {
+        "Patients": 6
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+    ],
+    "Select": [
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

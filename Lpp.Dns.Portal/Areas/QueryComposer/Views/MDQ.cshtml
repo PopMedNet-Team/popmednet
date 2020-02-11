@@ -248,26 +248,67 @@
 												<h3>Temporal Events</h3>
 										</div>
 										<div class="panel-body">
-												<div class="row-noborder">
-														<div class="col-sm-6 form-group">
-																<label for="txtIndexEventDateIdentifier">Index Event Identifier</label>
-																<input id="txtIndexEventDateIdentifier" type="text" class="form-control" data-bind="value: IndexEventDateIdentifier" required validationmessage="Index Event Identifier is required" />
-														</div>
-														<div class="col-sm-3 form-group">
-																<label for="txtDaysBefore" style="display:block;">Time Window</label>
-																<span>Days Before: </span><input id="txtDaysBefore" name="txtDaysBefore" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysBefore}" style="width:90px;" required validationmessage="&nbsp;" />
-																<span class="k-invalid-msg" data-for="txtDaysBefore"></span>
-														</div>
-														<div class="col-sm-3 form-group">
-																<label for="txtDaysAfter" style="display:block;">&nbsp;</label>
-																<span>Days After: </span><input id="txtDaysAfter" name="txtDaysAfter" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysAfter}" style="width:90px;" required validationmessage="&nbsp;"/>
-																<span class="k-invalid-msg" data-for="txtDaysAfter"></span>
-														</div>
-												</div>
-												<div class="row-noborder">
-														<div class="col-sm-6">&nbsp;</div>
-														<div class="col-sm-6"><div data-bind="patientReportedOutcomeEncounterTermValidator: {values: $data, termValidators: $root.TermValidators}"></div></div>
-												</div>
+											<div class="row row-noborder">
+													<div class="col-sm-6 form-group">
+															<label for="txtIndexEventDateIdentifier">Index Event Identifier</label>
+															<input id="txtIndexEventDateIdentifier" type="text" class="form-control" data-bind="value: IndexEventDateIdentifier" required validationmessage="Index Event Identifier is required" />
+													</div>
+													<div class="col-sm-3 form-group">
+															<label for="txtDaysBefore" style="display:block;">Time Window</label>
+															<span>Days Before: </span><input id="txtDaysBefore" name="txtDaysBefore" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysBefore}" style="width:90px;" required validationmessage="&nbsp;" />
+															<span class="k-invalid-msg" data-for="txtDaysBefore"></span>
+													</div>
+													<div class="col-sm-3 form-group">
+															<label for="txtDaysAfter" style="display:block;">&nbsp;</label>
+															<span>Days After: </span><input id="txtDaysAfter" name="txtDaysAfter" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysAfter}" style="width:90px;" required validationmessage="&nbsp;"/>
+															<span class="k-invalid-msg" data-for="txtDaysAfter"></span>
+													</div>
+											</div>
+											<div class="row row-noborder">
+													<div class="col-sm-6">&nbsp;</div>
+													<div class="col-sm-6"><div data-bind="patientReportedOutcomeEncounterTermValidator: {values: $data, termValidators: $root.TermValidators}"></div></div>
+											</div>
+                                            <section data-bind="visible:$root.HasTemporalEventTerms">
+                                                
+                                                <nav class="panel panel-warning" style="float:left;margin-right:15px; width:150px;">
+                                                    <div class="panel-heading">Add Terms</div>
+                                                    <div class="panel-body" style="padding:0px;">
+                                                        <ul data-bind="foreach: $root.TemporalEventsTermList, kendoMenu:{orientation:'vertical'}" style="width:100%">
+                                                            <li style="padding: 11px;" data-bind="visible: $root.IsTemplateEdit || $data.Allowed">
+                                                                <div>
+                                                                    <span data-bind="html: $data.Name, click: function(data, event){ $root.AddTemporalEventTerm($root, data, $parent, event); }"></span>
+                                                                    <!--ko if: $root.IsTemplateEdit-->
+                                                                    <input type="checkbox" data-bind="checked:$data.Allowed" style="float: right;" />
+                                                                    <!--/ko-->
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </nav>
+                                                <fieldset style="margin-left:180px;">
+                                                    <legend style="display:none;">Selected Terms</legend>
+                                                    <div data-bind="foreach:{ data: Criteria, as : 'parentCrit' }">
+                                                        <p><label><input type="checkbox" data-bind="checked:parentCrit.Exclusion" /> Exclusion Criteria</label></p>
+
+                                                        <div data-bind="foreach:{ data: parentCrit.Criteria, as : 'crit'}">
+
+                                                            <div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                                            <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
+
+                                                        </div>
+
+                                                        <div data-bind="visible:parentCrit.Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                                                        <div data-bind="template: {name: $root.TemplateSelector, foreach: parentCrit.Terms}"></div>
+
+                                                    </div>
+                                                </fieldset>
+                                                <br class="clear" />
+
+
+                                            </section>
 										</div>
 								</div>
 						</div>

@@ -78,8 +78,8 @@ var Users;
     }
     Users.ApplySettingsToGrid = ApplySettingsToGrid;
 })(Users || (Users = {}));
-var Permissions;
-(function (Permissions) {
+var PMNPermissions;
+(function (PMNPermissions) {
     var Group = /** @class */ (function () {
         function Group() {
         }
@@ -91,7 +91,7 @@ var Permissions;
         Group.ListProjects = '8C5E44DC-284E-45D8-A014-A0CD815883AE';
         return Group;
     }());
-    Permissions.Group = Group;
+    PMNPermissions.Group = Group;
     var Organization = /** @class */ (function () {
         function Organization() {
         }
@@ -106,7 +106,7 @@ var Permissions;
         Organization.Copy = '64A00001-A1D6-41DD-AB20-A2B200EEB9A3';
         return Organization;
     }());
-    Permissions.Organization = Organization;
+    PMNPermissions.Organization = Organization;
     var Project = /** @class */ (function () {
         function Project() {
         }
@@ -120,7 +120,7 @@ var Permissions;
         Project.EditRequestID = '43BF0001-4735-4598-BBAD-A4D801478AAA';
         return Project;
     }());
-    Permissions.Project = Project;
+    PMNPermissions.Project = Project;
     var User = /** @class */ (function () {
         function User() {
         }
@@ -134,7 +134,7 @@ var Permissions;
         User.ChangeCertificate = 'FDE2D32E-A045-4062-9969-00962E182367';
         return User;
     }());
-    Permissions.User = User;
+    PMNPermissions.User = User;
     var DataMart = /** @class */ (function () {
         function DataMart() {
         }
@@ -148,7 +148,7 @@ var Permissions;
         DataMart.ManageProjects = '6B42D2D8-F7A7-4119-9CC5-22991DC12AD3';
         return DataMart;
     }());
-    Permissions.DataMart = DataMart;
+    PMNPermissions.DataMart = DataMart;
     var Registry = /** @class */ (function () {
         function Registry() {
         }
@@ -158,7 +158,7 @@ var Permissions;
         Registry.ManageSecurity = '268F7007-E95F-435C-8FAF-0B9FBC9CA997';
         return Registry;
     }());
-    Permissions.Registry = Registry;
+    PMNPermissions.Registry = Registry;
     var Portal = /** @class */ (function () {
         function Portal() {
         }
@@ -170,7 +170,7 @@ var Permissions;
         Portal.CreateRequestType = 'AE341111-020E-4E32-9E9F-A3B00134A862';
         return Portal;
     }());
-    Permissions.Portal = Portal;
+    PMNPermissions.Portal = Portal;
     var Templates = /** @class */ (function () {
         function Templates() {
         }
@@ -180,7 +180,7 @@ var Permissions;
         Templates.ManageSecurity = 'D3B50001-528C-4E85-BC1B-A3B00131FD69';
         return Templates;
     }());
-    Permissions.Templates = Templates;
+    PMNPermissions.Templates = Templates;
     var RequestTypes = /** @class */ (function () {
         function RequestTypes() {
         }
@@ -190,7 +190,7 @@ var Permissions;
         RequestTypes.ManageSecurity = 'D3B50021-528C-4E85-BC1B-A3B00131FD69';
         return RequestTypes;
     }());
-    Permissions.RequestTypes = RequestTypes;
+    PMNPermissions.RequestTypes = RequestTypes;
     var ProjectRequestTypeWorkflowActivities = /** @class */ (function () {
         function ProjectRequestTypeWorkflowActivities() {
         }
@@ -210,7 +210,7 @@ var Permissions;
         ProjectRequestTypeWorkflowActivities.ViewTrackingTable = '97850001-E880-40FB-AC98-A6C601592C15';
         return ProjectRequestTypeWorkflowActivities;
     }());
-    Permissions.ProjectRequestTypeWorkflowActivities = ProjectRequestTypeWorkflowActivities;
+    PMNPermissions.ProjectRequestTypeWorkflowActivities = ProjectRequestTypeWorkflowActivities;
     var Request = /** @class */ (function () {
         function Request() {
         }
@@ -222,5 +222,5 @@ var Permissions;
         Request.SkipSubmissionApproval = '39683790-A857-4247-85DF-A9B425AC79CC';
         return Request;
     }());
-    Permissions.Request = Request;
-})(Permissions || (Permissions = {}));
+    PMNPermissions.Request = Request;
+})(PMNPermissions || (PMNPermissions = {}));

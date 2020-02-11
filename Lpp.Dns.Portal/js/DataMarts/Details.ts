@@ -65,7 +65,7 @@ module DataMarts.Details {
 
             self.DataModelProcessors = dmProcessors;
 
-            this.CanUninstall = ko.observable(this.HasPermission(Permissions.DataMart.UninstallModels));
+            this.CanUninstall = ko.observable(this.HasPermission(PMNPermissions.DataMart.UninstallModels));
 
             // NOTE This is necessary because the DataMart data object requires that the Url be non-null, yet the database allows it.
             // This forces it to be an empty string when null.
@@ -421,13 +421,13 @@ module DataMarts.Details {
         var id: any = $.url().param("ID");
         var orgid: any = $.url().param("OrganizationID");
         var defaultPermissions = [
-            Permissions.DataMart.Copy,
-            Permissions.DataMart.Delete,
-            Permissions.DataMart.Edit,
-            Permissions.DataMart.ManageSecurity,
-            Permissions.DataMart.InstallModels,
-            Permissions.DataMart.UninstallModels,
-            Permissions.DataMart.ManageProjects
+            PMNPermissions.DataMart.Copy,
+            PMNPermissions.DataMart.Delete,
+            PMNPermissions.DataMart.Edit,
+            PMNPermissions.DataMart.ManageSecurity,
+            PMNPermissions.DataMart.InstallModels,
+            PMNPermissions.DataMart.UninstallModels,
+            PMNPermissions.DataMart.ManageProjects
         ];
 
         $.when<any>(

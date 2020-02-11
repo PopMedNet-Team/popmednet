@@ -6,7 +6,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -94,7 +94,7 @@ var Plugins;
                                     }
                                 }
                                 if (term.Terms != null && term.Terms.length > 0) {
-                                    var hasSummaryModel = options.IsTemplateEdit ? RequestType.Details.vm.SelectedModels.indexOf('cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb') >= 0 : options.Models.length == 1 && termValueFilter.HasModel(MDQ.TermValueFilter.SummaryTablesModelID);
+                                    var hasSummaryModel = options.IsTemplateEdit ? RequestType.Details.vm.SelectedModels.indexOf(MDQ.TermValueFilter.SummaryTablesModelID) >= 0 : options.Models.length == 1 && termValueFilter.HasModel(MDQ.TermValueFilter.SummaryTablesModelID);
                                     var termCategory = { Name: term.Name, Description: term.Description, TermID: term.TermID, Terms: [], ValueTemplate: term.ValueTemplate, IncludeInCriteria: term.IncludeInCriteria, IncludeInStratifiers: term.IncludeInStratifiers, IncludeInProjectors: term.IncludeInProjectors };
                                     term.Terms.forEach(function (childTerm) {
                                         if (childTerm.TermID != null) {
@@ -203,6 +203,43 @@ var Plugins;
                             $('#FieldsSelector').kendoMenu({ orientation: 'vertical' });
                             return resultArr;
                         });
+                        _this.TemporalEventsTermList = ko.computed(function () {
+                            _this.TermListUpdateDummy();
+                            var resultArr = ko.utils.arrayFilter(self.FilteredTermList(), function (t) {
+                                //only Diagnosis and Procedure terms are allowed
+                                return MDQ.Terms.Compare(t.TermID, MDQ.Terms.CombinedDiagnosisCodesID) || MDQ.Terms.Compare(t.TermID, MDQ.Terms.ProcedureCodesID);
+                            }).map(function (t) {
+                                var tvm = null;
+                                var childTermVM = [];
+                                var templateTerm;
+                                var outerAllowed = false;
+                                if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
+                                    t.Terms.forEach(function (it) {
+                                        templateTerm = ko.utils.arrayFirst(self.TemplateTerms, function (tt) { return tt.Section == Dns.Enums.QueryComposerSections.TemportalEvents && tt.TermID == it.TermID; });
+                                        childTermVM.push(new TermVm(it, [], templateTerm == null ? true : templateTerm.Allowed));
+                                        if (templateTerm != null) {
+                                            if (templateTerm.Allowed) {
+                                                outerAllowed = true;
+                                            }
+                                        }
+                                        else {
+                                            outerAllowed = true;
+                                        }
+                                    });
+                                }
+                                templateTerm = ko.utils.arrayFirst(self.TemplateTerms, function (tt) { return tt.Section == Dns.Enums.QueryComposerSections.TemportalEvents && tt.TermID == t.TermID; });
+                                if (t.TermID != null) {
+                                    outerAllowed = templateTerm != null ? templateTerm.Allowed : true;
+                                }
+                                tvm = new TermVm(t, childTermVM, outerAllowed);
+                                return tvm;
+                            });
+                            return resultArr;
+                        });
+                        _this.HasTemporalEventTerms = ko.computed(function () {
+                            return _this.IsTemplateEdit || ko.utils.arrayFirst(_this.TemporalEventsTermList(), function (ti) { return ti.Allowed() != null && ti.Allowed(); }) != null;
+                        });
                         //holds all of the terms that aren't allowed by the request type. 
                         //updates when toggling checkboxes next to terms in template edit mode
                         _this.NotAllowedTerms = ko.computed(function () {
@@ -237,6 +274,21 @@ var Plugins;
                                         stratTerms.push(t);
                                 }
                             });
+                            var temporalEventTerms = [];
+                            ko.utils.arrayForEach(self.TemporalEventsTermList(), function (t) {
+                                if (t.Terms != null && t.Terms.length > 0) {
+                                    //it's a group of terms, like Criteria or Demographic
+                                    t.Terms.forEach(function (it) {
+                                        if (!it.Allowed()) {
+                                            temporalEventTerms.push(it);
+                                        }
+                                    });
+                                }
+                                else {
+                                    if (!t.Allowed())
+                                        temporalEventTerms.push(t);
+                                }
+                            });
                             //the last two arrays hold the terms as ISectionSpecificDTOs, a form that can be saved. 
                             var notAllowedCritTerms = criteriaTerms.map(function (t) {
                                 var sectionTerm = {
@@ -252,8 +304,15 @@ var Plugins;
                                 };
                                 return sectionTerm;
                             });
+                            var notAllowedTemporalEventTerms = temporalEventTerms.map(function (t) {
+                                var sectionTerm = {
+                                    Section: Dns.Enums.QueryComposerSections.TemportalEvents,
+                                    TermID: t.TermID
+                                };
+                                return sectionTerm;
+                            });
                             //Since the section the terms came from is now preserved by a property in the DTO, the arrays can be concated
-                            return notAllowedCritTerms.concat(notAllowedStratTerms);
+                            return notAllowedCritTerms.concat(notAllowedStratTerms).concat(notAllowedTemporalEventTerms);
                         }, _this, { deferEvaluation: true });
                         _this.UpdateTermList = function (modelID, adapterDetail, restrictToTermsID) {
                             var values = [];
@@ -375,6 +434,15 @@ var Plugins;
                                 convertTerms(cvm.Terms());
                                 cvm.Criteria().forEach(function (subCriteria) {
                                     convertTerms(subCriteria.Terms());
+                                });
+                            });
+                            _this.Request.TemporalEvents().forEach(function (temporalEvent) {
+                                var self = _this;
+                                temporalEvent.Criteria().forEach(function (cvm) {
+                                    convertTerms(cvm.Terms());
+                                    cvm.Criteria().forEach(function (subCriteria) {
+                                        convertTerms(subCriteria.Terms());
+                                    });
                                 });
                             });
                             //Add subscriptions here to listen for criteria changes
@@ -659,6 +727,65 @@ var Plugins;
                                 MDQ.vm.Request.Where.Criteria().pop();
                             MDQ.vm.Request.Where.Criteria.push(criteria);
                         });
+                    };
+                    ViewModel.prototype.AddTemporalEventTerm = function (root, data, parent, event) {
+                        var self = root;
+                        var rootCriteria;
+                        //only a single root criteria will be available for Temporal Events
+                        if (parent.Criteria().length == 0) {
+                            rootCriteria = new Dns.ViewModels.QueryComposerCriteriaViewModel();
+                            rootCriteria.ID(Constants.Guid.newGuid());
+                            rootCriteria.Name('Group 1');
+                            rootCriteria.Exclusion(false);
+                            rootCriteria.IndexEvent(true);
+                            rootCriteria.Operator(Dns.Enums.QueryComposerOperators.And);
+                            rootCriteria.Type(Dns.Enums.QueryComposerCriteriaTypes.IndexEvent);
+                            parent.Criteria.push(rootCriteria);
+                        }
+                        else {
+                            rootCriteria = parent.Criteria()[0];
+                        }
+                        var termValues = Global.Helpers.CopyObject(data.ValueTemplate);
+                        var termViewModel = new Dns.ViewModels.QueryComposerTermViewModel({
+                            Operator: Dns.Enums.QueryComposerOperators.And,
+                            Type: data.TermID,
+                            Values: termValues,
+                            Criteria: null,
+                            Design: data.Design
+                        });
+                        //add the term to the appropriate sub-criteria if same terms are to be OR'd within the same parent criteria.
+                        if (ViewModel.GroupedTerms.indexOf(data.TermID.toUpperCase()) >= 0) {
+                            //the terms should be OR's together and the criteria AND'd to other sub-criteria and parent criteria terms.
+                            termViewModel.Operator(Dns.Enums.QueryComposerOperators.Or);
+                            //find the first sub-criteria that contains a matching term (each sub-criteria should only contain terms of the same type at this time)
+                            var criteria = ko.utils.arrayFirst(rootCriteria.Criteria(), function (c) {
+                                var t = ko.utils.arrayFirst(c.Terms(), function (tt) { return true; });
+                                if (t == null)
+                                    return false;
+                                //if the term is a noncode term compare the first term in the subcriteria, for these all the terms should be the same.
+                                if (ViewModel.NonCodeGroupedTerms.indexOf(data.TermID.toUpperCase()) >= 0) {
+                                    return ViewModel.NonCodeGroupedTerms.indexOf(t.Type().toUpperCase()) >= 0 && MDQ.Terms.Compare(t.Type(), data.TermID);
+                                }
+                                //if it is a noncode term return if the first term of the sub-criteria is a noncode term or not.
+                                //if the term is a code term it should return true.
+                                return ViewModel.NonCodeGroupedTerms.indexOf(t.Type().toUpperCase()) < 0;
+                            });
+                            if (criteria == null) {
+                                criteria = new Dns.ViewModels.QueryComposerCriteriaViewModel();
+                                criteria.Operator(Dns.Enums.QueryComposerOperators.And);
+                                criteria.Type(Dns.Enums.QueryComposerCriteriaTypes.Paragraph);
+                                criteria.ID(Constants.Guid.newGuid());
+                                criteria.Name(ViewModel.NonCodeGroupedTerms.indexOf(data.TermID.toUpperCase()) >= 0 ? 'i_' + data.Name.replace(' ', '_') : 'i_codeterms');
+                                criteria.Terms.push(termViewModel);
+                                rootCriteria.Criteria.push(criteria);
+                            }
+                            else {
+                                criteria.Terms.push(termViewModel);
+                            }
+                        }
+                        else {
+                            rootCriteria.Terms.push(termViewModel);
+                        }
                     };
                     ViewModel.prototype.AddTerm = function (root, data, parent, event) {
                         var self = root;
@@ -965,6 +1092,25 @@ var Plugins;
                                 c.Criteria.remove(sc);
                             });
                         });
+                        //clean up TemporalEvents Criteria
+                        if (this.Request.TemporalEvents() != null || this.Request.TemporalEvents().length > 0) {
+                            ko.utils.arrayForEach(this.Request.TemporalEvents(), function (tevt) {
+                                var criteriaToDelete = [];
+                                ko.utils.arrayForEach(tevt.Criteria(), function (rootCriteria) {
+                                    var subCriteriaToRemove = ko.utils.arrayFilter(rootCriteria.Criteria(), function (subCrit) { return subCrit.Terms().length == 0; });
+                                    if (subCriteriaToRemove.length > 0) {
+                                        SuspendDataMartTimer();
+                                        rootCriteria.Criteria.removeAll(subCriteriaToRemove);
+                                    }
+                                    if (rootCriteria.Criteria().length == 0 && rootCriteria.Terms().length == 0) {
+                                        criteriaToDelete.push(rootCriteria);
+                                    }
+                                });
+                                var emptyCriteria = ko.utils.arrayFilter(tevt.Criteria(), function (cr) { return cr.Criteria().length == 0 && cr.Terms().length == 0; });
+                                SuspendDataMartTimer();
+                                tevt.Criteria.removeAll(emptyCriteria);
+                            });
+                        }
                     };
                     ViewModel.prototype.DeleteField = function (data, selectFields) {
                         var self = this;

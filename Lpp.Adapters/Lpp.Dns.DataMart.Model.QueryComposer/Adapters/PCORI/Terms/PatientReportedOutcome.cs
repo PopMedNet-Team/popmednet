@@ -24,19 +24,19 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ItemName",
+                    Name = "PRO_ITEM_NAME",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseText",
+                    Name = "PRO_RESPONSE_TEXT",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseNumber",
+                    Name = "PRO_RESPONSE_NUM",
                     Type = typeof(double?).FullName.ToString()
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "MeasureSequence",
+                    Name = "PRO_MEASURE_SEQ",
                     Type = "System.String"
                 }
             };
@@ -51,36 +51,97 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                 return Enumerable.Empty<MemberBinding>();
             }
 
-            string patientIDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "PatientID" : "PRO_PatientID";
-            string IDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "ID" : "PRO_CM_ID";
-
-            return new[] {
+            if(sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome))
+            {
+                return new[] {
                 Expression.Bind(
                         selectType.GetProperty("PRO_CM_ID"),
-                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(IDProperty))
+                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ID"))
                     ),
                 Expression.Bind(
                     selectType.GetProperty("PRO_PatientID"),
-                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(patientIDProperty))
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PatientID"))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("ItemName"),
+                    selectType.GetProperty("PRO_ITEM_NAME"),
                     Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ItemName"))
                     )
                     ,
                 Expression.Bind(
-                    selectType.GetProperty("ResponseText"),
+                    selectType.GetProperty("PRO_RESPONSE_TEXT"),
                     Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseText"))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("ResponseNumber"),
+                    selectType.GetProperty("PRO_RESPONSE_NUM"),
                     Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseNumber")), typeof(double?))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("MeasureSequence"),
+                    selectType.GetProperty("PRO_MEASURE_SEQ"),
                     Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("MeasureSequence"))
                     )
             };
+            }
+
+            return new[] {
+                Expression.Bind(
+                        selectType.GetProperty("PRO_CM_ID"),
+                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_CM_ID"))
+                    ),
+                Expression.Bind(
+                    selectType.GetProperty("PRO_PatientID"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_PatientID"))
+                    ),
+                Expression.Bind(
+                    selectType.GetProperty("PRO_ITEM_NAME"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_ITEM_NAME"))
+                    )
+                    ,
+                Expression.Bind(
+                    selectType.GetProperty("PRO_RESPONSE_TEXT"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_RESPONSE_TEXT"))
+                    ),
+                Expression.Bind(
+                    selectType.GetProperty("PRO_RESPONSE_NUM"),
+                    Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_RESPONSE_NUM")), typeof(double?))
+                    ),
+                Expression.Bind(
+                    selectType.GetProperty("PRO_MEASURE_SEQ"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_MEASURE_SEQ"))
+                    )
+            };
+
+
+
+            //string patientIDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "PatientID" : "PRO_PatientID";
+            //string IDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "ID" : "PRO_CM_ID";
+
+            //return new[] {
+            //    Expression.Bind(
+            //            selectType.GetProperty("PRO_CM_ID"),
+            //            Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(IDProperty))
+            //        ),
+            //    Expression.Bind(
+            //        selectType.GetProperty("PRO_PatientID"),
+            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(patientIDProperty))
+            //        ),
+            //    Expression.Bind(
+            //        selectType.GetProperty("PRO_ITEM_NAME"),
+            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ItemName"))
+            //        )
+            //        ,
+            //    Expression.Bind(
+            //        selectType.GetProperty("PRO_RESPONSE_TEXT"),
+            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseText"))
+            //        ),
+            //    Expression.Bind(
+            //        selectType.GetProperty("PRO_RESPONSE_NUM"),
+            //        Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseNumber")), typeof(double?))
+            //        ),
+            //    Expression.Bind(
+            //        selectType.GetProperty("PRO_MEASURE_SEQ"),
+            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_MEASURE_SEQ"))
+            //        )
+            //};
         }
 
         public override IPropertyDefinition[] GroupKeyPropertyDefinitions()
@@ -88,19 +149,19 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
             return new[] {
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO
                 {
-                    Name = "ItemName",
+                    Name = "PRO_ITEM_NAME",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseText",
+                    Name = "PRO_RESPONSE_TEXT",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseNumber",
+                    Name = "PRO_RESPONSE_NUM",
                     Type = typeof(double?).FullName.ToString()
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "MeasureSequence",
+                    Name = "PRO_MEASURE_SEQ",
                     Type = "System.String"
                 }
             };
@@ -109,18 +170,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         public override IEnumerable<MemberBinding> GroupKeySelectBindings(Type selectType, ParameterExpression sourceTypeParameter)
         {
             return new[] {
-                Expression.Bind(selectType.GetProperty("ItemName"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ItemName"))),
+                Expression.Bind(selectType.GetProperty("PRO_ITEM_NAME"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_ITEM_NAME"))),
                 Expression.Bind(
-                    selectType.GetProperty("ResponseText"),
-                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseText"))
+                    selectType.GetProperty("PRO_RESPONSE_TEXT"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_RESPONSE_TEXT"))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("ResponseNumber"),
-                    Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseNumber")), typeof(double?))
+                    selectType.GetProperty("PRO_RESPONSE_NUM"),
+                    Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_RESPONSE_NUM")), typeof(double?))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("MeasureSequence"),
-                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("MeasureSequence"))
+                    selectType.GetProperty("PRO_MEASURE_SEQ"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_MEASURE_SEQ"))
                     )
             };
         }
@@ -129,19 +190,19 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         {
             return new[] {
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ItemName",
+                    Name = "PRO_ITEM_NAME",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseText",
+                    Name = "PRO_RESPONSE_TEXT",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ResponseNumber",
+                    Name = "PRO_RESPONSE_NUM",
                     Type = typeof(double?).FullName.ToString()
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "MeasureSequence",
+                    Name = "PRO_MEASURE_SEQ",
                     Type = "System.String"
                 }
             };
@@ -149,18 +210,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         public override IEnumerable<MemberBinding> FinalSelectBindings(Type selectType, ParameterExpression sourceTypeParameter)
         {
             return new[] {
-                Expression.Bind(selectType.GetProperty("ItemName"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "ItemName")),
+                Expression.Bind(selectType.GetProperty("PRO_ITEM_NAME"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "PRO_ITEM_NAME")),
                 Expression.Bind(
-                    selectType.GetProperty("ResponseText"),
-                    Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "ResponseText")
+                    selectType.GetProperty("PRO_RESPONSE_TEXT"),
+                    Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "PRO_RESPONSE_TEXT")
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("ResponseNumber"),
-                    Expression.Convert(Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "ResponseNumber"), typeof(double?))
+                    selectType.GetProperty("PRO_RESPONSE_NUM"),
+                    Expression.Convert(Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "PRO_RESPONSE_NUM"), typeof(double?))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("MeasureSequence"),
-                    Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "MeasureSequence")
+                    selectType.GetProperty("PRO_MEASURE_SEQ"),
+                    Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "PRO_MEASURE_SEQ")
                     )
             };
         }

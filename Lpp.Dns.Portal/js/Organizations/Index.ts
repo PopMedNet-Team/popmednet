@@ -53,10 +53,10 @@ module Organizations.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("Organizations.Index.gOrganizations.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateOrganization)).done((gOrganizationsSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateOrganization)).done((gOrganizationsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateOrganization] : []);
+                vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateOrganization] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.OrganizationsGrid(), gOrganizationsSetting);
                 vm.OrganizationsGrid().bind("dataBound", function (e) {

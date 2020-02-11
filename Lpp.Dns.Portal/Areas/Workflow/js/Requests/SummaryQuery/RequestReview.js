@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -192,7 +192,7 @@ var Workflow;
                     //Hook up the Query Composer
                     var queryData = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                     var visualTerms = Requests.Details.rovm.VisualTerms;
-                    if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.ProjectRequestTypeWorkflowActivities.EditTask.toLowerCase()) > -1) {
+                    if (Requests.Details.rovm.ScreenPermissions.indexOf(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask.toLowerCase()) > -1) {
                         Plugins.Requests.QueryBuilder.Edit.init(queryData, Requests.Details.rovm.FieldOptions, Requests.Details.rovm.Request.Priority(), Requests.Details.rovm.Request.DueDate(), Requests.Details.rovm.Request.AdditionalInstructions(), ko.utils.arrayMap(Requests.Details.rovm.RequestDataMarts() || [], function (dm) { return dm.toData(); }), Requests.Details.rovm.Request.RequestTypeID(), visualTerms, false, Requests.Details.rovm.Request.ProjectID(), "", Requests.Details.rovm.Request.ID()).done(function (viewModel) {
                             if (viewModel) {
                                 //Override the save function on the page that is already there and inject what's needed.

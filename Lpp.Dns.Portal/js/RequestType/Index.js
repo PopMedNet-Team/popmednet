@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -61,10 +61,10 @@ var RequestType;
         }
         Index.NameAchor = NameAchor;
         function init() {
-            $.when(Users.GetSetting("RequestType.Index.gRequestTypes.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateRequestType)).done(function (gRequestTypesSetting, canAdd) {
+            $.when(Users.GetSetting("RequestType.Index.gRequestTypes.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRequestType)).done(function (gRequestTypesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $('#Content');
-                    Index.vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRequestType] : []);
+                    Index.vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRequestType] : []);
                     ko.applyBindings(Index.vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(Index.vm.RequestTypesGrid(), gRequestTypesSetting);
                     Index.vm.RequestTypesGrid().bind("dataBound", function (e) {

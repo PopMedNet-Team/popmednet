@@ -1,0 +1,119 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:27:29.2250821+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<5>. Actual:<7>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Elsa",
+        "Race": "04",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Imelda",
+        "Race": "02",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Karen",
+        "Race": "04",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "04",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "06",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Isaac",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Philippe",
+        "Age": "20 - 24",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "Age",
+      "Type": "System.String",
+      "As": "Age",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race",
+      "Age"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "Age",
+        "Type": "System.String",
+        "As": "Age",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

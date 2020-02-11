@@ -2562,16 +2562,6 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Response/ExportAllAsZip' + params, doNotHandleFail);
             };
-            Response.ExportResponse = function (requestID, format, doNotHandleFail) {
-                var params = '';
-                if (requestID != null)
-                    params += '&requestID=' + requestID;
-                if (format != null)
-                    params += '&format=' + encodeURIComponent(format);
-                if (params.length > 0)
-                    params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('Response/ExportResponse' + params, doNotHandleFail);
-            };
             Response.GetTrackingTableForAnalysisCenter = function (requestID, doNotHandleFail) {
                 var params = '';
                 if (requestID != null)

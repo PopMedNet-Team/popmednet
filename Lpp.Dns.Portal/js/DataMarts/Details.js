@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -27,7 +27,7 @@ var DataMarts;
                 self.QueryComposerAdapters = ko.utils.arrayFilter(allDataModels, function (m) { return m.QueryComposer && DataMarts.Details.InstalledModels.QueryComposerModelID != (m.ID || '').toUpperCase(); });
                 self.QueryComposerAdapters.splice(0, 0, { ID: null, Name: 'None', Description: 'Adapter not selected.', QueryComposer: true, RequiresConfiguration: false, Timestamp: null });
                 self.DataModelProcessors = dmProcessors;
-                _this.CanUninstall = ko.observable(_this.HasPermission(Permissions.DataMart.UninstallModels));
+                _this.CanUninstall = ko.observable(_this.HasPermission(PMNPermissions.DataMart.UninstallModels));
                 // NOTE This is necessary because the DataMart data object requires that the Url be non-null, yet the database allows it.
                 // This forces it to be an empty string when null.
                 if (datamart != null)
@@ -325,13 +325,13 @@ var DataMarts;
             var id = $.url().param("ID");
             var orgid = $.url().param("OrganizationID");
             var defaultPermissions = [
-                Permissions.DataMart.Copy,
-                Permissions.DataMart.Delete,
-                Permissions.DataMart.Edit,
-                Permissions.DataMart.ManageSecurity,
-                Permissions.DataMart.InstallModels,
-                Permissions.DataMart.UninstallModels,
-                Permissions.DataMart.ManageProjects
+                PMNPermissions.DataMart.Copy,
+                PMNPermissions.DataMart.Delete,
+                PMNPermissions.DataMart.Edit,
+                PMNPermissions.DataMart.ManageSecurity,
+                PMNPermissions.DataMart.InstallModels,
+                PMNPermissions.DataMart.UninstallModels,
+                PMNPermissions.DataMart.ManageProjects
             ];
             $.when(id == null ? null : Dns.WebApi.DataMarts.GetPermissions([id], defaultPermissions), id == null ? null : Dns.WebApi.DataMarts.Get(id), id == null ? null : Dns.WebApi.DataMarts.GetInstalledModelsByDataMart(id), Dns.WebApi.DataModels.List(null, null, 'Name'), Dns.WebApi.Organizations.List(null, "Name,ID"), id == null ? null : Dns.WebApi.ProjectDataMarts.List("DataMartID eq " + id, null, "Project"), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.DataMarts]), id == null ? null : Dns.WebApi.DataMarts.GetRequestTypesByDataMarts([id]), Dns.WebApi.Security.GetDataMartPermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetDataMartRequestTypePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.DataMarts.DataMartTypeList(null, "Name,ID"), orgid, Dns.WebApi.DataModels.ListDataModelProcessors()).done(function (screenPermissions, datamarts, installedModels, allDataModels, organizations, projects, permissionList, requestTypes, datamartPermission, datamartRequestTypePermissions, securityGroupTree, dmTypeList, orgid, dataModelProcessors) {
                 var datamart = datamarts == null ? null : datamarts[0];

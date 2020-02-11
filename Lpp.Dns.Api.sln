@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Api", "Lpp.Dns.Api\Lpp.Dns.Api.csproj", "{2AE3E366-45D0-44CC-97DC-FCA56DE0E671}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -26,9 +26,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Data", "Lpp.Dns.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO", "Lpp.Dns.DTO\Lpp.Dns.DTO.csproj", "{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Utilities", "Lpp.Utilities\Lpp.Utilities.csproj", "{F042377F-933E-4178-A871-AAB43006E351}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.WebServices", "Lpp.Dns.WebServices\Lpp.Dns.WebServices.csproj", "{55D64BFF-0AFB-4878-B0AC-971FEE5B1BAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Utilities.WebSites", "Lpp.Utilities.WebSites\Lpp.Utilities.WebSites.csproj", "{D3B148ED-522F-4737-8228-AAB5E7DE684E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Objects", "Lpp.Objects\Lpp.Objects.csproj", "{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO.DataMartClient", "Lpp.Dns.DTO.DataMartClient\Lpp.Dns.DTO.DataMartClient.csproj", "{3C729124-5D57-4DC2-9A83-D1947D64D0E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.WorkFlow.Engine", "Lpp.WorkFlow.Engine\Lpp.WorkFlow.Engine.csproj", "{EA3E3EB5-0D93-4A9A-AB0A-797E8D1AD009}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.QueryComposer", "Lpp.QueryComposer\Lpp.QueryComposer.csproj", "{B3374F4B-88A0-412D-90E5-79F2014D7721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.QueryComposer.TermRegistration", "Lpp.QueryComposer.TermRegistration\Lpp.QueryComposer.TermRegistration.csproj", "{5C31A0E6-E749-4E93-A370-C78623AB5C9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Workflow.Default", "Lpp.Dns.Workflow.Default\Lpp.Dns.Workflow.Default.csproj", "{D355B7EE-26B6-4721-8792-84225CE4B189}"
 EndProject
@@ -77,14 +89,38 @@ Global
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55D64BFF-0AFB-4878-B0AC-971FEE5B1BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55D64BFF-0AFB-4878-B0AC-971FEE5B1BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55D64BFF-0AFB-4878-B0AC-971FEE5B1BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55D64BFF-0AFB-4878-B0AC-971FEE5B1BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B148ED-522F-4737-8228-AAB5E7DE684E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B148ED-522F-4737-8228-AAB5E7DE684E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B148ED-522F-4737-8228-AAB5E7DE684E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B148ED-522F-4737-8228-AAB5E7DE684E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C729124-5D57-4DC2-9A83-D1947D64D0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3E3EB5-0D93-4A9A-AB0A-797E8D1AD009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3E3EB5-0D93-4A9A-AB0A-797E8D1AD009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3E3EB5-0D93-4A9A-AB0A-797E8D1AD009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3E3EB5-0D93-4A9A-AB0A-797E8D1AD009}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C31A0E6-E749-4E93-A370-C78623AB5C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C31A0E6-E749-4E93-A370-C78623AB5C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C31A0E6-E749-4E93-A370-C78623AB5C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C31A0E6-E749-4E93-A370-C78623AB5C9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D355B7EE-26B6-4721-8792-84225CE4B189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D355B7EE-26B6-4721-8792-84225CE4B189}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D355B7EE-26B6-4721-8792-84225CE4B189}.Release|Any CPU.ActiveCfg = Release|Any CPU

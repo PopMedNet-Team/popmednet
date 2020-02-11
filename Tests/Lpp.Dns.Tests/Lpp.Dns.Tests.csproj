@@ -34,7 +34,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\..\Build\Lpp.Dns.Targets" />
-  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -162,19 +162,19 @@
       <Project>{C26AA376-8202-47A7-80AF-9CDA4042A5D8}</Project>
       <Name>Lpp.Tests</Name>
     </ProjectReference>
-    
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TestData.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\Lpp.Dns.Model\SQLScripts\DNS3_a_BaseStructure.sql">
-      <Link>Resources\DNS3_a_BaseStructure.sql</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\Lpp.Dns.Model\SQLScripts\DNS4_a_Diff.sql">
-      <Link>Resources\DNS4_a_Diff.sql</Link>
-    </EmbeddedResource>
     <Content Include="..\..\Lpp.Mvc.Composition\Lpp.Audit\Data\DDL.sql">
       <Link>Resources\Audit\DDL.sql</Link>
     </Content>
@@ -218,5 +218,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
-  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

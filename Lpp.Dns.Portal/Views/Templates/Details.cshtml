@@ -22,13 +22,13 @@
             <div class="row">
                 <div class="col-md-6 form-group">
                     <label for="txtName">Template Name<em>*</em></label>
-                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: Template.Name, enable: HasPermission(Permissions.Templates.Edit)" />
+                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: Template.Name, enable: HasPermission(PMNPermissions.Templates.Edit)" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 form-group">
                     <label for="txtDescription">Description</label>
-                    <textarea id="txtDescription" class="form-control" data-bind="value: Template.Description, enable: HasPermission(Permissions.Templates.Edit)" rows="4"></textarea>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: Template.Description, enable: HasPermission(PMNPermissions.Templates.Edit)" rows="4"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -75,9 +75,9 @@
     
 
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: Template.ID() != null && HasPermission(Permissions.Templates.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: Template.ID() != null && HasPermission(PMNPermissions.Templates.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Templates.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.Templates.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

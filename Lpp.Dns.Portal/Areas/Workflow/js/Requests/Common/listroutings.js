@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -133,7 +133,7 @@ var Workflow;
                     self.AllowViewAggregateResults = canViewAggregateResponses;
                     self.isDefault = (Requests.Details.rovm.Request.WorkflowID().toUpperCase() == 'F64E0001-4F9A-49F0-BF75-A3B501396946');
                     self.AllowCopy = Requests.Details.rovm.AllowCopy();
-                    self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == Permissions.Request.ViewHistory; }) != null;
+                    self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == PMNPermissions.Request.ViewHistory; }) != null;
                     self.AllowAggregateView = true;
                     //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                     requestTypeModels.forEach(function (rt) {
@@ -672,7 +672,7 @@ var Workflow;
             function init() {
                 $(function () {
                     var id = Global.GetQueryParam("ID");
-                    $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewIndividualResponses(id), Dns.WebApi.Response.CanViewAggregateResponses(id), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetRequestTypeModels(id), Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory, Permissions]))
+                    $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.CanViewIndividualResponses(id), Dns.WebApi.Response.CanViewAggregateResponses(id), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetRequestTypeModels(id), Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory, PMNPermissions]))
                         .done(function (responses, canViewIndividualResponses, canViewAggregateResponses, responseGroups, overrideableRoutingIDs, requestTypeModels, requestPermissions) {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                         var bindingControl = $("#CommonListRoutings");

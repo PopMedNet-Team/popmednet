@@ -38,7 +38,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string CodeType { get; set; }
 
         [Column("PX_DATE")]
-        public DateTime? PerformedOn { get; set; }
+        public DateTime? ProcedureDate { get; set; }
 
         [Column("PX_SOURCE")]
         public string Source { get; set; }

@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -119,7 +119,7 @@ var Organization;
             };
             ViewModel.prototype.AddUser = function () {
                 var _this = this;
-                if (this.HasPermission(Permissions.Organization.Edit)) {
+                if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                     vm.Save(null, null, false).done(function () {
                         window.location.href = "/users/details?OrganizationID=" + _this.Organization.ID();
                     });
@@ -130,7 +130,7 @@ var Organization;
             };
             ViewModel.prototype.AddDataMart = function () {
                 var _this = this;
-                if (this.HasPermission(Permissions.Organization.Edit)) {
+                if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                     vm.Save(null, null, false).done(function () {
                         window.location.href = "/datamarts/details?OrganizationID=" + _this.Organization.ID();
                     });
@@ -141,7 +141,7 @@ var Organization;
             };
             ViewModel.prototype.NewRegistry = function () {
                 var _this = this;
-                if (this.HasPermission(Permissions.Organization.Edit)) {
+                if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                     vm.Save(null, null, false).done(function () {
                         window.location.href = "/registries/details?OrganizationID=" + _this.Organization.ID();
                     });
@@ -188,7 +188,7 @@ var Organization;
                     vm.Organization.Timestamp(orgs[0].Timestamp);
                     var orgAcls = null;
                     var orgEvents = null;
-                    if (_this.HasPermission(Permissions.Organization.ManageSecurity)) {
+                    if (_this.HasPermission(PMNPermissions.Organization.ManageSecurity)) {
                         orgAcls = _this.OrgAcls().map(function (a) {
                             a.OrganizationID(_this.Organization.ID());
                             return a.toData();
@@ -206,7 +206,7 @@ var Organization;
                         eh.OrganizationID(_this.Organization.ID());
                         return eh.toData();
                     });
-                    $.when(orgAcls != null ? Dns.WebApi.Security.UpdateOrganizationPermissions(orgAcls) : null, orgEvents != null ? Dns.WebApi.Events.UpdateOrganizationEventPermissions(orgEvents) : null, Dns.WebApi.Organizations.EHRSInsertOrUpdate({ OrganizationID: _this.Organization.ID(), EHRS: orgehrs }), _this.HasPermission(Permissions.Organization.Edit) ? Dns.WebApi.OrganizationRegistries.InsertOrUpdate(orgRegistries) : null).done(function () {
+                    $.when(orgAcls != null ? Dns.WebApi.Security.UpdateOrganizationPermissions(orgAcls) : null, orgEvents != null ? Dns.WebApi.Events.UpdateOrganizationEventPermissions(orgEvents) : null, Dns.WebApi.Organizations.EHRSInsertOrUpdate({ OrganizationID: _this.Organization.ID(), EHRS: orgehrs }), _this.HasPermission(PMNPermissions.Organization.Edit) ? Dns.WebApi.OrganizationRegistries.InsertOrUpdate(orgRegistries) : null).done(function () {
                         Dns.WebApi.Organizations.ListEHRS("OrganizationID eq " + _this.Organization.ID()).done(function (oehrs) {
                             vm.OrganizationEHRS(ko.utils.arrayMap(oehrs, function (item) {
                                 return new Dns.ViewModels.OrganizationEHRSViewModel(item);
@@ -248,14 +248,14 @@ var Organization;
         function init() {
             var id = $.url().param("ID");
             var defaultPermissions = [
-                Permissions.Organization.CreateUsers,
-                Permissions.Organization.Delete,
-                Permissions.Organization.Edit,
-                Permissions.Organization.ManageSecurity,
-                Permissions.Organization.View,
-                Permissions.Organization.CreateDataMarts,
-                Permissions.Organization.CreateRegistries,
-                Permissions.Organization.Copy
+                PMNPermissions.Organization.CreateUsers,
+                PMNPermissions.Organization.Delete,
+                PMNPermissions.Organization.Edit,
+                PMNPermissions.Organization.ManageSecurity,
+                PMNPermissions.Organization.View,
+                PMNPermissions.Organization.CreateDataMarts,
+                PMNPermissions.Organization.CreateRegistries,
+                PMNPermissions.Organization.Copy
             ];
             $.when(id == null ? null : Dns.WebApi.Organizations.GetPermissions([id], defaultPermissions), id == null ? null : Dns.WebApi.Organizations.Get(id), id == null ? null : Dns.WebApi.Security.GetOrganizationPermissions(id), id == null ? null : Dns.WebApi.Events.GetOrganizationEventPermissions(id), Dns.WebApi.Organizations.List(null, null, "Name", null, null, null), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Organizations]), Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Organizations]), id == null ? null : Dns.WebApi.OrganizationRegistries.List("OrganizationID eq " + id), Dns.WebApi.Registries.List(), id == null ? null : Dns.WebApi.Organizations.ListEHRS("OrganizationID eq " + id), id == null ? null : Dns.WebApi.Users.List("OrganizationID eq " + id), id == null ? null : Dns.WebApi.DataMarts.List("OrganizationID eq " + id), id == null ? null : Dns.WebApi.SecurityGroups.List("OwnerID eq " + id)).done(function (screenPermissions, organizationGet, orgAcls, orgEvents, organizationList, securityGroupTree, permissionList, eventList, registries, registryList, orgEHRS, users, datamarts, securityGroups) {
                 var organization = organizationGet == null ? null : organizationGet[0];

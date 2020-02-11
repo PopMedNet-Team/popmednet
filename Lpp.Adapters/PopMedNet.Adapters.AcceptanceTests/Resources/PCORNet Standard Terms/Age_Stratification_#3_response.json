@@ -1,0 +1,167 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:27:29.0089396+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<28>. Actual:<29>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Age": "-496 - -500",
+        "Patients": 1
+      },
+      {
+        "Age": "-196 - -200",
+        "Patients": 1
+      },
+      {
+        "Age": "-181 - -185",
+        "Patients": 1
+      },
+      {
+        "Age": "-171 - -175",
+        "Patients": 1
+      },
+      {
+        "Age": "-81 - -85",
+        "Patients": 1
+      },
+      {
+        "Age": "5 - 9",
+        "Patients": 2
+      },
+      {
+        "Age": "10 - 14",
+        "Patients": 2
+      },
+      {
+        "Age": "15 - 19",
+        "Patients": 6
+      },
+      {
+        "Age": "20 - 24",
+        "Patients": 7
+      },
+      {
+        "Age": "25 - 29",
+        "Patients": 12
+      },
+      {
+        "Age": "30 - 34",
+        "Patients": 8
+      },
+      {
+        "Age": "35 - 39",
+        "Patients": 11
+      },
+      {
+        "Age": "40 - 44",
+        "Patients": 9
+      },
+      {
+        "Age": "45 - 49",
+        "Patients": 11
+      },
+      {
+        "Age": "50 - 54",
+        "Patients": 16
+      },
+      {
+        "Age": "55 - 59",
+        "Patients": 7
+      },
+      {
+        "Age": "60 - 64",
+        "Patients": 4
+      },
+      {
+        "Age": "65 - 69",
+        "Patients": 7
+      },
+      {
+        "Age": "70 - 74",
+        "Patients": 4
+      },
+      {
+        "Age": "75 - 79",
+        "Patients": 6
+      },
+      {
+        "Age": "80 - 84",
+        "Patients": 1
+      },
+      {
+        "Age": "85 - 89",
+        "Patients": 1
+      },
+      {
+        "Age": "90 - 94",
+        "Patients": 5
+      },
+      {
+        "Age": "100 - 104",
+        "Patients": 1
+      },
+      {
+        "Age": "105 - 109",
+        "Patients": 5
+      },
+      {
+        "Age": "210 - 214",
+        "Patients": 1
+      },
+      {
+        "Age": "240 - 244",
+        "Patients": 1
+      },
+      {
+        "Age": "250 - 254",
+        "Patients": 2
+      },
+      {
+        "Age": "315 - 319",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Age",
+      "Type": "System.String",
+      "As": "Age",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Age"
+    ],
+    "Select": [
+      {
+        "Name": "Age",
+        "Type": "System.String",
+        "As": "Age",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

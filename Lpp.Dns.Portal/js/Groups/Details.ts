@@ -162,7 +162,7 @@ module Groups.Details {
     function init() {
         var id: any = $.url().param("ID");
         $.when<any>(
-            id == null ? null : Dns.WebApi.Groups.GetPermissions([id], [Permissions.Group.Delete, Permissions.Group.Edit, Permissions.Group.ManageSecurity, Permissions.Group.CreateProject]),
+            id == null ? null : Dns.WebApi.Groups.GetPermissions([id], [PMNPermissions.Group.Delete, PMNPermissions.Group.Edit, PMNPermissions.Group.ManageSecurity, PMNPermissions.Group.CreateProject]),
             id == null ? null : Dns.WebApi.Groups.Get(id),
             Dns.WebApi.Organizations.List(null, null, "Name"),
             id == null ? null : Dns.WebApi.OrganizationGroups.List("GroupID eq " + id ),
@@ -186,7 +186,7 @@ module Groups.Details {
                 ) => {
                 var group: Dns.Interfaces.IGroupDTO = groups == null ? null : groups[0];
 
-                screenPermissions = id == null ? [Permissions.Group.Delete, Permissions.Group.Edit, Permissions.Group.ManageSecurity, Permissions.Group.CreateProject] : screenPermissions;
+                screenPermissions = id == null ? [PMNPermissions.Group.Delete, PMNPermissions.Group.Edit, PMNPermissions.Group.ManageSecurity, PMNPermissions.Group.CreateProject] : screenPermissions;
 
                 $(() => {
                     var bindingControl = $("#Content");

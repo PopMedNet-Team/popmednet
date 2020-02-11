@@ -1385,11 +1385,6 @@ namespace Lpp.Dns.ApiClient
 
 	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExportAllAsZip?" + idQueryString + "&");
 	 	 }
-	 	 public async Task<System.Net.Http.HttpResponseMessage> ExportResponse(System.Guid requestID, string format)
-	 	 {
-
-	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExportResponse?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&format=" + (format == null ? "" : System.Net.WebUtility.UrlEncode(format.ToString())) + "&");
-	 	 }
 	 	 public async Task<System.Net.Http.HttpResponseMessage> GetTrackingTableForAnalysisCenter(System.Guid requestID)
 	 	 {
 

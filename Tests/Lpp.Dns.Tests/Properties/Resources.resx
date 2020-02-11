@@ -118,28 +118,4 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="DNS3_a_BaseStructure" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\lpp.dns.model\sqlscripts\dns3_a_basestructure.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
-  </data>
-  <data name="DNS4_a_Diff" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\Lpp.Dns.Model\SQLScripts\DNS4_a_Diff.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
-  </data>
-  <data name="AuditDDL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\Lpp.Mvc.Composition\Lpp.Audit\Data\DDL.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
-  </data>
-  <data name="DNS4_c_SecInitialize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\Lpp.Dns.Model\SQLScripts\DNS4_c_SecInitialize.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
-  </data>
-  <data name="SecurityDDL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\lpp.mvc.composition\lpp.security\data\ddl.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
-  </data>
-  <data name="SecurityTupleViews" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\lpp.mvc.composition\lpp.security\data\tupleviews.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
-  </data>
-  <data name="TestData" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\testdata.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="SecurityDAGs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\lpp.mvc.composition\lpp.security\data\dag.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
-  </data>
 </root>

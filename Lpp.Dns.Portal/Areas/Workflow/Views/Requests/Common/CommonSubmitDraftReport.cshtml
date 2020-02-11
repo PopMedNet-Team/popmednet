@@ -1,6 +1,6 @@
 ﻿<!-- ko: stopBinding:true-->
 <section id="CommonSubmitDraftReport" style="margin-top:15px;">
-    <div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+    <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">
     <!-- ko stopBinding: true -->
     <article id="draftreportupload">
         @Html.Partial("~/areas/controls/views/wffileupload/fortask.cshtml")
@@ -8,7 +8,7 @@
     <!-- /ko-->
     </div>
 
-    <div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) == false">
+    <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) == false">
         <p class="alert alert-info" style="width:75%;margin:auto;">
             <strong>Permission Required!</strong><br/>
             You do not have permission to edit this task, please let your Administrator know if you feel you should have permission.
@@ -16,9 +16,9 @@
     </div>
 
     <nav>
-        <button class="btn btn-primary pull-right" data-bind="click:onReviewDraftReport, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Submit for Draft Report Review</button>
-        <button class="btn btn-primary pull-right" data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete" style="margin-right:15px;">Report Status: Not Applicable</button>
-        <button class="btn btn-primary pull-right" data-bind="click:onViewStatusAndResults, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)" style="margin-right:15px;">Redistribute</button>
+        <button class="btn btn-primary pull-right" data-bind="click:onReviewDraftReport, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Submit for Draft Report Review</button>
+        <button class="btn btn-primary pull-right" data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete" style="margin-right:15px;">Report Status: Not Applicable</button>
+        <button class="btn btn-primary pull-right" data-bind="click:onViewStatusAndResults, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)" style="margin-right:15px;">Redistribute</button>
     </nav>
     <div class="clearfix"></div>
 </section>

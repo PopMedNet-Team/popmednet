@@ -1,0 +1,111 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:26:49.8617153+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<6>. Actual:<7>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Elsa",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Henri",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Larry",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Nicholas",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Odette",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "R",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Ida",
+        "Patients": 1,
+        "AdmittedOn": 2014
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "AdmittedOn",
+      "Type": "System.String",
+      "As": "AdmittedOn",
+      "Aggregate": null
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "AdmittedOn"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "AdmittedOn",
+        "Type": "System.String",
+        "As": "AdmittedOn",
+        "Aggregate": null
+      },
+      {
+        "Name": "LowThreshold",
+        "Type": "System.Boolean",
+        "As": "LowThreshold",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

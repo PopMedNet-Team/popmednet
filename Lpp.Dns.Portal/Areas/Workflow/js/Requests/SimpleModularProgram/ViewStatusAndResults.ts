@@ -160,7 +160,7 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
             self.DataMartsToChange = ko.observableArray([]);
             self.strDataMartsToChange = '';   
 
-            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == Permissions.Request.ViewHistory) != null;
+            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == PMNPermissions.Request.ViewHistory) != null;
             
             self.CompletedRoutings = ko.computed(() => {
                 return ko.utils.arrayFilter(self.Routings(), (routing) => {
@@ -213,7 +213,7 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
                 return self.SelectedIncompleteRoutings().length > 0;
             });
             self.CanGroupCompletedRoutings = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && self.SelectedCompleteRoutings().length > 1;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && self.SelectedCompleteRoutings().length > 1;
             });
             self.CanUnGroupCompletedRoutings = ko.computed(() => {
                 if (self.SelectedCompleteRoutings().length == 1) {
@@ -246,7 +246,7 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
             });
 
             self.CanCompleteActivity = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && ko.utils.arrayFilter(self.IncompleteRoutings(), (r: Dns.Interfaces.IRequestDataMartDTO) => { return r.Status != Dns.Enums.RoutingStatus.Canceled; }).length == 0;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && ko.utils.arrayFilter(self.IncompleteRoutings(), (r: Dns.Interfaces.IRequestDataMartDTO) => { return r.Status != Dns.Enums.RoutingStatus.Canceled; }).length == 0;
             });
 
             self.onGroupResponses = () => {
@@ -706,7 +706,7 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
         var id: any = Global.GetQueryParam("ID"); 
 
         //get the permissions for the view response detail, use to control the dialog view showing the result files
-        var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
+        var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
 
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
@@ -714,7 +714,7 @@ module Workflow.SimpleModularProgram.ViewStatusAndResults {
             Dns.WebApi.Requests.GetRequestSearchTerms(id),            
             getResponseDetailPermissions,
             Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'),
-            Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])
+            Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])
         ).done((responses: Dns.Interfaces.ICommonResponseDetailDTO[], responseGroups: Dns.Interfaces.IResponseGroupDTO[], searchTerms: Dns.Interfaces.IRequestSearchTermDTO[], responseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) => {
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
              var bindingControl = $("#MPViewStatusAndResults");

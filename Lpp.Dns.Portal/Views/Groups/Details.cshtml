@@ -38,8 +38,8 @@
             <ul>
                 <li class="k-state-active">Organizations</li>
                 <li>Projects</li>
-                <li data-bind="visible: HasPermission(Permissions.Group.ManageSecurity)">Permissions</li>
-                <li data-bind="visible: HasPermission(Permissions.Group.ManageSecurity)">Events</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.Group.ManageSecurity)">Permissions</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.Group.ManageSecurity)">Events</li>
             </ul>
             <div class="tab-body overflow-visible">
                 <!-- Organizations -->
@@ -102,7 +102,7 @@
                         <tfoot class="panel-footer">
                             <tr>
                                 <td>
-                                    <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnCreateProject" data-bind="enable: Group.ID() != null, visible: HasPermission( Permissions.Group.CreateProject), click: CreateProject"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Create Project" />Create Project</button>
+                                    <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnCreateProject" data-bind="enable: Group.ID() != null, visible: HasPermission( PMNPermissions.Group.CreateProject), click: CreateProject"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Create Project" />Create Project</button>
                                 </td>
                             </tr>
                         </tfoot>
@@ -133,9 +133,9 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission( Permissions.Group.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission( PMNPermissions.Group.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission( Permissions.Group.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission( PMNPermissions.Group.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

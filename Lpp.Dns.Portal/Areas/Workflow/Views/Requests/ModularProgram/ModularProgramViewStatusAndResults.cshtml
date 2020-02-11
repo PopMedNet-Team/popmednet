@@ -111,12 +111,12 @@
             </tbody>
         </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="5C5E0001-10A6-4992-A8BE-A3F4012D5FEB" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Resubmit</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="7821FC45-9FD5-4597-A405-B021E5ED14FA" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask),click:Complete,enable:CanUnGroupCompletedRoutings">Ungroup</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="49F9C682-9FAD-4AE5-A2C5-19157E227186" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask),click:onGroupResponses,enable:CanGroupCompletedRoutings">Group</button>
-            <button class="btn btn-warning pull-right" style="margin-right: 15px;" data-bind="visible:(HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ApproveRejectResponse)),click:ApproveResponses,enable:HasSelectedCompleteRoutings">Approve</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="visible:(HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ApproveRejectResponse)),click:RejectResponses,enable:HasSelectedCompleteRoutings">Reject</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8" data-bind="visible:HasViewResponseDetailPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) || HasViewResponseDetailPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewTask),click:ViewResponse,enable:HasSelectedCompleteRoutings">View Results</button>
+            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="5C5E0001-10A6-4992-A8BE-A3F4012D5FEB" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Resubmit</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="7821FC45-9FD5-4597-A405-B021E5ED14FA" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask),click:Complete,enable:CanUnGroupCompletedRoutings">Ungroup</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="49F9C682-9FAD-4AE5-A2C5-19157E227186" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask),click:onGroupResponses,enable:CanGroupCompletedRoutings">Group</button>
+            <button class="btn btn-warning pull-right" style="margin-right: 15px;" data-bind="visible:(HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(PMNPermissions.Request.ApproveRejectResponse)),click:ApproveResponses,enable:HasSelectedCompleteRoutings">Approve</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="visible:(HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(PMNPermissions.Request.ApproveRejectResponse)),click:RejectResponses,enable:HasSelectedCompleteRoutings">Reject</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="8BB67F67-764F-433B-9B61-0307836E61D8" data-bind="visible:HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) || HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask),click:ViewResponse,enable:HasSelectedCompleteRoutings">View Results</button>
             <div class="clearfix"></div>
         </nav>
         
@@ -171,10 +171,10 @@
             </tbody>
     </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: $root.SelectedIncompleteRoutings().length > 0, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" , style="margin-left:5px">Bulk Edit</button>          
+            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: $root.SelectedIncompleteRoutings().length > 0, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" , style="margin-left:5px">Bulk Edit</button>          
             <button class="btn btn-default pull-right" data-bind="click: onEditRoutingStatusDialog, visible:CanOverrideRoutingStatus" style="margin-right:15px;display:none;">Edit Routing Status</button>
-            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Remove DataMart</button>
-            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Add DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Remove DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Add DataMart</button>
             <div class="clearfix"></div>
         </nav>
     </article>
@@ -186,8 +186,8 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownCompletionMenu">
-                <li><a data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Report Status: Not Applicable</a></li>
-                <li><a data-resultid="EBEF0001-09B6-4BDE-89A2-A3F4012D282C" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Report Status: Pending Report</a></li>
+                <li><a data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Report Status: Not Applicable</a></li>
+                <li><a data-resultid="EBEF0001-09B6-4BDE-89A2-A3F4012D282C" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Report Status: Pending Report</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>

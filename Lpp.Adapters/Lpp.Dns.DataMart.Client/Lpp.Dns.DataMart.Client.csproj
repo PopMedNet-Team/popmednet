@@ -74,7 +74,7 @@
   <PropertyGroup>
     <StartupObject>Lpp.Dns.DataMart.Client.Program</StartupObject>
   </PropertyGroup>
-  <ItemGroup><Reference Include="Lpp.Utilities, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Utilities.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -444,7 +444,10 @@
       <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
       <Name>Lpp.Dns.DTO</Name>
     </ProjectReference>
-    
+    <ProjectReference Include="..\..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{F042377F-933E-4178-A871-AAB43006E351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lpp.Dns.DataMart.Client.DomainManger\Lpp.Dns.DataMart.Client.DomainManger.csproj">
       <Project>{36193b7d-3223-42bf-8eb0-e6eaeb0097b4}</Project>
       <Name>Lpp.Dns.DataMart.Client.DomainManger</Name>
@@ -453,7 +456,10 @@
       <Project>{3c729124-5d57-4dc2-9a83-d1947d64d0e3}</Project>
       <Name>Lpp.Dns.DTO.DataMartClient</Name>
     </ProjectReference>
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj">
       <Project>{325d9b27-88f8-49d3-a347-40a22881624c}</Project>
       <Name>Lpp.Dns.DataMart.Model.Interfaces</Name>

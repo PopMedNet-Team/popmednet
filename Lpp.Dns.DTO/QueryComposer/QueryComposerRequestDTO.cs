@@ -32,6 +32,7 @@ namespace Lpp.Dns.DTO.QueryComposer
         /// <summary>
         /// A Collection of Temporal Events.
         /// </summary>
+        [DataMember]
         public IEnumerable<QueryComposerTemporalEventDTO> TemporalEvents { get; set; }
     }
 }

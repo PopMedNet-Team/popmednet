@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -25,7 +25,7 @@ var Workflow;
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
                     _this.SubmitButtonText = ko.observable('Submit');
                     _this.AbortRejectMessage = ko.observable("");
-                    if (Requests.Details.rovm.ScreenPermissions.indexOf(Permissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
+                    if (Requests.Details.rovm.ScreenPermissions.indexOf(PMNPermissions.Request.SkipSubmissionApproval.toLowerCase()) >= 0) {
                         _this.SubmitButtonText = ko.observable('Submit');
                     }
                     else {

@@ -18,11 +18,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         {
             return new[] {
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "TrialID",
+                    Name = "TRIALID",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ParticipantID",
+                    Name = "PARTICIPANTID",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO
@@ -41,21 +41,36 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                 return Enumerable.Empty<MemberBinding>();
             }
 
-            string patientIDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ClinicalTrial) ? "PatientID" : "Trial_PatientID";
-            
+            if(sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ClinicalTrial))
+            {
+                return new[] {
+                    Expression.Bind(
+                            selectType.GetProperty("TRIALID"),
+                            Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("TrialID"))
+                        ),
+                    Expression.Bind(
+                        selectType.GetProperty("PARTICIPANTID"),
+                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ParticipantID"))
+                        ),
+                    Expression.Bind(
+                        selectType.GetProperty("Trial_PatientID"),
+                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PatientID"))
+                        )
+                };
+            }
 
             return new[] {
                 Expression.Bind(
-                        selectType.GetProperty("TrialID"),
-                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("TrialID"))
+                        selectType.GetProperty("TRIALID"),
+                        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("TRIALID"))
                     ),
                 Expression.Bind(
-                    selectType.GetProperty("ParticipantID"),
-                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ParticipantID"))
+                    selectType.GetProperty("PARTICIPANTID"),
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PARTICIPANTID"))
                     ),
                 Expression.Bind(
                     selectType.GetProperty("Trial_PatientID"),
-                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(patientIDProperty))
+                    Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("Trial_PatientID"))
                     )
             };
         }
@@ -65,12 +80,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
             return new[] {
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO
                 {
-                    Name = "TrialID",
+                    Name = "TRIALID",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO
                 {
-                    Name = "ParticipantID",
+                    Name = "PARTICIPANTID",
                     Type = "System.String"
                 }
             };
@@ -79,8 +94,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         public override IEnumerable<MemberBinding> GroupKeySelectBindings(Type selectType, ParameterExpression sourceTypeParameter)
         {
             return new[] {
-                Expression.Bind(selectType.GetProperty("TrialID"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("TrialID"))),
-                Expression.Bind(selectType.GetProperty("ParticipantID"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ParticipantID")))
+                Expression.Bind(selectType.GetProperty("TRIALID"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("TRIALID"))),
+                Expression.Bind(selectType.GetProperty("PARTICIPANTID"), Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PARTICIPANTID")))
             };
         }
 
@@ -88,11 +103,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         {
             return new[] {
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "TrialID",
+                    Name = "TRIALID",
                     Type = "System.String"
                 },
                 new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO{
-                    Name = "ParticipantID",
+                    Name = "PARTICIPANTID",
                     Type = "System.String"
                 }
             };
@@ -100,8 +115,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
         public override IEnumerable<MemberBinding> FinalSelectBindings(Type selectType, ParameterExpression sourceTypeParameter)
         {
             return new[] {
-                Expression.Bind(selectType.GetProperty("TrialID"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "TrialID")),
-                Expression.Bind(selectType.GetProperty("ParticipantID"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "ParticipantID"))
+                Expression.Bind(selectType.GetProperty("TRIALID"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "TRIALID")),
+                Expression.Bind(selectType.GetProperty("PARTICIPANTID"), Expressions.ChildPropertyExpression(sourceTypeParameter, "Key", "PARTICIPANTID"))
             };
         }
 

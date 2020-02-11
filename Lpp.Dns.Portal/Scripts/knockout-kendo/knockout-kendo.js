@@ -1,5 +1,5 @@
 /*
- * knockout-kendo 0.9.8
+ * knockout-kendo 0.10.0
  * Copyright © 2017 Ryan Niemeyer & Telerik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1079,7 +1079,9 @@ createBinding({
     },
     watch: {
         value: VALUE,
-        enabled: ENABLE
+        enabled: ENABLE,
+        min: MIN,
+        max: MAX
     }
 });
 

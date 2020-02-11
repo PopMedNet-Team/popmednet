@@ -41,7 +41,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             return db;
         }
 
-        public static Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext CreatePCORIDataContext(Model.Settings.SQLProvider dbProvider, string connectionString, bool logToConsole = true)
+        public static Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext CreatePCORIDataContext(Model.Settings.SQLProvider dbProvider, string connectionString, bool logToConsole = true, string schema = null)
         {
             string defaultSchema = "";
             System.Data.Common.DbConnection connection;
@@ -55,12 +55,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             }
             else if (dbProvider == Settings.SQLProvider.PostgreSQL)
             {
-                defaultSchema = "dbo";
+                defaultSchema = schema ?? "dbo";
                 connection = new Npgsql.NpgsqlConnection(connectionString);
             }
             else if (dbProvider == Settings.SQLProvider.Oracle)
             {
-                defaultSchema = "C##PCORNETUSER";
+                
+                defaultSchema = schema ?? "C##PCORNETUSER";
                 connection = new Oracle.ManagedDataAccess.Client.OracleConnection(connectionString);
             }
             else

@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -72,10 +72,10 @@ var Users;
         }
         Index.ActiveTemplate = ActiveTemplate;
         function init() {
-            $.when(Users.GetSetting("Users.Index.gUsers.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.CreateUsers)).done(function (gUsersSetting, canAdd) {
+            $.when(Users.GetSetting("Users.Index.gUsers.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateUsers)).done(function (gUsersSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateUsers] : []);
+                    vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateUsers] : []);
                     ko.applyBindings(vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(vm.UsersGrid(), gUsersSetting);
                     vm.UsersGrid().bind("dataBound", function (e) {

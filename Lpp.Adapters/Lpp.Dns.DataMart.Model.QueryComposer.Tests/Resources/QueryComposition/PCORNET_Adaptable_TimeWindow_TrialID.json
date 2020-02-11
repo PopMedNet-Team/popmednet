@@ -1,0 +1,82 @@
+{
+  "Header": {
+    "Name": "Time Windows - Trial1",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=5ef534df-f2c2-4d38-aaef-aa2900c6bf58",
+    "SubmittedOn": "2019-04-08T16:04:26.967Z"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "14623a94-f349-4698-b23f-810b61d00687",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7144573f-5552-4371-ba98-09e52f530716",
+            "Name": "i_Trial",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+                "Values": { "Trial": "FAKE_TRIAL-15" },
+                "Criteria": [],
+                "Design": { "Locked": true }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Trial",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Trial_Count",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters_Count",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  },
+  "TemporalEvents": [
+    {
+      "IndexEventDateIdentifier": "HOSPITALIZATION_DATE",
+      "DaysBefore": 0,
+      "DaysAfter": 300,
+      "Criteria": []
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-12-31T15:46:13.2251944+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<8>. Actual:<18>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Y",
+        "Race": null,
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "01",
+        "Patients": 3
+      },
+      {
+        "Hispanic": "N",
+        "Race": "02",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "02",
+        "Patients": 2
+      },
+      {
+        "Hispanic": "Ida",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Larry",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Elsa",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Peter",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Rose",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "06",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fred",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Kate",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Mindy",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "07",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "LowThreshold",
+        "Type": "System.Boolean",
+        "As": "LowThreshold",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

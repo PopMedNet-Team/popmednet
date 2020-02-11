@@ -135,17 +135,81 @@ namespace Lpp.QueryComposer.TermRegistration
         }
 
         /// <summary>
-        /// Updates the database from the provided terms with any that are missing.
+        /// Updates the database from the provided terms with any that are missing or needs to be updated.
         /// </summary>
         /// <param name="terms"></param>
         public void UpdateTerms(IEnumerable<IModelTerm> terms)
         {
             using (var db = new Lpp.Dns.Data.DataContext())
             {
-                foreach (var trm in terms)
+                //The Terms that are passed are from all the adapters so Distinct them.
+                var termIDs = terms.Select(x => x.ID).Distinct().ToArray();
+
+                var existingTerms = db.Terms.Where(x => termIDs.Contains(x.ID)).ToArray();
+
+                var changed = false;
+
+                //The Terms that are passed may have already been altered so generate a list of already altered terms based on their ID's.
+                List<Guid> checkedIDs = new List<Guid>();
+
+                foreach (var term in terms)
                 {
-                    db.Database.ExecuteSqlCommand("IF(NOT EXISTS (SELECT NULL FROM Terms WHERE Terms.ID = @p0)) INSERT INTO Terms (ID, Name, Description, OID, ReferenceUrl) VALUES (@p0, @p1, @p2, @p3, @p4)", trm.ID, trm.Name, trm.Description, trm.OID, trm.ReferenceUrl);
+                    if (!checkedIDs.Contains(term.ID))
+                    {
+                        var existingTerm = existingTerms.Where(x => x.ID == term.ID).FirstOrDefault();
+
+                        if (existingTerm == null)
+                        {
+                            db.Terms.Add(new Dns.Data.Term
+                            {
+                                ID = term.ID,
+                                Name = term.Name,
+                                ReferenceUrl = term.ReferenceUrl,
+                                OID = term.OID,
+                            });
+
+                            if (!changed)
+                                changed = true;
+
+                            checkedIDs.Add(term.ID);
+                        }
+                        else
+                        {
+                            if (!string.Equals(term.Name, existingTerm.Name))
+                            {
+                                existingTerm.Name = term.Name;
+                                if (!changed)
+                                    changed = true;
+                            }
+
+                            if (!string.Equals(term.Description, existingTerm.Description))
+                            {
+                                existingTerm.Description = term.Description;
+                                if (!changed)
+                                    changed = true;
+                            }
+
+                            if (!string.Equals(term.OID, existingTerm.OID))
+                            {
+                                existingTerm.OID = term.OID;
+                                if (!changed)
+                                    changed = true;
+                            }
+
+                            if (!string.Equals(term.ReferenceUrl, existingTerm.ReferenceUrl))
+                            {
+                                existingTerm.ReferenceUrl = term.ReferenceUrl;
+                                if (!changed)
+                                    changed = true;
+                            }
+
+                            checkedIDs.Add(term.ID);
+                        }
+                    }
                 }
+
+                if (changed)
+                    db.SaveChanges();
             }
         }
 

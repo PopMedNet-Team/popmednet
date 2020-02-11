@@ -134,7 +134,7 @@ module Workflow.DistributedRegression.Distribution {
             };
 
             this.CanSubmit = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.SelectedDataMartIDs().length > 0;
             }); 
 
             this.FieldOptions = fieldOptions;

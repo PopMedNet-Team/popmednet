@@ -101,10 +101,10 @@
             </div>
         </div>
 
-        <nav style="border-top:1px solid silver;padding-top:15px;" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject">
-            <button class="btn btn-default pull-right" data-resultid="0FEE0001-ED08-48D8-8C0B-A3B600EEF30F" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onApprove">Approve</button>
-            <button class="btn btn-default pull-right" data-resultid="F1B10001-B0B3-45A9-AAFF-A3B600EEFC49" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onReject">Reject</button>
-            <button class="btn btn-default pull-right" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(Permissions.Request.ApproveRejectResponse) && showApproveReject, click:onResubmit">Resubmit</button>
+        <nav style="border-top:1px solid silver;padding-top:15px;" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject">
+            <button class="btn btn-default pull-right" data-resultid="0FEE0001-ED08-48D8-8C0B-A3B600EEF30F" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onApprove">Approve</button>
+            <button class="btn btn-default pull-right" data-resultid="F1B10001-B0B3-45A9-AAFF-A3B600EEFC49" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onReject">Reject</button>
+            <button class="btn btn-default pull-right" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onResubmit">Resubmit</button>
             <div class="clearfix"></div>
         </nav>
     </section>

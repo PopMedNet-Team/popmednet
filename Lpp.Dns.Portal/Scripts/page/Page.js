@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -52,9 +52,9 @@ var Global;
          * @param validationContainer The container to use for validation other than the root binding container. If not specified the 'bindingControl' element is used.
          */
         function PageViewModel(bindingControl, screenPermissions, validationContainer) {
+            var _this = this;
             if (screenPermissions === void 0) { screenPermissions = null; }
             if (validationContainer === void 0) { validationContainer = null; }
-            var _this = this;
             this._BindingControl = bindingControl;
             var self = this;
             this.ScreenPermissions = screenPermissions == null ? null : screenPermissions.map(function (sp) {

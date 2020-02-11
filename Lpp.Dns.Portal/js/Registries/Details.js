@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -120,7 +120,7 @@ var Registries;
                     }).map(function (a) {
                         return a.toData();
                     });
-                    $.when(_this.HasPermission(Permissions.Registry.ManageSecurity) ? Dns.WebApi.Security.UpdateRegistryPermissions(registryAcls) : null, Dns.WebApi.OrganizationRegistries.InsertOrUpdate(organizations), Dns.WebApi.Registries.UpdateRegistryItemDefinitions({ registryID: _this.Registry.ID(), registryItemDefinitions: registryItemDefinitions })).done(function () {
+                    $.when(_this.HasPermission(PMNPermissions.Registry.ManageSecurity) ? Dns.WebApi.Security.UpdateRegistryPermissions(registryAcls) : null, Dns.WebApi.OrganizationRegistries.InsertOrUpdate(organizations), Dns.WebApi.Registries.UpdateRegistryItemDefinitions({ registryID: _this.Registry.ID(), registryItemDefinitions: registryItemDefinitions })).done(function () {
                         Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>");
                     });
                 });
@@ -140,7 +140,7 @@ var Registries;
         Details.ViewModel = ViewModel;
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.Registries.GetPermissions([id], [Permissions.Registry.Delete, Permissions.Registry.Edit, Permissions.Registry.ManageSecurity]), id == null ? null : Dns.WebApi.Registries.Get(id), Dns.WebApi.Organizations.List(), id == null ? null : Dns.WebApi.OrganizationRegistries.List("RegistryID eq " + id), Dns.WebApi.RegistryItemDefinition.GetList(), id == null ? null : Dns.WebApi.Registries.GetRegistryItemDefinitionList(id), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Registries]), Dns.WebApi.Security.GetRegistryPermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree()).done(function (screenPermissions, registries, allOrganizations, organizationRegistries, allRegistryItemDefinitions, registryItemDefinitions, permissionList, registryPermission, securityGroupTree) {
+            $.when(id == null ? null : Dns.WebApi.Registries.GetPermissions([id], [PMNPermissions.Registry.Delete, PMNPermissions.Registry.Edit, PMNPermissions.Registry.ManageSecurity]), id == null ? null : Dns.WebApi.Registries.Get(id), Dns.WebApi.Organizations.List(), id == null ? null : Dns.WebApi.OrganizationRegistries.List("RegistryID eq " + id), Dns.WebApi.RegistryItemDefinition.GetList(), id == null ? null : Dns.WebApi.Registries.GetRegistryItemDefinitionList(id), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Registries]), Dns.WebApi.Security.GetRegistryPermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree()).done(function (screenPermissions, registries, allOrganizations, organizationRegistries, allRegistryItemDefinitions, registryItemDefinitions, permissionList, registryPermission, securityGroupTree) {
                 var registry = registries == null ? {
                     Deleted: false,
                     Description: "",
@@ -169,7 +169,7 @@ var Registries;
                 }
                 $(function () {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(screenPermissions || [Permissions.Registry.Delete, Permissions.Registry.Edit, Permissions.Registry.ManageSecurity], registry, allOrganizations || [], organizationRegistries, allRegistryItemDefinitions || [], registryItemDefinitions || [], permissionList || [], registryPermission || [], securityGroupTree, bindingControl);
+                    vm = new ViewModel(screenPermissions || [PMNPermissions.Registry.Delete, PMNPermissions.Registry.Edit, PMNPermissions.Registry.ManageSecurity], registry, allOrganizations || [], organizationRegistries, allRegistryItemDefinitions || [], registryItemDefinitions || [], permissionList || [], registryPermission || [], securityGroupTree, bindingControl);
                     ko.applyBindings(vm, bindingControl[0]);
                 });
             });

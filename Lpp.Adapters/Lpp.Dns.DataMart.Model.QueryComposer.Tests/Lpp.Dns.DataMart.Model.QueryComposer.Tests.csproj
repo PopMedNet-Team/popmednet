@@ -27,7 +27,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
-  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -116,6 +116,7 @@
     <Compile Include="PCORIStratificationTests.cs" />
     <Compile Include="PCORISuccesfulTests.cs" />
     <Compile Include="PCORITests.cs" />
+    <Compile Include="PCORNET_Adaptable_ExpressionTree.cs" />
     <Compile Include="PCORNET_Adaptable_Queries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryCompositionTests.cs" />
@@ -143,8 +144,14 @@
       <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
       <Name>Lpp.Dns.DTO</Name>
     </ProjectReference>
-    
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.QueryComposer\Lpp.QueryComposer.csproj">
+      <Project>{b3374f4b-88a0-412d-90e5-79f2014d7721}</Project>
+      <Name>Lpp.QueryComposer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -177,14 +184,24 @@
     <None Include="Resources\QueryComposition\180193_request.json" />
     <None Include="Resources\QueryComposition\180194_request.json" />
     <None Include="Resources\QueryComposition\json1.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_json47760_PMNDEV_7296.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_json47766.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_MultiTrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID_PRO.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_UC2_PMNDEV-7294.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_UC2_PMNDEV-7297-1.json" />
     <None Include="Resources\QueryComposition\PCORNET_PatientCount_ByTrial_TrialID.json" />
     <None Include="Resources\QueryComposition\PCORNET_PatientCount_TrialID.json" />
     <None Include="Resources\QueryComposition\PCORNET_PRO_PatientCount.json" />
     <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyByPRO.json" />
     <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySex.json" />
     <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrial.json" />
-    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrialAndPRO.json" />
-    <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrialAndPRO - Copy.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrialAndPRO_WithExclusion.json" />
+    <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex - Copy.json" />
+    <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex_WithExclusion.json" />
     <None Include="Resources\QueryComposition\PMNDEV-6412.json" />
     <None Include="Resources\QueryComposition\PMNDEV_6287_5_3_2.json" />
     <None Include="Resources\QueryComposition\PMNDEV_6287_6_6.json" />

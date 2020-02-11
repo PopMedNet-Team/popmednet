@@ -97,6 +97,16 @@ module Plugins.Requests.QueryBuilder.View {
                         convertTerms(subCriteria.Terms());
                     });
                 });
+
+                this.Request.TemporalEvents().forEach((temporalEvent) => {
+                    temporalEvent.Criteria().forEach((cvm) => {
+                        convertTerms(cvm.Terms());
+                        cvm.Criteria().forEach((subCriteria) => {
+                            convertTerms(subCriteria.Terms());
+                        });
+                    });
+
+                });
             }
         }
 

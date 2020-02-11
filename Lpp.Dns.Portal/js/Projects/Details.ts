@@ -82,7 +82,7 @@ module Projects.Details {
 
             var self = this;
             
-            this.CanManageSecurityTypes = ko.observable(this.HasPermission(Permissions.Project.ManageRequestTypes));
+            this.CanManageSecurityTypes = ko.observable(this.HasPermission(PMNPermissions.Project.ManageRequestTypes));
 
             //Get lists
             this.DataMartList = dataMartList;
@@ -296,7 +296,7 @@ module Projects.Details {
                     let projectRequestTypeWorkFlowActivityAcls: Dns.Interfaces.IAclProjectRequestTypeWorkflowActivityDTO[] = null;
                     let projectFieldOptionsAcls: Dns.Interfaces.IAclProjectFieldOptionDTO[] = null;
 
-                    if (self.HasPermission(Permissions.Project.ManageSecurity)) {
+                    if (self.HasPermission(PMNPermissions.Project.ManageSecurity)) {
                         dataMartAcls = self.DataMartAcls().map((a) => {
                             a.ProjectID(projectID);
                             return a.toData();
@@ -347,7 +347,7 @@ module Projects.Details {
 
                     let projectRequestTypes: Dns.Interfaces.IUpdateProjectRequestTypesDTO = null;
 
-                    if (self.HasPermission(Permissions.Project.ManageRequestTypes)) {
+                    if (self.HasPermission(PMNPermissions.Project.ManageRequestTypes)) {
                         projectRequestTypes = {
                             ProjectID: projectID,
                             RequestTypes: self.ProjectRequestTypes().map((rt) => {
@@ -357,8 +357,8 @@ module Projects.Details {
                         };
                     }
 
-                    let canManageSecurity = self.HasPermission(Permissions.Project.ManageSecurity);
-                    let originalManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+                    let canManageSecurity = self.HasPermission(PMNPermissions.Project.ManageSecurity);
+                    let originalManageRequestTypes = self.HasPermission(PMNPermissions.Project.ManageRequestTypes);
 
                     $.when<any>(
                         canManageSecurity ? Dns.WebApi.Security.UpdateProjectPermissions(projectAcls) : null,
@@ -372,11 +372,11 @@ module Projects.Details {
 
                         //update permissions
                         Dns.WebApi.Projects.GetPermissions([projectID], [
-                            Permissions.Project.Copy,
-                            Permissions.Project.Delete,
-                            Permissions.Project.Edit,
-                            Permissions.Project.ManageSecurity,
-                            Permissions.Project.ManageRequestTypes]).done((perms) => {
+                            PMNPermissions.Project.Copy,
+                            PMNPermissions.Project.Delete,
+                            PMNPermissions.Project.Edit,
+                            PMNPermissions.Project.ManageSecurity,
+                            PMNPermissions.Project.ManageRequestTypes]).done((perms) => {
 
                                 //update the screen permissions with the newly set permissions
                                 self.ScreenPermissions = perms.map((sp: string) => {
@@ -384,7 +384,7 @@ module Projects.Details {
                                 });
 
                                 //now update the rest of the stuff using the new permissions
-                                var canManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+                                var canManageRequestTypes = self.HasPermission(PMNPermissions.Project.ManageRequestTypes);
                                 self.CanManageSecurityTypes(canManageRequestTypes);
 
                                 $.when<any>(
@@ -616,11 +616,11 @@ module Projects.Details {
         //Then we call all of the database calls that are necessary. By putting them in a $.when they all execute simultaniously and will complete at the length of the longest running request.
         $.when<any>(
             id == null ? null : Dns.WebApi.Projects.GetPermissions([id], [
-                Permissions.Project.Copy,
-                Permissions.Project.Delete,
-                Permissions.Project.Edit,
-                Permissions.Project.ManageSecurity,
-                Permissions.Project.ManageRequestTypes]),
+                PMNPermissions.Project.Copy,
+                PMNPermissions.Project.Delete,
+                PMNPermissions.Project.Edit,
+                PMNPermissions.Project.ManageSecurity,
+                PMNPermissions.Project.ManageRequestTypes]),
             id == null ? null : Dns.WebApi.Projects.Get(id),
             Dns.WebApi.Groups.List(null, "ID,Name"),
             Dns.WebApi.DataMarts.List(null, "ID,Name,Organization", "Name"),
@@ -676,8 +676,8 @@ module Projects.Details {
                 if (project != null && project.GroupID) {
 
                 $.when<any>(
-                    screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : null,
-                    screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : null,
+                    screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : null,
+                    screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : null,
                     Dns.WebApi.Organizations.ListByGroupMembership(project.GroupID))
                     .done((
                     projectRequestTypes: Dns.Interfaces.IProjectRequestTypeDTO[],
@@ -689,7 +689,7 @@ module Projects.Details {
                         //Pass everything in to the view model here.
 
                         vm = new ViewModel(
-                            screenPermissions || [Permissions.Project.Edit, Permissions.Project.ManageSecurity],
+                            screenPermissions || [PMNPermissions.Project.Edit, PMNPermissions.Project.ManageSecurity],
                             project,
                             projectRequestTypes || [],
                             projectRequestTypeWorkflowActivityAcls || [],
@@ -725,8 +725,8 @@ module Projects.Details {
                 } else {
 
                 $.when<any>(
-                    id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : [] : [],
-                    id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : [] : []
+                    id != null ? screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : [] : [],
+                    id != null ? screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : [] : []
                         ).done((
                         projectRequestTypes: Dns.Interfaces.IProjectRequestTypeDTO[],
                             requestTypes: Dns.Interfaces.IRequestTypeDTO[]) => {
@@ -735,9 +735,9 @@ module Projects.Details {
                         $(() => {
                             var bindingControl = $("#Content");
 
-                            vm = new ViewModel(screenPermissions || [Permissions.Project.Edit,
-                                Permissions.Project.ManageSecurity,
-                                Permissions.Project.ManageRequestTypes],
+                            vm = new ViewModel(screenPermissions || [PMNPermissions.Project.Edit,
+                                PMNPermissions.Project.ManageSecurity,
+                                PMNPermissions.Project.ManageRequestTypes],
                                 project,
                                 projectRequestTypes,
                                 projectRequestTypeWorkflowActivityAcls || [],

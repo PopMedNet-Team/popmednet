@@ -73,10 +73,6 @@ var PMNTermValidators;
                 else if (parseInt(daysBefore()) <= -1 || parseInt(daysAfter()) <= -1) {
                     isValid(false);
                 }
-                else if (parseInt(daysBefore()) === 0 && parseInt(daysAfter()) === 0) {
-                    errorMessage = "<span role='alert' class='k-widget k-tooltip k-tooltip-validation k-invalid-msg'><span class='k-icon k-i-warning'></span><small>Days Before or Days After must have a value greater than 0</small></div>";
-                    isValid(false);
-                }
                 else {
                     isValid(true);
                 }

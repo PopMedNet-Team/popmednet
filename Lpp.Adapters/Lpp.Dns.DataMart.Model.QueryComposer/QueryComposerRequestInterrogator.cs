@@ -141,6 +141,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             }
         }
 
+        public bool HasTemporalEvents
+        {
+            get
+            {
+                return _request.TemporalEvents != null && _request.TemporalEvents.Any();
+            }
+        }
+
         /// <summary>
         /// As per PMNMAINT-1025:
         /// If multiple Observation Period terms and a Diagnosis term are added to the same criteria group, 

@@ -1,0 +1,89 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-01-03T13:51:51.1021823+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": ""
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Humberto",
+        "Race": "01",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Lorenzo",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Grace",
+        "Race": "06",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Gabrielle",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Debby",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

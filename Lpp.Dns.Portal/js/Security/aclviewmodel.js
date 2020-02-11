@@ -5,8 +5,8 @@ var Security;
     (function (Acl) {
         var AclEditViewModel = /** @class */ (function () {
             function AclEditViewModel(permissions, securityGroupTree, acls, targets, aclType, identifier) {
-                if (identifier === void 0) { identifier = null; }
                 var _this = this;
+                if (identifier === void 0) { identifier = null; }
                 var self = this;
                 this.SecurityGroupTree = securityGroupTree;
                 this.AclType = aclType;

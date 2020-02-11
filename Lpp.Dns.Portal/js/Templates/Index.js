@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -67,10 +67,10 @@ var Templates;
         Index.typeFilterUI = typeFilterUI;
         function init() {
             //TODO: get the screen permissions and then bind the screen
-            $.when(Users.GetSetting("Templates.Index.gTemplates.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateTemplate)).done(function (gTemplatesSetting, canAdd) {
+            $.when(Users.GetSetting("Templates.Index.gTemplates.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done(function (gTemplatesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $('#Content');
-                    vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateTemplate] : []);
+                    vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateTemplate] : []);
                     ko.applyBindings(vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(vm.TemplatesGrid(), gTemplatesSetting);
                     vm.TemplatesGrid().bind("dataBound", function (e) {

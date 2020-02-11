@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -77,6 +77,14 @@ var Plugins;
                                 convertTerms(cvm.Terms());
                                 cvm.Criteria().forEach(function (subCriteria) {
                                     convertTerms(subCriteria.Terms());
+                                });
+                            });
+                            _this.Request.TemporalEvents().forEach(function (temporalEvent) {
+                                temporalEvent.Criteria().forEach(function (cvm) {
+                                    convertTerms(cvm.Terms());
+                                    cvm.Criteria().forEach(function (subCriteria) {
+                                        convertTerms(subCriteria.Terms());
+                                    });
                                 });
                             });
                         }

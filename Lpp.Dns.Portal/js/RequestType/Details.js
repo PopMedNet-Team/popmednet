@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -160,7 +160,7 @@ var RequestType;
         }
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.RequestTypes.Get(id), id == null ? [] : Dns.WebApi.RequestTypes.GetRequestTypeModels(id), id == null ? null : Dns.WebApi.RequestTypes.GetRequestTypeTerms(id), id == null ? null : Dns.WebApi.RequestTypes.GetPermissions([id], [Permissions.RequestTypes.Delete, Permissions.RequestTypes.Edit, Permissions.RequestTypes.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.RequestTypes]), Dns.WebApi.Security.GetRequestTypePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Workflow.List(null, "ID,Name", "Name"), Dns.WebApi.Templates.List("Type eq Lpp.Dns.DTO.Enums.TemplateTypes'" + Dns.Enums.TemplateTypes.Request + "'", "ID,Name", "Name"), Dns.WebApi.Terms.List(), GetVisualTerms()).done(function (requestTypes, requestTypeModels, requestTypeTerms, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, visualTerms) {
+            $.when(id == null ? null : Dns.WebApi.RequestTypes.Get(id), id == null ? [] : Dns.WebApi.RequestTypes.GetRequestTypeModels(id), id == null ? null : Dns.WebApi.RequestTypes.GetRequestTypeTerms(id), id == null ? null : Dns.WebApi.RequestTypes.GetPermissions([id], [PMNPermissions.RequestTypes.Delete, PMNPermissions.RequestTypes.Edit, PMNPermissions.RequestTypes.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.RequestTypes]), Dns.WebApi.Security.GetRequestTypePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Workflow.List(null, "ID,Name", "Name"), Dns.WebApi.Templates.List("Type eq Lpp.Dns.DTO.Enums.TemplateTypes'" + Dns.Enums.TemplateTypes.Request + "'", "ID,Name", "Name"), Dns.WebApi.Terms.List(), GetVisualTerms()).done(function (requestTypes, requestTypeModels, requestTypeTerms, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, visualTerms) {
                 var requestType = (requestTypes == null || requestTypes.length == 0) ? new Dns.ViewModels.RequestTypeViewModel().toData() : requestTypes[0];
                 $.when(requestType.TemplateID == null ? null : Dns.WebApi.Templates.Get(requestType.TemplateID)).done(function (templates) {
                     var template;
@@ -176,9 +176,9 @@ var RequestType;
                     var json = JSON.parse(((template.Data || '').trim() != '') ? template.Data : '{"Header":{},"Where":{"Criteria":[{"Name":"Group 1","Criteria":[],"Terms":[],"ObservationPeriod":{}}]}}');
                     $(function () {
                         var bindingControl = $('#Content');
-                        Details.vm = new ViewModel(requestType, requestTypeModels || [], requestTypeTerms || [], bindingControl, screenPermissions || [Permissions.RequestTypes.Delete,
-                            Permissions.RequestTypes.Edit,
-                            Permissions.RequestTypes.ManageSecurity], permissionList || [], requestTypePermissions || [], securityGroupTree || [], workflows, templates, termList, template);
+                        Details.vm = new ViewModel(requestType, requestTypeModels || [], requestTypeTerms || [], bindingControl, screenPermissions || [PMNPermissions.RequestTypes.Delete,
+                            PMNPermissions.RequestTypes.Edit,
+                            PMNPermissions.RequestTypes.ManageSecurity], permissionList || [], requestTypePermissions || [], securityGroupTree || [], workflows, templates, termList, template);
                         Plugins.Requests.QueryBuilder.Edit.init(json, [], null, null, '', [], null, visualTerms, true, null, requestType.TemplateID, null).done(function () {
                             Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList(Details.vm.SelectedModels(), Details.vm.Template.QueryType(), Details.vm.RequestTypeTerms().map(function (t) { return t.TermID(); }));
                         });

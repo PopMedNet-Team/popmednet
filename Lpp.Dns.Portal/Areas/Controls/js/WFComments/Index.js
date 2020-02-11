@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -72,7 +72,7 @@ var Controls;
                             documents.forEach(function (d) {
                                 //if the document ID is null then the document has been deleted, can't allow download.
                                 if (d.DocumentID) {
-                                    if (self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)) {
+                                    if (self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewDocuments)) {
                                         comment += Controls.WFDocuments.List.Utils.buildDownloadLink(d.DocumentID, d.FileName, d.DocumentName);
                                     }
                                     else {

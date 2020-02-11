@@ -118,7 +118,7 @@ module Organization.Details {
             });
         }
         public AddUser() {
-            if (this.HasPermission(Permissions.Organization.Edit)) {
+            if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                 vm.Save(null, null, false).done(() => {
                     window.location.href = "/users/details?OrganizationID=" + this.Organization.ID();
                 });
@@ -127,7 +127,7 @@ module Organization.Details {
             }
         }
         public AddDataMart() {
-            if (this.HasPermission(Permissions.Organization.Edit)) {
+            if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                 vm.Save(null, null, false).done(() => {
                     window.location.href = "/datamarts/details?OrganizationID=" + this.Organization.ID();
                 });
@@ -136,7 +136,7 @@ module Organization.Details {
             }
         }
         public NewRegistry() {
-            if (this.HasPermission(Permissions.Organization.Edit)) {
+            if (this.HasPermission(PMNPermissions.Organization.Edit)) {
                 vm.Save(null, null, false).done(() => {
                     window.location.href = "/registries/details?OrganizationID=" + this.Organization.ID();
                 });
@@ -218,7 +218,7 @@ module Organization.Details {
                 vm.Organization.Timestamp(orgs[0].Timestamp);
                 var orgAcls = null;
                 var orgEvents = null;
-                if (this.HasPermission(Permissions.Organization.ManageSecurity)) {
+                if (this.HasPermission(PMNPermissions.Organization.ManageSecurity)) {
                     orgAcls = this.OrgAcls().map((a) => {
                         a.OrganizationID(this.Organization.ID());
                         return a.toData();
@@ -244,7 +244,7 @@ module Organization.Details {
                     orgAcls != null ? Dns.WebApi.Security.UpdateOrganizationPermissions(orgAcls) : null,
                     orgEvents != null ? Dns.WebApi.Events.UpdateOrganizationEventPermissions(orgEvents) : null,
                     Dns.WebApi.Organizations.EHRSInsertOrUpdate({ OrganizationID: this.Organization.ID(), EHRS: orgehrs }),
-                    this.HasPermission(Permissions.Organization.Edit) ?  Dns.WebApi.OrganizationRegistries.InsertOrUpdate(orgRegistries) : null
+                    this.HasPermission(PMNPermissions.Organization.Edit) ?  Dns.WebApi.OrganizationRegistries.InsertOrUpdate(orgRegistries) : null
                     ).done(() => {
                         Dns.WebApi.Organizations.ListEHRS("OrganizationID eq " + this.Organization.ID()).done((oehrs) => {
                             vm.OrganizationEHRS(ko.utils.arrayMap(oehrs, (item) => { 
@@ -289,14 +289,14 @@ module Organization.Details {
         var id: any = $.url().param("ID");
 
         var defaultPermissions = [
-            Permissions.Organization.CreateUsers,
-            Permissions.Organization.Delete,
-            Permissions.Organization.Edit,
-            Permissions.Organization.ManageSecurity,
-            Permissions.Organization.View,
-            Permissions.Organization.CreateDataMarts,
-            Permissions.Organization.CreateRegistries,
-            Permissions.Organization.Copy
+            PMNPermissions.Organization.CreateUsers,
+            PMNPermissions.Organization.Delete,
+            PMNPermissions.Organization.Edit,
+            PMNPermissions.Organization.ManageSecurity,
+            PMNPermissions.Organization.View,
+            PMNPermissions.Organization.CreateDataMarts,
+            PMNPermissions.Organization.CreateRegistries,
+            PMNPermissions.Organization.Copy
         ];
         $.when<any>(
             id == null ? null : Dns.WebApi.Organizations.GetPermissions([id], defaultPermissions),

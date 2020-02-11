@@ -6,7 +6,7 @@
             <h4>Distribute Request</h4>
         </div>
         <div class="panel-body">
-            <div data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)"> 
+            <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)"> 
                 <!-- ko stopBinding: true -->
                 <div id="mpupload">        
                 @Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
@@ -28,8 +28,8 @@
         </div>
     </article>
     <nav>
-        <button class="btn btn-primary pull-right" style="width:115px;" data-resultid="5445DC6E-72DC-4A6B-95B6-338F0359F89E" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),enable:CanSubmit,click:Complete">Submit Request</button>
-        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="E970F48E-A072-41C1-B8C3-CC34C5826A46" data-bind="visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Modify Working Specifications</button>        
+        <button class="btn btn-primary pull-right" style="width:115px;" data-resultid="5445DC6E-72DC-4A6B-95B6-338F0359F89E" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),enable:CanSubmit,click:Complete">Submit Request</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="E970F48E-A072-41C1-B8C3-CC34C5826A46" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Modify Working Specifications</button>        
         <div class="clearfix"></div>
     </nav>
 </section>

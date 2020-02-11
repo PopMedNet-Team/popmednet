@@ -83,9 +83,9 @@
             </tbody>
         </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="22AE0001-0B5A-4BA9-BB55-A3B600E2728C" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && HasPermission(Permissions.Project.ResubmitRequests)">Resubmit</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="7821FC45-9FD5-4597-A405-B021E5ED14FA" data-bind="enable:CanUnGroupCompletedRoutings,click:Complete, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Ungroup</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="49F9C682-9FAD-4AE5-A2C5-19157E227186" data-bind="enable:CanGroupCompletedRoutings,click:onGroupResponses, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask)">Group</button>
+            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="22AE0001-0B5A-4BA9-BB55-A3B600E2728C" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && HasPermission(PMNPermissions.Project.ResubmitRequests)">Resubmit</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="7821FC45-9FD5-4597-A405-B021E5ED14FA" data-bind="enable:CanUnGroupCompletedRoutings,click:Complete, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">Ungroup</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="49F9C682-9FAD-4AE5-A2C5-19157E227186" data-bind="enable:CanGroupCompletedRoutings,click:onGroupResponses, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">Group</button>
             <div class="btn-group pull-right">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:HasSelectedCompleteRoutings, visible: (AllowViewIndividualResults || AllowViewAggregateResults)">View Results <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
@@ -145,19 +145,19 @@
             </tbody>
         </table>
         <nav style="margin:15px 0px;">
-            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: HasSelectedIncompleteRoutings, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" style="margin-left:5px;">Bulk Edit</button>
+            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: HasSelectedIncompleteRoutings, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" style="margin-left:5px;">Bulk Edit</button>
             <button class="btn btn-default pull-right" data-bind="click: onEditRoutingStatusDialog , visible:CanOverrideRoutingStatus, enable: HasSelectedIncompleteRoutings" style="margin-right:15px;display:none;">Edit Routing Status</button>
-            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Remove DataMart</button>
-            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(Permissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Add DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(PMNPermissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Remove DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && HasPermission(PMNPermissions.Request.ChangeRoutingsAfterSubmission)" style="margin-right:15px;">Add DataMart</button>
             <div class="clearfix"></div>
         </nav>
     </article>
 
     <nav style="border-top:1px solid silver;padding-top:15px;">
         <button class="btn btn-primary pull-left" data-bind="click: Requests.Details.rovm.onCopy, visible: isDefault && AllowCopy">Copy</button>
-        <button class="btn btn-default pull-right" data-resultid="E1C90001-B582-4180-9A71-A3B600EA0C27" data-bind="click:onComplete, visible:ShowReportingOptions == false && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Complete</button>
+        <button class="btn btn-default pull-right" data-resultid="E1C90001-B582-4180-9A71-A3B600EA0C27" data-bind="click:onComplete, visible:ShowReportingOptions == false && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Complete</button>
 
-        <div class="btn-group pull-right" data-bind="visible:ShowReportingOptions == true && HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask)">
+        <div class="btn-group pull-right" data-bind="visible:ShowReportingOptions == true && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Complete Distribution <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a data-resultid="E93CED3B-4B55-4991-AF84-07058ABE315C" data-bind="click:Complete">Report Status: N/A</a></li>

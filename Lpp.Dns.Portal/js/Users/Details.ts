@@ -352,7 +352,7 @@ module Users.Details {
                 return;
             }
 
-            if (this.HasPermission(Permissions.User.ManageSecurity)) {
+            if (this.HasPermission(PMNPermissions.User.ManageSecurity)) {
                 if (this.User.Active() && this.User.OrganizationID() == null) {
                     Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have selected an organization.</p>");
                     deferred.reject();
@@ -366,7 +366,7 @@ module Users.Details {
                 //    return;
                 //}
 
-                if (this.User.Active() && this.HasPermission(Permissions.User.ManageSecurity) && this.SecurityGroups().length == 0) {
+                if (this.User.Active() && this.HasPermission(PMNPermissions.User.ManageSecurity) && this.SecurityGroups().length == 0) {
                     Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that this active user belongs to at least one security group.</p>");
                     return;
                 }
@@ -383,7 +383,7 @@ module Users.Details {
 
                 window.history.replaceState(null, window.document.title, "/users/details?ID=" + users[0].ID);
 
-                if (this.HasPermission(Permissions.User.ManageSecurity)) {
+                if (this.HasPermission(PMNPermissions.User.ManageSecurity)) {
                     var userAcls = this.UserAcls().map((a) => {
                         a.UserID(this.User.ID());
                         return a.toData();
@@ -414,7 +414,7 @@ module Users.Details {
                     };
                 }
 
-                if (this.HasPermission(Permissions.User.ManageNotifications)) {
+                if (this.HasPermission(PMNPermissions.User.ManageNotifications)) {
                     var userSubscriptions = this.Subscriptions().map((s) => {
                         var subscription: Dns.Interfaces.IUserEventSubscriptionDTO = {
                             EventID: s.EventID(),
@@ -507,14 +507,14 @@ module Users.Details {
         var organizationId: any = $.url().param("OrganizationID");
 
         var defaultScreenPermissions = [
-            Permissions.User.ChangeCertificate,
-            Permissions.User.ChangeLogin,
-            Permissions.User.ChangePassword,
-            Permissions.User.Delete,
-            Permissions.User.Edit,
-            Permissions.User.ManageNotifications,
-            Permissions.User.ManageSecurity,
-            Permissions.User.View,
+            PMNPermissions.User.ChangeCertificate,
+            PMNPermissions.User.ChangeLogin,
+            PMNPermissions.User.ChangePassword,
+            PMNPermissions.User.Delete,
+            PMNPermissions.User.Edit,
+            PMNPermissions.User.ManageNotifications,
+            PMNPermissions.User.ManageSecurity,
+            PMNPermissions.User.View,
         ];
 
         $.when<any>(
@@ -522,7 +522,7 @@ module Users.Details {
             id == null ? null : Dns.WebApi.Users.Get(id),
             id == null ? null : Dns.WebApi.Security.GetUserPermissions(id),
             id == null ? null : Dns.WebApi.Events.GetUserEventPermissions(id),
-            Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.ApproveRejectRegistrations),
+            Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.ApproveRejectRegistrations),
             Dns.WebApi.Organizations.List(),
             Dns.WebApi.Security.GetAvailableSecurityGroupTree(),
             Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Users]),
@@ -563,7 +563,7 @@ module Users.Details {
 
             // If it's the current user (editing own profile), ensure they have view, edit and manage notification rights
             if (user.ID == User.ID) {
-                $.merge(screenPermissions, [Permissions.User.View.toLowerCase(), Permissions.User.Edit.toLowerCase(), Permissions.User.ChangeLogin.toLowerCase(), Permissions.User.ManageNotifications.toLowerCase()]);
+                $.merge(screenPermissions, [PMNPermissions.User.View.toLowerCase(), PMNPermissions.User.Edit.toLowerCase(), PMNPermissions.User.ChangeLogin.toLowerCase(), PMNPermissions.User.ManageNotifications.toLowerCase()]);
                 screenPermissions = $.unique(screenPermissions);
             }
 
@@ -595,13 +595,13 @@ module Users.Details {
             });
 
             $.when<any>(
-                id && screenPermissions.indexOf(Permissions.User.ManageSecurity.toLowerCase()) > -1 ? Dns.WebApi.Users.MemberOfSecurityGroups(id) : null,
-                user.ID && (screenPermissions.indexOf(Permissions.User.ManageNotifications.toLowerCase()) > -1 || screenPermissions.indexOf(Permissions.User.ManageNotifications) > -1) ? Dns.WebApi.Users.GetSubscribedEvents(user.ID) : null,
-                user.OrganizationID == null ? null : Dns.WebApi.Organizations.GetPermissions([user.OrganizationID], [Permissions.Organization.ApproveRejectRegistrations])
+                id && screenPermissions.indexOf(PMNPermissions.User.ManageSecurity.toLowerCase()) > -1 ? Dns.WebApi.Users.MemberOfSecurityGroups(id) : null,
+                user.ID && (screenPermissions.indexOf(PMNPermissions.User.ManageNotifications.toLowerCase()) > -1 || screenPermissions.indexOf(PMNPermissions.User.ManageNotifications) > -1) ? Dns.WebApi.Users.GetSubscribedEvents(user.ID) : null,
+                user.OrganizationID == null ? null : Dns.WebApi.Organizations.GetPermissions([user.OrganizationID], [PMNPermissions.Organization.ApproveRejectRegistrations])
             ).done((sg, events, permission) => {
                 subscribedEvents = events;
                 securityGroups = sg;
-                canApproveRejectOrgLevel = (permission == null || permission.length == 0) ? false : permission[0].toUpperCase() == Permissions.Organization.ApproveRejectRegistrations;
+                canApproveRejectOrgLevel = (permission == null || permission.length == 0) ? false : permission[0].toUpperCase() == PMNPermissions.Organization.ApproveRejectRegistrations;
                 deferred.resolve();
             });
         });

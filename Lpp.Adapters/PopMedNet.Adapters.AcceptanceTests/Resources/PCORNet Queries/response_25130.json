@@ -1,0 +1,100 @@
+{
+  "ID": null,
+  "ResponseDateTime": "2017-11-21T22:16:23.8580104+00:00",
+  "RequestID": "ff913fb2-98bd-4552-aa86-a832011adaaf",
+  "Errors": null,
+  "Results": [
+    [
+      {
+        "Hispanic": "Danny",
+        "Race": "05",
+        "Patients": 1,
+        "LowThreshold": false
+      },
+      {
+        "Hispanic": "Claudette",
+        "Race": "06",
+        "Patients": 1,
+        "LowThreshold": false
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "Nana",
+        "Patients": 1,
+        "LowThreshold": false
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Paulette",
+        "Patients": 1,
+        "LowThreshold": false
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Rene",
+        "Patients": 1,
+        "LowThreshold": false
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Sally",
+        "Patients": 1,
+        "LowThreshold": false
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

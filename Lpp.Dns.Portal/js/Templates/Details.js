@@ -6,7 +6,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -116,7 +116,7 @@ var Templates;
         }
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.Templates.Get(id), id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [Permissions.Templates.Delete, Permissions.Templates.Edit, Permissions.Templates.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Templates]), Dns.WebApi.Security.GetTemplatePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Templates.GetGlobalTemplatePermissions(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), GetVisualTerms()).done(function (templates, screenPermissions, permissionList, templatePermissions, globalPermissions, securityGroupTree, visualTerms) {
+            $.when(id == null ? null : Dns.WebApi.Templates.Get(id), id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Templates]), Dns.WebApi.Security.GetTemplatePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Templates.GetGlobalTemplatePermissions(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), GetVisualTerms()).done(function (templates, screenPermissions, permissionList, templatePermissions, globalPermissions, securityGroupTree, visualTerms) {
                 var template = templates == null ? {
                     ID: null,
                     Name: '',
@@ -146,7 +146,7 @@ var Templates;
                 Plugins.Requests.QueryBuilder.MDQ.init(jTemplate, [], null, null, '', [], null, visualTerms, true, template.ID);
                 $(function () {
                     var bindingControl = $('#Content');
-                    Details.vm = new ViewModel(bindingControl, screenPermissions || [Permissions.Templates.Delete, Permissions.Templates.Edit, Permissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0]);
+                    Details.vm = new ViewModel(bindingControl, screenPermissions || [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0]);
                     ko.applyBindings(Details.vm, bindingControl[0]);
                 });
             });

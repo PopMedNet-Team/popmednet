@@ -66,13 +66,13 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         [Column("PRO_MEASURE_THETA")]
         public double? MeasureTheta { get; set; }
 
-        [Column("PRO_MEASURE_SCALED _TSCORE")]
+        [Column("PRO_MEASURE_SCALED_TSCORE")]
         public double? MeasureScaledTScore { get; set; }
 
-        [Column("PRO_MEASURE_STAND ARD_ERROR")]
+        [Column("PRO_MEASURE_STANDARD_ERROR")]
         public double? MeasureStandardError { get; set; }
 
-        [Column("PRO_MEASURE_COUNT _SCORED")]
+        [Column("PRO_MEASURE_COUNT_SCORED")]
         public double? MeasureCountScored { get; set; }
 
         [Column("PRO_MEASURE_LOINC")]

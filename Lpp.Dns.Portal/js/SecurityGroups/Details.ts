@@ -76,7 +76,7 @@ module SecurityGroups.Details {
         
 
         $.when<any>(
-            id == null ? null : Dns.WebApi.SecurityGroups.GetPermissions(id, [Permissions.Project.ManageSecurity, Permissions.Organization.ManageSecurity]),
+            id == null ? null : Dns.WebApi.SecurityGroups.GetPermissions(id, [PMNPermissions.Project.ManageSecurity, PMNPermissions.Organization.ManageSecurity]),
             id == null ? null : Dns.WebApi.SecurityGroups.Get(id),            
             Dns.WebApi.Organizations.List(),
             Dns.WebApi.Projects.List(),
@@ -126,7 +126,7 @@ module SecurityGroups.Details {
                     }
 
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(screenPermissions || [Permissions.Project.ManageSecurity, Permissions.Organization.ManageSecurity], securityGroup, organizations, projects, securityGroupList.filter((value) => { return value.OwnerID == securityGroup.OwnerID; }), isOrganization, bindingControl);
+                    vm = new ViewModel(screenPermissions || [PMNPermissions.Project.ManageSecurity, PMNPermissions.Organization.ManageSecurity], securityGroup, organizations, projects, securityGroupList.filter((value) => { return value.OwnerID == securityGroup.OwnerID; }), isOrganization, bindingControl);
                     ko.applyBindings(vm, bindingControl[0]);
                 });
             });

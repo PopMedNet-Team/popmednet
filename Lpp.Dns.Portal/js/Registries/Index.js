@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -70,10 +70,10 @@ var Registries;
         }
         Index.typeFilterUI = typeFilterUI;
         function init() {
-            $.when(Users.GetSetting("Registries.Index.gRegistries.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateRegistry)).done(function (gRegistriesSetting, canAdd) {
+            $.when(Users.GetSetting("Registries.Index.gRegistries.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRegistry)).done(function (gRegistriesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRegistry] : []);
+                    vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRegistry] : []);
                     ko.applyBindings(vm, bindingControl[0]);
                     Global.Helpers.SetGridFromSettings(vm.RegistriesGrid(), gRegistriesSetting);
                     vm.RegistriesGrid().bind("dataBound", function (e) {

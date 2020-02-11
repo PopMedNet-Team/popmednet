@@ -32,7 +32,7 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
-  <ItemGroup><Reference Include="Lpp.QueryComposer, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.QueryComposer.dll</HintPath></Reference><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -132,6 +132,7 @@
     <Compile Include="Adapters\PCORI\Terms\Hispanic.cs" />
     <Compile Include="Adapters\PCORI\Terms\PatientCount.cs" />
     <Compile Include="Adapters\PCORI\Terms\PatientReportedOutcome.cs" />
+    <Compile Include="Adapters\PCORI\Terms\PatientReportedOutcomeEncounter.cs" />
     <Compile Include="Adapters\PCORI\Terms\ProcedureCodes.cs" />
     <Compile Include="Adapters\PCORI\Terms\Race.cs" />
     <Compile Include="Adapters\PCORI\Terms\Setting.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Adapters\PCORI\Terms\Trial.cs" />
     <Compile Include="Adapters\PCORI\Terms\VitalMeasureDate.cs" />
     <Compile Include="Adapters\PCORI\Terms\Weight.cs" />
+    <Compile Include="Adapters\PCORI\TimeWindowQueryBuilder.cs" />
     <Compile Include="Adapters\SummaryQuery\MetadataRefreshModelAdapter.cs" />
     <Compile Include="Adapters\SummaryQuery\SqlDistributionAdapter.cs" />
     <Compile Include="Adapters\SummaryQuery\SummarySqlQueryAdapter.cs" />
@@ -185,8 +187,14 @@
       <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
       <Name>Lpp.Dns.DTO</Name>
     </ProjectReference>
-    
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.QueryComposer\Lpp.QueryComposer.csproj">
+      <Project>{b3374f4b-88a0-412d-90e5-79f2014d7721}</Project>
+      <Name>Lpp.QueryComposer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data.csproj">
       <Project>{1b945fa5-035d-49ac-a901-4570a2a64c08}</Project>
       <Name>Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data</Name>

@@ -115,7 +115,7 @@
                         <span data-bind="text: Request.DueDate() ? moment(Request.DueDate()).format('MM/D/YYYY') : ''"></span>
                     </div>
                     <div data-bind="visible: $root.IsNotTerminatedRequest()" class="Row">
-                        <button class="btn btn-default pull-right" name="EditWFRequestMetadata" data-bind="click:onEditWFRequestMetadata, visible: HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata) || WorkflowActivity.Name() == 'New Request'" style="width:115px; margin-bottom: 5px; margin-top: 8px;">Edit Metadata</button>
+                        <button class="btn btn-default pull-right" name="EditWFRequestMetadata" data-bind="click:onEditWFRequestMetadata, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata) || WorkflowActivity.Name() == 'New Request'" style="width:115px; margin-bottom: 5px; margin-top: 8px;">Edit Metadata</button>
                     </div>
                 </div>
             </article>
@@ -376,7 +376,7 @@
 						}
 
 						<div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
-								<button class="btn btn-danger" data-bind="click: Requests.Details.rovm.Terminate, visible:HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.TerminateWorkflow) && Request.ID() != null && IsNotTerminatedRequest() && RequestIsComplete() == false">Terminate Request</button>
+								<button class="btn btn-danger" data-bind="click: Requests.Details.rovm.Terminate, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.TerminateWorkflow) && Request.ID() != null && IsNotTerminatedRequest() && RequestIsComplete() == false">Terminate Request</button>
 						</div>
 				</div>
         }

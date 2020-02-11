@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -51,7 +51,7 @@ var Projects;
                     });
                 };
                 var self = _this;
-                _this.CanManageSecurityTypes = ko.observable(_this.HasPermission(Permissions.Project.ManageRequestTypes));
+                _this.CanManageSecurityTypes = ko.observable(_this.HasPermission(PMNPermissions.Project.ManageRequestTypes));
                 //Get lists
                 _this.DataMartList = dataMartList;
                 _this.OrganizationList = ko.observableArray(organizationList.map(function (item) {
@@ -227,7 +227,7 @@ var Projects;
                         var organizationEvents = null;
                         var projectRequestTypeWorkFlowActivityAcls = null;
                         var projectFieldOptionsAcls = null;
-                        if (self.HasPermission(Permissions.Project.ManageSecurity)) {
+                        if (self.HasPermission(PMNPermissions.Project.ManageSecurity)) {
                             dataMartAcls = self.DataMartAcls().map(function (a) {
                                 a.ProjectID(projectID);
                                 return a.toData();
@@ -267,7 +267,7 @@ var Projects;
                             projectFieldOptionsAcls = self.FieldOptions.Acls().map(function (a) { return a.toData(); });
                         }
                         var projectRequestTypes = null;
-                        if (self.HasPermission(Permissions.Project.ManageRequestTypes)) {
+                        if (self.HasPermission(PMNPermissions.Project.ManageRequestTypes)) {
                             projectRequestTypes = {
                                 ProjectID: projectID,
                                 RequestTypes: self.ProjectRequestTypes().map(function (rt) {
@@ -276,23 +276,23 @@ var Projects;
                                 })
                             };
                         }
-                        var canManageSecurity = self.HasPermission(Permissions.Project.ManageSecurity);
-                        var originalManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+                        var canManageSecurity = self.HasPermission(PMNPermissions.Project.ManageSecurity);
+                        var originalManageRequestTypes = self.HasPermission(PMNPermissions.Project.ManageRequestTypes);
                         $.when(canManageSecurity ? Dns.WebApi.Security.UpdateProjectPermissions(projectAcls) : null, canManageSecurity ? Dns.WebApi.Events.UpdateProjectEventPermissions(projectEventAcls) : null, canManageSecurity ? Dns.WebApi.Events.UpdateProjectDataMartEventPermissions(projectDataMartEventAcls) : null, canManageSecurity ? Dns.WebApi.Events.UpdateProjectOrganizationEventPermissions(organizationEvents) : null, canManageSecurity ? Dns.WebApi.Security.UpdateProjectOrganizationPermissions(organizationAcls) : null, canManageSecurity ? Dns.WebApi.Security.UpdateProjectDataMartPermissions(dataMartAcls) : null, canManageSecurity && (projectFieldOptionsAcls != null && projectFieldOptionsAcls.length > 0) ? Dns.WebApi.Security.UpdateProjectFieldOptionPermissions(projectFieldOptionsAcls) : null).done(function () {
                             //update permissions
                             Dns.WebApi.Projects.GetPermissions([projectID], [
-                                Permissions.Project.Copy,
-                                Permissions.Project.Delete,
-                                Permissions.Project.Edit,
-                                Permissions.Project.ManageSecurity,
-                                Permissions.Project.ManageRequestTypes
+                                PMNPermissions.Project.Copy,
+                                PMNPermissions.Project.Delete,
+                                PMNPermissions.Project.Edit,
+                                PMNPermissions.Project.ManageSecurity,
+                                PMNPermissions.Project.ManageRequestTypes
                             ]).done(function (perms) {
                                 //update the screen permissions with the newly set permissions
                                 self.ScreenPermissions = perms.map(function (sp) {
                                     return sp.toLowerCase();
                                 });
                                 //now update the rest of the stuff using the new permissions
-                                var canManageRequestTypes = self.HasPermission(Permissions.Project.ManageRequestTypes);
+                                var canManageRequestTypes = self.HasPermission(PMNPermissions.Project.ManageRequestTypes);
                                 self.CanManageSecurityTypes(canManageRequestTypes);
                                 $.when(canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectRequestTypePermissions(projectRequestTypeAcls) : null, canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectDataMartRequestTypePermissions(projectDataMartRequestTypeAcls) : null).done(function () {
                                     $.when(Dns.WebApi.ProjectDataMarts.InsertOrUpdate({ ProjectID: projectID, DataMarts: dataMarts }), Dns.WebApi.ProjectOrganizations.InsertOrUpdate({ ProjectID: projectID, Organizations: organizations }), (canManageRequestTypes && projectRequestTypes != null) ? Dns.WebApi.Projects.UpdateProjectRequestTypes(projectRequestTypes) : null, (canManageRequestTypes && projectRequestTypeWorkFlowActivityAcls != null) ? Dns.WebApi.Security.UpdateProjectRequestTypeWorkflowActivityPermissions(projectRequestTypeWorkFlowActivityAcls) : null
@@ -451,11 +451,11 @@ var Projects;
             var groupid = $.url().param("GroupID");
             //Then we call all of the database calls that are necessary. By putting them in a $.when they all execute simultaniously and will complete at the length of the longest running request.
             $.when(id == null ? null : Dns.WebApi.Projects.GetPermissions([id], [
-                Permissions.Project.Copy,
-                Permissions.Project.Delete,
-                Permissions.Project.Edit,
-                Permissions.Project.ManageSecurity,
-                Permissions.Project.ManageRequestTypes
+                PMNPermissions.Project.Copy,
+                PMNPermissions.Project.Delete,
+                PMNPermissions.Project.Edit,
+                PMNPermissions.Project.ManageSecurity,
+                PMNPermissions.Project.ManageRequestTypes
             ]), id == null ? null : Dns.WebApi.Projects.Get(id), Dns.WebApi.Groups.List(null, "ID,Name"), Dns.WebApi.DataMarts.List(null, "ID,Name,Organization", "Name"), id == null ? null : Dns.WebApi.Security.GetProjectRequestTypeWorkflowActivityPermissions(id), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Projects,
                 Dns.Enums.PermissionAclTypes.ProjectDataMarts,
                 Dns.Enums.PermissionAclTypes.ProjectDataMartRequestTypes,
@@ -466,13 +466,13 @@ var Projects;
                 var project = projects == null ? null : projects[0];
                 //Now have our conditional queries that need to be executed. These should be items that depend on other items that you just got back to be queried.
                 if (project != null && project.GroupID) {
-                    $.when(screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : null, screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : null, Dns.WebApi.Organizations.ListByGroupMembership(project.GroupID))
+                    $.when(screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : null, screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : null, Dns.WebApi.Organizations.ListByGroupMembership(project.GroupID))
                         .done(function (projectRequestTypes, requestTypes, organizationList) {
                         $(function () {
                             //We get our binding control here because it's inside the document.ready. It cannot be assured anywhere else.
                             var bindingControl = $("#Content");
                             //Pass everything in to the view model here.
-                            vm = new ViewModel(screenPermissions || [Permissions.Project.Edit, Permissions.Project.ManageSecurity], project, projectRequestTypes || [], projectRequestTypeWorkflowActivityAcls || [], groups, dataMartList || [], organizationList || [], permissionList, requestTypes || [], projectDataMarts || [], projectDataMartPermissions, projectPermissions, projectRequestTypePermissions, projectDataMartRequestTypePermissions, projectEventPermissions, projectDataMartEventPermissions, projectOrganizationPermissions, projectOrganizationEvents, securityGroupTree, projectSecurityGroups || [], projectOrganizations || [], eventList || [], projectDataMartsEventList || [], groupid, requestTypeList, fieldOptions, bindingControl);
+                            vm = new ViewModel(screenPermissions || [PMNPermissions.Project.Edit, PMNPermissions.Project.ManageSecurity], project, projectRequestTypes || [], projectRequestTypeWorkflowActivityAcls || [], groups, dataMartList || [], organizationList || [], permissionList, requestTypes || [], projectDataMarts || [], projectDataMartPermissions, projectPermissions, projectRequestTypePermissions, projectDataMartRequestTypePermissions, projectEventPermissions, projectDataMartEventPermissions, projectOrganizationPermissions, projectOrganizationEvents, securityGroupTree, projectSecurityGroups || [], projectOrganizations || [], eventList || [], projectDataMartsEventList || [], groupid, requestTypeList, fieldOptions, bindingControl);
                             //Apply your bindings.
                             ko.applyBindings(vm, bindingControl[0]);
                             $('#PageLoadingMessage').remove();
@@ -480,12 +480,12 @@ var Projects;
                     });
                 }
                 else {
-                    $.when(id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : [] : [], id != null ? screenPermissions.indexOf(Permissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : [] : []).done(function (projectRequestTypes, requestTypes) {
+                    $.when(id != null ? screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetProjectRequestTypes(id) : [] : [], id != null ? screenPermissions.indexOf(PMNPermissions.Project.ManageRequestTypes.toLowerCase()) > -1 ? Dns.WebApi.Projects.GetRequestTypes(id) : [] : []).done(function (projectRequestTypes, requestTypes) {
                         $(function () {
                             var bindingControl = $("#Content");
-                            vm = new ViewModel(screenPermissions || [Permissions.Project.Edit,
-                                Permissions.Project.ManageSecurity,
-                                Permissions.Project.ManageRequestTypes], project, projectRequestTypes, projectRequestTypeWorkflowActivityAcls || [], groups, dataMartList || [], [], permissionList, requestTypes, projectDataMarts || [], projectDataMartPermissions, projectPermissions, projectRequestTypePermissions, projectDataMartRequestTypePermissions, projectEventPermissions, projectDataMartEventPermissions, projectOrganizationPermissions, projectOrganizationEvents, securityGroupTree, projectSecurityGroups || [], projectOrganizations || [], eventList || [], projectDataMartsEventList || [], groupid, requestTypeList, fieldOptions, bindingControl);
+                            vm = new ViewModel(screenPermissions || [PMNPermissions.Project.Edit,
+                                PMNPermissions.Project.ManageSecurity,
+                                PMNPermissions.Project.ManageRequestTypes], project, projectRequestTypes, projectRequestTypeWorkflowActivityAcls || [], groups, dataMartList || [], [], permissionList, requestTypes, projectDataMarts || [], projectDataMartPermissions, projectPermissions, projectRequestTypePermissions, projectDataMartRequestTypePermissions, projectEventPermissions, projectDataMartEventPermissions, projectOrganizationPermissions, projectOrganizationEvents, securityGroupTree, projectSecurityGroups || [], projectOrganizations || [], eventList || [], projectDataMartsEventList || [], groupid, requestTypeList, fieldOptions, bindingControl);
                             ko.applyBindings(vm, bindingControl[0]);
                             $('#PageLoadingMessage').remove();
                         });

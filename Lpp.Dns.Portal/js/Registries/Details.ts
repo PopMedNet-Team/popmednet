@@ -151,7 +151,7 @@ module Registries.Details {
                 });
 
                 $.when<any>(
-                    this.HasPermission(Permissions.Registry.ManageSecurity) ? Dns.WebApi.Security.UpdateRegistryPermissions(registryAcls) : null,
+                    this.HasPermission(PMNPermissions.Registry.ManageSecurity) ? Dns.WebApi.Security.UpdateRegistryPermissions(registryAcls) : null,
                     Dns.WebApi.OrganizationRegistries.InsertOrUpdate(organizations),
                     Dns.WebApi.Registries.UpdateRegistryItemDefinitions({ registryID: this.Registry.ID(), registryItemDefinitions: registryItemDefinitions })
                     ).done(() => {
@@ -176,7 +176,7 @@ module Registries.Details {
     function init() {
         var id: any = $.url().param("ID");
         $.when<any>(
-            id == null ? null : Dns.WebApi.Registries.GetPermissions([id], [Permissions.Registry.Delete, Permissions.Registry.Edit, Permissions.Registry.ManageSecurity]),
+            id == null ? null : Dns.WebApi.Registries.GetPermissions([id], [PMNPermissions.Registry.Delete, PMNPermissions.Registry.Edit, PMNPermissions.Registry.ManageSecurity]),
             id == null ? null : Dns.WebApi.Registries.Get(id),
             Dns.WebApi.Organizations.List(),
             id == null ? null : Dns.WebApi.OrganizationRegistries.List("RegistryID eq " + id),
@@ -227,7 +227,7 @@ module Registries.Details {
 
                 $(() => {
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(screenPermissions || [Permissions.Registry.Delete, Permissions.Registry.Edit, Permissions.Registry.ManageSecurity], registry, allOrganizations || [], organizationRegistries, allRegistryItemDefinitions || [], registryItemDefinitions || [], permissionList || [], registryPermission || [], securityGroupTree, bindingControl);
+                    vm = new ViewModel(screenPermissions || [PMNPermissions.Registry.Delete, PMNPermissions.Registry.Edit, PMNPermissions.Registry.ManageSecurity], registry, allOrganizations || [], organizationRegistries, allRegistryItemDefinitions || [], registryItemDefinitions || [], permissionList || [], registryPermission || [], securityGroupTree, bindingControl);
                     ko.applyBindings(vm, bindingControl[0]);
                 });
             });

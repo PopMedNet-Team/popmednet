@@ -45,10 +45,10 @@ module DataMarts.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("DataMarts.Index.gDataMarts.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.CreateDataMarts)).done((gDataMartsSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done((gDataMartsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [Permissions.Organization.CreateDataMarts] : []);
+                vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateDataMarts] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.DataMartsGrid(), gDataMartsSetting);
                 vm.DataMartsGrid().bind("dataBound", function (e) {

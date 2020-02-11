@@ -162,7 +162,7 @@ module Workflow.ModularProgram.ViewStatusAndResults {
             self.DataMartsToChange = ko.observableArray([]);
             self.strDataMartsToChange = '';   
 
-            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == Permissions.Request.ViewHistory) != null;
+            self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, (p) => p.toUpperCase() == PMNPermissions.Request.ViewHistory) != null;
             
             self.CompletedRoutings = ko.computed(() => {
                 return ko.utils.arrayFilter(self.Routings(), (routing) => {
@@ -193,7 +193,7 @@ module Workflow.ModularProgram.ViewStatusAndResults {
                 return self.SelectedIncompleteRoutings().length > 0;
             });
             self.CanGroupCompletedRoutings = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.EditTask) && self.SelectedCompleteRoutings().length > 1;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) && self.SelectedCompleteRoutings().length > 1;
             });
             self.CanUnGroupCompletedRoutings = ko.computed(() => {
                 if (self.SelectedCompleteRoutings().length == 1) {
@@ -226,7 +226,7 @@ module Workflow.ModularProgram.ViewStatusAndResults {
             });
 
             self.CanCompleteActivity = ko.computed(() => {
-                return self.HasPermission(Permissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.IncompleteRoutings().length == 0;
+                return self.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask) && self.IncompleteRoutings().length == 0;
             });            
 
             self.ViewResponse = (data: any, evt: any) => {
@@ -666,7 +666,7 @@ module Workflow.ModularProgram.ViewStatusAndResults {
         var id: any = Global.GetQueryParam("ID"); 
 
         //get the permissions for the view response detail, use to control the dialog view showing the result files
-        var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), '6BD20AD7-502C-4D8E-A0BB-A9A5CE388C4B', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
+        var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), '6BD20AD7-502C-4D8E-A0BB-A9A5CE388C4B', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
 
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
@@ -674,7 +674,7 @@ module Workflow.ModularProgram.ViewStatusAndResults {
             Dns.WebApi.Requests.GetRequestSearchTerms(id),            
             getResponseDetailPermissions,
             Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'),
-            Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])
+            Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])
         ).done((responses: Dns.Interfaces.ICommonResponseDetailDTO[], responseGroups: Dns.Interfaces.IResponseGroupDTO[], searchTerms: Dns.Interfaces.IRequestSearchTermDTO[], responseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) => {
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
              var bindingControl = $("#MPViewStatusAndResults");

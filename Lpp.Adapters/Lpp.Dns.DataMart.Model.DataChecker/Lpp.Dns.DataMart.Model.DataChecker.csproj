@@ -92,8 +92,6 @@
       </PluginFiles>
     </ItemGroup>
     
-    <Copy SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="$(SolutionDir)Lpp.Adapters\Lpp.Wbd.AdapterService\$(OutputPath)Plugins" />
-    
   </Target>
   <Target Name="CreateVersionedZip" AfterTargets="AfterBuild">
     <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(OutputPath)$(AssemblyName).dll">

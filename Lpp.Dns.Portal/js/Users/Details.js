@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -285,7 +285,7 @@ var Users;
                     deferred.reject();
                     return;
                 }
-                if (this.HasPermission(Permissions.User.ManageSecurity)) {
+                if (this.HasPermission(PMNPermissions.User.ManageSecurity)) {
                     if (this.User.Active() && this.User.OrganizationID() == null) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have selected an organization.</p>");
                         deferred.reject();
@@ -297,7 +297,7 @@ var Users;
                     //    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have selected at least one security group for this who has permission to edit this user and manage user security.</p>");
                     //    return;
                     //}
-                    if (this.User.Active() && this.HasPermission(Permissions.User.ManageSecurity) && this.SecurityGroups().length == 0) {
+                    if (this.User.Active() && this.HasPermission(PMNPermissions.User.ManageSecurity) && this.SecurityGroups().length == 0) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that this active user belongs to at least one security group.</p>");
                         return;
                     }
@@ -308,7 +308,7 @@ var Users;
                     _this.User.ID(users[0].ID);
                     _this.User.Timestamp(users[0].Timestamp);
                     window.history.replaceState(null, window.document.title, "/users/details?ID=" + users[0].ID);
-                    if (_this.HasPermission(Permissions.User.ManageSecurity)) {
+                    if (_this.HasPermission(PMNPermissions.User.ManageSecurity)) {
                         var userAcls = _this.UserAcls().map(function (a) {
                             a.UserID(_this.User.ID());
                             return a.toData();
@@ -336,7 +336,7 @@ var Users;
                             Groups: uSecurityGroups
                         };
                     }
-                    if (_this.HasPermission(Permissions.User.ManageNotifications)) {
+                    if (_this.HasPermission(PMNPermissions.User.ManageNotifications)) {
                         var userSubscriptions = _this.Subscriptions().map(function (s) {
                             var subscription = {
                                 EventID: s.EventID(),
@@ -414,16 +414,16 @@ var Users;
             var id = $.url().param("ID");
             var organizationId = $.url().param("OrganizationID");
             var defaultScreenPermissions = [
-                Permissions.User.ChangeCertificate,
-                Permissions.User.ChangeLogin,
-                Permissions.User.ChangePassword,
-                Permissions.User.Delete,
-                Permissions.User.Edit,
-                Permissions.User.ManageNotifications,
-                Permissions.User.ManageSecurity,
-                Permissions.User.View,
+                PMNPermissions.User.ChangeCertificate,
+                PMNPermissions.User.ChangeLogin,
+                PMNPermissions.User.ChangePassword,
+                PMNPermissions.User.Delete,
+                PMNPermissions.User.Edit,
+                PMNPermissions.User.ManageNotifications,
+                PMNPermissions.User.ManageSecurity,
+                PMNPermissions.User.View,
             ];
-            $.when(id == null ? null : Dns.WebApi.Users.GetPermissions([id], defaultScreenPermissions), id == null ? null : Dns.WebApi.Users.Get(id), id == null ? null : Dns.WebApi.Security.GetUserPermissions(id), id == null ? null : Dns.WebApi.Events.GetUserEventPermissions(id), Dns.WebApi.Users.GetGlobalPermission(Permissions.Organization.ApproveRejectRegistrations), Dns.WebApi.Organizations.List(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == User.ID ? Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users, Dns.Enums.PermissionAclTypes.UserProfile]) : Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == null ? null : Dns.WebApi.Users.GetSubscribableEvents(id, null, null, "Name"), id == null ? null : Dns.WebApi.Users.GetAssignedNotifications(id)).done(function (screenPermissions, users, userAcls, userEvents, canApproveRejectGlobally, organizationList, securityGroupTree, permissionList, eventList, subscribableEventsList, assignedNotificationsList) {
+            $.when(id == null ? null : Dns.WebApi.Users.GetPermissions([id], defaultScreenPermissions), id == null ? null : Dns.WebApi.Users.Get(id), id == null ? null : Dns.WebApi.Security.GetUserPermissions(id), id == null ? null : Dns.WebApi.Events.GetUserEventPermissions(id), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.ApproveRejectRegistrations), Dns.WebApi.Organizations.List(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == User.ID ? Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users, Dns.Enums.PermissionAclTypes.UserProfile]) : Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == null ? null : Dns.WebApi.Users.GetSubscribableEvents(id, null, null, "Name"), id == null ? null : Dns.WebApi.Users.GetAssignedNotifications(id)).done(function (screenPermissions, users, userAcls, userEvents, canApproveRejectGlobally, organizationList, securityGroupTree, permissionList, eventList, subscribableEventsList, assignedNotificationsList) {
                 var user;
                 if (users == null || users.length == 0) {
                     // New user
@@ -443,7 +443,7 @@ var Users;
                 }
                 // If it's the current user (editing own profile), ensure they have view, edit and manage notification rights
                 if (user.ID == User.ID) {
-                    $.merge(screenPermissions, [Permissions.User.View.toLowerCase(), Permissions.User.Edit.toLowerCase(), Permissions.User.ChangeLogin.toLowerCase(), Permissions.User.ManageNotifications.toLowerCase()]);
+                    $.merge(screenPermissions, [PMNPermissions.User.View.toLowerCase(), PMNPermissions.User.Edit.toLowerCase(), PMNPermissions.User.ChangeLogin.toLowerCase(), PMNPermissions.User.ManageNotifications.toLowerCase()]);
                     screenPermissions = $.unique(screenPermissions);
                 }
                 var deferred = $.Deferred();
@@ -457,10 +457,10 @@ var Users;
                         ko.applyBindings(Details.vm, bindingControl[0]);
                     });
                 });
-                $.when(id && screenPermissions.indexOf(Permissions.User.ManageSecurity.toLowerCase()) > -1 ? Dns.WebApi.Users.MemberOfSecurityGroups(id) : null, user.ID && (screenPermissions.indexOf(Permissions.User.ManageNotifications.toLowerCase()) > -1 || screenPermissions.indexOf(Permissions.User.ManageNotifications) > -1) ? Dns.WebApi.Users.GetSubscribedEvents(user.ID) : null, user.OrganizationID == null ? null : Dns.WebApi.Organizations.GetPermissions([user.OrganizationID], [Permissions.Organization.ApproveRejectRegistrations])).done(function (sg, events, permission) {
+                $.when(id && screenPermissions.indexOf(PMNPermissions.User.ManageSecurity.toLowerCase()) > -1 ? Dns.WebApi.Users.MemberOfSecurityGroups(id) : null, user.ID && (screenPermissions.indexOf(PMNPermissions.User.ManageNotifications.toLowerCase()) > -1 || screenPermissions.indexOf(PMNPermissions.User.ManageNotifications) > -1) ? Dns.WebApi.Users.GetSubscribedEvents(user.ID) : null, user.OrganizationID == null ? null : Dns.WebApi.Organizations.GetPermissions([user.OrganizationID], [PMNPermissions.Organization.ApproveRejectRegistrations])).done(function (sg, events, permission) {
                     subscribedEvents = events;
                     securityGroups = sg;
-                    canApproveRejectOrgLevel = (permission == null || permission.length == 0) ? false : permission[0].toUpperCase() == Permissions.Organization.ApproveRejectRegistrations;
+                    canApproveRejectOrgLevel = (permission == null || permission.length == 0) ? false : permission[0].toUpperCase() == PMNPermissions.Organization.ApproveRejectRegistrations;
                     deferred.resolve();
                 });
             });

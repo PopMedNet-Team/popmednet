@@ -256,12 +256,12 @@ module Workflow.DistributedRegression.ConductAnalysis {
     function init() {
 
         let id: any = Global.GetQueryParam("ID");
-        let getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [Permissions.ProjectRequestTypeWorkflowActivities.ViewTask, Permissions.ProjectRequestTypeWorkflowActivities.EditTask]);
+        let getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
             getResponseDetailPermissions,
             Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'),
-            Dns.WebApi.Requests.GetPermissions([id], [Permissions.Request.ViewHistory])
+            Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])
         ).done((responses: Dns.Interfaces.ICommonResponseDetailDTO[], responseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) => {
             $(() => {
                 let bindingControl = $("#DRConductAnalysis");

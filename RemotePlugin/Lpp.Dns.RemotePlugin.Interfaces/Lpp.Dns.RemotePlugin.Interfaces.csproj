@@ -34,7 +34,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\..\Build\Lpp.Dns.Targets" />
-  <ItemGroup><Reference Include="Lpp.Objects, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL"><SpecificVersion>False</SpecificVersion><HintPath>..\..\Dependencies\Lpp.Objects.dll</HintPath></Reference>
+  <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -128,7 +128,10 @@
       <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
       <Name>Lpp.Dns.DTO</Name>
     </ProjectReference>
-    
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
     <Copy Condition="$(Configuration) == 'Debug'" SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" SourceFiles="@(PluginFiles)" DestinationFolder="C:\Publish\Debug\DNS\bin" />

@@ -70,24 +70,20 @@ module PMNTermValidators {
 
     ko.bindingHandlers.patientReportedOutcomeEncounterTermValidator = {
         init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var daysBefore: KnockoutObservable<any> = valueAccessor().values.DaysBefore;
-            var daysAfter: KnockoutObservable<any> = valueAccessor().values.DaysAfter;
-            var isValid: KnockoutObservable<boolean> = ko.observable<boolean>(true);
-            var uniqueID: string = Constants.Guid.newGuid();
+            let daysBefore: KnockoutObservable<any> = valueAccessor().values.DaysBefore;
+            let daysAfter: KnockoutObservable<any> = valueAccessor().values.DaysAfter;
+            let isValid: KnockoutObservable<boolean> = ko.observable<boolean>(true);
+            let uniqueID: string = Constants.Guid.newGuid();
 
-            var errorMessage: string = "<span role='alert' class='k-widget k-tooltip k-tooltip-validation k-invalid-msg'><span class='k-icon k-i-warning'></span><small>Both Days Before and Days After must contain a value of 0 or above</small></div>";
-            var jqElement: JQuery = $(element);
+            let errorMessage: string = "<span role='alert' class='k-widget k-tooltip k-tooltip-validation k-invalid-msg'><span class='k-icon k-i-warning'></span><small>Both Days Before and Days After must contain a value of 0 or above</small></div>";
+            let jqElement: JQuery = $(element);
 
             jqElement.attr('id', uniqueID);
-            var validate: Function = function () {
+            let validate: Function = function () {
                 if (daysBefore() == null || daysAfter() == null) {
                     isValid(false);
                 }
                 else if (parseInt(daysBefore()) <= -1 || parseInt(daysAfter()) <= -1) {
-                    isValid(false);
-                }
-                else if (parseInt(daysBefore()) === 0 && parseInt(daysAfter()) === 0) {
-                    errorMessage = "<span role='alert' class='k-widget k-tooltip k-tooltip-validation k-invalid-msg'><span class='k-icon k-i-warning'></span><small>Days Before or Days After must have a value greater than 0</small></div>";
                     isValid(false);
                 }
                 else {

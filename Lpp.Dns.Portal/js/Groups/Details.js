@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -123,9 +123,9 @@ var Groups;
         Details.ViewModel = ViewModel;
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.Groups.GetPermissions([id], [Permissions.Group.Delete, Permissions.Group.Edit, Permissions.Group.ManageSecurity, Permissions.Group.CreateProject]), id == null ? null : Dns.WebApi.Groups.Get(id), Dns.WebApi.Organizations.List(null, null, "Name"), id == null ? null : Dns.WebApi.OrganizationGroups.List("GroupID eq " + id), id == null ? null : Dns.WebApi.Projects.List("GroupID eq " + id), id == null ? null : Dns.WebApi.Events.GetGroupEventPermissions(id), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Groups]), Dns.WebApi.Security.GetGroupPermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Groups])).done(function (screenPermissions, groups, allOrganizations, organizationGroups, groupProjects, events, permissionList, groupPermission, securityGroupTree, eventList) {
+            $.when(id == null ? null : Dns.WebApi.Groups.GetPermissions([id], [PMNPermissions.Group.Delete, PMNPermissions.Group.Edit, PMNPermissions.Group.ManageSecurity, PMNPermissions.Group.CreateProject]), id == null ? null : Dns.WebApi.Groups.Get(id), Dns.WebApi.Organizations.List(null, null, "Name"), id == null ? null : Dns.WebApi.OrganizationGroups.List("GroupID eq " + id), id == null ? null : Dns.WebApi.Projects.List("GroupID eq " + id), id == null ? null : Dns.WebApi.Events.GetGroupEventPermissions(id), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Groups]), Dns.WebApi.Security.GetGroupPermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Groups])).done(function (screenPermissions, groups, allOrganizations, organizationGroups, groupProjects, events, permissionList, groupPermission, securityGroupTree, eventList) {
                 var group = groups == null ? null : groups[0];
-                screenPermissions = id == null ? [Permissions.Group.Delete, Permissions.Group.Edit, Permissions.Group.ManageSecurity, Permissions.Group.CreateProject] : screenPermissions;
+                screenPermissions = id == null ? [PMNPermissions.Group.Delete, PMNPermissions.Group.Edit, PMNPermissions.Group.ManageSecurity, PMNPermissions.Group.CreateProject] : screenPermissions;
                 $(function () {
                     var bindingControl = $("#Content");
                     vm = new ViewModel(screenPermissions, group, allOrganizations, organizationGroups, groupProjects, events, permissionList, groupPermission, securityGroupTree, eventList, bindingControl);

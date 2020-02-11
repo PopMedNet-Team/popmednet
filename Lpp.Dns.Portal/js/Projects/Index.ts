@@ -52,10 +52,10 @@ module Projects.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("Projects.Index.gProjects.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Group.CreateProject)).done((gProjectsSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Group.CreateProject)).done((gProjectsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
-                vm = new ViewModel(gProjectsSetting, bindingControl, canAdd[0] ? [Permissions.Group.CreateProject] : []);
+                vm = new ViewModel(gProjectsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Group.CreateProject] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.ProjectsGrid(), gProjectsSetting);
                 vm.ProjectsGrid().bind("dataBound", function (e) {

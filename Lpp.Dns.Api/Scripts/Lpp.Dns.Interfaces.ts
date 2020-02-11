@@ -182,10 +182,12 @@ module Dns.Enums
 	 export enum QueryComposerSections{
 	 	Criteria = 0,
 	 	Stratification = 1,
+	 	TemportalEvents = 2,
 	 }
 	 export var QueryComposerSectionsTranslation: Dns.Structures.KeyValuePair[] = [
 	 	 {value:QueryComposerSections.Criteria , text: 'Criteria'},
 	 	 {value:QueryComposerSections.Stratification , text: 'Stratification'},
+	 	 {value:QueryComposerSections.TemportalEvents , text: 'TemportalEvents'},
 	 ]
 	 export enum RequestDocumentType{
 	 	Input = 0,

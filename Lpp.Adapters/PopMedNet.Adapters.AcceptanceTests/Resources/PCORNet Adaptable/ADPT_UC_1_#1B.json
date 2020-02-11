@@ -1,0 +1,82 @@
+{
+  "Header": {
+    "Name": "PMNDEV-7286",
+    "ViewUrl": "https://pmnplayground-2.popmednet.org/querycomposer/summaryview?ID=18fb0420-f83f-40aa-98fa-aa6b0127f19d",
+    "SubmittedOn": "2019-06-13T22:12:41.620Z"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "3dedced2-9c6e-4d23-a713-a668b7770b3a",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "489f4e53-e57e-4639-92b9-1dd9ef1a38c6",
+            "Name": "i_Trial",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+                "Values": { "Trial": "ADAPTABLE_3" },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Trial",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Trial_Count",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters_Count",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  },
+  "TemporalEvents": [
+    {
+      "IndexEventDateIdentifier": "HOSPITALIZATION_DATE",
+      "DaysBefore": 1,
+      "DaysAfter": 0,
+      "Criteria": []
+    }
+  ]
+}

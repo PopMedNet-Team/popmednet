@@ -40,11 +40,6 @@ namespace Lpp.Dns.Portal.Root
 
             AreaRegistration.RegisterAllAreas();
 
-#if !DEBUG 
-            Aspose.Cells.License lic = new Aspose.Cells.License();
-            lic.SetLicense(Server.MapPath("Aspose.Cells.lic"));
-#endif
-
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             //Registers the notifier that will send emails etc on notifications.

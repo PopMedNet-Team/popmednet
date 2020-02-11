@@ -188,10 +188,12 @@ var Dns;
         (function (QueryComposerSections) {
             QueryComposerSections[QueryComposerSections["Criteria"] = 0] = "Criteria";
             QueryComposerSections[QueryComposerSections["Stratification"] = 1] = "Stratification";
+            QueryComposerSections[QueryComposerSections["TemportalEvents"] = 2] = "TemportalEvents";
         })(QueryComposerSections = Enums.QueryComposerSections || (Enums.QueryComposerSections = {}));
         Enums.QueryComposerSectionsTranslation = [
             { value: QueryComposerSections.Criteria, text: 'Criteria' },
             { value: QueryComposerSections.Stratification, text: 'Stratification' },
+            { value: QueryComposerSections.TemportalEvents, text: 'TemportalEvents' },
         ];
         var RequestDocumentType;
         (function (RequestDocumentType) {

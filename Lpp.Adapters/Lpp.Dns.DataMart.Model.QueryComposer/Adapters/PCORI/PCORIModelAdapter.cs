@@ -113,9 +113,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             IQueryable<pcori.Patient> rootQuery = db.Patients;            
             if (_queryInterrogator.HasCriteria)
             {
-                System.Linq.Expressions.Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
-
-                //TODO: if age is part of the query need to modify the result type to include the calculated age
+                Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
                 rootQuery = rootQuery.Where(queryPredicate);
             }
 
@@ -160,7 +158,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             termImplementations.Add(ModelTermsFactory.ProcedureCodesID, new Terms.ProcedureCodes(db));
             termImplementations.Add(ModelTermsFactory.TrialID, new Terms.Trial(db));
             termImplementations.Add(ModelTermsFactory.PatientReportedOutcomeID, new Terms.PatientReportedOutcome(db));
-
+            termImplementations.Add(ModelTermsFactory.PatientReportedOutcomeEncounterID, new Terms.PatientReportedOutcomeEncounter(db));
 
 
             foreach (var field in request.Select.Fields)
@@ -177,35 +175,36 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 //Simpler to just get the terms that have registered fields when done.
             }
 
-            List<TermImplementation> terms = termImplementations.Values.Where(t => t.HasFields).ToList();
+            List<TermImplementation> selectorTerms = termImplementations.Values.Where(t => t.HasFields).ToList();
 
             //register the criteria with each term being used
             var criteria = request.Where.Criteria.ToArray();
-            terms.ForEach(t => t.RegisterCriteria(criteria));
+            selectorTerms.ForEach(t => t.RegisterCriteria(criteria));
+
+            
 
             //if there are any stratifications or counts, or no selects specified; remove counts then add PatientID count
-            if (terms.Any(t => t.HasCountAggregate || t.HasStratifications) || terms.Count == 0)
+            if (selectorTerms.Any(t => t.HasCountAggregate || t.HasStratifications) || selectorTerms.Count == 0)
             {
-                if (terms.Count > 0)
-                    terms.ForEach(t => t.RemoveCountAggregates());
+                if (selectorTerms.Count > 0)
+                    selectorTerms.ForEach(t => t.RemoveCountAggregates());
 
                 //Add the term implementation for the root patient count which replaces the others
-                terms.Add(new Terms.PatientCount(db));
-            }
-
-            Guid[] nonRootQueryTerms = new[] { ModelTermsFactory.TrialID, ModelTermsFactory.PatientReportedOutcomeID, ModelTermsFactory.PatientReportedOutcomeEncounterID };
-
+                selectorTerms.Add(new Terms.PatientCount(db));
+            }            
+            
             //note: this parameter may need to get changed to just be based on the type of the root query
             ParameterExpression patientParameterExpr = Expression.Parameter(rootQuery.ElementType, "p");
 
             //get the properties for the root query: exclude properties that are used for the join types
-            IEnumerable<Objects.Dynamic.IPropertyDefinition> selectPropertyDefinitions = terms.Where(t => !nonRootQueryTerms.Contains(t.TermID)).SelectMany(t => t.InnerSelectPropertyDefinitions()).ToArray();
+            Guid[] nonRootQueryTerms = new[] { ModelTermsFactory.TrialID, ModelTermsFactory.PatientReportedOutcomeID, ModelTermsFactory.PatientReportedOutcomeEncounterID };
+            IEnumerable<Objects.Dynamic.IPropertyDefinition> selectPropertyDefinitions = selectorTerms.Where(t => !nonRootQueryTerms.Contains(t.TermID)).SelectMany(t => t.InnerSelectPropertyDefinitions()).ToArray();
 
             //build the inner select Type
-            Type innerSelectType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("s", selectPropertyDefinitions);
+            Type innerSelectType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("pat", selectPropertyDefinitions);
 
             //get the bindings against the inner select type from the terms.
-            IEnumerable<MemberBinding> innerSelectBindings = terms.SelectMany(t => t.InnerSelectBindings(innerSelectType, patientParameterExpr));
+            IEnumerable<MemberBinding> innerSelectBindings = selectorTerms.SelectMany(t => t.InnerSelectBindings(innerSelectType, patientParameterExpr));
 
             //create the innner select expression call
             LambdaExpression innerSelector = Expression.Lambda(Expression.MemberInit(Expression.New(innerSelectType), innerSelectBindings), patientParameterExpr);
@@ -215,14 +214,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             //the current Type that will be returned by the query
             Type currentSelectType = innerSelectType;
             //the current expression to execute the query
-            Expression currentSelectCall = innerSelectCall;
+            Expression currentSelectCall = innerSelectCall;            
 
 
-            var trialIDTermImp = terms.FirstOrDefault(t => t.TermID == ModelTermsFactory.TrialID);
-            if(trialIDTermImp != null){
+            var trialIDTermImp = selectorTerms.FirstOrDefault(t => t.TermID == ModelTermsFactory.TrialID);
+            if (trialIDTermImp != null)
+            {
                 IQueryable<pcori.ClinicalTrial> trialQuery = db.ClinicalTrials;
                 var trialPredicate = ApplyClinicalTrialCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
-                if(trialPredicate != null)
+                if (trialPredicate != null)
                 {
                     trialQuery = trialQuery.Where(trialPredicate);
                 }
@@ -236,7 +236,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 MethodCallExpression trialSelectCall = Expression.Call(typeof(Queryable), "Select", new Type[] { trialQuery.ElementType, trialSelectType }, trialQuery.Expression, Expression.Quote(trialSelector));
 
                 //define the selector for the outer
-                ParameterExpression rootInnerParameterExpr = Expression.Parameter(currentSelectType, "k1");                
+                ParameterExpression rootInnerParameterExpr = Expression.Parameter(currentSelectType, "demo");                
                 Expression outerKeySelector = Expression.Lambda(Expression.Property(rootInnerParameterExpr, currentSelectType, "PatientID"), rootInnerParameterExpr);
 
                 //define the selector for the inner
@@ -244,12 +244,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 Expression innerKeySelector = Expression.Lambda(Expression.Property(trialSelectParamExpr, trialSelectType, "Trial_PatientID"), trialSelectParamExpr);
 
                 //build the join result type: root query inner select definitions + trial select definitions
-                var joinPropertyDefinitions = selectPropertyDefinitions.Concat(trialSelectTypePropertyDefinitions).ToArray();
-                Type innerJoinTrialType = Objects.Dynamic.TypeBuilderHelper.CreateType("ClinicalTrial_Join", joinPropertyDefinitions);
-                ParameterExpression innerJoinTrialParamExpr = Expression.Parameter(innerJoinTrialType, "ijtt");
-                IEnumerable<MemberBinding> innerJoinBindings = terms.Where(t => !nonRootQueryTerms.Contains(t.TermID)).SelectMany(t => t.InnerSelectBindings(innerJoinTrialType, rootInnerParameterExpr)).Concat(trialIDTermImp.InnerSelectBindings(innerJoinTrialType, trialSelectParamExpr));
-                LambdaExpression resultSelector = Expression.Lambda(Expression.MemberInit(Expression.New(innerJoinTrialType), innerJoinBindings), rootInnerParameterExpr, trialSelectParamExpr);
+                var trialJoinPropertyDefinitions = selectPropertyDefinitions.Concat(trialSelectTypePropertyDefinitions).ToArray();
+                Type innerJoinTrialType = Objects.Dynamic.TypeBuilderHelper.CreateType("ClinicalTrial_Join", trialJoinPropertyDefinitions);
 
+                ParameterExpression innerJoinTrialParamExpr = Expression.Parameter(innerJoinTrialType, "ijtt");
+
+                List<MemberBinding> innerJoinBindings = new List<MemberBinding>();
+                //add bindings for the trial term
+                innerJoinBindings.AddRange(trialIDTermImp.InnerSelectBindings(innerJoinTrialType, trialSelectParamExpr));
+                //add bindings for the root select type against the new join type
+                foreach (var xxx in currentSelectType.GetProperties())
+                {
+                    innerJoinBindings.Add(Expression.Bind(innerJoinTrialType.GetProperty(xxx.Name), Expression.Property(rootInnerParameterExpr, rootInnerParameterExpr.Type.GetProperty(xxx.Name))));
+                }                
+
+                LambdaExpression resultSelector = Expression.Lambda(Expression.MemberInit(Expression.New(innerJoinTrialType), innerJoinBindings), rootInnerParameterExpr, trialSelectParamExpr);
 
                 MethodCallExpression joinCall = Expression.Call(
                     typeof(Queryable), 
@@ -273,14 +282,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
                 currentSelectType = innerJoinTrialType;
                 currentSelectCall = joinCall;
+                selectPropertyDefinitions = trialJoinPropertyDefinitions;
             }
 
-            //IQueryable tempQuery = rootQuery.Provider.CreateQuery(currentSelectCall);
-            //var tempResult = tempQuery.ToTraceQuery();
+            //var temp = rootQuery.Provider.CreateQuery(currentSelectCall);
+            //var sql = temp.ToTraceQuery();
 
-            var patientReportedOutcomeTermImpl = terms.FirstOrDefault(t => t.TermID == ModelTermsFactory.PatientReportedOutcomeID);
-            if(patientReportedOutcomeTermImpl != null)
+            var patientReportedOutcomeTermImpl = selectorTerms.FirstOrDefault(t => t.TermID == ModelTermsFactory.PatientReportedOutcomeID);
+            if(patientReportedOutcomeTermImpl != null && (request.TemporalEvents == null || !request.TemporalEvents.Any()))
             {
+                var patientCountTerm = selectorTerms.First(t => t is Terms.PatientCount);
+                ((Terms.PatientCount)patientCountTerm).IsEncounterCount = true;
+
                 IQueryable<pcori.ReportedOutcome> proQuery = db.ReportedOutcomeCommonMeasures;
                 Expression<Func<pcori.ReportedOutcome, bool>> proPredicate = ApplyPatientReportedOutcomeCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
                 if(proPredicate != null)
@@ -308,28 +321,24 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 var joinPropertyDefinitions = selectPropertyDefinitions.Concat(proSelectTypePropertyDefinitions).ToArray();
                 Type innerJoinPROType = Objects.Dynamic.TypeBuilderHelper.CreateType("PRO_CM_Join", joinPropertyDefinitions);
                 ParameterExpression innerJoinTrialParamExpr = Expression.Parameter(innerJoinPROType, "pro_cmj");
-                IEnumerable<MemberBinding> innerJoinBindings = terms.Where(t => !nonRootQueryTerms.Contains(t.TermID)).SelectMany(t => t.InnerSelectBindings(innerJoinPROType, rootInnerParameterExpr)).Concat(patientReportedOutcomeTermImpl.InnerSelectBindings(innerJoinPROType, proSelectParamExpr));
-                LambdaExpression resultSelector = Expression.Lambda(Expression.MemberInit(Expression.New(innerJoinPROType), innerJoinBindings), rootInnerParameterExpr, proSelectParamExpr);
 
+                List<MemberBinding> proInnerJoinBindings = new List<MemberBinding>();
+                proInnerJoinBindings.AddRange(patientReportedOutcomeTermImpl.InnerSelectBindings(innerJoinPROType, proSelectParamExpr));
+                foreach (var xxx in currentSelectType.GetProperties())
+                {
+                    proInnerJoinBindings.Add(Expression.Bind(innerJoinPROType.GetProperty(xxx.Name), Expression.Property(rootInnerParameterExpr, rootInnerParameterExpr.Type.GetProperty(xxx.Name))));
+                }
 
-                MethodCallExpression joinCall = Expression.Call(
-                    typeof(Queryable),
-                    "Join",
-                    new Type[]
-                    {
-                        currentSelectType, //TOuter
-                        proSelectType, //TInner
-                        typeof(string), //TKey
-                        innerJoinPROType //TResult
-                    },
-                    new Expression[]
-                    {
-                        innerSelectCall,
+                LambdaExpression resultSelector = Expression.Lambda(Expression.MemberInit(Expression.New(innerJoinPROType), proInnerJoinBindings), rootInnerParameterExpr, proSelectParamExpr);
+                
+                var proJoinCallMethodInfo = typeof(Queryable).GetMethods().First(x => x.Name == "Join" && x.GetParameters().Length == 5).MakeGenericMethod(currentSelectType, proSelectType, typeof(string), innerJoinPROType);
+                var joinCall = Expression.Call(
+                        proJoinCallMethodInfo,
+                        currentSelectCall,
                         proSelectCall,
                         Expression.Quote(outerKeySelector),
                         Expression.Quote(innerKeySelector),
                         Expression.Quote(resultSelector)
-                    }
                     );
 
                 currentSelectType = innerJoinPROType;
@@ -337,52 +346,63 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             }
 
-            IQueryable tempQuery = rootQuery.Provider.CreateQuery(currentSelectCall);
-            var tempResult = tempQuery.ToTraceQuery();
-
-
+            //IQueryable tempQuery = rootQuery.Provider.CreateQuery(currentSelectCall);
+            //string tempQuerySQL = tempQuery.ToTraceQuery();
+            
             IEnumerable<Objects.Dynamic.IPropertyDefinition> groupKeyPropertyDefinitions = new QueryComposerResponsePropertyDefinitionDTO[0];
 
-            if (terms.Any(t => t.HasCountAggregate || t.HasStratifications))
+            //root inner query has been composed, determine if this is a time window query and execute if it is else continue with the group select
+            if (request.TemporalEvents != null && request.TemporalEvents.Any())
             {
-                groupKeyPropertyDefinitions = terms.SelectMany(t => t.GroupKeyPropertyDefinitions()).ToArray();
+                var timewindowBuilder = new TimeWindowQueryBuilder(db, request.TemporalEvents, request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                currentSelectCall = timewindowBuilder.Generate(currentSelectCall, currentSelectType);
 
-                //build the grouping key
-                Type groupingKeyType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("g", groupKeyPropertyDefinitions);
+                selectPropertyDefinitions = timewindowBuilder.FinalSelectPropertyDefinitions();
+                groupKeyPropertyDefinitions = timewindowBuilder.FinalGroupKeyProperyDefinitions();
+            }
+            else
+            {
+                if (selectorTerms.Any(t => t.HasCountAggregate || t.HasStratifications))
+                {
+                    groupKeyPropertyDefinitions = selectorTerms.SelectMany(t => t.GroupKeyPropertyDefinitions()).ToArray();
 
-                //the parameter expression of the select type the key is being generated from
-                ParameterExpression groupKeySelectParameterExpression = Expression.Parameter(currentSelectType, "k");
+                    //build the grouping key
+                    Type groupingKeyType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("g", groupKeyPropertyDefinitions);
 
-                //get the group key bindings
-                IEnumerable<MemberBinding> groupKeySelectBindings = terms.SelectMany(t => t.GroupKeySelectBindings(groupingKeyType, groupKeySelectParameterExpression));
+                    //the parameter expression of the select type the key is being generated from
+                    ParameterExpression groupKeySelectParameterExpression = Expression.Parameter(currentSelectType, "k");
 
-                //call the grouping on the key
-                LambdaExpression groupKeySelector = Expression.Lambda(Expression.MemberInit(Expression.New(groupingKeyType), groupKeySelectBindings), groupKeySelectParameterExpression);
-                MethodCallExpression groupCall = Expression.Call(typeof(Queryable), "GroupBy", new Type[] { currentSelectType, groupKeySelector.Body.Type }, currentSelectCall, Expression.Quote(groupKeySelector));
+                    //get the group key bindings
+                    IEnumerable<MemberBinding> groupKeySelectBindings = selectorTerms.SelectMany(t => t.GroupKeySelectBindings(groupingKeyType, groupKeySelectParameterExpression));
 
-                selectPropertyDefinitions = terms.SelectMany(t => t.FinalSelectPropertyDefinitions());
-                //build the final select type
-                currentSelectType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("ss", selectPropertyDefinitions);
+                    //call the grouping on the key
+                    LambdaExpression groupKeySelector = Expression.Lambda(Expression.MemberInit(Expression.New(groupingKeyType), groupKeySelectBindings), groupKeySelectParameterExpression);
+                    MethodCallExpression groupCall = Expression.Call(typeof(Queryable), "GroupBy", new Type[] { currentSelectType, groupKeySelector.Body.Type }, currentSelectCall, Expression.Quote(groupKeySelector));
 
-                //get the final select type bindings
-                Type groupingType = Lpp.Objects.Dynamic.Expressions.GetGenericType(typeof(IQueryable<>), groupCall.Type).GetGenericArguments().First();
-                //TODO: we know we want an IGrouping<innerSelectType>, can we just go there directly and avoid going into the groupCal query type?
+                    selectPropertyDefinitions = selectorTerms.SelectMany(t => t.FinalSelectPropertyDefinitions());
+                    //build the final select type
+                    currentSelectType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("ss", selectPropertyDefinitions);
 
-                ParameterExpression groupKeyParameterExpr = Expression.Parameter(groupingType, "k");
-                IEnumerable<MemberBinding> finalSelectBindings = terms.SelectMany(t => t.FinalSelectBindings(currentSelectType, groupKeyParameterExpr));
+                    //get the final select type bindings
+                    Type groupingType = Lpp.Objects.Dynamic.Expressions.GetGenericType(typeof(IQueryable<>), groupCall.Type).GetGenericArguments().First();
+                    //TODO: we know we want an IGrouping<innerSelectType>, can we just go there directly and avoid going into the groupCal query type?
 
-                //call the final select
-                LambdaExpression finalSelector = Expression.Lambda(Expression.MemberInit(Expression.New(currentSelectType), finalSelectBindings), groupKeyParameterExpr);
-                MethodCallExpression finalSelectCall = Expression.Call(typeof(Queryable), "Select", new Type[] { groupingType, currentSelectType }, groupCall, Expression.Quote(finalSelector));
+                    ParameterExpression groupKeyParameterExpr = Expression.Parameter(groupingType, "k");
+                    IEnumerable<MemberBinding> finalSelectBindings = selectorTerms.SelectMany(t => t.FinalSelectBindings(currentSelectType, groupKeyParameterExpr));
 
-                currentSelectCall = finalSelectCall;
+                    //call the final select
+                    LambdaExpression finalSelector = Expression.Lambda(Expression.MemberInit(Expression.New(currentSelectType), finalSelectBindings), groupKeyParameterExpr);
+                    MethodCallExpression finalSelectCall = Expression.Call(typeof(Queryable), "Select", new Type[] { groupingType, currentSelectType }, groupCall, Expression.Quote(finalSelector));
+
+                    currentSelectCall = finalSelectCall;
+                }
+
+                logger.Debug($"[{RequestMetadata.DataMartName}, {RequestMetadata.MSRequestID}] Final expression: { currentSelectCall.ToString() }");
             }
 
-            logger.Debug("Final expression: " + currentSelectCall.ToString());
+            IQueryable query = rootQuery.Provider.CreateQuery(currentSelectCall);            
 
-            IQueryable query = rootQuery.Provider.CreateQuery(currentSelectCall);
-
-            IEnumerable<ITermResultTransformer> resultTransformers = terms.Where(t => (t as ITermResultTransformer) != null).Cast<ITermResultTransformer>().ToArray();
+            IEnumerable<ITermResultTransformer> resultTransformers = selectorTerms.Where(t => (t as ITermResultTransformer) != null).Cast<ITermResultTransformer>().ToArray();
 
             List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
             if (!viewSQL)
@@ -437,7 +457,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 results.Add(row);
             }
 
-            logger.Debug("Number of results found:" + results.Count);
+            logger.Debug($"[{RequestMetadata.DataMartName}, {RequestMetadata.MSRequestID}] Number of results found: { results.Count }");
 
             //update the final select and group key property definitions for any of the terms that had result transforms
             selectPropertyDefinitions = VisitPropertyDefinitionsForTransforms(resultTransformers, selectPropertyDefinitions);
@@ -456,7 +476,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 Aggregation = new QueryComposerResponseAggregationDefinitionDTO
                 {
                     GroupBy = groupKeyPropertyDefinitions.Select(k => k.Name).ToArray(),
-                    Select = selectPropertyDefinitions
+                    //do not include the low threshhold column as an property to include in aggregation
+                    Select = selectPropertyDefinitions.Where(k => k.Name != LowThresholdColumnName).ToArray()
                 }
             };
 
@@ -1491,11 +1512,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
                 else
                 {
+                    //patient belongs to at least one trial
                     patientPredicate = patientPredicate.And((p)=> p.ClinicalTrials.Any());
                 }
             }
 
-            return trialIDPredicate == null ? patientPredicate : patientPredicate.And((p) => p.ClinicalTrials.Any(trialIDPredicate.Compile()));
+            return trialIDPredicate == null ? patientPredicate : patientPredicate.And((p) => p.ClinicalTrials.AsQueryable().Any(trialIDPredicate));
         }
 
         Expression<Func<pcori.Patient, bool>> ApplyPatientReportedOutcomeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
@@ -1528,6 +1550,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
                 else
                 {
+                    //existence of any PRO records
                     patientPredicate = patientPredicate.And((p) => p.ReportedOutcomes.Any());
                 }
 
@@ -1545,7 +1568,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             }
 
-            return proPredicate == null ? patientPredicate : patientPredicate.And((p) => p.ReportedOutcomes.Any(proPredicate.Compile()));
+            return proPredicate == null ? patientPredicate : patientPredicate.And((p) => p.ReportedOutcomes.AsQueryable().Any(proPredicate));
         }
 
         Expression<Func<pcori.Patient, bool>> ApplyRaceTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
@@ -2172,9 +2195,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
         Expression<Func<pcori.ClinicalTrial, bool>> ApplyClinicalTrialCriteria(IEnumerable<QueryComposerCriteriaDTO> criteria)
         {
             Expression<Func<pcori.ClinicalTrial, bool>> queryPredicate = null;
-            foreach (var paragraph in criteria)
-            {
-                var paragraphPredicate = ParseParagraphForClinicalTrial(paragraph, queryPredicate);
+            foreach(var paragraph in criteria) {
+                var paragraphPredicate = ParseParagraphForClinicalTrial(paragraph);
+                if (paragraphPredicate == null)
+                    continue;
 
                 if(queryPredicate == null)
                 {
@@ -2182,48 +2206,42 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     {
                         queryPredicate = PredicateHelper.Negate(paragraphPredicate).Expand();
                     }
-                    else
-                    {
-                        queryPredicate = paragraphPredicate;
-                    }
+                    queryPredicate = paragraphPredicate.Expand();
                 }
                 else
                 {
-                    var conjunction = paragraph.Operator;
-                    if(conjunction == DTO.Enums.QueryComposerOperators.And && paragraph.Exclusion == false)
+                    //merge the paragraphs
+                    if(paragraph.Operator == DTO.Enums.QueryComposerOperators.And && paragraph.Exclusion == false)
                     {
-                        queryPredicate = queryPredicate.Expand().And(first => (from tr in db.ClinicalTrials.AsExpandable()
-                                                                              where paragraphPredicate.Invoke(tr)
-                                                                              select tr.TrialID).Contains(first.TrialID));
-
-                    }else if(conjunction == DTO.Enums.QueryComposerOperators.AndNot || (conjunction == DTO.Enums.QueryComposerOperators.And && paragraph.Exclusion))
+                        //AND
+                        queryPredicate = queryPredicate.Expand().And(first => (from tr in db.ClinicalTrials.AsExpandable() where paragraphPredicate.Invoke(tr) select tr.TrialID).Contains(first.TrialID)).Expand();
+                    }
+                    else if(paragraph.Operator == DTO.Enums.QueryComposerOperators.AndNot || (paragraph.Operator == DTO.Enums.QueryComposerOperators.And && paragraph.Exclusion))
                     {
-
-                        queryPredicate = queryPredicate.Expand().And(first => (from tr in db.ClinicalTrials.AsExpandable()
-                                                                               where paragraphPredicate.Invoke(tr)
-                                                                               select tr.TrialID).Contains(first.TrialID) == false);
-
-                    }else if(conjunction == DTO.Enums.QueryComposerOperators.Or && paragraph.Exclusion == false)
+                        //AND NOT
+                        queryPredicate = queryPredicate.Expand().And(first => (from tr in db.ClinicalTrials.AsExpandable() where queryPredicate.Invoke(tr) select tr.TrialID).Contains(first.TrialID) == false).Expand();
+                    }
+                    else if(paragraph.Operator == DTO.Enums.QueryComposerOperators.Or && paragraph.Exclusion == false)
                     {
+                        //OR
                         queryPredicate = queryPredicate.Expand().Or(paragraphPredicate.Expand());
                     }
                     else
                     {
-                        queryPredicate = queryPredicate.Expand().Or(PredicateHelper.Negate(paragraphPredicate.Expand()));
+                        //OR NOT
+                        queryPredicate = queryPredicate.Expand().Or(PredicateHelper.Negate(paragraphPredicate).Expand());
                     }
                 }
-
             }
 
             return queryPredicate;
         }
 
-
-        Expression<Func<pcori.ClinicalTrial, bool>> ParseParagraphForClinicalTrial(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.ClinicalTrial,bool>> predicate)
+        Expression<Func<pcori.ClinicalTrial, bool>> ParseParagraphForClinicalTrial(QueryComposerCriteriaDTO paragraph)
         {
             var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.TrialID).ToArray();
             if (!terms.Any())
-                return predicate;
+                return null;
 
             Expression<Func<pcori.ClinicalTrial, bool>> trialIDPredicate = null;
             foreach (var term in terms)
@@ -2242,7 +2260,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
             }
 
-            return trialIDPredicate == null ? predicate : (predicate == null ? trialIDPredicate : predicate.And(trialIDPredicate.Expand()));
+            return trialIDPredicate;
+
         }
 
         Expression<Func<pcori.ReportedOutcome, bool>> ApplyPatientReportedOutcomeCriteria(IEnumerable<QueryComposerCriteriaDTO> criteria)
@@ -2250,7 +2269,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             Expression<Func<pcori.ReportedOutcome, bool>> queryPredicate = null;
             foreach (var paragraph in criteria)
             {
-                var paragraphPredicate = ParseParagraphForPatientReportedOutcome(paragraph, queryPredicate);
+                var paragraphPredicate = ParseParagraphForPatientReportedOutcome(paragraph);
+                if (paragraphPredicate == null)
+                    continue;
 
                 if (queryPredicate == null)
                 {
@@ -2260,7 +2281,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     }
                     else
                     {
-                        queryPredicate = paragraphPredicate;
+                        queryPredicate = paragraphPredicate.Expand();
                     }
                 }
                 else
@@ -2270,7 +2291,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     {
                         queryPredicate = queryPredicate.Expand().And(first => (from pro in db.ReportedOutcomeCommonMeasures.AsExpandable()
                                                                                where paragraphPredicate.Invoke(pro)
-                                                                               select pro.ID).Contains(first.ID));
+                                                                               select pro.ID).Contains(first.ID)).Expand();
 
                     }
                     else if (conjunction == DTO.Enums.QueryComposerOperators.AndNot || (conjunction == DTO.Enums.QueryComposerOperators.And && paragraph.Exclusion))
@@ -2278,7 +2299,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
                         queryPredicate = queryPredicate.Expand().And(first => (from pro in db.ReportedOutcomeCommonMeasures.AsExpandable()
                                                                                where paragraphPredicate.Invoke(pro)
-                                                                               select pro.ID).Contains(first.ID) == false);
+                                                                               select pro.ID).Contains(first.ID) == false).Expand();
 
                     }
                     else if (conjunction == DTO.Enums.QueryComposerOperators.Or && paragraph.Exclusion == false)
@@ -2287,7 +2308,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     }
                     else
                     {
-                        queryPredicate = queryPredicate.Expand().Or(PredicateHelper.Negate(paragraphPredicate.Expand()));
+                        queryPredicate = queryPredicate.Expand().Or(PredicateHelper.Negate(paragraphPredicate).Expand());
                     }
                 }
 
@@ -2296,11 +2317,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return queryPredicate;
         }
 
-        Expression<Func<pcori.ReportedOutcome, bool>> ParseParagraphForPatientReportedOutcome(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.ReportedOutcome, bool>> predicate)
+        Expression<Func<pcori.ReportedOutcome, bool>> ParseParagraphForPatientReportedOutcome(QueryComposerCriteriaDTO paragraph)
         {
             var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.PatientReportedOutcomeID).ToArray();
-            if (!terms.Any())
-                return predicate;
+            if (!terms.Any() || _queryInterrogator.HasTemporalEvents)
+                return null;
 
             Expression<Func<pcori.ReportedOutcome, bool>> proPredicate = null;
             foreach (var term in terms)
@@ -2340,11 +2361,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
             }
 
-            return proPredicate == null ? predicate : (predicate == null ? proPredicate : predicate.And(proPredicate.Expand()));
+            return proPredicate;
         }
-
-
-
 
     }
 }

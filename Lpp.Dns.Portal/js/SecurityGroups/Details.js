@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -67,7 +67,7 @@ var SecurityGroups;
         function init() {
             var id = $.url().param("ID");
             var ownerid = $.url().param("OwnerID");
-            $.when(id == null ? null : Dns.WebApi.SecurityGroups.GetPermissions(id, [Permissions.Project.ManageSecurity, Permissions.Organization.ManageSecurity]), id == null ? null : Dns.WebApi.SecurityGroups.Get(id), Dns.WebApi.Organizations.List(), Dns.WebApi.Projects.List(), Dns.WebApi.SecurityGroups.List(id != null ? "ID ne " + id : "")).done(function (screenPermissions, securityGroups, organizations, projects, securityGroupList) {
+            $.when(id == null ? null : Dns.WebApi.SecurityGroups.GetPermissions(id, [PMNPermissions.Project.ManageSecurity, PMNPermissions.Organization.ManageSecurity]), id == null ? null : Dns.WebApi.SecurityGroups.Get(id), Dns.WebApi.Organizations.List(), Dns.WebApi.Projects.List(), Dns.WebApi.SecurityGroups.List(id != null ? "ID ne " + id : "")).done(function (screenPermissions, securityGroups, organizations, projects, securityGroupList) {
                 var securityGroup = securityGroups == null ? null : securityGroups[0];
                 if (!ownerid && securityGroup)
                     ownerid = securityGroup.OwnerID;
@@ -101,7 +101,7 @@ var SecurityGroups;
                             securityGroup.Owner = ownerProject.Name;
                     }
                     var bindingControl = $("#Content");
-                    vm = new ViewModel(screenPermissions || [Permissions.Project.ManageSecurity, Permissions.Organization.ManageSecurity], securityGroup, organizations, projects, securityGroupList.filter(function (value) { return value.OwnerID == securityGroup.OwnerID; }), isOrganization, bindingControl);
+                    vm = new ViewModel(screenPermissions || [PMNPermissions.Project.ManageSecurity, PMNPermissions.Organization.ManageSecurity], securityGroup, organizations, projects, securityGroupList.filter(function (value) { return value.OwnerID == securityGroup.OwnerID; }), isOrganization, bindingControl);
                     ko.applyBindings(vm, bindingControl[0]);
                 });
             });

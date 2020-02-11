@@ -22,13 +22,13 @@
             <div class="row">
                 <div class="col-md-6 form-group">
                     <label for="txtName">Name<em>*</em></label>
-                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: RequestType.Name, enable: HasPermission(Permissions.RequestTypes.Edit)" />
+                    <input type="text" id="txtName" class="form-control" maxlength="100" title="Please enter a name" data-bind="value: RequestType.Name, enable: HasPermission(PMNPermissions.RequestTypes.Edit)" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 form-group">
                     <label for="txtDescription">Description</label>
-                    <textarea id="txtDescription" class="form-control" data-bind="value: RequestType.Description, enable: HasPermission(Permissions.RequestTypes.Edit)" rows="4"></textarea>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: RequestType.Description, enable: HasPermission(PMNPermissions.RequestTypes.Edit)" rows="4"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -84,7 +84,7 @@
             <div class="row">
                 <div class="col-sm-6 form-group">
                     <label for="cboWorkFlow">Workflow<em>*</em></label>
-                    <input id="cboWorkFlow" required title="Please select a Workflow" data-bind="kendoDropDownList: {value: RequestType.WorkflowID, data: Workflows, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'<Not Selected>', enable: HasPermission(Permissions.RequestTypes.Edit)}" style="width: 100%;" />
+                    <input id="cboWorkFlow" required title="Please select a Workflow" data-bind="kendoDropDownList: {value: RequestType.WorkflowID, data: Workflows, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'<Not Selected>', enable: HasPermission(PMNPermissions.RequestTypes.Edit)}" style="width: 100%;" />
                 </div>
             </div>
         </form>
@@ -135,8 +135,8 @@
                         <tr>
                             <td colspan="4" style="overflow-y:visible; overflow-x:visible">
                                 <div class="dropdown pull-right">
-                                    @*<button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown">Add Term <span class="caret"></span></button>*@
-                                    <a class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-bind="enable: HasPermission(Permissions.RequestTypes.Edit)" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Term" />&nbsp;Add Term <span class="caret"></span></a>
+                                    @*<button class="btn btn-default dropdown-toggle" type="button" id="ddAddRequestType" data-bind="enable: HasPermission(PMNPermissions.RequestTypes.Edit)" data-toggle="dropdown">Add Term <span class="caret"></span></button>*@
+                                    <a class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-bind="enable: HasPermission(PMNPermissions.RequestTypes.Edit)" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Term" />&nbsp;Add Term <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableTerms">
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: $root.AddRequestTypeTerm, text: Name"></a></li>
                                     </ul>
@@ -149,9 +149,9 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: RequestType.ID() != null && HasPermission(Permissions.RequestTypes.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: RequestType.ID() != null && HasPermission(PMNPermissions.RequestTypes.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.RequestTypes.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.RequestTypes.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

@@ -52,10 +52,10 @@ module RequestType.Index {
 
     function init() {
         $.when<any>(Users.GetSetting("RequestType.Index.gRequestTypes.User:" + User.ID),
-        Dns.WebApi.Users.GetGlobalPermission(Permissions.Portal.CreateRequestType)).done((gRequestTypesSetting, canAdd) => {
+        Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRequestType)).done((gRequestTypesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $('#Content');
-                vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [Permissions.Portal.CreateRequestType] : []);
+                vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRequestType] : []);
                 ko.applyBindings(vm, bindingControl[0]);
                 Global.Helpers.SetGridFromSettings(vm.RequestTypesGrid(), gRequestTypesSetting);
                 vm.RequestTypesGrid().bind("dataBound", function (e) {

@@ -106,7 +106,7 @@
                 </div>
             </div>
         </form>
-        <div id="tabs" data-bind="kendoTabStrip: {}, visible: HasPermission(Permissions.Project.ManageSecurity)" style="min-height: 500px;width: 1022px;">
+        <div id="tabs" data-bind="kendoTabStrip: {}, visible: HasPermission(PMNPermissions.Project.ManageSecurity)" style="min-height: 500px;width: 1022px;">
             <ul>
                 <li class="k-state-active">Project Permissions</li>                
                 <li>DataMarts</li>
@@ -300,7 +300,7 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="pull-right">
-                                        <a href="#" role="button" data-bind="click: AddSecurityGroup, visible: HasPermission(Permissions.Project.ManageSecurity)" id="btnAddSecurityGroup" class="btn btn-default"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" />&nbsp;Add Security Group</a>
+                                        <a href="#" role="button" data-bind="click: AddSecurityGroup, visible: HasPermission(PMNPermissions.Project.ManageSecurity)" id="btnAddSecurityGroup" class="btn btn-default"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" />&nbsp;Add Security Group</a>
                                     </div>
                                 </td>
                             </tr>
@@ -408,10 +408,10 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(Permissions.Project.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(Permissions.Project.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(PMNPermissions.Project.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.Project.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(Permissions.Project.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.Project.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>
