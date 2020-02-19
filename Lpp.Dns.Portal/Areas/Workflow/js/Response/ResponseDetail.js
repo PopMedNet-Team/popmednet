@@ -26,6 +26,7 @@ var Workflow;
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, routings, responses, documents, canViewPendingApprovalResponses, exportForFileDistribution) {
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
+                        _this.ResponsesToApprove = [];
                         _this.hasResponseResultsContent = false;
                         var self = _this;
                         _this.IsResponseVisible = ko.observable(null);
@@ -33,30 +34,47 @@ var Workflow;
                         _this.IsResponseLoadFailed = ko.observable(false);
                         _this.Routings = routings;
                         _this.Responses = responses;
+                        _this.ResponsesToApprove = ko.utils.arrayFilter(ko.utils.arrayMap(self.Responses, function (x) { return x.ID; }), function (res) {
+                            var reqDM = ko.utils.arrayFirst(self.Routings, function (route) {
+                                return route.ResponseID.toLowerCase() === res.toLowerCase();
+                            });
+                            return reqDM !== null && reqDM.Status === Dns.Enums.RoutingStatus.AwaitingResponseApproval;
+                        });
                         _this.Documents = documents;
                         var currentResponseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
-                        var responseView = Dns.Enums.TaskItemTypes[$.url().param('view')];
+                        var responseView = $.url().param('view');
                         _this.ResponseView = ko.observable(responseView);
                         _this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
                         _this.ExportExcelUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&view=' + responseView + '&format=xlsx&authToken=' + User.AuthToken;
                         _this.ExportDownloadAllUrl = '/workflow/WorkflowRequests/ExportAllResponses?' + ko.utils.arrayMap(currentResponseIDs, function (r) { return 'id=' + r; }).join('&') + '&authToken=' + User.AuthToken;
-                        _this.isDownloadAllVisible = exportForFileDistribution && (ko.utils.arrayFirst(documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null);
-                        _this.showApproveReject = ko.observable(false);
                         canViewPendingApprovalResponses = canViewPendingApprovalResponses && responses.length > 0;
-                        routings.forEach(function (r) {
-                            if ((currentResponseIDs.indexOf(r.ResponseID) != -1) && r.Status == Dns.Enums.RoutingStatus.AwaitingResponseApproval && canViewPendingApprovalResponses) {
-                                _this.showApproveReject(true);
-                            }
+                        _this.IsResponseVisible(canViewPendingApprovalResponses);
+                        _this.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
+                        _this.showApproveReject = ko.observable(canViewPendingApprovalResponses && _this.ResponsesToApprove.length > 0 && responseView != Dns.Enums.TaskItemTypes.AggregateResponse);
+                        _this.DownloadAllForFDVisible = ko.pureComputed(function () {
+                            //must be export for FD, at least one output document, and no route is pending approval
+                            return exportForFileDistribution && (ko.utils.arrayFirst(self.Documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null)
+                                && (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses);
                         });
-                        self.IsResponseVisible(canViewPendingApprovalResponses);
-                        self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
-                        if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
+                        _this.DownloadAllForMDQVisible = ko.pureComputed(function () {
+                            //must NOT be export for FD, at least one output document, and no route is pending approval
+                            return !exportForFileDistribution &&
+                                (ko.utils.arrayFirst(self.Documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null) &&
+                                (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses) &&
+                                self.IsResponseLoadFailed() == false &&
+                                self.IsResponseVisible() &&
+                                self.hasResponseResultsContent;
+                        });
+                        _this.ShowNoDownloadDueToPendingRoutes = ko.pureComputed(function () {
+                            return self.ResponsesToApprove.length > 0 && !canViewPendingApprovalResponses;
+                        });
+                        _this.NoDownloadDueToPendingRoutesMessage = ko.pureComputed(function () {
+                            return exportForFileDistribution ? 'Download All is not available due to one or more responses pending approval.' : 'Download Results is not available due to one or more responses pending approval.';
+                        });
+                        if (canViewPendingApprovalResponses && _this.hasResponseResultsContent) {
                             Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done(function (responses) {
-                                if (responses == null || responses.length == 0) {
-                                    self.showApproveReject(false);
-                                    self.ResponseContentComplete(true);
+                                if (responses == null || responses.length == 0)
                                     return;
-                                }
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var panels = [];
                                 responses.forEach(function (resp) {
@@ -97,8 +115,11 @@ var Workflow;
                                             for (var i_1 = 0; i_1 < resp.Properties.length; i_1++) {
                                                 var propertyDefinition = resp.Properties[i_1];
                                                 if (propertyDefinition.Name == "LowThreshold") {
-                                                    kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
-                                                    suppressedValues = true;
+                                                    if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
+                                                        //only show the LowThreshold column in individual response view
+                                                        kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
+                                                        suppressedValues = true;
+                                                    }
                                                 }
                                                 else {
                                                     kendoColumns.push({
@@ -198,8 +219,7 @@ var Workflow;
                         self.onApprove = function () {
                             Global.Helpers.ShowDialog('Enter an Approval Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                                 .done(function (comment) {
-                                var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
-                                Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                                Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                                     .done(function () {
                                     //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
@@ -215,8 +235,7 @@ var Workflow;
                         self.onReject = function () {
                             Global.Helpers.ShowDialog('Enter an Reject Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                                 .done(function (comment) {
-                                var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
-                                Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                                Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                                     .done(function () {
                                     //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
@@ -231,7 +250,7 @@ var Workflow;
                         self.onResubmit = function () {
                             Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                                 .done(function (comment) {
-                                var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
+                                var responseIDs = ko.utils.arrayMap(self.Responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
                                     Global.Helpers.RedirectTo(window.top.location.href);

@@ -74,7 +74,6 @@ var Controls;
                         self.AttachmentsDataSource.read();
                     };
                     self.onRowSelectionChange = function (e) {
-                        debugger;
                         var grid = $(e.sender.wrapper).data('kendoGrid');
                         var rows = grid.select();
                         if (rows.length == 0) {

@@ -122,20 +122,7 @@ module Users.Details {
                         }
                     });
                 }
-            });
-            //this.User.Fax.extend({ pattern: {
-            //     message: 'Please enter a valid phone number',
-            //    params: '^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$'
-            //}
-            //});
-            //this.User.Phone.extend({
-            //    pattern: {
-            //        message: 'Please enter a valid phone number',
-            //        params: '^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$'
-            //    }
-            //});
-
-            
+            });            
 
             //Permissions
             this.UserAcls = ko.observableArray(userAcls.map((a) => {
@@ -258,47 +245,189 @@ module Users.Details {
         public onActivate(e) {
             if (e != undefined && e.item.id == "tbAuthentication") {
                 
-                var authGrid = $('#AuthGrid');
-                if (authGrid.hasClass("k-grid"))
-                {
-                    authGrid.empty();
+                let authGrid = $('#AuthGrid');
+                if (authGrid.children().length > 0) {
+                    for (var i = 0; i < authGrid.children().length; i++) {
+                        let child = authGrid.children()[i];
+                        child.remove();
+                    }
                 }
-                authGrid.kendoGrid({
-                    dataSource: {
-                        type: "webapi",
-                        serverPaging: true,
-                        serverSorting: true,
-                        pageSize: 25,
-                        transport: {
-                            read: {
-                                cache: false,
-                                url: Global.Helpers.GetServiceUrl("/Users/ListSuccessfulAudits?$orderby=DateTime desc&$filter=UserID eq " + vm.User.ID() + ""),
-                            }
-                        },
-                        schema: {
-                            model: kendo.data.Model.define(Dns.Interfaces.KendoModelUserAuthenticationDTO)
-                        },
-                    },
-                    sortable: true,
-                    filterable: {
-                        operators: {
-                            date: {
-                                gt: 'Is after',
-                                lt: 'Is before'
+
+                Dns.WebApi.Users.ListDistinctEnvironments(vm.User.ID()).done((audits) => {
+                    let environments = ko.utils.arrayGetDistinctValues(audits.map(item => {
+                        if (item.Environment === null || item.Environment.trim() === "") {
+                            return {
+                                Name: "Other",
+                                ID: "Other"
                             }
                         }
-                    },
-                    resizable: true,
-                    reorderable: true,
-                    scrollable: {
-                        virtual: true
-                    },
-                    pageable: false,
-                    columns: [
-                        { field: 'DateTime', title: 'Date', format: Constants.DateTimeFormatter, width: 180 },
-                        { field: 'Description', title: 'Description' }
-                    ]
-                }).data("kendoGrid");
+                        return {
+                            Name: item.Environment,
+                            ID: item.Environment.replace(" ", "")
+                        }
+                    }));
+
+                    Dns.WebApi.Users.GetSetting(environments.map((item) => { return "Users.Details." + item.ID + ":" + User.ID })).done(settings => {
+                        let mainTable = $('<table class="panel-body table table-stripped table-bordered table-hover"></table>');
+                        let tableBody = $('<tbody></tbody>')
+
+                        for (var i = 0; i < environments.length; i++) {
+                            let environment = environments[i];
+
+                            let mainRow = $('<tr style="background:#f5f5f5"></tr>');
+                            let mainCell = $('<td></td>');
+                            let icon = $('<i id="img-' + environment.ID + '" class="k-icon k-i-expand"></i><span>' + environment.Name + '</span>').click(function () {
+                                var img = $('#img-' + environment.ID);
+                                var child = $('#auth-' + environment.ID);
+                                var childGrid = $('#grid-' + environment.ID);
+                                if (img.hasClass('k-i-expand')) {
+                                    img.removeClass('k-i-expand');
+                                    img.addClass('k-i-collapse');
+                                    // When the grid is hidden, size and virtual scroll options are not set.  Due to this, we need to show it, then resize and reset the virtual options.
+                                    child.show();
+                                    childGrid.data("kendoGrid").resize();
+                                    childGrid.data("kendoGrid").setOptions({
+                                        scrollable: {
+                                            virtual: true
+                                        }
+                                    });
+
+                                    let setting = ko.utils.arrayFirst(settings, (item) => {
+                                        return item.Key === "Users.Details." + environment.ID + ":" + User.ID
+                                    })
+
+                                    if (setting != null && setting !== undefined && setting.Setting.trim() !== "") {
+                                        Global.Helpers.SetGridFromSettings(grid.data("kendoGrid"), setting.Setting);
+                                    }
+                                }
+                                else {
+                                    img.addClass('k-i-expand');
+                                    img.removeClass('k-i-collapse');
+                                    child.hide();
+                                }
+                            });
+
+                            mainCell.append(icon);
+                            mainRow.append(mainCell);
+                            tableBody.append(mainRow);
+                            let row = $('<tr id="auth-' + environment.ID + '" style="display: none;"></tr>');
+                            let cell = $('<td></td>');
+
+                            let grid = $('<div id="grid-' + environment.ID + '"></div>');
+                            if (environment.ID === "Other") {
+                                grid.kendoGrid({
+                                    dataSource: {
+                                        type: "webapi",
+                                        serverPaging: true,
+                                        serverSorting: true,
+                                        serverGrouping: false,
+                                        pageSize: 100,
+                                        transport: {
+                                            read: {
+                                                cache: false,
+                                                url: Global.Helpers.GetServiceUrl("/Users/ListAuthenticationAudits?$orderby=DateTime desc&$filter=Environment eq null and UserID eq " + vm.User.ID() + ""),
+                                            }
+                                        },
+                                        schema: {
+                                            model: kendo.data.Model.define(Dns.Interfaces.KendoModelUserAuthenticationDTO)
+                                        },
+                                    },
+                                    height: "500px",
+                                    sortable: true,
+                                    filterable: {
+                                        operators: {
+                                            date: {
+                                                gt: 'Is after',
+                                                lt: 'Is before'
+                                            }
+                                        }
+                                    },
+                                    resizable: true,
+                                    reorderable: true,
+                                    scrollable: {
+                                        virtual: true
+                                    },
+                                    columnMenu: true,
+                                    pageable: false,
+                                    columns: [
+                                        { field: 'DateTime', title: 'Date', format: Constants.DateTimeFormatter, width: 180 },
+                                        { field: 'Description', title: 'Description' },
+                                        { field: 'DMCVersion', title: 'DataMart Client Version' },
+                                        { field: 'Success', title: 'Success', hidden: true },
+                                        { field: 'Source', title: 'Source', hidden: true }
+                                    ]
+                                }).data("kendoGrid");
+
+                            } else {
+                                grid.kendoGrid({
+                                    dataSource: {
+                                        type: "webapi",
+                                        serverPaging: true,
+                                        serverSorting: true,
+                                        serverGrouping: false,
+                                        pageSize: 100,
+                                        transport: {
+                                            read: {
+                                                cache: false,
+                                                url: Global.Helpers.GetServiceUrl("/Users/ListAuthenticationAudits?$orderby=DateTime desc&$filter=Environment eq '" + environment.Name + "' and UserID eq " + vm.User.ID() + ""),
+                                            }
+                                        },
+                                        schema: {
+                                            model: kendo.data.Model.define(Dns.Interfaces.KendoModelUserAuthenticationDTO)
+                                        },
+                                    },
+                                    sortable: true,
+                                    filterable: {
+                                        operators: {
+                                            date: {
+                                                gt: 'Is after',
+                                                lt: 'Is before'
+                                            }
+                                        }
+                                    },
+                                    height: "500px",
+                                    resizable: true,
+                                    reorderable: true,
+                                    scrollable: {
+                                        virtual: true
+                                    },
+                                    columnMenu: true,
+                                    pageable: false,
+                                    columns: [
+                                        { field: 'DateTime', title: 'Date', format: Constants.DateTimeFormatter, width: 180 },
+                                        { field: 'Description', title: 'Description' },
+                                        { field: 'DMCVersion', title: 'DataMart Client Version' },
+                                        { field: 'Success', title: 'Success', hidden: true },
+                                        { field: 'Source', title: 'Source', hidden: true }
+                                    ]
+                                }).data("kendoGrid");
+                            }
+                            
+
+                            grid.data("kendoGrid").bind("dataBound", function (e) {
+                                Users.SetSetting("Users.Details." + environment.ID + ":" + User.ID, Global.Helpers.GetGridSettings(grid.data("kendoGrid")));
+                            });
+
+                            grid.data("kendoGrid").bind("columnShow", function (e) {
+                                Users.SetSetting("Users.Details." + environment.ID + ":" + User.ID, Global.Helpers.GetGridSettings(grid.data("kendoGrid")));
+                            });
+
+                            grid.data("kendoGrid").bind("columnHide", function (e) {
+                                Users.SetSetting("Users.Details." + environment.ID + ":" + User.ID, Global.Helpers.GetGridSettings(grid.data("kendoGrid")));
+                            });
+
+                            grid.data("kendoGrid").bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
+
+
+                            cell.append(grid);
+                            row.append(cell);
+                            tableBody.append(row);
+                        }
+                        mainTable.append(tableBody);
+                        authGrid.append(mainTable);
+
+                    })
+                });
             }
         }
 

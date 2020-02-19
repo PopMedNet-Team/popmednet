@@ -117,7 +117,7 @@
                 <li data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">Permissions</li>
                 <li data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">Events</li>
                 <li data-bind="visible: HasPermission(PMNPermissions.User.ManageNotifications), css: {'k-state-active': HasPermission(PMNPermissions.User.ManageNotifications) && !HasPermission(PMNPermissions.User.ManageSecurity)}">Notifications</li>
-                <li id="tbAuthentication">Authentication History</li>
+                <li data-bind="visible: HasPermission(PMNPermissions.User.View)" id="tbAuthentication">Authentication History</li>
             </ul>
             <div class="tab-body" data-bind="visible: HasPermission(PMNPermissions.User.ManageSecurity)">
                 <br />
@@ -221,7 +221,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-body">
+            <div class="tab-body" style="padding:0px;" data-bind="visible: HasPermission(PMNPermissions.User.View)">
                 <div id="AuthGrid"></div>
                 @*<div id="gResults" data-bind="kendoGrid: {
                     data: dataSource,

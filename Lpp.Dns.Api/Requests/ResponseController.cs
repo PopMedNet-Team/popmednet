@@ -56,6 +56,11 @@ namespace Lpp.Dns.Api.Requests
         [HttpPost]
         public async Task<HttpResponseMessage> ApproveResponses(ApproveResponseDTO responses)
         {
+            if(responses == null || responses.ResponseIDs == null || responses.ResponseIDs.Any() == false)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No responses were specified to approve.");
+            }
+
             var hasPermission = (from r in DataContext.Responses
                                  let userID = Identity.ID
                                  let permissionID = PermissionIdentifiers.DataMartInProject.ApproveResponses.ID
@@ -82,7 +87,7 @@ namespace Lpp.Dns.Api.Requests
 
             var requests = GetRequests(responses.ResponseIDs.ToArray());
 
-            var routes = await DataContext.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Responses.Any(r => responses.ResponseIDs.Contains(r.ID))).ToArrayAsync();
+            var routes = await DataContext.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Responses.Any(r => responses.ResponseIDs.Contains(r.ID)) && dm.Status == RoutingStatus.AwaitingResponseApproval).ToArrayAsync();
 
             var routeIDs = routes.Select(rt => rt.ID).ToArray();
             var statusChangeLogs = await DataContext.LogsRoutingStatusChange.Where(l => routeIDs.Contains(l.RequestDataMartID) && (l.ResponseID == null || (l.ResponseID.HasValue && responses.ResponseIDs.Contains(l.ResponseID.Value)))).ToArrayAsync();
@@ -127,6 +132,11 @@ namespace Lpp.Dns.Api.Requests
         [HttpPost]
         public async Task<HttpResponseMessage> RejectResponses(RejectResponseDTO responses)
         {
+            if (responses == null || responses.ResponseIDs == null || responses.ResponseIDs.Any() == false)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "No responses were specified to reject.");
+            }
+
             var globalAclFilter = DataContext.GlobalAcls.FilterAcl(Identity, PermissionIdentifiers.DataMartInProject.ApproveResponses);
             var datamartsAclFilter = DataContext.DataMartAcls.FilterAcl(Identity, PermissionIdentifiers.DataMartInProject.ApproveResponses);
             var projectAclFilter = DataContext.ProjectAcls.FilterAcl(Identity, PermissionIdentifiers.DataMartInProject.ApproveResponses);
@@ -159,7 +169,7 @@ namespace Lpp.Dns.Api.Requests
 
             var requests = GetRequests(responses.ResponseIDs.ToArray());
 
-            var routes = DataContext.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Responses.Any(r => responses.ResponseIDs.Contains(r.ID)));
+            var routes = DataContext.RequestDataMarts.Include(dm => dm.Responses).Where(dm => dm.Responses.Any(r => responses.ResponseIDs.Contains(r.ID)) && dm.Status == RoutingStatus.AwaitingResponseApproval);
             foreach (var route in routes)
             {
                 route.Status = DTO.Enums.RoutingStatus.ResponseRejectedAfterUpload;
@@ -947,7 +957,7 @@ namespace Lpp.Dns.Api.Requests
             combinedResponse.ResponseDateTime = DateTime.UtcNow;//TODO: should this be based on a response date? the most recent or earlies?
 
             //get the aggregatable properties, assume that all the responses have the same aggregation definition
-            IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Aggregation.Select.Any()).Select(r => r.Aggregation.Select).FirstOrDefault();
+            IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Aggregation.Select.Any()).Select(r => r.Aggregation.Select.Where(pd => !string.Equals("LowThreshold", pd.As, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             //add a default groupingkey, this is needed for when there is only a single property in the response and it is getting aggregated
             propertyDefinitions = propertyDefinitions.Union(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = DefaultGroupingKey, Type = typeof(string).FullName } });
 
@@ -996,6 +1006,8 @@ namespace Lpp.Dns.Api.Requests
             else
             {
                 var aggregate = responsesToAggregate.Where(r => r.Aggregation != null).Select(r => r.Aggregation).FirstOrDefault();
+                //in past some responses included the LowThreshold column in the aggregation select, remove explicitly from the combined aggregation defintion
+                aggregate.Select = aggregate.Select.Where(pd => !string.Equals("LowThreshold", pd.As, StringComparison.OrdinalIgnoreCase)).ToArray();
 
                 List<string> selectBy = new List<string>(aggregate.Select.Count() + 10);
                 foreach (Lpp.Dns.DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO prop in aggregate.Select)
@@ -1255,7 +1267,7 @@ namespace Lpp.Dns.Api.Requests
                                         let groups = rsp.ResponseGroup
                                         let datamart = rsp.RequestDataMart.DataMart
                                         where responseIDs.Contains(rsp.ID)
-                                        select new { ResponseID = rsp.ID, Title = groups != null ? groups.Name : datamart.Name }).ToArrayAsync();
+                                        select new { ResponseID = rsp.ID, Title = groups != null ? groups.Name : datamart.Name, Acronym = groups != null ? groups.Name : datamart.Acronym }).ToArrayAsync();
 
 
             string filename = (DataContext.Requests.Where(r => r.ID == requestID).Select(r => r.Name).FirstOrDefault() ?? "response");
@@ -1387,6 +1399,8 @@ namespace Lpp.Dns.Api.Requests
                             var response = requestResponses[sheetID - 1];
 
                             string responseSourceName = dataSourceName.Where(t => t.ResponseID == response.ID).Select(t => t.Title).FirstOrDefault();
+                            string tabName = dataSourceName.Where(t => t.ResponseID == response.ID).Select(t => t.Acronym).FirstOrDefault();
+
                             if (string.IsNullOrWhiteSpace(responseSourceName))
                             {
                                 var aggregationDefinition = requestResponses[sheetID - 1].Aggregation;
@@ -1397,10 +1411,11 @@ namespace Lpp.Dns.Api.Requests
                             //responseSourceName = string.Empty;
                             //Max length for a worksheet name is 31 characters.
                             responseSourceName = (string.IsNullOrWhiteSpace(responseSourceName) ? "Sheet " + sheetID : responseSourceName).Trim().MaxLength(30);
+                            tabName = (!string.IsNullOrWhiteSpace(responseSourceName) && !string.IsNullOrWhiteSpace(tabName) ? tabName : "Sheet " + sheetID).Trim().MaxLength(30);
 
                             WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
 
-                            Sheet sheet = new Sheet() { Id = s.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = sheetID, Name = responseSourceName };
+                            Sheet sheet = new Sheet() { Id = s.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = sheetID, Name = tabName };
                             sheets.Append(sheet);
 
                             SheetData sheetData = new SheetData();

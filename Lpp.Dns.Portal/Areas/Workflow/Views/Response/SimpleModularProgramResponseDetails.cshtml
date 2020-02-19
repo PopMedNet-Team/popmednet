@@ -47,7 +47,13 @@
                                 <!--ko if: file.DocumentType == 0-->
                                 <i class="glyphicon glyphicon-arrow-left"></i>
                                 <!--/ko-->
-                                <!--ko ifnot: file.DocumentType == 0-->
+                                <!--ko if: file.DocumentType == 2-->
+                                <i class="glyphicon glyphicon-arrow-left"></i>
+                                <!--/ko-->
+                                <!--ko if: file.DocumentType == 1-->
+                                <i class="glyphicon glyphicon-arrow-right"></i>
+                                <!--/ko-->
+                                <!--ko if: file.DocumentType == 3-->
                                 <i class="glyphicon glyphicon-arrow-right"></i>
                                 <!--/ko-->
                                 <span data-bind="text: file.DocumentType == null? 'Output' : Global.Helpers.GetEnumString(Dns.Enums.RequestDocumentTypeTranslation, file.DocumentType)"></span>

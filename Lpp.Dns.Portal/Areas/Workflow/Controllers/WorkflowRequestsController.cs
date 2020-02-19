@@ -119,7 +119,7 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
 
                 web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(model.AuthenticationType, authToken);
                 var response = await web.GetAsync(WebConfigurationManager.AppSettings["ServiceUrl"] + "response/ExportAllAsZip?" + string.Join("&", id.Select(r => "id=" + r).ToArray()));
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
                     return HttpNotFound();
                 }

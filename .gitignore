@@ -357,6 +357,7 @@ ASALocalRun/
 /Lpp.Dns.Portal/Scripts/knockout-kendo
 /Lpp.Dns.Portal/Scripts/moment
 /Lpp.Dns.Portal/Scripts/CustomBindings/*.js
+/Lpp.Dns.Portal/Scripts/signalr/*
 /Lpp.Dns.Portal/Scripts/page/*.js.map
 /Lpp.Dns.Portal/Scripts/page/*.js
 /Lpp.Dns.Portal/Scripts/TermValidators/*.js.map
@@ -365,3 +366,7 @@ ASALocalRun/
 /Lpp.Dns.Portal/Scripts/Common.js.map
 /Lpp.Dns.Portal/Scripts/utilities.js
 /Lpp.Dns.Portal/Scripts/utilities.js.map
+/Lpp.Dns.Data/ConnectionStrings.config
+/Lpp.Dns.Portal/ConnectionStrings.config
+/Lpp.Dns.Sso/**/*.js
+/Lpp.Dns.Sso/**/*.js.map

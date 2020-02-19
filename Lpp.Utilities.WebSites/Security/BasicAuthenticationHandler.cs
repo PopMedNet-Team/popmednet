@@ -48,7 +48,11 @@ namespace Lpp.Utilities.WebSites.Security
                 var decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(authToken)).Split(':');
                 if(decodedToken.Length > 1)
                 {
-                    employerID = Guid.Parse(decodedToken[1]);
+                    //employerID = Guid.Parse(decodedToken[1]);
+                    if(Guid.TryParse(decodedToken[1], out Guid emp))
+                    {
+                        employerID = emp;
+                    }                        
                 }
 
                 Lpp.Utilities.WebSites.Models.LoginResponseModel.DecryptCredentials(decodedToken[0], out username, out password);

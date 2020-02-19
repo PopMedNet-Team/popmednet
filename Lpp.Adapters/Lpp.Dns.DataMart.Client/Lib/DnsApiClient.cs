@@ -1,9 +1,12 @@
 ﻿using log4net;
+using Lpp.Dns.DTO.DataMartClient;
+using Lpp.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,16 +21,8 @@ namespace Lpp.Dns.DataMart.Client.Lib
         const string Path = "/DMC";
         const string AdaptersPath = "/Adapters";
 
-        public DnsApiClient(string host) : base(host)
-        {
-        }
-
-        public DnsApiClient(string host, string userName, string password) : base(host, userName, password, null)
-        {
-        }
-
         public DnsApiClient(Lpp.Dns.DataMart.Lib.NetWorkSetting ns, System.Security.Cryptography.X509Certificates.X509Certificate2 cert = null)
-            : base(ns.HubWebServiceUrl, ns.Username, ns.DecryptedPassword, cert)
+            : base(ns, cert)
         {
             this._Client.Timeout = ns.WcfReceiveTimoutTimeSpan;
         }
@@ -284,22 +279,22 @@ namespace Lpp.Dns.DataMart.Client.Lib
 
     internal abstract class HttpClientEx : IDisposable
     {
+        readonly static string _FileVersion;
+        readonly static string _ProductVersion;
         readonly string _Credentials;
+        protected readonly DataMart.Lib.NetWorkSetting _NetworkSetting;
         public readonly string _Host;
         public readonly HttpClient _Client;
 
-        public HttpClientEx(string host)
+        static HttpClientEx()
         {
-            this._Credentials = null;
-            this._Host = host.TrimEnd("/".ToCharArray());
-            this._Client = new HttpClient()
-            {
-                Timeout = new TimeSpan(0, 10, 0)
-            };
+            _FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            _ProductVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
         }
 
-        public HttpClientEx(string host, string userName, string password, System.Security.Cryptography.X509Certificates.X509Certificate2 cert)
+        public HttpClientEx(Lpp.Dns.DataMart.Lib.NetWorkSetting ns, System.Security.Cryptography.X509Certificates.X509Certificate2 cert)
         {
+            _NetworkSetting = ns;
             if (cert == null)
             {
                 this._Client = new HttpClient()
@@ -317,9 +312,14 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 };
             }
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11;
-            this._Credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + password));
-            this._Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _Credentials);
-            this._Host = host.TrimEnd("/".ToCharArray());
+
+            var metadata = new DMCMetadata { DMCFileVersion = _FileVersion, DMCProductVersion = _ProductVersion};
+
+            var creds = Crypto.EncryptStringAES(string.Format("{0}:{1}", _NetworkSetting.Username, _NetworkSetting.DecryptedPassword), "PopMedNet Authorization", _NetworkSetting.EncryptionSalt);
+            this._Credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(creds + ":"+ "" + ":" + JsonConvert.SerializeObject(metadata)));
+
+            this._Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("PopMedNet", _Credentials);
+            this._Host = ns.HubWebServiceUrl.TrimEnd("/".ToCharArray());
         }
 
         public void Dispose()

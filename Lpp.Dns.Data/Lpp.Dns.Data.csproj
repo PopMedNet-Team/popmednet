@@ -2971,6 +2971,14 @@
     <Compile Include="Migrations\201906241906434_AddDataMartAvailabilityPeriod_v2Table.Designer.cs">
       <DependentUpon>201906241906434_AddDataMartAvailabilityPeriod_v2Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001231741095_AlterAuthenticationLogs.cs" />
+    <Compile Include="Migrations\202001231741095_AlterAuthenticationLogs.Designer.cs">
+      <DependentUpon>202001231741095_AlterAuthenticationLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001271640264_AddDMCVersionToAuditLogs.cs" />
+    <Compile Include="Migrations\202001271640264_AddDMCVersionToAuditLogs.Designer.cs">
+      <DependentUpon>202001271640264_AddDMCVersionToAuditLogs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3761,6 +3769,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906241906434_AddDataMartAvailabilityPeriod_v2Table.resx">
       <DependentUpon>201906241906434_AddDataMartAvailabilityPeriod_v2Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001231741095_AlterAuthenticationLogs.resx">
+      <DependentUpon>202001231741095_AlterAuthenticationLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271640264_AddDMCVersionToAuditLogs.resx">
+      <DependentUpon>202001271640264_AddDMCVersionToAuditLogs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

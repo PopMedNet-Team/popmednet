@@ -372,7 +372,7 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.INotificationDTO[]>('Users/GetNotifications' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static ListSuccessfulAudits($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IUserAuthenticationDTO[]>{
+	 	 public static ListAuthenticationAudits($filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IUserAuthenticationDTO[]>{
 	 	 	 var params = '';
              if($filter) params += '&$filter=' + $filter;
 			if($select) params += '&$select=' + $select;
@@ -382,7 +382,21 @@ module Dns.WebApi {
 	 	 	 if (params.length > 0)
 	 	 	 	 params = '?' + params.substr(1);
 
-	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IUserAuthenticationDTO[]>('Users/ListSuccessfulAudits' + params, doNotHandleFail);
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IUserAuthenticationDTO[]>('Users/ListAuthenticationAudits' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static ListDistinctEnvironments(userID: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.IUserAuthenticationDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (userID != null) params += '&userID=' + userID;
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IUserAuthenticationDTO[]>('Users/ListDistinctEnvironments' + params, doNotHandleFail);
 	 	 }
 
 	 	 public static UpdateSubscribedEvents(subscribedEvents: Dns.Interfaces.IUserEventSubscriptionDTO[], doNotHandleFail?: boolean):JQueryDeferred<any[]>{

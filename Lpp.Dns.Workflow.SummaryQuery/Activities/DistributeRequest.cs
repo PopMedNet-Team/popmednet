@@ -59,7 +59,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             }
 
             var permissions = await db.GetGrantedWorkflowActivityPermissionsForRequestAsync(_workflow.Identity, _entity);
-            
+
             if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditTask) && (activityResultID.Value == SaveResultID || activityResultID.Value == ModifyResultID))
             {
                 return new ValidationResult
@@ -179,7 +179,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                 throw new ArgumentNullException(CommonMessages.ActivityResultIDRequired);
 
             var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-            
+
             if (activityResultID.Value == SaveResultID)
             {
                 if (_entity.Private)
@@ -210,10 +210,10 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     //IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
 
                     Guid[] documentRevisionSets = await (from d in db.Documents.AsNoTracking()
-                                                      join ar in db.ActionReferences on d.ItemID equals ar.TaskID
-                                                      where ar.ItemID == _entity.ID
-                                                      && d.RevisionSetID.HasValue
-                                                      select d.RevisionSetID.Value).Distinct().ToArrayAsync();
+                                                         join ar in db.ActionReferences on d.ItemID equals ar.TaskID
+                                                         where ar.ItemID == _entity.ID
+                                                         && d.RevisionSetID.HasValue
+                                                         select d.RevisionSetID.Value).Distinct().ToArrayAsync();
 
                     IEnumerable<Document> documents = await (from d in db.Documents.AsNoTracking()
                                                              join x in (
@@ -245,8 +245,9 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                     string submitterEmail = await db.Users.Where(u => u.ID == _workflow.Identity.ID).Select(u => u.Email).SingleAsync();
 
                     //update the request
-                    _entity.SubmittedByID = _workflow.Identity.ID;
-                    _entity.SubmittedOn = DateTime.UtcNow;
+                    var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.RequestPendingDistribution).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
                     _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
                     _entity.RejectedByID = null;
                     _entity.RejectedOn = null;
@@ -269,8 +270,8 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         {
                             currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
                         }
-                        currentResponse.SubmittedByID = _workflow.Identity.ID;
-                        currentResponse.SubmittedOn = DateTime.UtcNow;
+                        currentResponse.SubmittedByID = previousStatus.UserID;
+                        currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                         //add the request document associations
                         for (int i = 0; i < documentRevisionSets.Count(); i++)
@@ -348,8 +349,10 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
 
                     document.SetData(db, documentContent);
 
-                    _entity.SubmittedByID = _workflow.Identity.ID;
-                    _entity.SubmittedOn = DateTime.UtcNow;
+                    var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.DraftReview).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
                     _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
                     _entity.Private = false;
                     _entity.RejectedByID = null;
@@ -385,8 +388,8 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         {
                             currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
                         }
-                        currentResponse.SubmittedByID = _workflow.Identity.ID;
-                        currentResponse.SubmittedOn = DateTime.UtcNow;
+                        currentResponse.SubmittedByID = previousStatus.UserID;
+                        currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                         if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == document.RevisionSetID.Value))
                         {
@@ -461,7 +464,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                 throw new NotSupportedException(CommonMessages.ActivityResultNotSupported);
             }
         }
-        
+
         public static readonly Guid FileUploadTermID = new Guid("2F60504D-9B2F-4DB1-A961-6390117D3CAC");
         internal class FileUploadValues
         {

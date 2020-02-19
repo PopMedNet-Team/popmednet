@@ -98,7 +98,6 @@ module Controls.WFDocuments.List {
             };
 
             self.onRowSelectionChange = (e) => {
-                debugger;
                 let grid = $(e.sender.wrapper).data('kendoGrid');
                 let rows = grid.select();
                 if (rows.length == 0) {

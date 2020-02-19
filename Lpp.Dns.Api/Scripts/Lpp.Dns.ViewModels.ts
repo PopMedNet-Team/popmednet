@@ -2329,7 +2329,10 @@ module Dns.ViewModels {
 	 	 public Success: KnockoutObservable<boolean>;
 	 	 public Description: KnockoutObservable<string>;
 	 	 public IPAddress: KnockoutObservable<string>;
-	 	 public Enviorment: KnockoutObservable<string>;
+	 	 public Environment: KnockoutObservable<string>;
+	 	 public Source: KnockoutObservable<string>;
+	 	 public Details: KnockoutObservable<string>;
+	 	 public DMCVersion: KnockoutObservable<string>;
 	 	 public DateTime: KnockoutObservable<Date>;
 	 	 constructor(UserAuthenticationDTO?: Dns.Interfaces.IUserAuthenticationDTO)
 	 	  {
@@ -2340,7 +2343,10 @@ module Dns.ViewModels {
 	 	 	 	 this.Success = ko.observable<any>();
 	 	 	 	 this.Description = ko.observable<any>();
 	 	 	 	 this.IPAddress = ko.observable<any>();
-	 	 	 	 this.Enviorment = ko.observable<any>();
+	 	 	 	 this.Environment = ko.observable<any>();
+	 	 	 	 this.Source = ko.observable<any>();
+	 	 	 	 this.Details = ko.observable<any>();
+	 	 	 	 this.DMCVersion = ko.observable<any>();
 	 	 	 	 this.DateTime = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.ID = ko.observable(UserAuthenticationDTO.ID);
@@ -2348,7 +2354,10 @@ module Dns.ViewModels {
 	 	 	 	 this.Success = ko.observable(UserAuthenticationDTO.Success);
 	 	 	 	 this.Description = ko.observable(UserAuthenticationDTO.Description);
 	 	 	 	 this.IPAddress = ko.observable(UserAuthenticationDTO.IPAddress);
-	 	 	 	 this.Enviorment = ko.observable(UserAuthenticationDTO.Enviorment);
+	 	 	 	 this.Environment = ko.observable(UserAuthenticationDTO.Environment);
+	 	 	 	 this.Source = ko.observable(UserAuthenticationDTO.Source);
+	 	 	 	 this.Details = ko.observable(UserAuthenticationDTO.Details);
+	 	 	 	 this.DMCVersion = ko.observable(UserAuthenticationDTO.DMCVersion);
 	 	 	 	 this.DateTime = ko.observable(UserAuthenticationDTO.DateTime);
 	 	 	 }
 	 	 }
@@ -2360,7 +2369,10 @@ module Dns.ViewModels {
 	 	 	 	Success: this.Success(),
 	 	 	 	Description: this.Description(),
 	 	 	 	IPAddress: this.IPAddress(),
-	 	 	 	Enviorment: this.Enviorment(),
+	 	 	 	Environment: this.Environment(),
+	 	 	 	Source: this.Source(),
+	 	 	 	Details: this.Details(),
+	 	 	 	DMCVersion: this.DMCVersion(),
 	 	 	 	DateTime: this.DateTime(),
 	 	 	  };
 	 	  }

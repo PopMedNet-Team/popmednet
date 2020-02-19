@@ -1,4 +1,3 @@
-/// <reference path="../responses.common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -16,7 +15,7 @@ var ESPQueryBuilder;
 (function (ESPQueryBuilder) {
     var vm;
     var _bindingControl;
-    var HeaderSpecification = /** @class */ (function () {
+    var HeaderSpecification = (function () {
         function HeaderSpecification(text, tooltip, align) {
             this.text = text;
             this.tooltip = tooltip;
@@ -25,7 +24,7 @@ var ESPQueryBuilder;
         return HeaderSpecification;
     }());
     ESPQueryBuilder.HeaderSpecification = HeaderSpecification;
-    var ViewModel = /** @class */ (function () {
+    var ViewModel = (function () {
         function ViewModel(model) {
             this.SimpleResultVM = null;
             this.OtherLocationsVM = null;
@@ -38,7 +37,6 @@ var ESPQueryBuilder;
                 this.OtherLocationsVM = new OtherLocationsViewModel(model);
                 if (model.StratificationIncludesLocations) {
                     this.ProjectedOnLocationsVM = new ProjectedOnLocationsViewModel(model);
-                    //set the initial export to be projected for locations
                     self.ProjectedOnLocationsVM.UpdateExportArguments();
                 }
                 else {
@@ -61,7 +59,7 @@ var ESPQueryBuilder;
         return ViewModel;
     }());
     ESPQueryBuilder.ViewModel = ViewModel;
-    var SimpleResultViewModel = /** @class */ (function () {
+    var SimpleResultViewModel = (function () {
         function SimpleResultViewModel(model, StratificationFlags, AgeGroupTitle) {
             var _this = this;
             if (StratificationFlags === void 0) { StratificationFlags = Stratifications.None; }
@@ -124,7 +122,7 @@ var ESPQueryBuilder;
         return SimpleResultViewModel;
     }());
     ESPQueryBuilder.SimpleResultViewModel = SimpleResultViewModel;
-    var OtherLocationsViewModel = /** @class */ (function (_super) {
+    var OtherLocationsViewModel = (function (_super) {
         __extends(OtherLocationsViewModel, _super);
         function OtherLocationsViewModel(model) {
             var _this = _super.call(this, model) || this;
@@ -171,7 +169,6 @@ var ESPQueryBuilder;
                     $.getJSON("/api/demographics/GetRegionsAndTowns?country=us&state=" + encodeURIComponent(state)).done(function (results) {
                         self.Regions(results.Regions);
                         self.Towns(results.Towns);
-                        //Get the census data here
                         self.UpdateCensus();
                     });
                 }
@@ -189,15 +186,12 @@ var ESPQueryBuilder;
             if (this.stratifyProjectedViewByLocation) {
                 this.Headers.push(new HeaderSpecification("Location", "", "left"));
             }
-            // Join on Age, if appropriate
             if (this.stratifyProjectedViewByAgeGroup) {
                 this.Headers.push(new HeaderSpecification(this.AgeGroupTitle, "", "left"));
             }
-            // Join on Gender, if appropriate
             if (this.stratifyProjectedViewByGender) {
                 this.Headers.push(new HeaderSpecification("Sex", "", "left"));
             }
-            // Join on Ethinicity, if appropriate
             if (this.stratifyProjectedViewByEthnicity) {
                 this.Headers.push(new HeaderSpecification("Race-Ethnicity", "The race-ethnicity mappings are derived from selected US Census stratifications and ESP race and ethnicity data.", "left"));
             }
@@ -214,14 +208,11 @@ var ESPQueryBuilder;
             this.UpdateCensus();
         };
         OtherLocationsViewModel.prototype.UpdateCensus = function () {
-            // UpdateCensus will be available to activate only for projected view.
-            // Projected view is always aggregated, so there is only one table.  
             var self = this;
             var selected = $(":selected", $("#cboLocation"));
             var optGroup = selected.closest("optgroup").attr("label");
             var table = self.model.RawData.Table;
             if (self.Location()) {
-                //Selected, go look it up, first determine if it's a region or a town.
                 selected = $(":selected", $("#cboLocation"));
                 optGroup = selected.closest("optgroup").attr("label");
                 switch (optGroup) {
@@ -248,7 +239,6 @@ var ESPQueryBuilder;
                 });
             }
             else {
-                //Nothing selected, hide projection data.
                 self.CensusData.removeAll();
                 var q = Enumerable.From(table).Select(function (x) { return ({
                     AgeGroup: x[self.AgeGroupTitle],
@@ -260,8 +250,6 @@ var ESPQueryBuilder;
                 self.PopulateObservableTables(q);
             }
         };
-        /// Performs an inner join operation between base query and census data on any combination of age groups, ethnicity and gender.
-        /// Returns a joined table.
         OtherLocationsViewModel.prototype.JoinBaseAndCensus = function (base, census) {
             var _this = this;
             var censusTotal = Enumerable.From(census).Sum(function (x) { return x.Count; });
@@ -271,7 +259,6 @@ var ESPQueryBuilder;
             $.each(base, function (tindex, outer) {
                 $.each(census, function (cindex, inner) {
                     var row = null;
-                    // Join on Age, Gender, Ethnicity
                     if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByGender && _this.stratifyProjectedViewByEthnicity) {
                         if (_this.GetAgeGroup(outer[_this.AgeGroupTitle]) == inner.AgeGroup && outer.Sex.substring(0, 1) == inner.Gender &&
                             _this.GetEthnicity(outer.Ethnicity) == inner.Ethnicity) {
@@ -283,7 +270,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Gender and Ethnicity
                     else if (_this.stratifyProjectedViewByGender && _this.stratifyProjectedViewByEthnicity) {
                         if (outer.Sex.substring(0, 1) == inner.Gender && _this.GetEthnicity(outer.Ethnicity) == inner.Ethnicity) {
                             row = {
@@ -293,7 +279,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Age, Gender
                     else if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByGender) {
                         if (_this.GetAgeGroup(outer[_this.AgeGroupTitle]) == inner.AgeGroup && outer.Sex.substring(0, 1) == inner.Gender) {
                             row = {
@@ -303,7 +288,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Age, Ethnicity
                     else if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByEthnicity) {
                         if (_this.GetAgeGroup(outer[_this.AgeGroupTitle]) == inner.AgeGroup && _this.GetEthnicity(outer.Ethnicity) == inner.Ethnicity) {
                             row = {
@@ -313,7 +297,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Age
                     else if (_this.stratifyProjectedViewByAgeGroup) {
                         if (_this.GetAgeGroup(outer[_this.AgeGroupTitle]) == inner.AgeGroup) {
                             row = {
@@ -322,7 +305,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Gender
                     else if (_this.stratifyProjectedViewByGender) {
                         if (outer.Sex.substring(0, 1) == inner.Gender) {
                             row = {
@@ -331,7 +313,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // Join on Ethinicity
                     else if (_this.stratifyProjectedViewByEthnicity) {
                         if (_this.GetEthnicity(outer.Ethnicity) == inner.Ethnicity) {
                             row = {
@@ -340,7 +321,6 @@ var ESPQueryBuilder;
                             };
                         }
                     }
-                    // No stratification at all, or only stratifications that we don't add columns to the Projected View for
                     else {
                         row = {
                             Location: _this.stratifyProjectedViewByLocation ? outer.Location : null
@@ -409,17 +389,13 @@ var ESPQueryBuilder;
             return $.inArray(ageGroup, ageGroups) + 1;
         };
         OtherLocationsViewModel.prototype.GetEthnicity = function (race) {
-            //string value is the text value of the ethnicity from the esp database
-            //the returned numeric value needs to match the numeric value returned by demographics table
-            //ethnicities in demographics table map to original ethnicity enum implementation, not the current
-            //White = 1, Black = 2, Asian/Pacific Islander = 3, Hispanic = 4, Native American = 5
             var ethnicities = ["White", "Black", "Asian", "Hispanic", "Native American"];
             return $.inArray(race, ethnicities) + 1;
         };
         return OtherLocationsViewModel;
     }(SimpleResultViewModel));
     ESPQueryBuilder.OtherLocationsViewModel = OtherLocationsViewModel;
-    var ProjectedOnLocationsViewModel = /** @class */ (function (_super) {
+    var ProjectedOnLocationsViewModel = (function (_super) {
         __extends(ProjectedOnLocationsViewModel, _super);
         function ProjectedOnLocationsViewModel(model) {
             var _this = _super.call(this, model) || this;
@@ -450,15 +426,12 @@ var ESPQueryBuilder;
         ProjectedOnLocationsViewModel.prototype.BuildHeaders = function (stratifyProjectedViewByAgeGroup) {
             this.Headers([]);
             this.Headers.push(new HeaderSpecification("Location", "", "left"));
-            // Join on Age, if appropriate
             if (this.stratifyProjectedViewByAgeGroup) {
                 this.Headers.push(new HeaderSpecification(this.AgeGroupTitle, "", "left"));
             }
-            // Join on Gender, if appropriate
             if (this.stratifyProjectedViewByGender) {
                 this.Headers.push(new HeaderSpecification("Sex", "", "left"));
             }
-            // Join on Ethinicity, if appropriate
             if (this.stratifyProjectedViewByEthnicity) {
                 this.Headers.push(new HeaderSpecification("Race-Ethnicity", "The race-ethnicity mappings are derived from selected US Census stratifications and ESP race and ethnicity data.", "left"));
             }
@@ -471,15 +444,12 @@ var ESPQueryBuilder;
             this.Headers.push(new HeaderSpecification("Projected<br/>Patients", "Projected number of patients with this outcome in the specified region of interest.", "right"));
         };
         ProjectedOnLocationsViewModel.prototype.UpdateCensus = function () {
-            //submit all the locations to get their census data
             var self = this;
             var locationZips = ko.utils.arrayMap(self.model.Locations, function (item) { return item.PostalCodes; });
-            //NOTE: it is very easy to run into max query string length so need to chunk the requests by query string length and then aggregate the responses before joining on the base data
             var censusQueryChunks = [];
             var currentChunkLength = 0;
             var chunk = [];
             for (var l = 0; l < locationZips.length; l++) {
-                //each location encoded length (roughly) => enclosing array brackets + (zip length + two quotes and comma)*locationZips.length
                 var itemLength = 6 + (5 + 9) * locationZips[l].length;
                 if (currentChunkLength + itemLength > 1900) {
                     censusQueryChunks.push(chunk);
@@ -492,7 +462,6 @@ var ESPQueryBuilder;
             if (chunk.length > 0) {
                 censusQueryChunks.push(chunk);
             }
-            //now execute the gets sequentially to keep the order and aggregate to a single result
             var allCensusData = [];
             var allCensusQueries = $.Deferred();
             var queryChain = allCensusQueries.promise();
@@ -512,7 +481,6 @@ var ESPQueryBuilder;
                 });
             });
             queryChain.done(function () {
-                //have all the census results, now join against the base data and display
                 var joined = self.JoinBaseAndCensus(self.model.RawData.Table, allCensusData);
                 self.PopulateObservableTables(joined);
             });
@@ -541,7 +509,6 @@ var ESPQueryBuilder;
                 var row = {
                     Location: outer.Location
                 };
-                // Join on Age, Gender, Ethnicity
                 if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByGender && _this.stratifyProjectedViewByEthnicity) {
                     stratifiedCensusPopulation = Enumerable.From(censusData)
                         .Where(function (c) { return c.Sex.toUpperCase() == (outer.Sex.substring(0, 1) || '').toUpperCase()
@@ -552,7 +519,6 @@ var ESPQueryBuilder;
                     row.Sex = outer.Sex;
                     row.Race = outer.Ethnicity;
                 }
-                // Join on Gender and Ethnicity
                 else if (_this.stratifyProjectedViewByGender && _this.stratifyProjectedViewByEthnicity) {
                     stratifiedCensusPopulation = Enumerable.From(censusData)
                         .Where(function (c) { return c.Sex.toUpperCase() == (outer.Sex.substring(0, 1) || '').toUpperCase()
@@ -561,7 +527,6 @@ var ESPQueryBuilder;
                     row.Sex = outer.Sex;
                     row.Race = outer.Ethnicity;
                 }
-                // Join on Age, Gender
                 else if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByGender) {
                     stratifiedCensusPopulation = Enumerable.From(censusData)
                         .Where(function (c) { return c.Sex.toUpperCase() == (outer.Sex.substring(0, 1) || '').toUpperCase()
@@ -570,7 +535,6 @@ var ESPQueryBuilder;
                     row.AgeGroup = outer[_this.AgeGroupTitle];
                     row.Sex = outer.Sex;
                 }
-                // Join on Age, Ethnicity
                 else if (_this.stratifyProjectedViewByAgeGroup && _this.stratifyProjectedViewByEthnicity) {
                     stratifiedCensusPopulation = Enumerable.From(censusData)
                         .Where(function (c) { return _this.GetAgeGroup(outer[_this.AgeGroupTitle]) == c.AgeGroup
@@ -579,24 +543,20 @@ var ESPQueryBuilder;
                     row.AgeGroup = outer[_this.AgeGroupTitle];
                     row.Race = outer.Ethnicity;
                 }
-                // Join on Age
                 else if (_this.stratifyProjectedViewByAgeGroup) {
                     stratifiedCensusPopulation = Enumerable.From(censusData)
                         .Where(function (c) { return _this.GetAgeGroup(outer[_this.AgeGroupTitle]) == c.AgeGroup; })
                         .Sum(function (c) { return c.Count; });
                     row.AgeGroup = outer[_this.AgeGroupTitle];
                 }
-                // Join on Gender
                 else if (_this.stratifyProjectedViewByGender) {
                     stratifiedCensusPopulation = Enumerable.From(censusData).Where(function (c) { return c.Sex.toUpperCase() == (outer.Sex.substring(0, 1) || '').toUpperCase(); }).Sum(function (c) { return c.Count; });
                     row.Sex = outer.Sex;
                 }
-                // Join on Ethinicity
                 else if (_this.stratifyProjectedViewByEthnicity) {
                     stratifiedCensusPopulation = Enumerable.From(censusData).Where(function (c) { return _this.GetEthnicity(outer.Ethnicity) == c.Ethnicity; }).Sum(function (c) { return c.Count; });
                     row.Race = outer.Ethnicity;
                 }
-                // Only Location stratification
                 else {
                     stratifiedCensusPopulation = Enumerable.From(censusData).Sum(function (c) { return c.Count; });
                 }
@@ -616,7 +576,6 @@ var ESPQueryBuilder;
             var _this = this;
             if (this.stratifyProjectedViewByAgeGroup == false)
                 return base;
-            //the projection census data maxes out at 85+, have to merge the result set for values over 80
             var under80 = Enumerable.From(base).Where(function (i) { return i[_this.AgeGroupTitle] != "80-89" && i[_this.AgeGroupTitle] != "90-99"; }).ToArray();
             if (under80.length == base.length)
                 return base;
@@ -662,7 +621,6 @@ var ESPQueryBuilder;
             return $.inArray(ageGroup, ageGroups) + 1;
         };
         ProjectedOnLocationsViewModel.prototype.GetEthnicity = function (ethinicity) {
-            //array index aligns with ESP values for Race-Ethnicity, also what the values used for the census data import by ZCTA.
             var ethnicities = ["Unknown", "Native American", "Asian", "Black", "", "White", "Hispanic"];
             return $.inArray(ethinicity, ethnicities);
         };
@@ -699,15 +657,10 @@ var ESPQueryBuilder;
         Stratifications[Stratifications["Gender"] = 4] = "Gender";
         Stratifications[Stratifications["Location"] = 8] = "Location";
     })(Stratifications = ESPQueryBuilder.Stratifications || (ESPQueryBuilder.Stratifications = {}));
-    /*Indications the type of projection currently selected by the user.*/
     var ProjectionType;
     (function (ProjectionType) {
-        /*The projection type is unknown or not specified */
         ProjectionType[ProjectionType["None"] = 0] = "None";
-        /*The projection is to the specified location's entire population numbers.*/
         ProjectionType[ProjectionType["PopulationProjection"] = 1] = "PopulationProjection";
-        /*The projection is to a different geographic location than the original cohort could be from.*/
         ProjectionType[ProjectionType["GeographicProjection"] = 2] = "GeographicProjection";
     })(ProjectionType = ESPQueryBuilder.ProjectionType || (ESPQueryBuilder.ProjectionType = {}));
 })(ESPQueryBuilder || (ESPQueryBuilder = {}));
-//# sourceMappingURL=DisplayResponse.js.map

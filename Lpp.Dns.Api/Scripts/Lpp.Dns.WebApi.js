@@ -414,7 +414,7 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Users/GetNotifications' + params, doNotHandleFail);
             };
-            Users.ListSuccessfulAudits = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+            Users.ListAuthenticationAudits = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if ($filter)
                     params += '&$filter=' + $filter;
@@ -428,7 +428,25 @@ var Dns;
                     params += '&$top=' + $top;
                 if (params.length > 0)
                     params = '?' + params.substr(1);
-                return Helpers.GetAPIResult('Users/ListSuccessfulAudits' + params, doNotHandleFail);
+                return Helpers.GetAPIResult('Users/ListAuthenticationAudits' + params, doNotHandleFail);
+            };
+            Users.ListDistinctEnvironments = function (userID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (userID != null)
+                    params += '&userID=' + userID;
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Users/ListDistinctEnvironments' + params, doNotHandleFail);
             };
             Users.UpdateSubscribedEvents = function (subscribedEvents, doNotHandleFail) {
                 return Helpers.PostAPIValue('Users/UpdateSubscribedEvents', subscribedEvents, doNotHandleFail);

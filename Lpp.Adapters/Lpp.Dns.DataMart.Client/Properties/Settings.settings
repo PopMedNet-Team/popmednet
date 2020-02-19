@@ -47,5 +47,8 @@
     <Setting Name="UpdateSettings" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="EncryptionSalt" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">07809072-4AB9-4998-A19C-855287983782</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -43,7 +43,22 @@ namespace Lpp.Dns.DTO
         /// The Enviorment that triggered the Authentication
         /// </summary>
         [DataMember]
-        public string Enviorment { get; set; }
+        public string Environment { get; set; }
+        /// <summary>
+        /// The API Endpoint that was hit if the Environment is DataMart Client
+        /// </summary>
+        [DataMember]
+        public string Source { get; set; }
+        /// <summary>
+        /// The Details of the Audit.
+        /// </summary>
+        [DataMember]
+        public string Details { get; set; }
+        /// <summary>
+        /// The DMC Version that was used if the Environment is DataMart Client
+        /// </summary>
+        [DataMember]
+        public string DMCVersion { get; set; }
         /// <summary>
         /// The Time the Authentication was triggered
         /// </summary>

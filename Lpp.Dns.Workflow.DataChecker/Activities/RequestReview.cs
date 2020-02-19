@@ -21,7 +21,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
         public override Guid ID
         {
             get { return DataCheckerWorkflowConfiguration.ReviewRequestActivityID; }
-        }        
+        }
 
         public override string ActivityName
         {
@@ -69,7 +69,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             }
         }
 
-        
+
 
         public async override Task<CompletionResult> Complete(string data, Guid? activityResultID)
         {
@@ -85,6 +85,11 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
             if (activityResultID.Value == ApproveResultID)
             {
+                var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.AwaitingRequestApproval).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+
+                _entity.SubmittedByID = previousStatus.UserID;
+                _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
+
                 var responses = await db.RequestDataMarts.Where(rdm => rdm.RequestID == _entity.ID && rdm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval).SelectMany(rdm => rdm.Responses.Where(rsp => rsp.Count == rdm.Responses.Max(rr => rr.Count))).ToArrayAsync();
 
                 var previousTask = await (from a in db.Actions
@@ -122,8 +127,8 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 {
                     dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                    _entity.SubmittedByID = _workflow.Identity.ID;
-                    _entity.SubmittedOn = DateTime.UtcNow;
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                     //var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                     var currentResponse = responses.Where(rsp => rsp.RequestDataMartID == dm.ID).FirstOrDefault();

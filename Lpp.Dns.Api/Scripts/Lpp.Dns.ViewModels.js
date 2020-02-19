@@ -2057,7 +2057,10 @@ var Dns;
                     _this.Success = ko.observable();
                     _this.Description = ko.observable();
                     _this.IPAddress = ko.observable();
-                    _this.Enviorment = ko.observable();
+                    _this.Environment = ko.observable();
+                    _this.Source = ko.observable();
+                    _this.Details = ko.observable();
+                    _this.DMCVersion = ko.observable();
                     _this.DateTime = ko.observable();
                 }
                 else {
@@ -2066,7 +2069,10 @@ var Dns;
                     _this.Success = ko.observable(UserAuthenticationDTO.Success);
                     _this.Description = ko.observable(UserAuthenticationDTO.Description);
                     _this.IPAddress = ko.observable(UserAuthenticationDTO.IPAddress);
-                    _this.Enviorment = ko.observable(UserAuthenticationDTO.Enviorment);
+                    _this.Environment = ko.observable(UserAuthenticationDTO.Environment);
+                    _this.Source = ko.observable(UserAuthenticationDTO.Source);
+                    _this.Details = ko.observable(UserAuthenticationDTO.Details);
+                    _this.DMCVersion = ko.observable(UserAuthenticationDTO.DMCVersion);
                     _this.DateTime = ko.observable(UserAuthenticationDTO.DateTime);
                 }
                 return _this;
@@ -2078,7 +2084,10 @@ var Dns;
                     Success: this.Success(),
                     Description: this.Description(),
                     IPAddress: this.IPAddress(),
-                    Enviorment: this.Enviorment(),
+                    Environment: this.Environment(),
+                    Source: this.Source(),
+                    Details: this.Details(),
+                    DMCVersion: this.DMCVersion(),
                     DateTime: this.DateTime(),
                 };
             };

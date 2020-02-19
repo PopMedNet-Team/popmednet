@@ -563,10 +563,16 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.NotificationDTO>(Path + "/GetNotifications?userID=" + System.Net.WebUtility.UrlEncode(userID.ToString()) + "&", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
-	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.UserAuthenticationDTO>> ListSuccessfulAudits(string oDataQuery = null)
+	 	 public async Task<System.Linq.IQueryable<Lpp.Dns.DTO.UserAuthenticationDTO>> ListAuthenticationAudits(string oDataQuery = null)
 	 	 {
 
-	 	 	 var result = await Client.Get<Lpp.Dns.DTO.UserAuthenticationDTO>(Path + "/ListSuccessfulAudits", oDataQuery);
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.UserAuthenticationDTO>(Path + "/ListAuthenticationAudits", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.UserAuthenticationDTO>> ListDistinctEnvironments(System.Guid userID, string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.UserAuthenticationDTO>(Path + "/ListDistinctEnvironments?userID=" + System.Net.WebUtility.UrlEncode(userID.ToString()) + "&", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
 	 	 public async Task<System.Net.Http.HttpResponseMessage> UpdateSubscribedEvents(System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.UserEventSubscriptionDTO> subscribedEvents)

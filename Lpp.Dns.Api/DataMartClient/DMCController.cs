@@ -28,6 +28,8 @@ namespace Lpp.Dns.Api.DataMartClient
     /// </summary>
     /// <remarks>This controller is intentionally not included in the Lpp.Dns.NetClient generated file so that a dependency is not needed on Lpp.Dns.DTO.DataMartClient.</remarks>
     [ClientEntityIgnore]
+    [OverrideAuthentication]
+    [DMCAuthenticationLogging]
     public class DMCController : LppApiController<Lpp.Dns.Data.DataContext>
     {
         static DMCController()

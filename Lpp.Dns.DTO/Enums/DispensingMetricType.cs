@@ -28,7 +28,7 @@ namespace Lpp.Dns.DTO.Enums
         /// <summary>
         /// Days Supply _ Drug Only
         /// </summary>
-        [XmlEnum("4"), EnumMember, Description("Days Suppy (Drug Only)")]
+        [XmlEnum("4"), EnumMember, Description("Days Supply (Drug Only)")]
         DaysSupply_DrugOnly = 4
     }
 }

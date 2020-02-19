@@ -296,7 +296,7 @@ var Dns;
         Enums.DispensingMetricTranslation = [
             { value: DispensingMetric.Users, text: 'Users' },
             { value: DispensingMetric.Dispensing_DrugOnly, text: 'Dispensing (Drug Only)' },
-            { value: DispensingMetric.DaysSupply_DrugOnly, text: 'Days Suppy (Drug Only)' },
+            { value: DispensingMetric.DaysSupply_DrugOnly, text: 'Days Supply (Drug Only)' },
         ];
         var CodeMetric;
         (function (CodeMetric) {
@@ -1750,7 +1750,10 @@ var Dns;
                 'Success': { type: 'boolean', nullable: false },
                 'Description': { type: 'string', nullable: false },
                 'IPAddress': { type: 'string', nullable: false },
-                'Enviorment': { type: 'string', nullable: false },
+                'Environment': { type: 'string', nullable: false },
+                'Source': { type: 'string', nullable: false },
+                'Details': { type: 'string', nullable: false },
+                'DMCVersion': { type: 'string', nullable: false },
                 'DateTime': { type: 'date', nullable: false },
             }
         };

@@ -86,7 +86,7 @@ namespace Lpp.Dns.Api.Users
                     Description = "User Authenticated Failed from " + login.Enviorment + " from IP Address: " + login.IPAddress,
                     Success = false,
                     IPAddress = login.IPAddress,
-                    Enviorment = login.Enviorment,
+                    Environment = login.Enviorment,
                     Details = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + login.UserName + " was attempted with Password:" + login.Password,"AuthenticationLog", contact.ID.ToString("D"))
                 };
 
@@ -127,7 +127,7 @@ namespace Lpp.Dns.Api.Users
                     Description = "User Authenticated Successful from " + login.Enviorment + " from IP Address: " + login.IPAddress,
                     Success = true,
                     IPAddress = login.IPAddress,
-                    Enviorment = login.Enviorment
+                    Environment = login.Enviorment
                 };
                 DataContext.LogsUserAuthentication.Add(successAudit);
             }
@@ -475,23 +475,68 @@ namespace Lpp.Dns.Api.Users
 
             return notifications; //.AsQueryable();
         }
+
         /// <summary>
-        /// Returns an IQueryable List of Successful Audit Events for a specific User
+        /// Returns an IQueryable List of Audit Events for a Users
         /// </summary>
         /// <returns>A Queryable list of UserAuthenticationDTO</returns>
         [HttpGet]
-        public IQueryable<UserAuthenticationDTO> ListSuccessfulAudits()
+        public IQueryable<UserAuthenticationDTO> ListAuthenticationAudits()
         {
-            return (from u in DataContext.LogsUserAuthentication
-                    select new UserAuthenticationDTO {
-                        DateTime = u.TimeStamp,
-                        UserID = u.UserID,
-                        Success = u.Success,
+            return (from audit in DataContext.LogsUserAuthentication
+                    join u in DataContext.Users on audit.UserID equals u.ID
+                    let permissionID = PermissionIdentifiers.User.View.ID
+                    let identityID = Identity.ID
+                    let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                    let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                    let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
+                    let uAcls = DataContext.UserAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.ID == x.UserID)            
+                    
+                    where identityID == audit.UserID ||
+                    (
+                        (gAcls.Any() || oAcls.Any() || uAcls.Any())
+                        &&
+                        (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) &&  uAcls.All(a => a.Allowed))
+                    )
+                    select new UserAuthenticationDTO
+                    {
                         ID = u.ID,
-                        Description = u.Description,
-                        IPAddress = u.IPAddress,
-                        Enviorment = u.Enviorment
+                        DateTime = audit.TimeStamp,
+                        UserID = audit.UserID,
+                        Success = audit.Success,                        
+                        Description = audit.Description,
+                        Source = audit.Source,
+                        IPAddress = audit.IPAddress,
+                        Environment = audit.Environment,
+                        Details = audit.Details,
+                        DMCVersion = audit.DMCVersion
                     }).AsQueryable();
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<UserAuthenticationDTO>> ListDistinctEnvironments(Guid userID)
+        {
+            return (from audit in DataContext.LogsUserAuthentication
+                    join u in DataContext.Users on audit.UserID equals u.ID
+                    let permissionID = PermissionIdentifiers.User.View.ID
+                    let identityID = Identity.ID
+                    let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                    let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                    let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
+                    let uAcls = DataContext.UserAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.ID == x.UserID)
+
+                    where  audit.UserID == userID && (identityID == audit.UserID ||
+                    (
+                        (gAcls.Any() || oAcls.Any() || uAcls.Any())
+                        &&
+                        (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) && uAcls.All(a => a.Allowed))
+                         
+                    ))
+                    select new UserAuthenticationDTO
+                    {
+                        Environment = string.IsNullOrEmpty(audit.Environment) ? "" : audit.Environment
+                    }
+                ).Distinct().OrderBy(a => a);
         }
 
         /// <summary>

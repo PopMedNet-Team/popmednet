@@ -324,6 +324,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\MultiXmlDocumentationProvider.cs" />
     <Compile Include="Comments\CommentsController.cs" />
+    <Compile Include="DataMartClient\DMCAuthenticationLoggingAttribute.cs" />
     <Compile Include="DataMarts\DataMartAvailabilityController.cs" />
     <Compile Include="DataMartClient\DMCRoutingStatusProcessor.cs" />
     <Compile Include="DataMartClient\LocalDiskCache.cs" />

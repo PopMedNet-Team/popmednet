@@ -24,6 +24,8 @@ namespace Lpp.Dns.DataMart.Lib
         public NetWorkSetting()
         {
             CredentialKey = string.Format("DMCNetwork_{0:D}", Guid.NewGuid());
+
+            EncryptionSalt = Lpp.Dns.DataMart.Client.Properties.Settings.Default.EncryptionSalt;
         }
         #endregion
 
@@ -224,6 +226,13 @@ namespace Lpp.Dns.DataMart.Lib
                     wcfReceiveTimeout = 120;
                 return new TimeSpan(0,0,wcfReceiveTimeout);
             }
+        }
+
+        [XmlIgnore]
+        public string EncryptionSalt
+        {
+            get;
+            private set;
         }
 
         #endregion

@@ -1,6 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
-/// <reference path="../../../lpp.dns.portal/Scripts/page/Page.ts" />
-/// <reference path="../../../lpp.dns.portal/Scripts/typings/linq/linq.d.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20,7 +17,7 @@ var Summary;
     (function (Create) {
         Create.RawModel = null;
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(rawModel, bindingControl, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
@@ -121,13 +118,9 @@ var Summary;
                 }
             };
             ViewModel.prototype.Keypress = function (data, e) {
-                // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-                    // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
-                    // Allow: home, end, left, right
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
-                    // let it happen, don't do anything
                     return true;
                 }
                 return e.charCode >= 48 && e.charCode <= 57;
@@ -141,7 +134,7 @@ var Summary;
                     ShowCategoryDropdown: !this.ByDrugClass
                 }).done(function (results) {
                     if (!results)
-                        return; //User clicked cancel
+                        return;
                     _this.Codes(ko.utils.arrayGetDistinctValues(results.map(function (i) { return i.Code.replace(/,/g, '&#44;'); })).join(","));
                     $("form").formChanged(true);
                 });
@@ -165,7 +158,6 @@ var Summary;
         }(Dns.PageViewModel));
         Create.ViewModel = ViewModel;
         function init() {
-            // initialize dynamic lookup lists...???
             $(function () {
                 var bindingControl = $("#fsCriteria");
                 var hiddenDataControl = $("#hiddenDataControl");
@@ -177,4 +169,3 @@ var Summary;
         init();
     })(Create = Summary.Create || (Summary.Create = {}));
 })(Summary || (Summary = {}));
-//# sourceMappingURL=Create.js.map

@@ -48,26 +48,28 @@ namespace Lpp.Dns.Workflow.Default.Activities
             var permissions = await db.GetGrantedWorkflowActivityPermissionsForRequestAsync(_workflow.Identity, _entity, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask);
 
             var allowApproveRejectSubmission = await ApproveRejectSubmission();
-            if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask) || ! allowApproveRejectSubmission)
+            if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask) || !allowApproveRejectSubmission)
                 errors.AppendHtmlLine(CommonMessages.RequirePermissionToApproveOrRejectRequestSubmission);
 
             if (errors.Length > 0)
             {
-                return new ValidationResult {
+                return new ValidationResult
+                {
                     Success = false,
                     Errors = errors.ToString()
                 };
             }
             else
             {
-                return new ValidationResult {
+                return new ValidationResult
+                {
                     Success = true
                 };
             }
         }
 
         public async override Task<CompletionResult> Complete(string data, Guid? activityResultID)
-        {   
+        {
             if (activityResultID.Value == SaveResultID)
             {
                 return new CompletionResult
@@ -88,13 +90,16 @@ namespace Lpp.Dns.Workflow.Default.Activities
 
             if (activityResultID.Value == ApproveResultID)
             {
-                _entity.SubmittedByID = _workflow.Identity.ID;
-                _entity.SubmittedOn = DateTime.UtcNow;
+                var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.AwaitingRequestApproval).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+
+                _entity.SubmittedByID = previousStatus.UserID;
+                _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                 var responses = await db.RequestDataMarts.Where(rdm => rdm.RequestID == _entity.ID && rdm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval).SelectMany(rdm => rdm.Responses.Where(rsp => rsp.Count == rdm.Responses.Max(rr => rr.Count))).ToArrayAsync();
                 var previousTask = await (from a in db.Actions
-                                    join ar in db.ActionReferences on a.ID equals ar.TaskID
-                                    where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete select a).OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync();
+                                          join ar in db.ActionReferences on a.ID equals ar.TaskID
+                                          where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete
+                                          select a).OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync();
 
                 var document = await (from d in db.Documents.AsNoTracking()
                                       join x in (
@@ -116,7 +121,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
                                          select doc).ToArrayAsync();
 
 
-
                 foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval))
                 {
                     dm.Status = DTO.Enums.RoutingStatus.Submitted;
@@ -126,8 +130,8 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     {
                         currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
                     }
-                    currentResponse.SubmittedByID = _workflow.Identity.ID;
-                    currentResponse.SubmittedOn = DateTime.UtcNow;
+                    currentResponse.SubmittedByID = previousStatus.UserID;
+                    currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                     //get existing request documents associated to the response, add only missing documents
                     var existingRequestDocuments = await db.RequestDocuments.Where(rd => rd.ResponseID == currentResponse.ID).ToArrayAsync();
@@ -174,9 +178,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                 _entity.RejectedByID = _workflow.Identity.ID;
                 _entity.RejectedOn = DateTime.UtcNow;
                 //Update the workflow activity to request composition
-                _entity.WorkFlowActivityID = DefaultWorkflowConfiguration.NewRequestActivityID;                
+                _entity.WorkFlowActivityID = DefaultWorkflowConfiguration.NewRequestActivityID;
 
-                await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);            
+                await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);
 
                 //create a completed task to show the request was rejected.
                 PmnTask rejectedTask = db.Actions.Add(PmnTask.CreateForWorkflowActivity(_entity.ID, DefaultWorkflowConfiguration.NewRequestActivityID, _workflow.ID, db));
@@ -194,7 +198,8 @@ namespace Lpp.Dns.Workflow.Default.Activities
                         Text = data.ToStringEx()
                     });
 
-                    db.CommentReferences.Add(new CommentReference { 
+                    db.CommentReferences.Add(new CommentReference
+                    {
                         CommentID = cmt.ID,
                         Type = DTO.Enums.CommentItemTypes.Task,
                         ItemTitle = rejectedTask.Subject,

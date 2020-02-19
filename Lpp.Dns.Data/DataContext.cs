@@ -853,7 +853,6 @@ namespace Lpp.Dns.Data
             if (user == null || ((User)user).PasswordHash != password.ComputeHash())
                 return false;
             return true;
-
         }
 
 

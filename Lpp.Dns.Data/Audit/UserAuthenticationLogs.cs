@@ -3,12 +3,8 @@ using Lpp.Dns.DTO.Events;
 using Lpp.Utilities;
 using Lpp.Utilities.Logging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lpp.Dns.Data.Audit
 {
@@ -25,11 +21,14 @@ namespace Lpp.Dns.Data.Audit
         public bool Success { get; set; }
         [MaxLength(40)]
         public string IPAddress { get; set; }
-        [MaxLength(10)]
-        public string Enviorment { get; set; }
+        [MaxLength(50)]
+        public string Environment { get; set; }
         [MaxLength(500)]
         public string Details { get; set; }
-
+        [MaxLength(200)]
+        public string Source { get; set; }
+        [MaxLength(20)]
+        public string DMCVersion { get; set; }
     }
 
     internal class UserAuthenticationLogsDTOMapping : EntityMappingConfiguration<UserAuthenticationLogs, UserAuthenticationDTO>
@@ -44,7 +43,9 @@ namespace Lpp.Dns.Data.Audit
                     ID = d.ID,
                     Description = d.Description,
                     IPAddress = d.IPAddress,
-                    Enviorment = d.Enviorment                     
+                    Environment = d.Environment,
+                    Details = d.Success ? d.Details : "",
+                    DMCVersion = d.DMCVersion
                 };
             }
         }

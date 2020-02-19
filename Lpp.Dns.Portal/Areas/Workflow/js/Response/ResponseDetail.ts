@@ -17,8 +17,12 @@ module Workflow.Response.Common.ResponseDetail {
         public onApprove: () => void;
         public onReject: () => void;
         public onResubmit: () => void;
+        private ResponsesToApprove: any[] = [];
 
-        public isDownloadAllVisible: boolean;
+        public DownloadAllForFDVisible: KnockoutComputed<boolean>;
+        public DownloadAllForMDQVisible: KnockoutComputed<boolean>;
+        public ShowNoDownloadDueToPendingRoutes: KnockoutComputed<boolean>;
+        public NoDownloadDueToPendingRoutesMessage: KnockoutComputed<string>;
 
         public showApproveReject: KnockoutObservable<boolean>;
 
@@ -30,46 +34,62 @@ module Workflow.Response.Common.ResponseDetail {
         constructor(bindingControl: JQuery, routings: Dns.Interfaces.IRequestDataMartDTO[], responses: Dns.Interfaces.IResponseDTO[], documents: Dns.Interfaces.IExtendedDocumentDTO[], canViewPendingApprovalResponses: boolean, exportForFileDistribution: boolean) {
             super(bindingControl, rootVM.ScreenPermissions);
             let self = this;
-            
+
             this.IsResponseVisible = ko.observable(null);
             this.ResponseContentComplete = ko.observable(false);
             this.IsResponseLoadFailed = ko.observable(false);
             this.Routings = routings;
             this.Responses = responses;
-            this.Documents = documents;
-            let currentResponseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
-            
-            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes[$.url().param('view')];
-            this.ResponseView = ko.observable(responseView);
- 
-            this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
-            this.ExportExcelUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=xlsx&authToken=' + User.AuthToken;
-            this.ExportDownloadAllUrl = '/workflow/WorkflowRequests/ExportAllResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&authToken=' + User.AuthToken;
-            this.isDownloadAllVisible = exportForFileDistribution && (ko.utils.arrayFirst(documents, (d) => { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null);
-            
-            this.showApproveReject = ko.observable(false);
-
-            canViewPendingApprovalResponses = canViewPendingApprovalResponses && responses.length > 0;
-
-            routings.forEach(r => {
-                if ((currentResponseIDs.indexOf(r.ResponseID) != -1) && r.Status == Dns.Enums.RoutingStatus.AwaitingResponseApproval && canViewPendingApprovalResponses) {
-                    this.showApproveReject(true);
-                }
+            this.ResponsesToApprove = ko.utils.arrayFilter(ko.utils.arrayMap(self.Responses, (x) => x.ID), (res) => {
+                let reqDM = ko.utils.arrayFirst(self.Routings, (route) => {                    
+                    return route.ResponseID.toLowerCase() === res.toLowerCase();
+                });
+                return reqDM !== null && reqDM.Status === Dns.Enums.RoutingStatus.AwaitingResponseApproval;
             });
 
-            self.IsResponseVisible(canViewPendingApprovalResponses);
+            this.Documents = documents;
+            let currentResponseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
 
-            self.hasResponseResultsContent = (ko.utils.arrayFirst(documents, (d) => { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, (d) => { return d.ResponseGroupID != null }) != null;
+            let responseView: Dns.Enums.TaskItemTypes = <Dns.Enums.TaskItemTypes>(<any>$.url().param('view'));            
+            this.ResponseView = ko.observable(responseView);
 
-            if (canViewPendingApprovalResponses && self.hasResponseResultsContent) {
+            this.ExportCSVUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=csv&authToken=' + User.AuthToken;
+            this.ExportExcelUrl = '/workflow/WorkflowRequests/ExportResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&view=' + responseView + '&format=xlsx&authToken=' + User.AuthToken;
+            this.ExportDownloadAllUrl = '/workflow/WorkflowRequests/ExportAllResponses?' + ko.utils.arrayMap(currentResponseIDs, (r) => 'id=' + r).join('&') + '&authToken=' + User.AuthToken;        
+
+            canViewPendingApprovalResponses = canViewPendingApprovalResponses && responses.length > 0;
+            this.IsResponseVisible(canViewPendingApprovalResponses);
+
+            this.hasResponseResultsContent = (ko.utils.arrayFirst(documents, (d) => { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, (d) => { return d.ResponseGroupID != null }) != null;
+
+            this.showApproveReject = ko.observable(canViewPendingApprovalResponses && this.ResponsesToApprove.length > 0 && responseView != Dns.Enums.TaskItemTypes.AggregateResponse);
+
+            this.DownloadAllForFDVisible = ko.pureComputed(() => {
+                //must be export for FD, at least one output document, and no route is pending approval
+                return exportForFileDistribution && (ko.utils.arrayFirst(self.Documents, (d) => { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null)
+                    && (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses);
+            });
+            this.DownloadAllForMDQVisible = ko.pureComputed(() => {
+                //must NOT be export for FD, at least one output document, and no route is pending approval
+                return !exportForFileDistribution &&
+                    (ko.utils.arrayFirst(self.Documents, (d) => { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null) &&
+                    (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses) &&
+                    self.IsResponseLoadFailed() == false &&
+                    self.IsResponseVisible() &&
+                    self.hasResponseResultsContent;
+            });
+            this.ShowNoDownloadDueToPendingRoutes = ko.pureComputed(() => {
+                return self.ResponsesToApprove.length > 0 && !canViewPendingApprovalResponses;
+            });
+            this.NoDownloadDueToPendingRoutesMessage = ko.pureComputed(() => {
+                return exportForFileDistribution ? 'Download All is not available due to one or more responses pending approval.' : 'Download Results is not available due to one or more responses pending approval.';
+            });
+
+            if (canViewPendingApprovalResponses && this.hasResponseResultsContent) {
                 Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done((responses: Dns.Interfaces.IQueryComposerResponseDTO[]) => {
 
-                    if (responses == null || responses.length == 0) {
-                        self.showApproveReject(false);
-                        self.ResponseContentComplete(true);
+                    if (responses == null || responses.length == 0)
                         return;
-                    }
-                        
 
                     //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
 
@@ -125,8 +145,11 @@ module Workflow.Response.Common.ResponseDetail {
                                 for (let i = 0; i < resp.Properties.length; i++) {
                                     let propertyDefinition = resp.Properties[i];
                                     if (propertyDefinition.Name == "LowThreshold") {
-                                        kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
-                                        suppressedValues = true;
+                                        if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
+                                            //only show the LowThreshold column in individual response view
+                                            kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
+                                            suppressedValues = true;
+                                        }
                                     }
                                     else {
                                         kendoColumns.push({
@@ -251,18 +274,16 @@ module Workflow.Response.Common.ResponseDetail {
             self.onApprove = () => {
                 Global.Helpers.ShowDialog('Enter an Approval Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
-
-                        Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                        Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                             .done(() => {
 
                                 //Send notification that routes need to be reloaded
                                 rootVM.NotifyReloadRoutes();
                                 //hide the approve/reject buttons
                                 self.showApproveReject(false);
-                                
+
                             })
-                            .fail((err:any) => {
+                            .fail((err: any) => {
                                 let errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Approve Responses', errorMessage);
                             });
@@ -272,8 +293,7 @@ module Workflow.Response.Common.ResponseDetail {
             self.onReject = () => {
                 Global.Helpers.ShowDialog('Enter an Reject Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
-                        Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
+                        Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                             .done(() => {
 
                                 //Send notification that routes need to be reloaded
@@ -281,7 +301,7 @@ module Workflow.Response.Common.ResponseDetail {
                                 //hide the approve/reject buttons
                                 self.showApproveReject(false);
 
-                            }).fail((err:any) => {
+                            }).fail((err: any) => {
                                 let errorMessage = err.responseJSON.errors[0].Description;
                                 Global.Helpers.ShowErrorAlert('Access Denied to Reject Responses', errorMessage);
                             });
@@ -291,7 +311,7 @@ module Workflow.Response.Common.ResponseDetail {
             self.onResubmit = () => {
                 Global.Helpers.ShowDialog('Enter an Resubmission Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null)
                     .done(comment => {
-                        let responseIDs = ko.utils.arrayMap(responses, (x) => x.ID);
+                        let responseIDs = ko.utils.arrayMap(self.Responses, (x) => x.ID);
                         Dns.WebApi.Response.RejectAndReSubmitResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                             .done(() => {
                                 Global.Helpers.RedirectTo(window.top.location.href);
@@ -301,8 +321,9 @@ module Workflow.Response.Common.ResponseDetail {
                             });
                     });
             };
-        }
 
+            
+        }
     }
 
     $(() => {
@@ -310,7 +331,7 @@ module Workflow.Response.Common.ResponseDetail {
         rootVM = (<any>parent).Requests.Details.rovm;
         let id: any = Global.GetQueryParam("ID");
         let responseIDs = id.split(',');
-        
+
         Dns.WebApi.Response.GetDetails(responseIDs).done((details) => {
             let ss = details[0];
             let bindingControl = $('#DefaultResponseDetail');
