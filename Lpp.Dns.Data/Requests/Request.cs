@@ -533,10 +533,13 @@ namespace Lpp.Dns.Data
                 if (db.Entry(request).Reference(r => r.RequestType).IsLoaded == false)
                     db.Entry(request).Reference(r => r.RequestType).Load();
 
+                var newStatus = (RequestStatuses)obj.CurrentValues["Status"];
+                var origStatus = (RequestStatuses)obj.CurrentValues["Status"];
+
                 //New Request Submitted
                 var newRequestSubmittedLogItem = new Audit.NewRequestSubmittedLog
                 {
-                    Description = string.Format("New request of type '{0}' has been submitted by {1}", request.RequestType.Name, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                    Description = string.Format("New request of type '{0}' has been {2} by {1}", request.RequestType.Name, (orgUser.Acronym + @"\" + orgUser.UserName), newStatus == RequestStatuses.Submitted && (origStatus == RequestStatuses.Draft || origStatus == RequestStatuses.DraftReview) ? "submitted" : "approved"),
                     UserID = identity == null ? Guid.Empty : identity.ID,
                     RequestID = request.ID,
                     Request = request,

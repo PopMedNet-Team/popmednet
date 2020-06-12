@@ -108,11 +108,15 @@
         public static get VitalsMeasureDateID(): any {
             return 'F9920001-AEB1-425C-A929-A4BB01515850';
         }
-
         public static get ProcedureCodesID(): any {
             return 'F81AE5DE-7B35-4D7A-B398-A72200CE7419';
         }
-
+        public static get LOINCCodesID(): any {
+            return 'F5903376-D2A5-486F-92D3-1F97D598A221';
+        }
+        public static get PrescribingCodesID(): any {
+            return '793BD948-C90C-45DA-B4B7-F8E2387E1A78';
+        }
 
         public static Compare(a: any, b: any): boolean {
             if ((a == null && b != null) || (a != null && b == null))

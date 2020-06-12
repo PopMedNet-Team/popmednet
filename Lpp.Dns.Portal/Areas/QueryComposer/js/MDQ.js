@@ -398,7 +398,9 @@ var Plugins;
                                 MDQ.Terms.ZipCodeID,
                                 MDQ.Terms.CombinedDiagnosisCodesID,
                                 MDQ.Terms.ESPCombinedDiagnosisCodesID,
-                                MDQ.Terms.ProcedureCodesID // Procedure Codes
+                                MDQ.Terms.ProcedureCodesID,
+                                MDQ.Terms.LOINCCodesID,
+                                MDQ.Terms.PrescribingCodesID //Prescribing Codes
                             ];
                             var convertTerms = function (terms) {
                                 terms.forEach(function (term) {
@@ -686,7 +688,9 @@ var Plugins;
                                 MDQ.Terms.ZipCodeID,
                                 MDQ.Terms.CombinedDiagnosisCodesID,
                                 MDQ.Terms.ESPCombinedDiagnosisCodesID,
-                                MDQ.Terms.ProcedureCodesID // Procedure Codes
+                                MDQ.Terms.ProcedureCodesID,
+                                MDQ.Terms.LOINCCodesID,
+                                MDQ.Terms.PrescribingCodesID //Prescribing Codes
                             ];
                             var convertTerms = function (terms) {
                                 terms.forEach(function (term) {
@@ -1211,6 +1215,10 @@ var Plugins;
                         MDQ.Terms.TrialID,
                         //PatientReportedOutcome
                         MDQ.Terms.PatientReportedOutcomeID,
+                        // LOINC Codes
+                        MDQ.Terms.LOINCCodesID,
+                        //Prescribing Terms
+                        MDQ.Terms.PrescribingCodesID
                     ];
                     /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
                     ViewModel.NonCodeGroupedTerms = [

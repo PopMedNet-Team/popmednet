@@ -26,7 +26,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.TermProviders
             ModelTermsFactory.SqlDistributionID,
             ModelTermsFactory.FileUploadID,
             ModelTermsFactory.ModularProgramID,
-            ModelTermsFactory.ProcedureCodesID
+            ModelTermsFactory.ProcedureCodesID,
+            ModelTermsFactory.LOINCCodesID,
+            ModelTermsFactory.PrescribingID
         };
 
         public Guid ModelID

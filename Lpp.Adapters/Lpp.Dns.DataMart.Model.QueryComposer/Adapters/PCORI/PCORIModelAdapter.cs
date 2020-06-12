@@ -1844,13 +1844,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
             var diagnosisTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
             var procedureTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.ProcedureCodesID).ToArray();
+            var loincTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.LOINCCodesID).ToArray();
+            var prescribingTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.PrescribingID).ToArray();
 
             //The encounter predicate
             //This starts off with any criteria in the paragraph dictated by the Settings + Observation Period terms, if any.
             Expression<Func<pcori.Encounter, bool>> encounterPredicate = GetParagraphEncounterPredicate(paragraph);
 
             //Return the patient predicate if neither the diagnosis and procedure terms exist in the paragraph, and the encounter predicate is not defined.
-            if (!diagnosisTerms.Any() && !procedureTerms.Any() && encounterPredicate == null)
+            if (!diagnosisTerms.Any() && !procedureTerms.Any() && encounterPredicate == null && !loincTerms.Any() && !prescribingTerms.Any())
             {
                 return patientPredicate;
             }
@@ -2129,60 +2131,634 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             }
             #endregion
 
-            //PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
+            #region "Lab Results LOINC"
+            Expression<Func<pcori.LabResult, bool>> loincTermGroupingPredicate = null;
+            //each term should be OR'd together, and each code value OR'd within the term
+            foreach (var term in loincTerms)
+            {
+                DTO.Enums.TextSearchMethodType searchMethod;
+                if (!Enum.TryParse<DTO.Enums.TextSearchMethodType>(term.GetStringValue("SearchMethodType"), out searchMethod))
+                {
+                    searchMethod = DTO.Enums.TextSearchMethodType.ExactMatch;
+                }
+
+                var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Where(x => !string.IsNullOrEmpty(x.Trim())).Select(s => s.Trim()).Distinct().ToArray();
+
+                //limit to the encounters where the patient age falls within the specified range.
+                DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] {
+                    DTO.Enums.AgeRangeCalculationType.AtFirstMatchingEncounterWithinCriteriaGroup,
+                    DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
+                };
+
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+
+                Expression<Func<pcori.LabResult, bool>> ageGroupingPredicate = null;
+                if (ageRanges.Any())
+                {
+                    foreach (var range in ageRanges.Where(r => r.MinAge.HasValue || r.MaxAge.HasValue))
+                    {
+                        Expression<Func<pcori.LabResult, bool>> ageRangePredicate = (d) => true;
+                        if (range.MinAge.HasValue)
+                        {
+                            int minAge = range.MinAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+
+                                ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value) ?
+                                        (DbFunctions.DiffYears(d.Patient.BornOn.Value, (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn)).Value + ((d.Patient.BornOn.Value.Month < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))
+                                        :
+                                        (DbFunctions.DiffYears(d.Patient.BornOn, (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn)).Value - (((d.Patient.BornOn.Value.Month > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month) || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))));
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn.Value > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value) ?
+                                    ((d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    ((d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))));
+                            }
+                        }
+                        if (range.MinAge.HasValue)
+                        {
+                            int maxAge = range.MaxAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value) ?
+                                    (DbFunctions.DiffYears(d.Patient.BornOn.Value, (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value).Value + ((d.Patient.BornOn.Value.Month < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    (DbFunctions.DiffYears(d.Patient.BornOn, (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value).Value - (((d.Patient.BornOn.Value.Month > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month) || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn.Value > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value) ?
+                                    ((d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    ((d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                        }
+
+                        if (ageGroupingPredicate == null)
+                        {
+                            ageGroupingPredicate = ageRangePredicate;
+                        }
+                        else
+                        {
+                            ageGroupingPredicate = ageGroupingPredicate.Or(ageRangePredicate);
+                        }
+                    }
+                }
+
+                DateRangeValues[] observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
+                Expression<Func<pcori.LabResult, bool>> observationPeriodPredicate = null;
+
+                if (observationPeriodRanges.Any())
+                {
+                    foreach (var range in observationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start && d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate >= start && d.ResultDate <= end) : (d.OrderedOn >= start && d.OrderedOn <= end);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start && d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate >= start && d.ResultDate <= end) : (d.OrderedOn >= start && d.OrderedOn <= end));
+                        }
+                        else if (start.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start) : d.ResultDate.HasValue ? (d.ResultDate >= start) : (d.OrderedOn >= start);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start) : d.ResultDate.HasValue ? (d.ResultDate >= start) : (d.OrderedOn >= start));
+                        }
+                        else if (end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate <= end) : (d.OrderedOn <= end);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate <= end) : (d.OrderedOn <= end));
+                        }
+                    }
+                }
+
+                Expression<Func<pcori.LabResult, bool>> valuesPredicate = null;
+
+                if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
+                {
+                    if (codes.Length == 0)
+                    {
+                        valuesPredicate = d => true;
+                    }
+                    else if (codes.Length == 1)
+                    {
+                        string codeValue = codes[0];
+                        valuesPredicate = d => d.LogicalObservationINC == codeValue;
+                    }
+                    else
+                    {
+                        valuesPredicate = d => d.LogicalObservationINC != null && codes.Contains(d.LogicalObservationINC);
+                    }
+
+                    if (Enum.TryParse<DTO.Enums.LOINCQualitativeResultType>(term.GetStringValue("QualitativeResult"), out var qualResult))
+                    {
+                        switch (qualResult)
+                        {
+                            case DTO.Enums.LOINCQualitativeResultType.Positive:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "POSITIVE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Negative:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NEGATIVE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Borderline:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "BORDERLINE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Elevated:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ELEVATED");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.High:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "HIGH");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Low:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "LOW");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Normal:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NORMAL");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Abnormal:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ABNORMAL");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Undetermined:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETERMINED");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Undetectable:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETECTABLE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.NI:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NI");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.UN:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UN");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.OT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "OT");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
+                    {
+                        switch (resultModifier)
+                        {
+                            case DTO.Enums.LOINCResultModifierType.EQ:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.GE:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.GT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.LE:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.LT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.Text:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.NI:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.UN:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.OT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    double minVal;
+                    double maxVal;
+                    double.TryParse(term.GetStringValue("ResultRangeMin"), out minVal);
+                    double.TryParse(term.GetStringValue("ResultRangeMax"), out maxVal);
+                    if (minVal != 0 && maxVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal && d.ResultQuantitative <= maxVal);
+                    }
+                    else if (minVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal);
+                    }
+                    else if (maxVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative <= maxVal);
+                    }
+                }
+                else if (searchMethod == DTO.Enums.TextSearchMethodType.StartsWith)
+                {
+                    string value = codes[0];
+                    valuesPredicate = d => d.LogicalObservationINC.StartsWith(value);
+                    for (int i = 1; i < codes.Length; i++)
+                    {
+                        string valueinner = codes[i];
+                        valuesPredicate = valuesPredicate.Or(d => d.LogicalObservationINC.StartsWith(valueinner));
+                    }
+                    valuesPredicate = valuesPredicate.And(d => d.LogicalObservationINC != null);
+
+                    if (Enum.TryParse<DTO.Enums.LOINCQualitativeResultType>(term.GetStringValue("QualitativeResult"), out var qualResult))
+                    {
+                        switch (qualResult)
+                        {
+                            case DTO.Enums.LOINCQualitativeResultType.Positive:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "POSITIVE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Negative:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NEGATIVE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Borderline:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "BORDERLINE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Elevated:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ELEVATED");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.High:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "HIGH");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Low:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "LOW");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Normal:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NORMAL");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Abnormal:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ABNORMAL");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Undetermined:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETERMINED");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.Undetectable:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETECTABLE");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.NI:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NI");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.UN:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UN");
+                                break;
+                            case DTO.Enums.LOINCQualitativeResultType.OT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "OT");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
+                    {
+                        switch (resultModifier)
+                        {
+                            case DTO.Enums.LOINCResultModifierType.EQ:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.GE:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.GT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.LE:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.LT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.Text:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.NI:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.UN:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
+                                break;
+                            case DTO.Enums.LOINCResultModifierType.OT:
+                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    double minVal = double.Parse(term.GetStringValue("ResultRangeMin"));
+                    double maxVal = double.Parse(term.GetStringValue("ResultRangeMax"));
+                    if (minVal != 0 && maxVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal && d.ResultQuantitative <= maxVal);
+                    }
+                    else if (minVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal);
+                    }
+                    else if (maxVal != 0)
+                    {
+                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative <= maxVal);
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException("The search method type '" + searchMethod + "' is not supported.");
+                }
+
+                //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
+                if (loincTermGroupingPredicate == null)
+                {
+                    Expression<Func<pcori.LabResult, bool>> innerAndPredicate = (d) => true;
+                    if (ageGroupingPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
+                    }
+                    if (observationPeriodPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
+                    }
+                    if (valuesPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
+                    }
+                    loincTermGroupingPredicate = innerAndPredicate;
+                }
+                else
+                {
+                    Expression<Func<pcori.LabResult, bool>> innerAndPredicate = (d) => true;
+                    if (ageGroupingPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
+                    }
+                    else if (observationPeriodPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
+                    }
+                    else if (valuesPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
+                    }
+                    loincTermGroupingPredicate = loincTermGroupingPredicate.Or(innerAndPredicate);
+                }
+            }
+            #endregion
+
+            #region "Prescribing"
+            //Now process the Prescribing terms.
+            Expression<Func<pcori.Prescription, bool>> prescribingTermGroupingPredicate = null;
+            //each term should be OR'd together, and each code value OR'd within the term
+            foreach (var term in prescribingTerms)
+            {
+                DTO.Enums.TextSearchMethodType searchMethod;
+                if (!Enum.TryParse<DTO.Enums.TextSearchMethodType>(term.GetStringValue("SearchMethodType"), out searchMethod))
+                {
+                    searchMethod = DTO.Enums.TextSearchMethodType.ExactMatch;
+                }
+
+                var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Where(x => !string.IsNullOrEmpty(x.Trim())).Select(s => s.Trim()).Distinct().ToArray();
+
+                //limit to the encounters where the patient age falls within the specified range.
+                DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] {
+                    DTO.Enums.AgeRangeCalculationType.AtFirstMatchingEncounterWithinCriteriaGroup,
+                    DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
+                };
+
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+
+                Expression<Func<pcori.Prescription, bool>> ageGroupingPredicate = null;
+                if (ageRanges.Any())
+                {
+                    foreach (var range in ageRanges.Where(r => r.MinAge.HasValue || r.MaxAge.HasValue))
+                    {
+                        Expression<Func<pcori.Prescription, bool>> ageRangePredicate = (d) => true;
+                        if (range.MinAge.HasValue)
+                        {
+                            int minAge = range.MinAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+
+                                ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value) ?
+                                        (DbFunctions.DiffYears(d.Patient.BornOn.Value, (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn)).Value + ((d.Patient.BornOn.Value.Month < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))
+                                        :
+                                        (DbFunctions.DiffYears(d.Patient.BornOn, (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn)).Value - (((d.Patient.BornOn.Value.Month > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month) || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))));
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => minAge <= ((d.Patient.BornOn.Value > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value) ?
+                                    ((d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    ((d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))));
+                            }
+                        }
+                        if (range.MinAge.HasValue)
+                        {
+                            int maxAge = range.MaxAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value) ?
+                                    (DbFunctions.DiffYears(d.Patient.BornOn.Value, (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value).Value + ((d.Patient.BornOn.Value.Month < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    (DbFunctions.DiffYears(d.Patient.BornOn, (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value).Value - (((d.Patient.BornOn.Value.Month > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month) || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => ((d.Patient.BornOn.Value > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value) ?
+                                    ((d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day < (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))
+                                    :
+                                    ((d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                        }
+
+                        if (ageGroupingPredicate == null)
+                        {
+                            ageGroupingPredicate = ageRangePredicate;
+                        }
+                        else
+                        {
+                            ageGroupingPredicate = ageGroupingPredicate.Or(ageRangePredicate);
+                        }
+                    }
+                }
+
+                DateRangeValues[] observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
+                Expression<Func<pcori.Prescription, bool>> observationPeriodPredicate = null;
+
+                if (observationPeriodRanges.Any())
+                {
+                    foreach (var range in observationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? (d.OrderedOn >= start && d.OrderedOn <= end) : (d.StartedOn >= start && d.StartedOn <= end);
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? (d.OrderedOn >= start && d.OrderedOn <= end) : (d.StartedOn >= start && d.StartedOn <= end));
+                        }
+                        else if (start.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? d.OrderedOn >= start : d.StartedOn >= start;
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? d.OrderedOn >= start : d.StartedOn >= start);
+                        }
+                        else if (end.HasValue)
+                        {
+                            if (observationPeriodPredicate == null)
+                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? d.OrderedOn <= end : d.StartedOn <= end;
+                            else
+                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? d.OrderedOn <= end : d.StartedOn <= end);
+                        }
+                    }
+                }
+
+                Expression<Func<pcori.Prescription, bool>> valuesPredicate = null;
+
+                if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
+                {
+                    if (codes.Length == 0)
+                    {
+                        valuesPredicate = d => true;
+                    }
+                    else if (codes.Length == 1)
+                    {
+                        string codeValue = codes[0];
+                        valuesPredicate = d => d.RXNORMConceptIdentifier == codeValue;
+                    }
+                    else
+                    {
+                        valuesPredicate = d => d.RXNORMConceptIdentifier != null && codes.Contains(d.RXNORMConceptIdentifier);
+                    }
+                }
+                else if (searchMethod == DTO.Enums.TextSearchMethodType.StartsWith)
+                {
+                    if (codes.Length == 0)
+                    {
+                        valuesPredicate = d => true;
+                    }
+                    else
+                    {
+                        string value = codes[0];
+                        valuesPredicate = d => d.RXNORMConceptIdentifier.StartsWith(value);
+                        for (int i = 1; i < codes.Length; i++)
+                        {
+                            string valueinner = codes[i];
+                            valuesPredicate = valuesPredicate.Or(d => d.RXNORMConceptIdentifier.StartsWith(valueinner));
+                        }
+                        valuesPredicate = valuesPredicate.And(d => d.RXNORMConceptIdentifier != null);
+                    }                    
+                }
+                else
+                {
+                    throw new NotSupportedException("The search method type '" + searchMethod + "' is not supported.");
+                }
+
+                //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
+                if (prescribingTermGroupingPredicate == null)
+                {
+                    Expression<Func<pcori.Prescription, bool>> innerAndPredicate = (d) => true;
+                    if (ageGroupingPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
+                    }
+                    if (observationPeriodPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
+                    }
+                    if (valuesPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
+                    }
+                    prescribingTermGroupingPredicate = innerAndPredicate;
+                }
+                else
+                {
+                    Expression<Func<pcori.Prescription, bool>> innerAndPredicate = (d) => true;
+                    if (ageGroupingPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
+                    }
+                    else if (observationPeriodPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
+                    }
+                    else if (valuesPredicate != null)
+                    {
+                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
+                    }
+                    prescribingTermGroupingPredicate = prescribingTermGroupingPredicate.Or(innerAndPredicate);
+                }
+            }
+            #endregion
+
+            ///PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
             //Since Oracle 11 doesn't support lateral inline views or cross joins, we had to update the implementation below to apply the encounter
             //predicate separately to both procedures and diagnosis.
-            if (diagnosisTermGroupingPredicate != null && procedureTermGroupingPredicate != null)
+            if (diagnosisTermGroupingPredicate != null || procedureTermGroupingPredicate != null || loincTermGroupingPredicate != null || prescribingTermGroupingPredicate != null)
             {
-                //Combine and OR the diagnosis and procedure predicates, as per PMNDEV-6184
-                if (encounterPredicate == null)
+                Expression<Func<pcori.Patient, bool>> innerPredicate = (p) => false;
+                if (diagnosisTermGroupingPredicate != null)
                 {
-                    return patientPredicate.And((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate) || p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                    if (encounterPredicate == null)
+                    {
+                        innerPredicate = innerPredicate.Or((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate));
+                    }
+                    else
+                    {
+                        diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.And(e => encounterPredicate.Invoke(e.Encounter));
+                        innerPredicate = innerPredicate.Or((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate));
+                    }
                 }
-                else
-                {
-                    diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
-                    procedureTermGroupingPredicate = procedureTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
-                    return patientPredicate.And((p) =>
-                        p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate)
-                        ||
-                        p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate)
-                        );
-                }
-            }
-            else if (diagnosisTermGroupingPredicate != null)
-            {
-                if (encounterPredicate == null)
-                {
-                    return patientPredicate.And((p) => p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate));
-                }
-                else
-                {
-                    diagnosisTermGroupingPredicate = diagnosisTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
-                    return patientPredicate.And((p) =>
-                        p.Diagnoses.AsQueryable().Any(diagnosisTermGroupingPredicate)
-                        );
 
-                }
-            }
-            else if (procedureTermGroupingPredicate != null)
-            {
-                if (encounterPredicate == null)
+                if (procedureTermGroupingPredicate != null)
                 {
-                    return patientPredicate.And((p) => p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                    if (encounterPredicate == null)
+                    {
+                        innerPredicate = innerPredicate.Or((p) => p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                    }
+                    else
+                    {
+                        procedureTermGroupingPredicate = procedureTermGroupingPredicate.And(e => encounterPredicate.Invoke(e.Encounter));
+                        innerPredicate = innerPredicate.Or((p) => p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate));
+                    }
                 }
-                else
+
+                if (loincTermGroupingPredicate != null)
                 {
-                    procedureTermGroupingPredicate = procedureTermGroupingPredicate.And(p => encounterPredicate.Invoke(p.Encounter));
-                    return patientPredicate.And((p) =>
-                        p.Procedures.AsQueryable().Any(procedureTermGroupingPredicate)
-                        );
+                    innerPredicate = innerPredicate.Or((p) => p.LabResults.AsQueryable().Any(loincTermGroupingPredicate));
                 }
+
+                if (prescribingTermGroupingPredicate != null)
+                {
+                    innerPredicate = innerPredicate.Or((p) => p.Prescriptions.AsQueryable().Any(prescribingTermGroupingPredicate));
+                }
+
+                return patientPredicate.And(innerPredicate);
             }
             else if (encounterPredicate == null)
             {
-                //No diagnosis or procedure criteria was defined.
-                //Check if the encounter predicate was defined. If yes, then apply that.
                 return patientPredicate;
             }
 

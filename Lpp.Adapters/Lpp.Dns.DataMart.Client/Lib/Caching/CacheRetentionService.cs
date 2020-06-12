@@ -99,7 +99,7 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
             }
 
             Parallel.ForEach(requestDirectories, (directory) => {
-                string[] filePaths = Directory.GetFiles(directory, "*.meta");
+                string[] filePaths = Directory.GetFiles(directory, "*.meta", SearchOption.AllDirectories);
                 foreach(string path in filePaths)
                 {
                     TimeSpan age = DateTime.UtcNow - File.GetLastWriteTimeUtc(path);

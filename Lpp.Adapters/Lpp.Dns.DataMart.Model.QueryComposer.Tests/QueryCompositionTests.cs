@@ -21,8 +21,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         static readonly string OracleConnectionString;
         static readonly log4net.ILog Logger;
 
-        const bool RunPostgreSQL = true;
-        const bool RunOracle = false;
+        const bool RunPostgreSQL = false;
+        const bool RunOracle = true;
         const bool RunMySql = false;
 
         static QueryCompositionTests()
@@ -3151,7 +3151,413 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
         }
 
-		Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath)
+        [TestMethod]
+        public void LabRecord_NullCodesIn2015()
+        {
+            string filename = "LabRecordNullCodes.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                //Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesIn2015()
+        {
+            string filename = "LabRecordWithCodes.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesWithAgeIn2015()
+        {
+            string filename = "LabRecordWithCodesWithAge.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesWithExclusionIn2015()
+        {
+            string filename = "LabRecordWithCodesWithExclusion.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesWithModifierIn2015()
+        {
+            string filename = "LabRecordWithCodesWithModifier.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesWithQualifierIn2015()
+        {
+            string filename = "LabRecordWithCodesWithQualifier.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void LabRecord_WithCodesWithDiagnosisIn2015()
+        {
+            string filename = "LabRecordWithCodesWithDiagnosis.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+            //Console.WriteLine("Response Count from MSSQL is " + (response.Results.First().First().First().Value));
+            //var table = response.Results.First();
+            //var row = table.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+
+            if (RunPostgreSQL)
+            {
+                var npgsqlResponse = RunRequest(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                Assert.IsNull(npgsqlResponse.Errors);
+                //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
+                //Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
+            }
+
+            if (RunMySql)
+            {
+                var mysqlResponse = RunRequest(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                Assert.IsNull(mysqlResponse.Errors);
+                //Assert.AreEqual(
+                //table.Count(), mysqlResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermNullCode()
+        {
+            string filename = "Prescribing_NullTerm.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermWithCodes()
+        {
+            string filename = "Prescribing_TermWithCodes.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermNullCodesNoObservation()
+        {
+            string filename = "PrescribingTermNullCodesNoObservation.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void Prescribing_TermWithCodesAndExclusion()
+        {
+            string filename = "Prescribing_TermWithCodesAndExclusion.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermNullCodeWithAge()
+        {
+            string filename = "Prescribing_NullTermWithAge.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermWithCodesWithAge()
+        {
+            string filename = "Prescribing_TermWithCodesWithAge.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PrescribingTermWithOtherCodeTypes()
+        {
+            string filename = "PrescribingTermWithOtherCodeTypes.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath)
         {
             return RunRequest(requestJsonFilepath, MSSqlConnectionString, Settings.SQLProvider.SQLServer);
         }

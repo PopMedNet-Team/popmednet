@@ -19,7 +19,7 @@ namespace Theme.GlobalNetwork {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Theme {
@@ -70,7 +70,7 @@ namespace Theme.GlobalNetwork {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2018 PopMedNet, All Rights Reserved.
+        ///   Looks up a localized string similar to © 2020 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {
             get {

@@ -55,6 +55,58 @@ module Dns.Enums
 	 	 {value:AgeRangeCalculationType.AsOfDateOfRequestSubmission , text: 'As of the date of the request submission'},
 	 	 {value:AgeRangeCalculationType.AsOfSpecifiedDate , text: 'As of [select date]* '},
 	 ]
+	 export enum LOINCQualitativeResultType{
+	 	Positive = 1,
+	 	Negative = 2,
+	 	Borderline = 3,
+	 	Elevated = 4,
+	 	High = 5,
+	 	Low = 6,
+	 	Normal = 7,
+	 	Abnormal = 8,
+	 	Undetermined = 9,
+	 	Undetectable = 10,
+	 	NI = 11,
+	 	UN = 12,
+	 	OT = 13,
+	 }
+	 export var LOINCQualitativeResultTypeTranslation: Dns.Structures.KeyValuePair[] = [
+	 	 {value:LOINCQualitativeResultType.Positive , text: 'Positive'},
+	 	 {value:LOINCQualitativeResultType.Negative , text: 'Negative'},
+	 	 {value:LOINCQualitativeResultType.Borderline , text: 'Borderline'},
+	 	 {value:LOINCQualitativeResultType.Elevated , text: 'Elevated'},
+	 	 {value:LOINCQualitativeResultType.High , text: 'High'},
+	 	 {value:LOINCQualitativeResultType.Low , text: 'Low'},
+	 	 {value:LOINCQualitativeResultType.Normal , text: 'Normal'},
+	 	 {value:LOINCQualitativeResultType.Abnormal , text: 'Abnormal'},
+	 	 {value:LOINCQualitativeResultType.Undetermined , text: 'Undetermined'},
+	 	 {value:LOINCQualitativeResultType.Undetectable , text: 'Undetectable'},
+	 	 {value:LOINCQualitativeResultType.NI , text: 'NI'},
+	 	 {value:LOINCQualitativeResultType.UN , text: 'UN'},
+	 	 {value:LOINCQualitativeResultType.OT , text: 'OT'},
+	 ]
+	 export enum LOINCResultModifierType{
+	 	EQ = 1,
+	 	GE = 2,
+	 	GT = 3,
+	 	LE = 4,
+	 	LT = 5,
+	 	Text = 6,
+	 	NI = 7,
+	 	UN = 8,
+	 	OT = 9,
+	 }
+	 export var LOINCResultModifierTypeTranslation: Dns.Structures.KeyValuePair[] = [
+	 	 {value:LOINCResultModifierType.EQ , text: 'Equal'},
+	 	 {value:LOINCResultModifierType.GE , text: 'Greater than or equal'},
+	 	 {value:LOINCResultModifierType.GT , text: 'Greater than'},
+	 	 {value:LOINCResultModifierType.LE , text: 'Less than or equal to'},
+	 	 {value:LOINCResultModifierType.LT , text: 'Less than'},
+	 	 {value:LOINCResultModifierType.Text , text: 'Text'},
+	 	 {value:LOINCResultModifierType.NI , text: 'No Information'},
+	 	 {value:LOINCResultModifierType.UN , text: 'Unknown'},
+	 	 {value:LOINCResultModifierType.OT , text: 'Other'},
+	 ]
 	 export enum ProcedureCode{
 	 	Any = 1,
 	 	ICD9 = 2,

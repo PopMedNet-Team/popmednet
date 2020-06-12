@@ -163,31 +163,39 @@ namespace Lpp.Dns.Api.Terms
 
                                 if (headers.TryGetValue(columnReference, out string column))
                                 {
-                                    if (column.IsNullOrEmpty())
-                                        continue;
-
-                                    string value = GetValue(spreadsheetDocument, cell);
-                                    switch (column.ToUpperInvariant())
+                                    try
                                     {
-                                        case "CRITERIAINDEX":
-                                            try
-                                            {
-                                                addedCode.CriteriaIndex = Convert.ToInt32(value);
-                                            }
-                                            catch
-                                            {
-                                                throw new FormatException($"Unable to convert Criteria Index to integer at cell reference: { cell.CellReference.Value }. Value: \"{ value }\"");
-                                            }
-                                            break;
-                                        case "CODETYPE":
-                                            addedCode.CodeType = value;
-                                            break;
-                                        case "CODE":
-                                            addedCode.Code = value;
-                                            break;
-                                        case "EXACTMATCH":
-                                            addedCode.SearchMethodType = string.Equals("1", value, StringComparison.OrdinalIgnoreCase) ? TextSearchMethodType.ExactMatch : TextSearchMethodType.StartsWith;
-                                            break;
+                                        if (column.IsNullOrEmpty() || string.Equals("EMPTY", column, StringComparison.OrdinalIgnoreCase))
+                                            continue;
+
+                                        string value = GetValue(spreadsheetDocument, cell);
+                                        switch (column.ToUpperInvariant())
+                                        {
+                                            case "CRITERIAINDEX":
+                                                try
+                                                {
+                                                    addedCode.CriteriaIndex = Convert.ToInt32(value);
+                                                }
+                                                catch
+                                                {
+                                                    throw new FormatException($"Unable to convert Criteria Index to integer at cell reference: { cell.CellReference.Value }. Value: \"{ value }\"");
+                                                }
+                                                break;
+                                            case "CODETYPE":
+                                                addedCode.CodeType = value;
+                                                break;
+                                            case "CODE":
+                                                addedCode.Code = value;
+                                                break;
+                                            case "EXACTMATCH":
+                                                addedCode.SearchMethodType = string.Equals("1", value, StringComparison.OrdinalIgnoreCase) ? TextSearchMethodType.ExactMatch : TextSearchMethodType.StartsWith;
+                                                break;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                        throw;
                                     }
                                 }
 

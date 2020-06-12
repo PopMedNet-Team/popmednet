@@ -68,7 +68,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string ResultSNOMED { get; set; }
 
         [Column("RESULT_NUM")]
-        public string ResultQuantitative { get; set; }
+        public float? ResultQuantitative { get; set; }
 
         [Column("RESULT_MODIFIER")]
         public string ResultModifier { get; set; }

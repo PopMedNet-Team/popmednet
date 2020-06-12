@@ -248,6 +248,8 @@
     <Content Include="App_Code\Terms\PatientReportedOutcome.cs" />
     <Content Include="App_Code\Terms\PatientReportedOutcomeEncounter.cs" />
     <Content Include="App_Code\Terms\MetadataRefresh.cs" />
+    <Content Include="App_Code\Terms\LOINC.cs" />
+    <Content Include="App_Code\Terms\Prescribing.cs" />
     <Compile Include="App_Code\UI.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1438,6 +1440,10 @@
     <Content Include="Areas\QueryComposer\Views\Terms\PatientReportedOutcomeEncounter\StratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\MetadataRefresh\EditStratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\MetadataRefresh\StratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\LOINC\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\LOINC\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Prescribing\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\Prescribing\View.cshtml" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>

@@ -65,6 +65,8 @@
     <Compile Include="DataMarts\DataMartAvailabilityPeriodV2DTO.cs" />
     <Compile Include="DataMarts\DataModelProcessorDTO.cs" />
     <Compile Include="Enums\AgeRangeCalculationType.cs" />
+    <Compile Include="Enums\LOINCQualitativeResultType.cs" />
+    <Compile Include="Enums\LOINCResultModifierType.cs" />
     <Compile Include="Enums\ProcedureCode.cs" />
     <Compile Include="Enums\RequestScheduleTypes.cs" />
     <Compile Include="Enums\RoutingType.cs" />

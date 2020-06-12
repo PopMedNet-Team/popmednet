@@ -69,7 +69,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string Basis { get; set; }
 
         [Column("RXNORM_CUI")]
-        public float? RXNORMConceptIdentifier { get; set; }
+        public string RXNORMConceptIdentifier { get; set; }
 
         [Column("RX_SOURCE")]
         public string Source { get; set; }

@@ -943,6 +943,24 @@ namespace Lpp.QueryComposer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A term providing the ability to query for quantitative and qualitative lab results.
+        /// </summary>
+        public static string LOINCCode_Description {
+            get {
+                return ResourceManager.GetString("LOINCCode_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lab: LOINC.
+        /// </summary>
+        public static string LOINCCode_Name {
+            get {
+                return ResourceManager.GetString("LOINCCode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A database and universal standard for identifying medical laboratory observations..
         /// </summary>
         public static string LOINCLabTest_Description {
@@ -1083,6 +1101,24 @@ namespace Lpp.QueryComposer {
         public static string PatientReportedOutcomeEncounters_Name {
             get {
                 return ResourceManager.GetString("PatientReportedOutcomeEncounters_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prescribing.
+        /// </summary>
+        public static string Prescribing_Description {
+            get {
+                return ResourceManager.GetString("Prescribing_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prescribing.
+        /// </summary>
+        public static string Prescribing_Name {
+            get {
+                return ResourceManager.GetString("Prescribing_Name", resourceCulture);
             }
         }
         

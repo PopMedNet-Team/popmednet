@@ -268,6 +268,20 @@ var Plugins;
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "LOINCCodesID", {
+                        get: function () {
+                            return 'F5903376-D2A5-486F-92D3-1F97D598A221';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "PrescribingCodesID", {
+                        get: function () {
+                            return '793BD948-C90C-45DA-B4B7-F8E2387E1A78';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Terms.Compare = function (a, b) {
                         if ((a == null && b != null) || (a != null && b == null))
                             return false;

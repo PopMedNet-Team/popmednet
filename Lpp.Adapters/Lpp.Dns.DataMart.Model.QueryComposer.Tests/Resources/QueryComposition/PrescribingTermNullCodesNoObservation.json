@@ -1,0 +1,35 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "44af3bce-5100-467e-8b2a-b4fa15a5b644",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "793bd948-c90c-45da-b4b7-f8e2387e1a78",
+                "Values": {
+                  "CodeType": 0,
+                  "CodeValues": "",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}

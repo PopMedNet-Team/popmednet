@@ -253,9 +253,29 @@ namespace Lpp.Objects.Dynamic
 
                 PropertyInfo propInfo = pair.Value;
 
-                object value = Convert.ChangeType(propertyBag[pair.Key], propInfo.PropertyType);
+                try
+                {
+                    object value = Convert.ChangeType(propertyBag[pair.Key], propInfo.PropertyType);
 
-                propInfo.SetValue(obj, value, null);
+                    propInfo.SetValue(obj, value, null);
+                }
+                catch (InvalidCastException ex)
+                {
+                    object pairValue = propertyBag[pair.Key];
+
+                    if(pairValue != null)
+                    {
+                        var converter = System.ComponentModel.TypeDescriptor.GetConverter(propInfo.PropertyType);
+
+                        if (converter.IsValid(pairValue.ToString()))
+                        {
+                            object value = converter.ConvertFromString(pairValue.ToString());
+
+                            propInfo.SetValue(obj, value, null);
+                        }
+                    }
+                    
+                }
             }
 
             return obj;

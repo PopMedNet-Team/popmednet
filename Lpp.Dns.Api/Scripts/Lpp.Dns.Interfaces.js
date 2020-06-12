@@ -52,6 +52,60 @@ var Dns;
             { value: AgeRangeCalculationType.AsOfDateOfRequestSubmission, text: 'As of the date of the request submission' },
             { value: AgeRangeCalculationType.AsOfSpecifiedDate, text: 'As of [select date]* ' },
         ];
+        var LOINCQualitativeResultType;
+        (function (LOINCQualitativeResultType) {
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Positive"] = 1] = "Positive";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Negative"] = 2] = "Negative";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Borderline"] = 3] = "Borderline";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Elevated"] = 4] = "Elevated";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["High"] = 5] = "High";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Low"] = 6] = "Low";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Normal"] = 7] = "Normal";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Abnormal"] = 8] = "Abnormal";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Undetermined"] = 9] = "Undetermined";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Undetectable"] = 10] = "Undetectable";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["NI"] = 11] = "NI";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["UN"] = 12] = "UN";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["OT"] = 13] = "OT";
+        })(LOINCQualitativeResultType = Enums.LOINCQualitativeResultType || (Enums.LOINCQualitativeResultType = {}));
+        Enums.LOINCQualitativeResultTypeTranslation = [
+            { value: LOINCQualitativeResultType.Positive, text: 'Positive' },
+            { value: LOINCQualitativeResultType.Negative, text: 'Negative' },
+            { value: LOINCQualitativeResultType.Borderline, text: 'Borderline' },
+            { value: LOINCQualitativeResultType.Elevated, text: 'Elevated' },
+            { value: LOINCQualitativeResultType.High, text: 'High' },
+            { value: LOINCQualitativeResultType.Low, text: 'Low' },
+            { value: LOINCQualitativeResultType.Normal, text: 'Normal' },
+            { value: LOINCQualitativeResultType.Abnormal, text: 'Abnormal' },
+            { value: LOINCQualitativeResultType.Undetermined, text: 'Undetermined' },
+            { value: LOINCQualitativeResultType.Undetectable, text: 'Undetectable' },
+            { value: LOINCQualitativeResultType.NI, text: 'NI' },
+            { value: LOINCQualitativeResultType.UN, text: 'UN' },
+            { value: LOINCQualitativeResultType.OT, text: 'OT' },
+        ];
+        var LOINCResultModifierType;
+        (function (LOINCResultModifierType) {
+            LOINCResultModifierType[LOINCResultModifierType["EQ"] = 1] = "EQ";
+            LOINCResultModifierType[LOINCResultModifierType["GE"] = 2] = "GE";
+            LOINCResultModifierType[LOINCResultModifierType["GT"] = 3] = "GT";
+            LOINCResultModifierType[LOINCResultModifierType["LE"] = 4] = "LE";
+            LOINCResultModifierType[LOINCResultModifierType["LT"] = 5] = "LT";
+            LOINCResultModifierType[LOINCResultModifierType["Text"] = 6] = "Text";
+            LOINCResultModifierType[LOINCResultModifierType["NI"] = 7] = "NI";
+            LOINCResultModifierType[LOINCResultModifierType["UN"] = 8] = "UN";
+            LOINCResultModifierType[LOINCResultModifierType["OT"] = 9] = "OT";
+        })(LOINCResultModifierType = Enums.LOINCResultModifierType || (Enums.LOINCResultModifierType = {}));
+        Enums.LOINCResultModifierTypeTranslation = [
+            { value: LOINCResultModifierType.EQ, text: 'Equal' },
+            { value: LOINCResultModifierType.GE, text: 'Greater than or equal' },
+            { value: LOINCResultModifierType.GT, text: 'Greater than' },
+            { value: LOINCResultModifierType.LE, text: 'Less than or equal to' },
+            { value: LOINCResultModifierType.LT, text: 'Less than' },
+            { value: LOINCResultModifierType.Text, text: 'Text' },
+            { value: LOINCResultModifierType.NI, text: 'No Information' },
+            { value: LOINCResultModifierType.UN, text: 'Unknown' },
+            { value: LOINCResultModifierType.OT, text: 'Other' },
+        ];
         var ProcedureCode;
         (function (ProcedureCode) {
             ProcedureCode[ProcedureCode["Any"] = 1] = "Any";

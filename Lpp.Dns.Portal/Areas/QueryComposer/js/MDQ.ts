@@ -570,7 +570,9 @@ module Plugins.Requests.QueryBuilder.MDQ {
                     Terms.ZipCodeID,//Zip Code
                     Terms.CombinedDiagnosisCodesID,//Combinded Diagnosis Codes
                     Terms.ESPCombinedDiagnosisCodesID,//ESP Combined Diagnosis Codes
-                    Terms.ProcedureCodesID // Procedure Codes
+                    Terms.ProcedureCodesID, // Procedure Codes
+                    Terms.LOINCCodesID, // LOINC Codes
+                    Terms.PrescribingCodesID //Prescribing Codes
                 ];
 
                 var convertTerms = (terms: Dns.ViewModels.QueryComposerTermViewModel[]) => {
@@ -921,7 +923,9 @@ module Plugins.Requests.QueryBuilder.MDQ {
                     Terms.ZipCodeID,//Zip Code
                     Terms.CombinedDiagnosisCodesID,//Combinded Diagnosis Codes
                     Terms.ESPCombinedDiagnosisCodesID,//ESP Combined Diagnosis Codes
-                    Terms.ProcedureCodesID // Procedure Codes
+                    Terms.ProcedureCodesID, // Procedure Codes
+                    Terms.LOINCCodesID, // LOINC Codes
+                    Terms.PrescribingCodesID //Prescribing Codes
                 ];
 
                 var convertTerms = (terms: Dns.ViewModels.QueryComposerTermViewModel[]) => {
@@ -1045,6 +1049,10 @@ module Plugins.Requests.QueryBuilder.MDQ {
             Terms.TrialID,
             //PatientReportedOutcome
             Terms.PatientReportedOutcomeID,
+            // LOINC Codes
+            Terms.LOINCCodesID,
+            //Prescribing Terms
+            Terms.PrescribingCodesID
         ];
 
         /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */

@@ -40,7 +40,38 @@ namespace Lpp.Dns.Api.Projects
         [HttpGet]
         public override IQueryable<ProjectDTO> List()
         {
-            return base.List().Where(l => !l.Deleted);
+            return (from proj in DataContext.Projects
+                    join grp in DataContext.Groups on proj.GroupID equals grp.ID
+                    let pViewPermissionID = PermissionIdentifiers.Project.View.ID
+                    let pListPermissionID = PermissionIdentifiers.Group.ListProjects.ID
+                    let identityID = Identity.ID
+                    let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                    let gAcls = DataContext.GlobalAcls.Where(acl => secGrps.Contains(acl.SecurityGroupID) && (acl.PermissionID == pListPermissionID || acl.PermissionID == pViewPermissionID))
+                    let pAcls = DataContext.ProjectAcls.Where(acl => secGrps.Contains(acl.SecurityGroupID) && acl.PermissionID == pViewPermissionID && proj.ID == acl.ProjectID)
+                    let groupAcls = DataContext.GroupAcls.Where(acl => secGrps.Contains(acl.SecurityGroupID) && acl.PermissionID == pListPermissionID && grp.ID == acl.GroupID)
+
+                    where !proj.Deleted &&
+                    (
+                        (gAcls.Any(a => a.Allowed) || pAcls.Any(a => a.Allowed) || groupAcls.Any(a => a.Allowed))
+                        &&
+                        (gAcls.All(a => a.Allowed) && pAcls.All(a => a.Allowed) && groupAcls.All(a => a.Allowed))
+                    )
+                    select new ProjectDTO
+                    {
+                        Acronym = proj.Acronym,
+                        Active = proj.Active,
+                        Deleted = proj.Deleted,
+                        Description = proj.Description,
+                        EndDate = proj.EndDate,
+                        ID = proj.ID,
+                        Name = proj.Name,
+                        StartDate = proj.StartDate,
+                        Timestamp = proj.Timestamp,
+                        GroupID = proj.GroupID,
+                        Group = grp.Name
+                    }
+                );
+
         }
 
         

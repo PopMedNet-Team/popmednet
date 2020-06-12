@@ -1,0 +1,76 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "cb7599ed-6a97-4aad-b1ba-fbab1d9971e0",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2015-01-01T05:00:00.000Z",
+                  "End": "2015-12-31T05:00:00.000Z"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "44af3bce-5100-467e-8b2a-b4fa15a5b644",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "793bd948-c90c-45da-b4b7-f8e2387e1a78",
+                "Values": {
+                  "CodeType": 0,
+                  "CodeValues": "84428-4",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [],
+                "Design": {}
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "401",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [],
+                "Design": {}
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 4,
+                  "CodeValues": "I10",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}

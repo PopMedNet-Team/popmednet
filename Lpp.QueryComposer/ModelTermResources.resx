@@ -555,4 +555,16 @@
   <data name="MetaDataRefresh_Name" xml:space="preserve">
     <value>Metadata Refresh</value>
   </data>
+  <data name="LOINCCode_Description" xml:space="preserve">
+    <value>A term providing the ability to query for quantitative and qualitative lab results</value>
+  </data>
+  <data name="LOINCCode_Name" xml:space="preserve">
+    <value>Lab: LOINC</value>
+  </data>
+  <data name="Prescribing_Description" xml:space="preserve">
+    <value>Prescribing</value>
+  </data>
+  <data name="Prescribing_Name" xml:space="preserve">
+    <value>Prescribing</value>
+  </data>
 </root>

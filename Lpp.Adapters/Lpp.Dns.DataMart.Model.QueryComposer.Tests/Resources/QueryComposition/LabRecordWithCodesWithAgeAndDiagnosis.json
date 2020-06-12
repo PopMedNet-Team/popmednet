@@ -1,0 +1,101 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "e8eb17b0-f841-4b94-8f67-f1ab27328d1f",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "13955-0;16128-1;22327-1;22329-7",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": null,
+                  "ResultRangeMax": null,
+                  "QualitativeResult": 5,
+                  "ResultModifier": null
+                },
+                "Criteria": [],
+                "Design": {}
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "401",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [],
+                "Design": {}
+              },
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 4,
+                  "CodeValues": "I10",
+                  "SearchMethodType": 0
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "cb227556-dcda-4e1d-a8a5-df3835f4e98a",
+            "Name": "i_Age_Range",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "Values": {
+                  "MinAge": 45,
+                  "MaxAge": 84,
+                  "CalculationType": 1,
+                  "CalculateAsOf": null,
+                  "CalculateAsOfRequired": false
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "8a5680d3-2f94-4949-829a-8b168ad0877a",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2015-01-01T05:00:00.000Z",
+                  "End": "2020-01-01T05:00:00.000Z"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}

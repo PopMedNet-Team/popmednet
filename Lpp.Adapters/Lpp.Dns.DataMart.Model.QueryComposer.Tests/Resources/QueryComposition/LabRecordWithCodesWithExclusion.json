@@ -1,0 +1,130 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Exclusion": true,
+        "Criteria": [
+          {
+            "ID": "811d7e6e-35a6-4a30-8784-4794c9388de6",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "13955-0;16128-1;22327-1;22329-7",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": 75,
+                  "ResultRangeMax": 75,
+                  "QualitativeResult": null,
+                  "ResultModifier": "2"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "2bdfb91f-f4c5-400e-95ff-03ae935f90e0",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2015-01-01T05:00:00.000Z",
+                  "End": "2015-12-31T05:00:00.000Z"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "44bc3783-ceb9-4527-ac1c-db700f2be088",
+            "Name": "i_Age_Range",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+                "Values": {
+                  "MinAge": 45,
+                  "MaxAge": 84,
+                  "CalculationType": "3",
+                  "CalculateAsOf": null,
+                  "CalculateAsOfRequired": false
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      },
+      {
+        "Exclusion": true,
+        "Criteria": [
+          {
+            "ID": "2275ef25-21ab-460b-9d35-3e7f31090ac9",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "13955-0;16128-1;22327-1;22329-7",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": null,
+                  "ResultRangeMax": null,
+                  "QualitativeResult": null,
+                  "ResultModifier": null
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "3519b1a1-a9f1-4238-8562-a3d037bc921c",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2014-01-01T05:00:00.000Z",
+                  "End": "2014-12-31T05:00:00.000Z"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": []
+  },
+  "TemporalEvents": []
+}

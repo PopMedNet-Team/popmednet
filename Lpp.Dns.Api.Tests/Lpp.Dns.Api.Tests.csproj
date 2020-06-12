@@ -210,6 +210,7 @@
     <None Include="Requests\Samples\BadRequestObserver.json" />
     <None Include="Requests\Samples\GoodRequestObserver.json" />
     <None Include="Requests\Samples\ModularProgramRequest.json" />
+    <EmbeddedResource Include="Requests\Samples\NullResponse.json" />
     <None Include="Terms\Example01_DIAGNOSIS_Acute Kidney Failure.csv" />
     <None Include="Terms\Example01_DIAGNOSIS_Acute Kidney Failure.xlsx" />
     <None Include="Terms\Example02_PROCEDURE_Dialysis.csv" />

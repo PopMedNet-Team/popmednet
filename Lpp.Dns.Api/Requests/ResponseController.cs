@@ -958,6 +958,15 @@ namespace Lpp.Dns.Api.Requests
 
             //get the aggregatable properties, assume that all the responses have the same aggregation definition
             IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Aggregation.Select.Any()).Select(r => r.Aggregation.Select.Where(pd => !string.Equals("LowThreshold", pd.As, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+
+            combinedResponse.Properties = propertyDefinitions.Select(x => new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO {
+                    Name = x.Name,
+                    As = x.As,
+                    Type = x.Type,
+                    Aggregate = x.Aggregate
+            }).ToArray();
+
+
             //add a default groupingkey, this is needed for when there is only a single property in the response and it is getting aggregated
             propertyDefinitions = propertyDefinitions.Union(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = DefaultGroupingKey, Type = typeof(string).FullName } });
 
@@ -1052,7 +1061,6 @@ namespace Lpp.Dns.Api.Requests
                 //dont include LowThreshold as an aggregation
                 IEnumerable<Dictionary<string, object>> aggregatedResults = Lpp.Objects.Dynamic.TypeBuilderHelper.ConvertToDictionary(((IQueryable)q).AsEnumerable(), aggregate.Select);
                 combinedResponse.Results = new[] { aggregatedResults.ToArray() };
-                combinedResponse.Properties = responsesToAggregate.First().Properties.ToArray();
                 combinedResponse.Aggregation = aggregate;
 
             }
@@ -1351,15 +1359,17 @@ namespace Lpp.Dns.Api.Requests
                     else
                     {
                         string row = string.Empty;
-                        foreach (var col in columns)
+                        for (int c = 0; c < columns.Count(); c++)
                         {
-                            if (!string.IsNullOrEmpty(row))
+                            var col = columns[c];
+
+                            if (c == 0 && view != TaskItemTypes.AggregateResponse)
+                            {
+                                row += tableName + ",";
+                            }
+                            else if ((c + 1) < columns.Count())
                             {
                                 row += ",";
-                            }
-                            else
-                            {
-                                row += tableName;
                             }
                         }
                         await writer.WriteLineAsync(row);
@@ -1410,7 +1420,7 @@ namespace Lpp.Dns.Api.Requests
 
                             //responseSourceName = string.Empty;
                             //Max length for a worksheet name is 31 characters.
-                            responseSourceName = (string.IsNullOrWhiteSpace(responseSourceName) ? "Sheet " + sheetID : responseSourceName).Trim().MaxLength(30);
+                            responseSourceName = (string.IsNullOrWhiteSpace(responseSourceName) ? "Sheet " + sheetID : responseSourceName).Trim();
                             tabName = (!string.IsNullOrWhiteSpace(responseSourceName) && !string.IsNullOrWhiteSpace(tabName) ? tabName : "Sheet " + sheetID).Trim().MaxLength(30);
 
                             WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();

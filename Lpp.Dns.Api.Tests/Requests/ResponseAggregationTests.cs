@@ -309,6 +309,124 @@ Lpp.Dns.Api.Tests.Requests.Samples.request.json
         }
 
 
+        const string DefaultGroupingKey = "__DefaultGroupingKey";
+        const string DefaultGroupingKeyValue = "__DefaultGroupingKeyValue";
+        [TestMethod]
+        public void TestReadingNullResult()
+        {
+            var serializationSettings = new Newtonsoft.Json.JsonSerializerSettings();
+            serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
+            var responsesToAggregate = new List<DTO.QueryComposer.QueryComposerResponseDTO> { LoadJson<Dns.DTO.QueryComposer.QueryComposerResponseDTO>("Lpp.Dns.Api.Tests.Requests.Samples.NullResponse.json", serializationSettings) };
+
+            DTO.QueryComposer.QueryComposerResponseDTO combinedResponse = new DTO.QueryComposer.QueryComposerResponseDTO();
+            combinedResponse.RequestID = Guid.Empty;
+            combinedResponse.ResponseDateTime = DateTime.UtcNow;//TODO: should this be based on a response date? the most recent or earlies?
+
+            //get the aggregatable properties, assume that all the responses have the same aggregation definition
+            IEnumerable<Objects.Dynamic.IPropertyDefinition> propertyDefinitions = responsesToAggregate.Where(r => r.Aggregation.Select.Any()).Select(r => r.Aggregation.Select.Where(pd => !string.Equals("LowThreshold", pd.As, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            //add a default groupingkey, this is needed for when there is only a single property in the response and it is getting aggregated
+            propertyDefinitions = propertyDefinitions.Union(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = DefaultGroupingKey, Type = typeof(string).FullName } });
+
+            //convert to typed objects so that we can work with the results using reflection, all responses must have the same property and aggregation definition.
+            Type resultType = Lpp.Objects.Dynamic.TypeBuilderHelper.CreateType("ResponseItem", propertyDefinitions);
+
+            //create a typed list to hold the converted response items
+            Type listType = typeof(List<>).MakeGenericType(resultType);
+            //System.Collections.IList items = Activator.CreateInstance(listType) as System.Collections.IList;
+            var items = Activator.CreateInstance(listType);
+
+            //build a map of the property info to the dictionary key values
+            IDictionary<string, System.Reflection.PropertyInfo> propertyInfoMap = Lpp.Objects.Dynamic.TypeBuilderHelper.CreatePropertyInfoMap(resultType, propertyDefinitions);
+
+            //merge results
+            if (responsesToAggregate.Count == 1)
+            {
+                combinedResponse = responsesToAggregate[0];
+            }
+            else
+            {
+                IEnumerable<Dictionary<string, object>> combined = Enumerable.Empty<Dictionary<string, object>>();
+                foreach (var r in responsesToAggregate.SelectMany(rr => rr.Results))
+                {
+                    //include only the properties that are defined in the aggregation select definition, and are not the low threshhold column's standard name
+                    var filtered = r.Select(d => d.Where(k => !string.Equals(k.Key, "LowThreshold", StringComparison.OrdinalIgnoreCase) && propertyDefinitions.Any(p => p.As == k.Key)).ToDictionary(dd => dd.Key, dd => dd.Value));
+                    combined = combined.Concat(filtered); ;
+                }
+                combinedResponse.Results = new[] { combined };
+            }
+
+            foreach (var dic in combinedResponse.Results.First())
+            {
+                //add the default grouping value to the existing result item
+                dic.Add(DefaultGroupingKey, DefaultGroupingKeyValue);
+
+                //create and add the populated object to the collection
+                var obj = Lpp.Objects.Dynamic.TypeBuilderHelper.FlattenDictionaryToType(resultType, dic, propertyInfoMap);
+                ((System.Collections.IList)items).Add(obj);
+            }
+
+            if (((System.Collections.IList)items).Count == 0)
+            {
+                combinedResponse.Results = new[] { new Dictionary<string, object>[0] };
+            }
+            else
+            {
+                var aggregate = responsesToAggregate.Where(r => r.Aggregation != null).Select(r => r.Aggregation).FirstOrDefault();
+                //in past some responses included the LowThreshold column in the aggregation select, remove explicitly from the combined aggregation defintion
+                aggregate.Select = aggregate.Select.Where(pd => !string.Equals("LowThreshold", pd.As, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+                List<string> selectBy = new List<string>(aggregate.Select.Count() + 10);
+                foreach (Lpp.Dns.DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO prop in aggregate.Select)
+                {
+                    string s = (aggregate.GroupBy.Contains(prop.Name, StringComparer.OrdinalIgnoreCase) ? "Key." : "") + prop.As;
+
+                    //don't add LowThreshold to the select
+                    if (s.Equals("LowThreshold", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+
+                    if (!string.IsNullOrWhiteSpace(prop.Aggregate))
+                    {
+                        s = prop.Aggregate + "(" + Lpp.Objects.Dynamic.TypeBuilderHelper.CleanString(s) + ")";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(prop.Aggregate))
+                    {
+                        s += " as " + Lpp.Objects.Dynamic.TypeBuilderHelper.CleanString(prop.As);
+                    }
+
+                    selectBy.Add(s);
+                }
+
+                var q = ((System.Collections.IList)items).AsQueryable();
+
+                //group by the specified properties, else fall back to the default grouping key
+                if (aggregate.GroupBy != null && aggregate.GroupBy.Where(x => !string.IsNullOrEmpty(x)).Any())
+                {
+                    string groupingStatement = "new (" + string.Join(",", aggregate.GroupBy) + ")";
+                    q = q.GroupBy(groupingStatement);
+                }
+                else
+                {
+                    q = q.GroupBy($"new ({DefaultGroupingKey})");
+                }
+
+                string selectStatement = "new (" + string.Join(",", selectBy) + ")";
+                q = q.Select(selectStatement);
+
+                //convert results back to IEnumerable<Dictionary<string,object>>, and add to the results being returned
+                //dont include LowThreshold as an aggregation
+                IEnumerable<Dictionary<string, object>> aggregatedResults = Lpp.Objects.Dynamic.TypeBuilderHelper.ConvertToDictionary(((IQueryable)q).AsEnumerable(), aggregate.Select);
+                combinedResponse.Results = new[] { aggregatedResults.ToArray() };
+                combinedResponse.Properties = responsesToAggregate.First().Properties.ToArray();
+                combinedResponse.Aggregation = aggregate;
+
+            }
+
+            Assert.IsNotNull(combinedResponse);
+        }
+
+
         T LoadJson<T>(string key)
         {
             string json;
@@ -318,6 +436,16 @@ Lpp.Dns.Api.Tests.Requests.Samples.request.json
             }
 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
+        }
+
+        T LoadJson<T>(string key, Newtonsoft.Json.JsonSerializerSettings serializationSettings)
+        {
+            string json;
+            using (var stream = new System.IO.StreamReader(typeof(ResponseAggregationTests).Assembly.GetManifestResourceStream(key)))
+            {
+                json = stream.ReadToEnd();
+            }
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json, serializationSettings);
         }
     }
 }

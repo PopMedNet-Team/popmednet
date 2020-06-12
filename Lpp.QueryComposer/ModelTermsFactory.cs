@@ -44,6 +44,8 @@ namespace Lpp.QueryComposer
                 new ModelTerm{ ID = HCPCSProcedureCodesID, Name = ModelTermResources.HCPCSCodes_Name, Description = ModelTermResources.HCPCSCodes_Description, OID = null, ReferenceUrl = null},
 
                  new ModelTerm{ ID = ProcedureCodesID, Name = ModelTermResources.ProcedureCode_Name, Description = ModelTermResources.ProcedureCode_Description, OID = null, ReferenceUrl = null},
+                 new ModelTerm{ ID = LOINCCodesID, Name = ModelTermResources.LOINCCode_Name, Description = ModelTermResources.LOINCCode_Description, OID = null, ReferenceUrl = null},
+                 new ModelTerm{ ID = PrescribingID, Name = ModelTermResources.Prescribing_Name, Description = ModelTermResources.Prescribing_Description, OID = null, ReferenceUrl = null},
                 //ICD-9 Procedure Codes
                 new ModelTerm{ ID = ICD9ProcedureCodes3digitID, Name = ModelTermResources.ICD9ProcedureCodes3digit_Name, Description = ModelTermResources.ICD9ProcedureCodes3digit_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = ICD9ProcedureCodes4digitID, Name = ModelTermResources.ICD9ProcedureCodes4digit_Name, Description = ModelTermResources.ICD9ProcedureCodes4digit_Description, OID = null, ReferenceUrl = null},
@@ -146,6 +148,8 @@ namespace Lpp.QueryComposer
         public static readonly Guid VitalsMeasureDateID = new Guid("F9920001-AEB1-425C-A929-A4BB01515850");
         public static readonly Guid ESPDiagnosisCodesID = new Guid("A21E9775-39A4-4ECC-848B-1DC881E13689");
         public static readonly Guid ProcedureCodesID = new Guid("F81AE5DE-7B35-4D7A-B398-A72200CE7419");
+        public static readonly Guid LOINCCodesID = new Guid("F5903376-D2A5-486F-92D3-1F97D598A221");
+        public static readonly Guid PrescribingID = new Guid("793BD948-C90C-45DA-B4B7-F8E2387E1A78");
         //SqlDistribution is the term registered with QE model adapters
         public static readonly Guid SqlDistributionID = new Guid("9FCCD255-EEC2-49D5-A446-997EA2853BD5");
 
