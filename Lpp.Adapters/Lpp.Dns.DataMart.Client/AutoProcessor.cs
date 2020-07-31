@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
+﻿using log4net;
 using Lpp.Dns.DataMart.Client.Utils;
 using Lpp.Dns.DataMart.Lib;
 using Lpp.Dns.DataMart.Lib.Classes;
 using Lpp.Dns.DataMart.Lib.Utils;
 using Lpp.Dns.DataMart.Model;
-using DMClient = Lpp.Dns.DataMart.Client;
-using log4net;
-using System.Reactive.Linq;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Lpp.Dns.DataMart.Client
 {
@@ -23,8 +20,11 @@ namespace Lpp.Dns.DataMart.Client
         readonly ConcurrentDictionary<string, ProcessingStatus> RequestStatuses;
         readonly object Lock = new object();
         NetWorkSetting _networkSetting;
-        Timer _timer;
         int _queriesProcessedCount = 0;
+
+        TimeSpan _refreshRate = TimeSpan.FromMinutes(5);
+        bool _enableProcessing = false;
+        readonly int _processingBatchSize;
 
         enum ProcessingStatus { InProcessing, Complete, CannotRunAndUpload, PendingUpload }        
 
@@ -32,86 +32,99 @@ namespace Lpp.Dns.DataMart.Client
         {
             _networkSetting = networkSetting;
             RequestStatuses = new ConcurrentDictionary<string, ProcessingStatus>();
-            _timer = new Timer {
-                Interval = _networkSetting.RefreshRate * 1000,
-                AutoReset = false
-            };
-            _timer.Elapsed += OnTimerElapsed;
-            _timer.Start();
 
+            _processingBatchSize = Properties.Settings.Default.AutoProcessingBatchSize;
+            if (_processingBatchSize < 1)
+            {
+                _processingBatchSize = 10;
+            }
+
+
+            _refreshRate = TimeSpan.FromSeconds(_networkSetting.RefreshRate);
             Log.Info("For network: " + networkSetting.NetworkName + ", Automated processing worker started. Refresh rate:" + networkSetting.RefreshRate + " seconds.");
+            _enableProcessing = true;
+
+            StartAutoProcessing();
         }
 
         
 
         public void UpdateNetworkSetting(NetWorkSetting networkSetting)
         {
-            _timer.Stop();
+            Log.Info("For network: " + networkSetting.NetworkName + ", Automated processing worker stopped due to network setting being refreshed. Refresh rate:" + networkSetting.RefreshRate + " seconds.");
 
             lock (Lock)
             {
                 _networkSetting = networkSetting;
                 Log.Debug("Network settings for autoprocessor updated, Network:" + _networkSetting.NetworkName);
+
+                _refreshRate = TimeSpan.FromSeconds(_networkSetting.RefreshRate);
             }
 
-            _timer.Dispose();
-
-            _timer = new Timer {
-                Interval = _networkSetting.RefreshRate * 1000,
-                AutoReset = false
-            };
-
-            _timer.Start();
+            StartAutoProcessing();
         }
 
         public void Stop()
         {
-            _timer.Stop();
+            Log.Info("Stop called to AutoProcessor.");
+            _enableProcessing = false;
         }
 
-        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        void StartAutoProcessing()
         {
-            _timer.Stop();
-
             Task.Run(async () => {
-                try
+
+                while (_enableProcessing)
                 {
-                    Log.Info("For network: " + _networkSetting.NetworkName + ", checking Request Queue for requests requiring automated processing.");
-
-                    HubRequest[] requests = await GetRequestsAsync();
-
-                    Dictionary<string, HubRequest> newRequests = requests.ToDictionary(k => MakeKey(k));
-
-                    Log.Debug($"For network: { _networkSetting.NetworkName }, found { newRequests.Where(k => RequestStatuses.ContainsKey(k.Key) == false).Count() } new requests that require automated processing.");
-
-
-                    foreach(var pair in newRequests)
+                    try
                     {
-                        if (!RequestStatuses.ContainsKey(pair.Key))
+                        Log.Info("For network: " + _networkSetting.NetworkName + ", checking Request Queue for requests requiring automated processing.");
+
+                        HubRequest[] requests = await GetRequestsAsync();
+
+                        Dictionary<string, HubRequest> newRequests = requests.ToDictionary(k => MakeKey(k));
+
+                        Log.Debug($"For network: { _networkSetting.NetworkName }, found { newRequests.Where(k => RequestStatuses.ContainsKey(k.Key) == false).Count() }/{ newRequests.Count } new requests that require automated processing.");
+
+
+                        foreach (var pair in newRequests)
                         {
-                            AutoProcess(pair);
+                            if (!RequestStatuses.ContainsKey(pair.Key))
+                            {
+                                AutoProcess(pair);
+                            }
+                            else
+                            {
+                                Log.Debug($"For network:{ _networkSetting.NetworkName }, the AutoProcessor status tracking collection already has an entry for request:{ pair.Value.Source.MSRequestID }/{ pair.Value.DataMartName } (status: { pair.Value.RoutingStatus.ToString() }) with processing status of { RequestStatuses[pair.Key] }. Skipping auto-processing.");
+                            }
                         }
-                    }
-                    
-                    var toRemove = RequestStatuses.Where(kv => kv.Value == ProcessingStatus.Complete || (kv.Value == ProcessingStatus.CannotRunAndUpload && !newRequests.ContainsKey(kv.Key))).ToArray();
-                    for(int i = 0; i < toRemove.Length; i++)
-                    {
-                        ProcessingStatus v;
-                        RequestStatuses.TryRemove(toRemove[i].Key, out v);
-                    }
 
-                    toRemove = null;
-                    newRequests = null;
-                    requests = null;
+                        var toRemove = RequestStatuses.Where(kv => kv.Value == ProcessingStatus.Complete || (kv.Value == ProcessingStatus.CannotRunAndUpload && !newRequests.ContainsKey(kv.Key))).ToArray();
+                        Log.Debug($"For network: {_networkSetting.NetworkName }, removing { toRemove.Length } requests from the AutoProcessor status tracking collection.");
+                        for (int i = 0; i < toRemove.Length; i++)
+                        {
+                            ProcessingStatus v;
+                            if (RequestStatuses.TryRemove(toRemove[i].Key, out v))
+                            {
+                                Log.Debug($"For network: { _networkSetting.NetworkName }, removed AutoProcessing status tracking collection item with the key:{ toRemove[i].Key }.");
+                            }
+                        }
+
+                        toRemove = null;
+                        newRequests = null;
+                        requests = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("For network: " + _networkSetting.NetworkName + ", An error occurred during automated processing", ex);
+                    }
+                    finally
+                    {
+                        Log.Debug($"For network:{_networkSetting.NetworkName}, AutoProcessor starting to sleep for { _refreshRate.TotalSeconds } seconds.");
+                        System.Threading.Thread.Sleep(_refreshRate);
+                    }
                 }
-                catch(Exception ex)
-                {
-                    Log.Error("For network: " + _networkSetting.NetworkName + ", An error occurred during automated processing", ex);
-                }
-                finally
-                {
-                    _timer.Start();
-                }
+
             });
         }
 
@@ -231,34 +244,88 @@ namespace Lpp.Dns.DataMart.Client
             {
                 Log.Info(string.Format("Uploading {4} documents for query: {0} (DataMart:{1}, Network:{2}, RequestID: {3:D})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID, responseDocuments.Length));
 
-                //since the ID of the document returned from the API is not known when posting, and the order cannot be assumed in the response
-                //loop over each document and post the metadata and the content as a single unit of work per document.
-
-                for (int i=0; i < responseDocuments.Length; i++)
+                if (_networkSetting.SupportsUploadV2)
                 {
-                    string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
-                    Guid[] metaDataPostResponse = DnsServiceManager.PostResponseDocuments(uploadIdentifier, requestId, request.DataMartId, new[] { responseDocuments[i] }, _networkSetting);
-
-                    System.IO.Stream contentStream = null;
+                    Log.Debug($"Network settings indicate document upload v2 supported for query: {request.Source.Identifier}, (DataMart: {request.DataMartName}, Network: { request.NetworkName }, RequestID: { request.Source.ID }");
                     try
                     {
-                        if (cache.Enabled)
-                        {
-                            contentStream = cache.GetDocumentStream(Guid.Parse(responseDocuments[i].DocumentID));
-                        }
-                        else
-                        {
-                            request.Processor.ResponseDocument(requestId, responseDocuments[i].DocumentID, out contentStream, 60000);
-                        }
+                        Parallel.ForEach(responseDocuments,
+                                new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                                (doc) =>
+                                {
+                                    string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
 
-                        DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, requestId, request.DataMartId, metaDataPostResponse[0], responseDocuments[i].Filename, contentStream, _networkSetting)
-                            .LogExceptions(Log.Error)
-                            .Catch()
-                            .Wait();
+                                    System.IO.Stream stream = null;
+                                    try
+                                    {
+                                        if (cache.Enabled)
+                                        {
+                                            stream = cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
+                                        }
+                                        else
+                                        {
+                                            request.Processor.ResponseDocument(requestId, doc.DocumentID, out stream, doc.Size);
+                                        }
+
+                                        var dto = new DTO.DataMartClient.Criteria.DocumentMetadata
+                                        {
+                                            ID = Guid.Parse(doc.DocumentID),
+                                            DataMartID = request.DataMartId,
+                                            RequestID = Guid.Parse(requestId),
+                                            IsViewable = doc.IsViewable,
+                                            Size = doc.Size,
+                                            MimeType = doc.MimeType,
+                                            Kind = doc.Kind,
+                                            Name = doc.Filename,
+                                            CurrentChunkIndex = 0
+                                        };
+
+                                        DnsServiceManager.PostDocumentChunk(uploadIdentifier, dto, stream, _networkSetting);
+                                    }
+                                    finally
+                                    {
+                                        stream.Dispose();
+                                    }
+
+                                });
                     }
-                    finally
+                    catch (Exception ex)
                     {
-                        contentStream.CallDispose();
+                        Log.Error($"An error occurred during concurrent uploading of response documents for query: {request.Source.Identifier}, (DataMart: {request.DataMartName}, Network: { request.NetworkName }, RequestID: { request.Source.ID }", ex);
+                        throw;
+                    }
+                }
+                else
+                {
+                    //since the ID of the document returned from the API is not known when posting, and the order cannot be assumed in the response
+                    //loop over each document and post the metadata and the content as a single unit of work per document.
+                    Log.Debug($"Network settings indicates document upload v2 IS NOT supported for query: {request.Source.Identifier}, (DataMart: {request.DataMartName}, Network: { request.NetworkName }, RequestID: { request.Source.ID }");
+                    for (int i = 0; i < responseDocuments.Length; i++)
+                    {
+                        string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+                        Guid[] metaDataPostResponse = DnsServiceManager.PostResponseDocuments(uploadIdentifier, requestId, request.DataMartId, new[] { responseDocuments[i] }, _networkSetting);
+
+                        System.IO.Stream contentStream = null;
+                        try
+                        {
+                            if (cache.Enabled)
+                            {
+                                contentStream = cache.GetDocumentStream(Guid.Parse(responseDocuments[i].DocumentID));
+                            }
+                            else
+                            {
+                                request.Processor.ResponseDocument(requestId, responseDocuments[i].DocumentID, out contentStream, 60000);
+                            }
+
+                            DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, requestId, request.DataMartId, metaDataPostResponse[0], responseDocuments[i].Filename, contentStream, _networkSetting)
+                                .LogExceptions(Log.Error)
+                                .Catch()
+                                .Wait();
+                        }
+                        finally
+                        {
+                            contentStream.CallDispose();
+                        }
                     }
                 }
             }
@@ -535,21 +602,20 @@ namespace Lpp.Dns.DataMart.Client
             var requests = Observable.Create<DTO.DataMartClient.RequestList>(async observer =>
             {
                 int index = 0;
-                int batchSize = Properties.Settings.Default.AutoProcessingBatchSize;
                 DTO.DataMartClient.RequestList rl = null;
 
                 while (rl == null || (index < rl.TotalCount))
                 {
-                    rl = await DnsServiceManager.GetRequestList("AutoProcessor", _networkSetting, index, batchSize, requestFilter, DTO.DataMartClient.RequestSortColumn.RequestTime, true);
+                    rl = await DnsServiceManager.GetRequestList("AutoProcessor", _networkSetting, index, _processingBatchSize, requestFilter, DTO.DataMartClient.RequestSortColumn.RequestTime, true);
 
-                    if(rl == null || rl.TotalCount == 0)
+                    if (rl == null || rl.TotalCount == 0)
                     {
                         break;
                     }
 
-                    observer.OnNext(rl);                    
+                    observer.OnNext(rl);
 
-                    index += batchSize;
+                    index += _processingBatchSize;
                 }
 
                 observer.OnCompleted();
@@ -585,27 +651,57 @@ namespace Lpp.Dns.DataMart.Client
                     };
                 }
             })
-           .SelectMany(requestList => 
+           .SelectMany(requestList =>
            {
                if (requestList == null)
                {
                    return Array.Empty<DTO.DataMartClient.RequestListRow>();
                }
 
-               return requestList.Segment.DefaultIfEmpty().Where(s => s.AllowUnattendedProcessing);
+               return requestList.Segment.Where(s => s != null && s.AllowUnattendedProcessing).DefaultIfEmpty();
            })
-           .SelectMany(rlr => RequestCache.ForNetwork(_networkSetting).LoadRequest(rlr.ID, rlr.DataMartID))
-           .ToArray();
+           .SelectMany(rlr =>
+           //skipping using the request cache to always use the most recent request dto.
+            rlr == null ? Observable.Empty<HubRequest>() : LoadRequestImpl(rlr.ID, rlr.DataMartID)
+           ).ToArray();
 
             return await requests;
         }
 
+        IObservable<HubRequest> LoadRequestImpl(Guid id, Guid dataMartId)
+        {
+            var dm = _networkSetting.DataMartList.FirstOrDefault(d => d.DataMartId == dataMartId);
+            return from r in DnsServiceManager.GetRequests(_networkSetting, new[] { id }, dataMartId).SkipWhile(r => r.ID != id).Take(1)
+
+                   let rt = r.Routings.EmptyIfNull().FirstOrDefault(x => x.DataMartID == dataMartId)
+                   where rt != null
+
+                   select new HubRequest
+                   {
+                       Source = r,
+                       DataMartId = dataMartId,
+                       NetworkId = _networkSetting.NetworkId,
+                       NetworkName = _networkSetting.NetworkName,
+                       DataMartName = dm == null ? null : dm.DataMartName,
+                       DataMartOrgId = dm == null ? null : dm.OrganizationId,
+                       DataMartOrgName = dm == null ? null : dm.OrganizationName,
+                       ProjectName = r != null && r.Project != null ? r.Project.Name : null,
+
+                       Properties = rt.Properties.EmptyIfNull().GroupBy(p => p.Name).ToDictionary(pp => pp.Key, pp => pp.First().Value),
+                       Rights = r.Routings.Where(rn => rn.DataMartID == dataMartId).Select(rn => (HubRequestRights)rn.Rights).FirstOrDefault(),
+                       RoutingStatus = rt.Status,
+                       SubmittedDataMarts = string.Join(", ", from rtng in r.Routings
+                                                              join dmt in _networkSetting.DataMartList on rtng.DataMartID equals dmt.DataMartId
+                                                              select dmt.DataMartName),
+                       Documents = r.Documents.EmptyIfNull().ToArray()
+                   };
+        }
+
         public void Dispose()
         {
-            if (_timer != null)
+            if (_enableProcessing)
             {
-                _timer.Stop();
-                _timer.Dispose();
+                _enableProcessing = false;
             }
         }
     }

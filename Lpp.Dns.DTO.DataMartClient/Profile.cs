@@ -18,5 +18,7 @@ namespace Lpp.Dns.DTO.DataMartClient
         public string FullName { get; set; }
         [DataMember]
         public string OrganizationName { get; set; }
+        [DataMember]
+        public bool? SupportsUploadV2 { get; set; }
     }
 }

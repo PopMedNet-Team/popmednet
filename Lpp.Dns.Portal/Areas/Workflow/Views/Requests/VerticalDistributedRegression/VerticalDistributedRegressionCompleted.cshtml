@@ -1,0 +1,143 @@
+﻿<script src="~/Areas/Workflow/js/Requests/VerticalDistributedRegression/Completed.js"></script>
+<!-- ko stopBinding: true -->
+<section id="DRCompleted" style="margin-top:15px;display:none;" data-bind="visible:true;">
+    <div class="modal fade" id="responseHistoryDialog" role="dialog" aria-labelledby="responseHistoryDialogTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="responseHistoryDialogTitle">History</h4>
+                </div>
+                <div class="modal-body" data-bind="foreach: RoutingHistory">
+                    <table class="table table-hover">
+                        <caption data-bind="text:DataMartName"></caption>
+                        <tbody data-bind="foreach:HistoryItems">
+                            <tr>
+                                <td data-bind="text: moment(moment(DateTime).format('M/D/YYYY h:mm:ss A UTC')).local().format('M/D/YYYY h:mm:ss A')"></td>
+                                <td>
+                                    <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span><span data-bind="visible:$.trim(Message || '') != ''">;</span>
+                                    <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <article class="panel panel-default">
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Analysis Center</h4>
+            </div>
+            <table class="panel-body table table-striped table-bordered table-hover">
+                <colgroup>
+                    <col style="width: 33%;" />
+                    <col style="width: 56%;" />
+                    <col style="width: 13%;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DataMart</th>
+                        <th>Message</th>
+                        <th>History</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="visible:AnalysisCenters.length == 0">
+                    <tr>
+                        <td colspan="5" style="text-align:center;color:lightgray;">No Analysis Centers</td>
+                    </tr>
+                </tbody>
+                <tbody data-bind="foreach: AnalysisCenters">
+                    <tr>
+                        <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                        <td data-bind="html: Messages "></td>
+                        <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
+                    </tr>
+                    <tr data-bind="attr: {ID: 'response-' + ID}, visible:false">
+                        <td colspan="3">
+                            <div>
+                                <table class="panel-body table table-stripped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Submitted On</th>
+                                            <th>Responded On</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: Children">
+                                        <tr>
+                                            <td colspan="1"><a data-bind="click:$root.ViewChildResponse.bind($data, ID), text: Name" /></td>
+                                            <td colspan="1" data-bind="text:moment(SubmittedOn).format('M/D/YYYY h:mm:ss A')"></td>
+                                            <td colspan="1" data-bind="text:moment(ResponseTime).format('M/D/YYYY h:mm:ss A ')"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+        <br class="clearfix" />
+
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Data Partner Completed Routings</h4>
+            </div>
+            <table class="panel-body table table-striped table-bordered table-hover">
+                <colgroup>
+                    <col style="width: 250px;" />
+                    <col style="width: 100px;" />
+                    <col />
+                    <col style="width: 80px;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DataMart</th>
+                        <th>Status</th>
+                        <th>Message</th>
+                        <th>History</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="visible:CompletedRoutings().length == 0">
+                    <tr>
+                        <td colspan="5" style="text-align:center;color:lightgray;">No Completed Routings</td>
+                    </tr>
+                </tbody>
+                <tbody data-bind="foreach: VirtualRoutings">
+                    <tr>
+                        <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                        <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                        <td data-bind="html: Messages "></td>
+                        <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
+                    </tr>
+                    <tr data-bind="attr: {ID: 'response-' + ID}, visible:false">
+                        <td colspan="4">
+                            <div>
+                                <table class="panel-body table table-stripped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Submitted On</th>
+                                            <th>Responded On</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: Children">
+                                        <tr>
+                                            <td colspan="1"><a data-bind="click:$root.ViewChildResponse.bind($data, ID), text: Name" /></td>
+                                            <td colspan="1" data-bind="text:moment(SubmittedOn).format('M/D/YYYY h:mm:ss A')"></td>
+                                            <td colspan="1" data-bind="text:moment(ResponseTime).format('M/D/YYYY h:mm:ss A ')"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </article>
+</section>
+<script src="~/Areas/Workflow/js/Requests/DistributedRegression/Completed.js"></script>
+<!-- /ko -->

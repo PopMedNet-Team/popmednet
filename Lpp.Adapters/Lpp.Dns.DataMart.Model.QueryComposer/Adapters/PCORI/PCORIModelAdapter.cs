@@ -1,6 +1,7 @@
 ﻿using LinqKit;
 using log4net;
 using Lpp.Dns.DataMart.Model.PCORIQueryBuilder;
+using Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model;
 using Lpp.Dns.DTO.QueryComposer;
 using Lpp.QueryComposer;
 using System;
@@ -1841,6 +1842,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyCombinedDiagnosisAndProcedureCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
+            //return patientPredicate;
             //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
             var diagnosisTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
             var procedureTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.ProcedureCodesID).ToArray();
@@ -1852,7 +1854,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             Expression<Func<pcori.Encounter, bool>> encounterPredicate = GetParagraphEncounterPredicate(paragraph);
 
             //Return the patient predicate if neither the diagnosis and procedure terms exist in the paragraph, and the encounter predicate is not defined.
-            if (!diagnosisTerms.Any() && !procedureTerms.Any() && encounterPredicate == null && !loincTerms.Any() && !prescribingTerms.Any())
+            if (!diagnosisTerms.Any() && !procedureTerms.Any() && !loincTerms.Any() && !prescribingTerms.Any() && encounterPredicate == null)
             {
                 return patientPredicate;
             }
@@ -2134,6 +2136,56 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             #region "Lab Results LOINC"
             Expression<Func<pcori.LabResult, bool>> loincTermGroupingPredicate = null;
             //each term should be OR'd together, and each code value OR'd within the term
+            DateRangeValues[] loincObservationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
+            List<string> loincSettingValues = _queryInterrogator.ParagraphEncounterTypes(paragraph);
+            Expression<Func<pcori.LabResult, bool>> loincObservationPeriodPredicate = null;
+
+            if (loincTerms.Any() && (loincObservationPeriodRanges.Any() || loincSettingValues.Any()))
+            {
+                loincObservationPeriodPredicate = BuildLOINCEncouterPredicate(loincObservationPeriodRanges, loincSettingValues);
+
+                if (loincObservationPeriodRanges.Any())
+                {
+                    Expression<Func<pcori.LabResult, bool>> obsPred = null;
+
+                    foreach (var range in loincObservationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        Expression<Func<pcori.LabResult, bool>> innerObsPred = null;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            innerObsPred = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start && d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate >= start && d.ResultDate <= end) : (d.OrderedOn >= start && d.OrderedOn <= end);
+                        }
+                        else if (start.HasValue)
+                        {
+                            innerObsPred = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start) : d.ResultDate.HasValue ? (d.ResultDate >= start) : (d.OrderedOn >= start);
+                        }
+                        else if (end.HasValue)
+                        {
+                            innerObsPred = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate <= end) : (d.OrderedOn <= end);
+                        }
+
+                        if (obsPred == null)
+                        {
+                            obsPred = innerObsPred;
+                        }
+                        else
+                        {
+                            obsPred = obsPred.Or(innerObsPred);
+                        }
+                    }
+
+                    loincObservationPeriodPredicate = loincObservationPeriodPredicate.And(obsPred.Expand());
+                }
+            }
             foreach (var term in loincTerms)
             {
                 DTO.Enums.TextSearchMethodType searchMethod;
@@ -2207,45 +2259,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     }
                 }
 
-                DateRangeValues[] observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
-                Expression<Func<pcori.LabResult, bool>> observationPeriodPredicate = null;
-
-                if (observationPeriodRanges.Any())
-                {
-                    foreach (var range in observationPeriodRanges)
-                    {
-                        DateTime? start = null;
-                        if (range.StartDate.HasValue)
-                            start = range.StartDate.Value.DateTime.Date;
-
-                        DateTime? end = null;
-                        if (range.EndDate.HasValue)
-                            end = range.EndDate.Value.Date;
-
-                        if (start.HasValue && end.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start && d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate >= start && d.ResultDate <= end) : (d.OrderedOn >= start && d.OrderedOn <= end);
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start && d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate >= start && d.ResultDate <= end) : (d.OrderedOn >= start && d.OrderedOn <= end));
-                        }
-                        else if (start.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start) : d.ResultDate.HasValue ? (d.ResultDate >= start) : (d.OrderedOn >= start);
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn >= start) : d.ResultDate.HasValue ? (d.ResultDate >= start) : (d.OrderedOn >= start));
-                        }
-                        else if (end.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate <= end) : (d.OrderedOn <= end);
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.SpecimenCollectedOn.HasValue ? (d.SpecimenCollectedOn <= end) : d.ResultDate.HasValue ? (d.ResultDate <= end) : (d.OrderedOn <= end));
-                        }
-                    }
-                }
-
                 Expression<Func<pcori.LabResult, bool>> valuesPredicate = null;
 
                 if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
@@ -2263,216 +2276,23 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     {
                         valuesPredicate = d => d.LogicalObservationINC != null && codes.Contains(d.LogicalObservationINC);
                     }
-
-                    if (Enum.TryParse<DTO.Enums.LOINCQualitativeResultType>(term.GetStringValue("QualitativeResult"), out var qualResult))
-                    {
-                        switch (qualResult)
-                        {
-                            case DTO.Enums.LOINCQualitativeResultType.Positive:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "POSITIVE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Negative:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NEGATIVE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Borderline:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "BORDERLINE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Elevated:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ELEVATED");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.High:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "HIGH");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Low:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "LOW");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Normal:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NORMAL");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Abnormal:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ABNORMAL");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Undetermined:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETERMINED");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Undetectable:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETECTABLE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.NI:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NI");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.UN:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UN");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.OT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "OT");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
-                    {
-                        switch (resultModifier)
-                        {
-                            case DTO.Enums.LOINCResultModifierType.EQ:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.GE:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.GT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.LE:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.LT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.Text:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.NI:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.UN:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.OT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    double minVal;
-                    double maxVal;
-                    double.TryParse(term.GetStringValue("ResultRangeMin"), out minVal);
-                    double.TryParse(term.GetStringValue("ResultRangeMax"), out maxVal);
-                    if (minVal != 0 && maxVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal && d.ResultQuantitative <= maxVal);
-                    }
-                    else if (minVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal);
-                    }
-                    else if (maxVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative <= maxVal);
-                    }
                 }
                 else if (searchMethod == DTO.Enums.TextSearchMethodType.StartsWith)
                 {
-                    string value = codes[0];
-                    valuesPredicate = d => d.LogicalObservationINC.StartsWith(value);
-                    for (int i = 1; i < codes.Length; i++)
+                    if (codes.Length == 0)
                     {
-                        string valueinner = codes[i];
-                        valuesPredicate = valuesPredicate.Or(d => d.LogicalObservationINC.StartsWith(valueinner));
+                        valuesPredicate = d => true;
                     }
-                    valuesPredicate = valuesPredicate.And(d => d.LogicalObservationINC != null);
-
-                    if (Enum.TryParse<DTO.Enums.LOINCQualitativeResultType>(term.GetStringValue("QualitativeResult"), out var qualResult))
+                    else
                     {
-                        switch (qualResult)
+                        string value = codes[0];
+                        valuesPredicate = d => d.LogicalObservationINC.StartsWith(value);
+                        for (int i = 1; i < codes.Length; i++)
                         {
-                            case DTO.Enums.LOINCQualitativeResultType.Positive:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "POSITIVE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Negative:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NEGATIVE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Borderline:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "BORDERLINE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Elevated:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ELEVATED");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.High:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "HIGH");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Low:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "LOW");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Normal:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NORMAL");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Abnormal:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ABNORMAL");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Undetermined:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETERMINED");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.Undetectable:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETECTABLE");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.NI:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NI");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.UN:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UN");
-                                break;
-                            case DTO.Enums.LOINCQualitativeResultType.OT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "OT");
-                                break;
-                            default:
-                                break;
+                            string valueinner = codes[i];
+                            valuesPredicate = valuesPredicate.Or(d => d.LogicalObservationINC.StartsWith(valueinner));
                         }
-                    }
-
-                    if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
-                    {
-                        switch (resultModifier)
-                        {
-                            case DTO.Enums.LOINCResultModifierType.EQ:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.GE:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.GT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.LE:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.LT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.Text:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.NI:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.UN:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
-                                break;
-                            case DTO.Enums.LOINCResultModifierType.OT:
-                                valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    double minVal = double.Parse(term.GetStringValue("ResultRangeMin"));
-                    double maxVal = double.Parse(term.GetStringValue("ResultRangeMax"));
-                    if (minVal != 0 && maxVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal && d.ResultQuantitative <= maxVal);
-                    }
-                    else if (minVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal);
-                    }
-                    else if (maxVal != 0)
-                    {
-                        valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative <= maxVal);
+                        valuesPredicate = valuesPredicate.And(d => d.LogicalObservationINC != null);
                     }
                 }
                 else
@@ -2480,48 +2300,187 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     throw new NotSupportedException("The search method type '" + searchMethod + "' is not supported.");
                 }
 
+                if (Enum.TryParse<DTO.Enums.LOINCQualitativeResultType>(term.GetStringValue("QualitativeResult"), out var qualResult))
+                {
+                    switch (qualResult)
+                    {
+                        case DTO.Enums.LOINCQualitativeResultType.Positive:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "POSITIVE");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Negative:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NEGATIVE");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Borderline:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "BORDERLINE");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Elevated:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ELEVATED");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.High:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "HIGH");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Low:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "LOW");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Normal:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NORMAL");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Abnormal:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "ABNORMAL");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Undetermined:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETERMINED");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.Undetectable:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UNDETECTABLE");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.NI:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "NI");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.UN:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "UN");
+                            break;
+                        case DTO.Enums.LOINCQualitativeResultType.OT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultQualitative == "OT");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
+                {
+                    switch (resultModifier)
+                    {
+                        case DTO.Enums.LOINCResultModifierType.EQ:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.GE:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.GT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.LE:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.LT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.Text:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.NI:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.UN:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.OT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                double minVal = -1;
+                double maxVal = -1;
+
+                var hadMin = double.TryParse(term.GetStringValue("ResultRangeMin"), out minVal);
+                var hadMax = double.TryParse(term.GetStringValue("ResultRangeMax"), out maxVal);
+                if ((hadMin && minVal >= 0) && (hadMax && maxVal >= 0))
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal && d.ResultQuantitative <= maxVal);
+                }
+                else if (hadMin && minVal >= 0)
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative >= minVal);
+                }
+                else if (hadMax && maxVal >= 0)
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.ResultQuantitative <= maxVal);
+                }
+
                 //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
+
+                if (ageGroupingPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(ageGroupingPredicate);
+                }
+
+                if (loincObservationPeriodPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(loincObservationPeriodPredicate);
+                }              
+
                 if (loincTermGroupingPredicate == null)
                 {
-                    Expression<Func<pcori.LabResult, bool>> innerAndPredicate = (d) => true;
-                    if (ageGroupingPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
-                    }
-                    if (observationPeriodPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
-                    }
-                    if (valuesPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
-                    }
-                    loincTermGroupingPredicate = innerAndPredicate;
+                    loincTermGroupingPredicate = valuesPredicate;
                 }
                 else
                 {
-                    Expression<Func<pcori.LabResult, bool>> innerAndPredicate = (d) => true;
-                    if (ageGroupingPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
-                    }
-                    else if (observationPeriodPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
-                    }
-                    else if (valuesPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
-                    }
-                    loincTermGroupingPredicate = loincTermGroupingPredicate.Or(innerAndPredicate);
+                    loincTermGroupingPredicate = loincTermGroupingPredicate.Or(valuesPredicate);
                 }
             }
+
             #endregion
 
             #region "Prescribing"
             //Now process the Prescribing terms.
             Expression<Func<pcori.Prescription, bool>> prescribingTermGroupingPredicate = null;
             //each term should be OR'd together, and each code value OR'd within the term
+            DateRangeValues[] prescribingObservationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
+            List<string> prescribingSettingValues = _queryInterrogator.ParagraphEncounterTypes(paragraph);
+            Expression<Func<pcori.Prescription, bool>> prescribingObservationPeriodPredicate = null;
+
+            if (prescribingTerms.Any() && (prescribingObservationPeriodRanges.Any() || prescribingSettingValues.Any()))
+            {
+                prescribingObservationPeriodPredicate = BuildPerscribingEncouterPredicate(prescribingObservationPeriodRanges, loincSettingValues);
+
+                if (prescribingObservationPeriodRanges.Any())
+                {
+                    Expression<Func<pcori.Prescription, bool>> obsPred = null;
+
+                    foreach (var range in prescribingObservationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        Expression<Func<pcori.Prescription, bool>> innerObsPred = null;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            innerObsPred = (d) => d.OrderedOn.HasValue ? (d.OrderedOn >= start && d.OrderedOn <= end) : (d.StartedOn >= start && d.StartedOn <= end);
+                        }
+                        else if (start.HasValue)
+                        {
+                            innerObsPred = (d) => d.OrderedOn.HasValue ? d.OrderedOn >= start : d.StartedOn >= start;
+                        }
+                        else if (end.HasValue)
+                        {
+                            innerObsPred = (d) => d.OrderedOn.HasValue ? d.OrderedOn <= end : d.StartedOn <= end;
+                        }
+
+                        if (obsPred == null)
+                        {
+                            obsPred = innerObsPred;
+                        }
+                        else
+                        {
+                            obsPred = obsPred.Or(innerObsPred);
+                        }
+                    }
+
+                    prescribingObservationPeriodPredicate = prescribingObservationPeriodPredicate.And(obsPred.Expand());
+                }
+            }
+
             foreach (var term in prescribingTerms)
             {
                 DTO.Enums.TextSearchMethodType searchMethod;
@@ -2595,45 +2554,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     }
                 }
 
-                DateRangeValues[] observationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
-                Expression<Func<pcori.Prescription, bool>> observationPeriodPredicate = null;
-
-                if (observationPeriodRanges.Any())
-                {
-                    foreach (var range in observationPeriodRanges)
-                    {
-                        DateTime? start = null;
-                        if (range.StartDate.HasValue)
-                            start = range.StartDate.Value.DateTime.Date;
-
-                        DateTime? end = null;
-                        if (range.EndDate.HasValue)
-                            end = range.EndDate.Value.Date;
-
-                        if (start.HasValue && end.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? (d.OrderedOn >= start && d.OrderedOn <= end) : (d.StartedOn >= start && d.StartedOn <= end);
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? (d.OrderedOn >= start && d.OrderedOn <= end) : (d.StartedOn >= start && d.StartedOn <= end));
-                        }
-                        else if (start.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? d.OrderedOn >= start : d.StartedOn >= start;
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? d.OrderedOn >= start : d.StartedOn >= start);
-                        }
-                        else if (end.HasValue)
-                        {
-                            if (observationPeriodPredicate == null)
-                                observationPeriodPredicate = (d) => d.OrderedOn.HasValue ? d.OrderedOn <= end : d.StartedOn <= end;
-                            else
-                                observationPeriodPredicate = observationPeriodPredicate.Or(d => d.OrderedOn.HasValue ? d.OrderedOn <= end : d.StartedOn <= end);
-                        }
-                    }
-                }
-
                 Expression<Func<pcori.Prescription, bool>> valuesPredicate = null;
 
                 if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
@@ -2676,39 +2596,23 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
 
                 //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
+
+                if (ageGroupingPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(ageGroupingPredicate);
+                }
+                if (prescribingObservationPeriodPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(prescribingObservationPeriodPredicate);
+                }
+
                 if (prescribingTermGroupingPredicate == null)
                 {
-                    Expression<Func<pcori.Prescription, bool>> innerAndPredicate = (d) => true;
-                    if (ageGroupingPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
-                    }
-                    if (observationPeriodPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
-                    }
-                    if (valuesPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
-                    }
-                    prescribingTermGroupingPredicate = innerAndPredicate;
+                    prescribingTermGroupingPredicate = valuesPredicate;
                 }
                 else
                 {
-                    Expression<Func<pcori.Prescription, bool>> innerAndPredicate = (d) => true;
-                    if (ageGroupingPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(ageGroupingPredicate);
-                    }
-                    else if (observationPeriodPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(observationPeriodPredicate);
-                    }
-                    else if (valuesPredicate != null)
-                    {
-                        innerAndPredicate = innerAndPredicate.And(valuesPredicate);
-                    }
-                    prescribingTermGroupingPredicate = prescribingTermGroupingPredicate.Or(innerAndPredicate);
+                    prescribingTermGroupingPredicate = prescribingTermGroupingPredicate.Or(valuesPredicate);
                 }
             }
             #endregion
@@ -2746,7 +2650,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
 
                 if (loincTermGroupingPredicate != null)
-                {
+                { 
                     innerPredicate = innerPredicate.Or((p) => p.LabResults.AsQueryable().Any(loincTermGroupingPredicate));
                 }
 
@@ -2766,7 +2670,157 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return patientPredicate.And((p) => p.Encounters.AsQueryable().Any(encounterPredicate));
         }
 
+        Expression<Func<LabResult, bool>> BuildLOINCEncouterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        {
+            Expression<Func<pcori.Encounter, bool>> obsPred = null;
+            Expression<Func<pcori.Encounter, bool>> settingPred = null;
 
+            foreach (var range in observationPeriodRanges)
+            {
+                DateTime? start = null;
+                if (range.StartDate.HasValue)
+                    start = range.StartDate.Value.DateTime.Date;
+
+                DateTime? end = null;
+                if (range.EndDate.HasValue)
+                    end = range.EndDate.Value.Date;
+
+                Expression<Func<pcori.Encounter, bool>> obsPredicate = null;
+
+                if (start.HasValue && end.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn >= start && d.AdmittedOn <= end;
+                }
+                else if (start.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn >= start;
+                }
+                else if (end.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn <= end;
+                }
+
+                if (obsPred == null)
+                {
+                    obsPred = obsPredicate;
+                }
+                else
+                {
+                    obsPred = obsPred.Or(obsPredicate);
+                }
+            }
+
+            foreach (var value in settingValues)
+            {
+                Expression<Func<pcori.Encounter, bool>> innerSettingPred = null;
+
+                if (value == "AN")
+                    innerSettingPred = (enc) => !string.IsNullOrEmpty(enc.EncounterType);
+                else
+                    innerSettingPred = (enc) => enc.EncounterType == value;
+
+                if (settingPred == null)
+                {
+                    settingPred = innerSettingPred;
+                }
+                else
+                {
+                    settingPred = settingPred.Or(innerSettingPred);
+                }
+            }
+
+            if (settingPred != null && obsPred == null)
+            {
+                Expression<Func<LabResult, bool>> setReturn = lab => lab.Patient.Encounters.Any(e => settingPred.Invoke(e));
+                return setReturn;
+            }
+
+            if (settingPred == null && obsPred != null)
+            {
+                Expression<Func<LabResult, bool>> obsReturn = lab => lab.Patient.Encounters.Any(e => obsPred.Invoke(e));
+                return obsReturn;
+            }
+
+            var combingedPred = obsPred.And(settingPred);
+            Expression<Func<LabResult, bool>> encReturn = lab => lab.Patient.Encounters.Any(e => combingedPred.Invoke(e));
+            return encReturn;
+        }
+
+        Expression<Func<Prescription, bool>> BuildPerscribingEncouterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        {
+            Expression<Func<pcori.Encounter, bool>> obsPred = null;
+            Expression<Func<pcori.Encounter, bool>> settingPred = null;
+
+            foreach (var range in observationPeriodRanges)
+            {
+                DateTime? start = null;
+                if (range.StartDate.HasValue)
+                    start = range.StartDate.Value.DateTime.Date;
+
+                DateTime? end = null;
+                if (range.EndDate.HasValue)
+                    end = range.EndDate.Value.Date;
+
+                Expression<Func<pcori.Encounter, bool>> obsPredicate = null;
+
+                if (start.HasValue && end.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn >= start && d.AdmittedOn <= end;
+                }
+                else if (start.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn >= start;
+                }
+                else if (end.HasValue)
+                {
+                    obsPredicate = d => d.AdmittedOn <= end;
+                }
+
+                if (obsPred == null)
+                {
+                    obsPred = obsPredicate;
+                }
+                else
+                {
+                    obsPred = obsPred.Or(obsPredicate);
+                }
+            }
+
+            foreach (var value in settingValues)
+            {
+                Expression<Func<pcori.Encounter, bool>> innerSettingPred = null;
+
+                if (value == "AN")
+                    innerSettingPred = (enc) => !string.IsNullOrEmpty(enc.EncounterType);
+                else
+                    innerSettingPred = (enc) => enc.EncounterType == value;
+
+                if (settingPred == null)
+                {
+                    settingPred = innerSettingPred;
+                }
+                else
+                {
+                    settingPred = settingPred.Or(innerSettingPred);
+                }
+            }
+
+            if (settingPred != null && obsPred == null)
+            {
+                Expression<Func<Prescription, bool>> setReturn = lab => lab.Patient.Encounters.Any(e => settingPred.Invoke(e));
+                return setReturn;
+            }
+
+            if (settingPred == null && obsPred != null)
+            {
+                Expression<Func<Prescription, bool>> obsReturn = lab => lab.Patient.Encounters.Any(e => obsPred.Invoke(e));
+                return obsReturn;
+            }
+
+            var combingedPred = obsPred.And(settingPred);
+            Expression<Func<Prescription, bool>> encReturn = lab => lab.Patient.Encounters.Any(e => combingedPred.Invoke(e));
+            return encReturn;
+        }
 
         Expression<Func<pcori.ClinicalTrial, bool>> ApplyClinicalTrialCriteria(IEnumerable<QueryComposerCriteriaDTO> criteria)
         {

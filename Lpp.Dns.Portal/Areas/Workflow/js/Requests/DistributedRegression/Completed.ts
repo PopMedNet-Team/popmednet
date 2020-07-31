@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../../../../js/requests/details.ts" />
 
 module Workflow.DistributedRegression.Completed {
-    var vm: ViewModel;
+    let vm: ViewModel;
 
     interface IExpandedResponseDTO extends Dns.Interfaces.IResponseDTO {
         Name: string;
@@ -29,7 +29,7 @@ module Workflow.DistributedRegression.Completed {
                 this.ID = routing.ResponseID;
                 this.Name = routing.DataMart;
             }
-            
+
             this.Status = routing.Status;
             this.Messages = '';
             this.addToMessages(routing.ErrorMessage);
@@ -116,7 +116,7 @@ module Workflow.DistributedRegression.Completed {
         constructor(bindingControl: JQuery, routings: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], canViewIndividualResponses: boolean, canViewAggregateResponses: boolean) {
             super(bindingControl, Requests.Details.rovm.ScreenPermissions)
 
-            var self = this;
+            let self = this;
             self.Routings = ko.observableArray(routings.RequestDataMarts || []);
             self.AllowViewIndividualResults = ko.observable(canViewIndividualResponses);
             self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
@@ -146,7 +146,7 @@ module Workflow.DistributedRegression.Completed {
             self.VirtualRoutings = [];
             ko.utils.arrayForEach(self.CompletedRoutings(), routing => {
                 if (!routing.ResponseGroupID && routing.RoutingType != Dns.Enums.RoutingType.AnalysisCenter) {
-                    var routeResponses: Dns.Interfaces.IResponseDTO[] = routings.Responses.filter(function (res) {
+                    let routeResponses: Dns.Interfaces.IResponseDTO[] = routings.Responses.filter(function (res) {
                         return res.RequestDataMartID == routing.ID
                     });
                     self.VirtualRoutings.push(new VirtualRoutingViewModel(routing, null, routeResponses));
@@ -155,7 +155,7 @@ module Workflow.DistributedRegression.Completed {
 
             self.AnalysisCenters = [];
             ko.utils.arrayForEach(self.AnalysisCenterRoutings(), routing => {
-                var resp: Dns.Interfaces.IResponseDTO[] = routings.Responses.filter(function (res) {
+                let resp: Dns.Interfaces.IResponseDTO[] = routings.Responses.filter(function (res) {
                     return res.RequestDataMartID == routing.ID
                 });
                 self.AnalysisCenters.push(new VirtualRoutingViewModel(routing, null, resp));
@@ -173,28 +173,28 @@ module Workflow.DistributedRegression.Completed {
                 });
             };
 
-            var setupResponseTabView = (responseView: Dns.Enums.TaskItemTypes) => {
-                var tabID = 'responsedetail_' + self.responseIndex;
+            let setupResponseTabView = (responseView: Dns.Enums.TaskItemTypes) => {
+                let tabID = 'responsedetail_' + self.responseIndex;
                 self.responseIndex++;
 
-                var q = '//' + window.location.host + '/workflowrequests/responsedetail';
+                let q = '//' + window.location.host + '/workflowrequests/responsedetail';
                 q += '?id=' + self.SelectedCompleteResponses();
                 q += '&view=' + responseView;
                 q += '&workflowID=' + Requests.Details.rovm.Request.WorkflowID();
 
-                var contentFrame = document.createElement('iframe');
+                let contentFrame = document.createElement('iframe');
                 contentFrame.src = q;
                 contentFrame.setAttribute('style', 'margin:0px;padding:0px;border:none;width:100%;height:940px;min-height:940px;');
                 contentFrame.setAttribute('scrolling', 'no');
 
-                var contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
+                let contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
                 contentContainer.append(contentFrame);
                 $('#root-tab-content').append(contentContainer);
 
-                var tl = $('<li></li>');
-                var ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
+                let tl = $('<li></li>');
+                let ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
 
-                var tac = ta.find('i');
+                let tac = ta.find('i');
 
                 tac.click((evt) => {
                     evt.stopPropagation();
@@ -224,8 +224,8 @@ module Workflow.DistributedRegression.Completed {
 
         }
         public OpenChildDetail(id: string) {
-            var img = $('#img-' + id);
-            var child = $('#response-' + id);
+            let img = $('#img-' + id);
+            let child = $('#response-' + id);
             if (img.hasClass('k-i-plus-sm')) {
                 img.removeClass('k-i-plus-sm');
                 img.addClass('k-i-minus-sm');
@@ -239,29 +239,29 @@ module Workflow.DistributedRegression.Completed {
         }
 
         public ViewChildResponse = (id: string) => {
-            var self = this;
-            var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
-            var tabID = 'responsedetail_' + self.responseIndex;
+            let self = this;
+            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
+            let tabID = 'responsedetail_' + self.responseIndex;
             self.responseIndex++;
-            var q = '//' + window.location.host + '/workflowrequests/responsedetail';
+            let q = '//' + window.location.host + '/workflowrequests/responsedetail';
             q += '?id=' + id;
             q += '&view=' + responseView;
             q += '&workflowID=' + Requests.Details.rovm.Request.WorkflowID();
 
-            var contentFrame = document.createElement('iframe');
+            let contentFrame = document.createElement('iframe');
             contentFrame.id = 'responsedetailframe_' + self.responseIndex;
             contentFrame.src = q;
             contentFrame.setAttribute('style', 'margin:0px;padding:0px;border:none;width:100%;height:940px;min-height:940px;');
             contentFrame.setAttribute('scrolling', 'no');
 
-            var contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
+            let contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
             contentContainer.append(contentFrame);
             $('#root-tab-content').append(contentContainer);
 
-            var tl = $('<li></li>');
-            var ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
+            let tl = $('<li></li>');
+            let ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
 
-            var tac = ta.find('i');
+            let tac = ta.find('i');
 
             tac.click((evt) => {
                 evt.stopPropagation();
@@ -283,30 +283,30 @@ module Workflow.DistributedRegression.Completed {
         }
 
         public onViewResponses() {
-            var self = this;
-            var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
-            var tabID = 'responsedetail_' + self.responseIndex;
+            let self = this;
+            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
+            let tabID = 'responsedetail_' + self.responseIndex;
             self.responseIndex++;
 
-            var q = '//' + window.location.host + '/workflowrequests/responsedetail';
+            let q = '//' + window.location.host + '/workflowrequests/responsedetail';
             q += '?id=' + self.SelectedCompleteResponses();
             q += '&view=' + responseView;
             q += '&workflowID=' + Requests.Details.rovm.Request.WorkflowID();
 
-            var contentFrame = document.createElement('iframe');
+            let contentFrame = document.createElement('iframe');
             contentFrame.id = 'responsedetailframe_' + self.responseIndex;
             contentFrame.src = q;
             contentFrame.setAttribute('style', 'margin:0px;padding:0px;border:none;width:100%;height:940px;min-height:940px;');
             contentFrame.setAttribute('scrolling', 'no');
 
-            var contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
+            let contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
             contentContainer.append(contentFrame);
             $('#root-tab-content').append(contentContainer);
 
-            var tl = $('<li></li>');
-            var ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
+            let tl = $('<li></li>');
+            let ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
 
-            var tac = ta.find('i');
+            let tac = ta.find('i');
 
             tac.click((evt) => {
                 evt.stopPropagation();
@@ -330,7 +330,7 @@ module Workflow.DistributedRegression.Completed {
 
     export function init() {
 
-        var id: any = Global.GetQueryParam("ID");
+        let id: any = Global.GetQueryParam("ID");
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
             Dns.WebApi.Response.CanViewIndividualResponses(id).promise(),
@@ -346,7 +346,7 @@ module Workflow.DistributedRegression.Completed {
 
             $(() => {
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-                var bindingControl = $('#DRCompleted');
+                let bindingControl = $('#DRCompleted');
                 vm = new ViewModel(bindingControl, routings[0], responseGroups || [], canViewIndividualResponses[0], canViewAggregateResponses[0]);
 
                 if (bindingControl[0]) {

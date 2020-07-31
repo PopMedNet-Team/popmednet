@@ -63,7 +63,7 @@ namespace Lpp.Dns.Api.DataMartClient
                     if (!File.Exists(filename))
                     {
                         string tempFileName = Path.Combine(_uploadPath, "temp_" + documentID.ToString("D") + ".part");
-                        using (var fs = new FileStream(tempFileName, FileMode.Append, FileAccess.Write, FileShare.Write))
+                        using (var fs = new FileStream(tempFileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                         using (var dbStream = new Data.Documents.DocumentStream(dataContext, documentID))
                         {
                             dbStream.CopyTo(fs);
@@ -80,11 +80,48 @@ namespace Lpp.Dns.Api.DataMartClient
             byte[] buffer = new byte[length];
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                stream.Seek(offset, SeekOrigin.Begin);
-                await stream.ReadAsync(buffer, 0, buffer.Length);
+                if (offset != 0)
+                {
+                    stream.Seek(offset, SeekOrigin.Begin);
+                }
+
+                await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
             }
 
             return buffer;
+        }
+
+        /// <summary>
+        /// Returns a readonly stream for the specified document from the local disk cache.
+        /// </summary>
+        /// <param name="dataContext">The current datacontext to use if the cache needs to be populated.</param>
+        /// <param name="documentID">The ID of the document.</param>
+        /// <returns></returns>
+        public Stream GetStream(Data.DataContext dataContext, Guid documentID)
+        {
+            string filename = Path.Combine(_uploadPath, documentID.ToString("D") + ".part");
+
+            if (!File.Exists(filename))
+            {
+                lock (_lock)
+                {
+                    if (!File.Exists(filename))
+                    {
+                        string tempFileName = Path.Combine(_uploadPath, "temp_" + documentID.ToString("D") + ".part");
+                        using (var fs = new FileStream(tempFileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                        using (var dbStream = new Data.Documents.DocumentStream(dataContext, documentID))
+                        {
+                            dbStream.CopyTo(fs);
+                            fs.Flush();
+                            fs.Close();
+                        }
+
+                        File.Move(tempFileName, filename);
+                    }
+                }
+            }
+
+            return new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
     }
 }

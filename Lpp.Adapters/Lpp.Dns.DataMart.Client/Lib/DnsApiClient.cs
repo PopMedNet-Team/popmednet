@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -187,6 +188,35 @@ namespace Lpp.Dns.DataMart.Client.Lib
             }
 
             _log.Debug(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + documentID.ToString("D"), true));
+        }
+
+        public async Task PostDocumentChunk(Lpp.Dns.DTO.DataMartClient.Criteria.DocumentMetadata doc, byte[] data)
+        {
+            string identifier;
+            _log.Debug(ExecutingMessage("PostResponseDocumentChunk?documentID=" + doc.ID.ToString("D"), out identifier));
+            using (var content = new MultipartFormDataContent())
+            {
+                var docContent = JsonConvert.SerializeObject(doc, HttpClientHelpers.SerializerSettings());
+                var sContent = new StringContent(docContent, Encoding.UTF8, "application/json");
+
+                content.Add(sContent, "metadata");
+
+                var docByteContent = new ByteArrayContent(data);
+                docByteContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+
+                content.Add(docByteContent, "files", doc.Name);
+
+                var result = await this._Client.PostAsync(this._Host + Path + "/PostDocumentChunk", content);
+                if (!result.IsSuccessStatusCode)
+                {
+                    var errorMsg = await result.GetMessage();
+                    _log.Error(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + doc.ID.ToString("D"), false) + ".\r\n" + errorMsg);
+
+                    throw new Exception("An error occured during upload of document data: " + errorMsg);
+                }
+
+                _log.Debug(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + doc.ID.ToString("D"), true));
+            }
         }
 
         public async Task SetRequestStatus(Guid requestID, Guid datamartID, Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus status, string statusMessage, IEnumerable<Lpp.Dns.DTO.DataMartClient.RoutingProperty> properties)

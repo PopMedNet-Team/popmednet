@@ -7,7 +7,7 @@ var RootLayout;
         title.tooltip({
             html: true,
             trigger: 'click',
-            placement: 'auto bottom'
+            placement: 'bottom'
         });
         title.click(function (event) {
             event.preventDefault();

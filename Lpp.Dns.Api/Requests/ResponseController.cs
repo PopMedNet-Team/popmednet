@@ -2019,41 +2019,37 @@ namespace Lpp.Dns.Api.Requests
 
             if (format.ToLower() == "csv")
             {
-                output.Content = new PushStreamContent(async (ouputStream, httpContent, transportContext) => {
-                    try
-                    {
-                        StreamWriter writer = new StreamWriter(ouputStream);
-                        List<string> rowValues = new List<string>();
+                var ms = new MemoryStream();
+                using (StreamWriter writer = new StreamWriter(ms, Encoding.Default, 32, true))
+                {
+                    List<string> rowValues = new List<string>();
 
-                        //header
-                        rowValues.Add("Iteration");
-                        rowValues.Add("Source");
-                        rowValues.Add("Description");
-                        rowValues.Add("Time");
-                        rowValues.Add("Type");
+                    //header
+                    rowValues.Add("Iteration");
+                    rowValues.Add("Source");
+                    rowValues.Add("Description");
+                    rowValues.Add("Time");
+                    rowValues.Add("Type");
+                    await writer.WriteLineAsync(string.Join(",", rowValues));
+
+                    //events
+                    foreach (var item in await builder.GetItems())
+                    {
+                        rowValues.Clear();
+                        rowValues.Add(item.Step.ToString());
+                        rowValues.Add(EscapeForCsv(item.Source));
+                        rowValues.Add(EscapeForCsv(item.Description));
+                        rowValues.Add(item.Timestamp.ToString("O"));
+                        rowValues.Add(EscapeForCsv(item.EventType));
                         await writer.WriteLineAsync(string.Join(",", rowValues));
-
-                        //events
-                        foreach (var item in await builder.GetItems())
-                        {
-                            rowValues.Clear();
-                            rowValues.Add(item.Step.ToString());
-                            rowValues.Add(EscapeForCsv(item.Source));
-                            rowValues.Add(EscapeForCsv(item.Description));
-                            rowValues.Add(item.Timestamp.ToString("O"));
-                            rowValues.Add(EscapeForCsv(item.EventType));
-                            await writer.WriteLineAsync(string.Join(",", rowValues));
-                        }
-
-
                     }
-                    finally
-                    {
-                        ouputStream.Close();
-                    }
-                });
+                }
 
+                ms.Position = 0;
+                output.Content = new StreamContent(ms);
                 output.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                output.Content.Headers.ContentLength = ms.Length;
+                output.Content.Headers.Expires = DateTimeOffset.UtcNow;
                 output.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
                     FileName = "eventlog.csv"

@@ -1518,6 +1518,12 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<System.Guid[]>(Path + "/GetRequestTypeModels?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
+	 	 public async Task<System.Guid[]> GetModelIDsforRequest(System.Guid requestID)
+	 	 {
+
+	 	 	 var result = await Client.Get<System.Guid[]>(Path + "/GetModelIDsforRequest?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&");
+	 	 	 return result.ReturnSingleItem();
+	 	 }
 	 	 public async Task<System.Net.Http.HttpResponseMessage> UpdateRequestMetadata(Lpp.Dns.DTO.RequestMetadataDTO reqMetadata)
 	 	 {
 	 	 	 var result = await Client.Post<Lpp.Dns.DTO.RequestMetadataDTO>(Path + "/UpdateRequestMetadata", reqMetadata);

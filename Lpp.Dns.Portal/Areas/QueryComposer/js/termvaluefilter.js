@@ -337,6 +337,20 @@ var Plugins;
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(TermValueFilter, "DistributedRegressionModelID", {
+                        get: function () {
+                            return '4c8a25dc-6816-4202-88f4-6d17e72a43bc';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(TermValueFilter, "FileDistributionModelID", {
+                        get: function () {
+                            return '00bf515f-6539-405b-a617-ca9f8aa12970';
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     TermValueFilter.ContainsModel = function (models, id) {
                         return ko.utils.arrayFirst(models, function (i) { return i.toLowerCase() == id; }) != null;
                     };

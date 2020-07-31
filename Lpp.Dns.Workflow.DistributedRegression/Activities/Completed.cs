@@ -37,7 +37,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
         {
             get
             {
-                return DistributedRegressionConfiguration.CompletedID;
+                return HorizontalDistributedRegressionConfiguration.CompletedID;
             }
         }
 

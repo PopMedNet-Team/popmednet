@@ -22,7 +22,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         static readonly log4net.ILog Logger;
 
         const bool RunPostgreSQL = false;
-        const bool RunOracle = true;
+        const bool RunOracle = false;
         const bool RunMySql = false;
 
         static QueryCompositionTests()
@@ -3404,6 +3404,24 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
         }
 
         [TestMethod]
+        public void LabRecord_NullResultRange_UAT27396()
+        {
+            string filename = "LabRecord-request-27396.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+        }
+
+        [TestMethod]
+        public void LabRecord_MultipleLabWithObservationPeriod_UAT27424()
+        {
+            //2 LOINC terms and one Observation Period term
+            //LOINC terms are simple exact match, and the observation period is for the year 2015
+            string filename = "LabRecord-request-27424.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+        }
+
+        [TestMethod]
         public void PrescribingTermNullCode()
         {
             string filename = "Prescribing_NullTerm.json";
@@ -3539,6 +3557,28 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
         public void PrescribingTermWithOtherCodeTypes()
         {
             string filename = "PrescribingTermWithOtherCodeTypes.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsNull(response.Errors);
+            Assert.IsTrue(response.Results.Any());
+
+            var table = response.Results.First();
+
+            if (RunOracle)
+            {
+                var oracleResponse = RunRequest(filename, OracleConnectionString, Settings.SQLProvider.Oracle, "PCORNET_4_1_UPDATE");
+                Assert.IsNull(oracleResponse.Errors);
+                Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
+            }
+        }
+
+        [TestMethod]
+        public void PMNDEV_7691_Perscribing_Test()
+        {
+            string filename = "PMNDEV-7691_PerscribingTest.json";
             var response = RunRequest(filename);
             Logger.Debug(SerializeJsonToString(response));
 

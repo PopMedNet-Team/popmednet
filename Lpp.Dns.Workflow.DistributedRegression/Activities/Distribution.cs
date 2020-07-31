@@ -25,11 +25,11 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
         /// </summary>
         private static readonly Guid CopyResultID = new Guid("47538F13-9257-4161-BCD0-AA7DEA897AE5");
         /// <summary>
-        /// The Result ID Passed by the User to Submit the Request to the DataPartners.  This Closes the current task and Sets the Request Status to Submitted
+        /// The Result ID Passed by the User to Submit the Request to the DataPartners. This Closes the current task and Sets the Request Status to Submitted
         /// </summary>
         private static readonly Guid SubmitResultID = new Guid("5445DC6E-72DC-4A6B-95B6-338F0359F89E");
         /// <summary>
-        /// The Result ID Passed by the User to Terminate the Request.  This Closes the current task and Sets the Request Status to cancelled.
+        /// The Result ID Passed by the User to Terminate the Request. This Closes the current task and Sets the Request Status to cancelled.
         /// </summary>
         private static readonly Guid TerminateResultID = new Guid("53579F36-9D20-47D9-AC33-643D9130080B");
 
@@ -214,14 +214,11 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                     if (currentResponse == null && dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
                     {
-                        currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                        currentResponse = dm.AddResponse(_workflow.Identity.ID);
                     }
                     
                     if (dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
                     {
-                        currentResponse.SubmittedByID = _workflow.Identity.ID;
-                        currentResponse.SubmittedOn = DateTime.UtcNow;
-
                         //add the request document associations
                         for (int i = 0; i < documentRevisionSets.Count; i++)
                         {
@@ -247,7 +244,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                 await db.Entry(_entity).ReloadAsync();
 
                 DTO.QueryComposer.QueryComposerRequestDTO qcRequestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                var modularTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == DistributedRegressionConfiguration.ModularProgramTermID)).FirstOrDefault();
+                var modularTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == HorizontalDistributedRegressionConfiguration.ModularProgramTermID)).FirstOrDefault();
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 //update the request.json term value to include system generated documents revisionsetIDs

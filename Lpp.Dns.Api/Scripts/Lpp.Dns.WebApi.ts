@@ -2484,6 +2484,15 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<any[]>('Requests/GetRequestTypeModels' + params, doNotHandleFail);
 	 	 }
 
+	 	 public static GetModelIDsforRequest(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (requestID != null) params += '&requestID=' + requestID;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('Requests/GetModelIDsforRequest' + params, doNotHandleFail);
+	 	 }
+
 	 	 public static UpdateRequestMetadata(reqMetadata: Dns.Interfaces.IRequestMetadataDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 return Helpers.PostAPIValue<any[]>('Requests/UpdateRequestMetadata', reqMetadata, doNotHandleFail);
 	 	 }

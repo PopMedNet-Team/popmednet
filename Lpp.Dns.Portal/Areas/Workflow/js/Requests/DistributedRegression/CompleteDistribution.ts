@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../../../js/requests/details.ts" />
 module Workflow.DistributedRegression.CompleteDistribution {
-    var vm: ViewModel;
+    let vm: ViewModel;
 
     interface IExpandedResponseDTO extends Dns.Interfaces.IResponseDTO {
         Name: string;
@@ -28,7 +28,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 this.ID = routing.ResponseID;
                 this.Name = routing.DataMart;
             }
-            
+
             this.Status = routing.Status;
             this.Messages = '';
             this.addToMessages(routing.ErrorMessage);
@@ -146,7 +146,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
             super(bindingControl, screenPermissions);
             this.ViewResponseDetailPermissions = viewResponseDetailPermissions || [];
 
-            var self = this;
+            let self = this;
 
             self.Routings = ko.observableArray(responses.RequestDataMarts || []);
             self.OverrideableRoutingIDs = overrideableRoutingIDs || [];
@@ -170,7 +170,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                         routing.Status == Dns.Enums.RoutingStatus.AwaitingResponseApproval ||
                         routing.Status == Dns.Enums.RoutingStatus.RequestRejected ||
                         routing.Status == Dns.Enums.RoutingStatus.ResponseRejectedBeforeUpload ||
-                        routing.Status == Dns.Enums.RoutingStatus.ResponseRejectedAfterUpload 
+                        routing.Status == Dns.Enums.RoutingStatus.ResponseRejectedAfterUpload
                 });
             });
 
@@ -203,7 +203,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
 
             ko.utils.arrayForEach(self.CompletedRoutings(), routing => {
                 if (!routing.ResponseGroupID && routing.RoutingType != Dns.Enums.RoutingType.AnalysisCenter) {
-                    var routeResponses: Dns.Interfaces.IResponseDTO[] = responses.Responses.filter(function (res) {
+                    let routeResponses: Dns.Interfaces.IResponseDTO[] = responses.Responses.filter(function (res) {
                         return res.RequestDataMartID == routing.ID
                     });
                     self.VirtualRoutings.push(new VirtualRoutingViewModel(routing, null, routeResponses));
@@ -212,7 +212,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
 
             self.AnalysisCenters = [];
             ko.utils.arrayForEach(self.AnalysisCenterRoutings(), routing => {
-                var resp: Dns.Interfaces.IResponseDTO[] = responses.Responses.filter(function (res) {
+                let resp: Dns.Interfaces.IResponseDTO[] = responses.Responses.filter(function (res) {
                     return res.RequestDataMartID == routing.ID
                 });
                 self.AnalysisCenters.push(new VirtualRoutingViewModel(routing, null, resp));
@@ -250,11 +250,11 @@ module Workflow.DistributedRegression.CompleteDistribution {
                     .done((result: any) => {
                         if (result != null) {
                             //update values for selected incomplete routings
-                            var routings = self.IncompleteRoutings();
-                            var updatedRoutings = [];
+                            let routings = self.IncompleteRoutings();
+                            let updatedRoutings = [];
                             self.IncompleteRoutings([]);
 
-                            var newDueDate: Date = new Date(result.stringDate);
+                            let newDueDate: Date = new Date(result.stringDate);
 
                             routings.forEach((dm) => {
                                 if (self.SelectedIncompleteRoutings.indexOf(dm.ID) != -1) {
@@ -300,7 +300,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
             };
 
             self.onAddDataMartDialog = () => {
-                var modularProgramTermID = 'a1ae0001-e5b4-46d2-9fad-a3d8014fffd8';
+                let modularProgramTermID = 'a1ae0001-e5b4-46d2-9fad-a3d8014fffd8';
                 Dns.WebApi.Requests.GetCompatibleDataMarts({
                     TermIDs: [modularProgramTermID],
                     ProjectID: Requests.Details.rovm.Request.ProjectID(),
@@ -308,14 +308,14 @@ module Workflow.DistributedRegression.CompleteDistribution {
                     RequestID: Requests.Details.rovm.Request.ID()
                 }).done((dataMarts) => {
                     //compatible datamarts
-                    var newDataMarts = dataMarts;
-                    var i = 0;
+                    let newDataMarts = dataMarts;
+                    let i = 0;
 
                     while (i < 100) {
-                        var dm = self.Routings()[i];
+                        let dm = self.Routings()[i];
                         //removing already submitted DMs from the list of available DMs
                         if (dm != null || undefined) {
-                            var exisitngDataMarts = ko.utils.arrayFirst(newDataMarts, datamart => datamart.ID == dm.DataMartID);
+                            let exisitngDataMarts = ko.utils.arrayFirst(newDataMarts, datamart => datamart.ID == dm.DataMartID);
                             ko.utils.arrayRemoveItem(newDataMarts, exisitngDataMarts);
                         } else { break; }
                         i++;
@@ -324,8 +324,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                     Global.Helpers.ShowDialog("Select DataMarts To Add", "/workflow/workflowrequests/adddatamartdialog", ["Close"], 750, 410, {
                         CurrentRoutings: responses.RequestDataMarts, AllDataMarts: newDataMarts
                     }).done((result) => {
-                        if (!result)
-                        { return; }
+                        if (!result) { return; }
 
                         self.DataMartsToAdd(result);
 
@@ -336,7 +335,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
             };
 
             self.TranslatePriority = (item: Dns.Enums.Priorities) => {
-                var translated = null;
+                let translated = null;
                 Dns.Enums.PrioritiesTranslation.forEach((p) => {
                     if (p.value == item) {
                         translated = p.text;
@@ -345,11 +344,11 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 return translated;
             };
 
-            var showRoutingHistory = (requestDataMartID: any, requestID: any): void => {
+            let showRoutingHistory = (requestDataMartID: any, requestID: any): void => {
                 Dns.WebApi.Requests.GetResponseHistory(requestDataMartID, requestID).done((results: Dns.Interfaces.IResponseHistoryDTO[]) => {
                     self.RoutingHistory.removeAll();
 
-                    var errorMesssages = ko.utils.arrayMap(ko.utils.arrayFilter(results, (r) => { return (r.ErrorMessage || '').length > 0; }), (r) => {
+                    let errorMesssages = ko.utils.arrayMap(ko.utils.arrayFilter(results, (r) => { return (r.ErrorMessage || '').length > 0; }), (r) => {
                         return r.ErrorMessage;
                     });
 
@@ -382,7 +381,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 }
 
                 ko.utils.arrayForEach(self.SelectedIncompleteRoutings(), (dm) => {
-                    var response = ko.utils.arrayFirst(self.IncompleteRoutings(), (item) => {
+                    let response = ko.utils.arrayFirst(self.IncompleteRoutings(), (item) => {
                         return item.ID == dm
                     });
 
@@ -402,7 +401,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                         }
                     });
                 });
-                
+
 
             };
 
@@ -417,7 +416,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                     } else {
                         self.SelectedCompleteRoutings([]);
                     }
-                } 
+                }
             });
             self.incompleteRoutesSelectAll = ko.pureComputed<boolean>({
                 read: () => {
@@ -431,16 +430,16 @@ module Workflow.DistributedRegression.CompleteDistribution {
                         self.SelectedIncompleteRoutings([]);
                     }
                 }
-            });  
-             
+            });
+
         }
 
         public UpdateRoutings(updates) {
-            var newPriority = updates != null ? updates.newPriority : null;
-            var newDueDate = updates != null ? updates.newDueDate : null;
+            let newPriority = updates != null ? updates.newPriority : null;
+            let newDueDate = updates != null ? updates.newDueDate : null;
             if (newPriority != null) {
-                var requestDataMarts = this.IncompleteRoutings();
-                var updatedDataMarts = [];
+                let requestDataMarts = this.IncompleteRoutings();
+                let updatedDataMarts = [];
                 this.IncompleteRoutings([]);
                 requestDataMarts.forEach((rdm) => {
                     rdm.Priority = newPriority;
@@ -449,8 +448,8 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 this.IncompleteRoutings(updatedDataMarts);
             }
             if (newDueDate != null) {
-                var requestDataMarts = this.IncompleteRoutings();
-                var updatedDataMarts = [];
+                let requestDataMarts = this.IncompleteRoutings();
+                let updatedDataMarts = [];
                 this.IncompleteRoutings([]);
                 requestDataMarts.forEach((rdm) => {
                     rdm.DueDate = newDueDate;
@@ -461,15 +460,15 @@ module Workflow.DistributedRegression.CompleteDistribution {
         }
 
         public PostComplete(resultID: string) {
-            var routingsBulkEditID = '4F7E1762-E453-4D12-8037-BAE8A95523F7';
-            var completeRequestResultID = 'E93CED3B-4B55-4991-AF84-07058ABE315C';
-            var resubmitRoutingsResultID = '5C5E0001-10A6-4992-A8BE-A3F4012D5FEB';
-            var removeDataMartsResultID = '5E010001-1353-44E9-9204-A3B600E263E9';
-            var addDataMartsResultID = '15BDEF13-6E86-4E0F-8790-C07AE5B798A8';
-            var uploadResponseResultID = '8A68399F-D562-4A98-87C9-195D3D83A103';
+            let routingsBulkEditID = '4F7E1762-E453-4D12-8037-BAE8A95523F7';
+            let completeRequestResultID = 'E93CED3B-4B55-4991-AF84-07058ABE315C';
+            let resubmitRoutingsResultID = '5C5E0001-10A6-4992-A8BE-A3F4012D5FEB';
+            let removeDataMartsResultID = '5E010001-1353-44E9-9204-A3B600E263E9';
+            let addDataMartsResultID = '15BDEF13-6E86-4E0F-8790-C07AE5B798A8';
+            let uploadResponseResultID = '8A68399F-D562-4A98-87C9-195D3D83A103';
 
-            var data = null;
-            var triggerRefresh: boolean = true;
+            let data = null;
+            let triggerRefresh: boolean = true;
             if (resultID.toUpperCase() == routingsBulkEditID) {
                 data = this.IncompleteRoutings;
             } else if (resultID.toUpperCase() == removeDataMartsResultID) {
@@ -483,12 +482,12 @@ module Workflow.DistributedRegression.CompleteDistribution {
                     Responses: this.SelectedCompleteRoutings()
                 });
             } else if (resultID.toUpperCase() == uploadResponseResultID) {
-                var reqDM = ko.utils.arrayFirst(this.IncompleteRoutings(), (item) => {
-                    var res = ko.utils.arrayFirst(this.SelectedIncompleteRoutings(), (re) => {
+                let reqDM = ko.utils.arrayFirst(this.IncompleteRoutings(), (item) => {
+                    let res = ko.utils.arrayFirst(this.SelectedIncompleteRoutings(), (re) => {
                         return re
                     });
                     return item.ID == res;
-                }); 
+                });
                 data = JSON.stringify({
                     RequestDM: reqDM.ID,
                     Response: reqDM.ResponseID,
@@ -496,7 +495,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 });
             }
 
-            var datamarts = this.Routings();
+            let datamarts = this.Routings();
 
             Dns.WebApi.Requests.CompleteActivity({
                 DemandActivityResultID: resultID,
@@ -505,7 +504,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
                 Data: data,
                 Comment: null
             }).done((results) => {
-                var result = results[0];
+                let result = results[0];
                 if (triggerRefresh) {
                     if (result.Uri) {
                         Global.Helpers.RedirectTo(result.Uri);
@@ -541,8 +540,8 @@ module Workflow.DistributedRegression.CompleteDistribution {
         }
 
         public OpenChildDetail(id: string) {
-            var img = $('#img-' + id);
-            var child = $('#response-' + id);
+            let img = $('#img-' + id);
+            let child = $('#response-' + id);
             if (img.hasClass('k-i-plus-sm')) {
                 img.removeClass('k-i-plus-sm');
                 img.addClass('k-i-minus-sm');
@@ -556,29 +555,29 @@ module Workflow.DistributedRegression.CompleteDistribution {
         }
 
         public ViewChildResponse = (id: string) => {
-            var self = this;
-            var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
-            var tabID = 'responsedetail_' + self.responseIndex;
+            let self = this;
+            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
+            let tabID = 'responsedetail_' + self.responseIndex;
             self.responseIndex++;
-            var q = '//' + window.location.host + '/workflowrequests/responsedetail';
+            let q = '//' + window.location.host + '/workflowrequests/responsedetail';
             q += '?id=' + id;
             q += '&view=' + responseView;
             q += '&workflowID=' + Requests.Details.rovm.Request.WorkflowID();
 
-            var contentFrame = document.createElement('iframe');
+            let contentFrame = document.createElement('iframe');
             contentFrame.id = 'responsedetailframe_' + self.responseIndex;
             contentFrame.src = q;
             contentFrame.setAttribute('style', 'margin:0px;padding:0px;border:none;width:100%;height:940px;min-height:940px;');
             contentFrame.setAttribute('scrolling', 'no');
 
-            var contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
+            let contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
             contentContainer.append(contentFrame);
             $('#root-tab-content').append(contentContainer);
 
-            var tl = $('<li></li>');
-            var ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
+            let tl = $('<li></li>');
+            let ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
 
-            var tac = ta.find('i');
+            let tac = ta.find('i');
 
             tac.click((evt) => {
                 evt.stopPropagation();
@@ -600,30 +599,30 @@ module Workflow.DistributedRegression.CompleteDistribution {
         }
 
         public onViewResponses() {
-            var self = this;
-            var responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
-            var tabID = 'responsedetail_' + self.responseIndex;
+            let self = this;
+            let responseView: Dns.Enums.TaskItemTypes = Dns.Enums.TaskItemTypes.Response;
+            let tabID = 'responsedetail_' + self.responseIndex;
             self.responseIndex++;
 
-            var q = '//' + window.location.host + '/workflowrequests/responsedetail';
+            let q = '//' + window.location.host + '/workflowrequests/responsedetail';
             q += '?id=' + self.SelectedCompleteRoutings();
             q += '&view=' + responseView;
             q += '&workflowID=' + Requests.Details.rovm.Request.WorkflowID();
 
-            var contentFrame = document.createElement('iframe');
+            let contentFrame = document.createElement('iframe');
             contentFrame.id = 'responsedetailframe_' + self.responseIndex;
             contentFrame.src = q;
             contentFrame.setAttribute('style', 'margin:0px;padding:0px;border:none;width:100%;height:940px;min-height:940px;');
             contentFrame.setAttribute('scrolling', 'no');
 
-            var contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
+            let contentContainer = $('<div class="tab-pane fade" id="' + tabID + '"></div>');
             contentContainer.append(contentFrame);
             $('#root-tab-content').append(contentContainer);
 
-            var tl = $('<li></li>');
-            var ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
+            let tl = $('<li></li>');
+            let ta = $('<a href="#' + tabID + '" role="tab" data-toggle="tab" style="display:inline-block">Response Detail <i class="glyphicon glyphicon-remove-circle"></i></a>');
 
-            var tac = ta.find('i');
+            let tac = ta.find('i');
 
             tac.click((evt) => {
                 evt.stopPropagation();
@@ -645,10 +644,10 @@ module Workflow.DistributedRegression.CompleteDistribution {
     }
 
     export function init() {
-        var id: any = Global.GetQueryParam("ID");
+        let id: any = Global.GetQueryParam("ID");
 
         //get the permissions for the view response detail, use to control the dialog view showing the result files
-        var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
+        let getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
 
         $.when<any>(
             Dns.WebApi.Response.GetForWorkflowRequest(id, false),
@@ -657,7 +656,7 @@ module Workflow.DistributedRegression.CompleteDistribution {
             Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])
         ).done((responses: Dns.Interfaces.ICommonResponseDetailDTO[], responseDetailPermissions: any[], overrideableRoutingIDs: any[], requestPermissions: any[]) => {
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-            var bindingControl = $("#DRCompleteDistribution");
+            let bindingControl = $("#DRCompleteDistribution");
             vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, responses[0], responseDetailPermissions, overrideableRoutingIDs, requestPermissions || []);
 
             $(() => {

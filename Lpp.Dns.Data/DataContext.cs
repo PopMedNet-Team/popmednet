@@ -787,6 +787,34 @@ namespace Lpp.Dns.Data
             return WorkflowActivities.Find(workflowActivityID);
         }
 
+        public IQueryable<RequestType> GetProjectAvailableRequestTypes(Guid projectID)
+        {
+            //For legacy request types, the user has to have the automatic or manual permission for the request type, which can be set at two levels within the Project (Project level or Project DataMart level)
+            var projectDatamartAcls = this.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+            var projectAcls = this.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
+
+            var results = from rt in this.ProjectRequestTypes
+                          let projID = projectID
+                          let userID = Identity.ID
+                          let editTaskPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditTask.ID
+                          let wAcls = this.ProjectRequestTypeWorkflowActivities.Where(a => a.RequestTypeID == rt.RequestTypeID && a.WorkflowActivity.Start == true && a.SecurityGroup.Users.Any(u => u.UserID == userID) &&
+                                                                                   a.ProjectID == projID &&
+                                                                                   a.PermissionID == editTaskPermissionID)
+                          let pAcls = projectAcls.Where(pa => pa.ProjectID == projID && pa.RequestTypeID == rt.RequestTypeID)
+                          let pdmAcls = projectDatamartAcls.Where(pa => pa.ProjectID == projID && pa.RequestTypeID == rt.RequestTypeID)
+                          where rt.ProjectID == projID
+                          && (
+                               (rt.RequestType.WorkflowID.HasValue && wAcls.Any(a => a.Allowed) && wAcls.All(a => a.Allowed))
+                               ||
+                               (rt.RequestType.WorkflowID.HasValue == false &&
+                               (pAcls.Any(a => a.Permission > 0) || pdmAcls.Any(a => a.Permission > 0)) &&
+                               (pAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0)))
+                          )
+                          select rt.RequestType;
+
+            return results;
+        }
+
         private ApiIdentity Identity
         {
             get

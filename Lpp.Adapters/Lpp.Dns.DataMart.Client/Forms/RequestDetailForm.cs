@@ -24,6 +24,7 @@ using System.Reactive.Concurrency;
 using System.Reactive;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Lpp.Dns.DataMart.Client
 {
@@ -386,75 +387,173 @@ namespace Lpp.Dns.DataMart.Client
                 responseDocuments = Processor.Response(RequestId);
             }
 
-            var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
-            
-            var postDocuments = responseDocuments.NullOrEmpty() ? Observable.Return(100) : Observable.Start<Document[]>(() => responseDocuments, Scheduler.Default)
-                .SelectMany(documents =>
-                {
-                    return documents.Select((doc, index) =>
-                    {
-                        return Observable.Defer(() => {
+            if (netWorkSetting.SupportsUploadV2)
+            {
+                var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
+                double progressPercentage = 0;
+                BackgroundWorker uploadWorker = new BackgroundWorker();
+                uploadWorker.WorkerSupportsCancellation = false;
+                uploadWorker.WorkerReportsProgress = true;
+
+                uploadWorker.DoWork += (object s, DoWorkEventArgs workArgs) => {
+                    Parallel.ForEach(responseDocuments,
+                        new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                        (doc) =>
+                        {
                             string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
-                            Guid[] serverIDs = DnsServiceManager.PostResponseDocuments(uploadIdentifier, RequestId, Request.DataMartId, new[] { doc }, netWorkSetting);
-                            Guid serverDocumentID = serverIDs[0];
 
-                            Thread.Sleep(3000);
+                            Stream stream;
 
-                            return Observable.Using(() =>
+                            if (Cache.Enabled)
                             {
-                                if (Cache.Enabled)
-                                {
-                                    return Cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
-                                }
-                                else
-                                {
-                                    Stream data;
-                                    Processor.ResponseDocument(RequestId, doc.DocumentID, out data, doc.Size);
-                                    return data;
-                                }
-                            },
-                               inStream =>
-                               {
-                                   return (inStream == null) ?
-                                                 Observable.Return(100 * (index + 1) / responseDocuments.Length) :
-                                                 DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, RequestId, Request.DataMartId, serverDocumentID, doc.Filename, inStream, netWorkSetting).Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.Size)) / responseDocuments.Length);
-                               }
-                            );
+                                stream = Cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
+                            }
+                            else
+                            {
+                                Processor.ResponseDocument(RequestId, doc.DocumentID, out stream, doc.Size);
+                            }
+
+                            var beforeMath = 25 / responseDocuments.Length;
+
+                            progressPercentage = Math.Ceiling(progressPercentage + beforeMath);
+
+                            uploadWorker.ReportProgress(0);
+
+                            var dto = new DTO.DataMartClient.Criteria.DocumentMetadata
+                            {
+                                ID = Guid.Parse(doc.DocumentID),
+                                DataMartID = Request.DataMartId,
+                                RequestID = Guid.Parse(RequestId),
+                                IsViewable = doc.IsViewable,
+                                Size = doc.Size,
+                                MimeType = doc.MimeType,
+                                Kind = doc.Kind,
+                                Name = doc.Filename,
+                                CurrentChunkIndex = 0
+                            };
+
+                            DnsServiceManager.PostDocumentChunk(uploadIdentifier, dto, stream, netWorkSetting);
+
+                            double afterMath = 75 / responseDocuments.Length;
+
+                            progressPercentage = Math.Ceiling(progressPercentage + afterMath);
+
+                            uploadWorker.ReportProgress(0);
                         });
 
-                        
-                    }).Concat();
-                });
 
-            postDocuments.ObserveOn(this)
-                .Do(percent => progress.Progress = percent)
-                .Select(_ => Unit.Default)
-                .Concat(Observable.Defer(() => Observable.Start(() =>
-                 {
-                     DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval, rejectReason), Request.Properties, netWorkSetting);
-                     RequestCache.ForNetwork(netWorkSetting).Release(Request);
-                 }, Scheduler.Default)
-                  .ObserveOn(this)
-                  .Do(_ =>
-                  {
+                    DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval, rejectReason), Request.Properties, netWorkSetting);
+                    RequestCache.ForNetwork(netWorkSetting).Release(Request);
 
-                      this.Close();
+                };
 
-                  })
-                ))
-                .TakeUntil(progress.ShowAndWaitForCancel(this))
-                .Finally(progress.Dispose)
-                .LogExceptions(log.Error)
-                .Catch((ModelProcessorError ex) => ShowPossibleTransientError(ex))
-                .Catch((Exception ex) => ShowUnexpectedError(ex))
-                .Do(_ => { }, () =>
+                uploadWorker.ProgressChanged += (object progressSender, ProgressChangedEventArgs progressArgs) =>
                 {
-                    EnableDisableButtons();
-                    RefreshRequestHeader();
-                    this.Cursor = Cursors.Default;
-                })
-                .Catch()
-                .Subscribe();
+                    progress.Progress = Convert.ToInt32(progressPercentage);
+                };
+
+                uploadWorker.RunWorkerCompleted += (object completedSender, RunWorkerCompletedEventArgs workCompletedArgs) =>
+                {
+                    if (workCompletedArgs.Error != null)
+                    {
+                        log.Error(workCompletedArgs.Error);
+                        if (workCompletedArgs.Error is ModelProcessorError)
+                        {
+                            ShowPossibleTransientError(workCompletedArgs.Error);
+                        }
+                        else
+                        {
+                            ShowUnexpectedError(workCompletedArgs.Error);
+                        }
+                        progress.Close();
+                        progress.Dispose();
+                    }
+                    else
+                    {
+                        progress.Close();
+                        progress.Dispose();
+                        this.Close();
+                    }
+                };
+
+                uploadWorker.RunWorkerAsync();
+                progress.ShowDialog();
+
+            }
+            else
+            {
+
+                var progress = new ProgressForm("Uploading the result", "Uploading the request results...") { Indeteminate = false };
+
+                var postDocuments = responseDocuments.NullOrEmpty() ? Observable.Return(100) : Observable.Start<Document[]>(() => responseDocuments, Scheduler.Default)
+                    .SelectMany(documents =>
+                    {
+                        return documents.Select((doc, index) =>
+                        {
+                            return Observable.Defer(() =>
+                            {
+                                string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+                                Guid[] serverIDs = DnsServiceManager.PostResponseDocuments(uploadIdentifier, RequestId, Request.DataMartId, new[] { doc }, netWorkSetting);
+                                Guid serverDocumentID = serverIDs[0];
+
+                                Thread.Sleep(3000);
+
+                                return Observable.Using(() =>
+                                {
+                                    if (Cache.Enabled)
+                                    {
+                                        return Cache.GetDocumentStream(Guid.Parse(doc.DocumentID));
+                                    }
+                                    else
+                                    {
+                                        Stream data;
+                                        Processor.ResponseDocument(RequestId, doc.DocumentID, out data, doc.Size);
+                                        return data;
+                                    }
+                                },
+                                   inStream =>
+                                   {
+                                       return (inStream == null) ?
+                                                     Observable.Return(100 * (index + 1) / responseDocuments.Length) :
+                                                     DnsServiceManager.PostResponseDocumentContent(uploadIdentifier, RequestId, Request.DataMartId, serverDocumentID, doc.Filename, inStream, netWorkSetting).Select(bytes => (100 * index + bytes * 100 / Math.Max(1, doc.Size)) / responseDocuments.Length);
+                                   }
+                                );
+                            });
+
+
+                        }).Concat();
+                    });
+
+                postDocuments.ObserveOn(this)
+                    .Do(percent => progress.Progress = percent)
+                    .Select(_ => Unit.Default)
+                    .Concat(Observable.Defer(() => Observable.Start(() =>
+                    {
+                        DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(DTO.DataMartClient.Enums.DMCRoutingStatus.AwaitingResponseApproval, rejectReason), Request.Properties, netWorkSetting);
+                        RequestCache.ForNetwork(netWorkSetting).Release(Request);
+                    }, Scheduler.Default)
+                      .ObserveOn(this)
+                      .Do(_ =>
+                      {
+
+                          this.Close();
+
+                      })
+                    ))
+                    .TakeUntil(progress.ShowAndWaitForCancel(this))
+                    .Finally(progress.Dispose)
+                    .LogExceptions(log.Error)
+                    .Catch((ModelProcessorError ex) => ShowPossibleTransientError(ex))
+                    .Catch((Exception ex) => ShowUnexpectedError(ex))
+                    .Do(_ => { }, () =>
+                    {
+                        EnableDisableButtons();
+                        RefreshRequestHeader();
+                        this.Cursor = Cursors.Default;
+                    })
+                    .Catch()
+                    .Subscribe();
+            }
         }
 
         private void btnRejectQuery_Click(object sender, EventArgs e)

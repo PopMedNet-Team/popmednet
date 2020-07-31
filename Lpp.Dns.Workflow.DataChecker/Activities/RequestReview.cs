@@ -134,7 +134,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     var currentResponse = responses.Where(rsp => rsp.RequestDataMartID == dm.ID).FirstOrDefault();
                     if (currentResponse == null)
                     {
-                        currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                        currentResponse = dm.AddResponse(_workflow.Identity.ID);
                     }
                     currentResponse.SubmittedByID = _workflow.Identity.ID;
                     currentResponse.SubmittedOn = DateTime.UtcNow;

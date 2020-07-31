@@ -1,3 +1,4 @@
+/// <reference path="../../areas/querycomposer/js/termvaluefilter.ts" />
 /// <reference path="../_rootlayout.ts" />
 declare var WorkflowActivityList: Requests.Details.IVisualWorkflowActivity[];
 
@@ -121,7 +122,8 @@ module Requests.Details {
             canViewIndividualResponses: boolean,
             canViewAggregateResponses: boolean,
             currentTask: Dns.Interfaces.ITaskDTO,
-            requestTypeModels: any[]
+            requestTypeModels: any[],
+            queryComposerRequest: Dns.Interfaces.IQueryComposerRequestDTO
         ) {
             super(bindingControl, screenPermissions);
 
@@ -308,10 +310,15 @@ module Requests.Details {
 
             self.AllowAggregateView = true;
 
-            //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
+            //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type             
             requestTypeModels.forEach((rt) => {
-                if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
+                if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
+                    (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && queryComposerRequest.Header.QueryType == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh)) {
                     self.AllowAggregateView = false;
+                }
             });
 
             self.SelectedCompleteResponses = ko.observableArray([]);
@@ -1001,7 +1008,7 @@ module Requests.Details {
                         Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()),
                         Dns.WebApi.Response.CanViewIndividualResponses(request.ID()),
                         Dns.WebApi.Response.CanViewAggregateResponses(request.ID()),
-                        Dns.WebApi.Requests.GetRequestTypeModels(request.ID())
+                        Dns.WebApi.Requests.GetModelIDsforRequest(request.ID())
                     //Get the work flow activity that it's on
                         ).done((
                         parentRequests: Dns.Interfaces.IRequestDTO[],
@@ -1082,7 +1089,9 @@ module Requests.Details {
             let currentTask: Dns.Interfaces.ITaskDTO = ko.utils.arrayFirst(tasks, (item) => { return item.WorkflowActivityID == request.CurrentWorkFlowActivityID() && item.EndOn == null; });
             let bindingControl = $("#ContentWrapper");
 
-            rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels);
+            let queryComposerRequest: Dns.Interfaces.IQueryComposerRequestDTO = JSON.parse(request.Query());
+
+            rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels, queryComposerRequest);
 
             let taskID: any = Global.GetQueryParam("TaskID");
             //If new, or TaskID passed, set the tab to the Task tab
@@ -1104,7 +1113,7 @@ module Requests.Details {
       
             // Load the view of the criteria only if #viewQueryComposer element is present
             if (viewOverview && $('#viewQueryComposer').length) {
-                rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(JSON.parse(request.Query()), visualTerms, $('#overview-queryview'));
+                rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(queryComposerRequest, visualTerms, $('#overview-queryview'));
             }
             
             //Notifications

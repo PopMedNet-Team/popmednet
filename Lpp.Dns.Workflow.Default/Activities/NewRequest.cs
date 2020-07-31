@@ -209,7 +209,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                         var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                         if (currentResponse == null)
                         {
-                            currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                            currentResponse = dm.AddResponse(_workflow.Identity.ID);
                         }
                         currentResponse.SubmittedByID = _workflow.Identity.ID;
                         currentResponse.SubmittedOn = DateTime.UtcNow;
@@ -339,8 +339,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                             var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                             if (currentResponse == null)
                             {
-                                currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                                currentResponse = dm.AddResponse(_workflow.Identity.ID);
                             }
+
                             currentResponse.SubmittedByID = _workflow.Identity.ID;
                             currentResponse.SubmittedOn = DateTime.UtcNow;
 

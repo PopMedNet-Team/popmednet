@@ -92,7 +92,7 @@ namespace Lpp.Dns.Portal
             {
                 var datamart = dm;
                 var requestDataMart = new RequestDataMart { DataMart = datamart, Responses = new HashSet<Response>() };
-                requestDataMart.Responses.Add(new Response { RequestDataMart = requestDataMart, SubmittedByID = Auth.CurrentUser.ID });
+                requestDataMart.AddResponse(Auth.CurrentUser.ID);
                 requestDataMart.Priority = Priorities.Medium;
                 request.DataMarts.Add(requestDataMart);
             }
@@ -229,6 +229,8 @@ namespace Lpp.Dns.Portal
                     RequestDataMart = requestDataMart,
                     SubmittedByID = Auth.CurrentUser.ID
                 });
+
+                requestDataMart.AddResponse(Auth.CurrentUser.ID);
             }
             
             var documents = DataContext.Documents.Where(d => d.ItemID == ctx.Request.ID).ToArray();

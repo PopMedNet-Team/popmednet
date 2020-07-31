@@ -18,9 +18,13 @@ namespace Lpp.Dns.Api.DataMartClient
     public class DMCRoutingStatusProcessor
     {
         /// <summary>
-        /// ID of the Distributed Regression workflow.
+        /// ID of the Horizontal Distributed Regression workflow.
         /// </summary>
-        public static readonly Guid DistributedRegressionWorkflowID = new Guid("E9656288-33FF-4D1F-BA77-C82EB0BF0192");
+        public static readonly Guid HorizontalDistributedRegressionWorkflowID = new Guid("E9656288-33FF-4D1F-BA77-C82EB0BF0192");
+        /// <summary>
+        /// ID of the Vertical Distributed Regression workflow.
+        /// </summary>
+        public static readonly Guid VerticalDistributedRegressionWorkflowID = new Guid("047AC2E4-3F74-40DB-BA9F-2DFA0FB3123A");
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(DMCRoutingStatusProcessor));
         readonly DataContext DataContext;
         readonly Utilities.Security.ApiIdentity Identity;
@@ -146,10 +150,23 @@ namespace Lpp.Dns.Api.DataMartClient
 
             await DataContext.Entry(request).ReloadAsync();
 
-            if (routingIsComplete && request.Status == DTO.Enums.RequestStatuses.Complete && request.WorkflowID.HasValue)
+            if (request.WorkflowID.HasValue && request.WorkflowID.Value == VerticalDistributedRegressionWorkflowID && (routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified))
             {
-
-                if (request.WorkflowID.Value == DistributedRegressionWorkflowID && (routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified))
+                try
+                {
+                    await DataContext.Entry(routing).Reference(r => r.Request).LoadAsync();
+                    var routingProcessor = new VerticalDistributedRegressionRoutingProcessor(DataContext, Identity.ID);
+                    await routingProcessor.Process(routing);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(string.Format("Error processing distributed regression route transistion for request ID: {0}\r\n{1}", routing.RequestID, Lpp.Utilities.ExceptionHelpers.UnwindException(ex, true)), ex.InnerException ?? ex);
+                    throw;
+                }
+            }
+            else if (routingIsComplete && request.Status == DTO.Enums.RequestStatuses.Complete && request.WorkflowID.HasValue)
+            {
+                if (request.WorkflowID.Value == HorizontalDistributedRegressionWorkflowID && (routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified))
                 {
                     try
                     {

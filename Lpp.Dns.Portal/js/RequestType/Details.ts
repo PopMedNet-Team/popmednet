@@ -55,11 +55,12 @@ module RequestType.Details {
                     modelID == '7c69584a-5602-4fc0-9f3f-a27f329b1113' || //ESP
                     modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' || //PCORnet
                     modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' || //Summary Tables
-                    modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' ||//Distributed Regression
-                    modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154'; //Modular Program
-                
-                }).map((item) => {
-                    return item.DataModelID.toLowerCase();
+                    modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' || //Distributed Regression
+                    modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154' || //Modular Program
+                    modelID == '00bf515f-6539-405b-a617-ca9f8aa12970'; //File Distribution
+
+            }).map((item) => {
+                return item.DataModelID.toLowerCase();
             }));
             
             self.RequestTypeTerms = ko.observableArray(requestTypeTerms.map((item) => {

@@ -85,8 +85,20 @@ namespace Lpp.Dns.Data
             this.Responses.Add(response);
 
             return response;
-        }   
-     
+        }
+
+        public Response AddResponse(Guid submittedByID, int count)
+        {
+            Response response = new Response { RequestDataMart = this, SubmittedByID = submittedByID, SubmittedOn = DateTime.UtcNow, Count = count };
+
+            if (this.Responses == null)
+                this.Responses = new HashSet<Response>();
+
+            this.Responses.Add(response);
+
+            return response;
+        }
+
         public static RequestDataMart Create(Guid requestID, Guid dataMartID, Guid submittedByID){
             RequestDataMart routing = new RequestDataMart { DataMartID = dataMartID, RequestID = requestID, Status = RoutingStatus.Draft };
             routing.AddResponse(submittedByID);

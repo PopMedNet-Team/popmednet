@@ -9,6 +9,7 @@ using log4net;
 using System.IO;
 using Lpp.Dns.DataMart.Model.Settings;
 using System.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
 {
@@ -106,14 +107,29 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
         public IEnumerable<QueryComposerModelProcessor.DocumentEx> StartRequest(Model.DocumentWithStream[] requestDocs)
         {
 
-            if(requestDocs.Any(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase)))
+            if (requestDocs.Any(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase)))
             {
-                IsAnalysisCenter = true;
+                JToken manifestObject;
+                using (var sr = new StreamReader(requestDocs.Where(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase)).FirstOrDefault().Stream))
+                {
+                    manifestObject = JToken.Parse(sr.ReadToEnd());
+                    sr.BaseStream.Position = 0;
+                }
 
-                return ProcessForAnalysisCenter(requestDocs);
-
+                if (manifestObject.Type != JTokenType.Array)
+                {
+                    LogDebug("Manifest.json contains partner information, processing as Vertical Distributed Regression request.");
+                    return ProcessVertical(requestDocs, manifestObject.ToObject<DistributedRegressionManifestFile>());
+                }
+                else
+                {
+                    LogDebug("Manifest.json is an array of input files, processing as Horizontal Distributed Regression for Analysis Center.");
+                    IsAnalysisCenter = true;
+                    return ProcessForAnalysisCenter(requestDocs, manifestObject.ToObject<DistributedRegressionAnalysisCenterManifestItem[]>());
+                }
             }
 
+            LogDebug("Manifest.json does not exist in payload, processing as Horizontal Distributed Regression for Data Partner.");
             return ProcessForDataPartner(requestDocs);
         }
 
@@ -208,24 +224,28 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Beginning download of input files."));
 
                 LogDebug($"Beginning download of { requestDocs.Length } files to input folder: { inputfilesFolderPath }");
-                foreach (var f in requestDocs)
-                {
-                    try
+
+                Parallel.ForEach(requestDocs,
+                    new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                    (file) =>
                     {
-                        LogDebug("Downloading document: " + f.Document.Filename);
-                        using (FileStream destination = File.Create(Path.Combine(inputfilesFolderPath, f.Document.Filename)))
+                        try
                         {
-                            f.Stream.CopyTo(destination);
-                            destination.Flush();
-                            destination.Close();
+                            LogDebug("Downloading document: " + file.Document.Filename);
+                            using (FileStream destination = File.Create(Path.Combine(inputfilesFolderPath, file.Document.Filename)))
+                            {
+                                file.Stream.CopyTo(destination);
+                                destination.Flush();
+                                destination.Close();
+                            }
+                            LogDebug("Successfully downloaded document: " + file.Document.Filename);
                         }
-                        LogDebug("Successfully downloaded document: " + f.Document.Filename);
-                    }catch(Exception ex)
-                    {
-                        LogError($"Error downloading file { f.Document.Filename } to the input files folder.", ex);
-                        throw;
-                    }
-                }
+                        catch (Exception ex)
+                        {
+                            LogError($"Error downloading file { file.Document.Filename } to the input files folder.", ex);
+                            throw;
+                        }
+                    });
 
                 LogDebug($"Finished download of { requestDocs.Length } files to input folder: { inputfilesFolderPath }");
                 EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Input files successfully downloaded."));
@@ -324,7 +344,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             });
         }
 
-        IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessForAnalysisCenter(DocumentWithStream[] requestDocs)
+        IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessForAnalysisCenter(DocumentWithStream[] requestDocs, DistributedRegressionAnalysisCenterManifestItem[] manifestDocuments)
         {
             string outputFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
 
@@ -334,75 +354,60 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 LogDebug($"Creating output directory: { outputFolderPath }");
                 Directory.CreateDirectory(outputFolderPath);
             }
-            
-            //look for the manifest.json file
-            var manifestDocument = requestDocs.FirstOrDefault(d => string.Equals(d.Document.Filename, "manifest.json", StringComparison.OrdinalIgnoreCase) && d.Document.Kind == Lpp.Dns.DTO.Enums.DocumentKind.SystemGeneratedNoLog);
-            if(manifestDocument == null)
-            {
-                throw new Exception("Missing Analysis Center manifest file, unable to determine location to extract input files.");
-            }
-
-            DistributedRegressionAnalysisCenterManifestItem[] manifestDocuments = null;
 
             Dictionary<Guid, string> datapartnerFolders = new Dictionary<Guid, string>();
-
-            LogDebug("Determining documents to download for DataPartners from API.");
-
-            using (var sr = new StreamReader(manifestDocument.Stream))
-            using(var jr = new Newtonsoft.Json.JsonTextReader(sr))
-            {
-                var serializer = new Newtonsoft.Json.JsonSerializer();
-                manifestDocuments = serializer.Deserialize<DistributedRegressionAnalysisCenterManifestItem[]>(jr);
-            }
 
             LogDebug("Starting download of files to DataPartner directories.");
 
             EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Initiating DataPartner input files download to Analysis Center."));
 
             //save the files to the specified folders based on the manifest file
-            foreach (var document in manifestDocuments)
-            {
-                if (string.IsNullOrEmpty(document.DataPartnerIdentifier))
-                {
-                    //TODO:cannot extract file without knowing the folder, find out if this should fail everything
-                    LogDebug($"DataPartner Identifier is null or empty for document ID: { document.DocumentID }, skipping download.");
-                    continue;
-                }
 
-                var doc = requestDocs.FirstOrDefault(d => d.ID == document.DocumentID);
-                if(doc == null)
-                {
-                    LogDebug($"Document not found in request documents for document ID: { document.DocumentID }, skipping download.");
-                    continue;
-                }
-
-                string partnerDirectory = Path.Combine(RootMonitorFolder, RequestIdentifier, document.DataPartnerIdentifier);
-                if (!Directory.Exists(partnerDirectory))
-                {
-                    LogDebug($"Creating directory for DataPartner: {document.DataPartnerIdentifier}");
-                    Directory.CreateDirectory(partnerDirectory);
-                }
-
-                try
-                {
-                    using (var writer = File.OpenWrite(Path.Combine(partnerDirectory, doc.Document.Filename)))
+            Parallel.ForEach(manifestDocuments,
+                    new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                    (document) =>
                     {
-                        doc.Stream.CopyTo(writer);
-                        writer.Flush();
-                        LogDebug($"Successfully downloaded file \"{ doc.Document.Filename }\" for DataPartner: { document.DataPartnerIdentifier }");
-                    }
-                }catch(Exception ex)
-                {
-                    LogError($"Error downloading file \"{ doc.Document.Filename }\" to DataPartner folder: { partnerDirectory }.", ex);
-                    throw;
-                }
+                        if (string.IsNullOrEmpty(document.DataPartnerIdentifier))
+                        {
+                            //TODO:cannot extract file without knowing the folder, find out if this should fail everything
+                            LogDebug($"DataPartner Identifier is null or empty for document ID: { document.DocumentID }, skipping download.");
+                            return;
+                        }
 
-                if(datapartnerFolders.ContainsKey(document.DataMartID) == false)
-                {
-                    datapartnerFolders.Add(document.DataMartID, partnerDirectory);
-                }
+                        var doc = requestDocs.FirstOrDefault(d => d.ID == document.DocumentID);
+                        if (doc == null)
+                        {
+                            LogDebug($"Document not found in request documents for document ID: { document.DocumentID }, skipping download.");
+                            return;
+                        }
 
-            }
+                        string partnerDirectory = Path.Combine(RootMonitorFolder, RequestIdentifier, document.DataPartnerIdentifier);
+                        if (!Directory.Exists(partnerDirectory))
+                        {
+                            LogDebug($"Creating directory for DataPartner: {document.DataPartnerIdentifier}");
+                            Directory.CreateDirectory(partnerDirectory);
+                        }
+
+                        try
+                        {
+                            using (var writer = File.OpenWrite(Path.Combine(partnerDirectory, doc.Document.Filename)))
+                            {
+                                doc.Stream.CopyTo(writer);
+                                writer.Flush();
+                                LogDebug($"Successfully downloaded file \"{ doc.Document.Filename }\" for DataPartner: { document.DataPartnerIdentifier }");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError($"Error downloading file \"{ doc.Document.Filename }\" to DataPartner folder: { partnerDirectory }.", ex);
+                            throw;
+                        }
+
+                        if (datapartnerFolders.ContainsKey(document.DataMartID) == false)
+                        {
+                            datapartnerFolders.Add(document.DataMartID, partnerDirectory);
+                        }
+                    });
 
             LogDebug("All DataPartner input files successfully downloaded to Analysis Center.");
             EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "DataPartner input files successfully downloaded to Analysis Center."));
@@ -420,7 +425,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                     }
 
                     LogDebug("Successfully created Execution Complete trigger file \"" + ExecutionCompleteFilename + "\" in DataPartner folder: " + dpf.Value);
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     LogError($"Error creating Execution Complete trigger file \"{ ExecutionCompleteFilename }\" to DataPartner folder: { dpf.Value }.", ex);
                     throw;
@@ -479,6 +485,193 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
             DeleteTriggerFiles(outputFolderPath);
 
             return outputDocuments;
+        }
+
+        private IEnumerable<QueryComposerModelProcessor.DocumentEx> ProcessVertical(DocumentWithStream[] requestDocs, DistributedRegressionManifestFile manifestFileContents)
+        {
+            var currentDM = manifestFileContents.DataPartners.Where(x => x.DataMartID == Guid.Parse(RequestMetadata.DataMartId)).FirstOrDefault();
+
+            if (currentDM.RouteType == DTO.Enums.RoutingType.AnalysisCenter)
+            {
+                IsAnalysisCenter = true;
+                return ProcessForAnalysisCenter(requestDocs, manifestFileContents.Items.ToArray());
+            }
+            else
+            {
+                string outputFolderPath = Path.Combine(RootMonitorFolder, RequestIdentifier, "msoc");
+
+                LogDebug($"Checking to see if output directory exists: { outputFolderPath }");
+                if (!Directory.Exists(outputFolderPath))
+                {
+                    LogDebug($"Creating output directory: { outputFolderPath }");
+                    Directory.CreateDirectory(outputFolderPath);
+                }
+
+                Dictionary<Guid, string> datapartnerFolders = new Dictionary<Guid, string>();
+
+                LogDebug("Determining documents to download for DataPartners from API.");
+
+                LogDebug("Starting download of files to DataPartner directories.");
+
+                EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "Initiating DataPartner input files download to Analysis Center."));
+
+                //save the files to the specified folders based on the manifest file
+                foreach (var document in manifestFileContents.Items)
+                {
+                    if (string.IsNullOrEmpty(document.DataPartnerIdentifier))
+                    {
+                        //TODO:cannot extract file without knowing the folder, find out if this should fail everything
+                        LogDebug($"DataPartner Identifier is null or empty for document ID: { document.DocumentID }, skipping download.");
+                        continue;
+                    }
+
+                    var doc = requestDocs.FirstOrDefault(d => d.ID == document.DocumentID);
+                    if (doc == null)
+                    {
+                        LogDebug($"Document not found in request documents for document ID: { document.DocumentID }, skipping download.");
+                        continue;
+                    }
+
+                    var dp = manifestFileContents.DataPartners.Where(x => x.DataMartIdentifier == document.DataPartnerIdentifier).FirstOrDefault();
+                    if (dp.RouteType == DTO.Enums.RoutingType.DataPartner)
+                    {
+                        string partnerDirectory = Path.Combine(RootMonitorFolder, RequestIdentifier, document.DataPartnerIdentifier);
+                        if (!Directory.Exists(partnerDirectory))
+                        {
+                            LogDebug($"Creating directory for DataPartner: {document.DataPartnerIdentifier}");
+                            Directory.CreateDirectory(partnerDirectory);
+                        }
+
+                        try
+                        {
+                            using (var writer = File.OpenWrite(Path.Combine(partnerDirectory, doc.Document.Filename)))
+                            {
+                                doc.Stream.CopyTo(writer);
+                                writer.Flush();
+                                LogDebug($"Successfully downloaded file \"{ doc.Document.Filename }\" for DataPartner: { document.DataPartnerIdentifier }");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError($"Error downloading file \"{ doc.Document.Filename }\" to DataPartner folder: { partnerDirectory }.", ex);
+                            throw;
+                        }
+
+                        if (datapartnerFolders.ContainsKey(document.DataMartID) == false)
+                        {
+                            datapartnerFolders.Add(document.DataMartID, partnerDirectory);
+                        }
+                    }
+                    else
+                    {
+                        string partnerDirectory = Path.Combine(RootMonitorFolder, RequestIdentifier, "inputfiles");
+
+                        LogDebug($"Checking to see if output directory exists: { partnerDirectory }");
+                        if (!Directory.Exists(partnerDirectory))
+                        {
+                            LogDebug($"Creating directory for Analysis Center: { partnerDirectory }");
+                            Directory.CreateDirectory(partnerDirectory);
+                        }
+
+                        try
+                        {
+                            using (var writer = File.OpenWrite(Path.Combine(partnerDirectory, doc.Document.Filename)))
+                            {
+                                doc.Stream.CopyTo(writer);
+                                writer.Flush();
+                                LogDebug($"Successfully downloaded file \"{ doc.Document.Filename }\" for Analysis Center");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError($"Error downloading file \"{ doc.Document.Filename }\" to Analysis Center folder: { partnerDirectory }.", ex);
+                            throw;
+                        }
+
+                        if (datapartnerFolders.ContainsKey(document.DataMartID) == false)
+                        {
+                            datapartnerFolders.Add(document.DataMartID, partnerDirectory);
+                        }
+                    }
+                }
+
+                LogDebug("All DataPartner input files successfully downloaded.");
+                EventLog.Add(new EventLogItem(EventLogItemTypes.DownloadPayload, "DataPartner input files successfully downloaded."));
+
+                //write the trigger files for each datapartner input folder
+                foreach (var dpf in datapartnerFolders)
+                {
+                    try
+                    {
+                        LogDebug("Creating Execution Complete trigger file \"" + ExecutionCompleteFilename + "\" in DataPartner folder: " + dpf.Value);
+
+                        using (var fs = File.CreateText(Path.Combine(dpf.Value, ExecutionCompleteFilename)))
+                        {
+                            fs.Close();
+                        }
+
+                        LogDebug("Successfully created Execution Complete trigger file \"" + ExecutionCompleteFilename + "\" in DataPartner folder: " + dpf.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError($"Error creating Execution Complete trigger file \"{ ExecutionCompleteFilename }\" to DataPartner folder: { dpf.Value }.", ex);
+                        throw;
+                    }
+                }
+
+                EventLog.Add(new EventLogItem(EventLogItemTypes.TriggerFileCreated, "Execution Complete trigger file created by adapter for each Data Partner in their input folder."));
+
+
+                LogDebug("Checking to see if the Start Job or Execution Complete Trigger files are there.");
+
+                if (!TriggerFileExists(outputFolderPath, TriggerFileNames))
+                {
+                    DirectoryWatcher(outputFolderPath);
+                }
+
+                //get all the files to upload that are listed in the filelist document
+                List<QueryComposerModelProcessor.DocumentEx> outputDocuments = FilesToUpload(outputFolderPath);
+                LogDebug("Manifest File list the following Files for upload: " + string.Join(", ", outputDocuments.Select(x => string.Format("\"{0}\"", x.FileInfo.Name)).ToArray()));
+                //get the actual file bytes for the trigger files
+                foreach (var document in outputDocuments)
+                {
+                    if (IsTriggerFile(document.FileInfo.Name))
+                    {
+                        DateTime maxFileEndTime = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_settings.GetAsString("MaxReadWaitTime", "5")));
+                        while (IsFileLocked(document.FileInfo))
+                        {
+                            if (DateTime.UtcNow > maxFileEndTime)
+                            {
+                                throw new Exception("The maximum time to wait to read the trigger file has been exceeded and it is still locked.");
+                            }
+                        }
+
+                        //copy the bytes of the trigger file now (likely always zero) since the physical file will be deleted prior to upload.
+                        byte[] buffer = new byte[document.FileInfo.Length];
+                        using (var fs = document.FileInfo.OpenRead())
+                        {
+                            fs.Read(buffer, 0, buffer.Length);
+                            fs.Close();
+                        }
+
+                        document.Content = buffer;
+                        document.FileInfo = null;
+                    }
+                }
+
+                LogOutputFilesCreated(outputDocuments);
+
+                var trackingTableDocuments = outputDocuments.Where(d => d.Document.Kind == TrackingTableFileKind).Select(d => d.Document.Filename).ToArray();
+                if (trackingTableDocuments.Length > 1)
+                {
+                    throw new Exception("More than one tracking table document is included in the output files: " + string.Join(", ", trackingTableDocuments));
+                }
+
+                LogDebug("Deleting trigger files from: " + outputFolderPath);
+                DeleteTriggerFiles(outputFolderPath);
+
+                return outputDocuments;
+            }
         }
 
         private void DirectoryWatcher(string outputFolderPath)

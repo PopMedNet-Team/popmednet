@@ -297,36 +297,19 @@ namespace Lpp.Dns.Portal
 
                 ctx.Request.Status = RequestStatuses.Submitted;
 
-                // Removed per PMNDEV-3134
-                //if(!AsyncHelpers.RunSync<bool>(() => db.HasPermissions<Request>(Auth.ApiIdentity, ctx.RequestID, PermissionIdentifiers.DataMartInProject.ApproveResponses))){
-                //    return DnsResult.Failed("Access denied to 'Approve/Reject' a response which is required for resubmit.");
-                //}
-
                 var CanSkipSubmissionApproval = AsyncHelpers.RunSync(() => db.HasPermissions<Request>(Auth.ApiIdentity, ctx.RequestID, PermissionIdentifiers.Request.SkipSubmissionApproval));
 
                 var list = new List<Response>(responses.ToArray());
                 //add new pending responses
                 var routingIDs = responses.Select(r => r.RequestDataMartID).Distinct().ToArray();
-                foreach (var dm in db.RequestDataMarts.Where(d => routingIDs.Contains(d.ID)))
+                foreach (var dm in db.RequestDataMarts.Where(d => routingIDs.Contains(d.ID)).Include("Responses"))
                 {
                     dm.Status = CanSkipSubmissionApproval ? RoutingStatus.Resubmitted : RoutingStatus.AwaitingRequestApproval;
-                    //var count = db.Responses.Where(r => r.RequestDataMartID == dm.ID).Select(r => r.Count).FirstOrDefault();
-                    db.Responses.Add(new Response { RequestDataMartID = dm.ID, /*Count = count + 1,*/ SubmittedByID = Auth.CurrentUserID, SubmitMessage = message, SubmittedOn=DateTime.UtcNow });
-                    var count = responses.Where(r => r.RequestDataMartID == dm.ID).Select(r => r.Count).FirstOrDefault();
-                    //db.Responses.Add(new Response { RequestDataMart = dm, SubmittedBy = Auth.CurrentUser, Count = count + 1, SubmitMessage = message });
+                    dm.AddResponse(Auth.CurrentUserID);
                 }
 
                 db.SaveChanges();
 
-                //try
-                //{
-                //    ctx.Request.Status = RequestStatuses.Resubmitted;
-                //}
-                //catch(DbUpdateConcurrencyException ex)
-                //{
-                //    var entry = ex.Entries.Single();
-                //    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
-                //}
                 return DnsResult.Success;
             }
         }

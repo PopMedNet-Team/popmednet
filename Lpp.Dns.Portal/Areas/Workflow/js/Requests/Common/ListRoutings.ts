@@ -157,10 +157,15 @@ module Workflow.Common.ListRoutings {
 
             self.AllowAggregateView = true;
 
-            //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
+            //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type       
             requestTypeModels.forEach((rt) => {
-                if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
+                if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
+                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
+                    (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && Requests.Details.rovm.OverviewQCviewViewModel.Request.Header.QueryType() != null && Requests.Details.rovm.OverviewQCviewViewModel.Request.Header.QueryType().toString() == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh.toString())) {
                     self.AllowAggregateView = false;
+                }
             });
 
             self.DataMartsToAdd = ko.observableArray([]);
@@ -826,7 +831,7 @@ module Workflow.Common.ListRoutings {
                 Dns.WebApi.Response.CanViewAggregateResponses(id),
                 Dns.WebApi.Response.GetResponseGroupsByRequestID(id),
                 Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'),
-                Dns.WebApi.Requests.GetRequestTypeModels(id),
+                Dns.WebApi.Requests.GetModelIDsforRequest(id),
                 Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory, PMNPermissions])
                 )
                 .done((

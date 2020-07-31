@@ -218,21 +218,21 @@ var Workflow;
                             if (result != null) {
                                 //update values for selected incomplete routings
                                 var routings = self.IncompleteRoutings();
-                                var updatedRoutings = [];
+                                var updatedRoutings_1 = [];
                                 self.IncompleteRoutings([]);
-                                var newDueDate = new Date(result.stringDate);
+                                var newDueDate_1 = new Date(result.stringDate);
                                 routings.forEach(function (dm) {
                                     if (self.SelectedIncompleteRoutings.indexOf(dm.ID) != -1) {
                                         if (result.UpdateDueDate) {
-                                            dm.DueDate = newDueDate;
+                                            dm.DueDate = newDueDate_1;
                                         }
                                         if (result.UpdatePriority) {
                                             dm.Priority = result.PriorityValue;
                                         }
                                     }
-                                    updatedRoutings.push(dm);
+                                    updatedRoutings_1.push(dm);
                                 });
-                                self.IncompleteRoutings(updatedRoutings);
+                                self.IncompleteRoutings(updatedRoutings_1);
                                 //save values for selected incomplete routings
                                 self.PostComplete('4F7E1762-E453-4D12-8037-BAE8A95523F7');
                             }
@@ -269,7 +269,7 @@ var Workflow;
                             //compatible datamarts
                             var newDataMarts = dataMarts;
                             var i = 0;
-                            while (i < 100) {
+                            var _loop_1 = function () {
                                 var dm = self.Routings()[i];
                                 //removing already submitted DMs from the list of available DMs
                                 if (dm != null || undefined) {
@@ -277,9 +277,14 @@ var Workflow;
                                     ko.utils.arrayRemoveItem(newDataMarts, exisitngDataMarts);
                                 }
                                 else {
-                                    break;
+                                    return "break";
                                 }
                                 i++;
+                            };
+                            while (i < 100) {
+                                var state_1 = _loop_1();
+                                if (state_1 === "break")
+                                    break;
                             }
                             ;
                             Global.Helpers.ShowDialog("Select DataMarts To Add", "/workflow/workflowrequests/adddatamartdialog", ["Close"], 750, 410, {
@@ -387,23 +392,23 @@ var Workflow;
                     var newDueDate = updates != null ? updates.newDueDate : null;
                     if (newPriority != null) {
                         var requestDataMarts = this.IncompleteRoutings();
-                        var updatedDataMarts = [];
+                        var updatedDataMarts_1 = [];
                         this.IncompleteRoutings([]);
                         requestDataMarts.forEach(function (rdm) {
                             rdm.Priority = newPriority;
-                            updatedDataMarts.push(rdm);
+                            updatedDataMarts_1.push(rdm);
                         });
-                        this.IncompleteRoutings(updatedDataMarts);
+                        this.IncompleteRoutings(updatedDataMarts_1);
                     }
                     if (newDueDate != null) {
                         var requestDataMarts = this.IncompleteRoutings();
-                        var updatedDataMarts = [];
+                        var updatedDataMarts_2 = [];
                         this.IncompleteRoutings([]);
                         requestDataMarts.forEach(function (rdm) {
                             rdm.DueDate = newDueDate;
-                            updatedDataMarts.push(rdm);
+                            updatedDataMarts_2.push(rdm);
                         });
-                        this.IncompleteRoutings(updatedDataMarts);
+                        this.IncompleteRoutings(updatedDataMarts_2);
                     }
                 };
                 ViewModel.prototype.PostComplete = function (resultID) {

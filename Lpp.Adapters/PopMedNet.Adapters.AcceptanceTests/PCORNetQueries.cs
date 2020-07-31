@@ -1,13 +1,624 @@
 ﻿using Lpp.Dns.DataMart.Model.QueryComposer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PopMedNet.Adapters.AcceptanceTests
 {
+    [TestClass]
+    public class PCORNetQueries_Postgres96 : PCORNetQueries<PCORNetQueries_Postgres96>
+    {
+        protected override string ErrorOutputFolder => @".\Error Output\PCORNet Queries Postgres96";
+
+        Dictionary<string, object> adapterSettings = null;
+
+        //setup configuration settings and database specific tests
+        public PCORNetQueries_Postgres96() : base("PCORNET_PostgreSQL96")
+        {
+        }
+
+        protected override Dictionary<string, object> ProvideAdapterSettings()
+        {
+            if (adapterSettings == null)
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder(ConnectionString);
+
+                adapterSettings = new Dictionary<string, object>(){
+                    {"Server", connectionStringBuilder.Host },
+                    {"Port", connectionStringBuilder.Port },
+                    {"UserID", connectionStringBuilder.Username },
+                    {"Password", connectionStringBuilder.Password},
+                    {"Database", connectionStringBuilder.Database },
+                    {"DatabaseSchema", "PCORNET_5_1"},
+                    {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.PostgreSQL.ToString()}
+                };
+            }
+
+            return adapterSettings;
+        }
+
+        [DataTestMethod, DataRow("request_25573")]
+        public override void request_25573(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+   SELECT demo.""HISPANIC"" as Hispanic, demo.""RACE"" as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.""HISPANIC"", d.""RACE"", (CASE WHEN (d.""BIRTH_DATE"" > cast('{0}' as date)) THEN
+(date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 +
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) < cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR 
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) < cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+ELSE
+(
+    (date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 -
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) > cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) > cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.""BIRTH_DATE"" IS NOT NULL
+) as demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.""HISPANIC"", demo.""RACE"";
+", DateTimeOffset.UtcNow, 0, 15, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("request_25576")]
+        public override void request_25576(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+   SELECT demo.""HISPANIC"" as Hispanic, demo.""RACE"" as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.""HISPANIC"", d.""RACE"", (CASE WHEN (d.""BIRTH_DATE"" > cast('{0}' as date)) THEN
+(date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 +
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) < cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR 
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) < cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+ELSE
+(
+    (date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 -
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) > cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) > cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.""BIRTH_DATE"" IS NOT NULL
+) as demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.""HISPANIC"", demo.""RACE"";
+", DateTimeOffset.UtcNow, 40, 41, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var psConn = new NpgsqlConnection(ConnectionString);
+            psConn.Open();
+            return psConn;
+        }
+    }
+
+    [TestClass]
+    public class PCORNetQueries_Postgres95 : PCORNetQueries<PCORNetQueries_Postgres95>
+    {
+        protected override string ErrorOutputFolder => @".\Error Output\PCORNet Queries Postgres95";
+
+        Dictionary<string, object> adapterSettings = null;
+
+        //setup configuration settings and database specific tests
+        public PCORNetQueries_Postgres95() : base("PCORNET_PostgreSQL95")
+        {
+        }
+
+        protected override Dictionary<string, object> ProvideAdapterSettings()
+        {
+            if (adapterSettings == null)
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder(ConnectionString);
+
+                adapterSettings = new Dictionary<string, object>(){
+                    {"Server", connectionStringBuilder.Host },
+                    {"Port", connectionStringBuilder.Port },
+                    {"UserID", connectionStringBuilder.Username },
+                    {"Password", connectionStringBuilder.Password},
+                    {"Database", connectionStringBuilder.Database },
+                    {"DatabaseSchema", "PCORNET_5_1"},
+                    {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.PostgreSQL.ToString()}
+                };
+            }
+
+            return adapterSettings;
+        }
+
+        [DataTestMethod, DataRow("request_25573")]
+        public override void request_25573(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+   SELECT demo.""HISPANIC"" as Hispanic, demo.""RACE"" as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.""HISPANIC"", d.""RACE"", (CASE WHEN (d.""BIRTH_DATE"" > cast('{0}' as date)) THEN
+(date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 +
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) < cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR 
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) < cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+ELSE
+(
+    (date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 -
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) > cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) > cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.""BIRTH_DATE"" IS NOT NULL
+) as demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.""HISPANIC"", demo.""RACE"";
+", DateTimeOffset.UtcNow, 0, 15, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("request_25576")]
+        public override void request_25576(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+   SELECT demo.""HISPANIC"" as Hispanic, demo.""RACE"" as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.""HISPANIC"", d.""RACE"", (CASE WHEN (d.""BIRTH_DATE"" > cast('{0}' as date)) THEN
+(date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 +
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) < cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR 
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) < cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+ELSE
+(
+    (date_part('year',age(date_trunc('year', cast('{0}' as date)),date_trunc('year',d.""BIRTH_DATE"")))::int4 -
+    (CASE WHEN 
+	(
+        (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) > cast(extract(Month FROM  cast('{0}' as date)) as int4)
+        OR
+        (
+            (cast(extract(Month FROM d.""BIRTH_DATE"") as int4) = cast(extract(Month FROM  cast('{0}' as date)) as int4) OR cast(extract(Month FROM d.""BIRTH_DATE"") as int4) IS NULL AND cast(extract(Month FROM  cast('{0}' as date)) as int4) IS NULL) 
+            AND
+            cast(extract(Day FROM d.""BIRTH_DATE"") as int4) > cast(extract(Day FROM  cast('{0}' as date)) as int4)
+        )) 	 
+	)
+	THEN (1) ELSE (0) END)
+ )
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.""BIRTH_DATE"" IS NOT NULL
+) as demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.""HISPANIC"", demo.""RACE"";
+", DateTimeOffset.UtcNow, 40, 41, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var psConn = new NpgsqlConnection(ConnectionString);
+            psConn.Open();
+            return psConn;
+        }
+    }
+
+    [TestClass]
+    public class PCORNetQueries_Oracle12 : PCORNetQueries<PCORNetQueries_Oracle12>
+    {
+        protected override string ErrorOutputFolder => @".\Error Output\PCORNet Queries Oracle12";
+
+        Dictionary<string, object> adapterSettings = null;
+
+        //setup configuration settings and database specific tests
+        public PCORNetQueries_Oracle12() : base("PCORNET_ORACLE12")
+        {
+        }
+
+        protected override Dictionary<string, object> ProvideAdapterSettings()
+        {
+            if (adapterSettings == null)
+            {
+                var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(ConnectionString);
+
+                adapterSettings = new Dictionary<string, object>(){
+                    {"Server", "" },
+                    {"Port", "" },
+                    {"Database", "" },
+                    {"UserID", connectionStringBuilder.UserID },
+                    {"Password", connectionStringBuilder.Password },
+                    {"DataProvider",  Lpp.Dns.DataMart.Model.Settings.SQLProvider.Oracle.ToString()},
+                    {"DatabaseSchema", connectionStringBuilder.UserID }
+                };
+
+                //(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={server address})(PORT=1521))(CONNECT_DATA=(SERVICE_NAME={service name})))
+                System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(@"\((?:[\w|\=|\.]+)\)");
+                var matches = regex.Matches(connectionStringBuilder.DataSource);
+                foreach (var m in matches)
+                {
+                    string capture = m.ToString();
+                    string[] split = capture.Substring(1, capture.Length - 2).Split(new[] { '=' });
+                    if (string.Equals("HOST", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Server"] = split[1];
+                    }
+                    else if (string.Equals("PORT", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Port"] = split[1];
+                    }
+                    else if (string.Equals("SERVICE_NAME", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Database"] = split[1];
+                    }
+                }
+            }
+
+            return adapterSettings;
+        }
+
+        [DataTestMethod, DataRow("request_25573")]
+        public override void request_25573(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+SELECT demo.HISPANIC as Hispanic, demo.RACE as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.HISPANIC, d.RACE, (CASE WHEN (d.BIRTH_DATE > TO_DATE('{0}', 'MM/DD/YYYY')) THEN
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) + 
+	(CASE WHEN 
+	(
+		(extract (month from  d.BIRTH_DATE) < extract (month from TO_DATE('{0}', 'MM/DD/YYYY'))) 
+		OR 
+		(
+			(((extract (month from d.BIRTH_DATE)) = (extract (month from  TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL)))
+			AND 
+			((extract (day from d.BIRTH_DATE)) < (extract (day from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		) 		
+	)
+	THEN 1 ELSE 0 END
+	)
+)
+ELSE
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) - 
+	(CASE WHEN 
+	(
+		((extract (month from d.BIRTH_DATE)) > (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		OR 
+		(
+			(((extract (month from  d.BIRTH_DATE)) = (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL))) 
+			AND 
+			((extract (day from d.BIRTH_DATE)) > (extract (day from TO_DATE('{0}', 'MM/DD/YYYY'))))
+		)
+	) 
+	THEN 1 ELSE 0 END
+	)
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.BIRTH_DATE IS NOT NULL
+) demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.HISPANIC, demo.RACE
+", DateTimeOffset.UtcNow.Date.ToString("MM/dd/yyyy"), 0, 15, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("request_25576")]
+        public override void request_25576(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+SELECT demo.HISPANIC as Hispanic, demo.RACE as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.HISPANIC, d.RACE, (CASE WHEN (d.BIRTH_DATE > TO_DATE('{0}', 'MM/DD/YYYY')) THEN
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) + 
+	(CASE WHEN 
+	(
+		(extract (month from  d.BIRTH_DATE) < extract (month from TO_DATE('{0}', 'MM/DD/YYYY'))) 
+		OR 
+		(
+			(((extract (month from d.BIRTH_DATE)) = (extract (month from  TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL)))
+			AND 
+			((extract (day from d.BIRTH_DATE)) < (extract (day from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		) 		
+	)
+	THEN 1 ELSE 0 END
+	)
+)
+ELSE
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) - 
+	(CASE WHEN 
+	(
+		((extract (month from d.BIRTH_DATE)) > (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		OR 
+		(
+			(((extract (month from  d.BIRTH_DATE)) = (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL))) 
+			AND 
+			((extract (day from d.BIRTH_DATE)) > (extract (day from TO_DATE('{0}', 'MM/DD/YYYY'))))
+		)
+	) 
+	THEN 1 ELSE 0 END
+	)
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.BIRTH_DATE IS NOT NULL
+) demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.HISPANIC, demo.RACE
+", DateTimeOffset.UtcNow.Date.ToString("MM/dd/yyyy"), 40, 41, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var oraCon = new OracleConnection(ConnectionString);
+            oraCon.Open();
+            return oraCon;
+        }
+    }
+
+    [TestClass]
+    public class PCORNetQueries_Oracle18 : PCORNetQueries<PCORNetQueries_Oracle18>
+    {
+        protected override string ErrorOutputFolder => @".\Error Output\PCORNet Queries Oracle18";
+
+        Dictionary<string, object> adapterSettings = null;
+
+        //setup configuration settings and database specific tests
+        public PCORNetQueries_Oracle18() : base("PCORNET_ORACLE18")
+        {
+        }
+
+        protected override Dictionary<string, object> ProvideAdapterSettings()
+        {
+            if (adapterSettings == null)
+            {
+                var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(ConnectionString);
+
+                adapterSettings = new Dictionary<string, object>(){
+                    {"Server", "" },
+                    {"Port", "" },
+                    {"Database", "" },
+                    {"UserID", connectionStringBuilder.UserID },
+                    {"Password", connectionStringBuilder.Password },
+                    {"DataProvider",  Lpp.Dns.DataMart.Model.Settings.SQLProvider.Oracle.ToString()},
+                    {"DatabaseSchema", connectionStringBuilder.UserID }
+                };
+
+                //(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={server address})(PORT=1521))(CONNECT_DATA=(SERVICE_NAME={service name})))
+                System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(@"\((?:[\w|\=|\.]+)\)");
+                var matches = regex.Matches(connectionStringBuilder.DataSource);
+                foreach (var m in matches)
+                {
+                    string capture = m.ToString();
+                    string[] split = capture.Substring(1, capture.Length - 2).Split(new[] { '=' });
+                    if (string.Equals("HOST", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Server"] = split[1];
+                    }
+                    else if (string.Equals("PORT", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Port"] = split[1];
+                    }
+                    else if (string.Equals("SERVICE_NAME", split[0], StringComparison.OrdinalIgnoreCase))
+                    {
+                        adapterSettings["Database"] = split[1];
+                    }
+                }
+            }
+
+            return adapterSettings;
+        }
+
+        [DataTestMethod, DataRow("request_25573")]
+        public override void request_25573(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+SELECT demo.HISPANIC as Hispanic, demo.RACE as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.HISPANIC, d.RACE, (CASE WHEN (d.BIRTH_DATE > TO_DATE('{0}', 'MM/DD/YYYY')) THEN
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) + 
+	(CASE WHEN 
+	(
+		(extract (month from  d.BIRTH_DATE) < extract (month from TO_DATE('{0}', 'MM/DD/YYYY'))) 
+		OR 
+		(
+			(((extract (month from d.BIRTH_DATE)) = (extract (month from  TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL)))
+			AND 
+			((extract (day from d.BIRTH_DATE)) < (extract (day from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		) 		
+	)
+	THEN 1 ELSE 0 END
+	)
+)
+ELSE
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) - 
+	(CASE WHEN 
+	(
+		((extract (month from d.BIRTH_DATE)) > (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		OR 
+		(
+			(((extract (month from  d.BIRTH_DATE)) = (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL))) 
+			AND 
+			((extract (day from d.BIRTH_DATE)) > (extract (day from TO_DATE('{0}', 'MM/DD/YYYY'))))
+		)
+	) 
+	THEN 1 ELSE 0 END
+	)
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.BIRTH_DATE IS NOT NULL
+) demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.HISPANIC, demo.RACE
+", DateTimeOffset.UtcNow.Date.ToString("MM/dd/yyyy"), 0, 15, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("request_25576")]
+        public override void request_25576(string filename)
+        {
+            var request = LoadRequest(filename);
+            var result = RunRequest(filename, request);
+
+            string newQuery = string.Format(@"
+SELECT demo.HISPANIC as Hispanic, demo.RACE as Race, COUNT(*) AS Patients, 0 AS LowThreshold FROM (
+SELECT d.HISPANIC, d.RACE, (CASE WHEN (d.BIRTH_DATE > TO_DATE('{0}', 'MM/DD/YYYY')) THEN
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) + 
+	(CASE WHEN 
+	(
+		(extract (month from  d.BIRTH_DATE) < extract (month from TO_DATE('{0}', 'MM/DD/YYYY'))) 
+		OR 
+		(
+			(((extract (month from d.BIRTH_DATE)) = (extract (month from  TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL)))
+			AND 
+			((extract (day from d.BIRTH_DATE)) < (extract (day from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		) 		
+	)
+	THEN 1 ELSE 0 END
+	)
+)
+ELSE
+((extract (year from TO_DATE('{0}', 'MM/DD/YYYY')) - extract (year from  d.BIRTH_DATE)) - 
+	(CASE WHEN 
+	(
+		((extract (month from d.BIRTH_DATE)) > (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) 
+		OR 
+		(
+			(((extract (month from  d.BIRTH_DATE)) = (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')))) OR ((extract (month from  d.BIRTH_DATE) IS NULL) AND (extract (month from TO_DATE('{0}', 'MM/DD/YYYY')) IS NULL))) 
+			AND 
+			((extract (day from d.BIRTH_DATE)) > (extract (day from TO_DATE('{0}', 'MM/DD/YYYY'))))
+		)
+	) 
+	THEN 1 ELSE 0 END
+	)
+)
+END) as AGE 
+FROM ""{3}"".""DEMOGRAPHIC"" d WHERE d.BIRTH_DATE IS NOT NULL
+) demo
+WHERE demo.AGE >= {1} AND demo.AGE <= {2}
+GROUP BY demo.HISPANIC, demo.RACE
+", DateTimeOffset.UtcNow.Date.ToString("MM/dd/yyyy"), 40, 41, adapterSettings["DatabaseSchema"]);
+
+            string responseFileName = filename.Replace("request_", "response_");
+            var expectedResponse = LoadResponse(responseFileName);
+            ManualQueryForExpectedResults(newQuery, expectedResponse);
+            ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var oraCon = new OracleConnection(ConnectionString);
+            oraCon.Open();
+            return oraCon;
+        }
+    }
+
     [TestClass]
     public class PCORNetQueries_SQLServer2014 : PCORNetQueries<PCORNetQueries_SQLServer2014>
     {
@@ -37,6 +648,13 @@ namespace PopMedNet.Adapters.AcceptanceTests
             }
 
             return adapterSettings;
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var mssmsConn = new System.Data.SqlClient.SqlConnection(ConnectionString);
+            mssmsConn.Open();
+            return mssmsConn;
         }
     }
 
@@ -69,6 +687,13 @@ namespace PopMedNet.Adapters.AcceptanceTests
             }
 
             return adapterSettings;
+        }
+
+        protected override DbConnection GetDbConnection()
+        {
+            var mssmsConn = new System.Data.SqlClient.SqlConnection(ConnectionString);
+            mssmsConn.Open();
+            return mssmsConn;
         }
     }
 
@@ -824,15 +1449,13 @@ GROUP BY demo.HISPANIC, demo.RACE";
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="expectedResponse"></param>
-        void ManualQueryForExpectedResults(string sql, Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO expectedResponse)
+        protected void ManualQueryForExpectedResults(string sql, Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO expectedResponse)
         {
             var properties = expectedResponse.Properties.Select(p => p.As).ToArray();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
 
-            using (var conn = new System.Data.SqlClient.SqlConnection(ConnectionString))
+            using (var conn = GetDbConnection())
             {
-                conn.Open();
-
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = sql;

@@ -1,17 +1,14 @@
-﻿using System;
+﻿using log4net;
+using Lpp.Dns.DataMart.Lib.Classes;
+using Lpp.Dns.DTO.DataMartClient;
+using Lpp.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
-using System.ServiceModel.Security;
-using System.Text.RegularExpressions;
-using log4net;
-using Lpp.Dns.DataMart.Lib.Classes;
-using System.Collections;
-using Lpp.Dns.DataMart.Client.Utils;
-using Lpp.Dns.DTO.DataMartClient;
 using System.Threading.Tasks;
 
 namespace Lpp.Dns.DataMart.Lib
@@ -145,15 +142,14 @@ namespace Lpp.Dns.DataMart.Lib
                                 };
                             }                            
                             
-                            _lastSucessfulPageSize = st.pageSize;
-                            
+                            _lastSucessfulPageSize = st.pageSize;                            
                             
                             return new
                             {
                                 reqs,
                                 nextIndex = st.nextIndex + reqs.Segment.Count(),
-                                st.pageSize, 
-                                count = Math.Min( st.count, reqs.TotalCount - reqs.StartIndex ) - reqs.Segment.Count(), 
+                                st.pageSize,
+                                count = Math.Max(0, Math.Min(st.count, reqs.TotalCount - reqs.StartIndex) - reqs.Segment.Count()),
                                 finish = false,
                                 error = noError
                             };
@@ -217,6 +213,7 @@ namespace Lpp.Dns.DataMart.Lib
                             OrganizationName = profile.OrganizationName,
                             Username = profile.Username
                         };
+                        ns.SupportsUploadV2 = profile.SupportsUploadV2.HasValue && profile.SupportsUploadV2.Value;
                     }
                     ns.IsAuthenticated = true;
                     ns.NetworkStatus = Util.ConnectionOKStatus;
@@ -369,8 +366,23 @@ namespace Lpp.Dns.DataMart.Lib
                 using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                 {
                     var buffer = Task.Run(() => web.GetDocumentChunk(documentID, offset, size)).Result;
+                    if (buffer == null)
+                    {
+                        return Array.Empty<byte>();
+                    }
                     return buffer.ToArray();
                 }
+            }
+            catch (AggregateException aex)
+            {
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine($"There were one or more errors downloading document chunk. (DocumentID:{ documentID }, offset:{ offset }, size:{ size }).");
+                foreach (Exception x in aex.InnerExceptions)
+                {
+                    sb.AppendLine(ExceptionHelpers.UnwindException(x, true));
+                }
+                _log.Error(sb.ToString(), aex);
+                throw;
             }
             catch (Exception ex)
             {
@@ -435,7 +447,7 @@ namespace Lpp.Dns.DataMart.Lib
                     {
                         using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
                         {
-                            Task.Run(() => web.PostResponseDocumentChunk(documentId, data)).Wait();
+                            Task.Run(async () => await web.PostResponseDocumentChunk(documentId, data)).Wait(TimeSpan.FromDays(2));
                         }
                     }
                     catch (Exception ex)
@@ -448,6 +460,48 @@ namespace Lpp.Dns.DataMart.Lib
                 },
                 st => st.offset                
             );
+        }
+
+        public static void PostDocumentChunk(string uploadIdentifier, Dns.DTO.DataMartClient.Criteria.DocumentMetadata doc, Stream stream, NetWorkSetting ns)
+        {
+            _log.Debug($"{uploadIdentifier} - Posting response document to API for: {doc.Name} (Chunk Index: {doc.CurrentChunkIndex}, ID: {doc.ID.ToString("D") }); RequestID: {doc.RequestID}, DataMartID: {doc.DataMartID.ToString("D")}");
+
+            using (var web = new Lpp.Dns.DataMart.Client.Lib.DnsApiClient(ns, FindCert(ns)))
+            {
+                byte[] buffer = new byte[0x400000];
+                int index = 0;
+                int bytesRead;
+                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) >= 0)
+                {
+                    byte[] data = buffer;
+                    if (bytesRead < data.Length)
+                    {
+                        data = new byte[bytesRead];
+                        Buffer.BlockCopy(buffer, 0, data, 0, bytesRead);
+                    }
+                    try
+                    {
+                        doc.CurrentChunkIndex = index;
+
+                        Task.Run(async () => await web.PostDocumentChunk(doc, data)).Wait(TimeSpan.FromDays(2));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error($"{uploadIdentifier} - Unable to post response document content for: {doc.Name} (Chunk Index: {doc.CurrentChunkIndex}, ID: { doc.ID.ToString("D") }); RequestID: {doc.RequestID }, DataMartID: {doc.DataMartID.ToString("D") }.", ex);
+                        throw new PostResponseDocumentContentFailed(ex);
+                    }
+
+                    if (bytesRead == 0)
+                    {
+                        //post zero content document, and do not continue.
+                        break;
+                    }
+
+                    index++;
+                }
+            }
+
+            _log.Debug($"{uploadIdentifier} - Finished posting document content to API for: {doc.Name} (ID: {doc.ID.ToString("D") }); RequestID: {doc.RequestID}, DataMartID: {doc.DataMartID.ToString("D")}");
         }
 
         public static void SetRequestStatus( HubRequest request, HubRequestStatus status, IDictionary<string, string> requestProperties, NetWorkSetting ns )

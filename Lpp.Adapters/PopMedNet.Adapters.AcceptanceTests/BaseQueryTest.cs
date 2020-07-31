@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 
 namespace PopMedNet.Adapters.AcceptanceTests
 {
@@ -215,5 +218,7 @@ namespace PopMedNet.Adapters.AcceptanceTests
             Array.Sort(v);
             return v;
         }
+
+        protected abstract DbConnection GetDbConnection();
     }
 }

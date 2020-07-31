@@ -73,6 +73,7 @@ namespace Lpp.Dns.DataMart.Client
             this.txtAdditionalInstructions = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.vpAttachments = new Lpp.Dns.DataMart.Client.Controls.DataMartViewPanel();
+            this.lblInputAttachments = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.txtRequestTimeLocal = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -136,7 +137,6 @@ namespace Lpp.Dns.DataMart.Client
             this.queryMSRequestIDLabel = new System.Windows.Forms.Label();
             this.tlpHeaderDetails = new System.Windows.Forms.TableLayoutPanel();
             this.panelHeaderFiller = new System.Windows.Forms.Panel();
-            this.lblInputAttachments = new System.Windows.Forms.Label();
             btn_Close = new System.Windows.Forms.Button();
             lblSubmittedByNote = new System.Windows.Forms.Label();
             lblNetwork = new System.Windows.Forms.Label();
@@ -494,6 +494,16 @@ namespace Lpp.Dns.DataMart.Client
             this.vpAttachments.Size = new System.Drawing.Size(984, 197);
             this.vpAttachments.TabIndex = 0;
             this.vpAttachments.ViewText = "";
+            // 
+            // lblInputAttachments
+            // 
+            this.lblInputAttachments.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblInputAttachments.AutoSize = true;
+            this.lblInputAttachments.Location = new System.Drawing.Point(3, 3);
+            this.lblInputAttachments.Name = "lblInputAttachments";
+            this.lblInputAttachments.Size = new System.Drawing.Size(69, 13);
+            this.lblInputAttachments.TabIndex = 1;
+            this.lblInputAttachments.Text = "Attachments:";
             // 
             // tableLayoutPanel1
             // 
@@ -1268,16 +1278,6 @@ namespace Lpp.Dns.DataMart.Client
             this.panelHeaderFiller.Name = "panelHeaderFiller";
             this.panelHeaderFiller.Size = new System.Drawing.Size(1004, 6);
             this.panelHeaderFiller.TabIndex = 121;
-            // 
-            // lblInputAttachments
-            // 
-            this.lblInputAttachments.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblInputAttachments.AutoSize = true;
-            this.lblInputAttachments.Location = new System.Drawing.Point(3, 3);
-            this.lblInputAttachments.Name = "lblInputAttachments";
-            this.lblInputAttachments.Size = new System.Drawing.Size(69, 13);
-            this.lblInputAttachments.TabIndex = 1;
-            this.lblInputAttachments.Text = "Attachments:";
             // 
             // RequestDetailForm
             // 

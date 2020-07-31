@@ -128,7 +128,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     var currentResponse = responses.Where(rsp => rsp.RequestDataMartID == dm.ID).FirstOrDefault();
                     if (currentResponse == null)
                     {
-                        currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                        currentResponse = dm.AddResponse(previousStatus.UserID);
                     }
                     currentResponse.SubmittedByID = previousStatus.UserID;
                     currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;

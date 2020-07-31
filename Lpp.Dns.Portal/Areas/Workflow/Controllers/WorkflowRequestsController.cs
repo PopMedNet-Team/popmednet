@@ -48,6 +48,10 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
             {
                 this.View("~/areas/Workflow/views/requests/DistributedRegression/" + actionName + ".cshtml").ExecuteResult(this.ControllerContext);
             }
+            else if (actionName.StartsWith("VerticalDistributedRegression", StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.View("~/areas/Workflow/views/requests/VerticalDistributedRegression/" + actionName + ".cshtml").ExecuteResult(this.ControllerContext);
+            }
             else
             {
                 this.View("~/areas/Workflow/views/requests/" + actionName + ".cshtml").ExecuteResult(this.ControllerContext);

@@ -370,3 +370,6 @@ ASALocalRun/
 /Lpp.Dns.Portal/ConnectionStrings.config
 /Lpp.Dns.Sso/**/*.js
 /Lpp.Dns.Sso/**/*.js.map
+/Lpp.Adapters/PopMedNet.Adapters.AcceptanceTests/ConnectionStrings.config
+/Lpp.Adapters/Lpp.Dns.DataMart.Model.QueryComposer.Tests/ConnectionStrings.config
+/DMCS/PopMedNet.DMCS/wwwroot/assets

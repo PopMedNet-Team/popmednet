@@ -10,16 +10,16 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
     [Table("LAB_RESULT_CM")]
     public class LabResult : Lpp.Objects.Entity
     {
-        [Column("LAB_RESULT_CM_ID")]
+        [Key, Column("LAB_RESULT_CM_ID")]
         public string ID { get; set; }
 
         [Column("PATID")]
         public string PatientID { get; set; }
         public virtual Patient Patient { get; set; }
 
-        [Column("ENCOUNTERID")]
-        public string EncounterID { get; set; }
-        public Encounter Encounter { get; set; }
+        //[Column("ENCOUNTERID")]
+        //public string EncounterID { get; set; }
+        //public virtual Encounter Encounter { get; set; }
 
         [Column("LAB_NAME")]
         public string LabName { get; set; }

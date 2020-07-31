@@ -80,6 +80,12 @@ namespace Lpp.Dns.Api.Requests
                     //Update basic settings on the request that cannot be trusted to the client
 
                     await Task.Run(() => {
+                        entity.Name = entity.Name.Trim();
+
+                        if(entity.MSRequestID != null)
+                        {
+                            entity.MSRequestID = entity.MSRequestID.Trim();
+                        }
 
                         entity.UpdatedByID = Identity.ID;
                         entity.UpdatedOn = DateTime.UtcNow;
@@ -1014,6 +1020,20 @@ namespace Lpp.Dns.Api.Requests
         }
 
         /// <summary>
+        /// Gets the model IDs associated with the Request Type.
+        /// </summary>
+        /// <param name="requestID">The ID of the request</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<Guid[]> GetModelIDsforRequest(Guid requestID)
+        {
+            return await (from r in DataContext.Requests
+                          join rt in DataContext.RequestTypeDataModels on r.RequestTypeID equals rt.RequestTypeID
+                          where r.ID == requestID
+                          select rt.DataModelID).ToArrayAsync();
+        }
+
+        /// <summary>
         /// Update the request metadata
         /// </summary>
         /// <param name="reqMetadata"></param>
@@ -1021,14 +1041,14 @@ namespace Lpp.Dns.Api.Requests
         [HttpPost]
         public async Task<HttpResponseMessage> UpdateRequestMetadata(RequestMetadataDTO reqMetadata)
         {
-            if (reqMetadata.MSRequestID != null && reqMetadata.MSRequestID != "" &&
-                DataContext.Requests.Any(req => req.MSRequestID == reqMetadata.MSRequestID && req.ID != reqMetadata.ID))
+            if (reqMetadata.MSRequestID != null && reqMetadata.MSRequestID.Trim() != "" &&
+                DataContext.Requests.Any(req => req.MSRequestID.Trim() == reqMetadata.MSRequestID.Trim() && req.ID != reqMetadata.ID))
             {
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "The Request ID is not unique. Please enter in a different Request ID.");
             }
 
             var request = await DataContext.Requests.FindAsync(reqMetadata.ID);
-            request.Name = reqMetadata.Name;
+            request.Name = reqMetadata.Name.Trim();
             request.Description = reqMetadata.Description;
             request.PurposeOfUse = reqMetadata.PurposeOfUse;
             request.PhiDisclosureLevel = reqMetadata.PhiDisclosureLevel;
@@ -1036,7 +1056,7 @@ namespace Lpp.Dns.Api.Requests
             request.WorkplanTypeID = reqMetadata.WorkplanTypeID;
             request.DueDate = reqMetadata.DueDate.HasValue ? reqMetadata.DueDate.Value.Date : reqMetadata.DueDate;
             request.Priority = reqMetadata.Priority;
-            request.MSRequestID = reqMetadata.MSRequestID;
+            request.MSRequestID = reqMetadata.MSRequestID.Trim();
             request.ReportAggregationLevelID = reqMetadata.ReportAggregationLevelID;
 
             if (reqMetadata.ActivityProjectID.HasValue)
@@ -1185,23 +1205,8 @@ namespace Lpp.Dns.Api.Requests
         public async Task<bool> AllowCopyRequest(Guid requestID)
         {
             var request = DataContext.Requests.Where(r => r.ID == requestID).First();
-            var dataMartIDs = DataContext.RequestDataMarts.Where(dm => dm.RequestID == request.ID).Select(d => d.DataMartID).ToArray();
-            var projectAcls = DataContext.ProjectDataMartRequestTypeAcls.Where(pa => pa.ProjectID == request.ID && pa.RequestTypeID == request.RequestTypeID && dataMartIDs.Contains(pa.DataMartID));
-
-
-            var result = await (from r in DataContext.Secure<Request>(Identity)
-                                 where r.ID == requestID
-                                 let pAcls = DataContext.ProjectRequestTypeAcls.Where(pa => pa.ProjectID == request.ProjectID && pa.RequestTypeID == request.RequestTypeID)
-                                 let dAcls = DataContext.DataMartRequestTypeAcls.Where(da => dataMartIDs.Contains(da.DataMartID) && da.RequestTypeID == request.RequestTypeID)
-                                 let pdmAcls = DataContext.ProjectDataMartRequestTypeAcls.Where(pda => pda.ProjectID == request.ProjectID && pda.RequestTypeID == request.RequestTypeID && dataMartIDs.Contains(pda.DataMartID))
-                                 where (
-                                   (pAcls.Any() || dAcls.Any() || pdmAcls.Any())
-                                   &&
-                                   (pAcls.All(a => a.Permission > 0) && dAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0))
-                                 )
-                                 select r.ID).AnyAsync();
-
-            return result;
+            var result = DataContext.GetProjectAvailableRequestTypes(request.ProjectID);
+            return await result.AnyAsync(x => x.ID == request.RequestTypeID);
         }
 
         /// <summary>
@@ -1216,6 +1221,12 @@ namespace Lpp.Dns.Api.Requests
             Request request = DataContext.Secure<Request>(Identity).Where(rq => rq.ID == requestID).FirstOrDefault();
             if (request == null)
                 throw new UnauthorizedAccessException("Not authorized to access the request.");
+
+
+            if (!(await DataContext.GetProjectAvailableRequestTypes(request.ProjectID).AnyAsync(x => x.ID == request.RequestTypeID)))
+            {
+                throw new UnauthorizedAccessException("Not authorized to Copy the request.");
+            }
 
             var activityID = DataContext.WorkflowActivityCompletionMaps.Where(wa => wa.WorkflowID == request.WorkflowID && wa.SourceWorkflowActivity.Start == true).Select(a => a.SourceWorkflowActivityID).First();
 

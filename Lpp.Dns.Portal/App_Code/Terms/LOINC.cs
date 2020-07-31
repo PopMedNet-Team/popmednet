@@ -83,8 +83,8 @@ namespace Lpp.Dns.Portal.App_Code.Terms
         /// The match method for the terms: 0 = exact match, 1 = starts with
         /// </summary>
         public DTO.Enums.TextSearchMethodType SearchMethodType { get; set; }
-        public int? ResultRangeMin { get; set; }
-        public int? ResultRangeMax { get; set; }
+        public double? ResultRangeMin { get; set; }
+        public double? ResultRangeMax { get; set; }
         public DTO.Enums.LOINCQualitativeResultType? QualitativeResult { get; set; }
         public DTO.Enums.LOINCResultModifierType? ResultModifier { get; set; }
     }

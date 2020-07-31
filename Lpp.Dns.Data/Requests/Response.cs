@@ -34,7 +34,6 @@ namespace Lpp.Dns.Data
 
         public DateTime? ResponseTime { get; set; }
 
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Computed)]
         public int Count { get; set; }
 
         public DateTime SubmittedOn { get; set; }

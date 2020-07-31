@@ -51,6 +51,7 @@
     <Compile Include="..\Build\DataMartClientCommonAssemlbyInfo.cs">
       <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
     </Compile>
+    <Compile Include="Criteria\DocumentMetadata.cs" />
     <Compile Include="Criteria\PostResponseDocumentsData.cs" />
     <Compile Include="Criteria\RequestCriteria.cs" />
     <Compile Include="Criteria\RequestListCriteria.cs" />

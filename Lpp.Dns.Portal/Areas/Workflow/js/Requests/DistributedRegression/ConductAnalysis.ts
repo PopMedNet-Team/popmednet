@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../../../js/requests/details.ts" />
 module Workflow.DistributedRegression.ConductAnalysis {
-    var vm: ViewModel;
+    let vm: ViewModel;
 
     interface IExpandedResponseDTO extends Dns.Interfaces.IResponseDTO {
         Name: string;

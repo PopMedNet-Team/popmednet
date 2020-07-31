@@ -221,33 +221,8 @@ namespace Lpp.Dns.Api.Projects
         {
             if (!await DataContext.HasPermissions<Project>(Identity, projectID, PermissionIdentifiers.Request.Edit))
                 return null;
-            
-            //For legacy request types, the user has to have the automatic or manual permission for the request type, which can be set at two levels within the Project (Project level or Project DataMart level)
-            var projectDatamartAcls = DataContext.ProjectDataMartRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
-            var projectAcls = DataContext.ProjectRequestTypeAcls.FilterRequestTypeAcl(Identity.ID);
 
-            //For WF request types, the user has to have the "Edit Task" permission on the "New Request" activity for the workflow
-            var wfAcls = DataContext.ProjectRequestTypeWorkflowActivities.Where(p => p.SecurityGroup.Users.Any(u => u.UserID == Identity.ID) &&
-                                                                                   p.ProjectID == projectID &&
-                                                                                   p.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditTask.ID );
-
-            var results = from rt in DataContext.ProjectRequestTypes
-                       let wAcls = wfAcls.Where(a => a.RequestTypeID == rt.RequestTypeID && a.WorkflowActivity.Start == true)
-                       let pAcls = projectAcls.Where(pa => pa.ProjectID == projectID && pa.RequestTypeID == rt.RequestTypeID)
-                       let pdmAcls = projectDatamartAcls.Where(pa => pa.ProjectID == projectID && pa.RequestTypeID == rt.RequestTypeID)
-                       where rt.ProjectID == projectID
-                       && (
-                            (rt.RequestType.WorkflowID.HasValue && wAcls.Any(a => a.Allowed) && wAcls.All(a => a.Allowed))
-                            ||
-                            (rt.RequestType.WorkflowID.HasValue == false && 
-                            (pAcls.Any(a => a.Permission > 0) || pdmAcls.Any(a => a.Permission > 0)) &&
-                            (pAcls.All(a => a.Permission > 0) && pdmAcls.All(a => a.Permission > 0)))
-                       )
-                       select rt.RequestType;
-
-            return results.Map<RequestType, RequestTypeDTO>();
-
-            
+            return DataContext.GetProjectAvailableRequestTypes(projectID).Map<RequestType, RequestTypeDTO>();
         }
 
         /// <summary>

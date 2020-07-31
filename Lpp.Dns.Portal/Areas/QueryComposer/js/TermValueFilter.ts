@@ -147,6 +147,13 @@
             return '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154';
         }
 
+        public static get DistributedRegressionModelID(): any {
+            return '4c8a25dc-6816-4202-88f4-6d17e72a43bc';
+        }
+        public static get FileDistributionModelID(): any {
+            return '00bf515f-6539-405b-a617-ca9f8aa12970';
+        }
+
         public static ContainsModel(models: any[], id: any): boolean {
             return ko.utils.arrayFirst(models, (i) => i.toLowerCase() == id) != null;
         }

@@ -58,23 +58,23 @@ var Workflow;
                         Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: Requests.Details.rovm.Request.Priority(), defaultDueDate: Requests.Details.rovm.Request.DueDate() })
                             .done(function (result) {
                             if (result != null) {
-                                var newPriority;
+                                var newPriority_1;
                                 if (result.UpdatePriority) {
-                                    newPriority = result.PriorityValue;
+                                    newPriority_1 = result.PriorityValue;
                                 }
                                 ;
-                                var newDueDate = new Date(result.stringDate);
+                                var newDueDate_1 = new Date(result.stringDate);
                                 if (!result.UpdateDueDate) {
-                                    newDueDate = null;
+                                    newDueDate_1 = null;
                                 }
                                 // update selected datamarts here
                                 self.DataMarts().forEach(function (dm) {
                                     if (self.SelectedDataMartIDs().indexOf(dm.DataMartID) != -1) {
                                         if (result.UpdatePriority) {
-                                            dm.Priority(newPriority);
+                                            dm.Priority(newPriority_1);
                                         }
                                         if (result.UpdateDueDate) {
-                                            dm.DueDate(newDueDate);
+                                            dm.DueDate(newDueDate_1);
                                         }
                                     }
                                 });
@@ -86,23 +86,23 @@ var Workflow;
                         var newDueDate = info != null ? info.newDueDate : null;
                         if (newPriority != null) {
                             var requestDataMarts = _this.DataMarts();
-                            var updatedDataMarts = [];
+                            var updatedDataMarts_1 = [];
                             requestDataMarts.forEach(function (rdm) {
                                 rdm.Priority(newPriority);
-                                updatedDataMarts.push(rdm);
+                                updatedDataMarts_1.push(rdm);
                             });
                             _this.DataMarts.removeAll();
-                            _this.DataMarts(updatedDataMarts);
+                            _this.DataMarts(updatedDataMarts_1);
                         }
                         if (newDueDate != null) {
                             var requestDataMarts = _this.DataMarts();
-                            var updatedDataMarts = [];
+                            var updatedDataMarts_2 = [];
                             requestDataMarts.forEach(function (rdm) {
                                 rdm.DueDate(newDueDate);
-                                updatedDataMarts.push(rdm);
+                                updatedDataMarts_2.push(rdm);
                             });
                             _this.DataMarts.removeAll();
-                            _this.DataMarts(updatedDataMarts);
+                            _this.DataMarts(updatedDataMarts_2);
                         }
                     });
                     _this.DataMartsSelectAll = function () {

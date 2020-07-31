@@ -89,7 +89,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
             HasMany(t => t.Diagnoses).WithRequired(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
             HasMany(t => t.Procedures).WithRequired(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
             HasMany(t => t.Vitals).WithRequired(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
-            HasMany(t => t.LabResults).WithOptional(t => t.Encounter).Map(a => a.MapKey("ENCOUNTERID")).WillCascadeOnDelete(false);
+            //HasMany(t => t.LabResults).WithOptional(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
             HasMany(t => t.Conditions).WithOptional(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
             HasMany(t => t.ReportedOutcomes).WithOptional(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);
             HasMany(t => t.Prescriptions).WithOptional(t => t.Encounter).HasForeignKey(t => t.EncounterID).WillCascadeOnDelete(false);

@@ -280,7 +280,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
             {
 
                 DTO.QueryComposer.QueryComposerRequestDTO requestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                var modularTerm = requestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == DistributedRegressionConfiguration.ModularProgramTermID)).FirstOrDefault();
+                var modularTerm = requestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == HorizontalDistributedRegressionConfiguration.ModularProgramTermID)).FirstOrDefault();
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 string[] datamartIDs = data.Split(',');

@@ -20,7 +20,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
 
         public Guid ID
         {
-            get { return DistributedRegressionConfiguration.TerminateRequestID; }
+            get { return HorizontalDistributedRegressionConfiguration.TerminateRequestID; }
         }
 
         public string Uri

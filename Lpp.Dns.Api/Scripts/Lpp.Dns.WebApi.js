@@ -2877,6 +2877,14 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Requests/GetRequestTypeModels' + params, doNotHandleFail);
             };
+            Requests.GetModelIDsforRequest = function (requestID, doNotHandleFail) {
+                var params = '';
+                if (requestID != null)
+                    params += '&requestID=' + requestID;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Requests/GetModelIDsforRequest' + params, doNotHandleFail);
+            };
             Requests.UpdateRequestMetadata = function (reqMetadata, doNotHandleFail) {
                 return Helpers.PostAPIValue('Requests/UpdateRequestMetadata', reqMetadata, doNotHandleFail);
             };

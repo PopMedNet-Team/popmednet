@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/// <reference path="../../areas/querycomposer/js/termvaluefilter.ts" />
 /// <reference path="../_rootlayout.ts" />
 var Requests;
 (function (Requests) {
@@ -18,7 +19,7 @@ var Requests;
     (function (Details) {
         var RequestOverviewViewModel = /** @class */ (function (_super) {
             __extends(RequestOverviewViewModel, _super);
-            function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels) {
+            function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels, queryComposerRequest) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 _this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 _this.PhiDisclosureLevelOptions = new Array({ Name: 'Aggregated', Value: 'Aggregated' }, { Name: 'Limited', Value: 'Limited' }, { Name: 'De-identified', Value: 'De-identified' }, { Name: 'PHI', Value: 'PHI' });
@@ -176,10 +177,15 @@ var Requests;
                 self.CanViewIndividualResponses = canViewIndividualResponses;
                 self.CanViewAggregateResponses = canViewAggregateResponses;
                 self.AllowAggregateView = true;
-                //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
+                //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type             
                 requestTypeModels.forEach(function (rt) {
-                    if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
+                    if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
+                        (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && queryComposerRequest.Header.QueryType == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh)) {
                         self.AllowAggregateView = false;
+                    }
                 });
                 self.SelectedCompleteResponses = ko.observableArray([]);
                 self.HasSelectedCompleteRoutings = ko.pureComputed(function () { return self.SelectedCompleteResponses().length > 0; });
@@ -698,7 +704,7 @@ var Requests;
                         request = new Dns.ViewModels.RequestViewModel(requests[0]);
                         var projectID = request.ProjectID();
                         var parentRequestID = requests[0].ParentRequestID;
-                        $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.Requests.RequestDataMarts(request.ID()), Dns.WebApi.RequestTypes.Get(request.RequestTypeID()), Dns.WebApi.Workflow.GetWorkflowActivity(request.CurrentWorkFlowActivityID()), Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()), Dns.WebApi.RequestUsers.List('RequestID eq ' + id), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.ChangeRoutingsAfterSubmission, PMNPermissions.Project.ResubmitRequests, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Request.ChangeRoutingsAfterSubmission]), Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()), Dns.WebApi.Response.CanViewIndividualResponses(request.ID()), Dns.WebApi.Response.CanViewAggregateResponses(request.ID()), Dns.WebApi.Requests.GetRequestTypeModels(request.ID())
+                        $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.Requests.RequestDataMarts(request.ID()), Dns.WebApi.RequestTypes.Get(request.RequestTypeID()), Dns.WebApi.Workflow.GetWorkflowActivity(request.CurrentWorkFlowActivityID()), Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()), Dns.WebApi.RequestUsers.List('RequestID eq ' + id), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.ChangeRoutingsAfterSubmission, PMNPermissions.Project.ResubmitRequests, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Request.ChangeRoutingsAfterSubmission]), Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()), Dns.WebApi.Response.CanViewIndividualResponses(request.ID()), Dns.WebApi.Response.CanViewAggregateResponses(request.ID()), Dns.WebApi.Requests.GetModelIDsforRequest(request.ID())
                         //Get the work flow activity that it's on
                         ).done(function (parentRequests, requestDataMarts, requestTypes, workflowActivities, activityTree, requestUsers, fieldOptions, projPermissions, reqTypePermissions, responseGroups, canViewIndividualResponses, canViewAggregateResponses, requestTypeModels) {
                             if (parentRequests.length != 0) {
@@ -741,7 +747,8 @@ var Requests;
                 }
                 var currentTask = ko.utils.arrayFirst(tasks, function (item) { return item.WorkflowActivityID == request.CurrentWorkFlowActivityID() && item.EndOn == null; });
                 var bindingControl = $("#ContentWrapper");
-                Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels);
+                var queryComposerRequest = JSON.parse(request.Query());
+                Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels, queryComposerRequest);
                 var taskID = Global.GetQueryParam("TaskID");
                 //If new, or TaskID passed, set the tab to the Task tab
                 if (workFlowActivity.End) {
@@ -759,7 +766,7 @@ var Requests;
                 var viewTrackingTable = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase(); }) != null;
                 // Load the view of the criteria only if #viewQueryComposer element is present
                 if (viewOverview && $('#viewQueryComposer').length) {
-                    Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(JSON.parse(request.Query()), visualTerms, $('#overview-queryview'));
+                    Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(queryComposerRequest, visualTerms, $('#overview-queryview'));
                 }
                 //Notifications
                 if (assignRequestNotifications) {

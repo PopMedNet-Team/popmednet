@@ -26,6 +26,8 @@ namespace Lpp.Dns.DataMart.Lib
             CredentialKey = string.Format("DMCNetwork_{0:D}", Guid.NewGuid());
 
             EncryptionSalt = Lpp.Dns.DataMart.Client.Properties.Settings.Default.EncryptionSalt;
+
+            SupportsUploadV2 = false;
         }
         #endregion
 
@@ -227,6 +229,9 @@ namespace Lpp.Dns.DataMart.Lib
                 return new TimeSpan(0,0,wcfReceiveTimeout);
             }
         }
+
+        [XmlIgnore]
+        public bool SupportsUploadV2 { get; set; }
 
         [XmlIgnore]
         public string EncryptionSalt

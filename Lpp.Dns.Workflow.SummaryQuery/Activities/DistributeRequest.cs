@@ -268,8 +268,9 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                         if (currentResponse == null)
                         {
-                            currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                            currentResponse = dm.AddResponse(previousStatus.UserID);
                         }
+
                         currentResponse.SubmittedByID = previousStatus.UserID;
                         currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
@@ -386,8 +387,9 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                         var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                         if (currentResponse == null)
                         {
-                            currentResponse = db.Responses.Add(new Response { RequestDataMartID = dm.ID });
+                            currentResponse = dm.AddResponse(previousStatus.UserID);
                         }
+
                         currentResponse.SubmittedByID = previousStatus.UserID;
                         currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 

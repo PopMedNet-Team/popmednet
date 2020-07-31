@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0"?>
 <connectionStrings>
   <!-- PCORNet -->
-  <add name="PCORNET_SQLServer2014" connectionString="Server=localhost,1443;Database=PCORNET_4_1_UPDATE;User ID=**;Password=**;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
-  <add name="PCORNET_SQLServer2016" connectionString="Server=localhost,1453;Database=PCORNET_4_1_UPDATE;User ID=**;Password=**;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
-  <add name="PCORNET_PostgreSQL96" connectionString="Server=localhost;Port=5432;User ID=**;Password=**;Database=pcornet;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
-  <add name="PCORNET_ORACLE12" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));User ID=**; Password=**;" providerName="OracleConnection"/>
+  <add name="PCORNET_SQLServer2014" connectionString="Server=Server=10.1.1.10,1443;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
+  <add name="PCORNET_SQLServer2016" connectionString="Server=10.1.1.10,1453;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
+  <add name="PCORNET_PostgreSQL96" connectionString="Server=10.1.1.10;Port=5434;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
+  <add name="PCORNET_PostgreSQL95" connectionString="Server=10.1.1.10;Port=5432;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
+  <add name="PCORNET_ORACLE12" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.1.1.12)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl12dmc.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
+  <add name="PCORNET_ORACLE18" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.1.1.14)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl18c.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
 </connectionStrings>
