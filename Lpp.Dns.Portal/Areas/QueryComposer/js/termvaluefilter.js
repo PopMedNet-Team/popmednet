@@ -13,273 +13,273 @@ var Plugins;
                         get: function () {
                             return '1F065B02-5BF3-4340-A412-84465C9B164C';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "AgeRangeID", {
                         get: function () {
                             return 'D9DD6E82-BBCA-466A-8022-B54FF3D99A3C';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "DrugClassID", {
                         get: function () {
                             return '75290001-0E78-490C-9635-A3CA01550704';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "DrugNameID", {
                         get: function () {
                             return '0E1F0001-CA0C-42D2-A9CC-A3CA01550E84';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "HCPCSProcedureCodesID", {
                         get: function () {
                             return '096A0001-73B4-405D-B45F-A3CA014C6E7D';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ICD9Diagnosis3digitID", {
                         get: function () {
                             return '5E5020DC-C0E4-487F-ADF2-45431C2B7695';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ICD9Diagnosis4digitID", {
                         get: function () {
                             return 'D0800001-2810-48ED-96B9-A3D40146BAAE';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ICD9Diagnosis5digitID", {
                         get: function () {
                             return '80750001-6C3B-4C2D-90EC-A3D40146C26D';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ICD9Procedure3digitID", {
                         get: function () {
                             return 'E1CC0001-1D9A-442A-94C4-A3CA014C7B94';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ICD9Procedure4digitID", {
                         get: function () {
                             return '9E870001-1D48-4AA3-8889-A3D40146CCB3';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ZipCodeID", {
                         get: function () {
                             return '8B5FAA77-4A4B-4AC7-B817-69F1297E24C5';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "CombinedDiagnosisCodesID", {
                         get: function () {
                             return '86110001-4BAB-4183-B0EA-A4BC0125A6A7';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ESPCombinedDiagnosisCodesID", {
                         get: function () {
                             return 'A21E9775-39A4-4ECC-848B-1DC881E13689';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "MetadataRefreshID", {
                         get: function () {
                             return '421BAC16-CAAC-4918-8760-A10FF76CC87B';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ConditionID", {
                         get: function () {
                             return 'EC593176-D0BF-4E5A-BCFF-4BBD13E88DBF';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "TrialID", {
                         get: function () {
                             return '56A38F6D-993A-4953-BCB9-11BDD809C0B4';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "PatientReportedOutcomeID", {
                         get: function () {
                             return 'AE87C785-BB74-4708-B0CD-FA91D584615C';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "PatientReportedOutcomeEncounterID", {
                         get: function () {
                             return 'A11DCC97-4C8D-4B80-AE61-58ECB2F66C3D';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "VisitsID", {
                         get: function () {
                             return 'F01BE0A4-7D8E-4288-AE33-C65166AF8335';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "SexID", {
                         get: function () {
                             return '71B4545C-345B-48B2-AF5E-F84DC18E4E1A';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "CodeMetricID", {
                         get: function () {
                             return 'E39D0001-07A1-4DFD-9299-A3CB00F2474B';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "CoverageID", {
                         get: function () {
                             return 'DC880001-23B2-4F36-94E2-A3CB00DA8248';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "CriteriaID", {
                         get: function () {
                             return '17540001-8185-41BB-BE64-A3CB00F27EC2';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "DispensingMetricID", {
                         get: function () {
                             return '16ED0001-7E2D-4B27-B943-A3CB0162C262';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "EthnicityID", {
                         get: function () {
                             return '702CE918-9A59-4082-A8C7-A9234536FE79';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "FacilityID", {
                         get: function () {
                             return 'A257DA68-9557-4D6A-AEBD-541AA9BDD145';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "HeightID", {
                         get: function () {
                             return '8BC627CA-5729-4E7A-9702-0000A45A0018';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "HispanicID", {
                         get: function () {
                             return 'D26FE166-49A2-47F8-87E2-4F42A945D4D5';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ObservationPeriodID", {
                         get: function () {
                             return '98A78326-35D2-461A-B858-5B69E0FED28A';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "QuarterYearID", {
                         get: function () {
                             return 'D62F0001-3FE1-4910-99A9-A3CB014C2BC7';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "RaceID", {
                         get: function () {
                             return '834F0001-FA03-4ECD-BE28-A3CD00EC02E2';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "SettingID", {
                         get: function () {
                             return '2DE50001-7882-4EDE-AC4F-A3CB00D9051A';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "TobaccoUseID", {
                         get: function () {
                             return '342C354B-9ECC-479B-BE61-1770E4B44675';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "WeightID", {
                         get: function () {
                             return '3B0ED310-DDE9-4836-9857-0000A45A0018';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "YearID", {
                         get: function () {
                             return '781A0001-1FF0-41AB-9E67-A3CB014C37F2';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "VitalsMeasureDateID", {
                         get: function () {
                             return 'F9920001-AEB1-425C-A929-A4BB01515850';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "ProcedureCodesID", {
                         get: function () {
                             return 'F81AE5DE-7B35-4D7A-B398-A72200CE7419';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "LOINCCodesID", {
                         get: function () {
                             return 'F5903376-D2A5-486F-92D3-1F97D598A221';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(Terms, "PrescribingCodesID", {
                         get: function () {
                             return '793BD948-C90C-45DA-B4B7-F8E2387E1A78';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Terms.Compare = function (a, b) {
@@ -306,49 +306,49 @@ var Plugins;
                         get: function () {
                             return '85ee982e-f017-4bc4-9acd-ee6ee55d2446';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "SummaryTablesModelID", {
                         get: function () {
                             return 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "ESPModelID", {
                         get: function () {
                             return '7c69584a-5602-4fc0-9f3f-a27f329b1113';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "DataCheckerModelID", {
                         get: function () {
                             return '321adaa1-a350-4dd0-93de-5de658a507df';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "ModularProgramModelID", {
                         get: function () {
                             return '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "DistributedRegressionModelID", {
                         get: function () {
                             return '4c8a25dc-6816-4202-88f4-6d17e72a43bc';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     Object.defineProperty(TermValueFilter, "FileDistributionModelID", {
                         get: function () {
                             return '00bf515f-6539-405b-a617-ca9f8aa12970';
                         },
-                        enumerable: true,
+                        enumerable: false,
                         configurable: true
                     });
                     TermValueFilter.ContainsModel = function (models, id) {

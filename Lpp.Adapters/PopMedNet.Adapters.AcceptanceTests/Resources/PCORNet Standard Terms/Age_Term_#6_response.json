@@ -1,8 +1,14 @@
 {
   "ID": null,
-  "ResponseDateTime": "2017-11-22T17:44:38.9507982+00:00",
-  "RequestID": "35cd3a39-81f4-4c00-b5be-a83300d127c7",
-  "Errors": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-15T00:30:31.7915014+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"Hispanic\":\"\",\"Race\":\"Ian\",\"Patients\":\"1\"}]\r\nActual result: [{\"Hispanic\":\"Humberto\",\"Race\":\"01\",\"Patients\":1},{\"Hispanic\":\"Lorenzo\",\"Race\":\"05\",\"Patients\":1},{\"Hispanic\":\"Grace\",\"Race\":\"06\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Debby\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Hermine\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Ian\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Lisa\",\"Patients\":1}]"
+    }
+  ],
   "Results": [
     [
       {
@@ -21,13 +27,23 @@
         "Patients": 1
       },
       {
-        "Hispanic": "Gabrielle",
-        "Race": "07",
+        "Hispanic": "Y",
+        "Race": "Debby",
         "Patients": 1
       },
       {
         "Hispanic": "Y",
-        "Race": "Debby",
+        "Race": "Hermine",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Ian",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Lisa",
         "Patients": 1
       }
     ]

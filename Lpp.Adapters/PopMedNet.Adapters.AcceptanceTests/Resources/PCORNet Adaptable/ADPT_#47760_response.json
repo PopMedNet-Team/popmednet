@@ -1,12 +1,12 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2020-01-02T21:10:34.5111102+00:00",
+  "ResponseDateTime": "2020-09-15T00:10:09.6686231+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<16>. Actual:<9>. The number of rows in the result is different."
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_867\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"4/17/2000 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/17/2000\",\"PRO_RESPONSE_NUM\":\"14717\",\"PRO_MEASURE_SEQ\":\"2.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Barbara\"}]\r\nActual result: [{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MI\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MAJOR BLEEDING\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"2.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Barbara\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"CHEST PAIN\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Ivo_A\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"mi\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_1143\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2000-04-17T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/17/2000\",\"PRO_RESPONSE_NUM\":14717.0,\"PRO_MEASURE_SEQ\":\"2.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Barbara\"},{\"ENCOUNTERID\":\"PK_1140\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2010-02-03T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/1/2010\",\"PRO_RESPONSE_NUM\":18294.0,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":\"PK_1159\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-08-15T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":19585.0,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Ivo_A\"},{\"ENCOUNTERID\":\"PK_1187\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"290\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_1187\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"410.9\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"}]"
     }
   ],
   "Results": [
@@ -72,7 +72,7 @@
         "PARTICIPANTID": "Amanda"
       },
       {
-        "ENCOUNTERID": "PK_867",
+        "ENCOUNTERID": "PK_1143",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2000-04-17T00:00:00",
         "DX": null,
@@ -87,7 +87,7 @@
         "PARTICIPANTID": "Barbara"
       },
       {
-        "ENCOUNTERID": "PK_864",
+        "ENCOUNTERID": "PK_1140",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2010-02-03T00:00:00",
         "DX": null,
@@ -102,7 +102,7 @@
         "PARTICIPANTID": "Alvin"
       },
       {
-        "ENCOUNTERID": "PK_883",
+        "ENCOUNTERID": "PK_1159",
         "ENC_TYPE": "IC",
         "ADMIT_DATE": "2013-08-15T00:00:00",
         "DX": null,
@@ -117,7 +117,7 @@
         "PARTICIPANTID": "Ivo_A"
       },
       {
-        "ENCOUNTERID": "PK_911",
+        "ENCOUNTERID": "PK_1187",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2015-07-13T00:00:00",
         "DX": "290",
@@ -132,7 +132,7 @@
         "PARTICIPANTID": "Amanda"
       },
       {
-        "ENCOUNTERID": "PK_911",
+        "ENCOUNTERID": "PK_1187",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2015-07-13T00:00:00",
         "DX": "410.9",

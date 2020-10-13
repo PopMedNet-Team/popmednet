@@ -151,6 +151,16 @@ var Events;
                         });
                     });
                 };
+                this.ClearAllGroups = function () {
+                    //Remove all of the acls by setting the allowed to null
+                    self.Acls().forEach(function (a) { a.Allowed(null); });
+                    self.SelectedSecurityGroup(null);
+                    self.SecurityGroups = [];
+                    var cboSecurityGroups = $('#cboEventSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+                    _this.dsSecurityGroups.data(_this.SecurityGroups);
+                    _this.dsSecurityGroups.fetch();
+                    cboSecurityGroups.refresh();
+                };
             }
             EventAclEditViewModel.prototype.SelectSecurityGroup = function () {
                 var _this = this;

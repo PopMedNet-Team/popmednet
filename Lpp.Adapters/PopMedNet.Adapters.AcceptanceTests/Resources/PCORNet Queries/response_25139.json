@@ -1,12 +1,12 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2019-11-14T16:26:49.3407285+00:00",
+  "ResponseDateTime": "2020-09-14T23:36:19.6126594+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<9>. Actual:<11>. The number of rows in the result is different."
+      "Description": "Assert.AreEqual failed. Expected:<11>. Actual:<15>. The number of rows in the result is different."
     }
   ],
   "Results": [
@@ -19,6 +19,11 @@
       {
         "Race": "Bertha",
         "Weight": ">=-10.0 and <0.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Henryk",
+        "Weight": ">=0.0 and <10.0",
         "Patients": 1
       },
       {
@@ -38,6 +43,11 @@
       },
       {
         "Race": "07",
+        "Weight": ">=100.0 and <110.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Karl",
         "Weight": ">=100.0 and <110.0",
         "Patients": 1
       },
@@ -62,7 +72,17 @@
         "Patients": 1
       },
       {
+        "Race": "Ian",
+        "Weight": ">=150.0 and <160.0",
+        "Patients": 1
+      },
+      {
         "Race": "Josephine",
+        "Weight": ">=150.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Walter",
         "Weight": ">=150.0 and <160.0",
         "Patients": 1
       }
@@ -118,12 +138,6 @@
         "Type": "System.Int32",
         "As": "Patients",
         "Aggregate": "Sum"
-      },
-      {
-        "Name": "LowThreshold",
-        "Type": "System.Boolean",
-        "As": "LowThreshold",
-        "Aggregate": null
       }
     ],
     "Name": null

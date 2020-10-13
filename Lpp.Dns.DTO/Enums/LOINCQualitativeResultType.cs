@@ -73,6 +73,66 @@ namespace Lpp.Dns.DTO.Enums
         /// OT
         /// </summary>
         [EnumMember, Description("OT")]
-        OT = 13
+        OT = 13,
+        /// <summary>
+        /// Detected
+        /// </summary>
+        [EnumMember, Description("Detected")]
+        Detected = 14,
+        /// <summary>
+        /// Equivocal
+        /// </summary>
+        [EnumMember, Description("Equivocal")]
+        Equivocal = 15,
+        /// <summary>
+        /// Indeterminate abnormal
+        /// </summary>
+        [EnumMember, Description("Indeterminate abnormal")]
+        Indeterminate_Abnormal = 16,
+        /// <summary>
+        /// Invalid
+        /// </summary>
+        [EnumMember, Description("Invalid")]
+        Invalid = 17,
+        /// <summary>
+        /// Nonreactive
+        /// </summary>
+        [EnumMember, Description("Nonreactive")]
+        Nonreactive = 18,
+        /// <summary>
+        /// Not Detected
+        /// </summary>
+        [EnumMember, Description("Not Detected")]
+        NotDetencted = 19,
+        /// <summary>
+        /// Past Infection
+        /// </summary>
+        [EnumMember, Description("Past Infection")]
+        PastInfected = 20,
+        /// <summary>
+        /// Presumptive Positive
+        /// </summary>
+        [EnumMember, Description("Presumptive Positive")]
+        PresumptivePositive = 21,
+        /// <summary>
+        /// Reactive
+        /// </summary>
+        [EnumMember, Description("Reactive")]
+        Reactive = 22,
+        /// <summary>
+        /// Recent Infection
+        /// </summary>
+        [EnumMember, Description("Recent Infection")]
+        RecentInfection = 23,
+        /// <summary>
+        /// Specimen Unsatisfactory
+        /// </summary>
+        [EnumMember, Description("Specimen Unsatisfactory")]
+        SpecimenUnsatisfactory = 24,
+        /// <summary>
+        /// Suspected
+        /// </summary>
+        [EnumMember, Description("Suspected")]
+        Suspected = 25
     }
 }

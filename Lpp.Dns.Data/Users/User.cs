@@ -175,6 +175,8 @@ namespace Lpp.Dns.Data
         public virtual ICollection<UserEventSubscription> Subscriptions { get; set; }
 
         public virtual ICollection<Audit.UserChangeLog> UserChangeLogs { get; set; }
+        public virtual ICollection<Audit.UserPasswordChangeLog> UserPasswordLogs { get; set; }
+        public virtual ICollection<Audit.UserPasswordChangeLog> ChangedUserPassowrdLogs { get; set; }
         public virtual ICollection<Audit.ProfileUpdatedLog> ProfileUpdatedLogs { get; set; }
         public virtual ICollection<Audit.PasswordExpirationLog> PasswordExpirationLogs { get; set; }
         public virtual ICollection<Audit.UserRegistrationSubmittedLog> RegistrationSubmittedLogs { get; set; }
@@ -280,6 +282,8 @@ namespace Lpp.Dns.Data
             HasMany(t => t.PasswordExpirationLogs).WithRequired(t => t.ExpiringUser).HasForeignKey(t => t.ExpiringUserID).WillCascadeOnDelete(true);
             HasMany(t => t.RegistrationSubmittedLogs).WithRequired(t => t.RegisteredUser).HasForeignKey(t => t.RegisteredUserID).WillCascadeOnDelete(true);
             HasMany(t => t.RegistrationChangedLogs).WithRequired(t => t.RegisteredUser).HasForeignKey(t => t.RegisteredUserID).WillCascadeOnDelete(true);
+            HasMany(t => t.ChangedUserPassowrdLogs).WithRequired(x => x.User).HasForeignKey(x => x.UserID).WillCascadeOnDelete(false);
+            HasMany(t => t.UserPasswordLogs).WithRequired(x => x.UserChanged).HasForeignKey(x => x.UserChangedID).WillCascadeOnDelete(false);
 
             HasMany(t => t.UploadedDocuments).WithOptional(t => t.UploadedBy).HasForeignKey(t => t.UploadedByID).WillCascadeOnDelete(false);
 

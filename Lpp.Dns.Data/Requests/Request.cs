@@ -1279,39 +1279,39 @@ namespace Lpp.Dns.Data
 
                 //user is not a requestUser and has subscribed to the general notification
                 var recipients = (from s in db.UserEventSubscriptions
-                                  join u in db.Users on s.UserID equals u.ID
-                                  where (s.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && !s.User.Deleted && s.User.Active && s.Frequency != null &&
-                                      (
-                                      //Additional Check: if the user does not have the Request Status Changed event enabled at Organization, Project, or Project Organization level, then notification is only sent if the user is the one who submitted the request
-                                            (
-                                                (db.OrganizationEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
-                                                    || db.ProjectEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
-                                                    || db.ProjectOrganizationEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
-                                                )
-                                              &&
-                                                (db.OrganizationEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
-                                                    && db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
-                                                    && db.ProjectOrganizationEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
-                                                )
-                                            )
-                                           || (log.Request.SubmittedByID == s.UserID && s.FrequencyForMy == null)
-                                        )
-                                     //user is not a request user OR user is a requestUser but has not subscribed to the "My" Notification
-                                     && (!db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID)
-                                        ||
-                                        db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID && s.FrequencyForMy == null && s.Frequency != null)
-                                     )
-                                     && ((!immediate && s.NextDueTime <= DateTime.UtcNow && (Frequencies)s.Frequency != Frequencies.Immediately) 
-                                            || ( immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
-                                       
-                                  )
-                                  select new Recipient
-                                        {
-                                            Email = s.User.Email,
-                                            Phone = s.User.Phone,
-                                            Name = ((u.FirstName + " " + u.MiddleName).Trim() + " " + u.LastName).Trim(),
-                                            UserID = s.UserID
-                                        }).ToArray();
+                                             join u in db.Users on s.UserID equals u.ID
+                                             where (s.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && !s.User.Deleted && s.User.Active && s.Frequency != null &&
+                                                 (
+                                                       //Additional Check: if the user does not have the Request Status Changed event enabled at Organization, Project, or Project Organization level, then notification is only sent if the user is the one who submitted the request
+                                                       (
+                                                           (db.OrganizationEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
+                                                               || db.ProjectEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
+                                                               || db.ProjectOrganizationEvents.Any(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active))
+                                                           )
+                                                         &&
+                                                           (db.OrganizationEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
+                                                               && db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
+                                                               && db.ProjectOrganizationEvents.Where(a => a.EventID == EventIdentifiers.Request.RequestStatusChanged.ID && a.ProjectID == log.Request.ProjectID && a.OrganizationID == log.Request.OrganizationID && a.SecurityGroup.Users.Any(us => us.UserID == s.UserID && !us.User.Deleted && us.User.Active)).All(a => a.Allowed)
+                                                           )
+                                                       )
+                                                      || (log.Request.SubmittedByID == s.UserID && s.FrequencyForMy == null)
+                                                   )
+                                                //user is not a request user OR user is a requestUser but has not subscribed to the "My" Notification
+                                                && (!db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID)
+                                                       ||
+                                                       db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID && s.FrequencyForMy == null && s.Frequency != null)
+                                                    )
+                                                    && ((!immediate && s.NextDueTime <= DateTime.UtcNow && (Frequencies)s.Frequency != Frequencies.Immediately)
+                                                           || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
+
+                                                 )
+                                             select new Recipient
+                                             {
+                                                 Email = s.User.Email,
+                                                 Phone = s.User.Phone,
+                                                 Name = ((u.FirstName + " " + u.MiddleName).Trim() + " " + u.LastName).Trim(),
+                                                 UserID = s.UserID
+                                             }).ToArray();
 
                 //user is a request user and has subscribed to the "My" notification
                 var requestUsersQuery = (from s in db.UserEventSubscriptions
@@ -1715,7 +1715,7 @@ namespace Lpp.Dns.Data
                     notifications.AddRange(notification);
             }
 
-            var statusChangedlogs = await FilterAuditLog(from l in db.LogsRequestStatusChanged.Include(x => x.Request) select l, db.UserEventSubscriptions, EventIdentifiers.Request.RequestStatusChanged.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
+            var statusChangedlogs = (await FilterAuditLog((from l in db.LogsRequestStatusChanged.Include(x => x.Request) where (int)l.NewStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft && (int)l.OldStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft select l), db.UserEventSubscriptions, EventIdentifiers.Request.RequestStatusChanged.ID).ToArrayAsync()).GroupBy(g => new { g.RequestID, g.Request.Identifier, g.UserID });
 
             foreach (var log in statusChangedlogs)
             {
@@ -1792,32 +1792,40 @@ namespace Lpp.Dns.Data
                                      Username = user.UserName
                                  }).FirstOrDefaultAsync();
 
-            string currentStatusText = Lpp.Utilities.ObjectEx.ToString(originalStatus, true);
-            string newStatusText = Lpp.Utilities.ObjectEx.ToString(newStatus, true);
+            try
+            {
+                string currentStatusText = Lpp.Utilities.ObjectEx.ToString(originalStatus, true);
+                string newStatusText = Lpp.Utilities.ObjectEx.ToString(newStatus, true);
 
-            string emailBody = string.Format(RequestLogConfiguration.RequestStatusEmailTemplate,
-                TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")),
-                details.NetworkName,
-                details.RequestType,
-                details.RequestName,
-                details.RequestIdentifier,
-                currentStatusText,
-                newStatusText,
-                details.Username,
-               (details.Project ?? System.Web.HttpUtility.HtmlEncode("<<Not Found>>")));
+                string emailBody = string.Format(RequestLogConfiguration.RequestStatusEmailTemplate,
+                    TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")),
+                    details.NetworkName,
+                    details.RequestType,
+                    details.RequestName,
+                    details.RequestIdentifier,
+                    currentStatusText,
+                    newStatusText,
+                    details.Username,
+                   (details.Project ?? System.Web.HttpUtility.HtmlEncode("<<Not Found>>")));
 
-            string myEmailBody = string.Format(RequestLogConfiguration.RequestStatusEmailTemplate,
-                TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")),
-                details.NetworkName,
-                details.RequestType,
-                details.RequestName,
-                details.RequestIdentifier,
-                currentStatusText,
-                newStatusText,
-                details.Username,
-                (details.Project ?? System.Web.HttpUtility.HtmlEncode("<<Not Found>>")));
+                string myEmailBody = string.Format(RequestLogConfiguration.RequestStatusEmailTemplate,
+                    TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")),
+                    details.NetworkName,
+                    details.RequestType,
+                    details.RequestName,
+                    details.RequestIdentifier,
+                    currentStatusText,
+                    newStatusText,
+                    details.Username,
+                    (details.Project ?? System.Web.HttpUtility.HtmlEncode("<<Not Found>>")));
 
-            return new string[] { emailBody, myEmailBody };
+                return new string[] { emailBody, myEmailBody };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public void SendNotification(IEnumerable<Notification> notifications)

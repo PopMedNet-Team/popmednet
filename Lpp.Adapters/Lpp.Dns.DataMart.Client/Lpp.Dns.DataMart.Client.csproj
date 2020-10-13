@@ -559,7 +559,7 @@
   </ItemGroup>
   <Target Name="BeforeBuild">
     <ItemGroup>
-      <Artifacts Include="$(ClientDatabasePath)Lpp.Dns.DataMart.Client.Database.dll;$(ClientDatabasePath)Npgsql.dll;$(ClientDatabasePath)Oracle.ManagedDataAccess.dll;">
+      <Artifacts Include="$(ClientDatabasePath)*.dll;">
         <InProject>false</InProject>
       </Artifacts>
     </ItemGroup>

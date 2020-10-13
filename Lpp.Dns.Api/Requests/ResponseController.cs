@@ -1535,14 +1535,21 @@ namespace Lpp.Dns.Api.Requests
         [HttpGet]
         public async Task<HttpResponseMessage> ExportAllAsZip([FromUri]IEnumerable<Guid> id)
         {
-            //string filename = EXPORT_BASENAME + "_" + context.Request.Model.Name + "_" + context.Request.RequestID.ToString() + "." + format.ID;
-            var DMDocs = new SortedDictionary<string, List<Document>>();
-
-            var lDocs = await (from r in DataContext.Responses
+            var lDocs = await (from r in DataContext.FilteredResponseList(Identity.ID)
+                               let userID = Identity.ID
+                               let permissionID = PermissionIdentifiers.DataMartInProject.ApproveResponses.ID
+                               let globalAcls = DataContext.GlobalAcls.Where(a => a.PermissionID == permissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
+                               let datamartAcls = DataContext.DataMartAcls.Where(a => a.PermissionID == permissionID && a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
+                               let projectAcls = DataContext.ProjectAcls.Where(a => a.PermissionID == permissionID && a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
+                               let orgAcls = DataContext.OrganizationAcls.Where(a => a.PermissionID == permissionID && a.Organization.Requests.Any(rq => rq.ID == r.RequestDataMart.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
+                               let projectDataMartsAcls = DataContext.ProjectDataMartAcls.Where(a => a.PermissionID == permissionID && a.Project.Requests.Any(rd => rd.ID == r.RequestDataMart.RequestID) && a.DataMart.Requests.Any(rd => rd.ID == r.RequestDataMartID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
                                join rdoc in DataContext.RequestDocuments on r.ID equals rdoc.ResponseID
                                join doc in DataContext.Documents on rdoc.RevisionSetID equals doc.RevisionSetID
-                               where id.Contains(r.ID) && rdoc.DocumentType == RequestDocumentType.Output
-                               && r.RequestDataMart.Status != RoutingStatus.AwaitingResponseApproval
+                               where id.Contains(r.ID) && rdoc.DocumentType == RequestDocumentType.Output &&
+                               (
+                                   r.RequestDataMart.Status == RoutingStatus.AwaitingResponseApproval ? ((globalAcls.Any() || datamartAcls.Any() || projectAcls.Any() || projectDataMartsAcls.Any() || orgAcls.Any())
+                                   && (globalAcls.All(a => a.Allowed) && datamartAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && projectDataMartsAcls.All(a => a.Allowed) && orgAcls.All(a => a.Allowed))) : true
+                               )
                                orderby r.RequestDataMart.DataMart.ID
                                select new
                                {

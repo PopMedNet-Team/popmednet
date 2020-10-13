@@ -1,34 +1,54 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2018-03-27T17:54:49.3454486+00:00",
-  "RequestID": "0b8c0320-a4f9-44a3-ac0d-a8a900b2b350",
-  "Errors": null,
+  "ResponseDateTime": "2020-09-14T23:36:23.0082052+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"Hispanic\":\"\",\"Race\":\"Fiona\",\"Patients\":\"1\"}]\r\nActual result: [{\"Hispanic\":\"patient_2\",\"Race\":null,\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"02\",\"Patients\":1},{\"Hispanic\":\"Mindy\",\"Race\":\"07\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Fiona\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Grzegorz \",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Julio\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Lee\",\"Patients\":1},{\"Hispanic\":\"R\",\"Race\":\"Martin\",\"Patients\":1}]"
+    }
+  ],
   "Results": [
     [
       {
-        "Hispanic": "Julian",
-        "Race": "04",
+        "Hispanic": "patient_2",
+        "Race": null,
         "Patients": 1
       },
       {
-        "Hispanic": "William",
-        "Race": "04",
+        "Hispanic": "Y",
+        "Race": "02",
         "Patients": 1
       },
       {
-        "Hispanic": "Kate",
+        "Hispanic": "Mindy",
         "Race": "07",
         "Patients": 1
       },
       {
-        "Hispanic": "Y",
-        "Race": "Franklin",
+        "Hispanic": null,
+        "Race": "Fiona",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Grzegorz ",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Julio",
         "Patients": 1
       },
       {
         "Hispanic": "Y",
-        "Race": "Gordon",
+        "Race": "Lee",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Martin",
         "Patients": 1
       }
     ]

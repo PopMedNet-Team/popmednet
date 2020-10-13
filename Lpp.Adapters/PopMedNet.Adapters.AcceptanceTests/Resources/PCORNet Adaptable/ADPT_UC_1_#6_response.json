@@ -1,18 +1,18 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2020-01-02T21:10:36.1261139+00:00",
+  "ResponseDateTime": "2020-09-15T00:10:10.488524+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_191\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"9/30/2013 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":\"19967\",\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"}]\r\nActual result: [{\"ENCOUNTERID\":\"PK_906\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2013-09-30T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_906\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2013-09-30T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_905\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_905\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_905\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/3/2015\",\"PRO_RESPONSE_NUM\":20122.0,\"PRO_MEASURE_SEQ\":\"22.03\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_905\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_907\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_907\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_907\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/3/2015\",\"PRO_RESPONSE_NUM\":20122.0,\"PRO_MEASURE_SEQ\":\"22.03\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_907\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_907\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/8/2016\",\"PRO_RESPONSE_NUM\":20492.0,\"PRO_MEASURE_SEQ\":\"22.05\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_908\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2016-02-05T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_908\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2016-02-05T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/8/2016\",\"PRO_RESPONSE_NUM\":20492.0,\"PRO_MEASURE_SEQ\":\"22.05\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"}]"
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_906\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"9/30/2013 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":\"19967\",\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"}]\r\nActual result: [{\"ENCOUNTERID\":\"PK_1182\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2013-09-30T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1182\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2013-09-30T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1181\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1181\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1181\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/3/2015\",\"PRO_RESPONSE_NUM\":20122.0,\"PRO_MEASURE_SEQ\":\"22.03\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1181\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1183\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1183\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/11/2014\",\"PRO_RESPONSE_NUM\":19977.0,\"PRO_MEASURE_SEQ\":\"22.02\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1183\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/3/2015\",\"PRO_RESPONSE_NUM\":20122.0,\"PRO_MEASURE_SEQ\":\"22.03\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1183\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1183\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2015-04-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/8/2016\",\"PRO_RESPONSE_NUM\":20492.0,\"PRO_MEASURE_SEQ\":\"22.05\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1184\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2016-02-05T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/16/2015\",\"PRO_RESPONSE_NUM\":20135.0,\"PRO_MEASURE_SEQ\":\"22.04\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1184\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2016-02-05T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/8/2016\",\"PRO_RESPONSE_NUM\":20492.0,\"PRO_MEASURE_SEQ\":\"22.05\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"}]"
     }
   ],
   "Results": [
     [
       {
-        "ENCOUNTERID": "PK_906",
+        "ENCOUNTERID": "PK_1182",
         "ENC_TYPE": "OA",
         "ADMIT_DATE": "2013-09-30T00:00:00",
         "DX": null,
@@ -27,7 +27,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_906",
+        "ENCOUNTERID": "PK_1182",
         "ENC_TYPE": "OA",
         "ADMIT_DATE": "2013-09-30T00:00:00",
         "DX": null,
@@ -42,7 +42,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_905",
+        "ENCOUNTERID": "PK_1181",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2014-09-01T00:00:00",
         "DX": null,
@@ -57,7 +57,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_905",
+        "ENCOUNTERID": "PK_1181",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2014-09-01T00:00:00",
         "DX": null,
@@ -72,7 +72,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_905",
+        "ENCOUNTERID": "PK_1181",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2014-09-01T00:00:00",
         "DX": null,
@@ -87,7 +87,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_905",
+        "ENCOUNTERID": "PK_1181",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2014-09-01T00:00:00",
         "DX": null,
@@ -102,7 +102,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_907",
+        "ENCOUNTERID": "PK_1183",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2015-04-12T00:00:00",
         "DX": null,
@@ -117,7 +117,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_907",
+        "ENCOUNTERID": "PK_1183",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2015-04-12T00:00:00",
         "DX": null,
@@ -132,7 +132,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_907",
+        "ENCOUNTERID": "PK_1183",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2015-04-12T00:00:00",
         "DX": null,
@@ -147,7 +147,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_907",
+        "ENCOUNTERID": "PK_1183",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2015-04-12T00:00:00",
         "DX": null,
@@ -162,7 +162,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_907",
+        "ENCOUNTERID": "PK_1183",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2015-04-12T00:00:00",
         "DX": null,
@@ -177,7 +177,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_908",
+        "ENCOUNTERID": "PK_1184",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2016-02-05T00:00:00",
         "DX": null,
@@ -192,7 +192,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_908",
+        "ENCOUNTERID": "PK_1184",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2016-02-05T00:00:00",
         "DX": null,

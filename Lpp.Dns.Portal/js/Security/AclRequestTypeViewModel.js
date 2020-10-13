@@ -140,6 +140,16 @@ var Security;
                             });
                         });
                     };
+                    this.ClearAllGroups = function () {
+                        //Remove all of the acls by setting the allowed to null
+                        self.Acls().forEach(function (a) { a.Permission(null); });
+                        self.SelectedSecurityGroup(null);
+                        self.SecurityGroups = [];
+                        var cboSecurityGroups = $('#cboRequestTypeSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+                        _this.dsSecurityGroups.data(_this.SecurityGroups);
+                        _this.dsSecurityGroups.fetch();
+                        cboSecurityGroups.refresh();
+                    };
                 }
                 AclRequestTypeEditViewModel.prototype.SelectSecurityGroup = function () {
                     var _this = this;
@@ -244,16 +254,18 @@ var Security;
                         var acls = self.VM.Acls().filter(function (a) {
                             return a.RequestTypeID() == self.ID() && a.SecurityGroupID() == self.VM.SelectedSecurityGroup();
                         });
-                        var acl = null;
-                        if (acls.length > 0) {
-                            acl = acls[0];
+                        if (vm.SelectedSecurityGroup() !== null) {
+                            var acl = null;
+                            if (acls.length > 0) {
+                                acl = acls[0];
+                            }
+                            else {
+                                acl = _this.CreateAcl(_this.VM, self.VM.SelectedSecurityGroup());
+                                acl.RequestTypeID(_this.ID());
+                            }
+                            acl.Permission(value);
+                            _this.VM.HasChanges(true);
                         }
-                        else {
-                            acl = _this.CreateAcl(_this.VM, self.VM.SelectedSecurityGroup());
-                            acl.RequestTypeID(_this.ID());
-                        }
-                        acl.Permission(value);
-                        _this.VM.HasChanges(true);
                     });
                 }
                 RequestTypeAclViewModel.prototype.CreateAcl = function (vm, securityGroupID) {

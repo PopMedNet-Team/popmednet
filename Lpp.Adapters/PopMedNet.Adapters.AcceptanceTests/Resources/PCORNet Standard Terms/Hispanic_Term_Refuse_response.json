@@ -1,1 +1,109 @@
-{"ID":null,"ResponseDateTime":"2017-12-05T14:59:00.1089505+00:00","RequestID":"b2cd7041-e83d-44c4-8515-a83300e78fe3","Errors":null,"Results":[[{"Hispanic":"R","Race":"Ana","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Arthur","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Bertha","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Isaias","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Laura","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Marco","Patients":1,"LowThreshold":false},{"Hispanic":"R","Race":"Teddy","Patients":1,"LowThreshold":false}]],"LowCellThrehold":null,"Properties":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"},{"Name":"LowThreshold","Type":"System.Boolean","As":"LowThreshold","Aggregate":null}],"Aggregation":{"GroupBy":["Hispanic","Race"],"Select":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"}],"Name":null}}
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:15.8584952+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<7>. Actual:<9>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "R",
+        "Race": "Ana",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Arthur",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Bertha",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Ewa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Isaias",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Laura",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Marco",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Martin",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Teddy",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

@@ -1,1 +1,164 @@
-{"ID":null,"ResponseDateTime":"2019-12-05T17:30:57.0788102+00:00","RequestID":"167d5cd2-2f86-4c5e-9da8-a83300ec8d96","Errors":null,"Results":[[{"Hispanic":null,"Race":"03","Patients":1},{"Hispanic":"Fay","Race":"04","Patients":1},{"Hispanic":"N","Race":"04","Patients":1},{"Hispanic":"R","Race":"Marco","Patients":1},{"Hispanic":"NI","Race":"Sam","Patients":1},{"Hispanic":"OT","Race":"Wilfred","Patients":1}]],"LowCellThrehold":null,"Properties":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"}],"Aggregation":{"GroupBy":["Hispanic","Race"],"Select":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"}],"Name":null}}
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:22.6020723+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<6>. Actual:<20>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Richard",
+        "Race": "02",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Shary",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fay",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tobias",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Virginie",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Genevieve",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Hernan",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Iselle",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Karina",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Karl",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Lisa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Marco",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Martin",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Nicole",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Owen",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "NI",
+        "Race": "Sam",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Walter",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "Wilfred",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

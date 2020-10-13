@@ -1,61 +1,16 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2020-01-02T21:10:40.6571219+00:00",
+  "ResponseDateTime": "2020-09-15T00:10:12.3859184+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_149\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2/3/2010 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/1/2010\",\"PRO_RESPONSE_NUM\":\"18294\",\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"}]\r\nActual result: [{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MI\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"29.01\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MI\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"mi\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"26.01\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_864\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2010-02-03T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/1/2010\",\"PRO_RESPONSE_NUM\":18294.0,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":\"PK_916\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-07-07T00:00:00\",\"DX\":\"434\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/7/2013\",\"PRO_RESPONSE_NUM\":19546.0,\"PRO_MEASURE_SEQ\":\"29.02\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":\"PK_917\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2013-07-10T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":\"92037\",\"PX_TYPE\":\"CH\",\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/7/2013\",\"PRO_RESPONSE_NUM\":19546.0,\"PRO_MEASURE_SEQ\":\"29.02\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":\"PK_905\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_912\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2014-11-09T00:00:00\",\"DX\":\"434.91\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"11/9/2014\",\"PRO_RESPONSE_NUM\":20036.0,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_911\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"290\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_911\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"410.9\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_914\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2020-05-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":\"92937\",\"PX_TYPE\":\"CH\",\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"5/2/2020\",\"PRO_RESPONSE_NUM\":22037.0,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"},{\"ENCOUNTERID\":\"PK_914\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2020-05-12T00:00:00\",\"DX\":\"434.91\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"5/2/2020\",\"PRO_RESPONSE_NUM\":22037.0,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"}]"
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_864\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2/3/2010 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/1/2010\",\"PRO_RESPONSE_NUM\":\"18294\",\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"}]\r\nActual result: [{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MI\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"mi\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"26.01\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"MI\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"},{\"ENCOUNTERID\":null,\"ENC_TYPE\":null,\"ADMIT_DATE\":null,\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_EVENT\",\"PRO_RESPONSE_TEXT\":\"STROKE\",\"PRO_RESPONSE_NUM\":null,\"PRO_MEASURE_SEQ\":\"29.01\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":\"PK_1140\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2010-02-03T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"2/1/2010\",\"PRO_RESPONSE_NUM\":18294.0,\"PRO_MEASURE_SEQ\":\"1.01\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Alvin\"},{\"ENCOUNTERID\":\"PK_1192\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-07-07T00:00:00\",\"DX\":\"434\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/7/2013\",\"PRO_RESPONSE_NUM\":19546.0,\"PRO_MEASURE_SEQ\":\"29.02\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":\"PK_1193\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2013-07-10T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":\"92037\",\"PX_TYPE\":\"CH\",\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/7/2013\",\"PRO_RESPONSE_NUM\":19546.0,\"PRO_MEASURE_SEQ\":\"29.02\",\"TRIALID\":\"ADAPTABLE_5\",\"PARTICIPANTID\":\"Elida\"},{\"ENCOUNTERID\":\"PK_1181\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2014-09-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"9/1/2014\",\"PRO_RESPONSE_NUM\":19967.0,\"PRO_MEASURE_SEQ\":\"22.01\",\"TRIALID\":\"ADAPTABLE_4\",\"PARTICIPANTID\":\"Wallis\"},{\"ENCOUNTERID\":\"PK_1188\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2014-11-09T00:00:00\",\"DX\":\"434.91\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"11/9/2014\",\"PRO_RESPONSE_NUM\":20036.0,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_1187\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"290\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_1187\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2015-07-13T00:00:00\",\"DX\":\"410.9\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"7/13/2015\",\"PRO_RESPONSE_NUM\":20282.0,\"PRO_MEASURE_SEQ\":\"25.03\",\"TRIALID\":\"ADAPTABLE_1\",\"PARTICIPANTID\":\"Amanda\"},{\"ENCOUNTERID\":\"PK_1190\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2020-05-12T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":\"92937\",\"PX_TYPE\":\"CH\",\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"5/2/2020\",\"PRO_RESPONSE_NUM\":22037.0,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"},{\"ENCOUNTERID\":\"PK_1190\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2020-05-12T00:00:00\",\"DX\":\"434.91\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"5/2/2020\",\"PRO_RESPONSE_NUM\":22037.0,\"PRO_MEASURE_SEQ\":\"27.03\",\"TRIALID\":\"adaptable_5\",\"PARTICIPANTID\":\"Cristina\"}]"
     }
   ],
   "Results": [
     [
-      {
-        "ENCOUNTERID": null,
-        "ENC_TYPE": null,
-        "ADMIT_DATE": null,
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
-        "PRO_RESPONSE_TEXT": "MI",
-        "PRO_RESPONSE_NUM": null,
-        "PRO_MEASURE_SEQ": "26.02",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Boris"
-      },
-      {
-        "ENCOUNTERID": null,
-        "ENC_TYPE": null,
-        "ADMIT_DATE": null,
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
-        "PRO_RESPONSE_TEXT": "STROKE",
-        "PRO_RESPONSE_NUM": null,
-        "PRO_MEASURE_SEQ": "27.03",
-        "TRIALID": "adaptable_5",
-        "PARTICIPANTID": "Cristina"
-      },
-      {
-        "ENCOUNTERID": null,
-        "ENC_TYPE": null,
-        "ADMIT_DATE": null,
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
-        "PRO_RESPONSE_TEXT": "STROKE",
-        "PRO_RESPONSE_NUM": null,
-        "PRO_MEASURE_SEQ": "29.01",
-        "TRIALID": "ADAPTABLE_5",
-        "PARTICIPANTID": "Elida"
-      },
       {
         "ENCOUNTERID": null,
         "ENC_TYPE": null,
@@ -117,7 +72,52 @@
         "PARTICIPANTID": "Boris"
       },
       {
-        "ENCOUNTERID": "PK_864",
+        "ENCOUNTERID": null,
+        "ENC_TYPE": null,
+        "ADMIT_DATE": null,
+        "DX": null,
+        "DX_TYPE": null,
+        "PX": null,
+        "PX_TYPE": null,
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "26.02",
+        "TRIALID": "ADAPTABLE_3",
+        "PARTICIPANTID": "Boris"
+      },
+      {
+        "ENCOUNTERID": null,
+        "ENC_TYPE": null,
+        "ADMIT_DATE": null,
+        "DX": null,
+        "DX_TYPE": null,
+        "PX": null,
+        "PX_TYPE": null,
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "27.03",
+        "TRIALID": "adaptable_5",
+        "PARTICIPANTID": "Cristina"
+      },
+      {
+        "ENCOUNTERID": null,
+        "ENC_TYPE": null,
+        "ADMIT_DATE": null,
+        "DX": null,
+        "DX_TYPE": null,
+        "PX": null,
+        "PX_TYPE": null,
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "29.01",
+        "TRIALID": "ADAPTABLE_5",
+        "PARTICIPANTID": "Elida"
+      },
+      {
+        "ENCOUNTERID": "PK_1140",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2010-02-03T00:00:00",
         "DX": null,
@@ -132,7 +132,7 @@
         "PARTICIPANTID": "Alvin"
       },
       {
-        "ENCOUNTERID": "PK_916",
+        "ENCOUNTERID": "PK_1192",
         "ENC_TYPE": "IC",
         "ADMIT_DATE": "2013-07-07T00:00:00",
         "DX": "434",
@@ -147,7 +147,7 @@
         "PARTICIPANTID": "Elida"
       },
       {
-        "ENCOUNTERID": "PK_917",
+        "ENCOUNTERID": "PK_1193",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2013-07-10T00:00:00",
         "DX": null,
@@ -162,7 +162,7 @@
         "PARTICIPANTID": "Elida"
       },
       {
-        "ENCOUNTERID": "PK_905",
+        "ENCOUNTERID": "PK_1181",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2014-09-01T00:00:00",
         "DX": null,
@@ -177,7 +177,7 @@
         "PARTICIPANTID": "Wallis"
       },
       {
-        "ENCOUNTERID": "PK_912",
+        "ENCOUNTERID": "PK_1188",
         "ENC_TYPE": "OA",
         "ADMIT_DATE": "2014-11-09T00:00:00",
         "DX": "434.91",
@@ -192,7 +192,7 @@
         "PARTICIPANTID": "Boris"
       },
       {
-        "ENCOUNTERID": "PK_911",
+        "ENCOUNTERID": "PK_1187",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2015-07-13T00:00:00",
         "DX": "290",
@@ -207,7 +207,7 @@
         "PARTICIPANTID": "Amanda"
       },
       {
-        "ENCOUNTERID": "PK_911",
+        "ENCOUNTERID": "PK_1187",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2015-07-13T00:00:00",
         "DX": "410.9",
@@ -222,7 +222,7 @@
         "PARTICIPANTID": "Amanda"
       },
       {
-        "ENCOUNTERID": "PK_914",
+        "ENCOUNTERID": "PK_1190",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2020-05-12T00:00:00",
         "DX": null,
@@ -237,7 +237,7 @@
         "PARTICIPANTID": "Cristina"
       },
       {
-        "ENCOUNTERID": "PK_914",
+        "ENCOUNTERID": "PK_1190",
         "ENC_TYPE": "EI",
         "ADMIT_DATE": "2020-05-12T00:00:00",
         "DX": "434.91",

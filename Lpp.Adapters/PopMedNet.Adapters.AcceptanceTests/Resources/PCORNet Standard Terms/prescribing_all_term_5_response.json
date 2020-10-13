@@ -1,1 +1,89 @@
-{"ID":null,"DocumentID":null,"ResponseDateTime":"2020-04-21T09:11:03.7301669+00:00","RequestID":"00000000-0000-0000-0000-000000000000","Errors":null,"Results":[[{"Hispanic":"","Race":"Colin","Patients":1,"AdmittedOn":"2010-05"},{"Hispanic":"","Race":"Wojtek","Patients":1,"AdmittedOn":"2010-04"}]],"LowCellThrehold":null,"Properties":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"},{"Name":"AdmittedOn","Type":"System.String","As":"AdmittedOn","Aggregate":null}],"Aggregation":{"GroupBy":["Hispanic","Race","AdmittedOn"],"Select":[{"Name":"Hispanic","Type":"System.String","As":"Hispanic","Aggregate":null},{"Name":"Race","Type":"System.String","As":"Race","Aggregate":null},{"Name":"PatientID","Type":"System.Int32","As":"Patients","Aggregate":"Sum"},{"Name":"AdmittedOn","Type":"System.String","As":"AdmittedOn","Aggregate":null}],"Name":null}}
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:18.1321603+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"Hispanic\":\"\",\"Race\":\"Colin\",\"Patients\":\"1\",\"AdmittedOn\":\"2010-05\"}]\r\nActual result: [{\"Hispanic\":null,\"Race\":\"Colin\",\"Patients\":1,\"AdmittedOn\":\"2010-05\"},{\"Hispanic\":null,\"Race\":\"Wojtek\",\"Patients\":1,\"AdmittedOn\":\"2010-04\"}]"
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": null,
+        "Race": "Colin",
+        "Patients": 1,
+        "AdmittedOn": "2010-05"
+      },
+      {
+        "Hispanic": null,
+        "Race": "Wojtek",
+        "Patients": 1,
+        "AdmittedOn": "2010-04"
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "AdmittedOn",
+      "Type": "System.String",
+      "As": "AdmittedOn",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race",
+      "AdmittedOn"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "AdmittedOn",
+        "Type": "System.String",
+        "As": "AdmittedOn",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

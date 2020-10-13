@@ -1,18 +1,18 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2020-01-02T21:10:36.9301076+00:00",
+  "ResponseDateTime": "2020-09-15T00:10:10.6827956+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_168\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"8/15/2013 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":\"19585\",\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Ivo_B\"}]\r\nActual result: [{\"ENCOUNTERID\":\"PK_883\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-08-15T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":19585.0,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Ivo_B\"},{\"ENCOUNTERID\":\"PK_888\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2018-12-31T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"43463\",\"PRO_RESPONSE_NUM\":21547.0,\"PRO_MEASURE_SEQ\":\"11.01\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Kiko\"},{\"ENCOUNTERID\":\"PK_891\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2100-04-11T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/8/2100\",\"PRO_RESPONSE_NUM\":51232.0,\"PRO_MEASURE_SEQ\":\"12.03\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Lorena\"}]"
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_883\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"8/15/2013 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":\"19585\",\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Ivo_B\"}]\r\nActual result: [{\"ENCOUNTERID\":\"PK_1159\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-08-15T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":19585.0,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Ivo_B\"},{\"ENCOUNTERID\":\"PK_1164\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2018-12-31T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"43463\",\"PRO_RESPONSE_NUM\":21547.0,\"PRO_MEASURE_SEQ\":\"11.01\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Kiko\"},{\"ENCOUNTERID\":\"PK_1167\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2100-04-11T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/8/2100\",\"PRO_RESPONSE_NUM\":51232.0,\"PRO_MEASURE_SEQ\":\"12.03\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Lorena\"}]"
     }
   ],
   "Results": [
     [
       {
-        "ENCOUNTERID": "PK_883",
+        "ENCOUNTERID": "PK_1159",
         "ENC_TYPE": "IC",
         "ADMIT_DATE": "2013-08-15T00:00:00",
         "DX": null,
@@ -27,7 +27,7 @@
         "PARTICIPANTID": "Ivo_B"
       },
       {
-        "ENCOUNTERID": "PK_888",
+        "ENCOUNTERID": "PK_1164",
         "ENC_TYPE": "OS",
         "ADMIT_DATE": "2018-12-31T00:00:00",
         "DX": null,
@@ -42,7 +42,7 @@
         "PARTICIPANTID": "Kiko"
       },
       {
-        "ENCOUNTERID": "PK_891",
+        "ENCOUNTERID": "PK_1167",
         "ENC_TYPE": "IC",
         "ADMIT_DATE": "2100-04-11T00:00:00",
         "DX": null,

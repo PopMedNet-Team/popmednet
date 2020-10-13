@@ -69,6 +69,18 @@ module Dns.Enums
 	 	NI = 11,
 	 	UN = 12,
 	 	OT = 13,
+	 	Detected = 14,
+	 	Equivocal = 15,
+	 	Indeterminate_Abnormal = 16,
+	 	Invalid = 17,
+	 	Nonreactive = 18,
+	 	NotDetencted = 19,
+	 	PastInfected = 20,
+	 	PresumptivePositive = 21,
+	 	Reactive = 22,
+	 	RecentInfection = 23,
+	 	SpecimenUnsatisfactory = 24,
+	 	Suspected = 25,
 	 }
 	 export var LOINCQualitativeResultTypeTranslation: Dns.Structures.KeyValuePair[] = [
 	 	 {value:LOINCQualitativeResultType.Positive , text: 'Positive'},
@@ -84,6 +96,18 @@ module Dns.Enums
 	 	 {value:LOINCQualitativeResultType.NI , text: 'NI'},
 	 	 {value:LOINCQualitativeResultType.UN , text: 'UN'},
 	 	 {value:LOINCQualitativeResultType.OT , text: 'OT'},
+	 	 {value:LOINCQualitativeResultType.Detected , text: 'Detected'},
+	 	 {value:LOINCQualitativeResultType.Equivocal , text: 'Equivocal'},
+	 	 {value:LOINCQualitativeResultType.Indeterminate_Abnormal , text: 'Indeterminate abnormal'},
+	 	 {value:LOINCQualitativeResultType.Invalid , text: 'Invalid'},
+	 	 {value:LOINCQualitativeResultType.Nonreactive , text: 'Nonreactive'},
+	 	 {value:LOINCQualitativeResultType.NotDetencted , text: 'Not Detected'},
+	 	 {value:LOINCQualitativeResultType.PastInfected , text: 'Past Infection'},
+	 	 {value:LOINCQualitativeResultType.PresumptivePositive , text: 'Presumptive Positive'},
+	 	 {value:LOINCQualitativeResultType.Reactive , text: 'Reactive'},
+	 	 {value:LOINCQualitativeResultType.RecentInfection , text: 'Recent Infection'},
+	 	 {value:LOINCQualitativeResultType.SpecimenUnsatisfactory , text: 'Specimen Unsatisfactory'},
+	 	 {value:LOINCQualitativeResultType.Suspected , text: 'Suspected'},
 	 ]
 	 export enum LOINCResultModifierType{
 	 	EQ = 1,
@@ -4018,6 +4042,16 @@ module Dns.Interfaces
 	 	 	'ScheduleJSON': { type:'string', nullable: false},
 	 	 }
 	 }
+	 export interface IDistributedRegressionManifestFile{
+	 	 Items: IDistributedRegressionAnalysisCenterManifestItem[];
+	 	 DataPartners: IDistributedRegressionManifestDataPartner[];
+	 }
+	 export var KendoModelDistributedRegressionManifestFile: any = {
+	 	 fields: {
+	 	 	'Items': { type:'any[]', nullable: false},
+	 	 	'DataPartners': { type:'any[]', nullable: false},
+	 	 }
+	 }
 	 export interface IDistributedRegressionAnalysisCenterManifestItem{
 	 	 DocumentID: any;
 	 	 RevisionSetID: any;
@@ -4036,6 +4070,20 @@ module Dns.Interfaces
 	 	 	'DataPartnerIdentifier': { type:'string', nullable: false},
 	 	 	'DataMart': { type:'string', nullable: false},
 	 	 	'RequestDataMartID': { type:'any', nullable: false},
+	 	 }
+	 }
+	 export interface IDistributedRegressionManifestDataPartner{
+	 	 DataMartID: any;
+	 	 RouteType: Dns.Enums.RoutingType;
+	 	 DataMartIdentifier: string;
+	 	 DataMartCode: string;
+	 }
+	 export var KendoModelDistributedRegressionManifestDataPartner: any = {
+	 	 fields: {
+	 	 	'DataMartID': { type:'any', nullable: false},
+	 	 	'RouteType': { type:'dns.enums.routingtype', nullable: false},
+	 	 	'DataMartIdentifier': { type:'string', nullable: false},
+	 	 	'DataMartCode': { type:'string', nullable: false},
 	 	 }
 	 }
 	 export interface IQueryComposerTemporalEventDTO{

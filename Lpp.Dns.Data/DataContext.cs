@@ -309,6 +309,7 @@ namespace Lpp.Dns.Data
         public DbSet<Audit.NewRequestDraftSubmittedLog> LogsNewRequestDraftSubmitted { get; set; }
         public DbSet<Audit.RequestDataMartAddedRemovedLog> LogsRequestDataMartAddedRemoved { get; set; }
         public DbSet<Audit.UserAuthenticationLogs> LogsUserAuthentication { get; set; }
+        public DbSet<Audit.UserPasswordChangeLog> LogsUserPasswordChange { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserSetting> UserSettings { get; set; }

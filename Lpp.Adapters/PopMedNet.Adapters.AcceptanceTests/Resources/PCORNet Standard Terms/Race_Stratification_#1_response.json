@@ -1,19 +1,19 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2019-12-31T15:46:58.2591952+00:00",
+  "ResponseDateTime": "2020-09-14T23:28:21.5606996+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<69>. Actual:<70>. The number of rows in the result is different."
+      "Description": "Assert.AreEqual failed. Expected:<70>. Actual:<115>. The number of rows in the result is different."
     }
   ],
   "Results": [
     [
       {
         "Race": null,
-        "Patients": 1
+        "Patients": 6
       },
       {
         "Race": "01",
@@ -21,19 +21,19 @@
       },
       {
         "Race": "02",
-        "Patients": 8
+        "Patients": 10
       },
       {
         "Race": "03",
-        "Patients": 12
+        "Patients": 13
       },
       {
         "Race": "04",
-        "Patients": 12
+        "Patients": 14
       },
       {
         "Race": "05",
-        "Patients": 8
+        "Patients": 9
       },
       {
         "Race": "06",
@@ -48,7 +48,15 @@
         "Patients": 1
       },
       {
+        "Race": "Alex",
+        "Patients": 1
+      },
+      {
         "Race": "Ana",
+        "Patients": 1
+      },
+      {
+        "Race": "Anka",
         "Patients": 1
       },
       {
@@ -68,6 +76,14 @@
         "Patients": 1
       },
       {
+        "Race": "Bich",
+        "Patients": 1
+      },
+      {
+        "Race": "Bonnie",
+        "Patients": 1
+      },
+      {
         "Race": "Bret",
         "Patients": 1
       },
@@ -84,6 +100,14 @@
         "Patients": 1
       },
       {
+        "Race": "Colin",
+        "Patients": 1
+      },
+      {
+        "Race": "Danielle",
+        "Patients": 1
+      },
+      {
         "Race": "Debby",
         "Patients": 1
       },
@@ -93,6 +117,10 @@
       },
       {
         "Race": "Dorian",
+        "Patients": 1
+      },
+      {
+        "Race": "Earl",
         "Patients": 1
       },
       {
@@ -108,6 +136,14 @@
         "Patients": 1
       },
       {
+        "Race": "Ewa",
+        "Patients": 1
+      },
+      {
+        "Race": "Fiona",
+        "Patients": 1
+      },
+      {
         "Race": "Florence",
         "Patients": 1
       },
@@ -116,11 +152,27 @@
         "Patients": 1
       },
       {
+        "Race": "Gaston",
+        "Patients": 1
+      },
+      {
+        "Race": "Genevieve",
+        "Patients": 1
+      },
+      {
         "Race": "Gert",
         "Patients": 1
       },
       {
         "Race": "Gordon",
+        "Patients": 1
+      },
+      {
+        "Race": "Grzegorz ",
+        "Patients": 1
+      },
+      {
+        "Race": "Hania",
         "Patients": 1
       },
       {
@@ -136,6 +188,22 @@
         "Patients": 1
       },
       {
+        "Race": "Henryk",
+        "Patients": 1
+      },
+      {
+        "Race": "Hermine",
+        "Patients": 1
+      },
+      {
+        "Race": "Hernan",
+        "Patients": 1
+      },
+      {
+        "Race": "Ian",
+        "Patients": 1
+      },
+      {
         "Race": "Irma",
         "Patients": 1
       },
@@ -148,6 +216,18 @@
         "Patients": 1
       },
       {
+        "Race": "Iselle",
+        "Patients": 1
+      },
+      {
+        "Race": "Janina",
+        "Patients": 1
+      },
+      {
+        "Race": "Jarek",
+        "Patients": 1
+      },
+      {
         "Race": "Jose",
         "Patients": 1
       },
@@ -157,6 +237,26 @@
       },
       {
         "Race": "Joyce",
+        "Patients": 1
+      },
+      {
+        "Race": "Julia",
+        "Patients": 1
+      },
+      {
+        "Race": "Julio",
+        "Patients": 1
+      },
+      {
+        "Race": "Karina",
+        "Patients": 1
+      },
+      {
+        "Race": "Karl",
+        "Patients": 1
+      },
+      {
+        "Race": "Karolina",
         "Patients": 1
       },
       {
@@ -184,6 +284,10 @@
         "Patients": 1
       },
       {
+        "Race": "Lisa",
+        "Patients": 1
+      },
+      {
         "Race": "Marco",
         "Patients": 1
       },
@@ -192,7 +296,19 @@
         "Patients": 1
       },
       {
+        "Race": "Marlena",
+        "Patients": 1
+      },
+      {
+        "Race": "Martin",
+        "Patients": 1
+      },
+      {
         "Race": "Michael",
+        "Patients": 1
+      },
+      {
+        "Race": "Miroslaw",
         "Patients": 1
       },
       {
@@ -205,6 +321,10 @@
       },
       {
         "Race": "Nate",
+        "Patients": 1
+      },
+      {
+        "Race": "Nicole",
         "Patients": 1
       },
       {
@@ -224,7 +344,35 @@
         "Patients": 5
       },
       {
+        "Race": "Owen",
+        "Patients": 1
+      },
+      {
+        "Race": "patient_10",
+        "Patients": 1
+      },
+      {
+        "Race": "patient_6",
+        "Patients": 1
+      },
+      {
+        "Race": "patient_7",
+        "Patients": 1
+      },
+      {
+        "Race": "patient_8",
+        "Patients": 1
+      },
+      {
+        "Race": "patient_9",
+        "Patients": 1
+      },
+      {
         "Race": "Patty",
+        "Patients": 1
+      },
+      {
+        "Race": "Paula",
         "Patients": 1
       },
       {
@@ -233,6 +381,14 @@
       },
       {
         "Race": "Philippe",
+        "Patients": 1
+      },
+      {
+        "Race": "Piotr",
+        "Patients": 1
+      },
+      {
+        "Race": "Radek",
         "Patients": 1
       },
       {
@@ -272,11 +428,19 @@
         "Patients": 1
       },
       {
+        "Race": "Tomasz ",
+        "Patients": 1
+      },
+      {
         "Race": "Vicky",
         "Patients": 1
       },
       {
         "Race": "Vince",
+        "Patients": 1
+      },
+      {
+        "Race": "Walter",
         "Patients": 1
       },
       {
@@ -289,6 +453,22 @@
       },
       {
         "Race": "Wilfred",
+        "Patients": 1
+      },
+      {
+        "Race": "Wojtek",
+        "Patients": 1
+      },
+      {
+        "Race": "Zbigniew",
+        "Patients": 1
+      },
+      {
+        "Race": "Zdzislawa",
+        "Patients": 1
+      },
+      {
+        "Race": "Zofia",
         "Patients": 1
       }
     ]

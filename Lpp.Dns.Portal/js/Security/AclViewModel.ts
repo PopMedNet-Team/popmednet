@@ -22,6 +22,8 @@ module Security.Acl {
         public RemoveSecurityGroup: (data: AclEditViewModel<T>) => void;
         public dsSecurityGroups: kendo.data.DataSource;
 
+        public ClearAllGroups: () => void;
+
         constructor(permissions: Dns.Interfaces.IPermissionDTO[], securityGroupTree: Dns.Interfaces.ITreeItemDTO[], acls: KnockoutObservableArray<T>, targets: AclTargets[], aclType, identifier: string = null)
         {
             var self = this;
@@ -133,6 +135,19 @@ module Security.Acl {
                         }
                     });
                 });
+            }
+
+            this.ClearAllGroups = () => {
+                //Remove all of the acls by setting the allowed to null
+                self.Acls().forEach((a) => { a.Allowed(null); });
+                self.SelectedSecurityGroup(null);
+                self.SecurityGroups = [];
+
+                var cboSecurityGroups: kendo.ui.DropDownList = $('#cboSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+
+                this.dsSecurityGroups.data(this.SecurityGroups);
+                this.dsSecurityGroups.fetch();
+                cboSecurityGroups.refresh();
             }
         }
 

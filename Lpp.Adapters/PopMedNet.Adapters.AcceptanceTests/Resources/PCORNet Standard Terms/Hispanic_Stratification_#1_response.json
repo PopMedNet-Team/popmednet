@@ -1,19 +1,19 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2019-11-14T16:27:31.83068+00:00",
+  "ResponseDateTime": "2020-09-14T23:28:15.5097945+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<48>. Actual:<52>. The number of rows in the result is different."
+      "Description": "Assert.AreEqual failed. Expected:<52>. Actual:<63>. The number of rows in the result is different."
     }
   ],
   "Results": [
     [
       {
         "Hispanic": null,
-        "Patients": 2
+        "Patients": 39
       },
       {
         "Hispanic": "Andrea",
@@ -96,6 +96,10 @@
         "Patients": 1
       },
       {
+        "Hispanic": "Ivelina",
+        "Patients": 1
+      },
+      {
         "Hispanic": "Jerry",
         "Patients": 1
       },
@@ -129,7 +133,7 @@
       },
       {
         "Hispanic": "N",
-        "Patients": 33
+        "Patients": 36
       },
       {
         "Hispanic": "Nestor",
@@ -160,15 +164,39 @@
         "Patients": 1
       },
       {
+        "Hispanic": "patient_1",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_2",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_3",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_4",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_5",
+        "Patients": 1
+      },
+      {
         "Hispanic": "Peter",
         "Patients": 1
       },
       {
         "Hispanic": "R",
-        "Patients": 7
+        "Patients": 9
       },
       {
         "Hispanic": "Rebekah",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Richard",
         "Patients": 1
       },
       {
@@ -184,7 +212,15 @@
         "Patients": 1
       },
       {
+        "Hispanic": "Shary",
+        "Patients": 1
+      },
+      {
         "Hispanic": "Tanya",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tobias",
         "Patients": 1
       },
       {
@@ -208,6 +244,10 @@
         "Patients": 1
       },
       {
+        "Hispanic": "Virginie",
+        "Patients": 1
+      },
+      {
         "Hispanic": "Wanda",
         "Patients": 1
       },
@@ -217,7 +257,11 @@
       },
       {
         "Hispanic": "Y",
-        "Patients": 38
+        "Patients": 41
+      },
+      {
+        "Hispanic": "Zlati",
+        "Patients": 1
       }
     ]
   ],

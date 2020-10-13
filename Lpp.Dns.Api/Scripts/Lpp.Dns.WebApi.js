@@ -637,6 +637,12 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Users/GetMetadataEditPermissionsSummary' + params, doNotHandleFail);
             };
+            Users.ExpireAllUserPasswords = function (doNotHandleFail) {
+                var params = '';
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Users/ExpireAllUserPasswords' + params, doNotHandleFail);
+            };
             Users.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if (IDs != null)

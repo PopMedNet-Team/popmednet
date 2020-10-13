@@ -1,16 +1,22 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2019-11-14T16:26:49.156794+00:00",
+  "ResponseDateTime": "2020-09-14T23:36:19.5184263+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<10>. Actual:<13>. The number of rows in the result is different."
+      "Description": "Assert.AreEqual failed. Expected:<13>. Actual:<18>. The number of rows in the result is different."
     }
   ],
   "Results": [
     [
+      {
+        "Hispanic": null,
+        "Race": "Ian",
+        "Height": ">=48.0 and <52.0",
+        "Patients": 1
+      },
       {
         "Hispanic": "Fernand",
         "Race": "07",
@@ -25,8 +31,20 @@
       },
       {
         "Hispanic": "N",
+        "Race": "Karl",
+        "Height": ">=44.0 and <48.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
         "Race": "Kyle",
         "Height": ">=56.0 and <60.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Walter",
+        "Height": ">=48.0 and <52.0",
         "Patients": 1
       },
       {
@@ -81,6 +99,18 @@
         "Hispanic": "UN",
         "Race": "Teresa",
         "Height": ">=32.0 and <36.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Henryk",
+        "Height": ">=56.0 and <60.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Hermine",
+        "Height": ">=48.0 and <52.0",
         "Patients": 1
       },
       {
@@ -154,12 +184,6 @@
         "Type": "System.Int32",
         "As": "Patients",
         "Aggregate": "Sum"
-      },
-      {
-        "Name": "LowThreshold",
-        "Type": "System.Boolean",
-        "As": "LowThreshold",
-        "Aggregate": null
       }
     ],
     "Name": null

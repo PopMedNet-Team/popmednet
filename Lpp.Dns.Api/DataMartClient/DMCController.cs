@@ -145,11 +145,20 @@ namespace Lpp.Dns.Api.DataMartClient
                     rd = rd.Where(x => criteria.FilterByStatus.Any(s => (int)s == (int)x.d.Status));
                 }
 
-                var res = from gd in GetGrantedDataMarts().SelectMany(x => x.Projects.Select(p => new { DataMartID = x.ID, p.ProjectID })).GroupBy(k => new { ProjectID = k.ProjectID, DataMartID = k.DataMartID })
+                var res = from gd in DataContext.DataMarts.SelectMany(x => x.Projects.Select(p => new { DataMartID = x.ID, p.ProjectID })).GroupBy(k => new { ProjectID = k.ProjectID, DataMartID = k.DataMartID })
                           join dm in rd on gd.Key equals new { ProjectID = dm.r.ProjectID, DataMartID = dm.d.DataMartID }
                           let r = dm.r
                           let d = dm.d
                           let i = dm.i
+                          let permissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
+                          let userID = Identity.ID
+                          let globalAcls = DataContext.GlobalAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == permissionID)
+                          let projectAcls = DataContext.ProjectAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == permissionID && x.ProjectID == gd.Key.ProjectID)
+                          let datamartAcls = DataContext.DataMartAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == permissionID && x.DataMartID == gd.Key.DataMartID)
+                          let projectDataMartAcls = DataContext.ProjectDataMartAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == permissionID && x.ProjectID == gd.Key.ProjectID && x.DataMartID == gd.Key.DataMartID)
+                          let organizationAcls = DataContext.OrganizationAcls.Where(org => org.SecurityGroup.Users.Any(sg => sg.UserID == userID) && org.PermissionID == permissionID && org.OrganizationID == dm.OrganizationID)
+                          where (globalAcls.Any(x => x.Allowed) || projectAcls.Any(x => x.Allowed) || datamartAcls.Any(x => x.Allowed) || projectDataMartAcls.Any(x => x.Allowed) || organizationAcls.Any(x => x.Allowed)) &&
+                          (globalAcls.All(x => x.Allowed) && projectAcls.All(x => x.Allowed) && datamartAcls.All(x => x.Allowed) && projectDataMartAcls.All(x => x.Allowed) && organizationAcls.All(x => x.Allowed))
                           select new
                           {
                               r.ID,
@@ -272,8 +281,6 @@ namespace Lpp.Dns.Api.DataMartClient
             if (criteria.ID == null || !criteria.ID.Any())
                 return Enumerable.Empty<dmc.Request>();
 
-            var dataMartIDs = GetGrantedDataMarts().Where(dm => criteria.DatamartID.HasValue ? dm.ID == criteria.DatamartID : true ).Select(dm => dm.ID).ToArray();
-
             var query = (from r in DataContext.Secure<Request>(Identity)
                          let datamartID = criteria.DatamartID
                          where criteria.ID.Contains(r.ID)
@@ -331,8 +338,17 @@ namespace Lpp.Dns.Api.DataMartClient
                                          let modifyResultsPermissionID = PermissionIdentifiers.DataMartInProject.ModifyResults.ID
                                          let viewAttachmentsPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewAttachments.ID
                                          let modifyAttachmentsPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ModifyAttachments.ID
-                                         let acls = DataContext.DataMartRights(Identity.ID, r.ID, rdm.DataMartID)
-                                         where dataMartIDs.Contains(rdm.DataMartID)
+                                         let seeRequestPermissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
+                                         let userID = Identity.ID
+                                         let globalAcls = DataContext.GlobalAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == seeRequestPermissionID)
+                                         let projectAcls = DataContext.ProjectAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == seeRequestPermissionID && x.ProjectID == rdm.Request.ProjectID)
+                                         let datamartAcls = DataContext.DataMartAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == seeRequestPermissionID && x.DataMartID == rdm.DataMartID)
+                                         let projectDataMartAcls = DataContext.ProjectDataMartAcls.Where(x => x.SecurityGroup.Users.Any(y => y.UserID == userID) && x.PermissionID == seeRequestPermissionID && x.ProjectID == rdm.Request.ProjectID && x.DataMartID == rdm.DataMartID)
+                                         let organizationAcls = DataContext.OrganizationAcls.Where(org => org.SecurityGroup.Users.Any(sg => sg.UserID == userID) && org.PermissionID == seeRequestPermissionID && org.OrganizationID == rdm.DataMart.OrganizationID)
+                                         let acls = DataContext.DataMartRights(userID, r.ID, rdm.DataMartID)
+                                         where (criteria.DatamartID.HasValue ? rdm.DataMartID == criteria.DatamartID : true) &&
+                                         (globalAcls.Any(x => x.Allowed) || projectAcls.Any(x => x.Allowed) || datamartAcls.Any(x => x.Allowed) || projectDataMartAcls.Any(x => x.Allowed) || organizationAcls.Any(x => x.Allowed)) &&
+                                         (globalAcls.All(x => x.Allowed) && projectAcls.All(x => x.Allowed) && datamartAcls.All(x => x.Allowed) && projectDataMartAcls.All(x => x.Allowed) && organizationAcls.All(x => x.Allowed))
                                          select new
                                          {
                                              DataMartID = rdm.DataMartID,
@@ -372,6 +388,7 @@ namespace Lpp.Dns.Api.DataMartClient
             }
 
             Guid[] requestIDs = requests.Select(r => r.ID).ToArray();
+            Guid[] dataMartIDs = requests.SelectMany(x => x.Responses).Select(x => x.DataMartID).ToArray();
             var docs = await DataContext.Documents.Where(dx => requestIDs.Contains(dx.ItemID)).Select(d => new DocumentDetailsDTO { RequestID = d.ItemID, ID = d.ID, IsViewable = d.Viewable, Kind = d.Kind, MimeType = d.MimeType, Name = d.FileName, Size = d.Length, DocumentType = DTO.Enums.RequestDocumentType.Input })
                 .Union(
                 from rd in DataContext.RequestDocuments

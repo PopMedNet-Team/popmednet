@@ -6110,6 +6110,31 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class DistributedRegressionManifestFile extends ViewModel<Dns.Interfaces.IDistributedRegressionManifestFile>{
+	 	 public Items: KnockoutObservableArray<DistributedRegressionAnalysisCenterManifestItem>;
+	 	 public DataPartners: KnockoutObservableArray<DistributedRegressionManifestDataPartner>;
+	 	 constructor(DistributedRegressionManifestFile?: Dns.Interfaces.IDistributedRegressionManifestFile)
+	 	  {
+	 	 	  super();
+	 	 	 if (DistributedRegressionManifestFile== null) {
+	 	 	 	 this.Items = ko.observableArray<DistributedRegressionAnalysisCenterManifestItem>();
+	 	 	 	 this.DataPartners = ko.observableArray<DistributedRegressionManifestDataPartner>();
+	 	 	  }else{
+	 	 	 	 this.Items = ko.observableArray<DistributedRegressionAnalysisCenterManifestItem>(DistributedRegressionManifestFile.Items == null ? null : DistributedRegressionManifestFile.Items.map((item) => {return new DistributedRegressionAnalysisCenterManifestItem(item);}));
+	 	 	 	 this.DataPartners = ko.observableArray<DistributedRegressionManifestDataPartner>(DistributedRegressionManifestFile.DataPartners == null ? null : DistributedRegressionManifestFile.DataPartners.map((item) => {return new DistributedRegressionManifestDataPartner(item);}));
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IDistributedRegressionManifestFile{
+	 	 	  return {
+	 	 	 	Items: this.Items == null ? null : this.Items().map((item) => {return item.toData();}),
+	 	 	 	DataPartners: this.DataPartners == null ? null : this.DataPartners().map((item) => {return item.toData();}),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class DistributedRegressionAnalysisCenterManifestItem extends ViewModel<Dns.Interfaces.IDistributedRegressionAnalysisCenterManifestItem>{
 	 	 public DocumentID: KnockoutObservable<any>;
 	 	 public RevisionSetID: KnockoutObservable<any>;
@@ -6149,6 +6174,39 @@ module Dns.ViewModels {
 	 	 	 	DataPartnerIdentifier: this.DataPartnerIdentifier(),
 	 	 	 	DataMart: this.DataMart(),
 	 	 	 	RequestDataMartID: this.RequestDataMartID(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class DistributedRegressionManifestDataPartner extends ViewModel<Dns.Interfaces.IDistributedRegressionManifestDataPartner>{
+	 	 public DataMartID: KnockoutObservable<any>;
+	 	 public RouteType: KnockoutObservable<Dns.Enums.RoutingType>;
+	 	 public DataMartIdentifier: KnockoutObservable<string>;
+	 	 public DataMartCode: KnockoutObservable<string>;
+	 	 constructor(DistributedRegressionManifestDataPartner?: Dns.Interfaces.IDistributedRegressionManifestDataPartner)
+	 	  {
+	 	 	  super();
+	 	 	 if (DistributedRegressionManifestDataPartner== null) {
+	 	 	 	 this.DataMartID = ko.observable<any>();
+	 	 	 	 this.RouteType = ko.observable<any>();
+	 	 	 	 this.DataMartIdentifier = ko.observable<any>();
+	 	 	 	 this.DataMartCode = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.DataMartID = ko.observable(DistributedRegressionManifestDataPartner.DataMartID);
+	 	 	 	 this.RouteType = ko.observable(DistributedRegressionManifestDataPartner.RouteType);
+	 	 	 	 this.DataMartIdentifier = ko.observable(DistributedRegressionManifestDataPartner.DataMartIdentifier);
+	 	 	 	 this.DataMartCode = ko.observable(DistributedRegressionManifestDataPartner.DataMartCode);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IDistributedRegressionManifestDataPartner{
+	 	 	  return {
+	 	 	 	DataMartID: this.DataMartID(),
+	 	 	 	RouteType: this.RouteType(),
+	 	 	 	DataMartIdentifier: this.DataMartIdentifier(),
+	 	 	 	DataMartCode: this.DataMartCode(),
 	 	 	  };
 	 	  }
 

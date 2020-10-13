@@ -4950,6 +4950,29 @@ var Dns;
             return LegacySchedulerRequestViewModel;
         }(ViewModel));
         ViewModels.LegacySchedulerRequestViewModel = LegacySchedulerRequestViewModel;
+        var DistributedRegressionManifestFile = /** @class */ (function (_super) {
+            __extends(DistributedRegressionManifestFile, _super);
+            function DistributedRegressionManifestFile(DistributedRegressionManifestFile) {
+                var _this = _super.call(this) || this;
+                if (DistributedRegressionManifestFile == null) {
+                    _this.Items = ko.observableArray();
+                    _this.DataPartners = ko.observableArray();
+                }
+                else {
+                    _this.Items = ko.observableArray(DistributedRegressionManifestFile.Items == null ? null : DistributedRegressionManifestFile.Items.map(function (item) { return new DistributedRegressionAnalysisCenterManifestItem(item); }));
+                    _this.DataPartners = ko.observableArray(DistributedRegressionManifestFile.DataPartners == null ? null : DistributedRegressionManifestFile.DataPartners.map(function (item) { return new DistributedRegressionManifestDataPartner(item); }));
+                }
+                return _this;
+            }
+            DistributedRegressionManifestFile.prototype.toData = function () {
+                return {
+                    Items: this.Items == null ? null : this.Items().map(function (item) { return item.toData(); }),
+                    DataPartners: this.DataPartners == null ? null : this.DataPartners().map(function (item) { return item.toData(); }),
+                };
+            };
+            return DistributedRegressionManifestFile;
+        }(ViewModel));
+        ViewModels.DistributedRegressionManifestFile = DistributedRegressionManifestFile;
         var DistributedRegressionAnalysisCenterManifestItem = /** @class */ (function (_super) {
             __extends(DistributedRegressionAnalysisCenterManifestItem, _super);
             function DistributedRegressionAnalysisCenterManifestItem(DistributedRegressionAnalysisCenterManifestItem) {
@@ -4988,6 +5011,35 @@ var Dns;
             return DistributedRegressionAnalysisCenterManifestItem;
         }(ViewModel));
         ViewModels.DistributedRegressionAnalysisCenterManifestItem = DistributedRegressionAnalysisCenterManifestItem;
+        var DistributedRegressionManifestDataPartner = /** @class */ (function (_super) {
+            __extends(DistributedRegressionManifestDataPartner, _super);
+            function DistributedRegressionManifestDataPartner(DistributedRegressionManifestDataPartner) {
+                var _this = _super.call(this) || this;
+                if (DistributedRegressionManifestDataPartner == null) {
+                    _this.DataMartID = ko.observable();
+                    _this.RouteType = ko.observable();
+                    _this.DataMartIdentifier = ko.observable();
+                    _this.DataMartCode = ko.observable();
+                }
+                else {
+                    _this.DataMartID = ko.observable(DistributedRegressionManifestDataPartner.DataMartID);
+                    _this.RouteType = ko.observable(DistributedRegressionManifestDataPartner.RouteType);
+                    _this.DataMartIdentifier = ko.observable(DistributedRegressionManifestDataPartner.DataMartIdentifier);
+                    _this.DataMartCode = ko.observable(DistributedRegressionManifestDataPartner.DataMartCode);
+                }
+                return _this;
+            }
+            DistributedRegressionManifestDataPartner.prototype.toData = function () {
+                return {
+                    DataMartID: this.DataMartID(),
+                    RouteType: this.RouteType(),
+                    DataMartIdentifier: this.DataMartIdentifier(),
+                    DataMartCode: this.DataMartCode(),
+                };
+            };
+            return DistributedRegressionManifestDataPartner;
+        }(ViewModel));
+        ViewModels.DistributedRegressionManifestDataPartner = DistributedRegressionManifestDataPartner;
         var QueryComposerTemporalEventViewModel = /** @class */ (function (_super) {
             __extends(QueryComposerTemporalEventViewModel, _super);
             function QueryComposerTemporalEventViewModel(QueryComposerTemporalEventDTO) {

@@ -23,7 +23,10 @@ var Projects;
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, project, projectRequestTypes, projectRequestTypeWorkflowActivityAcls, groups, dataMartList, organizationList, permissionList, requestTypes, projectDataMarts, projectDataMartPermissions, projectPermissions, projectRequestTypePermissions, projectDataMartRequestTypePermissions, projectEventPermissions, projectDataMartEventPermissions, projectOrganizationPermissions, projectOrganizationEventPermissions, securityGroupTree, projectSecurityGroups, projectOrganizations, eventList, projectDataMartEventsList, groupid, requestTypeList, fieldOptions, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions, $('#frmProjectDetails')) || this;
+                _this.DeletedDataMarts = [];
+                _this.DeletedOrganizations = [];
                 _this.AddDataMart = function (dm) {
+                    _this.DeletedDataMarts = ko.utils.arrayFilter(_this.DeletedDataMarts, function (item) { return item.DataMartID() !== dm.ID; });
                     //Get the request types for the datamart
                     //Add them to the list of request types
                     Dns.WebApi.DataMarts.GetRequestTypesByDataMarts([dm.ID]).done(function (results) {
@@ -42,9 +45,10 @@ var Projects;
                 _this.RemoveDataMart = function (pdm) {
                     Global.Helpers.ShowConfirm("Confirm DataMart Removal", "<p>Are you sure that you wish to remove " + pdm.DataMart() + " from the project?</p>").done(function () {
                         if (pdm.ProjectID())
-                            Dns.WebApi.ProjectDataMarts.Remove([pdm.toData()]); //Can run async
-                        var ndx = vm.ProjectDataMarts.indexOf(pdm);
-                        // vm.ProjectDataMarts.splice(ndx, 1);
+                            _this.DeletedDataMarts.push(pdm);
+                        pdm.DataMartSecurity.ClearAllGroups();
+                        pdm.DataMartRequestTypeSecurity.ClearAllGroups();
+                        pdm.DataMartEvents.ClearAllGroups();
                         $('#acl' + pdm.DataMartID()).remove();
                         vm.ProjectDataMarts.remove(pdm); //Remove from the list.
                         _this.UpdateRequestTypes(); //Update the request types that are availble.
@@ -217,6 +221,12 @@ var Projects;
                             o.ProjectID(projectID);
                             return o.toData();
                         });
+                        var deletedDataMarts = self.DeletedDataMarts.map(function (dm) {
+                            return dm.toData();
+                        });
+                        var deletedOrgs = self.DeletedOrganizations.map(function (o) {
+                            return o.toData();
+                        });
                         var dataMartAcls = null;
                         var projectAcls = null;
                         var projectEventAcls = null;
@@ -295,9 +305,13 @@ var Projects;
                                 var canManageRequestTypes = self.HasPermission(PMNPermissions.Project.ManageRequestTypes);
                                 self.CanManageSecurityTypes(canManageRequestTypes);
                                 $.when(canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectRequestTypePermissions(projectRequestTypeAcls) : null, canManageRequestTypes ? Dns.WebApi.Security.UpdateProjectDataMartRequestTypePermissions(projectDataMartRequestTypeAcls) : null).done(function () {
-                                    $.when(Dns.WebApi.ProjectDataMarts.InsertOrUpdate({ ProjectID: projectID, DataMarts: dataMarts }), Dns.WebApi.ProjectOrganizations.InsertOrUpdate({ ProjectID: projectID, Organizations: organizations }), (canManageRequestTypes && projectRequestTypes != null) ? Dns.WebApi.Projects.UpdateProjectRequestTypes(projectRequestTypes) : null, (canManageRequestTypes && projectRequestTypeWorkFlowActivityAcls != null) ? Dns.WebApi.Security.UpdateProjectRequestTypeWorkflowActivityPermissions(projectRequestTypeWorkFlowActivityAcls) : null
-                                    //Add others here.
-                                    ).done(function () {
+                                    $.when(self.DeletedDataMarts.length > 0 ? Dns.WebApi.ProjectDataMarts.Remove(deletedDataMarts) : null, self.DeletedOrganizations.length > 0 ? Dns.WebApi.ProjectOrganizations.Remove(deletedOrgs) : null).then(function () {
+                                        Dns.WebApi.ProjectDataMarts.InsertOrUpdate({ ProjectID: projectID, DataMarts: dataMarts }),
+                                            Dns.WebApi.ProjectOrganizations.InsertOrUpdate({ ProjectID: projectID, Organizations: organizations }),
+                                            (canManageRequestTypes && projectRequestTypes != null) ? Dns.WebApi.Projects.UpdateProjectRequestTypes(projectRequestTypes) : null,
+                                            (canManageRequestTypes && projectRequestTypeWorkFlowActivityAcls != null) ? Dns.WebApi.Security.UpdateProjectRequestTypeWorkflowActivityPermissions(projectRequestTypeWorkFlowActivityAcls) : null;
+                                        //Add others here.
+                                    }).done(function () {
                                         if (showPrompt) {
                                             Global.Helpers.ShowAlert("Save", '<p style="text-align:center;">Save completed successfully!</p>')
                                                 .done(function () {
@@ -413,16 +427,11 @@ var Projects;
             ViewModel.prototype.RemoveOrganization = function (o) {
                 Global.Helpers.ShowConfirm("Confirm Organization Removal", "<p>Are you sure that you wish to remove " + o.Organization() + " from the project?</p>").done(function () {
                     if (o.ProjectID())
-                        Dns.WebApi.ProjectOrganizations.Remove([o.toData()]);
+                        vm.DeletedOrganizations.push(o);
+                    o.OrganizationSecurity.ClearAllGroups();
+                    o.OrganizationEvents.ClearAllGroups();
                     $('#acl' + o.OrganizationID()).remove();
                     vm.Organizations.remove(o);
-                    //if (o.ProjectID()) {
-                    //    Dns.WebApi.ProjectOrganizations.Remove([o.toData()]).done(() => {
-                    //        vm.Organizations.remove(o);
-                    //    });
-                    //} else {
-                    //vm.Organizations.remove(o);
-                    //}
                 });
             };
             ViewModel.prototype.Cancel = function () {

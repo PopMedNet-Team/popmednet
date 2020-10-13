@@ -67,6 +67,18 @@ var Dns;
             LOINCQualitativeResultType[LOINCQualitativeResultType["NI"] = 11] = "NI";
             LOINCQualitativeResultType[LOINCQualitativeResultType["UN"] = 12] = "UN";
             LOINCQualitativeResultType[LOINCQualitativeResultType["OT"] = 13] = "OT";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Detected"] = 14] = "Detected";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Equivocal"] = 15] = "Equivocal";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Indeterminate_Abnormal"] = 16] = "Indeterminate_Abnormal";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Invalid"] = 17] = "Invalid";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Nonreactive"] = 18] = "Nonreactive";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["NotDetencted"] = 19] = "NotDetencted";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["PastInfected"] = 20] = "PastInfected";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["PresumptivePositive"] = 21] = "PresumptivePositive";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Reactive"] = 22] = "Reactive";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["RecentInfection"] = 23] = "RecentInfection";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["SpecimenUnsatisfactory"] = 24] = "SpecimenUnsatisfactory";
+            LOINCQualitativeResultType[LOINCQualitativeResultType["Suspected"] = 25] = "Suspected";
         })(LOINCQualitativeResultType = Enums.LOINCQualitativeResultType || (Enums.LOINCQualitativeResultType = {}));
         Enums.LOINCQualitativeResultTypeTranslation = [
             { value: LOINCQualitativeResultType.Positive, text: 'Positive' },
@@ -82,6 +94,18 @@ var Dns;
             { value: LOINCQualitativeResultType.NI, text: 'NI' },
             { value: LOINCQualitativeResultType.UN, text: 'UN' },
             { value: LOINCQualitativeResultType.OT, text: 'OT' },
+            { value: LOINCQualitativeResultType.Detected, text: 'Detected' },
+            { value: LOINCQualitativeResultType.Equivocal, text: 'Equivocal' },
+            { value: LOINCQualitativeResultType.Indeterminate_Abnormal, text: 'Indeterminate abnormal' },
+            { value: LOINCQualitativeResultType.Invalid, text: 'Invalid' },
+            { value: LOINCQualitativeResultType.Nonreactive, text: 'Nonreactive' },
+            { value: LOINCQualitativeResultType.NotDetencted, text: 'Not Detected' },
+            { value: LOINCQualitativeResultType.PastInfected, text: 'Past Infection' },
+            { value: LOINCQualitativeResultType.PresumptivePositive, text: 'Presumptive Positive' },
+            { value: LOINCQualitativeResultType.Reactive, text: 'Reactive' },
+            { value: LOINCQualitativeResultType.RecentInfection, text: 'Recent Infection' },
+            { value: LOINCQualitativeResultType.SpecimenUnsatisfactory, text: 'Specimen Unsatisfactory' },
+            { value: LOINCQualitativeResultType.Suspected, text: 'Suspected' },
         ];
         var LOINCResultModifierType;
         (function (LOINCResultModifierType) {
@@ -2739,6 +2763,12 @@ var Dns;
                 'ScheduleJSON': { type: 'string', nullable: false },
             }
         };
+        Interfaces.KendoModelDistributedRegressionManifestFile = {
+            fields: {
+                'Items': { type: 'any[]', nullable: false },
+                'DataPartners': { type: 'any[]', nullable: false },
+            }
+        };
         Interfaces.KendoModelDistributedRegressionAnalysisCenterManifestItem = {
             fields: {
                 'DocumentID': { type: 'any', nullable: false },
@@ -2748,6 +2778,14 @@ var Dns;
                 'DataPartnerIdentifier': { type: 'string', nullable: false },
                 'DataMart': { type: 'string', nullable: false },
                 'RequestDataMartID': { type: 'any', nullable: false },
+            }
+        };
+        Interfaces.KendoModelDistributedRegressionManifestDataPartner = {
+            fields: {
+                'DataMartID': { type: 'any', nullable: false },
+                'RouteType': { type: 'dns.enums.routingtype', nullable: false },
+                'DataMartIdentifier': { type: 'string', nullable: false },
+                'DataMartCode': { type: 'string', nullable: false },
             }
         };
         Interfaces.KendoModelQueryComposerTemporalEventDTO = {

@@ -18,6 +18,8 @@ using Lpp.Dns.DTO.Enums;
 using System.Configuration;
 using Lpp.Dns.Data.Audit;
 using Lpp.Dns.DTO.Events;
+using Lpp.Dns.Data.Query;
+using System.Data.SqlClient;
 
 namespace Lpp.Dns.Api.Users
 {
@@ -325,8 +327,23 @@ namespace Lpp.Dns.Api.Users
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to change the specified user's password");
 
             //Update the password
-            var user = await DataContext.Users.FindAsync(updateInfo.UserID);
-            user.PasswordHash = updateInfo.Password.ComputeHash();
+            var user = DataContext.Users.Find(updateInfo.UserID);
+            string newHash = updateInfo.Password.ComputeHash();
+            DateTimeOffset dateBack = DateTimeOffset.UtcNow.AddDays(ConfigurationManager.AppSettings["PreviousDaysPasswordRestriction"].ToInt32() * -1);
+            int previousUses = ConfigurationManager.AppSettings["PreviousPasswordUses"].ToInt32();
+
+            var param = new LastUsedPasswordCheckParams { User = user, DateRange = dateBack, NumberOfEntries = previousUses, Hash = newHash };
+
+            var query = new LastUsedPasswordCheckQuery(DataContext);
+
+            if (user.PasswordHash == newHash || await query.ExecuteAsync(param))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "That Password has been used too frequently.  Please use a different password.");
+            }
+
+            DataContext.LogsUserPasswordChange.Add(new UserPasswordChangeLog { UserID = Identity.ID, UserChangedID = user.ID, OriginalPassword = user.PasswordHash, Method = UserPasswordChange.Profile });
+
+            user.PasswordHash = newHash;
             user.PasswordExpiration = DateTime.Now.AddMonths(ConfigurationManager.AppSettings["ConfiguredPasswordExpiryMonths"].ToInt32());
             user.PasswordRestorationTokenExpiration = null;
             user.PasswordRestorationToken = null;
@@ -357,9 +374,25 @@ namespace Lpp.Dns.Api.Users
             if (Data.User.CheckPasswordStrength(updateInfo.Password) != PasswordScores.VeryStrong)
                 return Request.CreateResponse(HttpStatusCode.Forbidden, "The password specified is not strong enough. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.");
 
-            user.PasswordHash = updateInfo.Password.ComputeHash();
+            string newHash = updateInfo.Password.ComputeHash();
+            DateTimeOffset dateBack = DateTimeOffset.UtcNow.AddDays(ConfigurationManager.AppSettings["PreviousDaysPasswordRestriction"].ToInt32() * -1);
+            int previousUses = ConfigurationManager.AppSettings["PreviousPasswordUses"].ToInt32();
+
+            var param = new LastUsedPasswordCheckParams { User = user, DateRange = dateBack, NumberOfEntries = previousUses, Hash = newHash };
+
+            var query = new LastUsedPasswordCheckQuery(DataContext);
+
+            if (user.PasswordHash == newHash || await query.ExecuteAsync(param))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "That Password has been used too frequently.  Please use a different password.");
+            }
+
+            DataContext.LogsUserPasswordChange.Add(new UserPasswordChangeLog { UserID = user.ID, UserChangedID = user.ID, OriginalPassword = user.PasswordHash, Method = UserPasswordChange.Reset });
+
+            user.PasswordHash = newHash;
             user.PasswordRestorationToken = null;
             user.PasswordRestorationTokenExpiration = null;
+            user.FailedLoginCount = 0;
 
             await DataContext.SaveChangesAsync();
             
@@ -1375,5 +1408,68 @@ namespace Lpp.Dns.Api.Users
             return result;
         }
 
+        /// <summary>
+        /// Expires all users that the logged in user has access to.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<HttpResponseMessage> ExpireAllUserPasswords()
+        {
+            var dateTimeNow = DateTime.Now;
+
+            var hasPermission = await (from secGroups in DataContext.SecurityGroupUsers
+                                  let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
+                                  let identityID = Identity.ID
+                                  let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                                  let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                                  let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                                  where secGroups.UserID == identityID &&
+                                  (gAcls.Any() || oAcls.Any())
+                                   &&
+                                   (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
+                                   select secGroups.SecurityGroupID
+                                  ).AnyAsync();
+
+            if (!hasPermission)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "You do not have permission to perform an expiration of any user passwords.");
+            }
+
+
+            var userIDs = await (from u in DataContext.Users
+                               let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
+                               let identityID = Identity.ID
+                               let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                               let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                               let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
+                               where
+                               !u.Deleted && u.PasswordExpiration.HasValue && u.PasswordExpiration.Value > dateTimeNow &&
+                                   (gAcls.Any() || oAcls.Any())
+                                   &&
+                                   (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
+                               select u.ID).ToArrayAsync();
+
+            using (var tran = DataContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var userID in userIDs)
+                    {
+                        await DataContext.Database.ExecuteSqlCommandAsync($"Update Users SET PasswordExpiration = @expireDateTime WHERE ID = @userID", new SqlParameter("@expireDateTime", dateTimeNow), new SqlParameter("@userID", userID));
+                        DataContext.LogsPasswordExpiration.Add(new PasswordExpirationLog { ExpiringUserID = userID, UserID = Identity.ID, Description = "Password expired by System Administrator." });
+                    }
+
+                    await DataContext.SaveChangesAsync();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw;
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

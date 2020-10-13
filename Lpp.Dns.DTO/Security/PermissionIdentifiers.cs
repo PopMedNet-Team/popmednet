@@ -233,6 +233,12 @@ namespace Lpp.Dns.DTO.Security
                 Locations = new PermissionAclTypes[] { PermissionAclTypes.Organizations, PermissionAclTypes.Global }
             };
 
+            public static readonly PermissionDefinition ExpireUsersPassword = new PermissionDefinition
+            {
+                ID = new Guid("AB53BECB-4ADE-44E8-995F-15511C4D0D19"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.Organizations, PermissionAclTypes.Global }
+            };
+
             static Organization()
             {
                 PermissionIdentifiers.Definitions.AddRange(new PermissionDefinition[]
@@ -246,7 +252,8 @@ namespace Lpp.Dns.DTO.Security
                     CreateRegistries,
                     ApproveRejectRegistrations,
                     AdministerWebBasedDatamart,
-                    Copy
+                    Copy,
+                    ExpireUsersPassword
                 });
             }
         }

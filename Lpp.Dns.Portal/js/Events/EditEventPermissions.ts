@@ -25,6 +25,8 @@ module Events.Acl {
         public dsSecurityGroupsTree: kendo.data.HierarchicalDataSource;
         public dsSecurityGroups: kendo.data.DataSource;
 
+        public ClearAllGroups: () => void;
+
         constructor(events: Dns.Interfaces.IEventDTO[], securityGroupTree: Dns.Interfaces.ITreeItemDTO[], acls: KnockoutObservableArray<T>, targets: AclTargets[], aclType, identifier: string = null) {
             var self = this;
             this.SecurityGroupTree = securityGroupTree;
@@ -200,6 +202,19 @@ module Events.Acl {
                     });
 
                 });
+            }
+
+            this.ClearAllGroups = () => {
+                //Remove all of the acls by setting the allowed to null
+                self.Acls().forEach((a) => { a.Allowed(null); });
+                self.SelectedSecurityGroup(null);
+                self.SecurityGroups = [];
+
+                var cboSecurityGroups: kendo.ui.DropDownList = $('#cboEventSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+
+                this.dsSecurityGroups.data(this.SecurityGroups);
+                this.dsSecurityGroups.fetch();
+                cboSecurityGroups.refresh();
             }
         }
         public SelectSecurityGroup() {

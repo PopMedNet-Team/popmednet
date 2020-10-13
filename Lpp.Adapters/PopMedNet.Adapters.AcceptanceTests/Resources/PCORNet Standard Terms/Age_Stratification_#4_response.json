@@ -1,16 +1,22 @@
 {
   "ID": null,
   "DocumentID": null,
-  "ResponseDateTime": "2019-11-14T16:27:29.2250821+00:00",
+  "ResponseDateTime": "2020-09-14T23:28:13.5922531+00:00",
   "RequestID": "00000000-0000-0000-0000-000000000000",
   "Errors": [
     {
       "Code": null,
-      "Description": "Assert.AreEqual failed. Expected:<5>. Actual:<7>. The number of rows in the result is different."
+      "Description": "Assert.AreEqual failed. Expected:<7>. Actual:<9>. The number of rows in the result is different."
     }
   ],
   "Results": [
     [
+      {
+        "Hispanic": null,
+        "Race": "Earl",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
       {
         "Hispanic": "Elsa",
         "Race": "04",
@@ -50,6 +56,12 @@
       {
         "Hispanic": "N",
         "Race": "Philippe",
+        "Age": "20 - 24",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Ewa",
         "Age": "20 - 24",
         "Patients": 1
       }

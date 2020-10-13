@@ -30,6 +30,8 @@ module Security.Acl.RequestTypes {
         public dsSecurityGroupsTree: kendo.data.HierarchicalDataSource;
         public dsSecurityGroups: kendo.data.DataSource;
 
+        public ClearAllGroups: () => void;
+
         constructor(requestTypes: KnockoutObservableArray<Dns.ViewModels.RequestTypeViewModel>, securityGroupTree: Dns.Interfaces.ITreeItemDTO[], acls: KnockoutObservableArray<T>, targets: AclTargets[], aclType) {
             var self = this;
             this.SecurityGroupTree = securityGroupTree;
@@ -184,6 +186,19 @@ module Security.Acl.RequestTypes {
                     });               
                 });
             }
+
+            this.ClearAllGroups = () => {
+                //Remove all of the acls by setting the allowed to null
+                self.Acls().forEach((a) => { a.Permission(null); });
+                self.SelectedSecurityGroup(null);
+                self.SecurityGroups = [];
+
+                var cboSecurityGroups: kendo.ui.DropDownList = $('#cboRequestTypeSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+
+                this.dsSecurityGroups.data(this.SecurityGroups);
+                this.dsSecurityGroups.fetch();
+                cboSecurityGroups.refresh();
+            }
         }
         public SelectSecurityGroup() {
             var self = this;
@@ -306,19 +321,20 @@ module Security.Acl.RequestTypes {
                 var acls = self.VM.Acls().filter((a) => {
                     return a.RequestTypeID() == self.ID() && a.SecurityGroupID() == self.VM.SelectedSecurityGroup();
                 });
+                if (vm.SelectedSecurityGroup() !== null) {
+                    var acl: T = null;
 
-                var acl: T = null;
+                    if (acls.length > 0) {
+                        acl = acls[0];
+                    } else {
+                        acl = this.CreateAcl(this.VM, self.VM.SelectedSecurityGroup());
+                        acl.RequestTypeID(this.ID());
+                    }
 
-                if (acls.length > 0) {
-                    acl = acls[0];
-                } else {
-                    acl = this.CreateAcl(this.VM, self.VM.SelectedSecurityGroup());
-                    acl.RequestTypeID(this.ID());
+                    acl.Permission(value);
+
+                    this.VM.HasChanges(true);
                 }
-
-                acl.Permission(value);
-
-                this.VM.HasChanges(true);
             });
         }
 

@@ -24,6 +24,8 @@ namespace Lpp.Dns.Api.Controllers
     /// </summary>
     public class NotificationsController : LppApiController<DataContext>
     {
+        static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(NotificationsController));
+
         /// <summary>
         /// Runs the scheduled notifications based on the permissions of the user used to login.
         /// Will fail if the user is not of type Background Task.
@@ -42,10 +44,20 @@ namespace Lpp.Dns.Api.Controllers
             var days = WebConfigurationManager.AppSettings["KeepResponseDocumentsDays"].ToInt32();
             if (days > 0)
             {
-                var dt = DateTime.UtcNow.AddDays(days * -1);
-                var documents = await (from d in DataContext.Documents where d.CreatedOn < dt select d).ToArrayAsync();
-                DataContext.Documents.RemoveRange(documents);
-                await DataContext.SaveChangesAsync();
+                try
+                {
+                    var dt = DateTime.UtcNow.AddDays(days * -1);
+
+                    var docIds = await (from d in DataContext.Documents where d.CreatedOn < dt select d.ID).ToArrayAsync();
+
+                    Logger.Debug($"{docIds.Count()} Documents pending deletion.");
+
+                    await DataContext.Database.ExecuteSqlCommandAsync("DELETE FROM Documents where CreatedOn < {0}", dt);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Error happened when deleting documents: ", ex);
+                }
             }
 
             var runTime = DateTime.UtcNow;
@@ -68,40 +80,56 @@ namespace Lpp.Dns.Api.Controllers
 
             //Loop through all of them generating notifications
             foreach(var log in Logging.AsParallel()) {
-                var method = log.GetType().GetMethod("GenerateNotificationsFromLogs");
-                var task = (Task<IEnumerable<Notification>>)method.Invoke(log, new object[] { DataContext });
-                foreach (var n in await task)
-                    notifications.Add(n);
+                try
+                {
+                    var method = log.GetType().GetMethod("GenerateNotificationsFromLogs");
+                    var task = (Task<IEnumerable<Notification>>)method.Invoke(log, new object[] { DataContext });
+                    foreach (var n in await task)
+                        notifications.Add(n);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Error Occured while executing notifications", ex);
+                }
             }
             
             //Flip the results so that we get a list of users, and a sub list of their notifications.
             var users = (from n in notifications from r in n.Recipients select r).DistinctBy(n => n.Email);
 
             var sendNotifications = new ConcurrentBag<Notification>();
-            foreach(var user in users.AsParallel()) { //We are multi-threading this so that we can send as many as possible at one time.
-                //Create a single notification for the user
-                
-                var notification = new Notification
+            foreach (var user in users.AsParallel())
+            {
+                try
                 {
-                    Recipients = new Recipient[] { user },
-                };
+                    //We are multi-threading this so that we can send as many as possible at one time.
+                    //Create a single notification for the user
 
-                var uNotes = notifications.Where(n => n.Recipients.Any(r => r.Email == user.Email)).Select(n => new {n.Body, n.Subject});
+                    var notification = new Notification
+                    {
+                        Recipients = new Recipient[] { user },
+                    };
 
-                if (uNotes.Count() > 1)
-                {//If there is more than one notification being aggrigated then set the subject to a generic title.
-                    notification.Subject = "Notifications and Reminders";
+                    var uNotes = notifications.Where(n => n.Recipients.Any(r => r.Email == user.Email)).Select(n => new { n.Body, n.Subject });
+
+                    if (uNotes.Count() > 1)
+                    {//If there is more than one notification being aggrigated then set the subject to a generic title.
+                        notification.Subject = "Notifications and Reminders";
+                    }
+                    else //If there is only one, use the specific subject created by the notification.
+                    {
+                        notification.Subject = uNotes.First().Subject;
+                    }
+
+                    notification.Body = string.Join("<hr/>", uNotes.Select(n => n.Body).ToArray());
+
+                    //This adds it the aggrigate notification to the list of notifications that will be sent.
+                    //Each of these notifications only have one recipient.
+                    sendNotifications.Add(notification);
                 }
-                else //If there is only one, use the specific subject created by the notification.
+                catch (Exception ex)
                 {
-                    notification.Subject = uNotes.First().Subject;
+                    Logger.Error("Error Occured while sending notifications", ex);
                 }
-
-                notification.Body = string.Join("<hr/>", uNotes.Select(n => n.Body).ToArray());
-
-                //This adds it the aggrigate notification to the list of notifications that will be sent.
-                //Each of these notifications only have one recipient.
-                sendNotifications.Add(notification);
             }
 
             //Create the notifier

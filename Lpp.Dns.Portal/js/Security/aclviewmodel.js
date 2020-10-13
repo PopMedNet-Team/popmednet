@@ -100,6 +100,16 @@ var Security;
                         });
                     });
                 };
+                this.ClearAllGroups = function () {
+                    //Remove all of the acls by setting the allowed to null
+                    self.Acls().forEach(function (a) { a.Allowed(null); });
+                    self.SelectedSecurityGroup(null);
+                    self.SecurityGroups = [];
+                    var cboSecurityGroups = $('#cboSecurityGroups' + self.Identifier()).data("kendoDropDownList");
+                    _this.dsSecurityGroups.data(_this.SecurityGroups);
+                    _this.dsSecurityGroups.fetch();
+                    cboSecurityGroups.refresh();
+                };
             }
             AclEditViewModel.prototype.SelectSecurityGroup = function () {
                 var _this = this;

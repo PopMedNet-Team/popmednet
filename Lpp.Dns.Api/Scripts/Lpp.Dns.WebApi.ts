@@ -576,6 +576,14 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]>('Users/GetMetadataEditPermissionsSummary' + params, doNotHandleFail);
 	 	 }
 
+	 	 public static ExpireAllUserPasswords( doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('Users/ExpireAllUserPasswords' + params, doNotHandleFail);
+	 	 }
+
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (IDs != null)

@@ -2,7 +2,9 @@
 using log4net.Appender;
 using Lpp.Audit.UI;
 using Lpp.Dns.Data;
+using Lpp.Dns.Data.Query;
 using Lpp.Dns.DTO;
+using Lpp.Dns.DTO.Enums;
 using Lpp.Dns.Portal.Models;
 using Lpp.Mvc;
 using Lpp.Mvc.Controls;
@@ -259,12 +261,21 @@ namespace Lpp.Dns.Portal.Controllers
 
             var user = await DataContext.Users.FindAsync(Auth.ApiIdentity.ID);
             string newHash = newPassword.ComputeHash();
+            DateTimeOffset dateBack = DateTimeOffset.UtcNow.AddDays(ConfigurationManager.AppSettings["PreviousDaysPasswordRestriction"].ToInt32() * -1);
+            int previousUses = ConfigurationManager.AppSettings["PreviousPasswordUses"].ToInt32();
 
-            if (string.CompareOrdinal(user.PasswordHash, newHash) == 0)
+            var param = new LastUsedPasswordCheckParams { User = user, DateRange = dateBack, NumberOfEntries = previousUses, Hash = newHash };
+
+            var query = new LastUsedPasswordCheckQuery(DataContext);
+
+            if (user.PasswordHash == newHash || await query.ExecuteAsync(param))
             {
-                ModelState.AddModelError("Error", "Your new password must be different than your previous password.");
+                ModelState.AddModelError("Error", "Your new password must be different than your previous password(s).");
                 return View("~/Views/Home/ExpiredPassword.cshtml");
             }
+
+            DataContext.LogsUserPasswordChange.Add(new Data.Audit.UserPasswordChangeLog { UserID = Auth.ApiIdentity.ID, UserChangedID = user.ID, OriginalPassword = user.PasswordHash, Method = UserPasswordChange.Profile });
+
 
             user.PasswordHash = newHash;
             user.PasswordExpiration = DateTime.Now.AddMonths(ConfigurationManager.AppSettings["ConfiguredPasswordExpiryMonths"].ToInt32());

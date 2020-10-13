@@ -666,6 +666,11 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.MetadataEditPermissionsSummaryDTO>(Path + "/GetMetadataEditPermissionsSummary");
 	 	 	 return result.ReturnSingleItem();
 	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> ExpireAllUserPasswords()
+	 	 {
+
+	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExpireAllUserPasswords");
+	 	 }
 	 }
 	 public class Theme
 	 {

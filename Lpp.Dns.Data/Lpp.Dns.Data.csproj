@@ -126,6 +126,7 @@
     <Compile Include="Audit\UploadedResultNeedsApprovalLog.cs" />
     <Compile Include="Audit\UserAuthenticationLogs.cs" />
     <Compile Include="Audit\UserChangeLog.cs" />
+    <Compile Include="Audit\UserPasswordChangeLog.cs" />
     <Compile Include="Audit\UserRegistrationSubmittedLog.cs" />
     <Compile Include="Audit\UserRegistrationChangedLog.cs" />
     <Compile Include="Audit\vNewRequestSubmittedLog.cs" />
@@ -2985,6 +2986,18 @@
     <Compile Include="Migrations\202006301845263_AddVerticalRegressionWorkflow.designer.cs">
       <DependentUpon>202006301845263_AddVerticalRegressionWorkflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007281514336_FixProjectDataMartAcls.cs" />
+    <Compile Include="Migrations\202007281514336_FixProjectDataMartAcls.designer.cs">
+      <DependentUpon>202007281514336_FixProjectDataMartAcls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007311543421_FixDocumentDeleteTrigger.cs" />
+    <Compile Include="Migrations\202007311543421_FixDocumentDeleteTrigger.designer.cs">
+      <DependentUpon>202007311543421_FixDocumentDeleteTrigger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008201929364_AddUserPasswordChangeLog.cs" />
+    <Compile Include="Migrations\202008201929364_AddUserPasswordChangeLog.designer.cs">
+      <DependentUpon>202008201929364_AddUserPasswordChangeLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3002,6 +3015,8 @@
     <Compile Include="QueryComposer\Template.cs" />
     <Compile Include="QueryComposer\TemplateTerm.cs" />
     <Compile Include="QueryComposer\Term.cs" />
+    <Compile Include="Query\LastUsedPassword.cs" />
+    <Compile Include="Query\Query.cs" />
     <Compile Include="Registries\RegistryItemDefinition.cs" />
     <Compile Include="Requests\ReportAggregationLevel.cs" />
     <Compile Include="Requests\RequestObserver.cs">
@@ -3784,6 +3799,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006301845263_AddVerticalRegressionWorkflow.resx">
       <DependentUpon>202006301845263_AddVerticalRegressionWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007281514336_FixProjectDataMartAcls.resx">
+      <DependentUpon>202007281514336_FixProjectDataMartAcls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007311543421_FixDocumentDeleteTrigger.resx">
+      <DependentUpon>202007311543421_FixDocumentDeleteTrigger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008201929364_AddUserPasswordChangeLog.resx">
+      <DependentUpon>202008201929364_AddUserPasswordChangeLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

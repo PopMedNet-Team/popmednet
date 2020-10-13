@@ -373,3 +373,6 @@ ASALocalRun/
 /Lpp.Adapters/PopMedNet.Adapters.AcceptanceTests/ConnectionStrings.config
 /Lpp.Adapters/Lpp.Dns.DataMart.Model.QueryComposer.Tests/ConnectionStrings.config
 /DMCS/PopMedNet.DMCS/wwwroot/assets
+/DMCS/PopMedNet.DMCS/Scripts/**/*.js
+/DMCS/PopMedNet.DMCS/Scripts/**/*.js.map
+/Lpp.Dns.Api.Tests/ConnectionStrings.config
