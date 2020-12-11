@@ -125,8 +125,11 @@
             <article class="panel panel-default">
                 <div class="panel-heading">Assignments</div>
                 <div class="panel-body">
-                    <div data-bind="kendoGrid:{
-                        data:AssignedWorkflowRequestUsers,
+                    <div data-bind="pmnGrid:{
+                        dataSource:AssignedWorkflowRequestUsers,
+						filterable: false,
+						sortable: false,
+						columnMenu: false,
                         height:180,
                         selectable:'row',
                         change: $root.onRequestUserRowSelected,

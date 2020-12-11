@@ -1,5 +1,5 @@
 /// <reference path="modernizr/modernizr.d.ts" />
-/// <reference path="kendo/kendo.all.d.ts" />
+/// <reference path="..\..\..\node_modules\@types\kendo-ui\index.d.ts" />
 /// <reference path="..\..\..\node_modules\@types\knockout.validation\index.d.ts" />
 /// <reference path="..\..\..\node_modules\@types\knockout.mapping\index.d.ts" />
 /// <reference path="moment/moment.d.ts" />

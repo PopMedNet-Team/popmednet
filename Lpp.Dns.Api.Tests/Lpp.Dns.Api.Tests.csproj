@@ -175,6 +175,7 @@
     <Compile Include="Terms\CodeUploadTests.cs" />
     <Compile Include="Users\SsoEndpointControllerTests.cs" />
     <Compile Include="Users\UsersControllerTests.cs" />
+    <Compile Include="Users\UsersQueryTests.cs" />
     <Compile Include="Workflow\RequestSetupHelper.cs" />
   </ItemGroup>
   <ItemGroup>

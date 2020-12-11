@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -22,6 +22,8 @@ var Registries;
             function ViewModel(gRegistriesSettings, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
+                var dsgroupSettings = gRegistriesSettings.filter(function (item) { return item.Key === "Registries.Index.gRegistries.User:" + User.ID; });
+                _this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null;
                 _this.ds = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -44,7 +46,6 @@ var Registries;
                     },
                     sort: { field: "Name", dir: "asc" },
                 });
-                Global.Helpers.SetDataSourceFromSettings(_this.ds, gRegistriesSettings);
                 return _this;
             }
             ViewModel.prototype.btnNewRegistry_Click = function () {
@@ -70,16 +71,11 @@ var Registries;
         }
         Index.typeFilterUI = typeFilterUI;
         function init() {
-            $.when(Users.GetSetting("Registries.Index.gRegistries.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRegistry)).done(function (gRegistriesSetting, canAdd) {
+            $.when(Users.GetSettings(["Registries.Index.gRegistries.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRegistry)).done(function (gRegistriesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
                     vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRegistry] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    Global.Helpers.SetGridFromSettings(vm.RegistriesGrid(), gRegistriesSetting);
-                    vm.RegistriesGrid().bind("dataBound", function (e) {
-                        Users.SetSetting("Registries.Index.gRegistries.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RegistriesGrid()));
-                    });
-                    vm.RegistriesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 });
             });
         }

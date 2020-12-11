@@ -12,17 +12,21 @@
         public SelectedObserverIDs: KnockoutObservableArray<any> = ko.observableArray([]);
         public DisplayObservers: () => void;
 
-        public onColumnMenuInit: (e: any) => void;
         public isDisplayNameHidden: boolean;
         public isEventSubscriptionHidden: boolean;
         public isCheckboxHidden: boolean;
 
-        constructor(gNotificationsSetting: string, bindingControl: JQuery, screenPermissions: any[], requestID: any, workflowActivity: string, workflowActivityID: any) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+
+        constructor(gNotificationsSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[], requestID: any, workflowActivity: string, workflowActivityID: any) {
             super(bindingControl, screenPermissions)
             var self = this;
             this.RequestID = requestID;
             this.WorkflowActivityID = workflowActivityID;
             this.WorkflowActivity = workflowActivity;
+
+            let dsgroupSettings = gNotificationsSetting.filter((item) => { return item.Key === "Controls.WFNotifications.List.grNotifications.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
 
             if (this.RequestID == null) {
                 var emptyObservers: Dns.Interfaces.IRequestObserverDTO[] = [];
@@ -41,7 +45,7 @@
                     }
                 });
             }
-            Global.Helpers.SetDataSourceFromSettings(self.dsRequestObservers, gNotificationsSetting);
+            
             this.isDisplayNameHidden = true;
             this.isEventSubscriptionHidden = true;
             this.isCheckboxHidden = true;
@@ -82,22 +86,10 @@
             self.DisplayObservers = () => {
                 alert(self.SelectedObserverIDs().length);
             }
-
-            this.onColumnMenuInit = (e) => {
-                var menu = e.container.find(".k-menu").data("kendoMenu");
-                menu.bind("close", (e) => {
-
-                    self.Save();
-                });
-            };
         }
 
         public NotificationsGrid(): kendo.ui.Grid {
             return $("#grNotifications").data("kendoGrid");
-        }
-
-        public Save() {
-            Users.SetSetting("Controls.WFNotifications.List.grNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(this.NotificationsGrid()));
         }
 
     }
@@ -105,15 +97,11 @@
     export function init(bindingControl: JQuery, screenPermissions: any[], requestID: any, workflowActivity: string, workflowActivityID: any) {
         $(() => {
 
-            $.when<any>(Users.GetSetting("Controls.WFNotifications.List.grNotifications.User:" + User.ID)).done((gNotificationsSetting) => {
+            $.when<any>(Users.GetSettings(["Controls.WFNotifications.List.grNotifications.User:" + User.ID])).done((gNotificationsSetting) => {
 
                 var bindingControl = $('#WFNotifications');
                 var vm = new ViewModel(gNotificationsSetting, bindingControl, screenPermissions, requestID, workflowActivity, workflowActivityID);
                 ko.applyBindings(vm, bindingControl[0]);
-
-                $(window).unload(() => vm.Save());
-
-                Global.Helpers.SetGridFromSettings(vm.NotificationsGrid(), gNotificationsSetting);
 
                 vm.NotificationsGrid().columns.forEach((c) => {
                     if (c.hidden == true) {

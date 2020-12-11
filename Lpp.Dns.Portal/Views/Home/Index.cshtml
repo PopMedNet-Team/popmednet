@@ -5,40 +5,57 @@
         #gTasks .k-grid-content {
             max-height: 400px;
         }
+
         #gMessages .k-grid-content {
             max-height: 400px;
         }
+
         #requests-panel-title {
-            float:left;
-            padding-top:10px;
+            float: left;
+            padding-top: 10px;
         }
+
         .k-grid .k-state-selected {
             background-color: skyblue;
         }
+
+        #notificationProgress {
+            position: relative;
+            width: 1022px;
+            text-align: center;
+        }
     </style>
 }
+
+<div id="PageLoadingMessage">
+    <div style="width:450px;margin-left:auto;margin-right:auto;margin-top:50px;">
+        <div class="panel panel-default">
+            <div class="panel-body" style="text-align:center;padding:24px;">
+                <img src="@this.ResourceUrl("/images/loading.gif")" height="40" />
+                <span style="padding-left:8px;font-weight:bold;color:dimgray">Hang tight, we're loading your homepage...</span>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <article id="pNotifications" class="panel panel-default" data-bind="css: {visible: true}">
     <div class="panel-heading">
         <h4 class="panel-title">Notifications</h4>
     </div>
-    <div class="panel-body" data-bind="style: {height: gNotificationsHeight}" style="padding: 0; overflow: hidden;">
-        <div id="gNotifications" data-bind="kendoGrid: {
-            data: dsNotifications,
-            sortable: true,
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            height: '100%',
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
+    <div class="panel-body" data-bind="style: {height: gNotificationsHeight}" style="padding:0;height:34px" id="gNotificationsContainer">
+        <div id="gNotifications" data-bind="pmnGrid: {
+            dataSource: dsNotifications,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Home.Index.gNotifications.User:',
+                Setting: notificationSetting !== null ? notificationSetting.Setting : null,
+                dateColumns:['Timestamp']
+            },
+            columnDefaults:{
+              'Date' :  100,
+              'Event': 125
+            },
             scrollable: {
                 virtual: true
             },
@@ -50,7 +67,6 @@
             ]
         }">
         </div>
-        @*<p data-bind="visible: ShowNotificationNone" class="center">No Notifications</p>*@
     </div>
 </article>
 
@@ -59,22 +75,17 @@
         <h4 class="panel-title">Messages</h4>
     </div>
     <div class="panel-body" data-bind="style: {height: gMessagesHeight}" style="padding: 0; overflow: hidden;">
-        <div id="gMessages" data-bind="kendoGrid: {
-            data: dsMessages,
-            sortable: true,
-            height: '100%',
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
+        <div id="gMessages" data-bind="pmnGrid: {
+            dataSource: dsMessages,
+            savedSetting:{
+                Key: 'Home.Index.gMessages.User:',
+                Setting: messageSetting !== null ? messageSetting.Setting : null,
+                dateColumns:['CreatedOn']
+            },
+            autoBind: false,
+            columnDefaults: {
+             'Date': 100,
+            },
             scrollable: true,
             pageable: false,
             columns: [
@@ -91,22 +102,27 @@
         <h4 class="panel-title">Tasks</h4>
     </div>
     <div class="panel-body" data-bind="style: {height: gTasksHeight}" style="padding: 0; overflow: hidden;">
-        <div id="gTasks" data-bind="kendoGrid: {
-            data: dsTasks,
-            height: '100%',
-            sortable: true,
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
+        <div id="gTasks" data-bind="pmnGrid: {
+            dataSource: dsTasks,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Home.Index.gTasks.User:',
+                Setting: taskSetting !== null ? taskSetting.Setting : null,
+                dateColumns:['CreatedOn', 'StartOn', 'EndOn']
+            },
+            columnDefaults: {
+             'Task': 150,
+             'Name': 180,
+             'Task Status': 150,
+             'Created': 160,
+             'Start Date': 160,
+             'End Date': 160,
+             'Assignees': 300,
+             'Type': 160,
+             'Request ID': 120,
+             'System Number': 150,
+             'Request Status': 150
+            },
             scrollable: {
                 virtual: true
             },
@@ -130,37 +146,41 @@
         </div>
     </div>
 </article>
+
 <article id="pRequests" class="panel panel-default" data-bind="css: {visible: true}">
     <div class="panel-heading">
-        <h4 class="panel-title" id="requests-panel-title" >Requests</h4>        
+        <h4 class="panel-title" id="requests-panel-title">Requests</h4>
         <div class="dropdown right">
             <button id="ddNewRequest" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 New Request <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="ddNewRequest" data-bind="foreach: Projects">
-                <li><a role="menuitem" data-bind="text:Name,click:$root.CreateRequest"></a></li>
+                <li><a role="menuitem" data-bind="text:Name,click:$root.CreateRequest, attr:{ id: 'proj-' + ID() }"></a></li>
             </ul>
-        </div>        
+        </div>
         <div class="clearfix"></div>
     </div>
     <div class="panel-body" data-bind="style: {height: gRequestsHeight}" style="padding: 0; overflow: hidden;">
-        <div id="gRequests" data-bind="kendoGrid: {
-            data: dsRequest,
-            sortable: true,
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            autoBind: true,
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
-            height: '100%',
+        <div id="gRequests" data-bind="pmnGrid: {
+            dataSource: dsRequest,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Home.Index.gRequests.User:',
+                Setting: requestSetting !== null ? requestSetting.Setting : null,
+                dateColumns:['SubmittedOn', 'DueDate']
+            },
+            columnDefaults: {
+             'Name': 200,
+             'System Number': 90,
+             'Date Submitted': 165,
+             'Submitter': 100,
+             'Status': 125,
+             'Type': 175,
+             'Project': 125,
+             'Priority': 100,
+             'Due Date': 120,
+             'Request ID': 120
+            },
             scrollable: {
                 virtual: true
             },
@@ -210,22 +230,13 @@
         <h4 class="panel-title" id="datamarts-panel-title">DataMarts</h4>
     </div>
     <div class="panel-body" style="padding:0;">
-        <div id="gDataMarts" data-bind="kendoGrid:{
-            data: dsDataMarts,
-            sortable: true,
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            autoBind: true,
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns:true },
-            columnMenuInit: $root.onColumnMenuInit,
+        <div id="gDataMarts" data-bind="pmnGrid:{
+            dataSource: dsDataMarts,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Home.Index.gDataMarts.User:',
+                Setting: dataMartSetting !== null ? dataMartSetting.Setting : null,
+            },
             scrollable: false,
             pageable: false,
             selectable: false,
@@ -240,10 +251,10 @@
 </article>
 
 <script type="text/html" id="invalid-requests-template">
-<div class="alert alert-warning" data-bind="visible:InvalidSelectedRequests.length > 0">
-    <p>One or more requests were selected that you do not have permission to edit the metadata for:</p>
-    <ul data-bind="foreach:{data: InvalidSelectedRequests, as: 'req' }">
-        <li><span data-bind="text:Identifier"></span> - <span data-bind="text:Name"></span></li>
-    </ul>
-</div>
+    <div class="alert alert-warning" data-bind="visible:InvalidSelectedRequests.length > 0">
+        <p>One or more requests were selected that you do not have permission to edit the metadata for:</p>
+        <ul data-bind="foreach:{data: InvalidSelectedRequests, as: 'req' }">
+            <li><span data-bind="text:Identifier"></span> - <span data-bind="text:Name"></span></li>
+        </ul>
+    </div>
 </script>

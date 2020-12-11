@@ -4,11 +4,12 @@ module RequestType.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gRequestTypesSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gRequestTypesSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
-
+            let dsgroupSettings = gRequestTypesSetting.filter((item) => { return item.Key === "RequestType.Index.gRequestTypes.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -25,7 +26,6 @@ module RequestType.Index {
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gRequestTypesSetting);
         }
         
         public onNewRequestType() {
@@ -51,17 +51,12 @@ module RequestType.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("RequestType.Index.gRequestTypes.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["RequestType.Index.gRequestTypes.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRequestType)).done((gRequestTypesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $('#Content');
                 vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRequestType] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.RequestTypesGrid(), gRequestTypesSetting);
-                vm.RequestTypesGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("RequestType.Index.gRequestTypes.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestTypesGrid()));
-                });
-                vm.RequestTypesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

@@ -14,14 +14,13 @@
         </ol>
     </div>
     <div class="panel-body">
-        <div id="gGroups" style="min-height: 400px;" data-bind="kendoGrid: {
-            data: ds,
-            sortable: true,
-            filterable: true,
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
+        <div id="gGroups" style="min-height: 400px;" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Groups.Index.gGroups.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
             scrollable: false,
             pageable: false,
             columns: [

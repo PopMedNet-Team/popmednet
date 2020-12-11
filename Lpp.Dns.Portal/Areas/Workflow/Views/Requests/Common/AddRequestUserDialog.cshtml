@@ -23,36 +23,33 @@
     <div class="row" style="margin-bottom:12px;">        
         <div class="col-md-4" style="display:inline-block;width:275px;">
             <label for="cboUser">User Organization<em>*</em></label>
-            <div data-bind="kendoGrid:{
-                data: dsOrganizations,
-                scrollable: true,
-                resizable: true,
-                filterable: true,
-                sortable: true,
-                selectable: 'row',
-                change: onSelectOrganization,
-                columns: [
-                    {field: 'Name', title: 'Organization', width: 90, attributes: { style: 'cursor: pointer;'}},
-                ]
-            }" style="height:300px;"></div>
+            <div data-bind="pmnGrid:{
+            dataSource: dsOrganizations,
+            height:300,
+            selectable: 'row',
+            columnMenu: false,
+            change: onSelectOrganization,
+            columns: [
+                {field: 'Name', title: 'Organization', width: 90, attributes: { style: 'cursor: pointer;'}},
+            ]
+        }" style="height:300px;"></div>
         </div>
         <div class="col-md-8" style="display:inline-block;width:427px;padding-right:0px;">
             <label for="cboUser">User<em>*</em></label>
-            <div id="grdUsers" data-bind="kendoGrid:{
-                data: FilteredUsers,
-                scrollable: true,
-                resizable: true,
-                filterable: true,
-                sortable: true,
-                selectable: 'row',
-                change: onSelectUser,
-                columns: [
-                    {field:'UserName', title:'Username', width:215, attributes: { style: 'cursor: pointer;'} },
-                    {field:'Email', title:'Email', width:275, attributes: { style: 'cursor: pointer;'} },
-                    {field: 'LastName', title:'Last Name', width:170, attributes: { style: 'cursor: pointer;'} },
-                    {field: 'FirstName', title:'First Name', width: 170, attributes: { style: 'cursor: pointer;'} }
-                ]
-            }" style="height:300px;"></div>
+            <div id="grdUsers" data-bind="pmnGrid:{
+            dataSource: FilteredUsers,
+            height:300,
+            autoBind: false,
+            selectable: 'row',
+            columnMenu: false,
+            change: onSelectUser,
+            columns: [
+                {field:'UserName', title:'Username', width:215, attributes: { style: 'cursor: pointer;'} },
+                {field:'Email', title:'Email', width:275, attributes: { style: 'cursor: pointer;'} },
+                {field: 'LastName', title:'Last Name', width:170, attributes: { style: 'cursor: pointer;'} },
+                {field: 'FirstName', title:'First Name', width: 170, attributes: { style: 'cursor: pointer;'} }
+            ]
+        }" style="height:300px;"></div>
         </div>
     </div>
     <div class="row">

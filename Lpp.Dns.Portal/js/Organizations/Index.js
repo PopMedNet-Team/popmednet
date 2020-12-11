@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -22,6 +22,8 @@ var Organizations;
             function ViewModel(gOrganizationsSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
+                var dsgroupSettings = gOrganizationsSetting.filter(function (item) { return item.Key === "Organizations.Index.gOrganizations.User:" + User.ID; });
+                _this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null;
                 _this.ds = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -37,7 +39,6 @@ var Organizations;
                     },
                     sort: { field: "Name", dir: "asc" },
                 });
-                Global.Helpers.SetDataSourceFromSettings(_this.ds, gOrganizationsSetting);
                 return _this;
             }
             ViewModel.prototype.btnNewOrganization_Click = function () {
@@ -63,16 +64,11 @@ var Organizations;
         }
         Index.ParentNameAchor = ParentNameAchor;
         function init() {
-            $.when(Users.GetSetting("Organizations.Index.gOrganizations.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateOrganization)).done(function (gOrganizationsSetting, canAdd) {
+            $.when(Users.GetSettings(["Organizations.Index.gOrganizations.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateOrganization)).done(function (gOrganizationsSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
                     vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateOrganization] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    Global.Helpers.SetGridFromSettings(vm.OrganizationsGrid(), gOrganizationsSetting);
-                    vm.OrganizationsGrid().bind("dataBound", function (e) {
-                        Users.SetSetting("Organizations.Index.gOrganizations.User:" + User.ID, Global.Helpers.GetGridSettings(vm.OrganizationsGrid()));
-                    });
-                    vm.OrganizationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 });
             });
         }

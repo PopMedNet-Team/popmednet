@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -22,6 +22,8 @@ var DataMarts;
             function ViewModel(gDataMartsSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
+                var dsDataMartSettings = gDataMartsSetting.filter(function (item) { return item.Key === "DataMarts.Index.gResults.User:" + User.ID; });
+                _this.dsSetting = (dsDataMartSettings.length > 0 && dsDataMartSettings[0] !== null) ? dsDataMartSettings[0] : null;
                 _this.ds = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -37,7 +39,6 @@ var DataMarts;
                     },
                     sort: { field: "Name", dir: "asc" },
                 });
-                Global.Helpers.SetDataSourceFromSettings(_this.ds, gDataMartsSetting);
                 return _this;
             }
             ViewModel.prototype.btnNewDataMart_Click = function () {
@@ -54,16 +55,11 @@ var DataMarts;
         }
         Index.NameAchor = NameAchor;
         function init() {
-            $.when(Users.GetSetting("DataMarts.Index.gDataMarts.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done(function (gDataMartsSetting, canAdd) {
+            $.when(Users.GetSettings(["DataMarts.Index.gDataMarts.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done(function (gDataMartsSetting, canAdd) {
                 $(function () {
                     var bindingControl = $("#Content");
                     vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateDataMarts] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    Global.Helpers.SetGridFromSettings(vm.DataMartsGrid(), gDataMartsSetting);
-                    vm.DataMartsGrid().bind("dataBound", function (e) {
-                        Users.SetSetting("DataMarts.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
-                    });
-                    vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 });
             });
         }

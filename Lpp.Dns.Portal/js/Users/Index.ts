@@ -5,11 +5,12 @@ module Users.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gUsersSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gUsersSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
-
+            let dsgroupSettings = gUsersSetting.filter((item) => { return item.Key === "Users.Index.gUsers.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -27,7 +28,6 @@ module Users.Index {
                 sort: { field: "UserName", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gUsersSetting);
         }
 
         public btnNewUser_Click() {
@@ -62,17 +62,12 @@ module Users.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("Users.Index.gUsers.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Users.Index.gUsers.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateUsers)).done((gUsersSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gUsersSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateUsers] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.UsersGrid(), gUsersSetting);
-                vm.UsersGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Users.Index.gUsers.User:" + User.ID, Global.Helpers.GetGridSettings(vm.UsersGrid()));
-                });
-                vm.UsersGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

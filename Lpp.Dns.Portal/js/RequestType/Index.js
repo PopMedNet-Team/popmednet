@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21,6 +21,8 @@ var RequestType;
             function ViewModel(gRequestTypesSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
+                var dsgroupSettings = gRequestTypesSetting.filter(function (item) { return item.Key === "RequestType.Index.gRequestTypes.User:" + User.ID; });
+                _this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null;
                 _this.ds = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -36,7 +38,6 @@ var RequestType;
                     },
                     sort: { field: "Name", dir: "asc" },
                 });
-                Global.Helpers.SetDataSourceFromSettings(_this.ds, gRequestTypesSetting);
                 return _this;
             }
             ViewModel.prototype.onNewRequestType = function () {
@@ -61,16 +62,11 @@ var RequestType;
         }
         Index.NameAchor = NameAchor;
         function init() {
-            $.when(Users.GetSetting("RequestType.Index.gRequestTypes.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRequestType)).done(function (gRequestTypesSetting, canAdd) {
+            $.when(Users.GetSettings(["RequestType.Index.gRequestTypes.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRequestType)).done(function (gRequestTypesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $('#Content');
                     Index.vm = new ViewModel(gRequestTypesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRequestType] : []);
                     ko.applyBindings(Index.vm, bindingControl[0]);
-                    Global.Helpers.SetGridFromSettings(Index.vm.RequestTypesGrid(), gRequestTypesSetting);
-                    Index.vm.RequestTypesGrid().bind("dataBound", function (e) {
-                        Users.SetSetting("RequestType.Index.gRequestTypes.User:" + User.ID, Global.Helpers.GetGridSettings(Index.vm.RequestTypesGrid()));
-                    });
-                    Index.vm.RequestTypesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 });
             });
         }

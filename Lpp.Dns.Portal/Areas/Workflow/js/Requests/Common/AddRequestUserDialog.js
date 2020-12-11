@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -38,7 +38,8 @@ var Workflow;
                         var dataItem = arg.sender.dataItem(selectedRow);
                         self.SelectedUser(null);
                         var orgUsers = ko.utils.arrayFilter(self.FullUsers, function (u) { return u.OrganizationID.toLowerCase() == dataItem.ID.toLowerCase(); });
-                        self.FilteredUsers(orgUsers);
+                        $("#grdUsers").data("kendoGrid").dataSource.data(orgUsers);
+                        $("#grdUsers").data("kendoGrid").refresh();
                     };
                     self.onSelectUser = function (arg) {
                         var selectedRow = arg.sender.select()[0];

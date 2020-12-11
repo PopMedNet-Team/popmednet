@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21,6 +21,8 @@ var Templates;
             function ViewModel(gTemplatesSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
+                var dsgroupSettings = gTemplatesSetting.filter(function (item) { return item.Key === "Templates.Index.gTemplates.User:" + User.ID; });
+                _this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null;
                 _this.ds = new kendo.data.DataSource({
                     type: "webapi",
                     serverPaging: true,
@@ -43,7 +45,6 @@ var Templates;
                     },
                     sort: { field: "Name", dir: "asc" },
                 });
-                Global.Helpers.SetDataSourceFromSettings(_this.ds, gTemplatesSetting);
                 return _this;
             }
             ViewModel.prototype.TemplatesGrid = function () {
@@ -67,16 +68,11 @@ var Templates;
         Index.typeFilterUI = typeFilterUI;
         function init() {
             //TODO: get the screen permissions and then bind the screen
-            $.when(Users.GetSetting("Templates.Index.gTemplates.User:" + User.ID), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done(function (gTemplatesSetting, canAdd) {
+            $.when(Users.GetSettings(["Templates.Index.gTemplates.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done(function (gTemplatesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $('#Content');
                     vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateTemplate] : []);
                     ko.applyBindings(vm, bindingControl[0]);
-                    Global.Helpers.SetGridFromSettings(vm.TemplatesGrid(), gTemplatesSetting);
-                    vm.TemplatesGrid().bind("dataBound", function (e) {
-                        Users.SetSetting("Templates.Index.gTemplates.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TemplatesGrid()));
-                    });
-                    vm.TemplatesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
                 });
             });
         }

@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -413,6 +413,8 @@ var Global;
         };
         Helpers.SetDataSourceFromSettings = function (ds, settings) {
             var s = JSON.parse(settings);
+            s.page = ds.page();
+            s.pageSize = ds.pageSize();
             if (s == null) {
                 ds.query();
             }
@@ -484,6 +486,8 @@ var Global;
         };
         Helpers.SetDataSourceFromSettingsWithDates = function (ds, settings, colDates) {
             var s = JSON.parse(settings);
+            s.page = ds.page();
+            s.pageSize = ds.pageSize();
             if (s == null) {
                 ds.query();
             }
@@ -562,6 +566,48 @@ var Global;
             finally {
                 grid.options["Updating"] = false;
             }
+        };
+        Helpers.SetGridDefaultColumnDefaultSizes = function (grid, columnSizes) {
+            grid.columns.forEach(function (column) {
+                for (var i = 0; i < Object.getOwnPropertyNames(columnSizes).length; i++) {
+                    var colProp = Object.getOwnPropertyNames(columnSizes)[i];
+                    var colValue = columnSizes[colProp];
+                    if (column.title === colProp)
+                        grid.resizeColumn(column, colValue);
+                }
+            });
+        };
+        Helpers.GetColumnFilterOperatorDefaults = function () {
+            return {
+                operators: {
+                    string: {
+                        contains: "Contains",
+                        doesnotcontain: "Does not contain",
+                        eq: "Is equal to",
+                        neq: "Is not equal to",
+                        startswith: "Starts with",
+                        endswith: "Ends With",
+                        isnull: "Is null",
+                        isnotnull: "Is not null",
+                        isempty: "Is empty",
+                        isnotempty: "Is not empty",
+                    },
+                    date: {
+                        gt: "Is After",
+                        lt: "Is Before"
+                    },
+                    number: {
+                        eq: "Is equal to",
+                        neq: "Is not equal to",
+                        gte: "Is greater than or equal to",
+                        gt: "Is greater than",
+                        lte: "Is less than or equal to",
+                        lt: "Is less than",
+                        isnull: "Is null",
+                        isnotnull: "Is not null"
+                    }
+                },
+            };
         };
         Helpers.WatchGridForChanges = function (grid, func) {
             grid.bind("columnResize", function () {
@@ -1124,22 +1170,5 @@ if ((typeof Dns != 'undefined') && Dns.WebApi != null)
 $(function () {
     if (!("autofocus" in document.createElement("input"))) {
         $("[autofocus]").focus();
-    }
-});
-$.ajaxSetup({
-    beforeSend: function (xhr, settings) {
-        if (!settings || !settings.type)
-            return;
-        switch (settings.type.toLowerCase()) {
-            case "post":
-            case "put":
-            case "delete":
-            case "patch":
-                Global.Helpers.ShowExecuting();
-                break;
-        }
-    },
-    complete: function (xhr) {
-        Global.Helpers.HideExecuting();
     }
 });

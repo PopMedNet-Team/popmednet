@@ -65,11 +65,9 @@
             <br style="clear:both" />
             <div class="panel-body" style="height:315px;overflow:auto" data-bind="foreach: {data:Routings, as: 'datamart' }">
                 <h5 data-bind="text:DataMart"></h5>
-                <div id="gDocuments" data-bind="kendoGrid: {
-                data: $root.DataSource,
-                sortable: true,
+                <div id="gDocuments" data-bind="pmnGrid: {
+                dataSource: $root.DataSource,
                 filterable: false,
-                resizable: true,
                 reorderable: false,
                 selectable:'row',
                 scrollable: true,

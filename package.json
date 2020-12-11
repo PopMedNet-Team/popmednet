@@ -14,6 +14,7 @@
     "@types/knockout.mapping": "^2.0.35",
     "@types/knockout.validation": "0.0.37",
     "@types/rx": "^4.1.1",
-    "@types/signalr": "^2.2.35"
+    "@types/signalr": "^2.2.35",
+	"@types/kendo-ui": "2019.3.0"
   }
 }

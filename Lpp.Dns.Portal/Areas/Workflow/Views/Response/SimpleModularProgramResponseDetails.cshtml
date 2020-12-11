@@ -62,34 +62,6 @@
                     </tbody>
                 </table>
             </article>
-            @*<br style="clear:both"/>
-            <div class="panel-body" style="height:315px;overflow:auto" data-bind="foreach: {data:Routings, as: 'datamart' }">
-                <h5 data-bind="text:DataMart"></h5>
-                <div id="gDocuments" data-bind="kendoGrid: {
-                data: $root.DataSource,
-                sortable: true,
-                filterable: false,
-                resizable: true,
-                reorderable: false,
-                selectable:'row',
-                scrollable: true,
-                pageable: false,
-                change: $root.onRowSelectionChange,
-                groupable: false,
-                detailInit: $root.onDetailInit,
-                columnMenu: { columns: true },
-                columns: [
-                    {field: 'FormattedDocumentName()', title: 'Name', encoded:false },
-                    {field: 'Description()', title: 'Description', hidden:false },
-                    {field: 'FormattedLength()', title: 'Size', attributes: { style: 'text-align:right;' }, width:95, headerAttributes: { style: 'text-align:center;' } },
-                    {field: 'FormattedCreatedOn()', title: 'Date', width:155 },
-                    {field: 'FormattedUploadedBy()', title: 'UploadedBy', hidden:false },
-                    {field: 'Version()', title: 'Version', hidden:true, width:95 },
-                    {field: 'ID', title: 'Revision Set', hidden:true }
-                ]
-            }">
-                </div>
-            </div>*@
         </div>
     </section>
 </section>

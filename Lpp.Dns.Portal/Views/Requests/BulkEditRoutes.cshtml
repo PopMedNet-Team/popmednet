@@ -18,16 +18,10 @@
         </div>
         <div class="panel-body" style="height:600px;">
             
-            <div id="gRequests" data-bind="kendoGrid: {
-                data: dsRequest,
-                sortable: true,
+            <div id="gRequests" data-bind="pmnGrid: {
+                dataSource: dsRequest,
                 filterable: false,
-                autoBind: true,
-                resizable: true,
-                reorderable: true,
-                columnMenu: { columns: true },
                 columnMenuInit: $root.onColumnMenuInit,
-                height: '100%',
                 scrollable: {
                     virtual: false
                 },

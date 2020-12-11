@@ -3,11 +3,12 @@
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gTemplatesSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gTemplatesSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
-
+            let dsgroupSettings = gTemplatesSetting.filter((item) => { return item.Key === "Templates.Index.gTemplates.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -31,7 +32,6 @@
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gTemplatesSetting);
         }
 
         public TemplatesGrid(): kendo.ui.Grid {
@@ -54,17 +54,12 @@
 
     function init() {
         //TODO: get the screen permissions and then bind the screen
-        $.when<any>(Users.GetSetting("Templates.Index.gTemplates.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Templates.Index.gTemplates.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done((gTemplatesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $('#Content');
                 vm = new ViewModel(gTemplatesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateTemplate] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.TemplatesGrid(), gTemplatesSetting);
-                vm.TemplatesGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Templates.Index.gTemplates.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TemplatesGrid()));
-                });
-                vm.TemplatesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

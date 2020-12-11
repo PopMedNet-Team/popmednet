@@ -42,8 +42,9 @@ module Workflow.Common.AddRequestUserDialog {
 
                 self.SelectedUser(null);
 
-                var orgUsers = ko.utils.arrayFilter(self.FullUsers, u => u.OrganizationID.toLowerCase() == dataItem.ID.toLowerCase());
-                self.FilteredUsers(orgUsers);                
+                var orgUsers = ko.utils.arrayFilter(self.FullUsers, u => u.OrganizationID.toLowerCase() == dataItem.ID.toLowerCase());     
+                $("#grdUsers").data("kendoGrid").dataSource.data(orgUsers);
+                $("#grdUsers").data("kendoGrid").refresh();
             };
 
             self.onSelectUser = (arg: kendo.ui.GridChangeEvent) => {

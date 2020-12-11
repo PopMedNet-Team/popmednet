@@ -26,12 +26,8 @@
                         </div>
                         <div class="panel-body">
                             <div class="panel-body">
-                                <div id="gOrgResults" data-bind="kendoGrid: {
-                                data: dsOrgResults,
-                                scrollable: true,
-                                resizable: true,
-                                filterable: true,
-                                sortable: true,
+                                <div id="gOrgResults" data-bind="pmnGrid: {
+                                dataSource: dsOrgResults,
                                 selectable: 'row',
                                 columns: [
                                     {field: 'Name', title: 'Organization', width: 90, attributes: { style: 'cursor: pointer;'}},
@@ -51,20 +47,16 @@
                         </div>
                         <div class="panel-body">
                             <div class="panel-body">
-                                <div id="gOrgSecResults" data-bind="kendoGrid: {
-                            data: dsOrgSecResults,
-                            autoBind: false,
-                            scrollable: true,
-                            filterable: true,
-                            resizable: true,
-                            sortable: true,
-                            selectable: 'row',
-                            columns: [
-                                {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
-                                {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
-                            ],
-                                change: AddOrgGrp
-                        }" style="height: 300px;"></div>
+                                <div id="gOrgSecResults" data-bind="pmnGrid: {
+                                    dataSource: dsOrgSecResults,
+                                    autoBind: false,
+                                    selectable: 'row',
+                                    columns: [
+                                        {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                        {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                    ],
+                                        change: AddOrgGrp
+                                }" style="height: 300px;"></div>
                             </div>
                         </div>
                     </article>
@@ -80,12 +72,8 @@
                         </div>
                         <div class="panel-body">
                             <div class="panel-body">
-                                <div id="gProjResults" data-bind="kendoGrid: {
-                                    data: dsProjResults,
-                                    scrollable: true,
-                                    filterable: true,
-                                    resizable: true,
-                                    sortable: true,
+                                <div id="gProjResults" data-bind="pmnGrid: {
+                                    dataSource: dsProjResults,
                                     selectable: 'row',
                                     columns: [
                                         {field: 'Name', title: 'Projects', width: 90, attributes: { style: 'cursor: pointer;'}},
@@ -105,19 +93,15 @@
                         </div>
                         <div class="panel-body">
                             <div class="panel-body">
-                                <div id="gProjSecResults" data-bind="kendoGrid: {
-                                    data: dsProjSecResults,
-                                    scrollable: true,
-                                    resizable: true,
-                                    filterable: true,
-                                    sortable: true,
-                                    selectable: 'row',
-                                    columns: [
-                                        {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
-                                        {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
-                                    ],
-                                change: AddProjectGrp
-                        }" style="height: 300px;"></div>
+                                <div id="gProjSecResults" data-bind="pmnGrid: {
+                                        dataSource: dsProjSecResults,
+                                        selectable: 'row',
+                                        columns: [
+                                            {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                            {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                        ],
+                                    change: AddProjectGrp
+                            }" style="height: 300px;"></div>
                             </div>
                         </div>
                     </article>

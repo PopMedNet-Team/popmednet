@@ -18,16 +18,12 @@
         <p class="panel-title">Comments for task: <span data-bind="text:WorkflowActivity"></span></p>
     </div>
     <div class="panel-body" style="padding:1px;">
-        <div data-bind="kendoGrid: {
-            data: DataSource,
-            sortable: true,
+        <div data-bind="pmnGrid: {
+            dataSource: DataSource,
             filterable: false,
-            resizable: true,
             reorderable: false,
-            scrollable: true,
             pageable: false,
             groupable: false,
-            columnMenu: { columns: true },
             columns: [
                 {field: 'Comment', title: 'Comment', template: $root.onFormatComment, encoded:false },
                 {field: 'WorkflowActivity', title:'Task', hidden:HideTaskColumn(), width:200 },

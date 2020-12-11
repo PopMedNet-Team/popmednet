@@ -376,3 +376,4 @@ ASALocalRun/
 /DMCS/PopMedNet.DMCS/Scripts/**/*.js
 /DMCS/PopMedNet.DMCS/Scripts/**/*.js.map
 /Lpp.Dns.Api.Tests/ConnectionStrings.config
+Lpp.Dns.Portal/Scripts/PmnGrid/PmnGrid.js

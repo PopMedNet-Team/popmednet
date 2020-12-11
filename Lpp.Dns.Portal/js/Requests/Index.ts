@@ -8,8 +8,9 @@ module Requests.Index {
         public dataSource: kendo.data.DataSource;
         public Projects: KnockoutObservableArray<Dns.ViewModels.ProjectViewModel>;
         public RequestableProjects: Dns.Interfaces.IProjectDTO[];
+        public dataSourceSetting: Dns.Interfaces.IUserSettingDTO;
 
-        constructor(gResultsSettings: string, bindingControl: JQuery, projects: Dns.Interfaces.IProjectDTO[], projectID: any, requestableProjecs: Dns.Interfaces.IProjectDTO[]) {
+        constructor(gResultsSettings: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, projects: Dns.Interfaces.IProjectDTO[], projectID: any, requestableProjecs: Dns.Interfaces.IProjectDTO[]) {
             super(bindingControl);
             var self = this;
 
@@ -23,6 +24,9 @@ module Requests.Index {
             //requestable project are the ones that the user can create new requests for.
             this.RequestableProjects = requestableProjecs;
 
+
+            let dsRequestSettings = gResultsSettings.filter((item) => { return item.Key === "Requests.Index.gResults.User:" + User.ID });
+            this.dataSourceSetting = (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) ? dsRequestSettings[0] : null
             this.dataSource = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -142,7 +146,7 @@ module Requests.Index {
 
 
     function init() {
-        $.when<any>(Users.GetSetting("Requests.Index.gResults.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Requests.Index.gResults.User:" + User.ID]),
             Dns.WebApi.Users.ListAvailableProjects(null, "ID, Name", "Name"),
             Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name")
             ).done((gResultsSettings, projects, requestableProjects) => {
@@ -157,11 +161,6 @@ module Requests.Index {
                 vm = new ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjects);
                 ko.applyBindings(vm, bindingControl[0]);
 
-                //The collection of Date type columns in the grid.
-                var arrDateColumns = [];
-                arrDateColumns.push("SubmittedOn", "DueDate");
-                //This specific method ensures that date filters are processed accordingly.
-                Global.Helpers.SetGridFromSettingsWithDates(vm.ResultsGrid(), gResultsSettings, arrDateColumns);
                 if (projectID != Constants.GuidEmpty) {
                   vm.ResultsGrid().dataSource.filter({
                     field: "ProjectID",
@@ -176,11 +175,6 @@ module Requests.Index {
                     value: projectID
                   });
                 }
-                
-                vm.ResultsGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ResultsGrid()));
-                });
-                vm.ResultsGrid().bind("columnMenuInit", vm.AddClearAllFiltersMenuItem);
             });
         });
     }

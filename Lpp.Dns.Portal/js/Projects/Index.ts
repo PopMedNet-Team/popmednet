@@ -5,11 +5,12 @@ module Projects.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gProjectsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gProjectsSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
-
+            let dsgroupSettings = gProjectsSetting.filter((item) => { return item.Key === "Projects.Index.gResults.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -26,7 +27,6 @@ module Projects.Index {
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gProjectsSetting);  
         }
 
         public btnNewProject_Click() {
@@ -51,17 +51,12 @@ module Projects.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("Projects.Index.gProjects.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Projects.Index.gProjects.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Group.CreateProject)).done((gProjectsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gProjectsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Group.CreateProject] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.ProjectsGrid(), gProjectsSetting);
-                vm.ProjectsGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Projects.Index.gProjects.User:" + User.ID, Global.Helpers.GetGridSettings(vm.ProjectsGrid()));
-                });
-                vm.ProjectsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

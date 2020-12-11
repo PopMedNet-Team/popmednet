@@ -5,11 +5,12 @@ module Organizations.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gOrganizationsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gOrganizationsSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
-
+            let dsgroupSettings = gOrganizationsSetting.filter((item) => { return item.Key === "Organizations.Index.gOrganizations.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -26,7 +27,6 @@ module Organizations.Index {
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gOrganizationsSetting); 
         }
             
         public btnNewOrganization_Click() {
@@ -52,17 +52,12 @@ module Organizations.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("Organizations.Index.gOrganizations.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Organizations.Index.gOrganizations.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateOrganization)).done((gOrganizationsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gOrganizationsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateOrganization] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.OrganizationsGrid(), gOrganizationsSetting);
-                vm.OrganizationsGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Organizations.Index.gOrganizations.User:" + User.ID, Global.Helpers.GetGridSettings(vm.OrganizationsGrid()));
-                });
-                vm.OrganizationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

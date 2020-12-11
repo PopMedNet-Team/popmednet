@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -266,14 +266,7 @@ var Users;
                                         },
                                         height: "500px",
                                         sortable: true,
-                                        filterable: {
-                                            operators: {
-                                                date: {
-                                                    gt: 'Is after',
-                                                    lt: 'Is before'
-                                                }
-                                            }
-                                        },
+                                        filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
                                         resizable: true,
                                         reorderable: true,
                                         scrollable: {
@@ -309,14 +302,7 @@ var Users;
                                             },
                                         },
                                         sortable: true,
-                                        filterable: {
-                                            operators: {
-                                                date: {
-                                                    gt: 'Is after',
-                                                    lt: 'Is before'
-                                                }
-                                            }
-                                        },
+                                        filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
                                         height: "500px",
                                         resizable: true,
                                         reorderable: true,

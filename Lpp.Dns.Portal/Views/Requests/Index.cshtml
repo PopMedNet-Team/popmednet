@@ -37,22 +37,15 @@
             <li data-bind="css: {active: $root.SelectedProjectID() == ID()}"><a href="#" data-bind="text: Name, click: $root.SelectProject"></a></li>
         </ul>
         <div class="tab-body">
-            <div id="gResults" data-bind="kendoGrid: {
-            data: dataSource,
+            <div id="gResults" data-bind="pmnGrid: {
+            dataSource: dataSource,
             height: 800,
-            sortable: true,
-            filterable: {
-                operators:{
-                    date: {
-                        gt: 'Is after',
-                        lt: 'Is before'
-                    }
-                }
-             },
-            resizable: true,
-            reorderable: true,
-            columnMenu: { columns: true },
-            columnMenuInit: $root.onColumnMenuInit,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Requests.Index.gResults.User:',
+                Setting: dataSourceSetting !== null ? dataSourceSetting.Setting : null,
+                dateColumns:['SubmittedOn', 'DueDate']
+            },
             scrollable: {
                 virtual: true
             },

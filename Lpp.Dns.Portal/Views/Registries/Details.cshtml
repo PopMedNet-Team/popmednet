@@ -63,17 +63,17 @@
             <div class="tab-body">
                 <!-- Items -->
                 <input type="hidden" name="SelectedRegistryItemDefinitions" id="SelectedRegistryItemDefinitions" data-bind="value: SelectedRegistryItemDefinitions" />
-                <div id="gItems" data-bind="kendoGrid: {
-                     data: dsAllRegistryItemDefinitions,
+                <div id="gItems" style="min-height: 500px;" data-bind="pmnGrid: {
+                     dataSource: dsAllRegistryItemDefinitions,
+                     columnMenu: false,
                      rowTemplate: 'item-row-template',
                      altRowTemplate: 'item-altrow-template',
                      useKOTemplates: true,
                      columns:[
-                     {title: '', width:35 },
-                     {field: 'Title' , title: 'Title' },
-                     {field: 'Category' , hidden: true, groupHeaderTemplate: '#= value #*' }
-                     ]
-                     }">
+                         {title: '', width:35 },
+                         {field: 'Title' , title: 'Title' },
+                        {field: 'Category' , hidden: true, groupHeaderTemplate: '#= value #*' }
+                     ]}">
                 </div>
                 <span>*Categories from the Registry of Patient Registries (RoPR): patientregistry.ahrq.gov</span>
             </div>

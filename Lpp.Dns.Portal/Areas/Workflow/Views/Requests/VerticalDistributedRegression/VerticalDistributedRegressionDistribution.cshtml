@@ -23,8 +23,8 @@
                             <div class="row" style="margin:3px;">
                                 <article class="Request-Footer-DataMarts" id="RequestDataMarts">
                                     @*<input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />*@
-                                    <div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="kendoGrid: {
-                                        data: DataMarts,
+                                    <div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="pmnGrid: {
+                                        dataSource: DataMarts,
                                         sortable: false,
                                         filterable: false,
                                         reorderable: false,

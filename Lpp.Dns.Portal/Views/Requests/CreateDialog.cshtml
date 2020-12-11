@@ -25,6 +25,6 @@
 
 <div style="height: 100%; overflow: auto;">
     <ul class="RequestTypesList" data-bind="foreach:RequestTypes">
-        <li><a href="#" data-bind="text: Name, click: $root.onSelectRequestType"></a></li>
+        <li><a href="#" data-bind="text: Name, click: $root.onSelectRequestType, attr:{id: 'rt-' + ID}"></a></li>
     </ul>
 </div>

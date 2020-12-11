@@ -23,26 +23,26 @@
 														<div class="row" style="margin:3px;">
 																<article class="Request-Footer-DataMarts" id="RequestDataMarts">
 																		@*<input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />*@
-																		<div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="kendoGrid: {
-                                        data: DataMarts,
-                                        sortable: false,
-                                        filterable: false,
-                                        reorderable: false,
-                                        columnMenu: false,
-                                        pageable: false,
-                                        scrollable: false,
-                                        rowTemplate: 'dataMartsRowTmpl',
-                                        altRowTemplate: 'dataMartsAltRowTmpl',
-                                        useKOTemplates: true,
-                                        columns:[
-                                            {field: 'DataMartID', title: ' ', width:35 },
-                                            {field: 'Name', title: 'Name'},
-                                            {field: 'Organization', title:'Organization'},
-                                            {field: 'Priority', title: 'Priority'},
-                                            {field: 'RoutingType', title: 'DataMart Type'},
-                                            {field: 'DueDate', title: 'Due Date'}
-                                            ]
-                                    }">
+																		<div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="pmnGrid: {
+                                                                            dataSource: DataMarts,
+                                                                            sortable: false,
+                                                                            filterable: false,
+                                                                            reorderable: false,
+                                                                            columnMenu: false,
+                                                                            pageable: false,
+                                                                            scrollable: false,
+                                                                            rowTemplate: 'dataMartsRowTmpl',
+                                                                            altRowTemplate: 'dataMartsAltRowTmpl',
+                                                                            useKOTemplates: true,
+                                                                            columns:[
+                                                                                {field: 'DataMartID', title: ' ', width:35 },
+                                                                                {field: 'Name', title: 'Name'},
+                                                                                {field: 'Organization', title:'Organization'},
+                                                                                {field: 'Priority', title: 'Priority'},
+                                                                                {field: 'RoutingType', title: 'DataMart Type'},
+                                                                                {field: 'DueDate', title: 'Due Date'}
+                                                                                ]
+                                                                        }">
 																		</div>
 																		<div style="margin-top: 5px;">
 																				<button role="button" id="btnDataMartsSelectAll" data-bind="click: $root.DataMartsSelectAll, clickBubble:false" class="btn btn-primary">Select All</button>

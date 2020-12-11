@@ -334,14 +334,7 @@ module Users.Details {
                                     },
                                     height: "500px",
                                     sortable: true,
-                                    filterable: {
-                                        operators: {
-                                            date: {
-                                                gt: 'Is after',
-                                                lt: 'Is before'
-                                            }
-                                        }
-                                    },
+                                    filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
                                     resizable: true,
                                     reorderable: true,
                                     scrollable: {
@@ -377,14 +370,7 @@ module Users.Details {
                                         },
                                     },
                                     sortable: true,
-                                    filterable: {
-                                        operators: {
-                                            date: {
-                                                gt: 'Is after',
-                                                lt: 'Is before'
-                                            }
-                                        }
-                                    },
+                                    filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
                                     height: "500px",
                                     resizable: true,
                                     reorderable: true,

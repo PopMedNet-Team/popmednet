@@ -1,32 +1,35 @@
 ﻿/// <reference path="../_rootlayout.ts" />
 
 module Home.Index {
-	var vm: ViewModel;
+    var vm: ViewModel;
 
     export class ViewModel extends Global.PageViewModel {
         public dsRequest: kendo.data.DataSource;
+        public requestSetting: Dns.Interfaces.IUserSettingDTO;
         public dsTasks: kendo.data.DataSource;
+        public taskSetting: Dns.Interfaces.IUserSettingDTO;
         public dsMessages: kendo.data.DataSource;
+        public messageSetting: Dns.Interfaces.IUserSettingDTO;
         public dsNotifications: kendo.data.DataSource;
+        public notificationSetting: Dns.Interfaces.IUserSettingDTO;
         public dsDataMarts: kendo.data.DataSource;
+        public dataMartSetting: Dns.Interfaces.IUserSettingDTO;
         public gRequestsHeight: KnockoutObservable<string>;
         public gTasksHeight: KnockoutObservable<string>;
         public gMessagesHeight: KnockoutObservable<string>;
         public gNotificationsHeight: KnockoutObservable<string>;
-        public gNotificationsVisible: KnockoutObservable<boolean>;
         public gDataMartsHeight: KnockoutObservable<number>;
         public Projects: KnockoutObservableArray<Dns.ViewModels.ProjectViewModel>;
         public InvalidSelectedRequests: KnockoutComputed<Dns.Interfaces.IHomepageRequestDetailDTO[]>;
         public SelectedRequests: KnockoutObservableArray<Dns.Interfaces.IHomepageRequestDetailDTO>;
         public EnableRequestBulkEdit: KnockoutComputed<boolean>;
 
-        public onColumnMenuInit: (e: any) => void;
         public onRequestRowSelectionChange: (e) => void;
         public onRequestBulkEdit: (data, evt) => void;
         public onClickRequestsFooter: (data, evt) => void;
 
-        static editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO;
-        private gRequestsRowSelector: any = 'multiple,row';
+        static editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO = { CanEditRequestMetadata: false, EditableDataMarts: [] };
+        public gRequestsRowSelector: any = 'multiple,row';
 
         constructor(projects: Dns.Interfaces.IProjectDTO[], settings: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery) {
             super(bindingControl);
@@ -34,7 +37,7 @@ module Home.Index {
             this.gRequestsHeight = ko.observable<string>(null);
             this.gTasksHeight = ko.observable<string>(null);
             this.gMessagesHeight = ko.observable<string>(null);
-            this.gNotificationsHeight = ko.observable<string>(null);
+            this.gNotificationsHeight = ko.observable<string>("200px");
             this.gDataMartsHeight = ko.observable<number>(400);
             if (ViewModel.editMetadataPermissions.CanEditRequestMetadata == false) {
                 this.gRequestsRowSelector = false;
@@ -51,34 +54,44 @@ module Home.Index {
             this.Projects = ko.observableArray(projects.map((item) => {
                 return new Dns.ViewModels.ProjectViewModel(item);
             }));
-            this.gNotificationsVisible = ko.observable(false);
+
+            let gNotificationsSettings = settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID });
+            this.notificationSetting = (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) ? gNotificationsSettings[0] : null
+            let dsNotificationsInitialLoad = true;
             this.dsNotifications = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
                 serverSorting: true,
                 serverFiltering: true,
-                pageSize: 100,
+                pageSize: 500,
                 transport: {
                     read: {
-                        url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID),
+                        //adding a restriction on the timestamp range caused the result to stall and not return.
+                        //url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID) + "&$filter=Timestamp ge " + moment().subtract(6, 'months').utc().format('YYYY-MM-DD[T00:00:00.000Z]')
+                        url: Global.Helpers.GetServiceUrl("/users/getnotifications?UserID=" + User.ID)
                     }
                 },
                 schema: {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelNotificationDTO)
                 },
-								sort: {
-									field: "Timestamp", dir: "desc"
-								},
-                change: (e) => {
-                    vm.gNotificationsVisible(e.items != null && e.items.length > 0);
-                    vm.gNotificationsHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
+                sort: {
+                    field: "Timestamp", dir: "desc"
+                },
+                requestStart: (e) => {
+                    if (dsNotificationsInitialLoad) kendo.ui.progress($('#gNotifications'), true);
+                },
+                requestEnd: (e) => {
+                    if (dsNotificationsInitialLoad) {
+                        kendo.ui.progress($('#gNotifications'), false);
+                        dsNotificationsInitialLoad = false;
+                    }
+                    self.gNotificationsHeight(e.response.results != null && e.response.results.length > 0 ? "200px" : "34px");
                 }
             });
-            
-            let gNotificationsSettings = settings.filter((item) => { return item.Key === "Home.Index.gNotifications.User:" + User.ID });
-            if (gNotificationsSettings.length > 0 && gNotificationsSettings[0] !== null) {
-                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsNotifications, gNotificationsSettings[0].Setting, ["Timestamp"]);
-            }
+
+            let dsRequestSettings = settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID });
+            this.requestSetting = (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) ? dsRequestSettings[0] : null
+            let dsRequestInitialLoad = true;
             this.dsRequest = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -94,25 +107,27 @@ module Home.Index {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelHomepageRequestDetailDTO)
                 },
                 sort: { field: "SubmittedOn", dir: "desc" },
-                change: (e) => {
-                    vm.gRequestsHeight(e.items != null && e.items.length > 0 ? "600px" : "34px");
+                requestStart: (e) => {
+                    if (dsRequestInitialLoad) kendo.ui.progress($('#gRequests'), true);
+                },
+                requestEnd: (e) => {
+                    if (dsRequestInitialLoad) {
+                        kendo.ui.progress($('#gRequests'), false);
+                        dsRequestInitialLoad = false;
+                    }
+                    self.gRequestsHeight(e.response.results != null && e.response.results.length > 0 ? "600px" : "34px");
                 }
             });
 
-            let dsRequestSettings = settings.filter((item) => { return item.Key === "Home.Index.gRequests.User:" + User.ID });
-            if (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) {
-                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsRequest, dsRequestSettings[0].Setting, ["SubmittedOn", "DueDate"]);
-            }
-
             self.onRequestRowSelectionChange = (e) => {
-                var selectedRequests: Dns.Interfaces.IHomepageRequestDetailDTO[] = [];
+                let selectedRequests: Dns.Interfaces.IHomepageRequestDetailDTO[] = [];
 
-                var grid = $(e.sender.wrapper).data('kendoGrid');
-                var rows = grid.select();
-                
+                let grid = $(e.sender.wrapper).data('kendoGrid');
+                let rows = grid.select();
+
                 if (rows.length > 0) {
-                    for (var i = 0; i < rows.length; i++) {
-                        var request: any = grid.dataItem(rows[i]);
+                    for (let i = 0; i < rows.length; i++) {
+                        let request: any = grid.dataItem(rows[i]);
                         selectedRequests.push(request);
                     }
                 }
@@ -126,18 +141,20 @@ module Home.Index {
                 if (self.SelectedRequests().length == 0 || self.InvalidSelectedRequests().length > 0)
                     return;
 
-                var selected: any[] = $.map(self.SelectedRequests(), (r: Dns.Interfaces.IHomepageRequestDetailDTO) => r.ID);
-                
+                let selected: any[] = $.map(self.SelectedRequests(), (r: Dns.Interfaces.IHomepageRequestDetailDTO) => r.ID);
+
                 location.href = '/requests/bulkedit/?r=' + selected.join(',');
             };
 
             self.onClickRequestsFooter = (data, evt) => {
-                var grid = self.RequestsGrid();
+                let grid = self.RequestsGrid();
                 grid.clearSelection();
                 evt.preventDefault();
             };
 
-
+            let dsMessagesSettings = settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID });
+            this.messageSetting = (dsMessagesSettings.length > 0 && dsMessagesSettings[0] !== null) ? dsMessagesSettings[0] : null
+            let dsMessagesInitialLoad = true;
             this.dsMessages = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: false,
@@ -145,30 +162,34 @@ module Home.Index {
                 serverFiltering: true,
                 transport: {
                     read: {
-                       url: Global.Helpers.GetServiceUrl("/networkmessages/list/"/*lastdays?days=15"*/),
+                        url: Global.Helpers.GetServiceUrl("/networkmessages/list"/*lastdays?days=15"*/),
                     }
                 },
                 schema: {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelNetworkMessageDTO)
                 },
                 sort: { field: "CreatedOn", dir: "desc" },
-                change: (e) => {
-                    
-                    vm.gMessagesHeight(e.items != null && e.items.length > 0 ? "200px" : "34px");
+                requestStart: (e) => {
+                    if (dsMessagesInitialLoad) kendo.ui.progress($('#gMessages'), true);
+                },
+                requestEnd: (e) => {
+                    if (dsMessagesInitialLoad) {
+                        kendo.ui.progress($('#gMessages'), false);
+                        dsMessagesInitialLoad = false;
+                    }
+                    self.gMessagesHeight(e.response.results != null && e.response.results.length > 0 ? "200px" : "34px");
                 }
-            }); 
+            });
 
-            let dsMessagesSettings = settings.filter((item) => { return item.Key === "Home.Index.gMessages.User:" + User.ID })
-            if (dsMessagesSettings.length > 0 && dsMessagesSettings[0] !== null) {
-                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsMessages, dsMessagesSettings[0].Setting, ["CreatedOn"]);
-            }
-
+            let dsTasksSettings = settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID });
+            this.taskSetting = (dsTasksSettings.length > 0 && dsTasksSettings[0] !== null) ? dsTasksSettings[0] : null
+            let dsTasksInitialLoad = true;
             this.dsTasks = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: false,
                 serverSorting: true,
                 serverFiltering: true,
-                pageSize: 100,
+                pageSize: 500,
                 transport: {
                     read: {
                         url: Global.Helpers.GetServiceUrl("/users/GetWorkflowTasks?UserID=" + User.ID)
@@ -180,27 +201,32 @@ module Home.Index {
                 sort: {
                     field: "CreatedOn", dir: "desc"
                 },
-                change: (e) => {
-                  vm.gTasksHeight(e.items != null && e.items.length > 0 ? "300px" : "34px");
+                requestStart: (e) => {
+                    if (dsTasksInitialLoad) kendo.ui.progress($('#gTasks'), true);
+                },
+                requestEnd: (e) => {
+                    if (dsTasksInitialLoad) {
+                        kendo.ui.progress($('#gTasks'), false);
+                        dsTasksInitialLoad = false;
+                    }
+                    self.gTasksHeight(e.response.results != null && e.response.results.length > 0 ? "300px" : "34px");
                 }
             });
-
-            let dsTasksSettings = settings.filter((item) => { return item.Key === "Home.Index.gTasks.User:" + User.ID });
-            if (dsTasksSettings.length > 0 && dsTasksSettings[0] !== null) {
-                Global.Helpers.SetDataSourceFromSettingsWithDates(this.dsTasks, dsTasksSettings[0].Setting, ["CreatedOn", "StartOn", "EndOn"]);
-            }
 
             let now = moment().add(5, 'days');
             let userdate = moment(User.PasswordExpiration);
             if (userdate <= now)
                 Global.Helpers.ShowToast("Your Password is Expiring soon.  Please update your password.");
 
+            let dsDataMartsSettings = settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID });
+            this.dataMartSetting = (dsDataMartsSettings.length > 0 && dsDataMartsSettings[0] !== null) ? dsDataMartsSettings[0] : null
+            let dsDataMartsInitialLoad = true;
             this.dsDataMarts = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: false,
                 serverSorting: true,
                 serverFiltering: true,
-                pageSize: 1000,
+                pageSize: 500,
                 transport: {
                     read: {
                         url: Global.Helpers.GetServiceUrl("/datamarts/listbasic")
@@ -211,13 +237,17 @@ module Home.Index {
                 },
                 sort: {
                     field: "Name", dir: "asc"
+                },
+                requestStart: (e) => {
+                    if (dsDataMartsInitialLoad) kendo.ui.progress($('#gDataMarts'), false);
+                },
+                requestEnd: (e) => {
+                    if (dsDataMartsInitialLoad) {
+                        kendo.ui.progress($('#gDataMarts'), false);
+                        dsDataMartsInitialLoad = false;
+                    }
                 }
             });
-
-            let dsDataMartsSettings = settings.filter((item) => { return item.Key === "Home.Index.gDataMarts.User:" + User.ID });
-            if (dsDataMartsSettings.length > 0 && dsDataMartsSettings[0] !== null) {
-                Global.Helpers.SetDataSourceFromSettings(this.dsDataMarts, dsDataMartsSettings[0].Setting);
-            }
         }
 
         public RequestsGrid(): kendo.ui.Grid {
@@ -263,7 +293,7 @@ module Home.Index {
             if (e.DirectToRequest) {
                 return '<a href="/requests/details?ID=' + e.RequestID + '&taskID=' + e.TaskID + '">' + e.TaskName + '</a>';
             }
-           
+
             return '<a href="/tasks/details?ID=' + e.TaskID + '">' + e.TaskName + '</a>';
         }
 
@@ -272,7 +302,7 @@ module Home.Index {
                 return '<a href="/requests/details?ID=' + e.RequestID + '&taskID=' + e.TaskID + '">' + e.Name + '</a>';
             }
             if (e.NewUserID != null) {
-                return '<a href="/users/details?ID=' + e.NewUserID +'">' + e.Name + '</a>';
+                return '<a href="/users/details?ID=' + e.NewUserID + '">' + e.Name + '</a>';
             }
             return '<a href="/tasks/details?ID=' + e.TaskID + '">' + e.Name + '</a>';
         }
@@ -282,20 +312,13 @@ module Home.Index {
         }
 
         public onDataMartsDetailInit(e: any) {
-            var datamart = <Dns.Interfaces.IDataMartListDTO>e.data;
+            let datamart = <Dns.Interfaces.IDataMartListDTO>e.data;
 
-            var canEditAnyMetadata = ko.utils.arrayFirst(ViewModel.editMetadataPermissions.EditableDataMarts, (id) => datamart.ID == id) != null;
+            let canEditAnyMetadata = ko.utils.arrayFirst(ViewModel.editMetadataPermissions.EditableDataMarts, (id) => datamart.ID == id) != null;
 
-            var grid = $('<div style="min-height:155px;"/>').kendoGrid({
+            let grid = $('<div style="min-height:155px;"/>').kendoGrid({
                 sortable: true,
-                filterable: {
-                    operators: {
-                        date: {
-                            gt: 'Is after',
-                            lt: 'Is before'
-                        }
-                    }
-                },
+                filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
                 autoBind: true,
                 resizable: true,
                 reorderable: true,
@@ -336,28 +359,28 @@ module Home.Index {
                     { field: 'DueDate', title: 'Due Date', format: Constants.DateFormatter, width: 120 },
                     { field: 'MSRequestID', title: 'Request ID', width: 120 },
                 ],
-                change: (e) => {                    
-                    var grd = $(e.sender.wrapper).data('kendoGrid');
-                    var rows = grd.select();
-                    var btn = $('#dmbulkedit-' + datamart.ID);
+                change: (e) => {
+                    let grd = $(e.sender.wrapper).data('kendoGrid');
+                    let rows = grd.select();
+                    let btn = $('#dmbulkedit-' + datamart.ID);
                     if (btn) {
-                        var container = $('#dmfooter-errorcontainer-' + datamart.ID);
+                        let container = $('#dmfooter-errorcontainer-' + datamart.ID);
                         ko.cleanNode(container[0]);
 
-                        var viewmodel = {
+                        let viewmodel = {
                             InvalidSelectedRequests: []
                         };
 
-                        if (rows.length > 0) {                            
+                        if (rows.length > 0) {
 
-                            var invalidRequests: Dns.Interfaces.IHomepageRouteDetailDTO[] = [];
+                            let invalidRequests: Dns.Interfaces.IHomepageRouteDetailDTO[] = [];
 
-                            for (var i = 0; i < rows.length; i++) {
-                                var request: any = grd.dataItem(rows[i]);
+                            for (let i = 0; i < rows.length; i++) {
+                                let request: any = grd.dataItem(rows[i]);
                                 if (request.CanEditMetadata == false) {
                                     invalidRequests.push(request);
                                 }
-                            }                            
+                            }
 
                             viewmodel.InvalidSelectedRequests = invalidRequests;
                         }
@@ -368,14 +391,14 @@ module Home.Index {
                             btn.removeAttr('disabled');
                         }
 
-                        ko.applyBindings(viewmodel, container[0]);   
+                        ko.applyBindings(viewmodel, container[0]);
                     }
                 }
             });
 
 
-            var url = Global.Helpers.GetServiceUrl("requests/requestsbyroute?id=" + datamart.ID);
-            var datasource = new kendo.data.DataSource({
+            let url = Global.Helpers.GetServiceUrl("requests/requestsbyroute?id=" + datamart.ID);
+            let datasource = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
                 serverSorting: true,
@@ -389,33 +412,36 @@ module Home.Index {
                 schema: {
                     model: kendo.data.Model.define(Dns.Interfaces.KendoModelHomepageRouteDetailDTO)
                 },
-                sort: { field: "Identifier", dir: "desc" }
+                sort: { field: "Identifier", dir: "desc" },
+                requestEnd: (e) => {
+                    kendo.ui.progress(grid, false);
+                }
             });
 
-            var gd = grid.data('kendoGrid');
+            let gd = grid.data('kendoGrid');
             gd.setDataSource(datasource);
 
-            var panel = $('<div class="panel panel-default">');
+            let panel = $('<div class="panel panel-default">');
 
-            var gridContainer = $('<div class="panel-body" style="height:400px;width:990px;overflow:auto;overflow-y:hidden;padding:0px;"></div>');
-            $(grid).appendTo(gridContainer);            
+            let gridContainer = $('<div class="panel-body" style="height:400px;width:990px;overflow:auto;overflow-y:hidden;padding:0px;position:relative;"></div>');
+            $(grid).appendTo(gridContainer);
             $(gridContainer).appendTo(panel);
 
             if (canEditAnyMetadata) {
-                var bulkEditButton = $('<button disabled="" class="btn btn-default">Edit Requests</button>');
+                let bulkEditButton = $('<button disabled="" class="btn btn-default">Edit Requests</button>');
                 bulkEditButton.attr('id', 'dmbulkedit-' + datamart.ID);
                 bulkEditButton.click((evt) => {
                     evt.stopPropagation();
                     evt.preventDefault();
 
-                    var grd = gd;
-                    var rows = grd.select();
+                    let grd = gd;
+                    let rows = grd.select();
 
                     if (rows.length == 0)
                         return;
 
-                    var selected: any[] = $.map(rows, (r: any) => {
-                        var route: any = grd.dataItem(r);
+                    let selected: any[] = $.map(rows, (r: any) => {
+                        let route: any = grd.dataItem(r);
                         return route.RequestDataMartID;
                     });
 
@@ -423,30 +449,30 @@ module Home.Index {
                 });
 
 
-                var footer = $('<div class="panel-footer">');
+                let footer = $('<div class="panel-footer">');
                 footer.attr('id', 'dmfooter-' + datamart.ID);
                 footer.click((e) => {
-                    var grid = gd;
+                    let grid = gd;
                     gd.clearSelection();
                     e.preventDefault();
 
-                    var container = $('#dmfooter-errorcontainer-' + datamart.ID);
+                    let container = $('#dmfooter-errorcontainer-' + datamart.ID);
                     ko.cleanNode(container[0]);
 
-                    var viewmodel = {
+                    let viewmodel = {
                         InvalidSelectedRequests: []
                     };
                     ko.applyBindings(viewmodel, container[0]);
                 });
 
-                var footerrow = $('<div class="row">');
+                let footerrow = $('<div class="row">');
                 footerrow.appendTo(footer);
 
-                var footerbuttoncell = $('<div class="col-xs-2">');
+                let footerbuttoncell = $('<div class="col-xs-2">');
                 footerbuttoncell.appendTo(footerrow);
                 bulkEditButton.appendTo(footerbuttoncell);
 
-                var footererrorcell = $('<div class="col-xs-9">');
+                let footererrorcell = $('<div class="col-xs-9">');
                 footererrorcell.appendTo(footerrow);
 
                 $('<div id="dmfooter-errorcontainer-' + datamart.ID + '" data-bind="template: { name: \'invalid-requests-template\'}">').appendTo(footererrorcell);
@@ -455,11 +481,12 @@ module Home.Index {
             }
 
             $(panel).appendTo(e.detailCell);
+            kendo.ui.progress(grid, true);
         }
     }
 
     export function decodeHtml(value): string {
-        var txt = document.createElement('textarea');
+        let txt = document.createElement('textarea');
         txt.innerHTML = value;
         return txt.value;
     }
@@ -477,327 +504,64 @@ module Home.Index {
     }
 
     export function DueDateTemplate(dataItem: Dns.Interfaces.IRequestDTO): string {
-      return dataItem.DueDate ? moment(dataItem.DueDate).format("MM/DD/YYYY") : "";
+        return dataItem.DueDate ? moment(dataItem.DueDate).format("MM/DD/YYYY") : "";
     }
 
     function init() {
-	    $.when<any>(
-		    Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
-		    Users.GetSettings([
-					"Home.Index.gRequests.User:" + User.ID,
-			    "Home.Index.gTasks.User:" + User.ID,
-					"Home.Index.gNotifications.User:" + User.ID,
-			    "Home.Index.gMessages.User:" + User.ID,
-					"Home.Index.gDataMarts.User:" + User.ID,
-			    "Home.Index.gDataMartsRoutes.User:" + User.ID
-		    ]),
-        Dns.WebApi.Users.GetMetadataEditPermissionsSummary()
-      ).done((projects, settings, editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]) => {
+
+        //$.when<any>(
+        //    Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
+        //    Users.GetSettings([
+        //        "Home.Index.gRequests.User:" + User.ID,
+        //        "Home.Index.gTasks.User:" + User.ID,
+        //        "Home.Index.gNotifications.User:" + User.ID,
+        //        "Home.Index.gMessages.User:" + User.ID,
+        //        "Home.Index.gDataMarts.User:" + User.ID,
+        //        "Home.Index.gDataMartsRoutes.User:" + User.ID
+        //    ]),
+        //    Dns.WebApi.Users.GetMetadataEditPermissionsSummary()
+        //).done((projects, settings, editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]) => {
+        $.when<any>(
+            Dns.WebApi.Projects.RequestableProjects(null, "ID,Name", "Name"),
+            Users.GetSettings([
+                "Home.Index.gRequests.User:" + User.ID,
+                "Home.Index.gTasks.User:" + User.ID,
+                "Home.Index.gNotifications.User:" + User.ID,
+                "Home.Index.gMessages.User:" + User.ID,
+                "Home.Index.gDataMarts.User:" + User.ID,
+                "Home.Index.gDataMartsRoutes.User:" + User.ID
+            ])
+        ).done((projects, settings) => {
             $(() => {
-                var bindingControl = $("#Content");
-                ViewModel.editMetadataPermissions = editMetadataPermissions.length > 0 ? editMetadataPermissions[0] : { CanEditRequestMetadata: false, EditableDataMarts: [] };
+                let bindingControl = $("#Content");
+
+                //ViewModel.editMetadataPermissions = editMetadataPermissions.length > 0 ? editMetadataPermissions[0] : { CanEditRequestMetadata: false, EditableDataMarts: [] };
+
                 vm = new ViewModel(projects, settings, bindingControl);
                 ko.applyBindings(vm, bindingControl[0]);
-                vm.TasksGrid().bind("dataBound", function (e) {
-                    Users.SetSetting("Home.Index.gTasks.User:" + User.ID, Global.Helpers.GetGridSettings(vm.TasksGrid()));
-              });
-                vm.TasksGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
-                vm.MessagesGrid().bind("dataBound", function (e) {
-                    Users.SetSetting("Home.Index.gMessages.User:" + User.ID, Global.Helpers.GetGridSettings(vm.MessagesGrid()));
-              });
-                vm.MessagesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
-                vm.NotificationsGrid().bind("dataBound", function (e) {
-                    Users.SetSetting("Home.Index.gNotifications.User:" + User.ID, Global.Helpers.GetGridSettings(vm.NotificationsGrid()));
-              });
-                vm.NotificationsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
-                vm.RequestsGrid().bind("dataBound", function (e) {
-                    Users.SetSetting("Home.Index.gRequests.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RequestsGrid()));
-              });
-                vm.RequestsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
-                vm.DataMartsGrid().bind("dataBound", function (e) {
-                    Users.SetSetting("Home.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
-              });
-                vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
 
-                for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
-                  var tasksGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
-                  if (vm.NotificationsGrid().columns[i].title == 'Date') { tasksGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(tasksGridOptions);}
-                  else if (vm.NotificationsGrid().columns[i].title == 'Event') { tasksGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(tasksGridOptions); }
-                }
-                vm.NotificationsGrid().bind("columnShow", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
-                    if (vm.NotificationsGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.NotificationsGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
-                    var notificationsGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
-                    if (numAvailCol < 3) {
-                      if (vm.NotificationsGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.NotificationsGrid().table.width();
-                        notificationsGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.NotificationsGrid().setOptions(notificationsGridOptions);
-                      }
-                      else if (vm.NotificationsGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.NotificationsGrid().table.width();
-                        notificationsGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.NotificationsGrid().setOptions(notificationsGridOptions);
-                      }
-                      else { notificationsGridOptions.columns[i].hidden = true; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
-                    }
-                    else {
-                      if (vm.NotificationsGrid().columns[i].title == 'Date') { notificationsGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
-                      else if (vm.NotificationsGrid().columns[i].title == 'Event') { notificationsGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(notificationsGridOptions); }
-                    }
-                  }
-                });
-                vm.NotificationsGrid().bind("columnHide", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
-                    if (vm.NotificationsGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.NotificationsGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.NotificationsGrid().columns.length; i++) {
-                    var taskGridOptions = $.extend({}, vm.NotificationsGrid().getOptions());
-                    if (numAvailCol < 3) {
-                      if (vm.NotificationsGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.NotificationsGrid().table.width();
-                        taskGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.NotificationsGrid().setOptions(taskGridOptions);
-                      }
-                      else if (vm.NotificationsGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.NotificationsGrid().table.width();
-                        taskGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.NotificationsGrid().setOptions(taskGridOptions);
-                      }
-                      else { taskGridOptions.columns[i].hidden = true; vm.NotificationsGrid().setOptions(taskGridOptions);}
-                    }
-                    else {
-                      if (vm.NotificationsGrid().columns[i].title == 'Date') { taskGridOptions.columns[i].width = 100; vm.NotificationsGrid().setOptions(taskGridOptions); }
-                      else if (vm.NotificationsGrid().columns[i].title == 'Event') { taskGridOptions.columns[i].width = 125; vm.NotificationsGrid().setOptions(taskGridOptions); }
-                    }
-                  }
-                });
+                Dns.WebApi.Users.GetMetadataEditPermissionsSummary().done((editMetadataPermissions: Dns.Interfaces.IMetadataEditPermissionsSummaryDTO[]) => {
+                    //ViewModel.editMetadataPermissions = editMetadataPermissions.length > 0 ? editMetadataPermissions[0] : { CanEditRequestMetadata: false, EditableDataMarts: [] };
 
-                for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
-                  var tasksGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
-                  if (vm.MessagesGrid().columns[i].title == 'Date') { tasksGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(tasksGridOptions); }
-                }
-                vm.MessagesGrid().bind("columnShow", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
-                    if (vm.MessagesGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.MessagesGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
-                    var messagesGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
-                    if (numAvailCol < 2) {
-                      if (vm.MessagesGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.MessagesGrid().table.width();
-                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
-                      }
-                      else if (vm.MessagesGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.MessagesGrid().table.width();
-                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
-                      }
-                      else { messagesGridOptions.columns[i].hidden = true; vm.MessagesGrid().setOptions(messagesGridOptions); }
+                    if (editMetadataPermissions.length > 0) {
+                        //set the requests grid as selectable
+                        //'multiple,row';
+                        //selectable: $root.gRequestsRowSelector,
+                        //vm.RequestsGrid().setOptions({ selectable: 'multiple,row' });
+                        ViewModel.editMetadataPermissions = editMetadataPermissions[0];
+                        if (editMetadataPermissions[0].CanEditRequestMetadata) {
+                            //vm.RequestsGrid().options.selectable = 'multiple,row';
+                            //vm.RequestsGrid().refresh();
+                            vm.RequestsGrid().setOptions({ selectable: 'multiple,row' });
+                            vm.RequestsGrid().dataSource.read();
+                        }
                     }
-                    else {
-                      if (vm.MessagesGrid().columns[i].title == 'Date') { messagesGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(messagesGridOptions); }
-                    }
-                  }
-                });
-                vm.MessagesGrid().bind("columnHide", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
-                    if (vm.MessagesGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.MessagesGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.MessagesGrid().columns.length; i++) {
-                    var messagesGridOptions = $.extend({}, vm.MessagesGrid().getOptions());
-                    if (numAvailCol < 2) {
-                      if (vm.MessagesGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.MessagesGrid().table.width();
-                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
-                      }
-                      else if (vm.MessagesGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.MessagesGrid().table.width();
-                        messagesGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.MessagesGrid().setOptions(messagesGridOptions);
-                      }
-                      else { messagesGridOptions.columns[i].hidden = true; vm.MessagesGrid().setOptions(messagesGridOptions); }
-                    }
-                    else {
-                      if (vm.MessagesGrid().columns[i].title == 'Date') { messagesGridOptions.columns[i].width = 100; vm.MessagesGrid().setOptions(messagesGridOptions); }
-                    }
-                  }
-                });
 
-                for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
-                  var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
-                  if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                  else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                }
-                vm.TasksGrid().bind("columnShow", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
-                    if (vm.TasksGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.TasksGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
-                    var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
-                    if (numAvailCol < 11) {
-                      if (vm.TasksGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.TasksGrid().table.width();
-                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.TasksGrid().setOptions(tasksGridOptions);
-                      }
-                      else if (vm.TasksGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.TasksGrid().table.width();
-                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.TasksGrid().setOptions(tasksGridOptions);
-                      }
-                      else { tasksGridOptions.columns[i].hidden = true; vm.TasksGrid().setOptions(tasksGridOptions); }
-                    }
-                    else {
-                      if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                    }
-                  }
-                });
-                vm.TasksGrid().bind("columnHide", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
-                    if (vm.TasksGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.TasksGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.TasksGrid().columns.length; i++) {
-                    var tasksGridOptions = $.extend({}, vm.TasksGrid().getOptions());
-                    if (numAvailCol < 11) {
-                      if (vm.TasksGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.TasksGrid().table.width();
-                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.TasksGrid().setOptions(tasksGridOptions);
-                      }
-                      else if (vm.TasksGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.TasksGrid().table.width();
-                        tasksGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.TasksGrid().setOptions(tasksGridOptions);
-                      }
-                      else { tasksGridOptions.columns[i].hidden = true; vm.TasksGrid().setOptions(tasksGridOptions); }
-                    }
-                    else {
-                      if (vm.TasksGrid().columns[i].title == 'Task') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 180; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Task Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Created') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Start Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'End Date') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Assignees') { tasksGridOptions.columns[i].width = 300; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 160; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                      else if (vm.TasksGrid().columns[i].title == 'Request Status') { tasksGridOptions.columns[i].width = 150; vm.TasksGrid().setOptions(tasksGridOptions); }
-                    }
-                  }
-                });
+                });               
 
-               
-                for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
-                  var tasksGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
-                  if (vm.RequestsGrid().columns[i].title == 'Name') { tasksGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(tasksGridOptions);}
-                  else if (vm.RequestsGrid().columns[i].title == 'System Number') { tasksGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { tasksGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Submitter') { tasksGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Status') { tasksGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Type') { tasksGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Project') { tasksGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Priority') { tasksGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Due Date') { tasksGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                  else if (vm.RequestsGrid().columns[i].title == 'Request ID') { tasksGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(tasksGridOptions); }
-                }
-                vm.RequestsGrid().bind("columnShow", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
-                    if (vm.RequestsGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.RequestsGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
-                    var requestGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
-                    if (numAvailCol < 10) {
-                      if (vm.RequestsGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.RequestsGrid().table.width();
-                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.RequestsGrid().setOptions(requestGridOptions);
-                      }
-                      else if (vm.RequestsGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.RequestsGrid().table.width();
-                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol); vm.RequestsGrid().setOptions(requestGridOptions);
-                      }
-                      else { requestGridOptions.columns[i].hidden = true; vm.RequestsGrid().setOptions(requestGridOptions); }
-                    }
-                    else {
-                      if (vm.RequestsGrid().columns[i].title == 'Name') { requestGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'System Number') { requestGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { requestGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Submitter') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Status') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Type') { requestGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Project') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Priority') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Due Date') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Request ID') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
-                    }
-                  }
-                });
-                vm.RequestsGrid().bind("columnHide", function (e) {
-                  var numAvailCol = 0;
-                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
-                    if (vm.RequestsGrid().columns[i].hidden == undefined) { numAvailCol++ }
-                    else if (vm.RequestsGrid().columns[i].hidden == false) { numAvailCol++ }
-                  }
-                  for (var i = 0; i < vm.RequestsGrid().columns.length; i++) {
-                    var requestGridOptions = $.extend({}, vm.RequestsGrid().getOptions());
-                    if (numAvailCol < 10) {
-                      if (vm.RequestsGrid().columns[i].hidden == undefined) {
-                        var totalWidth = vm.RequestsGrid().table.width();
-                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.RequestsGrid().setOptions(requestGridOptions);
-                      }
-                      else if (vm.RequestsGrid().columns[i].hidden == false) {
-                        var totalWidth = vm.RequestsGrid().table.width();
-                        requestGridOptions.columns[i].width = (totalWidth / numAvailCol);
-                        vm.RequestsGrid().setOptions(requestGridOptions);
-                      }
-                      else { requestGridOptions.columns[i].hidden = true; vm.RequestsGrid().setOptions(requestGridOptions);}
-                    }
-                    else {
-                      if (vm.RequestsGrid().columns[i].title == 'Name') { requestGridOptions.columns[i].width = 200; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'System Number') { requestGridOptions.columns[i].width = 90; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Date Submitted') { requestGridOptions.columns[i].width = 165; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Submitter') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Status') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Type') { requestGridOptions.columns[i].width = 175; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Project') { requestGridOptions.columns[i].width = 125; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Priority') { requestGridOptions.columns[i].width = 100; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Due Date') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
-                      else if (vm.RequestsGrid().columns[i].title == 'Request ID') { requestGridOptions.columns[i].width = 120; vm.RequestsGrid().setOptions(requestGridOptions); }
-                    }
-                  }
-                });
             });
+        }).then(() => {
+            $('#PageLoadingMessage').remove();
         });
     }
 

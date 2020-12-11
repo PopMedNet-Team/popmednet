@@ -5,11 +5,14 @@ module DataMarts.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
 
-        constructor(gDataMartsSetting: string, bindingControl: JQuery, screenPermissions: any[]) {
+        constructor(gDataMartsSetting: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);
             var self = this;
 
+            let dsDataMartSettings = gDataMartsSetting.filter((item) => { return item.Key === "DataMarts.Index.gResults.User:" + User.ID });
+            this.dsSetting = (dsDataMartSettings.length > 0 && dsDataMartSettings[0] !== null) ? dsDataMartSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -25,8 +28,7 @@ module DataMarts.Index {
                 },
                 sort: { field: "Name", dir: "asc" },
 
-            });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gDataMartsSetting);       
+            });     
 
         }
 
@@ -44,17 +46,12 @@ module DataMarts.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("DataMarts.Index.gDataMarts.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["DataMarts.Index.gDataMarts.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done((gDataMartsSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gDataMartsSetting, bindingControl, canAdd[0] ? [PMNPermissions.Organization.CreateDataMarts] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.DataMartsGrid(), gDataMartsSetting);
-                vm.DataMartsGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("DataMarts.Index.gDataMarts.User:" + User.ID, Global.Helpers.GetGridSettings(vm.DataMartsGrid()));
-                });
-                vm.DataMartsGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });        
     }

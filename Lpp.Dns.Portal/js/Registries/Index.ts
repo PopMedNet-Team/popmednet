@@ -4,11 +4,12 @@ module Registries.Index {
 
     export class ViewModel extends Global.PageViewModel {
         public ds: kendo.data.DataSource;
-
-        constructor(gRegistriesSettings: string, bindingControl: JQuery, screenPermissions: any[]) {
+        public dsSetting: Dns.Interfaces.IUserSettingDTO;
+        constructor(gRegistriesSettings: Dns.Interfaces.IUserSettingDTO[], bindingControl: JQuery, screenPermissions: any[]) {
             super(bindingControl, screenPermissions);    
             var self = this;
-                    
+            let dsgroupSettings = gRegistriesSettings.filter((item) => { return item.Key === "Registries.Index.gRegistries.User:" + User.ID });
+            this.dsSetting = (dsgroupSettings.length > 0 && dsgroupSettings[0] !== null) ? dsgroupSettings[0] : null
             this.ds = new kendo.data.DataSource({
                 type: "webapi",
                 serverPaging: true,
@@ -33,7 +34,6 @@ module Registries.Index {
                 sort: { field: "Name", dir: "asc" },
 
             });
-            Global.Helpers.SetDataSourceFromSettings(this.ds, gRegistriesSettings);
         }
 
         public btnNewRegistry_Click() {
@@ -59,17 +59,12 @@ module Registries.Index {
     }
 
     function init() {
-        $.when<any>(Users.GetSetting("Registries.Index.gRegistries.User:" + User.ID),
+        $.when<any>(Users.GetSettings(["Registries.Index.gRegistries.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateRegistry)).done((gRegistriesSetting, canAdd) => {
             $(() => {
                 var bindingControl = $("#Content");
                 vm = new ViewModel(gRegistriesSetting, bindingControl, canAdd[0] ? [PMNPermissions.Portal.CreateRegistry] : []);
                 ko.applyBindings(vm, bindingControl[0]);
-                Global.Helpers.SetGridFromSettings(vm.RegistriesGrid(), gRegistriesSetting);
-                vm.RegistriesGrid().bind("dataBound", function (e) {
-                  Users.SetSetting("Registries.Index.gRegistries.User:" + User.ID, Global.Helpers.GetGridSettings(vm.RegistriesGrid()));
-                });
-                vm.RegistriesGrid().bind("columnMenuInit", Global.Helpers.AddClearAllFiltersMenuItem);
             });
         });
     }

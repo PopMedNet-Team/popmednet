@@ -30,12 +30,11 @@
             </div>
             <div class="panel-body">
                 <!--ko if: Parameters.ListID != 13-->
-                <div id="gResults" data-bind="kendoGrid: {
-                    data: dsResults,
-                    scrollable: true,
-                    resizable: true,
-                    sortable: true,
+                <div id="gResults" data-bind="pmnGrid: {
+                    dataSource: dsResults,
                     selectable: 'row',
+                     columnMenu: false,
+                     height: 300,
                     columns: [
                         {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
                         {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
@@ -45,12 +44,11 @@
                 }" style="height: 300px;"></div>
                 <!--/ko-->
                 <!--ko if: Parameters.ListID == 13-->
-                <div id="gResults" data-bind="kendoGrid: {
-                    data: dsResults,
-                    scrollable: true,
-                    resizable: true,
-                    sortable: true,
+                <div id="gResults" data-bind="pmnGrid: {
+                    dataSource: dsResults,
                     selectable: 'row',
+                     columnMenu: false,
+                     height: 300,
                     columns: [
                         {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
                         {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
@@ -68,12 +66,11 @@
             </div>
             <div class="panel-body">
                 <!--ko if: Parameters.ListID != 13-->
-                <div id="Selected" data-bind="kendoGrid: {
-                    data: dsSelected,
-                    scrollable: true,
-                    resizable: true,
-                    sortable: true,
+                <div id="Selected" data-bind="pmnGrid: {
+                    dataSource: dsSelected,
                     selectable: 'row',
+                     columnMenu: false,
+                     height: 300,
                     columns: [
                         {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
                         {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},
@@ -83,12 +80,11 @@
                 }" style="height: 300px;"></div>
                 <!--/ko-->
                 <!--ko if: Parameters.ListID == 13-->
-                <div id="Selected" data-bind="kendoGrid: {
-                    data: dsSelected,
-                    scrollable: true,
-                    resizable: true,
-                    sortable: true,
+                <div id="Selected" data-bind="pmnGrid: {
+                    dataSource: dsSelected,
                     selectable: 'row',
+                     columnMenu: false,
+                     height: 300,
                     columns: [
                         {field: 'ItemCode', title: 'Code', width: 70, attributes: { style: 'cursor: pointer;'}},
                         {field: 'ItemName', title: 'Name', width: '100%', attributes: { style: 'cursor: pointer;'}},

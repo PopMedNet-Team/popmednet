@@ -13,25 +13,23 @@
         </div>
         <div class="row" style="border:none;">
             <div class="col-sm-10 col-sm-offset-1">
-                <div id="grNotifications" data-bind="kendoGrid: {
-                        data: dsRequestObservers,
-                        sortable: true,
-                        filterable: true,
-                        resizable: true,
-                        reorderable: true,
-                        scrollable: true,
-                        pageable: false,
-                        groupable: false,
-                        useKOTemplates: true,
-                        rowTemplate: 'templateRequestObservers',
-                        columnMenu: { columns: true },
-                        columnMenuInit: $root.onColumnMenuInit,
-                        columns: [
-                            {field: 'DisplayName', title: 'Name'},
-                            {field: 'EventSubscriptions', title: 'Notifications'},
-                            {field: 'ID', title: ' ', width: 50}
-                        ]
-                    }">
+                <div id="grNotifications" data-bind="pmnGrid: {
+                    dataSource: dsRequestObservers,
+                    autoBind: false,
+                    savedSetting:{
+                        Key: 'Controls.WFNotifications.List.grNotifications.User:',
+                        Setting: dsSetting !== null ? dsSetting.Setting : null
+                    },
+                    pageable: false,
+                    groupable: false,
+                    useKOTemplates: true,
+                    rowTemplate: 'templateRequestObservers',
+                    columns: [
+                        {field: 'DisplayName', title: 'Name'},
+                        {field: 'EventSubscriptions', title: 'Notifications'},
+                        {field: 'ID', title: ' ', width: 50}
+                    ]
+                }">
                 </div>
                 <br />
                 <script id="templateRequestObservers" type="text/html">
@@ -43,7 +41,7 @@
                             <!-- ko if: Email != '' -->
                             <span class="glyphicon glyphicon-envelope"></span>&nbsp;<span data-bind="text: DisplayName + ' <' + Email + '>'"></span>
                             <!-- /ko -->
-                            <!-- ko if: UserID != null -->  
+                            <!-- ko if: UserID != null -->
                             <span class="glyphicon glyphicon-user"></span>&nbsp;<span data-bind="text: DisplayName"></span>
                             <!-- /ko -->
                             @*<span data-bind="text: DisplayName"></span>*@

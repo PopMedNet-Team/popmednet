@@ -14,6 +14,7 @@ module Requests.Create {
 
             var self = this;
             self.RequestTypes = requestTypes;
+            debugger;
             this.onSelectRequestType = (requestType: Dns.Interfaces.IRequestTypeDTO) => {
                 self.Close(requestType);
             };

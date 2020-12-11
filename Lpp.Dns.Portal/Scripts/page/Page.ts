@@ -492,7 +492,9 @@ module Global {
 
         static SetDataSourceFromSettings(ds: kendo.data.DataSource, settings: string) {
             var s: IKendoDataSourceSettings = JSON.parse(settings);
-            
+            s.page = ds.page();
+            s.pageSize = ds.pageSize();
+
             if (s == null) {
                 ds.query();
             } else {
@@ -575,6 +577,9 @@ module Global {
         static SetDataSourceFromSettingsWithDates(ds: kendo.data.DataSource, settings: string, colDates: string[]) {
 
             var s: IKendoDataSourceSettings = JSON.parse(settings);
+            s.page = ds.page();
+            s.pageSize = ds.pageSize();
+            
 
             if (s == null) {
                 ds.query();
@@ -666,6 +671,50 @@ module Global {
             } finally {
                 grid.options["Updating"] = false;
             }
+        }
+
+        static SetGridDefaultColumnDefaultSizes(grid: kendo.ui.Grid, columnSizes: any) {
+            grid.columns.forEach(function (column: kendo.ui.GridColumn) {
+                for (var i = 0; i < Object.getOwnPropertyNames(columnSizes).length; i++) {
+                    var colProp = Object.getOwnPropertyNames(columnSizes)[i];
+                    var colValue = columnSizes[colProp];
+                    if (column.title === colProp)
+                        grid.resizeColumn(column, colValue);
+                }
+            });
+        }
+
+        static GetColumnFilterOperatorDefaults() {
+            return {
+                operators: {
+                    string: {
+                        contains: "Contains",
+                        doesnotcontain: "Does not contain",
+                        eq: "Is equal to",
+                        neq: "Is not equal to",
+                        startswith: "Starts with",
+                        endswith: "Ends With",
+                        isnull: "Is null",
+                        isnotnull: "Is not null",
+                        isempty: "Is empty",
+                        isnotempty: "Is not empty",
+                    },
+                    date: {
+                        gt: "Is After",
+                        lt: "Is Before"
+                    },
+                    number: {
+                        eq: "Is equal to",
+                        neq: "Is not equal to",
+                        gte: "Is greater than or equal to",
+                        gt: "Is greater than",
+                        lte: "Is less than or equal to",
+                        lt: "Is less than",
+                        isnull: "Is null",
+                        isnotnull: "Is not null"
+                    }
+                },
+            };
         }
 
         static WatchGridForChanges(grid: kendo.ui.Grid, func: () => void) {
@@ -1316,24 +1365,5 @@ if ((typeof Dns != 'undefined') && Dns.WebApi != null)
 $(() => {
     if (!("autofocus" in document.createElement("input"))) {
         $("[autofocus]").focus();
-    }
-});
-
-$.ajaxSetup({
-    beforeSend: (xhr: JQueryXHR, settings: JQueryAjaxSettings) => {
-        if (!settings || !settings.type)
-            return;
-
-        switch (settings.type.toLowerCase()) {
-            case "post":
-            case "put":
-            case "delete":
-            case "patch":
-                Global.Helpers.ShowExecuting();
-                break;
-        }
-    },
-    complete: (xhr: JQueryXHR) => {
-        Global.Helpers.HideExecuting();
     }
 });
