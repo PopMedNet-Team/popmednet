@@ -18,14 +18,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
         {
         }
 
-        public override QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             SummarySqlQueryAdapter sql = new SummarySqlQueryAdapter();
-            var result = sql.Execute(request, _settings, viewSQL);
-
-            _currentResponse = result;
-
-            return result;
+            var result = sql.Execute(query, _settings, viewSQL);
+            return new[] { result };
         }
     }
 }

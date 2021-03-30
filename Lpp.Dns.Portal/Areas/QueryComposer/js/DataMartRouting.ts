@@ -1,5 +1,5 @@
 ﻿module Plugins.Requests.QueryBuilder.DataMartRouting {
-    export var vm: ViewModel;
+    //export var vm: ViewModel;
 
     export class Routings {
         //binding fields here
@@ -50,7 +50,7 @@
 
     export class ViewModel extends Global.PageViewModel {
         DataMarts: KnockoutObservableArray<Plugins.Requests.QueryBuilder.DataMartRouting.Routings>;
-        LoadDataMarts: (ProjectID: any, strQuery: string) => void;
+        LoadDataMarts: (ProjectID: any, termIDs: any[]) => void;
         public DataMartsBulkEdit: () => void;
         public SelectedRoutings: () => Dns.Interfaces.IRequestDataMartDTO[];
         public SelectedDataMartIDs: KnockoutObservableArray<any>;
@@ -72,7 +72,7 @@
             additionalInstructions: string
         ){
             super(bindingControl);
-            var self = this;
+            let self = this;
             this.DataMarts = ko.observableArray([]);
             this.ExistingRequestDataMarts = existingRequestDataMarts || [];
             this.SelectedDataMartIDs = ko.observableArray(ko.utils.arrayMap(self.ExistingRequestDataMarts, (exdm) => exdm.DataMartID));
@@ -84,11 +84,13 @@
 
 
             this.DataMarts = ko.observableArray<Plugins.Requests.QueryBuilder.DataMartRouting.Routings>();
-            this.LoadDataMarts = (projectID: any, strQuery: string) => {
+
+            //load the datamarts available to service the request
+            this.LoadDataMarts = (projectID: any, termIDs: any[]) => {
                 Dns.WebApi.Requests.GetCompatibleDataMarts({
-                    TermIDs: null,
+                    TermIDs: termIDs,
                     ProjectID: projectID,
-                    Request: strQuery,
+                    Request: '',
                     RequestID: Global.GetQueryParam("ID")
                 }).done((dataMarts) => {
                     let routes = [];
@@ -103,7 +105,6 @@
                     }
 
                     self.DataMarts(routes);
-
                 });
             }
 
@@ -187,18 +188,22 @@
             });
         }
 
+        public onKnockoutBind() {
+            ko.applyBindings(this, this._BindingControl[0]);
+        }
+
     }
 
     export function init(
-        bindingControl: JQuery,
+        //bindingControl: JQuery,
         fieldOptions: Dns.Interfaces.IBaseFieldOptionAclDTO[],
         existingRequestDataMarts: Dns.Interfaces.IRequestDataMartDTO[],
         defaultDueDate: Date,
         defaultPriority: Dns.Enums.Priorities,
         additionalInstructions: string
     ) {
-        //let bindingControl = $('#DataMartsControl');
-        vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-        ko.applyBindings(vm, $('#DataMartsControl')[0]);
+        let vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel($('#DataMartsControl'), fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
+        //ko.applyBindings(vm, bindingControl[0]);
+        return vm;
     }
 }

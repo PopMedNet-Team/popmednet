@@ -19,6 +19,7 @@ var Plugins;
         (function (QueryBuilder) {
             var DataMartRouting;
             (function (DataMartRouting) {
+                //export var vm: ViewModel;
                 var Routings = /** @class */ (function () {
                     function Routings(dataMart, existingRequestDataMart) {
                         this.Priority = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.Priority : dataMart.Priority);
@@ -61,11 +62,12 @@ var Plugins;
                         _this.DefaultDueDate = ko.observable(defaultDueDate);
                         _this.DataMartAdditionalInstructions = ko.observable(additionalInstructions || '');
                         _this.DataMarts = ko.observableArray();
-                        _this.LoadDataMarts = function (projectID, strQuery) {
+                        //load the datamarts available to service the request
+                        _this.LoadDataMarts = function (projectID, termIDs) {
                             Dns.WebApi.Requests.GetCompatibleDataMarts({
-                                TermIDs: null,
+                                TermIDs: termIDs,
                                 ProjectID: projectID,
-                                Request: strQuery,
+                                Request: '',
                                 RequestID: Global.GetQueryParam("ID")
                             }).done(function (dataMarts) {
                                 var routes = [];
@@ -150,13 +152,18 @@ var Plugins;
                             }
                         });
                     };
+                    ViewModel.prototype.onKnockoutBind = function () {
+                        ko.applyBindings(this, this._BindingControl[0]);
+                    };
                     return ViewModel;
                 }(Global.PageViewModel));
                 DataMartRouting.ViewModel = ViewModel;
-                function init(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
-                    //let bindingControl = $('#DataMartsControl');
-                    DataMartRouting.vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-                    ko.applyBindings(DataMartRouting.vm, $('#DataMartsControl')[0]);
+                function init(
+                //bindingControl: JQuery,
+                fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
+                    var vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel($('#DataMartsControl'), fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
+                    //ko.applyBindings(vm, bindingControl[0]);
+                    return vm;
                 }
                 DataMartRouting.init = init;
             })(DataMartRouting = QueryBuilder.DataMartRouting || (QueryBuilder.DataMartRouting = {}));

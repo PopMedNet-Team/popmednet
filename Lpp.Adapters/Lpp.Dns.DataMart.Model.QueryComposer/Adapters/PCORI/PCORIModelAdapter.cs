@@ -22,7 +22,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         DataContext db = null;
         Model.Settings.SQLProvider _sqlProvider = Settings.SQLProvider.SQLServer;
-        QueryComposerResponseDTO _currentResponse = null;
 
         public PCORIModelAdapter(RequestMetadata requestMetadata)
             : base(new Guid("85EE982E-F017-4BC4-9ACD-EE6EE55D2446"), requestMetadata)
@@ -95,26 +94,29 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             };
         }
 
-        protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
+        protected override string[] LowThresholdColumns(QueryComposerResponseQueryResultDTO response)
         {
             return new string[] { "Patients" };
         }
 
-        QueryComposerRequestInterrogator _queryInterrogator = null;
+        QueryComposerQueryInterrogator _queryInterrogator = null;
 
-        public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
-            _queryInterrogator = new QueryComposerRequestInterrogator(request);
+            _queryInterrogator = new QueryComposerQueryInterrogator(query);
 
             if (_queryInterrogator.IsSQLDistribution)
             {
-                return ExecuteSqlDistribution(request, viewSQL);
+                return new[] { ExecuteSqlDistribution(query, viewSQL) };
             }
+
+            DateTimeOffset executionStart = DateTimeOffset.UtcNow;
 
             IQueryable<pcori.Patient> rootQuery = db.Patients;
             if (_queryInterrogator.HasCriteria)
             {
-                Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(query.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+
                 rootQuery = rootQuery.Where(queryPredicate);
             }
 
@@ -162,12 +164,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             termImplementations.Add(ModelTermsFactory.PatientReportedOutcomeEncounterID, new Terms.PatientReportedOutcomeEncounter(db));
 
 
-            foreach (var field in request.Select.Fields)
+            foreach (var field in query.Select.Fields)
             {
                 TermImplementation termImp;
                 if (!termImplementations.TryGetValue(field.Type, out termImp))
                 {
-                    throw new NotSupportedException("The term with type ID of '" + field.Type.ToString("D") + "' is not supported by this adapter.");
+                    throw new NotSupportedException($"For request:{ RequestMetadata.MSRequestID }, query:{ query.Header.Name }, the term with type ID of '" + field.Type.ToString("D") + "' is not supported by this adapter.");
                 }
 
                 termImp.RegisterQueryComposerField(field);
@@ -179,7 +181,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             List<TermImplementation> selectorTerms = termImplementations.Values.Where(t => t.HasFields).ToList();
 
             //register the criteria with each term being used
-            var criteria = request.Where.Criteria.ToArray();
+            var criteria = query.Where.Criteria.ToArray();
             selectorTerms.ForEach(t => t.RegisterCriteria(criteria));
 
 
@@ -222,7 +224,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             if (trialIDTermImp != null)
             {
                 IQueryable<pcori.ClinicalTrial> trialQuery = db.ClinicalTrials;
-                var trialPredicate = ApplyClinicalTrialCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                var trialPredicate = ApplyClinicalTrialCriteria(query.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
                 if (trialPredicate != null)
                 {
                     trialQuery = trialQuery.Where(trialPredicate);
@@ -290,13 +292,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             //var sql = temp.ToTraceQuery();
 
             var patientReportedOutcomeTermImpl = selectorTerms.FirstOrDefault(t => t.TermID == ModelTermsFactory.PatientReportedOutcomeID);
-            if (patientReportedOutcomeTermImpl != null && (request.TemporalEvents == null || !request.TemporalEvents.Any()))
+            if (patientReportedOutcomeTermImpl != null && (query.TemporalEvents == null || !query.TemporalEvents.Any()))
             {
                 var patientCountTerm = selectorTerms.First(t => t is Terms.PatientCount);
                 ((Terms.PatientCount)patientCountTerm).IsEncounterCount = true;
 
                 IQueryable<pcori.ReportedOutcome> proQuery = db.ReportedOutcomeCommonMeasures;
-                Expression<Func<pcori.ReportedOutcome, bool>> proPredicate = ApplyPatientReportedOutcomeCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                Expression<Func<pcori.ReportedOutcome, bool>> proPredicate = ApplyPatientReportedOutcomeCriteria(query.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
                 if (proPredicate != null)
                 {
                     proQuery = proQuery.Where(proPredicate);
@@ -353,9 +355,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             IEnumerable<Objects.Dynamic.IPropertyDefinition> groupKeyPropertyDefinitions = new QueryComposerResponsePropertyDefinitionDTO[0];
 
             //root inner query has been composed, determine if this is a time window query and execute if it is else continue with the group select
-            if (request.TemporalEvents != null && request.TemporalEvents.Any())
+            if (query.TemporalEvents != null && query.TemporalEvents.Any())
             {
-                var timewindowBuilder = new TimeWindowQueryBuilder(db, request.TemporalEvents, request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                var timewindowBuilder = new TimeWindowQueryBuilder(db, query.TemporalEvents, query.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
                 currentSelectCall = timewindowBuilder.Generate(currentSelectCall, currentSelectType);
 
                 selectPropertyDefinitions = timewindowBuilder.FinalSelectPropertyDefinitions();
@@ -401,7 +403,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 logger.Debug($"[{RequestMetadata.DataMartName}, {RequestMetadata.MSRequestID}] Final expression: { currentSelectCall.ToString() }");
             }
 
-            IQueryable query = rootQuery.Provider.CreateQuery(currentSelectCall);
+            IQueryable queryResult = rootQuery.Provider.CreateQuery(currentSelectCall);
 
             IEnumerable<ITermResultTransformer> resultTransformers = selectorTerms.Where(t => (t as ITermResultTransformer) != null).Cast<ITermResultTransformer>().ToArray();
 
@@ -410,7 +412,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             {
                 try
                 {
-                    foreach (var item in query)
+                    foreach (var item in queryResult)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -454,7 +456,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             else
             {
                 Dictionary<string, object> row = new Dictionary<string, object>();
-                row.Add("SQL", query.ToString());
+                row.Add("QueryName", query.Header.Name);
+                row.Add("SQL", queryResult.ToString());
                 results.Add(row);
             }
 
@@ -469,40 +472,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             groupKeyPropertyDefinitions = VisitPropertyDefinitionsForTransforms(resultTransformers, groupKeyPropertyDefinitions);
 
-            QueryComposerResponseDTO response = new QueryComposerResponseDTO
-            {
-                ResponseDateTime = DateTime.UtcNow,
+            QueryComposerResponseQueryResultDTO response = new QueryComposerResponseQueryResultDTO 
+            { 
+                ID = query.Header.ID,
+                QueryStart = executionStart,
+                QueryEnd = DateTimeOffset.UtcNow,
+                Name = query.Header.Name,
                 Results = new[] { results },
+                LowCellThrehold = _lowThresholdValue,
                 Properties = selectPropertyDefinitions.Cast<QueryComposerResponsePropertyDefinitionDTO>(),
-                Aggregation = new QueryComposerResponseAggregationDefinitionDTO
-                {
+                Aggregation = new QueryComposerResponseAggregationDefinitionDTO { 
                     GroupBy = groupKeyPropertyDefinitions.Select(k => k.Name).ToArray(),
                     //do not include the low threshhold column as an property to include in aggregation
                     Select = selectPropertyDefinitions.Where(k => k.Name != LowThresholdColumnName).ToArray()
                 }
             };
 
-            if (request.ID.HasValue)
-                response.RequestID = request.ID.Value;
+            //if (request.ID.HasValue)
+            //    response.RequestID = request.ID.Value;
 
-            _currentResponse = response;
-
-            return response;
-        }
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            if (_currentResponse == null)
-                return new QueryComposerModelProcessor.DocumentEx[0];
-
-            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
-        }
-
-        public override void PostProcess(QueryComposerResponseDTO response)
-        {
-            base.PostProcess(response);
-
-            _currentResponse = response;
+            return new[] { response };
         }
 
         public override void GeneratePatientIdentifierLists(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<Guid, string> outputSettings, string format)
@@ -513,65 +502,86 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             //if no results, empty file
             //if error throw exception
 
-            _queryInterrogator = new QueryComposerRequestInterrogator(request);
+            string msRequestID = _settings["MSRequestID"] as string ?? string.Empty;
 
-            if (_queryInterrogator.IsSQLDistribution)
+            logger.Debug("Beginning processing queries for Patient Identifier list for Request: " + msRequestID);
+
+            foreach (var query in request.Queries)
             {
-                throw new InvalidOperationException("SQL Distribution query is not supported by this method. Execute should be called instead.");
+                logger.Debug($"Beginning processing query: {query.Header.Name} for Patient Identifier list for Request: { msRequestID}");
+                _queryInterrogator = new QueryComposerQueryInterrogator(query);
+
+                if (_queryInterrogator.IsSQLDistribution)
+                {
+                    throw new InvalidOperationException($"SQL Distribution query is not supported by this method. Execute should be called instead. Request: { msRequestID }, query: { query.Header.Name }");
+                }
+
+                IQueryable<pcori.Patient> rootQuery = db.Patients;
+                if (_queryInterrogator.HasCriteria)
+                {
+                    System.Linq.Expressions.Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(query.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
+                    rootQuery = rootQuery.Where(queryPredicate);
+                }
+
+                var patietIdentifiers = rootQuery.Select(p => p.ID).Distinct().ToArray();
+                logger.Debug($"Finish query execution for Patient Identifier list for Request: { msRequestID }, query: { query.Header.Name }. { patietIdentifiers.Length } patient identifiers found.");
+
+                string outputPath = outputSettings[query.Header.ID];
+                logger.Info($"Saving { patietIdentifiers.Length } patient identifiers for Request: { _settings["MSRequestID"] }, query: {query.Header.Name } to { outputPath }");
+
+                using (var output = new System.IO.FileStream(outputPath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.Write))
+                {
+                    var delimited = string.Join(",", patietIdentifiers);
+                    byte[] buffer = Encoding.Default.GetBytes(delimited);
+                    output.Write(buffer, 0, buffer.Length);
+
+                    output.Flush();
+                    output.Close();
+                }
+
             }
 
-            IQueryable<pcori.Patient> rootQuery = db.Patients;
-            if (_queryInterrogator.HasCriteria)
-            {
-                System.Linq.Expressions.Expression<Func<pcori.Patient, bool>> queryPredicate = ApplyCriteria(request.Where.Criteria.Where(c => c.Type == DTO.Enums.QueryComposerCriteriaTypes.Paragraph));
-                rootQuery = rootQuery.Where(queryPredicate);
-            }
-
-            logger.Debug("Beginning query for Patient Identifier list for Request: " + _settings["MSRequestID"]);
-            var patietIdentifiers = rootQuery.Select(p => p.ID).Distinct().ToArray();
-            logger.Debug($"Finish query execution for Patient Identifier list for Request: { _settings["MSRequestID"] }. { patietIdentifiers.Length } patient identifiers found.");
-
-            string outputPath = outputSettings.Values.First();
-            logger.Info($"Saving { patietIdentifiers.Length } patient identifiers for Request: { _settings["MSRequestID"] } to { outputPath }");
-
-            using (var output = new System.IO.FileStream(outputPath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.Write))
-            {
-                var delimited = string.Join(",", patietIdentifiers);
-                byte[] buffer = Encoding.Default.GetBytes(delimited);
-                output.Write(buffer, 0, buffer.Length);
-
-                output.Flush();
-                output.Close();
-            }
+            logger.Debug("Finished processing queries for Patient Identifier list for Request: " + msRequestID);
 
         }
 
-        private QueryComposerResponseDTO ExecuteSqlDistribution(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO ExecuteSqlDistribution(QueryComposerQueryDTO query, bool viewSQL)
         {
-            QueryComposerResponseDTO response = new QueryComposerResponseDTO
-            {
-                ResponseDateTime = DateTime.UtcNow,
-                Errors = Array.Empty<QueryComposerResponseErrorDTO>()
-            };
-
-            var allTerms = request.Where.Criteria.SelectMany(c => GetAllCriteriaTerms(c, new Nullable<Guid>())).ToArray();
+            var allTerms = query.FlattenToTerms().ToArray();
             if (allTerms.Any(t => t.Type != ModelTermsFactory.SqlDistributionID))
             {
                 //error: cannot mix sql distribution with any other term
-                throw new NotSupportedException("Only a single Sql Distribution term can be specified per request. The term cannot be mixed with other terms.");
+                return new QueryComposerResponseQueryResultDTO {
+                    ID = query.Header.ID,
+                    Errors = new[] { new QueryComposerResponseErrorDTO {
+                        QueryID = query.Header.ID,
+                        Code = "-1",
+                        Description = $"For request:{RequestMetadata.MSRequestID }, query:{ query.Header.Name }, only a single Sql Distribution term can be specified per request. The term cannot be mixed with other terms."
+                    } }
+                };
             }
 
             if (allTerms.Length > 1)
             {
                 //limit to a single sql dist request
-                throw new NotSupportedException("Only a single Sql Distribution term can be specified per request.");
+                return new QueryComposerResponseQueryResultDTO
+                {
+                    ID = query.Header.ID,
+                    Errors = new[] { new QueryComposerResponseErrorDTO {
+                        QueryID = query.Header.ID,
+                        Code = "-1",
+                        Description = $"For request:{RequestMetadata.MSRequestID }, query:{ query.Header.Name }, only a single Sql Distribution term can be specified per request."
+                    } }
+                };
             }
+
+            QueryComposerResponseQueryResultDTO result = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, Errors = Enumerable.Empty<QueryComposerResponseErrorDTO>() };
 
             string sql = allTerms[0].GetStringValue("Sql");
 
             if (viewSQL)
             {
-                response.Results = new[] {
+                result.Results = new[] {
                     new [] {
                         new Dictionary<string,object>(){
                             { "SQL", sql }
@@ -579,18 +589,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     }
                 };
 
-                response.Properties = new[] {
-                    new QueryComposerResponsePropertyDefinitionDTO {
+                result.Properties = new[] {
+                    new QueryComposerResponsePropertyDefinitionDTO { 
                         Name = "SQL",
                         Type = "System.String"
                     }
                 };
 
-                return response;
-            }
+                return result;
+            }           
 
             List<DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO> columnProperties = new List<QueryComposerResponsePropertyDefinitionDTO>();
             List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
+
+            result.QueryStart = DateTimeOffset.UtcNow;
+            logger.Debug($"For request:{RequestMetadata.MSRequestID }, query:{ query.Header.Name }, beginning execution of SQL Distribution sql.\r\n{sql}");
 
             using (var conn = Utilities.OpenConnection(_settings, logger, true))
             using (var cmd = conn.CreateCommand())
@@ -631,16 +644,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
             }
 
-            if (request.ID.HasValue)
-                response.RequestID = request.ID.Value;
+            logger.Debug($"For request:{RequestMetadata.MSRequestID }, query:{ query.Header.Name }, finished execution of SQL Distribution sql. { queryResults.Count } results found.");
+            result.QueryEnd = DateTimeOffset.UtcNow;
+            result.Results = new[] { queryResults };
+            result.Properties = columnProperties;
 
-            response.ResponseDateTime = DateTime.UtcNow;
-            response.Results = new[] { queryResults };
-            response.Properties = columnProperties;
-
-            _currentResponse = response;
-
-            return response;
+            return result;
         }
 
         /// <summary>
@@ -697,28 +706,16 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return definitions;
         }
 
-        public static IEnumerable<QueryComposerTermDTO> GetAllCriteriaTerms(QueryComposerCriteriaDTO paragraph, Guid? termTypeID)
-        {
-            if (termTypeID.HasValue)
-                return paragraph.Terms.Where(t => t.Type == termTypeID.Value).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == termTypeID.Value)));
-
-            return paragraph.Terms.Concat(paragraph.Criteria.SelectMany(c => c.Terms));
-        }
-
-        public static IEnumerable<QueryComposerTermDTO> GetAllCriteriaTerms(QueryComposerCriteriaDTO paragraph, IEnumerable<Guid> termTypeIDs)
-        {
-            return paragraph.Terms.Where(t => termTypeIDs.Contains(t.Type)).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Where(t => termTypeIDs.Contains(t.Type))));
-        }
 
         Expression<Func<pcori.Patient, bool>> ApplyAgeRangeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID).ToArray();
             if (!terms.Any())
             {
                 return patientPredicate;
             }
 
-            IEnumerable<DTO.Enums.AgeRangeCalculationType> calculationTypes = new[] {
+            IEnumerable<DTO.Enums.AgeRangeCalculationType> calculationTypes = new[] { 
                 DTO.Enums.AgeRangeCalculationType.AsOfSpecifiedDate,
                 DTO.Enums.AgeRangeCalculationType.AsOfDateOfRequestSubmission,
                 DTO.Enums.AgeRangeCalculationType.AtLastEncounterWithinHealthSystem
@@ -845,10 +842,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 }
                 else if (ageRangeValues.CalculationType.Value == DTO.Enums.AgeRangeCalculationType.AsOfDateOfRequestSubmission)
                 {
-                    if (!_queryInterrogator.HasRequestSubmissionDate)
+                    if (!_queryInterrogator.HasQuerySubmissionDate)
                         throw new ArgumentException("Missing request submission date value for applying age range criteria.");
 
-                    calculateAsOf = _queryInterrogator.RequestSubmissionDate.Value;
+                    calculateAsOf = _queryInterrogator.QuerySubmissionDate.Value.DateTime;
                 }
                 else
                 {
@@ -923,7 +920,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplySexTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.SexID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.SexID).ToArray();
 
             if (!terms.Any(t => t.Type == ModelTermsFactory.SexID))
             {
@@ -1005,7 +1002,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyHispanicTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.HispanicID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.HispanicID).ToArray();
 
             if (!terms.Any(t => t.Type == ModelTermsFactory.HispanicID))
             {
@@ -1138,7 +1135,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodStartDateWithinCriteriaGroup,
                 DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodEndDateWithinCriteriaGroup
             };
-            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
             if (!ageRanges.Any() || ageRanges.All(a => a.MinAge == null && a.MaxAge == null))
             {
@@ -1206,7 +1203,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyVisitsTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.VisitsID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.VisitsID).ToArray();
+
             if (!terms.Any())
             {
                 return patientPredicate;
@@ -1235,7 +1233,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
         {
             //create the applicable predicates based on height, weight, vital measure date, and observation period
 
-            var vitalsTerms = GetAllCriteriaTerms(paragraph, new[] { ModelTermsFactory.HeightID, ModelTermsFactory.WeightID, ModelTermsFactory.VitalsMeasureDateID });
+            var vitalsTerms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.HeightID || t.Type == ModelTermsFactory.WeightID || t.Type == ModelTermsFactory.VitalsMeasureDateID).ToArray();
+
             if (vitalsTerms.Any() == false)
             {
                 //only apply if there are any terms that act
@@ -1254,7 +1253,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 DTO.Enums.AgeRangeCalculationType.AtFirstMatchingEncounterWithinCriteriaGroup,
                 DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
             };
-            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).Where(a => a.MinAge.HasValue || a.MaxAge.HasValue).ToArray();
+            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).Where(a => a.MinAge.HasValue || a.MaxAge.HasValue).ToArray();
             foreach (var range in ageRanges)
             {
 
@@ -1493,7 +1492,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyClinicalTrialTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.TrialID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.TrialID).ToArray();
             if (!terms.Any())
                 return patientPredicate;
 
@@ -1524,7 +1523,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyPatientReportedOutcomeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.PatientReportedOutcomeID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.PatientReportedOutcomeID).ToArray();
             if (!terms.Any())
                 return patientPredicate;
 
@@ -1577,7 +1576,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyRaceTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.RaceID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.RaceID).ToArray();
 
             if (!terms.Any(t => t.Type == ModelTermsFactory.RaceID))
             {
@@ -1727,7 +1726,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                 DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodStartDateWithinCriteriaGroup,
                 DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodEndDateWithinCriteriaGroup
             };
-            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+            IEnumerable<AgeRangeValues> ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
             if (ageRanges.Any() && observationPeriodPredicate == null)
             {
@@ -1845,12 +1844,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.Patient, bool>> ApplyCombinedDiagnosisAndProcedureCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
-            //return patientPredicate;
             //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
-            var diagnosisTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
-            var procedureTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.ProcedureCodesID).ToArray();
-            var loincTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.LOINCCodesID).ToArray();
-            var prescribingTerms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.PrescribingID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.CombinedDiagnosisCodesID || t.Type == ModelTermsFactory.ProcedureCodesID || t.Type == ModelTermsFactory.LOINCCodesID || t.Type == ModelTermsFactory.PrescribingID).ToArray();
+            var diagnosisTerms = terms.Where(t => t.Type == ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
+            var procedureTerms = terms.Where(t => t.Type == ModelTermsFactory.ProcedureCodesID).ToArray();
+            var loincTerms = terms.Where(t => t.Type == ModelTermsFactory.LOINCCodesID).ToArray();
+            var prescribingTerms = terms.Where(t => t.Type == ModelTermsFactory.PrescribingID).ToArray();
 
             //The encounter predicate
             //This starts off with any criteria in the paragraph dictated by the Settings + Observation Period terms, if any.
@@ -1902,7 +1901,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
                 };
 
-                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
                 if (ageRanges.Length > 0)
                 {
@@ -2039,7 +2038,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
                 };
 
-                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
                 if (ageRanges.Length > 0)
                 {
@@ -2205,7 +2204,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
                 };
 
-                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
                 Expression<Func<pcori.LabResult, bool>> ageGroupingPredicate = null;
                 if (ageRanges.Any())
@@ -2536,7 +2535,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
                 };
 
-                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(GetAllCriteriaTerms(paragraph, ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
 
                 Expression<Func<pcori.Prescription, bool>> ageGroupingPredicate = null;
                 if (ageRanges.Any())
@@ -2656,7 +2655,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             }
             #endregion
 
-            ///PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
+            //PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
             //Since Oracle 11 doesn't support lateral inline views or cross joins, we had to update the implementation below to apply the encounter
             //predicate separately to both procedures and diagnosis.
             if (diagnosisTermGroupingPredicate != null || procedureTermGroupingPredicate != null || loincTermGroupingPredicate != null || prescribingTermGroupingPredicate != null)
@@ -2909,7 +2908,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.ClinicalTrial, bool>> ParseParagraphForClinicalTrial(QueryComposerCriteriaDTO paragraph)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.TrialID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.TrialID).ToArray();
             if (!terms.Any())
                 return null;
 
@@ -2989,7 +2988,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
         Expression<Func<pcori.ReportedOutcome, bool>> ParseParagraphForPatientReportedOutcome(QueryComposerCriteriaDTO paragraph)
         {
-            var terms = GetAllCriteriaTerms(paragraph, ModelTermsFactory.PatientReportedOutcomeID).ToArray();
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.PatientReportedOutcomeID).ToArray();
             if (!terms.Any() || _queryInterrogator.HasTemporalEvents)
                 return null;
 

@@ -8,7 +8,7 @@
         <div class="col-sm-4 form-group">
         </div>
         <div class="col-sm-2">
-            <button id="btnDeleteDrugClassField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteDrugClassField" class="btn btn-danger" data-bind="click: $component.onDeleteField.bind($component, $data, $parent)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
         </div>
     </div>
 </script>

@@ -11,7 +11,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 {
     public interface IQueryAdapter : IDisposable
     {
-        DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL);
+        IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL);
     }
 
     public abstract class QueryAdapter : IQueryAdapter
@@ -37,13 +37,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             }
         }
 
-        public virtual DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
+        public virtual IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO request, bool viewSQL)
         {
             SummaryRequestModel args = ConvertToModel(request);
 
             IEnumerable<string> queries = BuildQueries(args);
             
             List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+
+            var response = new QueryComposerResponseQueryResultDTO { ID = request.Header.ID, QueryStart = DateTimeOffset.UtcNow };
 
             List<Dictionary<string, object>> resultSets = new List<Dictionary<string, object>>(500);
             foreach (var query in queries)
@@ -60,22 +62,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 }
             }
 
-            var response = new DTO.QueryComposer.QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { resultSets }
-            };
-
+            response.QueryEnd = DateTimeOffset.UtcNow;
+            response.Results = new[] { resultSets };
+            response.Errors = errors;
             response.Properties = GetResponsePropertyDefinitions();
             if (_lowThresholdValue.HasValue)
             {
+                response.LowCellThrehold = _lowThresholdValue;
                 response.Properties = response.Properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
             }
             response.Aggregation = GetResponseAggregationDefinition();
 
-            return response;
+            return new[] { response };
         }
 
         public abstract void Dispose();
@@ -117,7 +115,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        protected abstract SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerRequestDTO request);
+        protected abstract SummaryRequestModel ConvertToModel(QueryComposerQueryDTO query);
 
         /// <summary>
         /// Applies crossjoin (as applicable) to the query.
@@ -155,7 +153,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
         }
         public IEnumerable<QueryComposerTermDTO> GetAllCriteriaTerms(QueryComposerCriteriaDTO paragraph, Guid termTypeID)
         {
-            return paragraph.Terms.Where(t => t.Type == termTypeID).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == termTypeID)));
+            return paragraph.FlattenCriteriaToTerms().Where(t => t.Type == termTypeID);
         }
         protected IEnumerable<string> BuildQueries(SummaryRequestModel args)
         {

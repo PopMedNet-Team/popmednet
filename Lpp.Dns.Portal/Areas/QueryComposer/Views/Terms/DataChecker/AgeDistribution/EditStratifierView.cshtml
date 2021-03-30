@@ -2,15 +2,9 @@
 
 <script type="text/html" id="s_@ModelTermsFactory.DC_AgeDistribution">
     <div class="row">
-        <div class="col-sm-2"><h4 id="lblAgeDistribution" class="TermHeader" style="font-weight:bold;">Age Distribution</h4></div>
-        <div class="col-sm-4 form-group">
-            &nbsp;
-        </div>
-        <div class="col-sm-4 form-group">
-            &nbsp;
-        </div>
+        <div class="col-sm-10"><h4 id="lblAgeDistribution" class="TermHeader bold">Age Distribution</h4></div>
         <div class="col-sm-2">
-            <button id="btnDeleteAgeDistributionField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteAgeDistributionField" class="btn btn-danger" data-bind="click: $component.onDeleteField.bind($component, $data, $parent)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
         </div>
     </div>
 </script>

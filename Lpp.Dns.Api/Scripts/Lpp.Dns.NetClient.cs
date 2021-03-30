@@ -1396,6 +1396,11 @@ namespace Lpp.Dns.ApiClient
 
 	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExportAllAsZip?" + idQueryString + "&");
 	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> ExportResponse(System.Guid requestID, string format)
+	 	 {
+
+	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExportResponse?requestID=" + System.Net.WebUtility.UrlEncode(requestID.ToString()) + "&format=" + (format == null ? "" : System.Net.WebUtility.UrlEncode(format.ToString())) + "&");
+	 	 }
 	 	 public async Task<System.Net.Http.HttpResponseMessage> GetTrackingTableForAnalysisCenter(System.Guid requestID)
 	 	 {
 
@@ -1607,6 +1612,11 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.RequestTypeTermDTO>(Path + "/GetTermsFilteredBy", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> TermsByAdapterAndDetail(Lpp.Dns.DTO.QueryComposer.AvailableTermsRequestDTO details)
+	 	 {
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.QueryComposer.AvailableTermsRequestDTO>(Path + "/TermsByAdapterAndDetail", details);
+	 	 	 return result;
+	 	 }
 	 	 public async Task<System.Net.Http.HttpResponseMessage> UpdateRequestTypeTerms(Lpp.Dns.DTO.UpdateRequestTypeTermsDTO updateInfo)
 	 	 {
 	 	 	 var result = await Client.Post<Lpp.Dns.DTO.UpdateRequestTypeTermsDTO>(Path + "/UpdateRequestTypeTerms", updateInfo);
@@ -1634,9 +1644,21 @@ namespace Lpp.Dns.ApiClient
 	 	 	 var result = await Client.Get<Lpp.Dns.DTO.HasGlobalSecurityForTemplateDTO>(Path + "/GetGlobalTemplatePermissions", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
-	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.TemplateDTO>> SaveCriteriaGroup(Lpp.Dns.DTO.SaveCriteriaGroupRequestDTO details)
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.TemplateDTO>> SaveCriteriaGroup(Lpp.Dns.DTO.CreateCriteriaGroupTemplateDTO details)
 	 	 {
-	 	 	 var result = await Client.Post<Lpp.Dns.DTO.SaveCriteriaGroupRequestDTO, Lpp.Dns.DTO.TemplateDTO>(Path + "/SaveCriteriaGroup", details);
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.CreateCriteriaGroupTemplateDTO, Lpp.Dns.DTO.TemplateDTO>(Path + "/SaveCriteriaGroup", details);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.QueryComposer.TemplateTermDTO>> ListHiddenTerms(System.Guid ID, string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.QueryComposer.TemplateTermDTO>(Path + "/ListHiddenTerms?ID=" + System.Net.WebUtility.UrlEncode(ID.ToString()) + "&", oDataQuery);
+	 	 	 return result.ReturnList();
+	 	 }
+	 	 public async Task<System.Collections.Generic.IEnumerable<Lpp.Dns.DTO.QueryComposer.TemplateTermDTO>> ListHiddenTermsByRequestType(System.Guid id, string oDataQuery = null)
+	 	 {
+
+	 	 	 var result = await Client.Get<Lpp.Dns.DTO.QueryComposer.TemplateTermDTO>(Path + "/ListHiddenTermsByRequestType?id=" + System.Net.WebUtility.UrlEncode(id.ToString()) + "&", oDataQuery);
 	 	 	 return result.ReturnList();
 	 	 }
 	 }

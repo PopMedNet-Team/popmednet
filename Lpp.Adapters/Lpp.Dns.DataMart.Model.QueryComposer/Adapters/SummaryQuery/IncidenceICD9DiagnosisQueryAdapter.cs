@@ -13,9 +13,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
     {
         public IncidenceICD9DiagnosisQueryAdapter(IDictionary<string, object> settings) : base(settings) { }
 
-        protected override SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerRequestDTO request)
+        protected override SummaryRequestModel ConvertToModel(QueryComposerQueryDTO query)
         {
-            var criteria = request.Where.Criteria.First();
+            var criteria = query.Where.Criteria.First();
 
             SummaryRequestModel model = new SummaryRequestModel();
 
@@ -52,7 +52,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             }
 
             //These values are pulled from the stratification section of the request json
-            var ageStratification = GetAgeField(request.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
+            var ageStratification = GetAgeField(query.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
             if (ageStratification != null)
             {
                 QueryAdapter.SetAgeStratification(model, ageStratification);

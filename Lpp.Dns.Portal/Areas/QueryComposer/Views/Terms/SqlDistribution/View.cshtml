@@ -1,10 +1,10 @@
 ﻿@using Lpp.QueryComposer
 <script type="text/html" id="v_@ModelTermsFactory.SqlDistributionID">
-    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
     <div class="row row-noborder">
         <div class="col-sm-3 bold">SQL Distribution</div>
         <div class="col-sm-9">
-            <span data-bind="text:  Values().Sql()"></span>
+            <span data-bind="text:  Values.Sql"></span>
         </div>
     </div>
 </script>

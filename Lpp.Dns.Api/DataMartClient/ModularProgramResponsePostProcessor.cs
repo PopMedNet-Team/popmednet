@@ -35,7 +35,7 @@ namespace Lpp.Dns.Api.DataMartClient
             _uploadDir = uploadDir;
         }
 
-        public async Task ExecuteAsync(Document document)
+        public async Task ExecuteAsync(Document document, string cachedDocumentFileName)
         {
             var details = await(from d in db.Documents
                                 let requestDataMart = db.Responses.Where(r => r.ID == d.ItemID).Select(r => r.RequestDataMart).FirstOrDefault()
@@ -78,7 +78,7 @@ namespace Lpp.Dns.Api.DataMartClient
             ZipInputStream zf = null;
             try
             {
-                using (var stream = new FileStream(Path.Combine(_uploadDir, document.ID + ".part"), FileMode.Open, FileAccess.Read))
+                using (var stream = new FileStream(Path.Combine(_uploadDir, cachedDocumentFileName), FileMode.Open, FileAccess.Read))
                 {
                     System.IO.StreamReader reader = null;
                     if (document.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))

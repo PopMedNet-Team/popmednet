@@ -309,13 +309,10 @@ namespace Lpp.Dns.DataMart.Model
                     {
                         using (StreamReader reader = new StreamReader(requestJson.Stream))
                         {
-                            string query = reader.ReadToEnd();
-                            log.Debug("Request json:" + Environment.NewLine + query);
+                            string json = reader.ReadToEnd();
+                            log.Debug("Request json:" + Environment.NewLine + json);
 
-                            Newtonsoft.Json.JsonSerializerSettings jsonSettings = new Newtonsoft.Json.JsonSerializerSettings();
-                            jsonSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
-
-                            _request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(query, jsonSettings);
+                            _request = Lpp.Dns.DTO.QueryComposer.QueryComposerDTOHelpers.DeserializeRequest(json);
                         }
                     }
                     catch (Exception ex)
@@ -327,7 +324,7 @@ namespace Lpp.Dns.DataMart.Model
                     }
 
                     //inspect for modular or file dist. terms to determine type of request regardless of specified model for datamart
-                    var allTerms = _request.Where.Criteria.SelectMany(c => c.Criteria.SelectMany(cc => cc.Terms.Where(t => t.Type == ModelTermsFactory.ModularProgramID || t.Type == ModelTermsFactory.FileUploadID))).Concat(_request.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.ModularProgramID || t.Type == ModelTermsFactory.FileUploadID))).ToArray();
+                    var allTerms = Lpp.Dns.DTO.QueryComposer.QueryComposerDTOHelpers.FlattenToTerms(_request).Where(t => t != null && (t.Type == ModelTermsFactory.ModularProgramID || t.Type == ModelTermsFactory.FileUploadID));
                     if (allTerms.Any())
                     {
 
@@ -346,7 +343,8 @@ namespace Lpp.Dns.DataMart.Model
                 IsFileDistributionRequest = true;
             }
 
-            using (QueryComposer.IModelAdapter adapter = GetModelAdapter())
+            //the criteria is only required to determine the sub adapter type based on the query type. The ability to run and view sql is true by default for the model adapters.
+            using (QueryComposer.IModelAdapter adapter = GetModelAdapter(null))
             {
                 log.Debug(string.Format("Updating processor metadata based on the selected model adapter: CanViewSQL = {0}, CanRunAndUpload = {1}, CanUploadWithoutRun = {2}, AddFiles = {3}", adapter.CanViewSQL, adapter.CanRunAndUpload, adapter.CanUploadWithoutRun, adapter.CanAddResponseFiles));
 
@@ -391,83 +389,150 @@ namespace Lpp.Dns.DataMart.Model
 
             if (_request == null && !IsDistributedRegressionRequest)
                 throw new NullReferenceException("The deserialized request is null, please make sure that RequestDocument is called first and that the request document is not null.");
-            
-            using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
+
+            var queryResults = new List<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>();
+            var queryCanPostProcess = new List<Tuple<Guid, bool, string>>();
+
+            _request.SyncHeaders();
+
+            foreach(var query in _request.Queries)
             {
-                adapter.Initialize(Settings, requestId);
-
-                if (viewSQL && !adapter.CanViewSQL)
+                using(QueryComposer.IModelAdapter adapter = GetModelAdapter(query))
                 {
-                    throw new Exception("The adapter does not support providing the SQL of the query.");
-                }
+                    adapter.Initialize(Settings, requestId);
 
-                if(IsDistributedRegressionRequest)
-                {
-                    var drAdapter = adapter as QueryComposer.Adapters.DistributedRegression.DistributedRegressionModelAdapter;
-                    //DO DR Stuff here
+                    if (viewSQL && !adapter.CanViewSQL)
+                    {
+                        queryResults.Add(
+                            new DTO.QueryComposer.QueryComposerResponseQueryResultDTO {
+                                ID = query.Header.ID,
+                                QueryStart = DateTimeOffset.UtcNow,
+                                QueryEnd = DateTimeOffset.UtcNow,
+                                Errors = new[] {
+                                    new DTO.QueryComposer.QueryComposerResponseErrorDTO{
+                                        QueryID = query.Header.ID,
+                                        Code = "-1",
+                                        Description = $"The adapter \"{ adapter.GetType().FullName }\" does not support providing the SQL of a query."
+                                    }
+                                }
+                            }
+                        );
+
+                        queryCanPostProcess.Add(new Tuple<Guid, bool, string>(query.Header.ID, false, string.Empty));
+
+                        continue;
+                    }                    
+
+                    if (IsDistributedRegressionRequest)
+                    {
+                        var drAdapter = adapter as QueryComposer.Adapters.DistributedRegression.DistributedRegressionModelAdapter;
+                        var queryResult = new DTO.QueryComposer.QueryComposerResponseQueryResultDTO { ID = query.Header.ID, QueryStart = DateTimeOffset.UtcNow };
+
+                        try
+                        {
+                            DocumentEx[] outputDocuments = drAdapter.StartRequest(_drDocuments).ToArray();
+                            if (outputDocuments != null && outputDocuments.Length > 0)
+                            {
+                                _responseDocuments.AddRange(outputDocuments);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            queryResult.Errors = new[] {
+                                new DTO.QueryComposer.QueryComposerResponseErrorDTO{
+                                    QueryID = query.Header.ID,
+                                    Code = "-1",
+                                    Description = QueryComposer.ExceptionHelpers.UnwindException(ex)
+                                }
+                            };
+                        }
+
+                        queryResult.QueryEnd = DateTimeOffset.UtcNow;
+
+                        queryResults.Add(queryResult);
+                        queryCanPostProcess.Add(new Tuple<Guid, bool, string>(query.Header.ID, false, string.Empty));
+
+                        continue;
+                    }
+
+                    DateTimeOffset queryStart = DateTimeOffset.UtcNow;
                     try
                     {
-                        DocumentEx[] outputDocuments = drAdapter.StartRequest(_drDocuments).ToArray();
-                        if (outputDocuments != null && outputDocuments.Length > 0)
+                        foreach(var result in adapter.Execute(query, viewSQL))
                         {
-                            _responseDocuments.AddRange(outputDocuments);
-                        }                        
+                            queryResults.Add(result);
+                            if (adapter.CanPostProcess(result, out string postProcessMessage))
+                            {
+                                queryCanPostProcess.Add(new Tuple<Guid, bool, string>(query.Header.ID, true, postProcessMessage));
+                            }
+                            else
+                            {
+                                queryCanPostProcess.Add(new Tuple<Guid, bool, string>(query.Header.ID, false, string.Empty));
+                            }
+                        }
 
-                        //Message may become timeout values reached Error
-                        string message = string.Empty;
-                        status.PostProcess = false;
-                        status.Message = message;
-                        status.Code = RequestStatus.StatusCode.Complete;
                     }
                     catch(Exception ex)
                     {
-                        status.Code = RequestStatus.StatusCode.Error;
-                        status.Message = ex.Message;
+                        queryResults.Add(
+                            new DTO.QueryComposer.QueryComposerResponseQueryResultDTO {
+                                ID = query.Header.ID,
+                                QueryStart = queryStart,
+                                QueryEnd = DateTimeOffset.UtcNow,
+                                Errors = new[] {
+                                    new DTO.QueryComposer.QueryComposerResponseErrorDTO{
+                                        QueryID = query.Header.ID,
+                                        Code = "-1",
+                                        Description = QueryComposer.ExceptionHelpers.UnwindException(ex)
+                                    }
+                                }
+                            }
+                        );
+                        queryCanPostProcess.Add(new Tuple<Guid, bool, string>(query.Header.ID, false, string.Empty));
                     }
-                   
-                    
-                }
-                else
-                {
-                    var _tempResponse = adapter.Execute(_request, viewSQL);
 
-                    var outputDocuments = adapter.OutputDocuments();
 
-                    if (viewSQL)
-                    {
-                        var resultDocument = outputDocuments.First();
-                        resultDocument.Document.DocumentID = SqlResponseDocumentID.ToString("D");
-                        resultDocument.ID = SqlResponseDocumentID;
-                        _SqlResponseDocument = resultDocument;
-                    }
-                    else
-                    {
-                        _SqlResponseDocument = null;
-                        _responseDocuments.Clear();
-                        _responseDocuments.AddRange(outputDocuments);
-						_currentResponse = _tempResponse;
-                    }
-                    string message = string.Empty;
-                    status.PostProcess = !viewSQL && adapter.CanPostProcess(_tempResponse, out message);
-                    status.Message = message;
-                    //May have to alter this cause _currentResponse May be empty
-                    if(_tempResponse.Errors != null && _tempResponse.Errors.Any())
-                    {
-                        status.Code = RequestStatus.StatusCode.Error;
-                        status.Message = string.Join(Environment.NewLine, _tempResponse.Errors.Select(err => err.Description));
-                    }
-                    else
-                    {
-                        status.Code = string.IsNullOrWhiteSpace(status.Message) ? RequestStatus.StatusCode.Complete : RequestStatus.StatusCode.CompleteWithMessage;
-                    }
-                    
-                }
+                }//end of adapter using
+            }//end of processing each query
 
-                
-            }            
+
+            var response = new DTO.QueryComposer.QueryComposerResponseDTO {
+                Header = new DTO.QueryComposer.QueryComposerResponseHeaderDTO {
+                    DocumentID = viewSQL ? SqlResponseDocumentID : QueryComposerModelProcessor.NewGuid(),
+                    RequestID = _request.Header.ID
+                },
+                Queries = queryResults
+            };
+
+            response.RefreshQueryDates();
+            response.RefreshErrors();
+
+            string serializedResponse = Newtonsoft.Json.JsonConvert.SerializeObject(response, Newtonsoft.Json.Formatting.None);
+            byte[] resultContent = System.Text.Encoding.UTF8.GetBytes(serializedResponse);
+
+            Document resultDocument = new Document(response.Header.DocumentID.Value.ToString("D"), "application/json", "response.json");
+            resultDocument.Size = resultContent.Length;
+            resultDocument.IsViewable = true;
+            resultDocument.Kind = "MultiQuery.JSON";
+
+            if (viewSQL)
+            {
+                _SqlResponseDocument = new DocumentEx { ID = SqlResponseDocumentID, Document = resultDocument, Content = resultContent };
+            }
+            else
+            {
+                _SqlResponseDocument = null;
+                _responseDocuments.Clear();
+                _responseDocuments.Add(new DocumentEx { ID = response.Header.DocumentID.Value, Document = resultDocument, Content = resultContent });
+                _currentResponse = response;
+            }
+
+            status.PostProcess = queryCanPostProcess.Any(q => q.Item2 == true);
+            status.Message = queryCanPostProcess.Where(q => !string.IsNullOrEmpty(q.Item3)).Any() ? string.Join("\r\n", queryCanPostProcess.Where(q => !string.IsNullOrEmpty(q.Item3)).Select(q => q.Item3).ToArray()) : string.Empty;
+            status.Code = (response.Errors != null && response.Errors.Any()) ? RequestStatus.StatusCode.Error : (string.IsNullOrEmpty(status.Message) ? RequestStatus.StatusCode.Complete : RequestStatus.StatusCode.CompleteWithMessage);          
         }
 
-        QueryComposer.IModelAdapter GetModelAdapter(bool requireRequestDTO = false)
+        QueryComposer.IModelAdapter GetModelAdapter(DTO.QueryComposer.QueryComposerQueryDTO query, bool requireRequestDTO = false)
         {
             if (IsFileDistributionRequest)
             {
@@ -481,15 +546,15 @@ namespace Lpp.Dns.DataMart.Model
 
             if (ModelID == QueryComposerModelMetadata.SummaryTableModelID)
             {
-                if ((requireRequestDTO == false) && (_request == null))
+                if ((requireRequestDTO == false) && (_request == null || query == null))
                 {
                     return new QueryComposer.Adapters.SummaryQuery.DummyModelAdapter(_requestMetadata);
                 }
 
-                if (!_request.Header.QueryType.HasValue)
-                    throw new Exception("Unable to determine the Summary Query Type supported by the adapter. Invalid request Json.");
+                if (!query.Header.QueryType.HasValue)
+                    throw new Exception($"Unable to determine the Summary Query Type supported by the adapter required by query \"{ query.Header.Name }\". Invalid request JSON.");
 
-                switch (_request.Header.QueryType.Value)
+                switch (query.Header.QueryType.Value)
                 {
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Incidence:
                         return new QueryComposer.Adapters.SummaryQuery.IncidenceModelAdapter(_requestMetadata);
@@ -497,12 +562,10 @@ namespace Lpp.Dns.DataMart.Model
                         return new QueryComposer.Adapters.SummaryQuery.MostFrequentlyUsedQueriesModelAdapter(_requestMetadata);
                     case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Prevalence:
                         return new QueryComposer.Adapters.SummaryQuery.PrevalenceModelAdapter(_requestMetadata);
-                    case Dns.DTO.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh:
-                        return new QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter(_requestMetadata);
                     case DTO.Enums.QueryComposerQueryTypes.Sql:
                         return new QueryComposer.Adapters.SummaryQuery.SqlDistributionAdapter(_requestMetadata);
                     default:
-                        throw new Exception("Cannot determine model query adapter:" + _request.Header.QueryType.Value);
+                        throw new Exception($"Cannot determine model query adapter:{ query.Header.QueryType.Value} for query \"{ query.Header.Name }\".");
                 }
                 
             }
@@ -555,28 +618,43 @@ namespace Lpp.Dns.DataMart.Model
             if (_currentResponse == null)
                 return;
 
-            using (QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
+            foreach(var queryResult in _currentResponse.Queries.Where(qr => qr.Errors == null || qr.Errors.Any() == false))
             {
-                adapter.Initialize(Settings, requestId);
+                var query = _request.Queries.FirstOrDefault(q => q.Header.ID == queryResult.ID);
+                if (query == null)
+                    continue;
 
-                adapter.PostProcess(_currentResponse);
-
-                if (_currentResponse.RequestID == Guid.Empty)
+                using(var adapter = GetModelAdapter(query, requireRequestDTO: true))
                 {
-                    Guid id;
-                    if (Guid.TryParse(requestId, out id))
+                    adapter.Initialize(Settings, requestId);
+
+                    if (!adapter.CanPostProcess(queryResult, out string message))
                     {
-                        _currentResponse.RequestID = id;
+                        continue;
                     }
+
+                    queryResult.PostProcessStart = DateTimeOffset.UtcNow;
+                    adapter.PostProcess(queryResult);
+                    queryResult.PostProcessEnd = DateTimeOffset.UtcNow;
                 }
 
-                ////replace the current response with the post-processed response.
-                _responseDocuments.Clear();
-                _responseDocuments.AddRange(adapter.OutputDocuments());
-                
-                status.Code = RequestStatus.StatusCode.Complete;
-                status.Message = string.Empty;
-            } 
+            }
+
+            _currentResponse.RefreshQueryDates();
+            _currentResponse.RefreshErrors();
+
+            string serializedResponse = Newtonsoft.Json.JsonConvert.SerializeObject(_currentResponse, Newtonsoft.Json.Formatting.None);
+            byte[] resultContent = System.Text.Encoding.UTF8.GetBytes(serializedResponse);
+
+            Document resultDocument = new Document(_currentResponse.Header.DocumentID.Value.ToString("D"), "application/json", "response.json");
+            resultDocument.Size = resultContent.Length;
+            resultDocument.IsViewable = true;
+            resultDocument.Kind = "MultiQuery.JSON";
+            _responseDocuments.Clear();
+            _responseDocuments.Add(new DocumentEx { ID = _currentResponse.Header.DocumentID.Value, Document = resultDocument, Content = resultContent });
+
+            status.Code = RequestStatus.StatusCode.Complete;
+            status.Message = string.Empty;
         }
 
         public void Stop(string requestId, StopReason reason)
@@ -678,15 +756,12 @@ namespace Lpp.Dns.DataMart.Model
 
         IDictionary<Guid, string> IPatientIdentifierProcessor.GetQueryIdentifiers()
         {
-            //TODO: interogate the current request.json to determine how many queries exist. Until multi-query implemented, will always be one.
-            var queries = new Dictionary<Guid, string>();
-            queries.Add(Guid.NewGuid(), "Default Query");
-            return queries;
+            return _request.Queries.ToDictionary(q => q.Header.ID, q => q.Header.Name);
         }
 
         void IPatientIdentifierProcessor.GenerateLists(Guid requestID, NetworkConnectionMetadata network, RequestMetadata md, IDictionary<Guid, string> outputPaths, string format)
         {
-            using(QueryComposer.IModelAdapter adapter = GetModelAdapter(true))
+            using (QueryComposer.IModelAdapter adapter = GetModelAdapter( _request.Queries.First(), true))
             {
                 if (Settings.ContainsKey("MSRequestID"))
                 {
@@ -697,7 +772,7 @@ namespace Lpp.Dns.DataMart.Model
                     Settings.Add("MSRequestID", md.MSRequestID);
                 }
 
-                adapter.Initialize(Settings, requestID.ToString("D"));
+                adapter.Initialize(Settings, requestID.ToString());
                 adapter.GeneratePatientIdentifierLists(_request, outputPaths, format);
             }
         }

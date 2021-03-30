@@ -4,24 +4,16 @@
 /// <reference path="../../../../../js/requests/details.ts" />
 
 var templateFromUrlLoader = {
-    loadTemplate: function (name, templateConfigString, callback) {
-        if (templateConfigString.indexOf('{', 0) == 0) {
-            let templateConfig = JSON.parse(templateConfigString);
-            if (templateConfig.fromUrl) {
-                // Uses jQuery's ajax facility to load the markup from a file
-                var fullUrl = '/DataChecker/' + templateConfig.fromUrl;
-
-                $.get(fullUrl, function (markupString) {
-                    // We need an array of DOM nodes, not a string.
-                    // We can use the default loader to convert to the
-                    // required format.                
-                    ko.components.defaultLoader.loadTemplate(name, markupString, callback);
-                });
-            }
-            else {
-                // Unrecognized config format. Let another loader handle it.
-                callback(null);
-            }
+    loadTemplate: function (name, templateConfig, callback) {
+        if (templateConfig.fromUrl) {
+            // Uses jQuery's ajax facility to load the markup from a file
+            var fullUrl = '/DataChecker/' + templateConfig.fromUrl;
+            $.get(fullUrl, function (markupString) {
+                // We need an array of DOM nodes, not a string.
+                // We can use the default loader to convert to the
+                // required format.
+                ko.components.defaultLoader.loadTemplate(name, markupString, callback);
+            });
         }
         else {
             // Unrecognized config format. Let another loader handle it.
@@ -29,7 +21,6 @@ var templateFromUrlLoader = {
         }
     }
 };
-
 
 // Register the loaders
 ko.components.loaders.unshift(templateFromUrlLoader);
@@ -39,125 +30,70 @@ ko.components.register('datachecker-default', {
 });
 
 ko.components.register('datachecker-rxamt', {
-    template: JSON.stringify({ fromUrl: 'RxAmt/RxAmtResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.RxAmt.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'RxAmt/RxAmtResponse' },
+    viewModel: DataChecker.RxAmt.ViewModel
 });
 
 ko.components.register('datachecker-rxsup', {
-    template: JSON.stringify({ fromUrl: 'RxSup/RxSupResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.RxSup.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'RxSup/RxSupResponse' },
+    viewModel: DataChecker.RxSup.ViewModel
 });
 
 ko.components.register('datachecker-race', {
-    template: JSON.stringify({ fromUrl: 'Race/RaceResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Race.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Race/RaceResponse' },
+    viewModel: DataChecker.Race.ViewModel
 });
 
 ko.components.register('datachecker-ethnicity', {
-    template: JSON.stringify({ fromUrl: 'Ethnicity/EthnicityResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Ethnicity.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Ethnicity/EthnicityResponse' },
+    viewModel: DataChecker.Ethnicity.ViewModel
 });
 
 ko.components.register('datachecker-pdx', {
-    template: JSON.stringify({ fromUrl: 'DiagnosisPDX/DiagnosisPDXResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.DiagnosesPDX.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'DiagnosisPDX/DiagnosisPDXResponse' },
+    viewModel: DataChecker.DiagnosesPDX.ViewModel
 });
 
 ko.components.register('datachecker-diagnosis', {
-    template: JSON.stringify({ fromUrl: 'Diagnosis/DiagnosisResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.DCDiagnosis.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Diagnosis/DiagnosisResponse' },
+    viewModel: DataChecker.DCDiagnosis.ViewModel
 });
 
 ko.components.register('datachecker-procedure', {
-    template: JSON.stringify({ fromUrl: 'Procedure/ProcedureResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.DCProcedure.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Procedure/ProcedureResponse' },
+    viewModel: DataChecker.DCProcedure.ViewModel
 });
 
 ko.components.register('datachecker-metadata', {
-    template: JSON.stringify({ fromUrl: 'Metadata/MetadataResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Metadata.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Metadata/MetadataResponse' },
+    viewModel: DataChecker.Metadata.ViewModel
 });
 
 ko.components.register('datachecker-ndc', {
-    template: JSON.stringify({ fromUrl: 'NationalDrugCodes/NDCResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.NDC.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'NationalDrugCodes/NDCResponse' },
+    viewModel: DataChecker.NDC.ViewModel
 });
 ko.components.register('datachecker-sex', {
-    template: JSON.stringify({ fromUrl: 'Sex/SexResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Sex.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Sex/SexResponse' },
+    viewModel: DataChecker.Sex.ViewModel
 });
 ko.components.register('datachecker-weight', {
-    template: JSON.stringify({ fromUrl: 'Weight/WeightResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Weight.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Weight/WeightResponse' },
+    viewModel: DataChecker.Weight.ViewModel
 });
 ko.components.register('datachecker-agedistribution', {
-    template: JSON.stringify({ fromUrl: 'AgeDistribution/AgeDistributionResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.AgeDistribution.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'AgeDistribution/AgeDistributionResponse' },
+    viewModel: DataChecker.AgeDistribution.ViewModel
 });
 
 ko.components.register('datachecker-height', {
-    template: JSON.stringify({ fromUrl: 'Height/HeightResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Height.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'Height/HeightResponse' },
+    viewModel: DataChecker.Height.ViewModel
 });
+
 ko.components.register('datachecker-sql', {
-    template: JSON.stringify({ fromUrl: 'SqlDistribution/SqlResponse' }),
-    viewModel: {
-        createViewModel: function (params) {
-            return new DataChecker.Sql.ViewModel(params);
-        }
-    }
+    template: { fromUrl: 'SqlDistribution/SqlResponse' },
+    viewModel: DataChecker.Sql.ViewModel
 });
 
 module Workflow.Response.WFDataChecker.ResponseDetails {
@@ -201,21 +137,21 @@ module Workflow.Response.WFDataChecker.ResponseDetails {
 
                     responses.forEach((resp) => {
                         var datamartName = 'Aggregated Results';
-                        if (resp.ID) {
-                            var response = ko.utils.arrayFirst(self.Responses, (x) => x.ID == resp.ID);
+                        if (resp.Header.ID) {
+                            var response = ko.utils.arrayFirst(self.Responses, (x) => x.ID == resp.Header.ID);
                             if (response) {
                                 var routing = ko.utils.arrayFirst(self.Routings, (d) => d.ID == response.RequestDataMartID);
                                 if (routing) {
                                     datamartName = routing.DataMart;
-                                    self.CurrentResponseID(resp.ID);
+                                    self.CurrentResponseID(resp.Header.ID);
                                 }
                             }
                         }
                     });
 
                     var reqQuery: Dns.Interfaces.IQueryComposerRequestDTO = <Dns.Interfaces.IQueryComposerRequestDTO>JSON.parse(req.Query);
-                    //NOTE:when the json is parsed the QueryType is a string representation of the enum numeric value, need to parse to a number for the switch statement to work.
-                    switch (parseInt((reqQuery.Header.QueryType || '-1').toString())) {
+                        //NOTE:when the json is parsed the QueryType is a string representation of the enum numeric value, need to parse to a number for the switch statement to work.
+                        switch (parseInt((reqQuery.Queries[0].Header.QueryType || '-1').toString())) {
                         case Dns.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_AgeRange:
                             self.DataCheckerResponseBinding('datachecker-agedistribution');
                             break;
@@ -258,8 +194,8 @@ module Workflow.Response.WFDataChecker.ResponseDetails {
                         case Dns.Enums.QueryComposerQueryTypes.Sql:
                             self.DataCheckerResponseBinding("datachecker-sql");
                             break;
-                        default:
-                            throw new RangeError('Unknown query type:' + reqQuery.Header.QueryType);
+                            default:
+                                throw new RangeError('Unknown query type:' + reqQuery.Queries[0].Header.QueryType);
                     }
 
                     self.ResponseContentComplete(true);

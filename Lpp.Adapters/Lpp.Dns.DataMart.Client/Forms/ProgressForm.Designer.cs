@@ -58,7 +58,6 @@ namespace Lpp.Dns.DataMart.Client
             this.text.Size = new System.Drawing.Size(481, 29);
             this.text.TabIndex = 0;
             this.text.Text = "Loading full Request information from the Network...";
-            this.text.UseCompatibleTextRendering = true;
             // 
             // progress
             // 
@@ -71,8 +70,7 @@ namespace Lpp.Dns.DataMart.Client
             // 
             // ProgressForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(525, 125);
             this.ControlBox = false;

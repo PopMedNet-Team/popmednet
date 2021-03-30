@@ -1,95 +1,90 @@
 ﻿{
-  "Header": { "QueryType": "42" },
+  "Header": { },
   "Where": {
     "Criteria": [
       {
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "de1374e0-91c1-4ed1-87c5-16f0c3e9ddbc",
-            "Name": "i_Code_Metric Types",
+            "ID": "2795eb8c-b69b-4169-944a-1660db72cd03",
+            "Name": "i_Sex",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
-                "Type": "e39d0001-07a1-4dfd-9299-a3cb00f2474b",
-                "Values": { "Metric": "1" },
-                "Criteria": [],
-                "Design": {}
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "c39fd526-c8ce-4f32-a957-c01b22b5a8f6",
-            "Name": "i_Output_Criteria",
-            "Operator": 0,
-            "Criteria": [],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "17540001-8185-41bb-be64-a3cb00f27ec2",
-                "Values": { "Criteria": "5" },
-                "Criteria": [],
-                "Design": {}
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "75b72e42-985f-401b-9fc8-42b34f53c5b9",
+            "ID": "a658c0a3-00f1-4111-8a83-2c91a3419ac3",
             "Name": "i_Settings",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "1" },
-                "Criteria": [],
-                "Design": {}
+                "Values": { "Setting": "4" },
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "ea61c560-28e9-4cad-9c37-aebef4d0f906",
+            "ID": "7120e15b-62c6-48fb-95e7-4f0aed4aabbe",
             "Name": "i_Year_Observation Period",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2018
+                  "EndYear": 2010
                 },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "25d940bc-ff9c-41e2-a2e2-fef3a0d04356",
-            "Name": "i_Sex",
+            "ID": "71b92e3e-d6d5-49a0-8903-b048961b054e",
+            "Name": "i_Output_Criteria",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
-                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-                "Values": { "Sex": "3" },
-                "Criteria": [],
-                "Design": {}
+                "Type": "17540001-8185-41bb-be64-a3cb00f27ec2",
+                "Values": { "Criteria": "10" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "d2a06290-5f33-49de-bcd2-b098f483d083",
+            "Name": "i_Code_Metric Types",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "e39d0001-07a1-4dfd-9299-a3cb00f2474b",
+                "Values": { "Metric": "1" },
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": []
+        "Terms": [ ]
       }
     ]
   },
@@ -101,7 +96,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -110,7 +105,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -119,7 +114,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -128,16 +123,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
-        "OrderBy": 0
-      },
-      {
-        "FieldName": "Sex",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -146,7 +132,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
         "OrderBy": 0
       }
     ]

@@ -1,5 +1,7 @@
 ﻿using Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model;
 using Lpp.Objects.Dynamic;
+using Lpp.QueryComposer;
+using Lpp.Dns.DTO.QueryComposer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +142,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             var wherePredicateExpr = Expression.AndAlso(encounterSASDateBeforeTimeWindowPredicateExpr, encounterSASDateAfterTimeWindowPredicateExpr);
 
             //only Diagnosis and Procedure codes will be used as criteria against the index events, all terms are OR'd, there will only be a single root criteria
-            var terms = _indexEventCriteria.SelectMany(tevt => tevt.Criteria.SelectMany(rootCriteria => PCORIModelAdapter.GetAllCriteriaTerms(rootCriteria, new Guid[] { Lpp.QueryComposer.ModelTermsFactory.CombinedDiagnosisCodesID, Lpp.QueryComposer.ModelTermsFactory.ProcedureCodesID })));
+            var terms = _indexEventCriteria.SelectMany(tevt => tevt.Criteria.SelectMany(rootCriteria => rootCriteria.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.CombinedDiagnosisCodesID || t.Type == ModelTermsFactory.ProcedureCodesID).ToArray()));
             if (terms.Any())
             {
                 bool isExclusion = _indexEventCriteria.Select(tevt => tevt.Criteria.Select(c => c.Exclusion).FirstOrDefault()).FirstOrDefault();
@@ -750,7 +752,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             BinaryExpression queryPredicate = null;
             foreach (var paragraph in _pro_QueryCriteria)
             {
-                var terms = PCORIModelAdapter.GetAllCriteriaTerms(paragraph, Lpp.QueryComposer.ModelTermsFactory.PatientReportedOutcomeID);
+                var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.PatientReportedOutcomeID).ToArray();
                 if (terms.Any() == false)
                     continue;
 

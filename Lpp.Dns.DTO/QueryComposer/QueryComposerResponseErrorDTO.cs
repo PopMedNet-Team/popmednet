@@ -13,6 +13,11 @@ namespace Lpp.Dns.DTO.QueryComposer
     public class QueryComposerResponseErrorDTO
     {
         /// <summary>
+        /// Gets or sets the ID of the query that raised the error.
+        /// </summary>
+        [DataMember]
+        public Guid? QueryID { get; set; }
+        /// <summary>
         /// Gets or sets the code
         /// </summary>
         [DataMember]

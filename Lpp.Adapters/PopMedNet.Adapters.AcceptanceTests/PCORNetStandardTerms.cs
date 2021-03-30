@@ -45,6 +45,9 @@ namespace PopMedNet.Adapters.AcceptanceTests
         public override void Age_Term_6(string filename)
         {
             var request = LoadRequest(filename);
+            request.Header.SubmittedOn = DateTime.UtcNow;
+            request.SyncHeaders();
+
             var result = RunRequest(filename, request);
 
             string newQuery = string.Format(@"
@@ -136,6 +139,9 @@ GROUP BY demo.""HISPANIC"", demo.""RACE"";
         public override void Age_Term_6(string filename)
         {
             var request = LoadRequest(filename);
+            //set the submission date to now.
+            request.Header.SubmittedOn = DateTime.UtcNow;
+            request.SyncHeaders();
             var result = RunRequest(filename, request);
 
             string newQuery = string.Format(@"
@@ -248,6 +254,9 @@ GROUP BY demo.""HISPANIC"", demo.""RACE"";
         public override void Age_Term_6(string filename)
         {
             var request = LoadRequest(filename);
+            request.Header.SubmittedOn = DateTime.UtcNow;
+            request.SyncHeaders();
+
             var result = RunRequest(filename, request);
 
             var query = string.Format(@"
@@ -360,6 +369,9 @@ GROUP BY demo.HISPANIC, demo.RACE
         public override void Age_Term_6(string filename)
         {
             var request = LoadRequest(filename);
+            //set the submission date to now.
+            request.Header.SubmittedOn = DateTime.UtcNow;
+            request.SyncHeaders();
             var result = RunRequest(filename, request);
 
             var query = string.Format(@"
@@ -572,6 +584,11 @@ GROUP BY demo.HISPANIC, demo.RACE
         public virtual void Age_Term_6(string filename)
         {
             var request = LoadRequest(filename);
+
+            //set the submission date to now.
+            request.Header.SubmittedOn = DateTime.UtcNow;
+            request.SyncHeaders();
+
             var result = RunRequest(filename, request);
 
             string query = @"DECLARE @date datetime = GETUTCDATE()
@@ -1228,50 +1245,5 @@ GROUP BY demo.HISPANIC, demo.RACE";
             var result = RunRequest(filename);
             var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
         }
-
-        /// <summary>
-        /// Executes a manual sql query, and populates a QueryComposerResponseDTO's results collection.
-        /// The collection objects will be created based on the defined properties, and the column names of the sql response must
-        /// match the defined property names.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="expectedResponse"></param>
-        protected void ManualQueryForExpectedResults(string sql, Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO expectedResponse)
-        {
-            var properties = expectedResponse.Properties.Select(p => p.As).ToArray();
-            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-
-            using (var conn = GetDbConnection())
-            {
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Dictionary<string, object> row = new Dictionary<string, object>();
-                            foreach (string propertyName in properties)
-                            {
-                                int propertyOrdinal = reader.GetOrdinal(propertyName);
-                                if (propertyOrdinal >= 0)
-                                {
-                                    row.Add(propertyName, reader.GetFieldValue<object>(propertyOrdinal));
-                                }
-                            }
-                            if (row.Count > 0)
-                            {
-                                rows.Add(row);
-                            }
-                        }
-                    }
-                }
-
-            }
-            expectedResponse.ResponseDateTime = DateTime.UtcNow;
-            expectedResponse.Results = new[] { rows };
-        }
-
-
     }
 }

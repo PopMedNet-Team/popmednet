@@ -14,10 +14,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-//ko.components.register('MDQ', {
-//    viewModel: { require: Plugins.Requests.QueryBuilder.MDQ.vm },
-//        template: { require: '<span>...</span>' }
-//});
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -28,63 +24,153 @@ var Plugins;
             (function (Edit) {
                 var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
-                    function ViewModel(bindingControl, rawRequestData, projectID, requestID) {
+                    /**
+                     * Initializes the edit container holding the QueryComposer editor
+                     * @param bindingControl The binding element for knockout.
+                     * @param requestDTO The QueryComposer RequestDTO.
+                     * @param requestID The ID of the actual request.
+                     * @param requestTypeDTO The request type DTO.
+                     */
+                    function ViewModel(bindingControl, requestDTO, projectID, requestID, requestTypeDTO, requestTypeModelIDs, requestTypeTerms, visualTerms, criteriaGroupTemplates, hiddenTerms, routingsEditor, attachmentsEditor) {
                         var _this = _super.call(this, bindingControl) || this;
-                        _this.MDQ = ko.observable();
-                        _this.UploadViewModel = null;
+                        _this.IsFileUpload = false;
+                        _this.MDQ_Host = null;
+                        _this.FileUpload_Host = null;
                         var self = _this;
-                        _this.IsTemplateEdit = ko.observable(false);
-                        _this.fileUpload = ko.observable(false);
-                        _this.MDQ = ko.observable(false);
-                        _this.rawRequestData = rawRequestData;
-                        _this.projectID = projectID;
+                        _this.ProjectID = projectID;
+                        _this.RequestID = requestID;
+                        _this.RequestDTO = requestDTO;
+                        _this.RequestTypeDTO = requestTypeDTO;
+                        _this.RoutingsEditor = routingsEditor;
+                        _this.AttachmentsEditor = attachmentsEditor;
+                        if (_this.RequestDTO.SchemaVersion !== "2.0") {
+                            _this.RequestDTO.SchemaVersion = "2.0";
+                        }
+                        _this.TermsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
+                        if (_this.RequestDTO.Queries[0].Header.ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution) {
+                            _this.IsFileUpload = true;
+                            _this.FileUpload_Host = new Controls.WFFileUpload.Index.ViewModel($('#FileUploadControl'), _this.ScreenPermissions, _this.RequestDTO.Queries[0], QueryBuilder.MDQ.Terms.FileUploadID);
+                            var currentTerms = Plugins.Requests.QueryBuilder.MDQ.TermProvider.FlattenToAllTermIDs(_this.RequestDTO.Queries[0]);
+                            _this.TermsObserver.RegisterTermCollection(_this.RequestDTO.Queries[0].Header.ID, ko.observableArray(currentTerms));
+                        }
+                        else {
+                            var index_1 = 0;
+                            var templateViewModels = ko.utils.arrayMap(_this.RequestDTO.Queries, function (query) {
+                                var template = new Dns.ViewModels.TemplateViewModel();
+                                template.ID(query.Header.ID);
+                                template.ComposerInterface(query.Header.ComposerInterface);
+                                template.Data(JSON.stringify(query));
+                                template.Description(query.Header.Description);
+                                template.Name(query.Header.Name);
+                                template.Order(index_1++);
+                                template.QueryType(query.Header.QueryType);
+                                template.RequestTypeID(requestTypeDTO.ID);
+                                template.Type(Dns.Enums.TemplateTypes.Request);
+                                return template;
+                            });
+                            var initParams = {
+                                IsTemplateEdit: false,
+                                RequestTypeModelIDs: ko.observableArray(requestTypeModelIDs),
+                                RequestTypeTerms: ko.observableArray(requestTypeTerms.map(function (item) {
+                                    return new Dns.ViewModels.RequestTypeTermViewModel(item);
+                                })),
+                                Templates: templateViewModels,
+                                TemplateType: Dns.Enums.TemplateTypes.Request,
+                                CriteriaGroupTemplates: criteriaGroupTemplates,
+                                VisualTerms: visualTerms,
+                                HiddenTerms: hiddenTerms,
+                                SupportsMultiQuery: ko.observable(_this.RequestTypeDTO.SupportMultiQuery),
+                                TermsObserver: _this.TermsObserver
+                            };
+                            _this.MDQ_Host = new Plugins.Requests.QueryBuilder.QueryEditorHost(initParams);
+                        }
+                        _this.TermsObserver.DistinctTerms.subscribe(function (newValue) {
+                            _this.RoutingsEditor.LoadDataMarts(_this.ProjectID, newValue);
+                        }, _this);
+                        _this.RoutingsEditor.LoadDataMarts(_this.ProjectID, _this.TermsObserver.DistinctTerms());
                         return _this;
                     }
-                    ViewModel.prototype.UpdateRoutings = function (updates) {
-                        Plugins.Requests.QueryBuilder.DataMartRouting.vm.UpdateRoutings(updates);
+                    Object.defineProperty(ViewModel.prototype, "SelectedRoutings", {
+                        get: function () {
+                            return this.RoutingsEditor.SelectedRoutings();
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
+                    Object.defineProperty(ViewModel.prototype, "AdditionalInstructions", {
+                        get: function () {
+                            return this.RoutingsEditor.DataMartAdditionalInstructions();
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
+                    ViewModel.prototype.Validate = function () {
+                        if (this.MDQ_Host != null) {
+                            //check that there are no empty criteria groups
+                            var emptyCriteriaGroupQuery = ko.utils.arrayFirst(this.MDQ_Host.ExportQueries(), function (query) {
+                                if (ko.utils.arrayFirst(query.Where.Criteria, function (criteria) { return (criteria.Terms == null || criteria.Terms.length == 0) && (criteria.Criteria == null || criteria.Criteria.length == 0); }) != null) {
+                                    return true;
+                                }
+                                return false;
+                            });
+                            if (emptyCriteriaGroupQuery != null) {
+                                Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The Criteria Group cannot be empty.</p></div>');
+                                return false;
+                            }
+                            if (!this.MDQ_Host.onValidateEditors()) {
+                                return false;
+                            }
+                            _super.prototype.Validate.call(this);
+                        }
+                        return true;
                     };
                     ViewModel.prototype.fileUploadDMLoad = function () {
-                        Plugins.Requests.QueryBuilder.DataMartRouting.vm.LoadDataMarts(this.projectID, JSON.stringify((new Dns.ViewModels.QueryComposerRequestViewModel(this.rawRequestData)).toData()));
+                        this.RoutingsEditor.LoadDataMarts(this.ProjectID, this.TermsObserver.DistinctTerms());
+                    };
+                    ViewModel.prototype.UpdateRoutings = function (updates) {
+                        this.RoutingsEditor.UpdateRoutings(updates);
+                    };
+                    ViewModel.prototype.bindComponents = function () {
+                        if (this.MDQ_Host != null) {
+                            this.MDQ_Host.onKnockoutBind();
+                        }
+                        else {
+                            this.FileUpload_Host.onKnockoutBind();
+                        }
+                    };
+                    ViewModel.prototype.exportRequestDTO = function () {
+                        //clone the requestDTO object, and update the query dto's
+                        var requestDTO = JSON.parse(JSON.stringify(this.RequestDTO));
+                        requestDTO.Queries = this.MDQ_Host == null ? this.FileUpload_Host.ExportQueries() : this.MDQ_Host.ExportQueries();
+                        return requestDTO;
+                    };
+                    ViewModel.prototype.updateRequestHeader = function (name, viewUrl, submittedOn) {
+                        this.RequestDTO.Header.Name = name;
+                        this.RequestDTO.Header.ViewUrl = viewUrl;
+                        this.RequestDTO.Header.SubmittedOn = submittedOn;
                     };
                     return ViewModel;
                 }(Global.PageViewModel));
                 Edit.ViewModel = ViewModel;
-                function init(rawRequestData, fieldOptions, defaultPriority, defaultDueDate, additionalInstructions, existingRequestDataMarts, requestTypeID, visualTerms, isTemplateEdit, projectID, templateID, requestID) {
-                    if (isTemplateEdit === void 0) { isTemplateEdit = false; }
+                function init(requestDTO, fieldOptions, defaultPriority, defaultDueDate, additionalInstructions, existingRequestDataMarts, requestTypeDTO, projectID, requestID) {
                     if (projectID === void 0) { projectID = Global.GetQueryParam("projectID"); }
                     var promise = $.Deferred();
-                    $.when(requestTypeID == null ? null : Dns.WebApi.Templates.GetByRequestType(requestTypeID)).done(function (requestTypeTemplates) {
-                        var bindingControl = $('#ComposerControl');
-                        Edit.vm = new ViewModel(bindingControl, rawRequestData, projectID, requestID);
-                        ko.applyBindings(Edit.vm, bindingControl[0]);
-                        Plugins.Requests.QueryBuilder.DataMartRouting.init($('#DataMartsControl'), fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-                        if (isTemplateEdit) {
-                            Edit.vm.MDQ(true);
-                            Edit.vm.fileUpload(false);
-                            Plugins.Requests.QueryBuilder.MDQ.init(rawRequestData, fieldOptions, defaultPriority, defaultDueDate, additionalInstructions, existingRequestDataMarts, requestTypeID, visualTerms, isTemplateEdit, projectID, templateID).done(function (viewModel) {
-                                promise.resolve(viewModel);
-                            });
-                        }
-                        else {
-                            if (requestTypeTemplates != null && requestTypeTemplates.length > 0) {
-                                if (requestTypeTemplates[0].ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution) {
-                                    Edit.vm.MDQ(false);
-                                    Edit.vm.fileUpload(true);
-                                    var fileUploadID = "2F60504D-9B2F-4DB1-A961-6390117D3CAC";
-                                    Edit.vm.UploadViewModel = Controls.WFFileUpload.Index.init($('#FileUploadControl'), rawRequestData, fileUploadID);
-                                    //vm.UploadViewModel = Controls.WFFileUpload.ForTask.init($("#FileUploadControl"), tasks);
-                                    Edit.vm.fileUploadDMLoad();
-                                    promise.resolve();
-                                }
-                                else {
-                                    Edit.vm.MDQ(true);
-                                    Plugins.Requests.QueryBuilder.MDQ.init(rawRequestData, fieldOptions, defaultPriority, defaultDueDate, additionalInstructions, existingRequestDataMarts, requestTypeID, visualTerms, isTemplateEdit, projectID, templateID).done(function (viewModel) {
-                                        promise.resolve(viewModel);
-                                    });
-                                }
+                    $.when(Dns.WebApi.RequestTypes.GetRequestTypeModels(requestTypeDTO.ID, null, 'DataModelID'), Dns.WebApi.RequestTypes.GetRequestTypeTerms(requestTypeDTO.ID), Plugins.Requests.QueryBuilder.MDQ.TermProvider.GetVisualTerms(), Dns.WebApi.Templates.CriteriaGroups(), Dns.WebApi.Templates.ListHiddenTermsByRequestType(requestTypeDTO.ID), Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true)).done(function (requestTypeModelIDs, requestTypeTerms, visualTerms, criteriaGroupTemplates, hiddenTerms, attachmentsVM) {
+                        $(function () {
+                            var routingsVM = Plugins.Requests.QueryBuilder.DataMartRouting.init(fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
+                            var bindingControl = $('#ComposerControl');
+                            Edit.vm = new ViewModel(bindingControl, requestDTO, projectID, requestID, requestTypeDTO, (requestTypeModelIDs || []).map(function (m) { return m.DataModelID; }), requestTypeTerms, visualTerms, criteriaGroupTemplates, hiddenTerms, routingsVM, attachmentsVM);
+                            if (Edit.vm.IsFileUpload == false) {
+                                $('#FileUploadContainer').remove();
                             }
-                        }
-                        Edit.vm.IsTemplateEdit(isTemplateEdit);
+                            else {
+                                $('#QueryEditorHostContainer').remove();
+                            }
+                            ko.applyBindings(Edit.vm, bindingControl[0]);
+                            Edit.vm.bindComponents();
+                            routingsVM.onKnockoutBind();
+                            promise.resolve(Edit.vm);
+                        });
                     });
                     return promise;
                 }

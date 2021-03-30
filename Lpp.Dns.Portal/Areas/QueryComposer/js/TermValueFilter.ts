@@ -117,6 +117,13 @@
         public static get PrescribingCodesID(): any {
             return '793BD948-C90C-45DA-B4B7-F8E2387E1A78';
         }
+        public static get FileUploadID(): any {
+            return '2F60504D-9B2F-4DB1-A961-6390117D3CAC';
+        }
+        public static get ModularProgramID(): any {
+            return 'A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8';
+        }
+
 
         public static Compare(a: any, b: any): boolean {
             if ((a == null && b != null) || (a != null && b == null))
@@ -127,6 +134,156 @@
 
             return a.toLowerCase() === b.toLowerCase();
         }
+
+        /** Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria. */
+        static GroupedTerms: any[] = [
+            //Condition
+            Terms.ConditionID,
+            //HCPCS Procedure Codes
+            Terms.HCPCSProcedureCodesID,
+            //Combined Diagnosis Codes
+            Terms.CombinedDiagnosisCodesID,
+            //ICD9 Diagnosis Codes 3 digit
+            Terms.ICD9Diagnosis3digitID,
+            //ICD9 Diagnosis Codes 4 digit
+            Terms.ICD9Diagnosis4digitID,
+            //ICD9 Diagnosis Codes 5 digit
+            Terms.ICD9Diagnosis5digitID,
+            //ICD9 Procedure Codes 3 digit
+            Terms.ICD9Procedure3digitID,
+            //ICD9 Procedure Codes 4 digit
+            Terms.ICD9Procedure4digitID,
+            //ESP Combined Diagnosis Codes
+            Terms.ESPCombinedDiagnosisCodesID,
+            //Drug Class
+            Terms.DrugClassID,
+            //Drug Name
+            Terms.DrugNameID,
+            //Visits
+            Terms.VisitsID,
+            //Age Range
+            Terms.AgeRangeID,
+            //Sex
+            Terms.SexID,
+            //Code Metric
+            Terms.CodeMetricID,
+            //Coverage
+            Terms.CoverageID,
+            //Criteria
+            Terms.CriteriaID,
+            //Dispensing Metric
+            Terms.DispensingMetricID,
+            //Ethnicity
+            Terms.EthnicityID,
+            //Facility
+            Terms.FacilityID,
+            //Height
+            Terms.HeightID,
+            //Hispanic
+            Terms.HispanicID,
+            //Observation Period
+            Terms.ObservationPeriodID,
+            //Quarter Year
+            Terms.QuarterYearID,
+            //Race
+            Terms.RaceID,
+            //Setting
+            Terms.SettingID,
+            //Tobacco Use
+            Terms.TobaccoUseID,
+            //Weight
+            Terms.WeightID,
+            //Year
+            Terms.YearID,
+            //Zip Code
+            Terms.ZipCodeID,
+            //Vitals Measure Date
+            Terms.VitalsMeasureDateID,
+            // Procedure Codes
+            Terms.ProcedureCodesID,
+            //TrialID
+            Terms.TrialID,
+            //PatientReportedOutcome
+            Terms.PatientReportedOutcomeID,
+            // LOINC Codes
+            Terms.LOINCCodesID,
+            //Prescribing Terms
+            Terms.PrescribingCodesID
+        ];
+
+        /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
+        static NonCodeGroupedTerms: any[] = [
+            //Visits
+            Terms.VisitsID,
+            //Age Range
+            Terms.AgeRangeID,
+            //Sex
+            Terms.SexID,
+            //Code Metric
+            Terms.CodeMetricID,
+            //Coverage
+            Terms.CoverageID,
+            //Criteria
+            Terms.CriteriaID,
+            //Dispensing Metric
+            Terms.DispensingMetricID,
+            //Ethnicity
+            Terms.EthnicityID,
+            //Facility
+            Terms.FacilityID,
+            //Height
+            Terms.HeightID,
+            //Hispanic
+            Terms.HispanicID,
+            //Observation Period
+            Terms.ObservationPeriodID,
+            //Quarter Year
+            Terms.QuarterYearID,
+            //Race
+            Terms.RaceID,
+            //Setting
+            Terms.SettingID,
+            //Tobacco Use
+            Terms.TobaccoUseID,
+            //Weight
+            Terms.WeightID,
+            //Year
+            Terms.YearID,
+            //Zip Code
+            Terms.ZipCodeID,
+            //Vitals Measure Date
+            Terms.VitalsMeasureDateID,
+            //TrialID
+            Terms.TrialID,
+            //PatientReportedOutcome
+            Terms.PatientReportedOutcomeID
+        ];
+
+        /** DataChecker Procedure Code Types */
+        static DataCheckerProcedureCodeTypes: Dns.Structures.KeyValuePair[] = [
+            { text: 'Any', value: '' },
+            { text: 'ICD-9-CM', value: '09' },
+            { text: 'ICD-10-CM', value: '10' },
+            { text: 'ICD-11-CM', value: '11' },
+            { text: 'CPT Category II', value: 'C2' },
+            { text: 'CPT Category III', value: 'C3' },
+            { text: 'CPT-4 (i.e., HCPCS Level I)', value: 'C4' },
+            { text: 'HCPCS (i.e., HCPCS Level II)', value: 'HC' },
+            { text: 'HCPCS Level III', value: 'H3' },
+            { text: 'LOINC', value: 'LC' },
+            { text: 'Local Homegrown', value: 'LO' },
+            { text: 'NDC', value: 'ND' },
+            { text: 'Revenue', value: 'RE' },
+            { text: 'Other', value: 'OT' }];
+
+        /** DataChecker Diagnosis Code Types */
+        static DataCheckerDiagnosisCodeTypes: Dns.Structures.KeyValuePair[] =[
+            { text: 'Any', value: '' },
+            { text: 'ICD-9-CM', value: '09' },
+            { text: 'ICD-10-CM', value: '10' },
+            { text: 'ICD-11-CM', value: '11' },
+            { text: 'SNOMED CT', value: 'SM' },
+            { text: 'Other', value: 'OT' }];
     }
 
     export class TermValueFilter {       
@@ -146,7 +303,6 @@
         public static get ModularProgramModelID(): any {
             return '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154';
         }
-
         public static get DistributedRegressionModelID(): any {
             return '4c8a25dc-6816-4202-88f4-6d17e72a43bc';
         }
@@ -155,31 +311,48 @@
         }
 
         public static ContainsModel(models: any[], id: any): boolean {
-            return ko.utils.arrayFirst(models, (i) => i.toLowerCase() == id) != null;
+            for (let i = 0; i < models.length; i++) {
+                if (Constants.Guid.compare(models[i], id) == 0)
+                    return true;
+            }
+
+            return false;
         }
 
-        private _models: any[];
+        private _models: KnockoutObservableArray<any>;
         private _containsPCORnet: KnockoutComputed<boolean>;
         private _containsSummaryTables: KnockoutComputed<boolean>;
         private _containsESP: KnockoutComputed<boolean>;
         private _containsDataChecker: KnockoutComputed<boolean>;
         private _containsModularProgram: KnockoutComputed<boolean>;
 
-        constructor(models: any[]) {
-            this._models = models || [];
+        SexValues: KnockoutComputed<Dns.Structures.KeyValuePair[]>;
+        SettingsValues: KnockoutComputed<Dns.Structures.KeyValuePair[]>;
+        RaceValues: KnockoutComputed<Dns.Structures.KeyValuePair[]>;
+        RaceEthnicityValues: KnockoutComputed<Dns.Structures.KeyValuePair[]>;
+        AgeRangeStratifications: KnockoutComputed<Dns.Structures.KeyValuePair[]>;
 
-            this._containsPCORnet = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models, TermValueFilter.PCORnetModelID));
-            this._containsSummaryTables = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models, TermValueFilter.SummaryTablesModelID));
-            this._containsESP = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models, TermValueFilter.ESPModelID));
-            this._containsDataChecker = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models, TermValueFilter.DataCheckerModelID));
-            this._containsModularProgram = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models, TermValueFilter.ModularProgramModelID));
+        constructor(models: any[]) {
+            this._models = ko.observableArray<any>(models || []);
+
+            this._containsPCORnet = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models(), TermValueFilter.PCORnetModelID));
+            this._containsSummaryTables = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models(), TermValueFilter.SummaryTablesModelID));
+            this._containsESP = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models(), TermValueFilter.ESPModelID));
+            this._containsDataChecker = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models(), TermValueFilter.DataCheckerModelID));
+            this._containsModularProgram = ko.pureComputed(() => TermValueFilter.ContainsModel(this._models(), TermValueFilter.ModularProgramModelID));
+
+            this.SexValues = ko.pureComputed(this.getSexValues.bind(this));
+            this.SettingsValues = ko.pureComputed(this.getSettingsValues.bind(this));
+            this.RaceValues = ko.pureComputed(this.getRaceValues.bind(this));
+            this.RaceEthnicityValues = ko.pureComputed(this.getRaceEthnicityValues.bind(this));
+            this.AgeRangeStratifications = ko.pureComputed(this.getAgeRangeStratifications.bind(this));
         }
 
         static GetTranslations<T>(translations: Dns.Structures.KeyValuePair[], values: T[]): Dns.Structures.KeyValuePair[] {
-            var selected: Dns.Structures.KeyValuePair[] = [];
+            let selected: Dns.Structures.KeyValuePair[] = [];
             
-            for (var i = 0; i < translations.length; i++) {
-                var item = translations[i];
+            for (let i = 0; i < translations.length; i++) {
+                let item = translations[i];
                 if (values.indexOf(item.value) >= 0) {
                     selected.push(item);
                 }
@@ -190,21 +363,25 @@
             return selected;
         }
 
+        public UpdateModels(models: any[]) {
+            this._models(models || []);
+        }
+
         /*Indicates if the models set for the helper contain the specified model.*/
         public HasModel(modelID: any): boolean {
-            return TermValueFilter.ContainsModel(this._models, modelID);
+            return TermValueFilter.ContainsModel(this._models(), modelID);
         }
 
         /* Returns the valid values based on the models specified in initiation */
-        public SexValues(): Dns.Structures.KeyValuePair[] {
-            var sexTranslations = [];
+        private getSexValues(): Dns.Structures.KeyValuePair[] {
+            let sexTranslations = [];
             //Dont include MaleAndFemaleAggregated in the list of Sex Values
             Dns.Enums.SexStratificationsTranslation.forEach((s) => {
                 if (s.value != Dns.Enums.SexStratifications.MaleAndFemaleAggregated)
                     sexTranslations.push(s);
             });
 
-            if (this._models.length == 0)
+            if (this._models().length == 0)
                 return sexTranslations;
 
             if (this._containsSummaryTables() == true)
@@ -218,30 +395,32 @@
             return sexTranslations;
         }
 
+
+
         /* Returns the valid values based on the models specified in initiation */
-        public SettingsValues(): Dns.Structures.KeyValuePair[] {
-            if (this._models.length == 0)
+        private getSettingsValues(): Dns.Structures.KeyValuePair[] {
+            if (this._models().length == 0)
                 return Dns.Enums.SettingsTranslation;
 
-            var translations = [];
-            if (this._containsSummaryTables() || this._containsPCORnet()) {
-                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED]).forEach((i) => translations.push(i));
+            let translations = [];
+            if (this._containsSummaryTables() && this._containsPCORnet()) {
+                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.AN, Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach((i) => translations.push(i));
             }
 
             if (this._containsSummaryTables()) {
-                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.AN]).forEach((i) => translations.push(i));
+                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.AN]).forEach((i) => translations.push(i));
             }
 
             if (this._containsPCORnet()) {
-                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach((i) => translations.push(i));
+                TermValueFilter.GetTranslations<Dns.Enums.Settings>(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach((i) => translations.push(i));
             }
 
             return translations;
         }
 
         /* Returns the valid values based on the models specified in initiation */
-        public RaceValues(): Dns.Structures.KeyValuePair[] {
-            if (this._models.length == 0 || this._containsPCORnet())
+        private getRaceValues(): Dns.Structures.KeyValuePair[] {
+            if (this._models().length == 0 || this._containsPCORnet())
                 return Dns.Enums.RaceTranslation;
 
             if (this._containsSummaryTables()) {
@@ -252,8 +431,8 @@
         }
 
         /* Returns the valid values based on the models specified in initiation */
-        public RaceEthnicityValues(): Dns.Structures.KeyValuePair[] {
-            if (this._models.length == 0)
+        private getRaceEthnicityValues(): Dns.Structures.KeyValuePair[] {
+            if (this._models().length == 0)
                 return Dns.Enums.EthnicitiesTranslation;
 
             if (this._containsESP()) {
@@ -264,12 +443,12 @@
         }
 
         /* Returns the valid values based on the models specified in initiation */
-        public AgeRangeStratifications(): Dns.Structures.KeyValuePair[] {
+        private getAgeRangeStratifications(): Dns.Structures.KeyValuePair[] {
             
-            if (this._models.length == 0)
+            if (this._models().length == 0)
                 return Dns.Enums.AgeStratificationsTranslation;
 
-            var translations = [];
+            let translations = [];
             if (this._containsSummaryTables()) {
                 TermValueFilter.GetTranslations<Dns.Enums.AgeStratifications>(Dns.Enums.AgeStratificationsTranslation, [Dns.Enums.AgeStratifications.Ten, Dns.Enums.AgeStratifications.Seven, Dns.Enums.AgeStratifications.Four, Dns.Enums.AgeStratifications.Two, Dns.Enums.AgeStratifications.None]).forEach((i) => translations.push(i));
             }
@@ -286,26 +465,71 @@
         }
 
         /* Confirm all properties exist that have been addd to a template that may not exist on the request json*/
-        public ConfirmTemplateProperties(request: Dns.Interfaces.IQueryComposerRequestDTO, termTemplates: IVisualTerm[]) {
-            var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
+        public ConfirmTemplateProperties(query: Dns.Interfaces.IQueryComposerQueryDTO, termTemplates: IVisualTerm[]) {
+            let flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
             //loop through all the terms on all the criteria and make sure each term is up to date
-            for (var i = 0; i < request.Where.Criteria.length; i++) {
-                var criteria = request.Where.Criteria[i];
+            for (let i = 0; i < query.Where.Criteria.length; i++) {
+                let criteria = query.Where.Criteria[i];
                 this.ConfirmCriteria(criteria, flattenedTerms);
 
                 if (criteria.Terms && criteria.Terms.length > 0) {
-                    for (var j = 0; j < criteria.Terms.length; j++) {
-                        var term = criteria.Terms[i];
-                        var termTemplate = ko.utils.arrayFirst(flattenedTerms, (template: IVisualTerm) => { return template.TermID == term.Type; });
-                        this.ConfirmTermValues(criteria.Terms[j], termTemplate);
+                    for (let j = 0; j < criteria.Terms.length; j++) {
+                        let term = criteria.Terms[j];
+                        let termTemplate = ko.utils.arrayFirst(flattenedTerms, (template: IVisualTerm) => { return template.TermID == term.Type; });
+                        if (termTemplate) {
+                            this.ConfirmTermValues(term, termTemplate);
+                        }
                     }
                 }
 
             }
         }
 
+        public ConfirmTemplatePropertiesForViewModel(query: Dns.ViewModels.QueryComposerQueryViewModel, termTemplates: IVisualTerm[]) {
+            let flattenedTerms = this.FlattenTermTemplates(termTemplates, []) as IVisualTerm[];
+            //loop through all the terms on all the criteria and make sure each term is up to date
+            let rootCriteria = query.Where.Criteria();
+            for (let i = 0; i < rootCriteria.length; i++) {
+                let criteria: Dns.ViewModels.QueryComposerCriteriaViewModel = rootCriteria[i];
+                this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
+                
+                if (criteria.Terms() && criteria.Terms().length > 0) {
+                    for (let j = 0; j < criteria.Terms().length; j++) {
+                        let term = criteria.Terms()[j];
+                        let termTemplate = ko.utils.arrayFirst(flattenedTerms, (template: IVisualTerm) => { return template.TermID == term.Type(); });
+                        if (termTemplate) {
+                            this.ConfirmTermValuesForViewModel(term, termTemplate);
+                        }
+                    }
+                }
+
+            }
+
+            //check the criteria for each temporal event
+            let temporalEvents = query.TemporalEvents();
+            for (let i = 0; i < temporalEvents.length; i++) {
+                let temporalEvent = temporalEvents[i];
+                let rootCriteria = temporalEvent.Criteria();
+                for (let j = 0; j < rootCriteria.length; j++) {
+                    let criteria: Dns.ViewModels.QueryComposerCriteriaViewModel = rootCriteria[j];
+                    this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
+
+                    if (criteria.Terms() && criteria.Terms().length > 0) {
+                        for (let k = 0; k < criteria.Terms().length; k++) {
+                            let term = criteria.Terms()[k];
+                            let termTemplate = ko.utils.arrayFirst(flattenedTerms, (template: IVisualTerm) => { return template.TermID == term.Type(); });
+                            if (termTemplate) {
+                                this.ConfirmTermValuesForViewModel(term, termTemplate);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
         private FlattenTermTemplates(termTemplates: IVisualTerm[], flattened: IVisualTerm[]) {
-            for (var i = 0; i < termTemplates.length; i++) {
+            for (let i = 0; i < termTemplates.length; i++) {
 
                 if (termTemplates[i].TermID) {
                     flattened.push(termTemplates[i]);
@@ -320,32 +544,82 @@
 
         private ConfirmCriteria(criteria: Dns.Interfaces.IQueryComposerCriteriaDTO, termTemplates: IVisualTerm[]) {
             if (criteria.Terms) {
-                var term;
-                var termTemplate;
-                for (var i = 0; i < criteria.Terms.length; i++) {
+                let term;
+                let termTemplate;
+                for (let i = 0; i < criteria.Terms.length; i++) {
                     term = criteria.Terms[i];
                     termTemplate = ko.utils.arrayFirst(termTemplates, (template: IVisualTerm) => { return template.TermID == term.Type; });
-                    this.ConfirmTermValues(term, termTemplate);
+                    if (termTemplate) {
+                        this.ConfirmTermValues(term, termTemplate);
+                    }
                 }
             }
 
             if (criteria.Criteria && criteria.Criteria.length > 0) {
-                for (var j = 0; j < criteria.Criteria.length; j++) {
+                for (let  j = 0; j < criteria.Criteria.length; j++) {
                     this.ConfirmCriteria(criteria.Criteria[j], termTemplates);
                 }
             }
         }
 
+        public ConfirmCriteriaForViewModel(criteria: Dns.ViewModels.QueryComposerCriteriaViewModel, termTemplates: IVisualTerm[]) {
+            let terms = criteria.Terms();
+            if (terms) {
+                let term: Dns.ViewModels.QueryComposerTermViewModel;
+                let termTemplate: IVisualTerm;
+                for (let i = 0; i < terms.length; i++) {
+                    term = terms[i];
+                    termTemplate = ko.utils.arrayFirst(termTemplates, (template: IVisualTerm) => { return template.TermID == term.Type(); });
+                    if (termTemplate) {
+                        this.ConfirmTermValuesForViewModel(term, termTemplate);
+                    }
+                }
+            }
+
+            let subCriteria = criteria.Criteria();
+            if (subCriteria && subCriteria.length > 0) {
+                for (let j = 0; j < subCriteria.length; j++) {
+                    this.ConfirmCriteriaForViewModel(subCriteria[j], termTemplates);
+                }
+            }
+        }
+
         private ConfirmTermValues(term: Dns.Interfaces.IQueryComposerTermDTO, termTemplate: IVisualTerm) {
-            var termProperties: string[] = Object.keys(term.Values);
-            var tvalProperties: string[] = Object.keys(termTemplate.ValueTemplate);
-            var propertyName;
-            for (var i = 0; i < tvalProperties.length; i++) {
+            let termProperties: string[] = Object.keys(term.Values);
+            let tvalProperties: string[] = Object.keys(termTemplate.ValueTemplate);
+            let propertyName: string;
+            for (let i = 0; i < tvalProperties.length; i++) {
                 propertyName = tvalProperties[i];
                 if (termProperties.indexOf(propertyName) < 0) {                    
                     term.Values[propertyName] = termTemplate.ValueTemplate[propertyName];
                 }
             }
+
+        }
+
+        private ConfirmTermValuesForViewModel(term: Dns.ViewModels.QueryComposerTermViewModel, termTemplate: IVisualTerm) {
+
+            let unwrapped = ko.unwrap(term.Values);
+            let termProperties: string[] = Object.keys(unwrapped);
+            let tvalProperties: string[] = Object.keys(termTemplate.ValueTemplate);
+            let propertyName: string;
+            let hasChanges = false;
+            for (let i = 0; i < tvalProperties.length; i++) {
+                propertyName = tvalProperties[i];
+                if (termProperties.indexOf(propertyName) < 0) {
+                    unwrapped[propertyName] = termTemplate.ValueTemplate[propertyName];
+                    hasChanges = true;
+                }
+            }
+
+            if (hasChanges) {
+                //update the current instance of the term to include the added properties
+                term.Values(unwrapped);
+            }
+
+            //update the instance term values to observables
+            let values = Global.Helpers.ConvertTermObject(term.Values());
+            term.Values(values);
 
         }
 

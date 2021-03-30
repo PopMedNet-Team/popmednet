@@ -243,8 +243,8 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                 //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                 await db.Entry(_entity).ReloadAsync();
 
-                DTO.QueryComposer.QueryComposerRequestDTO qcRequestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                var modularTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == HorizontalDistributedRegressionConfiguration.ModularProgramTermID)).FirstOrDefault();
+                var qcRequestDTO = ParseRequestJSON();
+                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault();
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 //update the request.json term value to include system generated documents revisionsetIDs

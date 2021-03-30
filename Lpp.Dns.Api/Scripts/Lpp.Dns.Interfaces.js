@@ -1221,11 +1221,13 @@ var Dns;
             UserTypes[UserTypes["User"] = 0] = "User";
             UserTypes[UserTypes["Sso"] = 1] = "Sso";
             UserTypes[UserTypes["BackgroundTask"] = 2] = "BackgroundTask";
+            UserTypes[UserTypes["DMCSUser"] = 3] = "DMCSUser";
         })(UserTypes = Enums.UserTypes || (Enums.UserTypes = {}));
         Enums.UserTypesTranslation = [
             { value: UserTypes.User, text: 'User' },
             { value: UserTypes.Sso, text: 'Sso' },
             { value: UserTypes.BackgroundTask, text: 'BackgroundTask' },
+            { value: UserTypes.DMCSUser, text: 'DMCSUser' },
         ];
         var RoutingStatus;
         (function (RoutingStatus) {
@@ -1380,6 +1382,14 @@ var Dns;
                 'ResponseID': { type: 'any', nullable: false },
             }
         };
+        Interfaces.KendoModelCreateCriteriaGroupTemplateDTO = {
+            fields: {
+                'Name': { type: 'string', nullable: false },
+                'Description': { type: 'string', nullable: false },
+                'Json': { type: 'string', nullable: false },
+                'AdapterDetail': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
+            }
+        };
         Interfaces.KendoModelEnhancedEventLogItemDTO = {
             fields: {
                 'Step': { type: 'number', nullable: false },
@@ -1528,7 +1538,8 @@ var Dns;
         Interfaces.KendoModelUpdateRequestTypeRequestDTO = {
             fields: {
                 'RequestType': { type: 'any', nullable: false },
-                'Template': { type: 'any', nullable: false },
+                'Permissions': { type: 'any[]', nullable: false },
+                'Queries': { type: 'any[]', nullable: false },
                 'Terms': { type: 'any[]', nullable: false },
                 'NotAllowedTerms': { type: 'any[]', nullable: false },
                 'Models': { type: 'any[]', nullable: false },
@@ -1537,7 +1548,7 @@ var Dns;
         Interfaces.KendoModelUpdateRequestTypeResponseDTO = {
             fields: {
                 'RequestType': { type: 'any', nullable: false },
-                'Template': { type: 'any', nullable: false },
+                'Queries': { type: 'any[]', nullable: false },
             }
         };
         Interfaces.KendoModelUpdateRequestTypeTermsDTO = {
@@ -2763,6 +2774,12 @@ var Dns;
                 'ScheduleJSON': { type: 'string', nullable: false },
             }
         };
+        Interfaces.KendoModelAvailableTermsRequestDTO = {
+            fields: {
+                'Adapters': { type: 'any[]', nullable: false },
+                'QueryType': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
+            }
+        };
         Interfaces.KendoModelDistributedRegressionManifestFile = {
             fields: {
                 'Items': { type: 'any[]', nullable: false },
@@ -2788,6 +2805,54 @@ var Dns;
                 'DataMartCode': { type: 'string', nullable: false },
             }
         };
+        Interfaces.KendoModelQueryComposerQueryDTO = {
+            fields: {
+                'Header': { type: 'any', nullable: false },
+                'Where': { type: 'any', nullable: false },
+                'Select': { type: 'any', nullable: false },
+                'TemporalEvents': { type: 'any[]', nullable: false },
+            }
+        };
+        Interfaces.KendoModelQueryComposerResponseAggregationDefinitionDTO = {
+            fields: {
+                'GroupBy': { type: 'string[]', nullable: false },
+                'Select': { type: 'any[]', nullable: false },
+                'Name': { type: 'string', nullable: false },
+            }
+        };
+        Interfaces.KendoModelQueryComposerResponseHeaderDTO = {
+            fields: {
+                'ID': { type: 'any', nullable: true },
+                'RequestID': { type: 'any', nullable: true },
+                'DocumentID': { type: 'any', nullable: true },
+                'QueryingStart': { type: 'date', nullable: true },
+                'QueryingEnd': { type: 'date', nullable: true },
+                'DataMart': { type: 'string', nullable: false },
+            }
+        };
+        Interfaces.KendoModelQueryComposerResponsePropertyDefinitionDTO = {
+            fields: {
+                'Name': { type: 'string', nullable: false },
+                'Type': { type: 'string', nullable: false },
+                'As': { type: 'string', nullable: false },
+                'Aggregate': { type: 'string', nullable: false },
+            }
+        };
+        Interfaces.KendoModelQueryComposerResponseQueryResultDTO = {
+            fields: {
+                'ID': { type: 'any', nullable: true },
+                'Name': { type: 'string', nullable: false },
+                'QueryStart': { type: 'date', nullable: true },
+                'QueryEnd': { type: 'date', nullable: true },
+                'PostProcessStart': { type: 'date', nullable: true },
+                'PostProcessEnd': { type: 'date', nullable: true },
+                'Errors': { type: 'any[]', nullable: false },
+                'Results': { type: 'any[]', nullable: false },
+                'LowCellThrehold': { type: 'number', nullable: true },
+                'Properties': { type: 'any[]', nullable: false },
+                'Aggregation': { type: 'any', nullable: false },
+            }
+        };
         Interfaces.KendoModelQueryComposerTemporalEventDTO = {
             fields: {
                 'IndexEventDateIdentifier': { type: 'string', nullable: false },
@@ -2798,6 +2863,7 @@ var Dns;
         };
         Interfaces.KendoModelSectionSpecificTermDTO = {
             fields: {
+                'TemplateID': { type: 'any', nullable: false },
                 'TermID': { type: 'any', nullable: false },
                 'Section': { type: 'dns.enums.querycomposersections', nullable: false },
             }
@@ -2852,13 +2918,12 @@ var Dns;
         };
         Interfaces.KendoModelQueryComposerHeaderDTO = {
             fields: {
+                'ID': { type: 'any', nullable: false },
                 'Name': { type: 'string', nullable: false },
                 'Description': { type: 'string', nullable: false },
                 'ViewUrl': { type: 'string', nullable: false },
-                'Grammar': { type: 'string', nullable: false },
                 'Priority': { type: 'dns.enums.priorities', nullable: true },
                 'DueDate': { type: 'date', nullable: true },
-                'QueryType': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
                 'SubmittedOn': { type: 'date', nullable: true },
             }
         };
@@ -2867,8 +2932,16 @@ var Dns;
                 'Direction': { type: 'dns.enums.orderbydirections', nullable: false },
             }
         };
+        Interfaces.KendoModelQueryComposerRequestDTO = {
+            fields: {
+                'SchemaVersion': { type: 'string', nullable: false },
+                'Header': { type: 'any', nullable: false },
+                'Queries': { type: 'any[]', nullable: false },
+            }
+        };
         Interfaces.KendoModelQueryComposerResponseErrorDTO = {
             fields: {
+                'QueryID': { type: 'any', nullable: true },
                 'Code': { type: 'string', nullable: false },
                 'Description': { type: 'string', nullable: false },
             }
@@ -2880,30 +2953,10 @@ var Dns;
         };
         Interfaces.KendoModelQueryComposerResponseDTO = {
             fields: {
-                'ID': { type: 'any', nullable: true },
-                'DocumentID': { type: 'any', nullable: true },
-                'ResponseDateTime': { type: 'date', nullable: false },
-                'RequestID': { type: 'any', nullable: false },
+                'SchemaVersion': { type: 'string', nullable: false },
+                'Header': { type: 'any', nullable: false },
                 'Errors': { type: 'any[]', nullable: false },
-                'Results': { type: 'any[]', nullable: false },
-                'LowCellThrehold': { type: 'number', nullable: true },
-                'Properties': { type: 'any[]', nullable: false },
-                'Aggregation': { type: 'any', nullable: false },
-            }
-        };
-        Interfaces.KendoModelQueryComposerResponseAggregationDefinitionDTO = {
-            fields: {
-                'GroupBy': { type: 'string[]', nullable: false },
-                'Select': { type: 'any[]', nullable: false },
-                'Name': { type: 'string', nullable: false },
-            }
-        };
-        Interfaces.KendoModelQueryComposerResponsePropertyDefinitionDTO = {
-            fields: {
-                'Name': { type: 'string', nullable: false },
-                'Type': { type: 'string', nullable: false },
-                'As': { type: 'string', nullable: false },
-                'Aggregate': { type: 'string', nullable: false },
+                'Queries': { type: 'any[]', nullable: false },
             }
         };
         Interfaces.KendoModelQueryComposerTermDTO = {
@@ -2927,7 +2980,6 @@ var Dns;
                 'RequestType': { type: 'string', nullable: false },
                 'WorkflowID': { type: 'any', nullable: true },
                 'Workflow': { type: 'string', nullable: false },
-                'Template': { type: 'string', nullable: false },
             }
         };
         Interfaces.KendoModelRequestObserverEventSubscriptionDTO = {
@@ -3031,6 +3083,30 @@ var Dns;
                 'Setting': { type: 'string', nullable: false },
             }
         };
+        Interfaces.KendoModelQueryComposerQueryHeaderDTO = {
+            fields: {
+                'QueryType': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
+                'ComposerInterface': { type: 'dns.enums.querycomposerinterface', nullable: true },
+                'ID': { type: 'any', nullable: false },
+                'Name': { type: 'string', nullable: false },
+                'Description': { type: 'string', nullable: false },
+                'ViewUrl': { type: 'string', nullable: false },
+                'Priority': { type: 'dns.enums.priorities', nullable: true },
+                'DueDate': { type: 'date', nullable: true },
+                'SubmittedOn': { type: 'date', nullable: true },
+            }
+        };
+        Interfaces.KendoModelQueryComposerRequestHeaderDTO = {
+            fields: {
+                'ID': { type: 'any', nullable: false },
+                'Name': { type: 'string', nullable: false },
+                'Description': { type: 'string', nullable: false },
+                'ViewUrl': { type: 'string', nullable: false },
+                'Priority': { type: 'dns.enums.priorities', nullable: true },
+                'DueDate': { type: 'date', nullable: true },
+                'SubmittedOn': { type: 'date', nullable: true },
+            }
+        };
         Interfaces.KendoModelWFCommentDTO = {
             fields: {
                 'Comment': { type: 'string', nullable: false },
@@ -3124,6 +3200,9 @@ var Dns;
                 'Notes': { type: 'string', nullable: false },
                 'QueryType': { type: 'dns.enums.querycomposerquerytypes', nullable: true },
                 'ComposerInterface': { type: 'dns.enums.querycomposerinterface', nullable: true },
+                'Order': { type: 'number', nullable: false },
+                'RequestTypeID': { type: 'any', nullable: true },
+                'RequestType': { type: 'string', nullable: false },
                 'ID': { type: 'any', nullable: true },
                 'Timestamp': { type: 'any', nullable: false },
             }
@@ -3550,10 +3629,10 @@ var Dns;
                 'PostProcess': { type: 'boolean', nullable: false },
                 'AddFiles': { type: 'boolean', nullable: false },
                 'RequiresProcessing': { type: 'boolean', nullable: false },
-                'TemplateID': { type: 'any', nullable: true },
-                'Template': { type: 'string', nullable: false },
+                'Notes': { type: 'string', nullable: false },
                 'WorkflowID': { type: 'any', nullable: true },
                 'Workflow': { type: 'string', nullable: false },
+                'SupportMultiQuery': { type: 'boolean', nullable: false },
                 'ID': { type: 'any', nullable: true },
                 'Timestamp': { type: 'any', nullable: false },
             }
@@ -3722,16 +3801,6 @@ var Dns;
                 'Name': { type: 'string', nullable: false },
                 'Description': { type: 'string', nullable: false },
                 'IsRequestCreator': { type: 'boolean', nullable: false },
-                'ID': { type: 'any', nullable: true },
-                'Timestamp': { type: 'any', nullable: false },
-            }
-        };
-        Interfaces.KendoModelQueryComposerRequestDTO = {
-            fields: {
-                'Header': { type: 'any', nullable: false },
-                'Where': { type: 'any', nullable: false },
-                'Select': { type: 'any', nullable: false },
-                'TemporalEvents': { type: 'any[]', nullable: false },
                 'ID': { type: 'any', nullable: true },
                 'Timestamp': { type: 'any', nullable: false },
             }

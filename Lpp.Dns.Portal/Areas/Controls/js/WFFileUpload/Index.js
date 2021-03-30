@@ -27,21 +27,21 @@ var Controls;
                     _this.sFtpRoot = new WFFileUpload.sFtpItem("/", "/", WFFileUpload.ItemTypes.Folder, null);
                     var self = _this;
                     _this.TermID = termID;
-                    _this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(query);
-                    if (_this.Request.Where.Criteria() == null || _this.Request.Where.Criteria().length == 0) {
-                        _this.Request.Where.Criteria.push(new Dns.ViewModels.QueryComposerCriteriaViewModel({
+                    _this.Query = new Dns.ViewModels.QueryComposerQueryViewModel(query);
+                    if (_this.Query.Where.Criteria() == null || _this.Query.Where.Criteria().length == 0) {
+                        _this.Query.Where.Criteria.push(new Dns.ViewModels.QueryComposerCriteriaViewModel({
                             Operator: Dns.Enums.QueryComposerOperators.And,
                             Name: 'Group 1',
                             Exclusion: false,
                             Terms: [],
                             Criteria: null,
-                            IndexEvent: null,
+                            IndexEvent: false,
                             Type: 0,
                             ID: Constants.Guid.newGuid()
                         }));
                     }
                     //Get the modular program term
-                    _this.Term = ko.utils.arrayFirst(_this.Request.Where.Criteria()[0].Terms(), function (term) { return term.Type().toUpperCase() === _this.TermID.toUpperCase(); });
+                    _this.Term = ko.utils.arrayFirst(_this.Query.Where.Criteria()[0].Terms(), function (term) { return term.Type().toUpperCase() === _this.TermID.toUpperCase(); });
                     if (!_this.Term) {
                         _this.Term = new Dns.ViewModels.QueryComposerTermViewModel({
                             Operator: Dns.Enums.QueryComposerOperators.And,
@@ -50,7 +50,7 @@ var Controls;
                             Criteria: null,
                             Design: null
                         });
-                        _this.Request.Where.Criteria()[0].Terms.push(_this.Term);
+                        _this.Query.Where.Criteria()[0].Terms.push(_this.Term);
                     }
                     //NOTE: this.Term.Values.Documents is not an observable but this.Term.Values is
                     if (!_this.Term.Values().Documents || _this.Term.Values().Documents == null) {
@@ -127,8 +127,8 @@ var Controls;
                         }).done(function (result) {
                             try {
                                 self.sFtpSelectedFiles.removeAll();
-                                var result = JSON.parse(result.content);
-                                result.forEach(function (i) { return self.Documents.push(i); });
+                                var documents = JSON.parse(result.content);
+                                documents.forEach(function (i) { return self.Documents.push(i); });
                                 Requests.Details.rovm.Save(false);
                             }
                             catch (e) {
@@ -141,18 +141,21 @@ var Controls;
                         });
                     };
                     self.serializeCriteria = function () {
-                        var r = self.Request.toData();
+                        var r = self.Query.toData();
                         var term = ko.utils.arrayFirst(r.Where.Criteria[0].Terms, function (term) { return term.Type.toUpperCase() == self.TermID.toUpperCase(); });
                         term.Values.Documents = ko.utils.arrayMap(self.Documents(), function (d) { return { RevisionSetID: d.RevisionSetID }; });
                         var json = JSON.stringify(r);
                         return json;
                     };
-                    Requests.Details.rovm.RegisterRequestSaveFunction(function (requestViewModel) {
-                        requestViewModel.Query(self.serializeCriteria());
-                        return true;
-                    });
                     return _this;
                 }
+                ViewModel.prototype.ExportQueries = function () {
+                    var _this = this;
+                    var r = this.Query.toData();
+                    var term = ko.utils.arrayFirst(r.Where.Criteria[0].Terms, function (term) { return Constants.Guid.equals(term.Type, _this.TermID); });
+                    term.Values.Documents = ko.utils.arrayMap(this.Documents(), function (d) { return { RevisionSetID: d.RevisionSetID }; });
+                    return [r];
+                };
                 ViewModel.prototype.onFileUpload = function (evt) {
                     ko.utils.arrayForEach(evt.files, function (item) {
                         if (item.size > 2147483648) {
@@ -162,7 +165,7 @@ var Controls;
                         }
                     });
                     evt.data = {
-                        comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
+                        comments: Constants.Guid.equals(Requests.Details.rovm.WorkflowActivity.ID(), '931C0001-787C-464D-A90F-A64F00FB23E7') ? 'Modular Program specification document added.' : '',
                         requestID: Requests.Details.rovm.Request.ID(),
                         taskID: Requests.Details.rovm.CurrentTask.ID,
                         taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument
@@ -233,6 +236,9 @@ var Controls;
                     }).fail(function (error) {
                         alert(error.statusText);
                     });
+                };
+                ViewModel.prototype.onKnockoutBind = function () {
+                    ko.applyBindings(this, this._BindingControl[0]);
                 };
                 return ViewModel;
             }(Global.PageViewModel));

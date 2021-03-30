@@ -89,7 +89,10 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
                 //Reset reject for resubmit.
                 _entity.RejectedByID = null;
                 _entity.RejectedOn = null;
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+
+                bool hasFileUploadTerm = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, ParseRequestJSON()).Any();
+
+                if (hasFileUploadTerm)
                 {
 
                     var originalStatus = _entity.Status;

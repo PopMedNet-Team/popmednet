@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-2 bold">Dispensing RX Amount:</div>
         <div class="col-sm-10">
-            <span data-bind="foreach:Values().RXAmounts()">
+            <span data-bind="foreach:Values.RXAmounts">
                 <span data-bind="visible: $index() > 0">or</span>
                 <span data-bind="visible: $data == 0, text: '<0'"></span>
                 <span data-bind="visible: $data == 1, text: '1-2'"></span>
@@ -18,7 +18,7 @@
                 <span data-bind="visible: $data == 7, text: '>180'"></span>
                 <span data-bind="visible: $data == 8, text: 'Missing'"></span>
             </span>
-            <span data-bind="visible: Values().RXAmounts().length == 0">&lt;None Selected&gt;</span>
+            <span data-bind="visible: Values.RXAmounts.length == 0">&lt;None Selected&gt;</span>
         </div>
     </div>
 </script>

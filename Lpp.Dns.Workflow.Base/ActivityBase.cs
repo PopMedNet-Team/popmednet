@@ -416,5 +416,29 @@ namespace Lpp.Dns.Workflow
             await task.LogAsModifiedAsync(_workflow.Identity, db, optionalMessage);
         }
 
+        /// <summary>
+        /// Parses the Request's Query string into a QueryComposerRequestDTO, it will upconvert old request json schema to new objects.
+        /// </summary>
+        /// <returns></returns>
+        protected DTO.QueryComposer.QueryComposerRequestDTO ParseRequestJSON()
+        {
+            return Lpp.Dns.Data.QueryComposer.Helpers.ParseRequestJSON(_entity);
+        }
+
+        protected bool HasTermInAnyCriteria(Guid termTypeID, DTO.QueryComposer.QueryComposerRequestDTO requestDTO)
+        {
+            return Data.QueryComposer.Helpers.HasTermInAnyCriteria(termTypeID, requestDTO);
+        }
+
+        protected IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> GetAllTerms(Guid termTypeID, DTO.QueryComposer.QueryComposerRequestDTO requestDTO)
+        {
+            return Data.QueryComposer.Helpers.GetAllTerms(termTypeID, requestDTO.Queries.SelectMany(q => q.Where.Criteria));
+        }
+
+        protected IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> GetAllTerms(Guid termTypeID, IEnumerable<DTO.QueryComposer.QueryComposerCriteriaDTO> criteria)
+        {
+            return Data.QueryComposer.Helpers.GetAllTerms(termTypeID, criteria);
+        }
+
     }
 }

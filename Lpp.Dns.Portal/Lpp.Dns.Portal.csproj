@@ -691,6 +691,7 @@
       <DependentUpon>ProcedureResponse.ts</DependentUpon>
     </EmbeddedResource>
     <Content Include="Areas\DataChecker\js\datachecker.charting.js" />
+    <Content Include="Areas\QueryComposer\js\QueryEditor.css" />
     <Content Include="Areas\QueryComposer\Views\Terms\SqlDistribution\Edit.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\SqlDistribution\View.cshtml" />
     <Content Include="Areas\Workflow\Views\Requests\ResponseContainer.cshtml" />
@@ -1434,6 +1435,8 @@
     <Content Include="Areas\Controls\Views\WFEnhancedEventLog\Index.cshtml" />
     <Content Include="Areas\QueryComposer\Views\UploadCodeList.cshtml" />
     <Content Include="Areas\Controls\Views\WFFileUpload\ForAttachments.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\QueryEditor-Host.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\QueryEditor-MDQ.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\Trial\Edit.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\Trial\EditStratifierView.cshtml" />
     <Content Include="Areas\QueryComposer\Views\Terms\Trial\StratifierView.cshtml" />
@@ -3971,9 +3974,13 @@
     <TypeScriptCompile Include="Areas\QueryComposer\js\DataMartRouting.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\edit.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\ImportCodeListHelper.ts" />
-    <TypeScriptCompile Include="Areas\QueryComposer\js\MDQ.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\MDQ-Common.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\QueryEditor-Host.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\QueryEditor-MDQ.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\QueryEditor-TermProvider.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\SaveCriteriaGroup.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\SummaryView.ts" />
+    <TypeScriptCompile Include="Areas\QueryComposer\js\TermsObserver.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\TermValueFilter.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\UploadCodeList.ts" />
     <TypeScriptCompile Include="Areas\QueryComposer\js\View.ts" />

@@ -13,161 +13,59 @@ namespace Lpp.Dns.DTO.QueryComposer
     public class QueryComposerResponseDTO
     {
         /// <summary>
-        /// Gets or set the ID
+        /// Gets the schema version of the response.
         /// </summary>
         [DataMember]
-        public Guid? ID { get; set; }
+        public string SchemaVersion { get { return "2.0";  } }
         /// <summary>
-        /// The id of the document the response is serialized to.
+        /// Gets or sets the header for the response.
         /// </summary>
         [DataMember]
-        public Guid? DocumentID { get; set; }
+        public QueryComposerResponseHeaderDTO Header { get; set; }
         /// <summary>
-        /// Gets or sets the response time
-         /// </summary>
-        [DataMember]
-        public DateTimeOffset ResponseDateTime { get; set; }
-        /// <summary>
-        /// Gets or sets the ID of request
-         /// </summary>
-        [DataMember]
-         public Guid RequestID { get; set; }
-        /// <summary>
-        /// Errors
+        /// Gets or sets the collection of errors that occured while processing the queries.
         /// </summary>
         [DataMember]
         public IEnumerable<QueryComposerResponseErrorDTO> Errors { get; set; }
         /// <summary>
-        /// A collection of a collection of results (ie a collection of tables).
+        /// Gets or sets the query responses for the request.
         /// </summary>
         [DataMember]
-        public IEnumerable<IEnumerable<Dictionary<string,object>>> Results { get; set; }
-        /// <summary>
-        /// Lowcell Threshold
-        /// </summary>
-        [DataMember]
-        public double? LowCellThrehold { get; set; }
-        /// <summary>
-        /// Gets the collection of property definitions that define the shape of the response.
-        /// </summary>
-        [DataMember]
-        public IEnumerable<QueryComposerResponsePropertyDefinitionDTO> Properties { get; set; }
-        /// <summary>
-        /// Gets the information about how to aggregrate the results.
-        /// </summary>
-        [DataMember]
-        public QueryComposerResponseAggregationDefinitionDTO Aggregation { get; set; }
-    }
-    /// <summary>
-    /// QueryComposer Response AggregationDefinitionDTO
-    /// </summary>
-    [DataContract]
-    public class QueryComposerResponseAggregationDefinitionDTO : Lpp.Objects.Dynamic.IAggregationDefinition
-    {
-        /// <summary>
-        /// Gets or sets the collection of property names to group by.
-        /// </summary>
-        [DataMember]
-        public IEnumerable<string> GroupBy { get; set; }
-        /// <summary>
-        /// Gets or sets the collection of PropertyDefinitions defining the properties to select for the aggregation result.
-        /// The definition will indicate if any aggregate action should be applied.
-        /// </summary>
-        [DataMember]
-        public IEnumerable<Lpp.Objects.Dynamic.IPropertyDefinition> Select { get; set; }
-        /// <summary>
-        /// Stores the group name if any.
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-    }
-    /// <summary>
-    /// QueryComposer Response PropertyDefinitionDTO
-    /// </summary>
-    [DataContract]
-    public class QueryComposerResponsePropertyDefinitionDTO : Lpp.Objects.Dynamic.IPropertyDefinition
-    {
-        /// <summary>
-        /// The name of the property.
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-        /// <summary>
-        /// The name of the type of the property. This should be a defined type.
-        /// </summary>
-        [DataMember]
-        public string Type { get; set; }
+        public IEnumerable<QueryComposerResponseQueryResultDTO> Queries { get; set; }
 
-        string _as = null;
         /// <summary>
-        /// The name of the property to be used in a select or aggregation.
+        /// Refreshes the response query start and end dates based on the first query result start date, and the last query result finish or post-processing finish date.
+        /// If there are no queries, the query start and end dates are set to null.
         /// </summary>
-        [DataMember]
-        public string As
+        public void RefreshQueryDates()
         {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_as))
-                    return this.Name;
+            if (Header == null)
+                return;
 
-                return _as;
-            }
-            set
+            if(Queries == null)
             {
-                _as = value;
+                Header.QueryingStart = null;
+                Header.QueryingEnd = null;
+                return;
+            }
+
+            Header.QueryingStart = Queries.Where(q => q.QueryStart.HasValue).Max(q => (DateTimeOffset?)q.QueryStart.Value);
+            Header.QueryingEnd = Queries.Where(q => q.QueryEnd.HasValue).Select(q => q.QueryEnd.Value).Concat(Queries.Where(q => q.PostProcessEnd.HasValue).Select(q => q.PostProcessEnd.Value)).Max(d => (DateTimeOffset?)d);
+        }
+
+        /// <summary>
+        /// Combines all response and query result errors into a single collection.
+        /// If there are no errors the collection will be null.
+        /// </summary>
+        public void RefreshErrors()
+        {
+            Errors = (Errors ?? Enumerable.Empty<QueryComposerResponseErrorDTO>()).Where(e => e.QueryID == null).Concat((Queries ?? Enumerable.Empty<QueryComposerResponseQueryResultDTO>()).Where(q => q.Errors != null).SelectMany(q => q.Errors)).ToArray();
+
+            if (((QueryComposerResponseErrorDTO[])Errors).Length == 0)
+            {
+                Errors = null;
             }
         }
-        /// <summary>
-        /// The name of an applicable aggregation to apply when aggregating the results. (Sum, Average, Count, etc.)
-        /// </summary>
-        [DataMember]
-        public string Aggregate { get; set; }
-
-        /// <summary>
-        /// Returns the Type property as a System.Type.
-        /// </summary>
-        /// <returns></returns>
-        public Type AsType()
-        {
-            return System.Type.GetType(this.Type);
-        }
     }
-
-    /// <summary>
-    /// Custom json converter to handle converting IPropertyDefinition interface to concrete type.
-    /// </summary>
-    public class QueryComposerResponsePropertyDefinitionConverter : Newtonsoft.Json.JsonConverter
-    {
-        /// <summary>
-        /// retuns object type
-        /// </summary>
-        /// <param name="objectType"></param>
-        /// <returns></returns>
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(Lpp.Objects.Dynamic.IPropertyDefinition);
-        }
-        /// <summary>
-        /// reads the json object
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="objectType"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="serializer"></param>
-        /// <returns></returns>
-        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            return serializer.Deserialize<QueryComposerResponsePropertyDefinitionDTO>(reader);
-        }
-        /// <summary>
-        /// create a json object
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="serializer"></param>
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
-    }
+    
 }

@@ -22,79 +22,28 @@ var Plugins;
             (function (View) {
                 var ViewModel = /** @class */ (function (_super) {
                     __extends(ViewModel, _super);
-                    function ViewModel(query, visualTerms, bindingControl) {
+                    function ViewModel(request, bindingControl) {
                         var _this = _super.call(this, bindingControl) || this;
-                        _this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(query);
-                        if (query == null) {
-                            var criteria = new Dns.ViewModels.QueryComposerCriteriaViewModel();
-                            criteria.ID(Constants.Guid.newGuid());
-                            _this.Request.Where.Criteria.push(criteria);
-                        }
-                        var self = _this;
-                        _this.NonAggregateFields = ko.computed(function () {
-                            //hide the aggregate fields from view since they are not editable anyhow
-                            var filtered = ko.utils.arrayFilter(self.Request.Select.Fields(), function (item) { return item.Aggregate() == null; });
-                            return filtered;
-                        });
-                        //Load the Concept's TermValues as observables.
-                        if (_this.Request == null || _this.Request.Where.Criteria().length == 0) {
-                            //This is a new request, no previously defined criteria found.
-                        }
-                        else {
-                            var termValueFilter = new Plugins.Requests.QueryBuilder.MDQ.TermValueFilter([]);
-                            termValueFilter.ConfirmTemplateProperties(query, visualTerms);
-                            var convertTerms = function (terms) {
-                                terms.forEach(function (term) {
-                                    var termValues = Global.Helpers.ConvertTermObject(term.Values());
-                                    term.Values(termValues);
-                                    if (ViewModel.CodeTerms.indexOf(term.Type().toUpperCase()) >= 0) {
-                                        if (term.Values != null && term.Values().CodeValues != null) {
-                                            //Do not re-map as the CodeValues property already exists...
-                                        }
-                                        else {
-                                            visualTerms.forEach(function (item) {
-                                                if (item.Terms == null || item.Terms.length == 0) {
-                                                    if (term.Type() == item.TermID) {
-                                                        var termValuesUpdated = Global.Helpers.CopyObject(item.ValueTemplate);
-                                                        term.Values(termValuesUpdated);
-                                                    }
-                                                }
-                                                if (item.Terms != null && item.Terms.length > 0) {
-                                                    item.Terms.forEach(function (childTerm) {
-                                                        if (term.Type() == childTerm.TermID) {
-                                                            var termValuesUpdated = Global.Helpers.CopyObject(childTerm.ValueTemplate);
-                                                            term.Values(termValuesUpdated);
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            };
-                            _this.Request.Where.Criteria().forEach(function (cvm) {
-                                var selfVM = self;
-                                convertTerms(cvm.Terms());
-                                cvm.Criteria().forEach(function (subCriteria) {
-                                    convertTerms(subCriteria.Terms());
-                                });
-                            });
-                            _this.Request.TemporalEvents().forEach(function (temporalEvent) {
-                                temporalEvent.Criteria().forEach(function (cvm) {
-                                    convertTerms(cvm.Terms());
-                                    cvm.Criteria().forEach(function (subCriteria) {
-                                        convertTerms(subCriteria.Terms());
-                                    });
-                                });
-                            });
-                        }
+                        //TODO: look into how to easily confirm the properties on an object without going back and forth between interface and viewmodel
+                        _this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(request).toData();
                         return _this;
                     }
+                    ViewModel.prototype.FilterForNonAggregateFields = function (query) {
+                        return ko.utils.arrayFilter(query.Select.Fields, function (f) { return f.Aggregate == null; });
+                    };
+                    ViewModel.prototype.ShowSubCriteriaConjuction = function (parentCriteria, subCriteria) {
+                        if (parentCriteria.Criteria.length < 2)
+                            return false;
+                        if (parentCriteria.Criteria.indexOf(subCriteria) == 0) {
+                            return false;
+                        }
+                        return true;
+                    };
                     ViewModel.prototype.TemplateSelector = function (data) {
-                        return "v_" + data.Type().toLowerCase();
+                        return "v_" + data.Type.toLowerCase();
                     };
                     ViewModel.prototype.StratifierTemplateSelector = function (data) {
-                        return "sv_" + data.Type().toLowerCase();
+                        return "sv_" + data.Type.toLowerCase();
                     };
                     ViewModel.TranslateDataCheckerDiagnosisCodeType = function (value) {
                         var item = ko.utils.arrayFirst(ViewModel.DataCheckerDiagnosisCodeTypes, function (i) { return i.Value.toUpperCase() == (value || '').toUpperCase(); });
@@ -102,42 +51,51 @@ var Plugins;
                             return value;
                         return item.Name;
                     };
+                    /**
+                     * Loops through all Element nodes of the template after render and update's the declare identifying attributes with a prefix unique to the instantiated template.
+                     * @param nodes The collection of DOMnodes of the rendered template.
+                     */
+                    ViewModel.prototype.onUpdateTemplateElements = function (nodes) {
+                        if (nodes == null || nodes.length == 0)
+                            return;
+                        var prefix = Constants.Guid.newGuid() + '_';
+                        var updateAttributeValue = function (elmt, key) {
+                            if (elmt.hasAttribute(key)) {
+                                var v = elmt.getAttribute(key);
+                                if (v && v.trim().length > 0) {
+                                    elmt.setAttribute(key, prefix + v);
+                                }
+                            }
+                        };
+                        //recursive function to prepend the prefix to all defined id using attributes
+                        var updateElementID = function (element) {
+                            var attr = element.id;
+                            if (attr && attr.trim().length > 0) {
+                                element.id = prefix + attr;
+                            }
+                            updateAttributeValue(element, "for");
+                            updateAttributeValue(element, "name");
+                            updateAttributeValue(element, "aria-labelledby");
+                            updateAttributeValue(element, "data-for");
+                            if (element.children.length > 0) {
+                                for (var i = 0; i < element.children.length; i++) {
+                                    updateElementID(element.children.item(i));
+                                }
+                            }
+                        };
+                        nodes.forEach(function (node) {
+                            if (node.nodeType != 1)
+                                return;
+                            var element = node;
+                            updateElementID(element);
+                        });
+                    };
                     ViewModel.TranslateDataCheckerProcedureCodeType = function (value) {
                         var item = ko.utils.arrayFirst(ViewModel.DataCheckerProcedureCodeTypes, function (i) { return i.Value.toUpperCase() == (value || '').toUpperCase(); });
                         if (item == null)
                             return value;
                         return item.Name;
                     };
-                    ViewModel.prototype.ShowSubCriteriaConjuction = function (parentCriteria, subCriteria) {
-                        if (parentCriteria.Criteria().length < 2)
-                            return false;
-                        if (parentCriteria.Criteria().indexOf(subCriteria) == 0) {
-                            return false;
-                        }
-                        return true;
-                    };
-                    ViewModel.CodeTerms = [
-                        //drug class
-                        "75290001-0E78-490C-9635-A3CA01550704",
-                        //drug name
-                        "0E1F0001-CA0C-42D2-A9CC-A3CA01550E84",
-                        //HCPCS Procedure Codes
-                        "096A0001-73B4-405D-B45F-A3CA014C6E7D",
-                        //ICD9 Diagnosis Codes 3 digit
-                        "5E5020DC-C0E4-487F-ADF2-45431C2B7695",
-                        //ICD9 Diagnosis Codes 4 digit
-                        "D0800001-2810-48ED-96B9-A3D40146BAAE",
-                        //ICD9 Diagnosis Codes 5 digit
-                        "80750001-6C3B-4C2D-90EC-A3D40146C26D",
-                        //ICD9 Procedure Codes 3 digit
-                        "E1CC0001-1D9A-442A-94C4-A3CA014C7B94",
-                        //ICD9 Procedure Codes 4 digit
-                        "9E870001-1D48-4AA3-8889-A3D40146CCB3",
-                        //Zip Code
-                        "8B5FAA77-4A4B-4AC7-B817-69F1297E24C5",
-                        //Combinded Diagnosis Codes
-                        "86110001-4BAB-4183-B0EA-A4BC0125A6A7"
-                    ];
                     ViewModel.DataCheckerDiagnosisCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'SNOMED CT', Value: 'SM' }, { Name: 'Other', Value: 'OT' });
                     ViewModel.DataCheckerProcedureCodeTypes = new Array({ Name: 'Any', Value: '' }, { Name: 'ICD-9-CM', Value: '09' }, { Name: 'ICD-10-CM', Value: '10' }, { Name: 'ICD-11-CM', Value: '11' }, { Name: 'CPT Category II', Value: 'C2' }, { Name: 'CPT Category III', Value: 'C3' }, { Name: 'CPT-4 (i.e., HCPCS Level I)', Value: 'C4' }, { Name: 'HCPCS (i.e., HCPCS Level II)', Value: 'HC' }, { Name: 'HCPCS Level III', Value: 'H3' }, { Name: 'LOINC', Value: 'LC' }, { Name: 'Local Homegrown', Value: 'LO' }, { Name: 'NDC', Value: 'ND' }, { Name: 'Revenue', Value: 'RE' }, { Name: 'Other', Value: 'OT' });
                     return ViewModel;
@@ -151,12 +109,36 @@ var Plugins;
                     return value.split(delimiter).map(function (s) { return (s || '').trim(); }).join(delimiter.trim() + ' ');
                 }
                 View.PrepareCollectionForDisplay = PrepareCollectionForDisplay;
-                function init(query, visualTerms, bindingControl) {
-                    var vm = new ViewModel(query, visualTerms, bindingControl);
+                function initialize(query, requestVM, bindingControl) {
+                    var queryRequestDTO;
+                    if (query.hasOwnProperty('SchemaVersion') == false) {
+                        //Only a multi-query request will have a SchemaVersion property.
+                        //Going to assume request type hasn't been converted to the new multi-query schema.
+                        //Automactially upgrade, assume the current json only has a single query and it matches the first specifiec for the request type.
+                        //The 'query' parameter is original non-multi query json, need to wrap in new request json.
+                        queryRequestDTO = new Dns.ViewModels.QueryComposerRequestViewModel().toData();
+                        queryRequestDTO.Header.ID = requestVM.ID();
+                        queryRequestDTO.Header.Name = requestVM.Name();
+                        queryRequestDTO.Header.Description = requestVM.Description();
+                        queryRequestDTO.Header.DueDate = requestVM.DueDate();
+                        queryRequestDTO.Header.Priority = requestVM.Priority();
+                        queryRequestDTO.Header.SubmittedOn = requestVM.SubmittedOn();
+                        queryRequestDTO.Queries = [query];
+                    }
+                    else {
+                        queryRequestDTO = query;
+                    }
+                    var vm = new ViewModel(queryRequestDTO, bindingControl);
                     $(function () {
                         ko.applyBindings(vm, bindingControl[0]);
                     });
                     return vm;
+                }
+                View.initialize = initialize;
+                function init(query, visualTerms, bindingControl) {
+                    //deprecated for initialize()
+                    throw new DOMException("Deprecated for initialize().");
+                    return null;
                 }
                 View.init = init;
                 ko.bindingHandlers.DocumentsByRevision = {

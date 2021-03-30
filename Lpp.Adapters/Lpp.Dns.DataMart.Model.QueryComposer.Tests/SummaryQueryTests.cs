@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -348,36 +347,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         }
 
         [TestMethod]
-        public void Metadata_Refresh_Dates_Response()
-        {
-
-            var response = RunMetadataRefreshRequest("MetdataRefrshDates.json");
-            Logger.Debug(SerializeJsonToString(response));
-
-        }
-
-        [TestMethod]
-        public void Metadata_Refresh_Dates_Documents()
-        {
-            QueryComposerModelProcessor.DocumentEx[] docs;
-            var request = LoadRequest("MetdataRefrshDates.json");
-            using (var adapter = Helper.CreateMetadataRefreshAdapter(ConnectionString))
-            {
-                adapter.Execute(request, false);
-                docs = adapter.OutputDocuments();
-
-                foreach (var doc in docs)
-                {
-                    using (var fileStream = File.Create(doc.Document.Filename))
-                    {
-                        fileStream.Write(doc.Content, 0, doc.Content.Length);
-                        fileStream.Flush();
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
         public void PMNDEV5164()
         {
 
@@ -404,80 +373,45 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
         }
 
-        [TestMethod]
-        public void PMNDEV7081()
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunIncRequest(string queryJsonFilepath)
         {
-
-            var response = RunPrevRequest("PMNDEV-7081.json");
-            Logger.Debug(SerializeJsonToString(response));
-
-        }
-
-        [TestMethod]
-        public void PMNDEV7082()
-        {
-
-            var response = RunPrevRequest("PMNDEV-7082.json");
-            Logger.Debug(SerializeJsonToString(response));
-
-        }
-
-        [TestMethod]
-        public void PMNDEV7083()
-        {
-
-            var response = RunPrevRequest("PMNDEV-7083.json");
-            Logger.Debug(SerializeJsonToString(response));
-
-        }
-
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunIncRequest(string requestJsonFilepath)
-        {
-            var request = LoadRequest(requestJsonFilepath);
+            var query = LoadQuery(queryJsonFilepath);
             using (var adapter = Helper.CreateINCSummaryModelAdapterAdapter(ConnectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(query, false);
             }
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunMFURequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunMFURequest(string requestJsonFilepath)
         {
-            var request = LoadRequest(requestJsonFilepath);
+            var request = LoadQuery(requestJsonFilepath);
             using (var adapter = Helper.CreateMFUSummaryModelAdapterAdapter(ConnectionString))
             {
                 return adapter.Execute(request, false);
             }
         }
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunPrevRequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunPrevRequest(string requestJsonFilepath)
         {
-            var request = LoadRequest(requestJsonFilepath);
+            var request = LoadQuery(requestJsonFilepath);
             using (var adapter = Helper.CreatePrevSummaryModelAdapterAdapter(ConnectionString))
             {
                 return adapter.Execute(request, false);
             }
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunMetadataRefreshRequest(string requestJsonFilepath)
-        {
-            var request = LoadRequest(requestJsonFilepath);
-            using (var adapter = Helper.CreateMetadataRefreshAdapter(ConnectionString))
-            {
-                return adapter.Execute(request, false);
-            }
-        }
-
-        Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO LoadRequest(string filename, string folder = ResourceFolder)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO LoadQuery(string filename, string folder = ResourceFolder)
         {
             string filepath = System.IO.Path.Combine(folder, filename);
             var json = System.IO.File.ReadAllText(filepath);
             Newtonsoft.Json.JsonSerializerSettings jsonSettings = new Newtonsoft.Json.JsonSerializerSettings();
             jsonSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
-            Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(json, jsonSettings);
 
-            return request;
+            var query = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO>(json, jsonSettings);
+
+            return query;
         }
 
-        static string SerializeJsonToString(Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO response)
+        static string SerializeJsonToString(object response)
         {
             var settings = new Newtonsoft.Json.JsonSerializerSettings();
             settings.Formatting = Newtonsoft.Json.Formatting.Indented;

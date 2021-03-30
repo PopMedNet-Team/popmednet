@@ -50,12 +50,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             Helper.DumpQueryComposerResults(result.Results);
         }
-        QueryComposerResponseDTO RunQueryAgainstAdapter(string jsonSrc, string connectionString = null)
+        QueryComposerResponseQueryResultDTO RunQueryAgainstAdapter(string jsonSrc, string connectionString = null)
         {
             var json = System.IO.File.ReadAllText(jsonSrc);
             Newtonsoft.Json.JsonSerializerSettings jsonSettings = new Newtonsoft.Json.JsonSerializerSettings();
             jsonSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
-            QueryComposerRequestDTO request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(json, jsonSettings);
+
+            var request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO>(json, jsonSettings);
 
             if(string.IsNullOrEmpty(connectionString))
                 connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["PCORNET"].ConnectionString;

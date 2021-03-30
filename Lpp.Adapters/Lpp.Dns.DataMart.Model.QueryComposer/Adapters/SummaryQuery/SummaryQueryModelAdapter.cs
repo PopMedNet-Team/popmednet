@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lpp.Dns.DTO.QueryComposer;
 
 namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 {
@@ -10,7 +9,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
     {
         public SummaryQueryModelAdapter(Guid modelID, RequestMetadata requestMetadata) : base(modelID, requestMetadata) { }
 
-        protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
+        protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseQueryResultDTO response)
         {
             List<string> ltCols = new List<string>();
 
@@ -37,23 +36,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             }
 
             return ltCols.ToArray();
-        }
-
-        protected DTO.QueryComposer.QueryComposerResponseDTO _currentResponse = null;
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            if (_currentResponse == null)
-                return new QueryComposerModelProcessor.DocumentEx[0];
-
-            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
-        }
-
-        public override void PostProcess(QueryComposerResponseDTO response)
-        {
-            base.PostProcess(response);
-
-            _currentResponse = response;
         }
     }
 }

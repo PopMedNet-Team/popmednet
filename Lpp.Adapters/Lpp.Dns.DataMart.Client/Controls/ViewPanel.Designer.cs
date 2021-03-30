@@ -13,9 +13,16 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                if(_datasourceStream != null)
+                {
+                    _datasourceStream.Dispose();
+                    _datasourceStream = null;
+                }
+
+                if(components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -35,7 +42,8 @@
             this.DATASET = new System.Windows.Forms.DataGridView();
             this.HTML = new System.Windows.Forms.WebBrowser();
             this.URL = new System.Windows.Forms.WebBrowser();
-            this.JSON = new System.Windows.Forms.DataGridView();
+            this.JSON = new Lpp.Dns.DataMart.Client.Controls.JSON();
+            this.JSON_OLD = new System.Windows.Forms.DataGridView();
             this.XSLXML = new System.Windows.Forms.WebBrowser();
             this.FILELIST = new System.Windows.Forms.DataGridView();
             this.colDocumentSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -47,7 +55,7 @@
             this.XML = new System.Windows.Forms.TreeView();
             this.lblNoResults = new Lpp.Dns.DataMart.Client.Controls.TransparentLabel();
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.JSON)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.JSON_OLD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FILELIST)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsDocumentList)).BeginInit();
             this.SuspendLayout();
@@ -103,22 +111,35 @@
             // 
             // JSON
             // 
-            this.JSON.AllowUserToAddRows = false;
-            this.JSON.AllowUserToDeleteRows = false;
-            this.JSON.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.JSON.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.JSON.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.JSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.JSON.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AutoScroll = true;
             this.JSON.Location = new System.Drawing.Point(0, 0);
-            this.JSON.Margin = new System.Windows.Forms.Padding(2);
             this.JSON.Name = "JSON";
-            this.JSON.ReadOnly = true;
-            this.JSON.RowHeadersVisible = false;
-            this.JSON.RowTemplate.Height = 24;
             this.JSON.Size = new System.Drawing.Size(782, 333);
             this.JSON.TabIndex = 10;
             this.JSON.Visible = false;
-            this.JSON.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.JSON_CellFormatting);
+            // 
+            // JSON_OLD
+            // 
+            this.JSON_OLD.AllowUserToAddRows = false;
+            this.JSON_OLD.AllowUserToDeleteRows = false;
+            this.JSON_OLD.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.JSON_OLD.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.JSON_OLD.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.JSON_OLD.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.JSON_OLD.Location = new System.Drawing.Point(0, 0);
+            this.JSON_OLD.Margin = new System.Windows.Forms.Padding(2);
+            this.JSON_OLD.Name = "JSON_OLD";
+            this.JSON_OLD.ReadOnly = true;
+            this.JSON_OLD.RowHeadersVisible = false;
+            this.JSON_OLD.RowTemplate.Height = 24;
+            this.JSON_OLD.Size = new System.Drawing.Size(782, 333);
+            this.JSON_OLD.TabIndex = 10;
+            this.JSON_OLD.Visible = false;
+            this.JSON_OLD.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.JSON_CellFormatting);
             // 
             // XSLXML
             // 
@@ -225,18 +246,19 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.lblNoResults);
+            this.Controls.Add(this.JSON);
+            this.Controls.Add(this.JSON_OLD);
+            this.Controls.Add(this.XSLXML);
+            this.Controls.Add(this.DATASET);
             this.Controls.Add(this.PLAIN);
             this.Controls.Add(this.XML);
             this.Controls.Add(this.FILELIST);
             this.Controls.Add(this.HTML);
             this.Controls.Add(this.URL);
-            this.Controls.Add(this.JSON);
-            this.Controls.Add(this.XSLXML);
-            this.Controls.Add(this.DATASET);
             this.Name = "ViewPanel";
             this.Size = new System.Drawing.Size(782, 333);
             ((System.ComponentModel.ISupportInitialize)(this.DATASET)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.JSON)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.JSON_OLD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FILELIST)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsDocumentList)).EndInit();
             this.ResumeLayout(false);
@@ -249,7 +271,8 @@
         public System.Windows.Forms.DataGridView DATASET;
         private System.Windows.Forms.WebBrowser HTML;
         private System.Windows.Forms.WebBrowser URL;
-        public System.Windows.Forms.DataGridView JSON;
+        public System.Windows.Forms.DataGridView JSON_OLD;
+        public JSON JSON;
         private System.Windows.Forms.TreeView XML;
         private System.Windows.Forms.WebBrowser XSLXML;
         public System.Windows.Forms.DataGridView FILELIST;

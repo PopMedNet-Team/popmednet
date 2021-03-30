@@ -1,5 +1,6 @@
 ﻿using Lpp.Objects.Dynamic;
 using Lpp.QueryComposer;
+using Lpp.Dns.DTO.QueryComposer;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -442,7 +443,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
 
             if (rangeValues.CalculationType.Value == DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodStartDateWithinCriteriaGroup)
             {
-                var observation = PCORIModelAdapter.GetAllCriteriaTerms(primaryCriteria, ModelTermsFactory.ObservationPeriodID);
+                var observation = primaryCriteria.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.ObservationPeriodID);
                 var observationPeriodValues = observation.Select(t => AdapterHelpers.ParseDateRangeValues(t)).Where(rv => rv.StartDate.HasValue).FirstOrDefault();
                 //var observationPeriodValues = primaryCriteria.Terms.Where(t => t.Type == ModelTermsFactory.ObservationPeriodID).Select(t => AdapterHelpers.ParseDateRangeValues(t)).Where(rv => rv.StartDate.HasValue).FirstOrDefault();
 
@@ -455,7 +456,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
 
             if (rangeValues.CalculationType.Value == DTO.Enums.AgeRangeCalculationType.AsOfObservationPeriodEndDateWithinCriteriaGroup)
             {
-                var observation = PCORIModelAdapter.GetAllCriteriaTerms(primaryCriteria, ModelTermsFactory.ObservationPeriodID);
+                var observation = primaryCriteria.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.ObservationPeriodID);
                 var observationPeriodValues = observation.Select(t => AdapterHelpers.ParseDateRangeValues(t)).Where(rv => rv.StartDate.HasValue).FirstOrDefault();
 
                 if (observationPeriodValues == null)

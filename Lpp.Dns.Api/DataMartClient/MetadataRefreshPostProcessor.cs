@@ -35,7 +35,8 @@ namespace Lpp.Dns.Api.DataMartClient
         /// 
         /// </summary>
         /// <param name="document"></param>
-        public async Task ExecuteAsync(Document document)
+        /// <param name="cachedDocumentFileName"></param>
+        public async Task ExecuteAsync(Document document, string cachedDocumentFileName)
         {
             if (!string.Equals(document.Kind, "SummaryTables.RefreshDates", StringComparison.OrdinalIgnoreCase))
             {
@@ -63,7 +64,7 @@ namespace Lpp.Dns.Api.DataMartClient
 
             Logger.Debug("Deserializing the Response Document");
             DTO.QueryComposer.QueryComposerResponseDTO deserialzedDoc;
-            using (var stream = new FileStream(Path.Combine(_uploadDir, document.ID + ".part"), FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(Path.Combine(_uploadDir, cachedDocumentFileName), FileMode.Open, FileAccess.Read))
             using (var sr = new StreamReader(stream))
             using (var jr = new Newtonsoft.Json.JsonTextReader(sr))
             {
@@ -73,7 +74,7 @@ namespace Lpp.Dns.Api.DataMartClient
             }
 
             Logger.Debug($"Looping over the Document {document.ID} with DataMart {dataMartID}");
-            foreach (var row in deserialzedDoc.Results.FirstOrDefault())
+            foreach (var row in deserialzedDoc.Queries.First().Results.FirstOrDefault())
             {
                 var dt = row["DataTable"].ToString();
                 var period = row["Period"].ToString();

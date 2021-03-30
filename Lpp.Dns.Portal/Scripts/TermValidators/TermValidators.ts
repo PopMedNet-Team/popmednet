@@ -8,16 +8,20 @@ interface KnockoutBindingHandlers {
 module PMNTermValidators {
     ko.bindingHandlers.dateRangeTermValidator = {
         init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var startDate: KnockoutObservable<any> = valueAccessor().values.Start;
-            var endDate: KnockoutObservable<any> = valueAccessor().values.End;
-            var isValid: KnockoutObservable<boolean> = ko.observable<boolean>(true);
-            var uniqueID: string = Constants.Guid.newGuid();
+            let startDate: KnockoutObservable<any> = valueAccessor().values.Start;
+            let endDate: KnockoutObservable<any> = valueAccessor().values.End;
+            let isValid: KnockoutObservable<boolean> = ko.observable<boolean>(true);
 
-            var errorMessage: string = "<br><small>Please enter a properly formatted (mm/dd/yyyy) start or end date range</small>";
-            var jqElement: JQuery = $(element);
-           
-            jqElement.attr('id', uniqueID);
-            var validate: Function = function () {
+            let errorMessage: string = "<br><small>Please enter a properly formatted (mm/dd/yyyy) start or end date range</small>";
+            let jqElement: JQuery = $(element);
+
+            let uniqueID: string = jqElement.attr('id');
+            if (!uniqueID || uniqueID == '') {
+                uniqueID = Constants.Guid.newGuid();
+                jqElement.attr('id', uniqueID);
+            }
+            
+            let validate: Function = function () {
                 if (startDate() == null && endDate() == null) {
                     errorMessage = "<br><small>Please enter a properly formatted (mm/dd/yyyy) start or end date range</small>";
                     isValid(false);

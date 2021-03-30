@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Dns.Data</RootNamespace>
     <AssemblyName>Lpp.Dns.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -2998,6 +2998,14 @@
     <Compile Include="Migrations\202008201929364_AddUserPasswordChangeLog.designer.cs">
       <DependentUpon>202008201929364_AddUserPasswordChangeLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011111907228_AddDMCSServiceUser.cs" />
+    <Compile Include="Migrations\202011111907228_AddDMCSServiceUser.designer.cs">
+      <DependentUpon>202011111907228_AddDMCSServiceUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101251749558_UpdateRequestTypeForMultiQuery.cs" />
+    <Compile Include="Migrations\202101251749558_UpdateRequestTypeForMultiQuery.designer.cs">
+      <DependentUpon>202101251749558_UpdateRequestTypeForMultiQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3012,9 +3020,11 @@
     <Compile Include="Projects\ProjectRequestType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryComposer\DataAdapterDetailTerm.cs" />
+    <Compile Include="QueryComposer\Helpers.cs" />
     <Compile Include="QueryComposer\Template.cs" />
     <Compile Include="QueryComposer\TemplateTerm.cs" />
     <Compile Include="QueryComposer\Term.cs" />
+    <Compile Include="Query\GetDataMartsQuery.cs" />
     <Compile Include="Query\LastUsedPassword.cs" />
     <Compile Include="Query\Query.cs" />
     <Compile Include="Registries\RegistryItemDefinition.cs" />
@@ -3808,6 +3818,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008201929364_AddUserPasswordChangeLog.resx">
       <DependentUpon>202008201929364_AddUserPasswordChangeLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011111907228_AddDMCSServiceUser.resx">
+      <DependentUpon>202011111907228_AddDMCSServiceUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101251749558_UpdateRequestTypeForMultiQuery.resx">
+      <DependentUpon>202101251749558_UpdateRequestTypeForMultiQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

@@ -73,8 +73,8 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                     rsp = (Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
                 }
 
-                dt.Add(rsp.Results.First());
-                ht.AddRange(rsp.Properties);
+                dt.Add(rsp.Queries.First().Results.First());
+                ht.AddRange(rsp.Queries.First().Properties);
             }
 
 

@@ -19,8 +19,8 @@ namespace Lpp.Dns.Api.DataMartClient
         /// <summary>
         /// Method for Executing the Post Processor
         /// </summary>
-        /// <param name="document"></param>
-        /// <param name="stream"></param>
-        Task ExecuteAsync(Data.Document document);
+        /// <param name="document">The document metadata.</param>
+        /// <param name="cachedDocumentFileName">The name of the document if already cached on the local file system.</param>
+        Task ExecuteAsync(Data.Document document, string cachedDocumentFileName);
     }
 }

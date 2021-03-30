@@ -15,7 +15,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         string _connectionString = string.Empty;        
         DataContext db = null;
-        QueryComposerResponseDTO _currentResponse = null;
 
         public DataCheckerModelAdapter(RequestMetadata requestMetadata) : base(new Guid("321ADAA1-A350-4DD0-93DE-5DE658A507DF"), requestMetadata) { }
 
@@ -32,93 +31,75 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             };            
         }
 
-        protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
+        protected override string[] LowThresholdColumns(QueryComposerResponseQueryResultDTO response)
         {
             return new string[] { "n" };
         }
 
-        public override QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
-            if (request.Header.QueryType.HasValue == false)
+            if (query.Header.QueryType.HasValue == false)
             {
                 throw new Exception("The data adapter detail setting for the query template has not been set. Unable to determine the type of data characterization query.");
             }
 
-            var results = new QueryComposerResponseDTO();
+            QueryComposerResponseQueryResultDTO results;
           
-            switch (request.Header.QueryType.Value)
+            switch (query.Header.QueryType.Value)
             {
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_AgeRange:
-                    results = RunAgeQuery(request, viewSQL);
+                    results = RunAgeQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_Ethnicity:
-                    results = RunEthnicityQuery(request, viewSQL);
+                    results = RunEthnicityQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_Race:
-                    results = RunRaceQuery(request, viewSQL);
+                    results = RunRaceQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_Sex:
-                    results = RunSexQuery(request, viewSQL);
+                    results = RunSexQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Procedure_ProcedureCodes:
-                    results = RunProcedureQuery(request, viewSQL);
+                    results = RunProcedureQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Diagnosis_DiagnosisCodes:
-                    results = RunDiagnosisQuery(request, viewSQL);
+                    results = RunDiagnosisQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Diagnosis_PDX:
-                    results = RunPDXQuery(request, viewSQL);
+                    results = RunPDXQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Dispensing_NDC:
-                    results = RunNDCQuery(request, viewSQL);
+                    results = RunNDCQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Dispensing_RxAmount:
-                    results = RunRxAmtQuery(request, viewSQL);
+                    results = RunRxAmtQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Dispensing_RxSupply:
-                    results = RunRxSupQuery(request, viewSQL);
+                    results = RunRxSupQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Metadata_DataCompleteness:
-                    results = RunMetadataQuery(request, viewSQL);
+                    results = RunMetadataQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Vital_Height:
-                    results = RunHeightQuery(request, viewSQL);
+                    results = RunHeightQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.DataCharacterization_Vital_Weight:
-                    results = RunWeightQuery(request, viewSQL);
+                    results = RunWeightQuery(query, viewSQL);
                     break;
                 case DTO.Enums.QueryComposerQueryTypes.Sql:
-                    results = RunSqlDistributionQuery(request, viewSQL);
+                    results = RunSqlDistributionQuery(query, viewSQL);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("QueryType", request.Header.QueryType, "The specified query type is not supported by the Data Characterization Adapter. Value:" + (request.Header.QueryType.HasValue ? request.Header.QueryType.Value.ToString() : string.Empty));
+                    throw new ArgumentOutOfRangeException("QueryType", query.Header.QueryType, "The specified query type is not supported by the Data Characterization Adapter. Value:" + (query.Header.QueryType.HasValue ? query.Header.QueryType.Value.ToString() : string.Empty));
             }
 
-
-            Guid requestID;
-            if (Guid.TryParse(_requestId, out requestID))
-                results.RequestID = requestID;
-
-            _currentResponse = results;
-
-            return results;
-        }        
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            if (_currentResponse == null)
-                return new QueryComposerModelProcessor.DocumentEx[0];
-
-            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
+            return new[] { results };
         }
 
-        public override void PostProcess(QueryComposerResponseDTO response)
+        public override void PostProcess(QueryComposerResponseQueryResultDTO response)
         {
             base.PostProcess(response);
-
-            _currentResponse = response;
         }
-
 
         public override void Dispose()
         {
@@ -145,24 +126,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
         }
 
 
-        private QueryComposerResponseDTO RunRaceQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunRaceQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            //Get Values Selected for Race
-            var races = new List<string>();
-            var raceCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_Race);
-            //GetStringCollection
-            //var codes = (raceCriteria.GetStringValue("Races") ?? "").Split(new[] { ',' }).Select(s => s.Trim()).Distinct().ToArray();
-            var codes = (raceCriteria.GetStringCollection("Races")).Select(s => s.Trim()).Distinct().ToArray();
-            var hasMissingCriteria = codes.Contains("6");
-            races.AddRange(codes);
+            var races = GetValuesFromTerm(query, ModelTermsFactory.DC_Race, "Races", null);
+            var hasMissingCriteria = races.Contains("6");
+
             //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-            //Do Query
-            var query = (from r in db.Races
+            var dataPartners = GetDataPartnerCodes(query);
+
+            var entityQuery = (from r in db.Races
                          select new
                          {
                              r.DataPartner,
@@ -172,9 +144,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                     ).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.Value})
                     .Select(k => new { DataPartner = k.Key.DataPartner, Value = k.Key.Value, Count = k.Sum(r => r.n) });
 
-
+            DateTimeOffset queryStart = DateTimeOffset.UtcNow;
             List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
+            foreach (var item in entityQuery)
             {
                 Dictionary<string, object> row = new Dictionary<string, object>();
                 Type itemType = item.GetType();
@@ -219,41 +191,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             {
                 properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
             }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults},
-                Properties = GetRaceResponsePropertyDefinitions()
-            };
-            return results;
 
+            return new QueryComposerResponseQueryResultDTO {
+                ID = query.Header.ID,
+                QueryStart = queryStart,
+                QueryEnd = DateTimeOffset.UtcNow,
+                LowCellThrehold = _lowThresholdValue,
+                Properties = properties,
+                Results = new[] { queryResults }
+            };
         }
 
-        private QueryComposerResponseDTO RunEthnicityQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunEthnicityQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
+            var ethnicityCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_Ethnicity, "EthnicityValue", EthnicityDataTypeToDatabaseCode);
 
-            //Get Values Selected for Ethnicity
-            var ethnicities = new List<string>();
-            var ethnicityCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_Ethnicity);
-            var codes = (ethnicityCriteria.GetStringCollection("EthnicityValue")).Select(s => s.Trim()).Distinct().ToArray();
-            ethnicities.AddRange(codes);
-            var ethnicityCodes = new List<string>();
-            foreach (var code in codes)
-                ethnicityCodes.Add(EthnicityDataTypeToDatabaseCode(code));
             var hasMissingCriteria = ethnicityCodes.Contains("MISSING");
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            
-            //Do Query
-            //var query = from d in db.Hispanics
-            //            where ethnicityCodes.Contains(d.Value) && dataPartners.Contains(d.DataPartner)
-            //            select d;
-            var query = (from r in db.Hispanics
+
+            var dataPartners = GetDataPartnerCodes(query);
+
+            var entityQuery = (from r in db.Hispanics
                          select new
                          {
                              r.DataPartner,
@@ -262,10 +219,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                          }
                     ).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.Value })
                     .Select(k => new { DataPartner = k.Key.DataPartner, Value = k.Key.Value, Count = k.Sum(r => r.n) });
+
             //Shape the Results
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
             List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
+            DateTimeOffset queryStart = DateTimeOffset.UtcNow;
+            foreach (var item in entityQuery)
             {
                 Dictionary<string, object> row = new Dictionary<string, object>();
                 Type itemType = item.GetType();
@@ -309,23 +267,23 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             {
                 properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
             }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
-            return results;
 
+            return new QueryComposerResponseQueryResultDTO
+            {
+                ID = query.Header.ID,
+                QueryStart = queryStart,
+                QueryEnd = DateTimeOffset.UtcNow,
+                LowCellThrehold = _lowThresholdValue,
+                Properties = properties,
+                Results = new[] { queryResults }
+            };
         }
 
-        private QueryComposerResponseDTO RunDiagnosisQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunDiagnosisQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
             //Get Values Selected for Diagnosis
             var diagCodes = new List<string>();
-            var diagCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DiagnosisCodes);
+            var diagCriteria = query.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DiagnosisCodes);
             var codes = (diagCriteria.GetStringValue("CodeValues")).Split(new[] { ',' }).Select(s => s.Trim()).Distinct().ToArray();
             var searchType = diagCriteria.GetStringValue("SearchMethodType");
             diagCodes.AddRange(codes);
@@ -333,18 +291,16 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
 
 
             //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            var results = new QueryComposerResponseDTO();
-            //Do Query
+            var dataPartners = GetDataPartnerCodes(query);
+
+            var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
+            
             // 0 == Exact Match
             if (searchType == "0")
             {
                 if(codeType == "")
                 {
-                    var query = from d in db.Diagnoses
+                    var entityQuery = from d in db.Diagnoses
                                  where diagCodes.Contains(d.DX) && dataPartners.Contains(d.DataPartner)
                                  select new
                                  {
@@ -353,9 +309,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                     DxCodeType = d.DxCodeType,
                                     n = d.n
                                  };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -392,23 +349,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetDiagnosisResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
+                    
                 }
                 else{
-                        var query = from d in db.Diagnoses
+                        var entityQuery = from d in db.Diagnoses
                                 where diagCodes.Contains(d.DX) && dataPartners.Contains(d.DataPartner) && d.DxCodeType == codeType
                                     select new
                                     {
@@ -417,9 +373,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                         DxCodeType = d.DxCodeType,
                                         n = d.n
                                     };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -456,20 +412,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetDiagnosisResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
 
                 }
             
@@ -479,12 +433,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             {
                 if (codeType == "")
                 {
-                    var query = from d in db.Diagnoses
+                    var entityQuery = from d in db.Diagnoses
                                 where diagCodes.Any(dc => d.DX.StartsWith(dc)) && dataPartners.Contains(d.DataPartner)
                                 select new { DataPartner = d.DataPartner, DX = d.DX, DxCodeType = d.DxCodeType, n = d.n };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -522,29 +476,27 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
 
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetDiagnosisResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
                 }
                 else
                 {
-                    var query = from d in db.Diagnoses
+                    var entityQuery = from d in db.Diagnoses
                                 where diagCodes.Any(dc => d.DX.StartsWith(dc)) && dataPartners.Contains(d.DataPartner) && d.DxCodeType == codeType
                                 select new { DataPartner = d.DataPartner, DX = d.DX, DxCodeType = d.DxCodeType, n = d.n };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -581,47 +533,41 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetDiagnosisResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
 
                 }
 
             }
 
-            return results;
-
-           
+            return results;           
         }
 
-        private QueryComposerResponseDTO RunProcedureQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunProcedureQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
 
             //Get Values Selected for Procedure
             var procedureCodes = new List<string>();
-            var procedureCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_ProcedureCodes);
+            var procedureCriteria = query.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_ProcedureCodes);
             var codes = (procedureCriteria.GetStringValue("CodeValues")).Split(new[] { ',' }).Select(s => s.Trim()).Distinct().ToArray();
             var searchType = procedureCriteria.GetStringValue("SearchMethodType");
             procedureCodes.AddRange(codes);
             var codeType = procedureCriteria.GetStringValue("CodeType");
 
             //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            var results = new QueryComposerResponseDTO();
+            var dataPartners = GetDataPartnerCodes(query);
+
+            var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
             //Do Query
             // 0 == Exact Match
             if (searchType == "0")
@@ -629,7 +575,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
 
                 if (codeType == "")
                 {
-                    var query = from d in db.Procedures
+                    var entityQuery = from d in db.Procedures
                                 where procedureCodes.Contains(d.PX) && dataPartners.Contains(d.DataPartner)
                                 select new 
                                 { 
@@ -638,9 +584,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                     Px_CodeType = d.PxCodeType,
                                     n = d.n
                                 };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -677,24 +623,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetProcedureResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
                 }
                 else
                 {
-                    var query = from d in db.Procedures
+                    var entityQuery = from d in db.Procedures
                                 where procedureCodes.Contains(d.PX) && dataPartners.Contains(d.DataPartner) && d.PxCodeType == codeType
                                 select new
                                 {
@@ -703,9 +647,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                     Px_CodeType = d.PxCodeType,
                                     n = d.n
                                 }; 
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -742,20 +686,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetProcedureResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
 
                 }
 
@@ -765,12 +707,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             {
                 if (codeType == "")
                 {
-                    var query = from d in db.Procedures
+                    var entityQuery = from d in db.Procedures
                                 where procedureCodes.Any(pc => d.PX.StartsWith(pc)) && dataPartners.Contains(d.DataPartner)
                                 select new { DataPartner = d.DataPartner, PX = d.PX, PxCodeType = d.PxCodeType, n = d.n };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -807,29 +749,27 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetProcedureResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
                 }
                 else
                 {
-                    var query = from d in db.Procedures
+                    var entityQuery = from d in db.Procedures
                                 where procedureCodes.Any(pc => d.PX.StartsWith(pc)) && dataPartners.Contains(d.DataPartner) && d.PxCodeType == codeType
                                 select new { DataPartner = d.DataPartner, PX = d.PX, PxCodeType = d.PxCodeType, n = d.n };
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                    
                     List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -866,177 +806,164 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                         }
                         queryResults.Add(row);
                     }
+
+                    results.QueryEnd = DateTimeOffset.UtcNow;
+                    results.Results = new[] { queryResults };
+
                     //Shape the Results
                     var properties = GetProcedureResponsePropertyDefinitions();
                     if (_lowThresholdValue.HasValue)
                     {
                         properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
                     }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+
+                    results.Properties = properties;
 
                 }
 
             }
 
-            //var results = new QueryComposerResponseDTO();
             return results;
         }
 
-        private QueryComposerResponseDTO RunNDCQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunNDCQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
 
             //Get Values Selected for Diagnosis
-            var ndcCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_NDCCodes);
+            var ndcCriteria = query.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_NDCCodes);
             var ndcCodes = (ndcCriteria.GetStringValue("CodeValues")).Split(new[] { ',' }).Select(s => s.Trim()).Distinct().ToList();
             var searchType = ndcCriteria.GetStringValue("SearchMethodType");
-            
+
 
             //Get Values Selected for DataPartner
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dataPartners = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToList();
+            var dataPartners = GetDataPartnerCodes(query);
 
-            var results = new QueryComposerResponseDTO();
+            var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
             //Do Query
             // 0 == Exact Match
             if (searchType == "0")
             {
-                    var query = from d in db.NDCs
-                                where ndcCodes.Contains(d.NDCs) && dataPartners.Contains(d.DataPartner)
-                                select d;
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-                    List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                var entityQuery = from d in db.NDCs
+                            where ndcCodes.Contains(d.NDCs) && dataPartners.Contains(d.DataPartner)
+                            select d;
+                    
+                List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
+                foreach (var item in entityQuery)
+                {
+                    Dictionary<string, object> row = new Dictionary<string, object>();
+                    Type itemType = item.GetType();
+                    foreach (var propInfo in itemType.GetProperties())
                     {
-                        Dictionary<string, object> row = new Dictionary<string, object>();
-                        Type itemType = item.GetType();
-                        foreach (var propInfo in itemType.GetProperties())
+                        if (propInfo.Name == "NDCs")
                         {
-                            if (propInfo.Name == "NDCs")
+                            object value = propInfo.GetValue(item, null);
+                            row.Add("NDC", value);
+                        }
+                        else
+                        {
+                            object value = propInfo.GetValue(item, null);
+                            row.Add(propInfo.Name, value);
+                        }
+
+                    }
+
+                    if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
+                    {
+                        double value = Convert.ToDouble(row["n"]);
+                        if (value > 0 && value < _lowThresholdValue)
+                        {
+                            //need to mark that the value is less than the low threshold - not zero'd until post process triggered
+                            if (!row.ContainsKey(LowThresholdColumnName))
                             {
-                                object value = propInfo.GetValue(item, null);
-                                row.Add("NDC", value);
+                                row.Add(LowThresholdColumnName, true);
                             }
                             else
                             {
-                                object value = propInfo.GetValue(item, null);
-                                row.Add(propInfo.Name, value);
-                            }
-
-                        }
-
-                        if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                        {
-                            double value = Convert.ToDouble(row["n"]);
-                            if (value > 0 && value < _lowThresholdValue)
-                            {
-                                //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                                if (!row.ContainsKey(LowThresholdColumnName))
-                                {
-                                    row.Add(LowThresholdColumnName, true);
-                                }
-                                else
-                                {
-                                    row[LowThresholdColumnName] = true;
-                                }
+                                row[LowThresholdColumnName] = true;
                             }
                         }
-                        queryResults.Add(row);
                     }
-                    //Shape the Results
-                    var properties = GetNDCResponsePropertyDefinitions();
-                    if (_lowThresholdValue.HasValue)
-                    {
-                        properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-                    }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
+                    queryResults.Add(row);
+                }
+
+                results.QueryEnd = DateTimeOffset.UtcNow;
+                results.Results = new[] { queryResults };
+
+                //Shape the Results
+                var properties = GetNDCResponsePropertyDefinitions();
+                if (_lowThresholdValue.HasValue)
+                {
+                    properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
+                }
+
+                results.Properties = properties;
 
             }
             // 1 == Starts With
             else if (searchType == "1")
             {
-                    //var query = from d in db.NDCs
-                    //            where ndcCodes.Any(code => d.NDCs.StartsWith(code)) && dataPartners.Contains(d.DataPartner)
-                    //            select d;
+                var entityQuery = from d in db.NDCs where dataPartners.Contains(d.DataPartner) select d;
 
-                    var query = from d in db.NDCs where dataPartners.Contains(d.DataPartner) select d;
+                System.Linq.Expressions.Expression<Func<Model.NDC, bool>> codesPredicate = (d) => false;
 
-                    System.Linq.Expressions.Expression<Func<Model.NDC, bool>> codesPredicate = (d) => false;
+                for (int i = 0; i < ndcCodes.Count; i++)
+                {
+                    string value = ndcCodes[i];
+                    codesPredicate = codesPredicate.Or(d => d.NDCs.StartsWith(value));
+                }
 
-                    for (int i = 0; i < ndcCodes.Count; i++)
+                entityQuery = entityQuery.Where(codesPredicate);
+
+                List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
+                foreach (var item in entityQuery)
+                {
+                    Dictionary<string, object> row = new Dictionary<string, object>();
+                    Type itemType = item.GetType();
+                    foreach (var propInfo in itemType.GetProperties())
                     {
-                        string value = ndcCodes[i];
-                        codesPredicate = codesPredicate.Or(d => d.NDCs.StartsWith(value));
+                        if (propInfo.Name == "NDCs")
+                        {
+                            object value = propInfo.GetValue(item, null);
+                            row.Add("NDC", value);
+                        }
+                        else
+                        {
+                            object value = propInfo.GetValue(item, null);
+                            row.Add(propInfo.Name, value);
+                        }
                     }
 
-                    query = query.Where(codesPredicate);
-
-                    List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-                    List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-                    foreach (var item in query)
+                    if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
                     {
-                        Dictionary<string, object> row = new Dictionary<string, object>();
-                        Type itemType = item.GetType();
-                        foreach (var propInfo in itemType.GetProperties())
+                        double value = Convert.ToDouble(row["n"]);
+                        if (value > 0 && value < _lowThresholdValue)
                         {
-                            if (propInfo.Name == "NDCs")
+                            //need to mark that the value is less than the low threshold - not zero'd until post process triggered
+                            if (!row.ContainsKey(LowThresholdColumnName))
                             {
-                                object value = propInfo.GetValue(item, null);
-                                row.Add("NDC", value);
+                                row.Add(LowThresholdColumnName, true);
                             }
                             else
                             {
-                                object value = propInfo.GetValue(item, null);
-                                row.Add(propInfo.Name, value);
+                                row[LowThresholdColumnName] = true;
                             }
                         }
+                    }
+                    queryResults.Add(row);
+                }
 
-                        if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                        {
-                            double value = Convert.ToDouble(row["n"]);
-                            if (value > 0 && value < _lowThresholdValue)
-                            {
-                                //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                                if (!row.ContainsKey(LowThresholdColumnName))
-                                {
-                                    row.Add(LowThresholdColumnName, true);
-                                }
-                                else
-                                {
-                                    row[LowThresholdColumnName] = true;
-                                }
-                            }
-                        }
-                        queryResults.Add(row);
-                    }
-                    //Shape the Results
-                    var properties = GetNDCResponsePropertyDefinitions();
-                    if (_lowThresholdValue.HasValue)
-                    {
-                        properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-                    }
-                    results = new QueryComposerResponseDTO
-                    {
-                        Errors = errors,
-                        RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                        ResponseDateTime = DateTime.UtcNow,
-                        Results = new[] { queryResults },
-                        Properties = properties
-                    };
-        
+                results.QueryEnd = DateTimeOffset.UtcNow;
+                results.Results = new[] { queryResults };
+
+                //Shape the Results
+                var properties = GetNDCResponsePropertyDefinitions();
+                if (_lowThresholdValue.HasValue)
+                {
+                    properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
+                }
+
+                results.Properties = properties;
 
             }
             return results;
@@ -1050,20 +977,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             public double n { get; set; }
         }
 
-        private QueryComposerResponseDTO RunPDXQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunPDXQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            var terms = request.Where.Criteria.First().Terms;
-
-            var datapartners = terms.Where(t => t.Type == ModelTermsFactory.DC_DataPartners).SelectMany(t => t.GetStringCollection("DataPartnersValue").Select(s => s.Trim()).Distinct()).ToArray();
-            var pdxCriteria = terms.Where(t => t.Type == ModelTermsFactory.DC_DiagnosisPDX).SelectMany(t => t.GetStringCollection("PDXes").Select(s => s.Trim()).Distinct()).ToArray();
-            var encounterTypeCriteria = terms.Where(t => t.Type == ModelTermsFactory.DC_Encounter).SelectMany(t => t.GetStringCollection("Encounters").Select(s => s.Trim()).Distinct()).ToArray();
+            var datapartners = GetDataPartnerCodes(query);
+            var pdxCriteria = GetValuesFromTerm(query, ModelTermsFactory.DC_DiagnosisPDX, "PDXes", null);
+            var encounterTypeCriteria = GetValuesFromTerm(query, ModelTermsFactory.DC_Encounter, "Encounters", null);
 
             bool hasPDXCriteria = pdxCriteria.Where(x => x != "MISSING").Any();
             bool hasEncounterCriteria = encounterTypeCriteria.Where(x => x != "MISSING" && x != "ALL").Any();
             bool hasAllEncountersCriteria = encounterTypeCriteria.Contains("ALL");
             bool hasMissingPDX = pdxCriteria.Contains("MISSING");
             bool hasMissingEncounters = encounterTypeCriteria.Contains("MISSING");
-
 
             var q1 = db.PDXs.Where(p => !string.IsNullOrEmpty(p.DataPartner)).Select(p => new PDXResult 
                 { 
@@ -1088,7 +1012,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             }
             q1 = q1.GroupBy(p => new { p.DataPartner, p.PDX, p.EncType }).Select(p => new PDXResult { DataPartner = p.Key.DataPartner, PDX = p.Key.PDX, EncType = p.Key.EncType, n = p.Sum(k => k.n) });
 
-            IQueryable<PDXResult> query;
+            IQueryable<PDXResult> entityQuery;
             if (hasAllEncountersCriteria && hasEncounterCriteria)
             {
                 var q2 = db.PDXs
@@ -1111,15 +1035,16 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                 q2 = q2.GroupBy(p => new { p.DataPartner, p.PDX, p.EncType }).Select(p => new PDXResult { DataPartner = p.Key.DataPartner, PDX = p.Key.PDX, EncType = p.Key.EncType, n = p.Sum(k => k.n) });
 
 
-                query = q1.Union(q2);
+                entityQuery = q1.Union(q2);
             }
             else
             {
-                query = q1;
+                entityQuery = q1;
             };
-            
+
+            var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
             List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
+            foreach (var item in entityQuery)
             {
                 Dictionary<string, object> row = new Dictionary<string, object>();
                 Type itemType = item.GetType();
@@ -1157,40 +1082,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                 }
                 queryResults.Add(row);
             }
+
+            results.QueryEnd = DateTimeOffset.UtcNow;
+            results.Results = new[] { queryResults };
+
             //Shape the Results
             var properties = GetPDXResponsePropertyDefinitions();
             if (_lowThresholdValue.HasValue)
             {
                 properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
             }
-            var results = new QueryComposerResponseDTO
-            {
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),                
-                Properties = properties
-            };
+
+            results.Properties = properties;
+
             return results;
         }
 
-        private QueryComposerResponseDTO RunRxAmtQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunRxAmtQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-
-            //Get Values Selected for RxAmount
-            var rxAmtCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DispensingRXAmount);
-            var codes = (rxAmtCriteria.GetStringCollection("RXAmounts")).Select(s => s.Trim()).Distinct().ToArray();
-            var rxAmtCodes = new List<string>();
-            foreach (var code in codes)
-                rxAmtCodes.Add(RxAmtDataTypeToDatabaseCode(code));
-
-
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-
+            var rxAmtCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_DispensingRXAmount, "RXAmounts", RxAmtDataTypeToDatabaseCode);
+            var dataPartners = GetDataPartnerCodes(query);
 
             var squery = (from r in db.RXAmts
                             select new
@@ -1200,7 +1111,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                 RxAMT = (r.RxAmts < 0 ? "-1" : r.RxAmts >= 0 && r.RxAmts <= 1 ? "0" : r.RxAmts > 1 && r.RxAmts <= 30 ? "30" : r.RxAmts > 30 && r.RxAmts <= 60 ? "60" : r.RxAmts > 60 && r.RxAmts <= 90 ? "90" : r.RxAmts > 90 && r.RxAmts <= 120 ? "120" : r.RxAmts > 120 && r.RxAmts <= 180 ? "180" : r.RxAmts > 180 ? "181" : null)
                             }).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.RxAMT }).Select(k => new { DataPartner = k.Key.DataPartner, RxAMT = k.Key.RxAMT, Count = k.Sum(r => r.n) });
 
-             var query = (from r in squery
+             var entityQuery = (from r in squery
                          select new
                          {
                              r.DataPartner,
@@ -1208,75 +1119,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                              RxAMT = (r.RxAMT == null) ? "MISSING" : rxAmtCodes.Contains(r.RxAMT) ? r.RxAMT : "OTHER"
                          }).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.RxAMT }).Select(k => new { DP = k.Key.DataPartner, RxAmt = k.Key.RxAMT, Total = k.Sum(r => r.Count) });
 
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetRxAmtResponsePropertyDefinitions());
 
-
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                   
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-                    
-
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetRxAmtResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
         }
 
-        private QueryComposerResponseDTO RunRxSupQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunRxSupQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-
-            //Get Values Selected for RxSupply
-            var rxSupCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DispensingRXSupply);
-            var codes = (rxSupCriteria.GetStringCollection("RXSupply")).Select(s => s.Trim()).Distinct().ToArray();
-            var rxSupCodes = new List<string>();
-            foreach (var code in codes)
-                rxSupCodes.Add(RxSupDataTypeToDatabaseCode(code));
-
-
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-
+            var rxSupCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_DispensingRXSupply, "RXSupply", RxSupDataTypeToDatabaseCode);
+            var dataPartners = GetDataPartnerCodes(query);
 
             var squery = (from r in db.RXSups
                           select new
@@ -1286,7 +1137,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                               RxSup = (r.RxSup < 0 ? "-1" : r.RxSup >= 0 && r.RxSup < 2 ? "0" : r.RxSup >= 2 && r.RxSup <= 30 ? "2" : r.RxSup > 30 && r.RxSup <= 60 ? "30" : r.RxSup > 60 && r.RxSup <= 90 ? "60" : r.RxSup > 90 ? "90" : null)
                           }).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.RxSup }).Select(k => new { DataPartner = k.Key.DataPartner, RxSup = k.Key.RxSup, Count = k.Sum(r => r.n) });
 
-            var query = (from r in squery
+            var entityQuery = (from r in squery
                          select new
                          {
                              r.DataPartner,
@@ -1294,115 +1145,20 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                              RxSup = (r.RxSup == null) ? "MISSING" : rxSupCodes.Contains(r.RxSup) ? r.RxSup : "OTHER"
                          }).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.RxSup }).Select(k => new { DP = k.Key.DataPartner, RxSup = k.Key.RxSup, Total = k.Sum(r => r.Count) });
 
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetRxSupResponsePropertyDefinitions());
 
-
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                   
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetRxSupResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
         }
 
-        private QueryComposerResponseDTO RunMetadataQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunMetadataQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-            //Do Query
-            var query = (from r in db.Metadatas
+            var dataPartners = GetDataPartnerCodes(query);            
+
+            var entityQuery = (from r in db.Metadatas
                          where dataPartners.Contains(r.DataPartner)
                          select r);
 
-
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                    
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetMetadataResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetMetadataResponsePropertyDefinitions());
             return results;
         }
 
@@ -1413,17 +1169,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             public double n { get; set; }
         }
 
-        private QueryComposerResponseDTO RunAgeQuery(QueryComposerRequestDTO request, bool viewSQL)
-        {
-            var terms = request.Where.Criteria.First().Terms;
-
-            var datapartners = terms.Where(t => t.Type == ModelTermsFactory.DC_DataPartners).SelectMany(t => t.GetStringCollection("DataPartnersValue").Select(s => s.Trim()).Distinct()).ToArray();
-            var ageCriteria = terms.Where(t => t.Type == ModelTermsFactory.DC_AgeDistribution).SelectMany(t => t.GetStringCollection("AgeDistributionValue").Select(s => s.Trim()).Distinct()).Select(s => AgeDataTypeToDatabaseCode(s)).ToArray();
+        private QueryComposerResponseQueryResultDTO RunAgeQuery(QueryComposerQueryDTO query, bool viewSQL)
+        {   
+            var ageCriteria = GetValuesFromTerm(query, ModelTermsFactory.DC_AgeDistribution, "AgeDistributionValue", AgeDataTypeToDatabaseCode);
+            var datapartners = GetDataPartnerCodes(query);
 
             bool hasCritieria = ageCriteria.Any(c => c != "NULL or Missing");
             bool hasMissingCritieria = ageCriteria.Contains("NULL or Missing");
 
-            var query = db.Ages.Where(a => !string.IsNullOrEmpty(a.DataPartner))
+            var entityQuery = db.Ages.Where(a => !string.IsNullOrEmpty(a.DataPartner))
                                .Select(a => new AgeDistributionResult
                                {
                                    DataPartner = a.DataPartner,
@@ -1432,79 +1186,27 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                                                 "Other",
                                    n = a.n
                                });
+
             if (datapartners.Any())
             {
-                query = query.Where(a => datapartners.Contains(a.DataPartner));
+                entityQuery = entityQuery.Where(a => datapartners.Contains(a.DataPartner));
             }
 
-            query = query.GroupBy(k => new { k.DataPartner, k.AgeRange })
+            entityQuery = entityQuery.GroupBy(k => new { k.DataPartner, k.AgeRange })
                          .Select(k => new AgeDistributionResult{ DataPartner = k.Key.DataPartner, AgeRange = k.Key.AgeRange, n = k.Sum(j => j.n) });
 
 
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-                }
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetAgeResponsePropertyDefinitions());
 
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-
-                queryResults.Add(row);
-            }
-
-
-            //Shape the Results
-            var properties = GetAgeResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue) {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
-
         }
 
-        private QueryComposerResponseDTO RunHeightQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunHeightQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            //Get Values Selected for Race
-            var heightCodes = new List<string>();
-            var heightCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_HeightDistribution);
-            var codes = (heightCriteria.GetStringCollection("HeightDistributions")).Select(s => s.Trim()).Distinct().ToArray();
-            foreach (var code in codes)
-                heightCodes.Add(HeightDataTypeToDatabaseCode(code));
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-            //Do Query
-            var query = (from r in db.Heights
+            var heightCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_HeightDistribution, "HeightDistributions", HeightDataTypeToDatabaseCode);
+            var dataPartners = GetDataPartnerCodes(query);
+            
+            var entityQuery = (from r in db.Heights
                          select new
                          {
                              r.DataPartner,
@@ -1514,70 +1216,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                     ).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.Value })
                     .Select(k => new { DataPartner = k.Key.DataPartner, Height = k.Key.Value, Count = k.Sum(r => r.n) });
 
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetHeightResponsePropertyDefinitions());
 
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetHeightResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
-
         }
 
-        private QueryComposerResponseDTO RunSexQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunSexQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            //Get Values Selected for Race
-            var sexCodes = new List<string>();
-            var sexCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_SexDistribution);
-            var codes = (sexCriteria.GetStringCollection("SexDistributions")).Select(s => s.Trim()).Distinct().ToArray();
-            foreach (var code in codes)
-                sexCodes.Add(SexDataTypeToDatabaseCode(code));
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-            //Do Query
-            var query = (from r in db.Sexes
+            var sexCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_SexDistribution, "SexDistributions", SexDataTypeToDatabaseCode);
+            var dataPartners = GetDataPartnerCodes(query);
+            
+            var entityQuery = (from r in db.Sexes
                          select new
                          {
                              r.DataPartner,
@@ -1587,70 +1236,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                     ).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.Value })
                     .Select(k => new { DataPartner = k.Key.DataPartner, Sex = k.Key.Value, Count = k.Sum(r => r.n) });
 
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetSexResponsePropertyDefinitions());
 
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetSexResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
-
         }
 
-        private QueryComposerResponseDTO RunWeightQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunWeightQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            //Get Values Selected for Race
-            var weightCodes = new List<string>();
-            var weightCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_WeightDistribution);
-            var codes = (weightCriteria.GetStringCollection("WeightDistributions")).Select(s => s.Trim()).Distinct().ToArray();
-            foreach (var code in codes)
-                weightCodes.Add(WeightDataTypeToDatabaseCode(code));
-            //Get Values Selected for DataPartner
-            var dataPartners = new List<string>();
-            var dpCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DataPartners);
-            var dp = (dpCriteria.GetStringCollection("DataPartnersValue")).Select(s => s.Trim()).Distinct().ToArray();
-            dataPartners.AddRange(dp);
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
-            //Do Query
-            var query = (from r in db.Weights
+            var weightCodes = GetValuesFromTerm(query, ModelTermsFactory.DC_WeightDistribution, "WeightDistributions", WeightDataTypeToDatabaseCode);
+            var dataPartners = GetDataPartnerCodes(query);
+            
+            var entityQuery = (from r in db.Weights
                          select new
                          {
                              r.DataPartner,
@@ -1660,66 +1256,25 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                     ).Where(r => dataPartners.Contains(r.DataPartner)).GroupBy(k => new { k.DataPartner, k.Value })
                     .Select(k => new { DataPartner = k.Key.DataPartner, Weight = k.Key.Value, Count = k.Sum(r => r.n) });
 
+            var results = ExecuteQuery(query.Header.ID, entityQuery, GetWeightResponsePropertyDefinitions());
 
-            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
-            foreach (var item in query)
-            {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                Type itemType = item.GetType();
-                foreach (var propInfo in itemType.GetProperties())
-                {
-                    object value = propInfo.GetValue(item, null);
-                    row.Add(propInfo.Name, value);
-                }
-
-                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
-                {
-                    double value = Convert.ToDouble(row["n"]);
-                    if (value > 0 && value < _lowThresholdValue)
-                    {
-                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                        if (!row.ContainsKey(LowThresholdColumnName))
-                        {
-                            row.Add(LowThresholdColumnName, true);
-                        }
-                        else
-                        {
-                            row[LowThresholdColumnName] = true;
-                        }
-                    }
-                }
-                queryResults.Add(row);
-            }
-            //Shape the Results
-            var properties = GetWeightResponsePropertyDefinitions();
-            if (_lowThresholdValue.HasValue)
-            {
-                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
-            }
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = properties
-            };
             return results;
-
         }
 
-        private QueryComposerResponseDTO RunSqlDistributionQuery(QueryComposerRequestDTO request, bool viewSQL)
+        private QueryComposerResponseQueryResultDTO RunSqlDistributionQuery(QueryComposerQueryDTO query, bool viewSQL)
         {
-            if (request.Where.Criteria.Where(c => c.Terms.Any(d => d.Type != ModelTermsFactory.SqlDistributionID)).Count() > 0)
+            if (query.Where.Criteria.Where(c => c.Terms.Any(d => d.Type != ModelTermsFactory.SqlDistributionID)).Count() > 0)
             {
                 throw new NotSupportedException("Another Term is Included with Sql Distribution and this is not Supported");
             }
             //Get Values Selected for Sql Distribution
-            var sqlCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID);
-            string sql = (sqlCriteria.GetStringValue("Sql"));
+            var sqlCriteria = query.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID);
+            string sql = sqlCriteria.GetStringValue("Sql");
+
             List<DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO> columnProperties = new List<QueryComposerResponsePropertyDefinitionDTO>();
             List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
             List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
+            var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
 
             using(var conn = Utilities.OpenConnection(_settings, logger, true))
             using (var cmd = db.Database.Connection.CreateCommand())
@@ -1759,17 +1314,80 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
                     reader.Close();
                 }
             }
-           
-            var results = new QueryComposerResponseDTO
-            {
-                Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
-                Results = new[] { queryResults },
-                Properties = columnProperties
-            };
+
+            results.QueryEnd = DateTimeOffset.UtcNow;
+            results.Results = new[] { queryResults };
+            results.Properties = columnProperties;
+
             return results;
 
+        }
+
+        static IEnumerable<string> GetDataPartnerCodes(QueryComposerQueryDTO query)
+        {
+            return GetValuesFromTerm(query, ModelTermsFactory.DC_DataPartners, "DataPartnersValue", null);
+        }
+
+        static IEnumerable<string> GetValuesFromTerm(QueryComposerQueryDTO query, Guid termTypeID, string property, Func<string, string> translateCode)
+        {
+            var terms = query.Where.Criteria.First().Terms.Where(t => t.Type == termTypeID);
+            var codes = terms.SelectMany(t => t.GetStringCollection(property)).Select(s => s.Trim()).Distinct().ToArray();
+
+            if (translateCode == null)
+                return codes;
+
+            var codeList = new List<string>(codes.Length * 2);
+            foreach (var code in codes)
+                codeList.Add(translateCode(code));
+
+            return codeList;
+        }
+
+        QueryComposerResponseQueryResultDTO ExecuteQuery(Guid queryID, IQueryable entityQuery, IEnumerable<QueryComposerResponsePropertyDefinitionDTO> properties)
+        {
+            var results = new QueryComposerResponseQueryResultDTO { ID = queryID, LowCellThrehold = _lowThresholdValue, QueryStart = DateTimeOffset.UtcNow };
+
+            List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
+            foreach (var item in entityQuery)
+            {
+                Dictionary<string, object> row = new Dictionary<string, object>();
+                Type itemType = item.GetType();
+                foreach (var propInfo in itemType.GetProperties())
+                {
+                    object value = propInfo.GetValue(item, null);
+                    row.Add(propInfo.Name, value);
+                }
+
+                if (_lowThresholdValue.HasValue && row.ContainsKey("n"))
+                {
+                    double value = Convert.ToDouble(row["n"]);
+                    if (value > 0 && value < _lowThresholdValue)
+                    {
+                        //need to mark that the value is less than the low threshold - not zero'd until post process triggered
+                        if (!row.ContainsKey(LowThresholdColumnName))
+                        {
+                            row.Add(LowThresholdColumnName, true);
+                        }
+                        else
+                        {
+                            row[LowThresholdColumnName] = true;
+                        }
+                    }
+                }
+                queryResults.Add(row);
+            }
+
+            results.QueryEnd = DateTimeOffset.UtcNow;
+            results.Results = new[] { queryResults };
+
+            if (_lowThresholdValue.HasValue)
+            {
+                properties = properties.Concat(new[] { new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO { Name = LowThresholdColumnName, As = LowThresholdColumnName, Type = "System.Boolean" } });
+            }
+
+            results.Properties = properties;
+
+            return results;
         }
 
         private string EthnicityDataTypeToDatabaseCode(string Type)
@@ -2078,10 +1696,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker
             return code;
         }
 
-        private string WeightDataTypeToDatabaseCode(string Type)
+        string WeightDataTypeToDatabaseCode(string weightDataType)
         {
             string code;
-            switch (Type)
+            switch (weightDataType)
             {
                 case "0":
                     code = "<0";

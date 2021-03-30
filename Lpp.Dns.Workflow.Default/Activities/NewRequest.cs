@@ -23,9 +23,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
         private static readonly Guid DeleteResultID = new Guid("61110001-1708-4869-BDCF-A3B600E24AA3");
         private static readonly Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
 
-        private const string DocumentKind = "Lpp.Dns.Workflow.Default.Activities.Request";
-
-        public static readonly Guid FileUploadTermID = new Guid("2F60504D-9B2F-4DB1-A961-6390117D3CAC");
+        private const string DocumentKind = "Lpp.Dns.Workflow.Default.Activities.Request";        
 
         public override Guid ID
         {
@@ -140,9 +138,12 @@ namespace Lpp.Dns.Workflow.Default.Activities
                 var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, _entity, filters, PermissionIdentifiers.Request.SkipSubmissionApproval);
                 await db.Entry(_entity).ReloadAsync();
 
+                var requestJSON = ParseRequestJSON();
+                //bool hasFileUploadTerm = HasTermInAnyCriteria(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON);
+                var fileUploadTerm = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON).FirstOrDefault();
                 var originalStatus = _entity.Status;
 
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type == FileUploadTermID) || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type == FileUploadTermID))))
+                if (fileUploadTerm != null)
                 {
                     if (!permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
@@ -155,8 +156,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     if (!_entity.DataMarts.Any())
                         throw new Exception("At least one routing needs to be specified when submitting a requests.");
 
-                    //prepare the request documents, save created documents same as legacy
-                    IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
+                    
+                    var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
+                    IList<Guid> documentRevisionSets = termValues.Documents.Select(d => d.RevisionSetID).ToArray();
 
                     IEnumerable<Document> documents = await (from d in db.Documents.AsNoTracking()
                                                              join x in (
@@ -236,10 +238,6 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                     await db.Entry(_entity).ReloadAsync();
 
-                    DTO.QueryComposer.QueryComposerRequestDTO qcRequestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                    var fileUploadTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == FileUploadTermID)).FirstOrDefault();
-                    var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
-
                     //update the request.json term value to include system generated documents revisionsetIDs
                     termValues.Documents.Clear();
 
@@ -249,7 +247,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     }
 
                     fileUploadTerm.Values["Values"] = termValues;
-                    _entity.Query = Newtonsoft.Json.JsonConvert.SerializeObject(qcRequestDTO);
+                    _entity.Query = Newtonsoft.Json.JsonConvert.SerializeObject(requestJSON);
 
                     await db.SaveChangesAsync();
 

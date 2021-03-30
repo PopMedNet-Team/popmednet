@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0"?>
 <connectionStrings>
   <!-- PCORNet -->
-  <add name="PCORNET_SQLServer2014" connectionString="Server=Server=10.1.1.10,1443;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
-  <add name="PCORNET_SQLServer2016" connectionString="Server=10.1.1.10,1453;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
-  <add name="PCORNET_PostgreSQL96" connectionString="Server=10.1.1.10;Port=5434;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
-  <add name="PCORNET_PostgreSQL95" connectionString="Server=10.1.1.10;Port=5432;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
-  <add name="PCORNET_ORACLE12" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.1.1.12)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl12dmc.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
-  <add name="PCORNET_ORACLE18" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.1.1.14)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl18c.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
+  <add name="PCORNET_SQLServer2014" connectionString="Server=20.186.154.87,42543;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
+  <add name="PCORNET_SQLServer2016" connectionString="Server=20.186.154.87,42553;Database=PCORNET_5_1;User ID=regressiontests;Password=fkP1J75tJRneJssfxsIl;Asynchronous Processing=true;" providerName="System.Data.SqlClient"/>
+  <add name="PCORNET_PostgreSQL96" connectionString="Server=20.186.154.87;Port=43534;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
+  <add name="PCORNET_PostgreSQL95" connectionString="Server=20.186.154.87;Port=43532;User ID=cdaisteam;Password=DPMCenterforDAIS346*;Database=PCORnet51;Timeout=30;CommandTimeout=600" providerName="Npgsql"/>
+  <add name="PCORNET_ORACLE12" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=52.254.22.243)(PORT=44521))(CONNECT_DATA=(SERVICE_NAME=orcl12dmc.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
+  <add name="PCORNET_ORACLE18" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=52.247.49.93)(PORT=44621))(CONNECT_DATA=(SERVICE_NAME=orcl18c.pmn.net)));User ID=C##PCORNET_5_1; Password=HpHc20-0413;" providerName="OracleConnection"/>
 </connectionStrings>

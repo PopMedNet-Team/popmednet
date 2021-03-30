@@ -191,6 +191,7 @@ namespace Lpp.Dns.Api
 
             if (Doc.ParentDocumentID.HasValue)
             {
+                //get all the documents belonging to the same revision set as the parent document, order by version numbers descending
                 var versionQuery = from d in _dataContext.Documents
                                    let revisionID = _dataContext.Documents.Where(p => p.ID == _parentDocumentID).Select(p => p.RevisionSetID).FirstOrDefault()
                                    let taskReference = _dataContext.ActionReferences.Where(tr => tr.ItemID == d.ID).DefaultIfEmpty()
@@ -204,41 +205,34 @@ namespace Lpp.Dns.Api
                                        d.MinorVersion,
                                        d.BuildVersion,
                                        d.RevisionVersion,
+                                       d.Kind,
                                        TaskItemType = taskReference.Select(tr => (DTO.Enums.TaskItemTypes?)tr.Type).FirstOrDefault()
                                    };
-                var version = TaskID != Guid.Empty ? await versionQuery.Where(d => d.ItemID == TaskID).FirstOrDefaultAsync() : await versionQuery.Where(d => d.ItemID == RequestID).FirstOrDefaultAsync();
 
-                if (version != null && versionQuery.Count() > 0)
+                var currentDocument = await versionQuery.FirstOrDefaultAsync();
+                if (currentDocument != null)
                 {
-                    Doc.RevisionSetID = version.RevisionSetID;
-                    Doc.MajorVersion = version.MajorVersion;
-                    Doc.MinorVersion = version.MinorVersion;
-                    Doc.BuildVersion = version.BuildVersion;
-                    Doc.RevisionVersion = version.RevisionVersion + 1;
+                    //associate the revision to the same task as the parent document
+                    Doc.ItemID = currentDocument.ItemID;
+
+                    Doc.RevisionSetID = currentDocument.RevisionSetID;
+                    Doc.MajorVersion = currentDocument.MajorVersion;
+                    Doc.MinorVersion = currentDocument.MinorVersion;
+                    Doc.BuildVersion = currentDocument.BuildVersion;
+                    Doc.RevisionVersion = currentDocument.RevisionVersion + 1;
+
 
                     //if the task item type has not been specified for the upload but the parent document had it specified, inhertit the type.
-                    if (_taskItemType == null && version.TaskItemType.HasValue)
+                    if (_taskItemType == null && currentDocument.TaskItemType.HasValue)
                     {
-                        _taskItemType = version.TaskItemType.Value;
+                        _taskItemType = currentDocument.TaskItemType.Value;
+                    }
+
+                    if (string.IsNullOrEmpty(Doc.Kind))
+                    {
+                        Doc.Kind = currentDocument.Kind;
                     }
                 }
-                // Need to do this due to the possiblity a new revision is happening from a different task!
-                else if(version == null && versionQuery.Count() > 0 && TaskID != Guid.Empty)
-                {
-                    version = await versionQuery.FirstOrDefaultAsync();
-                    Doc.RevisionSetID = version.RevisionSetID;
-                    Doc.MajorVersion = version.MajorVersion;
-                    Doc.MinorVersion = version.MinorVersion;
-                    Doc.BuildVersion = version.BuildVersion;
-                    Doc.RevisionVersion = version.RevisionVersion + 1;
-
-                    //if the task item type has not been specified for the upload but the parent document had it specified, inhertit the type.
-                    if (_taskItemType == null && version.TaskItemType.HasValue)
-                    {
-                        _taskItemType = version.TaskItemType.Value;
-                    }
-                }
-
             }
 
             if (!Doc.RevisionSetID.HasValue)
@@ -258,7 +252,7 @@ namespace Lpp.Dns.Api
                 _dataContext.RequestDocuments.Add(requestDoc);
             }
 
-            if(_requestID != null && TaskID != null && Doc.Kind == "Attachment.Input" && !Doc.ParentDocumentID.HasValue)
+            if (_requestID != null && TaskID != Guid.Empty && Doc.Kind == "Attachment.Input" && !Doc.ParentDocumentID.HasValue)
             {
                 var routes = await _dataContext.Responses.Where(x => x.RequestDataMart.RequestID == _requestID && x.RequestDataMart.Status != DTO.Enums.RoutingStatus.AwaitingRequestApproval && x.RequestDataMart.Status != DTO.Enums.RoutingStatus.Draft).Select(x => x.ID).ToArrayAsync();
 
@@ -345,7 +339,7 @@ namespace Lpp.Dns.Api
                                 cmd.CommandTimeout = 900;
                                 await cmd.ExecuteNonQueryAsync();
                                 bytesRead -= chunkSize;
-                                
+
                             }
                             catch (Exception ex)
                             {
@@ -362,7 +356,7 @@ namespace Lpp.Dns.Api
             }
 
 
-            File.Delete(Path.Combine(this.RootPath, MetaData.UploadUid + ".part"));   
+            File.Delete(Path.Combine(this.RootPath, MetaData.UploadUid + ".part"));
         }
-    }    
+    }
 }

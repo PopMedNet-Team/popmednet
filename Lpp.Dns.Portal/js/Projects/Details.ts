@@ -512,7 +512,6 @@ module Projects.Details {
                 ProjectID: vm.Project.ID,
                 RequestType: requestType.Name,
                 RequestTypeID: requestType.ID,
-                Template: requestType.Template,
                 Workflow: requestType.Workflow,
                 WorkflowID: requestType.WorkflowID
             }));

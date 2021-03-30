@@ -41,7 +41,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             return db;
         }
 
-        public static Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext CreatePCORIDataContext(Model.Settings.SQLProvider dbProvider, string connectionString, bool logToConsole = true, string schema = null)
+        public static Lpp.Dns.DataMart.Model.PCORIQueryBuilder.DataContext CreatePCORIDataContext(Model.Settings.SQLProvider dbProvider, string connectionString, bool logToConsole = true)
         {
             string defaultSchema = "";
             System.Data.Common.DbConnection connection;
@@ -55,13 +55,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             }
             else if (dbProvider == Settings.SQLProvider.PostgreSQL)
             {
-                defaultSchema = schema ?? "dbo";
+                defaultSchema = "dbo";
                 connection = new Npgsql.NpgsqlConnection(connectionString);
             }
             else if (dbProvider == Settings.SQLProvider.Oracle)
             {
-                
-                defaultSchema = schema ?? "C##PCORNETUSER";
+                defaultSchema = "C##PCORNETUSER";
                 connection = new Oracle.ManagedDataAccess.Client.OracleConnection(connectionString);
             }
             else
@@ -162,7 +161,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
         #endregion PCORI
@@ -205,7 +204,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
         #endregion
@@ -227,7 +226,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
 
@@ -247,7 +246,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
 
@@ -267,27 +266,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
-            return adapter;
-        }
-
-        public static QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter CreateMetadataRefreshAdapter(string connectionString)
-        {
-            var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
-            var adapterSettings = new Dictionary<string, object>(){
-                    {"Server", connectionStringBuilder.DataSource },
-                    {"UserID", connectionStringBuilder.UserID },
-                    {"Password", connectionStringBuilder.Password },
-                    {"Database", connectionStringBuilder.InitialCatalog },
-                    {"DataProvider", Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer.ToString()}
-                };
-
-            var adapter = new QueryComposer.Adapters.SummaryQuery.MetadataRefreshModelAdapter(new RequestMetadata
-            {
-                CreatedOn = DateTime.UtcNow,
-                MSRequestID = "Unit Test Request"
-            });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
 
@@ -313,7 +292,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
+            adapter.Initialize(adapterSettings);
             return adapter;
         }
 

@@ -27,6 +27,7 @@ var Plugins;
                         var _this = _super.call(this, bindingControl) || this;
                         _this.options = _this.Parameters;
                         _this.Template = new Dns.ViewModels.TemplateViewModel();
+                        _this.Template.Name(_this.options.CriteriaGroup.Name);
                         _this.Template.Data(JSON.stringify(_this.options.CriteriaGroup));
                         _this.Template.CreatedByID(User.ID);
                         _this.Template.CreatedOn(moment.utc().toDate());

@@ -56,7 +56,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             
         }
 
-        protected override SummaryRequestModel ConvertToModel(QueryComposerRequestDTO request)
+        protected override SummaryRequestModel ConvertToModel(QueryComposerQueryDTO query)
         {
             throw new NotImplementedException();
         }

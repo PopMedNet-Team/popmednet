@@ -72,7 +72,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                     rsp = (Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
                 }
 
-                dt = CreateTable(rsp.Results.First());
+                dt = CreateTable(rsp.Queries.First().Results.First());
             }
 
             var respDT = (from item in dt.AsEnumerable()

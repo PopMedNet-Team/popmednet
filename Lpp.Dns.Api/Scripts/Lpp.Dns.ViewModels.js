@@ -477,6 +477,35 @@ var Dns;
             return ApproveRejectResponseViewModel;
         }(ViewModel));
         ViewModels.ApproveRejectResponseViewModel = ApproveRejectResponseViewModel;
+        var CreateCriteriaGroupTemplateViewModel = /** @class */ (function (_super) {
+            __extends(CreateCriteriaGroupTemplateViewModel, _super);
+            function CreateCriteriaGroupTemplateViewModel(CreateCriteriaGroupTemplateDTO) {
+                var _this = _super.call(this) || this;
+                if (CreateCriteriaGroupTemplateDTO == null) {
+                    _this.Name = ko.observable();
+                    _this.Description = ko.observable();
+                    _this.Json = ko.observable();
+                    _this.AdapterDetail = ko.observable();
+                }
+                else {
+                    _this.Name = ko.observable(CreateCriteriaGroupTemplateDTO.Name);
+                    _this.Description = ko.observable(CreateCriteriaGroupTemplateDTO.Description);
+                    _this.Json = ko.observable(CreateCriteriaGroupTemplateDTO.Json);
+                    _this.AdapterDetail = ko.observable(CreateCriteriaGroupTemplateDTO.AdapterDetail);
+                }
+                return _this;
+            }
+            CreateCriteriaGroupTemplateViewModel.prototype.toData = function () {
+                return {
+                    Name: this.Name(),
+                    Description: this.Description(),
+                    Json: this.Json(),
+                    AdapterDetail: this.AdapterDetail(),
+                };
+            };
+            return CreateCriteriaGroupTemplateViewModel;
+        }(ViewModel));
+        ViewModels.CreateCriteriaGroupTemplateViewModel = CreateCriteriaGroupTemplateViewModel;
         var EnhancedEventLogItemViewModel = /** @class */ (function (_super) {
             __extends(EnhancedEventLogItemViewModel, _super);
             function EnhancedEventLogItemViewModel(EnhancedEventLogItemDTO) {
@@ -988,14 +1017,16 @@ var Dns;
                 var _this = _super.call(this) || this;
                 if (UpdateRequestTypeRequestDTO == null) {
                     _this.RequestType = new RequestTypeViewModel();
-                    _this.Template = new TemplateViewModel();
+                    _this.Permissions = ko.observableArray();
+                    _this.Queries = ko.observableArray();
                     _this.Terms = ko.observableArray();
                     _this.NotAllowedTerms = ko.observableArray();
                     _this.Models = ko.observableArray();
                 }
                 else {
                     _this.RequestType = new RequestTypeViewModel(UpdateRequestTypeRequestDTO.RequestType);
-                    _this.Template = new TemplateViewModel(UpdateRequestTypeRequestDTO.Template);
+                    _this.Permissions = ko.observableArray(UpdateRequestTypeRequestDTO.Permissions == null ? null : UpdateRequestTypeRequestDTO.Permissions.map(function (item) { return new AclRequestTypeViewModel(item); }));
+                    _this.Queries = ko.observableArray(UpdateRequestTypeRequestDTO.Queries == null ? null : UpdateRequestTypeRequestDTO.Queries.map(function (item) { return new TemplateViewModel(item); }));
                     _this.Terms = ko.observableArray(UpdateRequestTypeRequestDTO.Terms == null ? null : UpdateRequestTypeRequestDTO.Terms.map(function (item) { return item; }));
                     _this.NotAllowedTerms = ko.observableArray(UpdateRequestTypeRequestDTO.NotAllowedTerms == null ? null : UpdateRequestTypeRequestDTO.NotAllowedTerms.map(function (item) { return new SectionSpecificTermViewModel(item); }));
                     _this.Models = ko.observableArray(UpdateRequestTypeRequestDTO.Models == null ? null : UpdateRequestTypeRequestDTO.Models.map(function (item) { return item; }));
@@ -1005,7 +1036,8 @@ var Dns;
             UpdateRequestTypeRequestViewModel.prototype.toData = function () {
                 return {
                     RequestType: this.RequestType.toData(),
-                    Template: this.Template.toData(),
+                    Permissions: this.Permissions == null ? null : this.Permissions().map(function (item) { return item.toData(); }),
+                    Queries: this.Queries == null ? null : this.Queries().map(function (item) { return item.toData(); }),
                     Terms: this.Terms(),
                     NotAllowedTerms: this.NotAllowedTerms == null ? null : this.NotAllowedTerms().map(function (item) { return item.toData(); }),
                     Models: this.Models(),
@@ -1020,18 +1052,18 @@ var Dns;
                 var _this = _super.call(this) || this;
                 if (UpdateRequestTypeResponseDTO == null) {
                     _this.RequestType = new RequestTypeViewModel();
-                    _this.Template = new TemplateViewModel();
+                    _this.Queries = ko.observableArray();
                 }
                 else {
                     _this.RequestType = new RequestTypeViewModel(UpdateRequestTypeResponseDTO.RequestType);
-                    _this.Template = new TemplateViewModel(UpdateRequestTypeResponseDTO.Template);
+                    _this.Queries = ko.observableArray(UpdateRequestTypeResponseDTO.Queries == null ? null : UpdateRequestTypeResponseDTO.Queries.map(function (item) { return new TemplateViewModel(item); }));
                 }
                 return _this;
             }
             UpdateRequestTypeResponseViewModel.prototype.toData = function () {
                 return {
                     RequestType: this.RequestType.toData(),
-                    Template: this.Template.toData(),
+                    Queries: this.Queries == null ? null : this.Queries().map(function (item) { return item.toData(); }),
                 };
             };
             return UpdateRequestTypeResponseViewModel;
@@ -4950,6 +4982,29 @@ var Dns;
             return LegacySchedulerRequestViewModel;
         }(ViewModel));
         ViewModels.LegacySchedulerRequestViewModel = LegacySchedulerRequestViewModel;
+        var AvailableTermsRequestViewModel = /** @class */ (function (_super) {
+            __extends(AvailableTermsRequestViewModel, _super);
+            function AvailableTermsRequestViewModel(AvailableTermsRequestDTO) {
+                var _this = _super.call(this) || this;
+                if (AvailableTermsRequestDTO == null) {
+                    _this.Adapters = ko.observableArray();
+                    _this.QueryType = ko.observable();
+                }
+                else {
+                    _this.Adapters = ko.observableArray(AvailableTermsRequestDTO.Adapters == null ? null : AvailableTermsRequestDTO.Adapters.map(function (item) { return item; }));
+                    _this.QueryType = ko.observable(AvailableTermsRequestDTO.QueryType);
+                }
+                return _this;
+            }
+            AvailableTermsRequestViewModel.prototype.toData = function () {
+                return {
+                    Adapters: this.Adapters(),
+                    QueryType: this.QueryType(),
+                };
+            };
+            return AvailableTermsRequestViewModel;
+        }(ViewModel));
+        ViewModels.AvailableTermsRequestViewModel = AvailableTermsRequestViewModel;
         var DistributedRegressionManifestFile = /** @class */ (function (_super) {
             __extends(DistributedRegressionManifestFile, _super);
             function DistributedRegressionManifestFile(DistributedRegressionManifestFile) {
@@ -5040,6 +5095,175 @@ var Dns;
             return DistributedRegressionManifestDataPartner;
         }(ViewModel));
         ViewModels.DistributedRegressionManifestDataPartner = DistributedRegressionManifestDataPartner;
+        var QueryComposerQueryViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerQueryViewModel, _super);
+            function QueryComposerQueryViewModel(QueryComposerQueryDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerQueryDTO == null) {
+                    _this.Header = new QueryComposerQueryHeaderViewModel();
+                    _this.Where = new QueryComposerWhereViewModel();
+                    _this.Select = new QueryComposerSelectViewModel();
+                    _this.TemporalEvents = ko.observableArray();
+                }
+                else {
+                    _this.Header = new QueryComposerQueryHeaderViewModel(QueryComposerQueryDTO.Header);
+                    _this.Where = new QueryComposerWhereViewModel(QueryComposerQueryDTO.Where);
+                    _this.Select = new QueryComposerSelectViewModel(QueryComposerQueryDTO.Select);
+                    _this.TemporalEvents = ko.observableArray(QueryComposerQueryDTO.TemporalEvents == null ? null : QueryComposerQueryDTO.TemporalEvents.map(function (item) { return new QueryComposerTemporalEventViewModel(item); }));
+                }
+                return _this;
+            }
+            QueryComposerQueryViewModel.prototype.toData = function () {
+                return {
+                    Header: this.Header.toData(),
+                    Where: this.Where.toData(),
+                    Select: this.Select.toData(),
+                    TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map(function (item) { return item.toData(); }),
+                };
+            };
+            return QueryComposerQueryViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerQueryViewModel = QueryComposerQueryViewModel;
+        var QueryComposerResponseAggregationDefinitionViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerResponseAggregationDefinitionViewModel, _super);
+            function QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseAggregationDefinitionDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerResponseAggregationDefinitionDTO == null) {
+                    _this.GroupBy = ko.observableArray();
+                    _this.Select = ko.observableArray();
+                    _this.Name = ko.observable();
+                }
+                else {
+                    _this.GroupBy = ko.observableArray(QueryComposerResponseAggregationDefinitionDTO.GroupBy == null ? null : QueryComposerResponseAggregationDefinitionDTO.GroupBy.map(function (item) { return item; }));
+                    _this.Select = ko.observableArray(QueryComposerResponseAggregationDefinitionDTO.Select == null ? null : QueryComposerResponseAggregationDefinitionDTO.Select.map(function (item) { return item; }));
+                    _this.Name = ko.observable(QueryComposerResponseAggregationDefinitionDTO.Name);
+                }
+                return _this;
+            }
+            QueryComposerResponseAggregationDefinitionViewModel.prototype.toData = function () {
+                return {
+                    GroupBy: this.GroupBy == null ? null : this.GroupBy().map(function (item) { return item; }),
+                    Select: this.Select(),
+                    Name: this.Name(),
+                };
+            };
+            return QueryComposerResponseAggregationDefinitionViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerResponseAggregationDefinitionViewModel = QueryComposerResponseAggregationDefinitionViewModel;
+        var QueryComposerResponseHeaderViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerResponseHeaderViewModel, _super);
+            function QueryComposerResponseHeaderViewModel(QueryComposerResponseHeaderDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerResponseHeaderDTO == null) {
+                    _this.ID = ko.observable();
+                    _this.RequestID = ko.observable();
+                    _this.DocumentID = ko.observable();
+                    _this.QueryingStart = ko.observable();
+                    _this.QueryingEnd = ko.observable();
+                    _this.DataMart = ko.observable();
+                }
+                else {
+                    _this.ID = ko.observable(QueryComposerResponseHeaderDTO.ID);
+                    _this.RequestID = ko.observable(QueryComposerResponseHeaderDTO.RequestID);
+                    _this.DocumentID = ko.observable(QueryComposerResponseHeaderDTO.DocumentID);
+                    _this.QueryingStart = ko.observable(QueryComposerResponseHeaderDTO.QueryingStart);
+                    _this.QueryingEnd = ko.observable(QueryComposerResponseHeaderDTO.QueryingEnd);
+                    _this.DataMart = ko.observable(QueryComposerResponseHeaderDTO.DataMart);
+                }
+                return _this;
+            }
+            QueryComposerResponseHeaderViewModel.prototype.toData = function () {
+                return {
+                    ID: this.ID(),
+                    RequestID: this.RequestID(),
+                    DocumentID: this.DocumentID(),
+                    QueryingStart: this.QueryingStart(),
+                    QueryingEnd: this.QueryingEnd(),
+                    DataMart: this.DataMart(),
+                };
+            };
+            return QueryComposerResponseHeaderViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerResponseHeaderViewModel = QueryComposerResponseHeaderViewModel;
+        var QueryComposerResponsePropertyDefinitionViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerResponsePropertyDefinitionViewModel, _super);
+            function QueryComposerResponsePropertyDefinitionViewModel(QueryComposerResponsePropertyDefinitionDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerResponsePropertyDefinitionDTO == null) {
+                    _this.Name = ko.observable();
+                    _this.Type = ko.observable();
+                    _this.As = ko.observable();
+                    _this.Aggregate = ko.observable();
+                }
+                else {
+                    _this.Name = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Name);
+                    _this.Type = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Type);
+                    _this.As = ko.observable(QueryComposerResponsePropertyDefinitionDTO.As);
+                    _this.Aggregate = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Aggregate);
+                }
+                return _this;
+            }
+            QueryComposerResponsePropertyDefinitionViewModel.prototype.toData = function () {
+                return {
+                    Name: this.Name(),
+                    Type: this.Type(),
+                    As: this.As(),
+                    Aggregate: this.Aggregate(),
+                };
+            };
+            return QueryComposerResponsePropertyDefinitionViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerResponsePropertyDefinitionViewModel = QueryComposerResponsePropertyDefinitionViewModel;
+        var QueryComposerResponseQueryResultViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerResponseQueryResultViewModel, _super);
+            function QueryComposerResponseQueryResultViewModel(QueryComposerResponseQueryResultDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerResponseQueryResultDTO == null) {
+                    _this.ID = ko.observable();
+                    _this.Name = ko.observable();
+                    _this.QueryStart = ko.observable();
+                    _this.QueryEnd = ko.observable();
+                    _this.PostProcessStart = ko.observable();
+                    _this.PostProcessEnd = ko.observable();
+                    _this.Errors = ko.observableArray();
+                    _this.Results = ko.observableArray();
+                    _this.LowCellThrehold = ko.observable();
+                    _this.Properties = ko.observableArray();
+                    _this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel();
+                }
+                else {
+                    _this.ID = ko.observable(QueryComposerResponseQueryResultDTO.ID);
+                    _this.Name = ko.observable(QueryComposerResponseQueryResultDTO.Name);
+                    _this.QueryStart = ko.observable(QueryComposerResponseQueryResultDTO.QueryStart);
+                    _this.QueryEnd = ko.observable(QueryComposerResponseQueryResultDTO.QueryEnd);
+                    _this.PostProcessStart = ko.observable(QueryComposerResponseQueryResultDTO.PostProcessStart);
+                    _this.PostProcessEnd = ko.observable(QueryComposerResponseQueryResultDTO.PostProcessEnd);
+                    _this.Errors = ko.observableArray(QueryComposerResponseQueryResultDTO.Errors == null ? null : QueryComposerResponseQueryResultDTO.Errors.map(function (item) { return new QueryComposerResponseErrorViewModel(item); }));
+                    _this.Results = ko.observableArray(QueryComposerResponseQueryResultDTO.Results == null ? null : QueryComposerResponseQueryResultDTO.Results.map(function (item) { return item; }));
+                    _this.LowCellThrehold = ko.observable(QueryComposerResponseQueryResultDTO.LowCellThrehold);
+                    _this.Properties = ko.observableArray(QueryComposerResponseQueryResultDTO.Properties == null ? null : QueryComposerResponseQueryResultDTO.Properties.map(function (item) { return new QueryComposerResponsePropertyDefinitionViewModel(item); }));
+                    _this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseQueryResultDTO.Aggregation);
+                }
+                return _this;
+            }
+            QueryComposerResponseQueryResultViewModel.prototype.toData = function () {
+                return {
+                    ID: this.ID(),
+                    Name: this.Name(),
+                    QueryStart: this.QueryStart(),
+                    QueryEnd: this.QueryEnd(),
+                    PostProcessStart: this.PostProcessStart(),
+                    PostProcessEnd: this.PostProcessEnd(),
+                    Errors: this.Errors == null ? null : this.Errors().map(function (item) { return item.toData(); }),
+                    Results: this.Results(),
+                    LowCellThrehold: this.LowCellThrehold(),
+                    Properties: this.Properties == null ? null : this.Properties().map(function (item) { return item.toData(); }),
+                    Aggregation: this.Aggregation.toData(),
+                };
+            };
+            return QueryComposerResponseQueryResultViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerResponseQueryResultViewModel = QueryComposerResponseQueryResultViewModel;
         var QueryComposerTemporalEventViewModel = /** @class */ (function (_super) {
             __extends(QueryComposerTemporalEventViewModel, _super);
             function QueryComposerTemporalEventViewModel(QueryComposerTemporalEventDTO) {
@@ -5074,10 +5298,12 @@ var Dns;
             function SectionSpecificTermViewModel(SectionSpecificTermDTO) {
                 var _this = _super.call(this) || this;
                 if (SectionSpecificTermDTO == null) {
+                    _this.TemplateID = ko.observable();
                     _this.TermID = ko.observable();
                     _this.Section = ko.observable();
                 }
                 else {
+                    _this.TemplateID = ko.observable(SectionSpecificTermDTO.TemplateID);
                     _this.TermID = ko.observable(SectionSpecificTermDTO.TermID);
                     _this.Section = ko.observable(SectionSpecificTermDTO.Section);
                 }
@@ -5085,6 +5311,7 @@ var Dns;
             }
             SectionSpecificTermViewModel.prototype.toData = function () {
                 return {
+                    TemplateID: this.TemplateID(),
                     TermID: this.TermID(),
                     Section: this.Section(),
                 };
@@ -5266,36 +5493,33 @@ var Dns;
             function QueryComposerHeaderViewModel(QueryComposerHeaderDTO) {
                 var _this = _super.call(this) || this;
                 if (QueryComposerHeaderDTO == null) {
+                    _this.ID = ko.observable();
                     _this.Name = ko.observable();
                     _this.Description = ko.observable();
                     _this.ViewUrl = ko.observable();
-                    _this.Grammar = ko.observable();
                     _this.Priority = ko.observable();
                     _this.DueDate = ko.observable();
-                    _this.QueryType = ko.observable();
                     _this.SubmittedOn = ko.observable();
                 }
                 else {
+                    _this.ID = ko.observable(QueryComposerHeaderDTO.ID);
                     _this.Name = ko.observable(QueryComposerHeaderDTO.Name);
                     _this.Description = ko.observable(QueryComposerHeaderDTO.Description);
                     _this.ViewUrl = ko.observable(QueryComposerHeaderDTO.ViewUrl);
-                    _this.Grammar = ko.observable(QueryComposerHeaderDTO.Grammar);
                     _this.Priority = ko.observable(QueryComposerHeaderDTO.Priority);
                     _this.DueDate = ko.observable(QueryComposerHeaderDTO.DueDate);
-                    _this.QueryType = ko.observable(QueryComposerHeaderDTO.QueryType);
                     _this.SubmittedOn = ko.observable(QueryComposerHeaderDTO.SubmittedOn);
                 }
                 return _this;
             }
             QueryComposerHeaderViewModel.prototype.toData = function () {
                 return {
+                    ID: this.ID(),
                     Name: this.Name(),
                     Description: this.Description(),
                     ViewUrl: this.ViewUrl(),
-                    Grammar: this.Grammar(),
                     Priority: this.Priority(),
                     DueDate: this.DueDate(),
-                    QueryType: this.QueryType(),
                     SubmittedOn: this.SubmittedOn(),
                 };
             };
@@ -5322,15 +5546,43 @@ var Dns;
             return QueryComposerOrderByViewModel;
         }(ViewModel));
         ViewModels.QueryComposerOrderByViewModel = QueryComposerOrderByViewModel;
+        var QueryComposerRequestViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerRequestViewModel, _super);
+            function QueryComposerRequestViewModel(QueryComposerRequestDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerRequestDTO == null) {
+                    _this.SchemaVersion = ko.observable();
+                    _this.Header = new QueryComposerRequestHeaderViewModel();
+                    _this.Queries = ko.observableArray();
+                }
+                else {
+                    _this.SchemaVersion = ko.observable(QueryComposerRequestDTO.SchemaVersion);
+                    _this.Header = new QueryComposerRequestHeaderViewModel(QueryComposerRequestDTO.Header);
+                    _this.Queries = ko.observableArray(QueryComposerRequestDTO.Queries == null ? null : QueryComposerRequestDTO.Queries.map(function (item) { return new QueryComposerQueryViewModel(item); }));
+                }
+                return _this;
+            }
+            QueryComposerRequestViewModel.prototype.toData = function () {
+                return {
+                    SchemaVersion: this.SchemaVersion(),
+                    Header: this.Header.toData(),
+                    Queries: this.Queries == null ? null : this.Queries().map(function (item) { return item.toData(); }),
+                };
+            };
+            return QueryComposerRequestViewModel;
+        }(ViewModel));
+        ViewModels.QueryComposerRequestViewModel = QueryComposerRequestViewModel;
         var QueryComposerResponseErrorViewModel = /** @class */ (function (_super) {
             __extends(QueryComposerResponseErrorViewModel, _super);
             function QueryComposerResponseErrorViewModel(QueryComposerResponseErrorDTO) {
                 var _this = _super.call(this) || this;
                 if (QueryComposerResponseErrorDTO == null) {
+                    _this.QueryID = ko.observable();
                     _this.Code = ko.observable();
                     _this.Description = ko.observable();
                 }
                 else {
+                    _this.QueryID = ko.observable(QueryComposerResponseErrorDTO.QueryID);
                     _this.Code = ko.observable(QueryComposerResponseErrorDTO.Code);
                     _this.Description = ko.observable(QueryComposerResponseErrorDTO.Description);
                 }
@@ -5338,6 +5590,7 @@ var Dns;
             }
             QueryComposerResponseErrorViewModel.prototype.toData = function () {
                 return {
+                    QueryID: this.QueryID(),
                     Code: this.Code(),
                     Description: this.Description(),
                 };
@@ -5370,100 +5623,30 @@ var Dns;
             function QueryComposerResponseViewModel(QueryComposerResponseDTO) {
                 var _this = _super.call(this) || this;
                 if (QueryComposerResponseDTO == null) {
-                    _this.ID = ko.observable();
-                    _this.DocumentID = ko.observable();
-                    _this.ResponseDateTime = ko.observable();
-                    _this.RequestID = ko.observable();
+                    _this.SchemaVersion = ko.observable();
+                    _this.Header = new QueryComposerResponseHeaderViewModel();
                     _this.Errors = ko.observableArray();
-                    _this.Results = ko.observableArray();
-                    _this.LowCellThrehold = ko.observable();
-                    _this.Properties = ko.observableArray();
-                    _this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel();
+                    _this.Queries = ko.observableArray();
                 }
                 else {
-                    _this.ID = ko.observable(QueryComposerResponseDTO.ID);
-                    _this.DocumentID = ko.observable(QueryComposerResponseDTO.DocumentID);
-                    _this.ResponseDateTime = ko.observable(QueryComposerResponseDTO.ResponseDateTime);
-                    _this.RequestID = ko.observable(QueryComposerResponseDTO.RequestID);
+                    _this.SchemaVersion = ko.observable(QueryComposerResponseDTO.SchemaVersion);
+                    _this.Header = new QueryComposerResponseHeaderViewModel(QueryComposerResponseDTO.Header);
                     _this.Errors = ko.observableArray(QueryComposerResponseDTO.Errors == null ? null : QueryComposerResponseDTO.Errors.map(function (item) { return new QueryComposerResponseErrorViewModel(item); }));
-                    _this.Results = ko.observableArray(QueryComposerResponseDTO.Results == null ? null : QueryComposerResponseDTO.Results.map(function (item) { return item; }));
-                    _this.LowCellThrehold = ko.observable(QueryComposerResponseDTO.LowCellThrehold);
-                    _this.Properties = ko.observableArray(QueryComposerResponseDTO.Properties == null ? null : QueryComposerResponseDTO.Properties.map(function (item) { return new QueryComposerResponsePropertyDefinitionViewModel(item); }));
-                    _this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseDTO.Aggregation);
+                    _this.Queries = ko.observableArray(QueryComposerResponseDTO.Queries == null ? null : QueryComposerResponseDTO.Queries.map(function (item) { return new QueryComposerResponseQueryResultViewModel(item); }));
                 }
                 return _this;
             }
             QueryComposerResponseViewModel.prototype.toData = function () {
                 return {
-                    ID: this.ID(),
-                    DocumentID: this.DocumentID(),
-                    ResponseDateTime: this.ResponseDateTime(),
-                    RequestID: this.RequestID(),
+                    SchemaVersion: this.SchemaVersion(),
+                    Header: this.Header.toData(),
                     Errors: this.Errors == null ? null : this.Errors().map(function (item) { return item.toData(); }),
-                    Results: this.Results(),
-                    LowCellThrehold: this.LowCellThrehold(),
-                    Properties: this.Properties == null ? null : this.Properties().map(function (item) { return item.toData(); }),
-                    Aggregation: this.Aggregation.toData(),
+                    Queries: this.Queries == null ? null : this.Queries().map(function (item) { return item.toData(); }),
                 };
             };
             return QueryComposerResponseViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseViewModel = QueryComposerResponseViewModel;
-        var QueryComposerResponseAggregationDefinitionViewModel = /** @class */ (function (_super) {
-            __extends(QueryComposerResponseAggregationDefinitionViewModel, _super);
-            function QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseAggregationDefinitionDTO) {
-                var _this = _super.call(this) || this;
-                if (QueryComposerResponseAggregationDefinitionDTO == null) {
-                    _this.GroupBy = ko.observableArray();
-                    _this.Select = ko.observableArray();
-                    _this.Name = ko.observable();
-                }
-                else {
-                    _this.GroupBy = ko.observableArray(QueryComposerResponseAggregationDefinitionDTO.GroupBy == null ? null : QueryComposerResponseAggregationDefinitionDTO.GroupBy.map(function (item) { return item; }));
-                    _this.Select = ko.observableArray(QueryComposerResponseAggregationDefinitionDTO.Select == null ? null : QueryComposerResponseAggregationDefinitionDTO.Select.map(function (item) { return item; }));
-                    _this.Name = ko.observable(QueryComposerResponseAggregationDefinitionDTO.Name);
-                }
-                return _this;
-            }
-            QueryComposerResponseAggregationDefinitionViewModel.prototype.toData = function () {
-                return {
-                    GroupBy: this.GroupBy == null ? null : this.GroupBy().map(function (item) { return item; }),
-                    Select: this.Select(),
-                    Name: this.Name(),
-                };
-            };
-            return QueryComposerResponseAggregationDefinitionViewModel;
-        }(ViewModel));
-        ViewModels.QueryComposerResponseAggregationDefinitionViewModel = QueryComposerResponseAggregationDefinitionViewModel;
-        var QueryComposerResponsePropertyDefinitionViewModel = /** @class */ (function (_super) {
-            __extends(QueryComposerResponsePropertyDefinitionViewModel, _super);
-            function QueryComposerResponsePropertyDefinitionViewModel(QueryComposerResponsePropertyDefinitionDTO) {
-                var _this = _super.call(this) || this;
-                if (QueryComposerResponsePropertyDefinitionDTO == null) {
-                    _this.Name = ko.observable();
-                    _this.Type = ko.observable();
-                    _this.As = ko.observable();
-                    _this.Aggregate = ko.observable();
-                }
-                else {
-                    _this.Name = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Name);
-                    _this.Type = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Type);
-                    _this.As = ko.observable(QueryComposerResponsePropertyDefinitionDTO.As);
-                    _this.Aggregate = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Aggregate);
-                }
-                return _this;
-            }
-            QueryComposerResponsePropertyDefinitionViewModel.prototype.toData = function () {
-                return {
-                    Name: this.Name(),
-                    Type: this.Type(),
-                    As: this.As(),
-                    Aggregate: this.Aggregate(),
-                };
-            };
-            return QueryComposerResponsePropertyDefinitionViewModel;
-        }(ViewModel));
-        ViewModels.QueryComposerResponsePropertyDefinitionViewModel = QueryComposerResponsePropertyDefinitionViewModel;
         var QueryComposerTermViewModel = /** @class */ (function (_super) {
             __extends(QueryComposerTermViewModel, _super);
             function QueryComposerTermViewModel(QueryComposerTermDTO) {
@@ -5526,7 +5709,6 @@ var Dns;
                     _this.RequestType = ko.observable();
                     _this.WorkflowID = ko.observable();
                     _this.Workflow = ko.observable();
-                    _this.Template = ko.observable();
                 }
                 else {
                     _this.ProjectID = ko.observable(ProjectRequestTypeDTO.ProjectID);
@@ -5534,7 +5716,6 @@ var Dns;
                     _this.RequestType = ko.observable(ProjectRequestTypeDTO.RequestType);
                     _this.WorkflowID = ko.observable(ProjectRequestTypeDTO.WorkflowID);
                     _this.Workflow = ko.observable(ProjectRequestTypeDTO.Workflow);
-                    _this.Template = ko.observable(ProjectRequestTypeDTO.Template);
                 }
                 return _this;
             }
@@ -5545,7 +5726,6 @@ var Dns;
                     RequestType: this.RequestType(),
                     WorkflowID: this.WorkflowID(),
                     Workflow: this.Workflow(),
-                    Template: this.Template(),
                 };
             };
             return ProjectRequestTypeViewModel;
@@ -5909,6 +6089,88 @@ var Dns;
             return UserSettingViewModel;
         }(EntityDtoViewModel));
         ViewModels.UserSettingViewModel = UserSettingViewModel;
+        var QueryComposerQueryHeaderViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerQueryHeaderViewModel, _super);
+            function QueryComposerQueryHeaderViewModel(QueryComposerQueryHeaderDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerQueryHeaderDTO == null) {
+                    _this.QueryType = ko.observable();
+                    _this.ComposerInterface = ko.observable();
+                    _this.ID = ko.observable();
+                    _this.Name = ko.observable();
+                    _this.Description = ko.observable();
+                    _this.ViewUrl = ko.observable();
+                    _this.Priority = ko.observable();
+                    _this.DueDate = ko.observable();
+                    _this.SubmittedOn = ko.observable();
+                }
+                else {
+                    _this.QueryType = ko.observable(QueryComposerQueryHeaderDTO.QueryType);
+                    _this.ComposerInterface = ko.observable(QueryComposerQueryHeaderDTO.ComposerInterface);
+                    _this.ID = ko.observable(QueryComposerQueryHeaderDTO.ID);
+                    _this.Name = ko.observable(QueryComposerQueryHeaderDTO.Name);
+                    _this.Description = ko.observable(QueryComposerQueryHeaderDTO.Description);
+                    _this.ViewUrl = ko.observable(QueryComposerQueryHeaderDTO.ViewUrl);
+                    _this.Priority = ko.observable(QueryComposerQueryHeaderDTO.Priority);
+                    _this.DueDate = ko.observable(QueryComposerQueryHeaderDTO.DueDate);
+                    _this.SubmittedOn = ko.observable(QueryComposerQueryHeaderDTO.SubmittedOn);
+                }
+                return _this;
+            }
+            QueryComposerQueryHeaderViewModel.prototype.toData = function () {
+                return {
+                    QueryType: this.QueryType(),
+                    ComposerInterface: this.ComposerInterface(),
+                    ID: this.ID(),
+                    Name: this.Name(),
+                    Description: this.Description(),
+                    ViewUrl: this.ViewUrl(),
+                    Priority: this.Priority(),
+                    DueDate: this.DueDate(),
+                    SubmittedOn: this.SubmittedOn(),
+                };
+            };
+            return QueryComposerQueryHeaderViewModel;
+        }(QueryComposerHeaderViewModel));
+        ViewModels.QueryComposerQueryHeaderViewModel = QueryComposerQueryHeaderViewModel;
+        var QueryComposerRequestHeaderViewModel = /** @class */ (function (_super) {
+            __extends(QueryComposerRequestHeaderViewModel, _super);
+            function QueryComposerRequestHeaderViewModel(QueryComposerRequestHeaderDTO) {
+                var _this = _super.call(this) || this;
+                if (QueryComposerRequestHeaderDTO == null) {
+                    _this.ID = ko.observable();
+                    _this.Name = ko.observable();
+                    _this.Description = ko.observable();
+                    _this.ViewUrl = ko.observable();
+                    _this.Priority = ko.observable();
+                    _this.DueDate = ko.observable();
+                    _this.SubmittedOn = ko.observable();
+                }
+                else {
+                    _this.ID = ko.observable(QueryComposerRequestHeaderDTO.ID);
+                    _this.Name = ko.observable(QueryComposerRequestHeaderDTO.Name);
+                    _this.Description = ko.observable(QueryComposerRequestHeaderDTO.Description);
+                    _this.ViewUrl = ko.observable(QueryComposerRequestHeaderDTO.ViewUrl);
+                    _this.Priority = ko.observable(QueryComposerRequestHeaderDTO.Priority);
+                    _this.DueDate = ko.observable(QueryComposerRequestHeaderDTO.DueDate);
+                    _this.SubmittedOn = ko.observable(QueryComposerRequestHeaderDTO.SubmittedOn);
+                }
+                return _this;
+            }
+            QueryComposerRequestHeaderViewModel.prototype.toData = function () {
+                return {
+                    ID: this.ID(),
+                    Name: this.Name(),
+                    Description: this.Description(),
+                    ViewUrl: this.ViewUrl(),
+                    Priority: this.Priority(),
+                    DueDate: this.DueDate(),
+                    SubmittedOn: this.SubmittedOn(),
+                };
+            };
+            return QueryComposerRequestHeaderViewModel;
+        }(QueryComposerHeaderViewModel));
+        ViewModels.QueryComposerRequestHeaderViewModel = QueryComposerRequestHeaderViewModel;
         var WFCommentViewModel = /** @class */ (function (_super) {
             __extends(WFCommentViewModel, _super);
             function WFCommentViewModel(WFCommentDTO) {
@@ -6192,6 +6454,9 @@ var Dns;
                     _this.Notes = ko.observable();
                     _this.QueryType = ko.observable();
                     _this.ComposerInterface = ko.observable();
+                    _this.Order = ko.observable();
+                    _this.RequestTypeID = ko.observable();
+                    _this.RequestType = ko.observable();
                     _this.ID = ko.observable();
                     _this.Timestamp = ko.observable();
                 }
@@ -6206,6 +6471,9 @@ var Dns;
                     _this.Notes = ko.observable(TemplateDTO.Notes);
                     _this.QueryType = ko.observable(TemplateDTO.QueryType);
                     _this.ComposerInterface = ko.observable(TemplateDTO.ComposerInterface);
+                    _this.Order = ko.observable(TemplateDTO.Order);
+                    _this.RequestTypeID = ko.observable(TemplateDTO.RequestTypeID);
+                    _this.RequestType = ko.observable(TemplateDTO.RequestType);
                     _this.ID = ko.observable(TemplateDTO.ID);
                     _this.Timestamp = ko.observable(TemplateDTO.Timestamp);
                 }
@@ -6223,6 +6491,9 @@ var Dns;
                     Notes: this.Notes(),
                     QueryType: this.QueryType(),
                     ComposerInterface: this.ComposerInterface(),
+                    Order: this.Order(),
+                    RequestTypeID: this.RequestTypeID(),
+                    RequestType: this.RequestType(),
                     ID: this.ID(),
                     Timestamp: this.Timestamp(),
                 };
@@ -7613,10 +7884,10 @@ var Dns;
                     _this.PostProcess = ko.observable();
                     _this.AddFiles = ko.observable();
                     _this.RequiresProcessing = ko.observable();
-                    _this.TemplateID = ko.observable();
-                    _this.Template = ko.observable();
+                    _this.Notes = ko.observable();
                     _this.WorkflowID = ko.observable();
                     _this.Workflow = ko.observable();
+                    _this.SupportMultiQuery = ko.observable();
                     _this.ID = ko.observable();
                     _this.Timestamp = ko.observable();
                 }
@@ -7627,10 +7898,10 @@ var Dns;
                     _this.PostProcess = ko.observable(RequestTypeDTO.PostProcess);
                     _this.AddFiles = ko.observable(RequestTypeDTO.AddFiles);
                     _this.RequiresProcessing = ko.observable(RequestTypeDTO.RequiresProcessing);
-                    _this.TemplateID = ko.observable(RequestTypeDTO.TemplateID);
-                    _this.Template = ko.observable(RequestTypeDTO.Template);
+                    _this.Notes = ko.observable(RequestTypeDTO.Notes);
                     _this.WorkflowID = ko.observable(RequestTypeDTO.WorkflowID);
                     _this.Workflow = ko.observable(RequestTypeDTO.Workflow);
+                    _this.SupportMultiQuery = ko.observable(RequestTypeDTO.SupportMultiQuery);
                     _this.ID = ko.observable(RequestTypeDTO.ID);
                     _this.Timestamp = ko.observable(RequestTypeDTO.Timestamp);
                 }
@@ -7644,10 +7915,10 @@ var Dns;
                     PostProcess: this.PostProcess(),
                     AddFiles: this.AddFiles(),
                     RequiresProcessing: this.RequiresProcessing(),
-                    TemplateID: this.TemplateID(),
-                    Template: this.Template(),
+                    Notes: this.Notes(),
                     WorkflowID: this.WorkflowID(),
                     Workflow: this.Workflow(),
+                    SupportMultiQuery: this.SupportMultiQuery(),
                     ID: this.ID(),
                     Timestamp: this.Timestamp(),
                 };
@@ -8224,41 +8495,6 @@ var Dns;
             return WorkflowRoleViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.WorkflowRoleViewModel = WorkflowRoleViewModel;
-        var QueryComposerRequestViewModel = /** @class */ (function (_super) {
-            __extends(QueryComposerRequestViewModel, _super);
-            function QueryComposerRequestViewModel(QueryComposerRequestDTO) {
-                var _this = _super.call(this) || this;
-                if (QueryComposerRequestDTO == null) {
-                    _this.Header = new QueryComposerHeaderViewModel();
-                    _this.Where = new QueryComposerWhereViewModel();
-                    _this.Select = new QueryComposerSelectViewModel();
-                    _this.TemporalEvents = ko.observableArray();
-                    _this.ID = ko.observable();
-                    _this.Timestamp = ko.observable();
-                }
-                else {
-                    _this.Header = new QueryComposerHeaderViewModel(QueryComposerRequestDTO.Header);
-                    _this.Where = new QueryComposerWhereViewModel(QueryComposerRequestDTO.Where);
-                    _this.Select = new QueryComposerSelectViewModel(QueryComposerRequestDTO.Select);
-                    _this.TemporalEvents = ko.observableArray(QueryComposerRequestDTO.TemporalEvents == null ? null : QueryComposerRequestDTO.TemporalEvents.map(function (item) { return new QueryComposerTemporalEventViewModel(item); }));
-                    _this.ID = ko.observable(QueryComposerRequestDTO.ID);
-                    _this.Timestamp = ko.observable(QueryComposerRequestDTO.Timestamp);
-                }
-                return _this;
-            }
-            QueryComposerRequestViewModel.prototype.toData = function () {
-                return {
-                    Header: this.Header.toData(),
-                    Where: this.Where.toData(),
-                    Select: this.Select.toData(),
-                    TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map(function (item) { return item.toData(); }),
-                    ID: this.ID(),
-                    Timestamp: this.Timestamp(),
-                };
-            };
-            return QueryComposerRequestViewModel;
-        }(EntityDtoWithIDViewModel));
-        ViewModels.QueryComposerRequestViewModel = QueryComposerRequestViewModel;
         var DataModelWithRequestTypesViewModel = /** @class */ (function (_super) {
             __extends(DataModelWithRequestTypesViewModel, _super);
             function DataModelWithRequestTypesViewModel(DataModelWithRequestTypesDTO) {

@@ -326,7 +326,6 @@
                     <colgroup>
                         <col style="width:32px;text-align:center;" />
                         <col />
-                        <col style="width:33%;" />
                         <col style="width:125px;" />
                         <col style="width:50px;text-align:center;" />
                     </colgroup>
@@ -334,7 +333,6 @@
                         <tr>
                             <th></th>
                             <th>Name</th>
-                            <th>Template</th>
                             <th>Work Flow</th>
                             <th></th>
                         </tr>
@@ -343,13 +341,12 @@
                         <tr>
                             <td><button class="btn btn-default btn-xs glyphicon chevron-button" data-bind="css: {'glyphicon-chevron-right': !Selected(), 'glyphicon-chevron-down': Selected}, click: onSelected, visible: Workflow() != null"></button></td>
                             <td><a href="#" data-bind="text: RequestType, attr: {href: '/RequestType/details?ID=' + RequestTypeID()}"></a></td>
-                            <td data-bind="text: Template"></td>
                             <td data-bind="text: Workflow"></td>
                             <td><button id="btnRequestTypeDelete" data-bind="click: $root.DeleteProjectRequestType, attr: {id: 'btnRequestTypeDelete' + RequestTypeID()}" class="btn btn-danger btn-sm delete-button glyphicon glyphicon-trash" title="Click to delete this request type."></button></td>
                         </tr>
                         <tr data-bind="visible: Selected">
                             <td></td>
-                            <td colspan="4" style="padding: 0px;">
+                            <td colspan="3" style="padding: 0px;">
                                 <table class="table table-striped table-bordered" style="width: 100%; margin: 0;">
                                     <colgroup>
                                         <col style="width: 32px;" />
@@ -375,7 +372,7 @@
                     </tbody>
                     <tfoot class="panel-footer">
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4">
                                 <div class="dropdown pull-right">
                                     <a href="#" class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add RequestType" />&nbsp;Add Request Type <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableRequestTypeList">

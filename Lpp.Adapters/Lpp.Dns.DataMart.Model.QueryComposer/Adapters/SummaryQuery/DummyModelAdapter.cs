@@ -20,12 +20,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
            
         }
 
-        public override QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             throw new NotImplementedException();
         }

@@ -14,15 +14,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
     public class SummarySqlQueryAdapter
     {
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<string, object> settings, bool viewSQL)
+        public QueryComposerResponseQueryResultDTO Execute(QueryComposerQueryDTO query, IDictionary<string, object> settings, bool viewSQL)
         {
-            QueryComposerResponseDTO response = new QueryComposerResponseDTO
-            {
-                ResponseDateTime = DateTime.UtcNow,
-                Errors = Array.Empty<QueryComposerResponseErrorDTO>()
-            };
-
-            var allTerms = GetSQLDistributionTerms(request).ToArray();
+            var allTerms = query.FlattenToTerms().Where(t => t.Type == ModelTermsFactory.SqlDistributionID).ToArray();
             if (allTerms.Length == 0)
             {
                 //error: cannot mix sql distribution with any other term
@@ -36,6 +30,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             }
 
             string sql = allTerms[0].GetStringValue("Sql");
+
+            var response = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, QueryStart = DateTimeOffset.UtcNow };
 
             if (viewSQL)
             {
@@ -53,6 +49,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                         Type = "System.String"
                     }
                 };
+
+                response.QueryEnd = DateTimeOffset.UtcNow;
 
                 return response;
             }
@@ -99,19 +97,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 }
             }
 
-            if (request.ID.HasValue)
-                response.RequestID = request.ID.Value;
-
-            response.ResponseDateTime = DateTime.UtcNow;
+            response.QueryEnd = DateTimeOffset.UtcNow;
             response.Results = new[] { queryResults };
             response.Properties = columnProperties;
 
             return response;
-        }
-
-        public static IEnumerable<QueryComposerTermDTO> GetSQLDistributionTerms(QueryComposerRequestDTO request)
-        {
-            return request.Where.Criteria.SelectMany(c => c.Criteria.SelectMany(cc => cc.Terms)).Concat(request.Where.Criteria.SelectMany(c => c.Terms)).Where(t => t.Type == ModelTermsFactory.SqlDistributionID).ToArray();
         }
     }
 }

@@ -61,7 +61,8 @@ var Workflow;
                 //Override the save function on the page that is already there and inject what's needed.
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 Requests.Details.rovm.RegisterRequestSaveFunction(function (request) {
-                    request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
+                    throw new DOMException("Not updated for multiquery yet!");
+                    //request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Query.toData()));
                     return true;
                 });
                 var dmStatuses;

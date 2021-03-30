@@ -34,7 +34,6 @@ namespace Lpp.Dns.Data
                     ProjectID = pr.ProjectID,
                     RequestTypeID = pr.RequestTypeID,
                     RequestType = pr.RequestType.Name,
-                    Template = pr.RequestType.Template.Name,
                     Workflow = pr.RequestType.Workflow.Name,
                     WorkflowID = pr.RequestType.WorkflowID
                 };

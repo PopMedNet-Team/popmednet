@@ -1258,7 +1258,7 @@ namespace Lpp.Dns.Api.Security
 
             //For each Request Type permission being updated, the associated template permission should also be updated
 
-            var requestTypes = await DataContext.RequestTypes.Where(rt => requestTypeIDs.Contains(rt.ID) && rt.TemplateID.HasValue).Select(rt => new { rt.ID, TemplateID = rt.TemplateID.Value }).ToDictionaryAsync(rt => rt.ID);
+            var requestTypes = await DataContext.RequestTypes.Where(rt => requestTypeIDs.Contains(rt.ID) && rt.Queries.Any()).SelectMany(rt => rt.Queries.Select(q => new { rt.ID, TemplateID = q.ID })).ToDictionaryAsync(rt => rt.ID);
             
             var permissionIDMap = new Dictionary<Guid, Guid> {
                 { PermissionIdentifiers.RequestTypes.View.ID, PermissionIdentifiers.Templates.View.ID },

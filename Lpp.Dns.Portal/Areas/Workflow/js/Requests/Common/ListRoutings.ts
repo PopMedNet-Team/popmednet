@@ -158,15 +158,32 @@ module Workflow.Common.ListRoutings {
             self.AllowAggregateView = true;
 
             //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type       
-            requestTypeModels.forEach((rt) => {
-                if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
-                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
-                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
-                    Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
-                    (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && Requests.Details.rovm.OverviewQCviewViewModel.Request.Header.QueryType() != null && Requests.Details.rovm.OverviewQCviewViewModel.Request.Header.QueryType().toString() == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh.toString())) {
-                    self.AllowAggregateView = false;
+
+            let containsMetaDataRefresh = (rtt: Dns.Interfaces.IQueryComposerRequestDTO): boolean => {
+                for (let i = 0; i++; i < rtt.Queries.length) {
+                    if (rtt.Queries[i].Header.QueryType != null && rtt.Queries[i].Header.QueryType == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh) {
+                        return true;
+                    }
                 }
-            });
+
+                return false;
+            };
+
+            if (containsMetaDataRefresh(Requests.Details.rovm.OverviewQCviewViewModel.Request)) {
+                self.AllowAggregateView = false;
+            } else {
+                requestTypeModels.forEach((rt) => {
+
+                    if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
+                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
+                        (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && containsMetaDataRefresh(rt))
+                    ) {
+                        self.AllowAggregateView = false;
+                    }
+                });
+            }
 
             self.DataMartsToAdd = ko.observableArray([]);
             self.strDataMartsToAdd = '';

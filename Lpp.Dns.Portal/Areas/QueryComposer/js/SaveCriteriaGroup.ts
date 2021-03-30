@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../js/_rootlayout.ts" />
 module Plugins.Requests.QueryBuilder.SaveCriteriaGroup {
-    var vm: ViewModel;
+    let vm: ViewModel;
 
     export class ViewModel extends Global.DialogViewModel {
         public Template: Dns.ViewModels.TemplateViewModel;
@@ -12,6 +12,7 @@ module Plugins.Requests.QueryBuilder.SaveCriteriaGroup {
             this.options = <Options>this.Parameters;
 
             this.Template = new Dns.ViewModels.TemplateViewModel();
+            this.Template.Name(this.options.CriteriaGroup.Name);
             this.Template.Data(JSON.stringify(this.options.CriteriaGroup));
             this.Template.CreatedByID(User.ID);
             this.Template.CreatedOn(moment.utc().toDate());

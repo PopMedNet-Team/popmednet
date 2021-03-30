@@ -26,7 +26,8 @@ namespace Lpp.DataMartClientChecker
                     else if (releaseKey >= 461808)
                     {
                         session.Log(".Net Framework 4.7.2 Found");
-                        return ActionResult.Success;
+                        session.Message(InstallMessage.Error, new Record { FormatString = ".Net Framework 4.7.2 Found. Please Upgrade your .Net Framework version to 4.8 or above." });
+                        return ActionResult.Failure;
                     }
                     else if (releaseKey >= 461308)
                     {
@@ -86,7 +87,7 @@ namespace Lpp.DataMartClientChecker
                 else
                 {
                     session.Log(".NET Framework is not detected.");
-                    session.Message(InstallMessage.Error, new Record { FormatString = "Please Install the .Net Framework 4.7.2 or above and restrat the installation." });
+                    session.Message(InstallMessage.Error, new Record { FormatString = "Please Install the .Net Framework 4.8 or above and restrat the installation." });
                     return ActionResult.Failure;
                 }
             }

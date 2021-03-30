@@ -102,7 +102,15 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
                     response.EnsureSuccessStatusCode();
                     var fileStream = await response.Content.ReadAsStreamAsync();
                     Response.BufferOutput = false;
-                    return File(fileStream, "application/octet-stream", string.Format("response.{0}", format));
+
+                    string filename = (response.Content.Headers.ContentDisposition.FileName).Replace("\"","");
+                    if (string.IsNullOrEmpty(filename))
+                    {
+                        filename = string.Format("response.{0}", format);
+                    }
+
+                    
+                    return File(fileStream, (filename.EndsWith("zip") ? "application/zip" : "application/octet-stream"), filename);
                 }
             }
         }
@@ -133,6 +141,13 @@ namespace Lpp.Dns.Portal.Areas.Workflow.Controllers
                     var cd = new ContentDisposition(response.Content.Headers.ContentDisposition.ToString());
                     var fileStream = await response.Content.ReadAsStreamAsync();
                     Response.BufferOutput = false;
+
+                    string filename = (response.Content.Headers.ContentDisposition.FileName).Replace("\"", "");
+                    if (string.IsNullOrEmpty(filename))
+                    {
+                        filename = "response.zip";
+                    }
+
                     return File(fileStream, "application/zip", string.Format("response.{0}", cd.FileName));
                 }
             }

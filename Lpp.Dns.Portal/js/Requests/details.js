@@ -11,7 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../areas/querycomposer/js/termvaluefilter.ts" />
 /// <reference path="../_rootlayout.ts" />
 var Requests;
 (function (Requests) {
@@ -19,7 +18,7 @@ var Requests;
     (function (Details) {
         var RequestOverviewViewModel = /** @class */ (function (_super) {
             __extends(RequestOverviewViewModel, _super);
-            function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels, queryComposerRequest) {
+            function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 _this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 _this.PhiDisclosureLevelOptions = new Array({ Name: 'Aggregated', Value: 'Aggregated' }, { Name: 'Limited', Value: 'Limited' }, { Name: 'De-identified', Value: 'De-identified' }, { Name: 'PHI', Value: 'PHI' });
@@ -39,7 +38,6 @@ var Requests;
                 _this.CurrentTask = currentTask;
                 _this.FieldOptions = fieldOptions;
                 _this.ReadOnly = ko.observable(false);
-                _this.VisualTerms = visualTerms || [];
                 _this.SaveRequestID = ko.observable("");
                 //Lists
                 _this.RequestType = requestType;
@@ -177,13 +175,9 @@ var Requests;
                 self.CanViewIndividualResponses = canViewIndividualResponses;
                 self.CanViewAggregateResponses = canViewAggregateResponses;
                 self.AllowAggregateView = true;
-                //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type             
+                //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                 requestTypeModels.forEach(function (rt) {
-                    if (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DataCheckerModelID) ||
-                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.ModularProgramModelID) ||
-                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.DistributedRegressionModelID) ||
-                        Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.FileDistributionModelID) ||
-                        (Plugins.Requests.QueryBuilder.MDQ.Terms.Compare(rt, Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.SummaryTablesModelID) && queryComposerRequest.Header.QueryType == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh)) {
+                    if (Constants.Guid.equals(rt, '321ADAA1-A350-4DD0-93DE-5DE658A507DF') || Constants.Guid.equals(rt, '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154') || Constants.Guid.equals(rt, 'CE347EF9-3F60-4099-A221-85084F940EDE')) {
                         self.AllowAggregateView = false;
                     }
                 });
@@ -262,6 +256,7 @@ var Requests;
                         self.Request.Status() == Dns.Enums.RequestStatuses.CompleteWithReport ||
                         self.Request.Status() == Dns.Enums.RequestStatuses.Cancelled ||
                         self.Request.Status() == Dns.Enums.RequestStatuses.Failed ||
+                        self.Request.Status() == Dns.Enums.RequestStatuses.RequestRejected ||
                         self.Request.Status() == Dns.Enums.RequestStatuses.TerminatedPriorToDistribution;
                 });
                 _this.WatchTitle(_this.Request.Name, "Request: ");
@@ -622,16 +617,6 @@ var Requests;
             return RequestOverviewViewModel;
         }(Global.PageViewModel));
         Details.RequestOverviewViewModel = RequestOverviewViewModel;
-        function GetVisualTerms() {
-            var d = $.Deferred();
-            $.ajax({ type: "GET", url: '/QueryComposer/VisualTerms', dataType: "json" })
-                .done(function (result) {
-                d.resolve(result);
-            }).fail(function (e, description, error) {
-                d.reject(e);
-            });
-            return d;
-        }
         function init() {
             var id = Global.GetQueryParam("ID");
             var requestTypeID;
@@ -655,23 +640,21 @@ var Requests;
                 PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata,
                 PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable
             ];
-            $.when(Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListWorkPlanTypes(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListReportAggregationLevels(null, "ID,Name,DeletedOn", "Name"), 
-            //Dns.WebApi.Projects.GetFieldOptions(pid),
-            GetVisualTerms()).done(function (requesterCenterList, workPlanTypeList, reportAggregationLevelList, visualTerms) {
+            $.when(Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListWorkPlanTypes(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListReportAggregationLevels(null, "ID,Name,DeletedOn", "Name")).done(function (requesterCenterList, workPlanTypeList, reportAggregationLevelList) {
                 if (!id) {
                     //Get the starting workflow activity
                     requestTypeID = Global.GetQueryParam("requestTypeID");
-                    var projectID = Global.GetQueryParam("ProjectID");
-                    var templateID = Global.GetQueryParam("templateID");
-                    var parentRequestID = Global.GetQueryParam("ParentRequestID");
+                    var projectID_1 = Global.GetQueryParam("ProjectID");
+                    //let templateID: any = Global.GetQueryParam("templateID");
+                    var parentRequestID_1 = Global.GetQueryParam("ParentRequestID");
                     var userID = Global.GetQueryParam("UserID");
                     //This is new, we need to get extensive information about the workflow, request type, etc.
-                    $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.RequestTypes.Get(requestTypeID), Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID), templateID == null ? null : Dns.WebApi.Templates.Get(templateID), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([Global.GetQueryParam("ProjectID")], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID)).done(function (parentRequests, requestTypes, workflowActivities, templates, fieldOptions, projPermissions, activityTree) {
+                    $.when(parentRequestID_1 == null ? [] : Dns.WebApi.Requests.Get(parentRequestID_1), Dns.WebApi.RequestTypes.Get(requestTypeID), Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID), Dns.WebApi.Templates.GetByRequestType(requestTypeID, null, null, "Order"), Dns.WebApi.Projects.GetFieldOptions(projectID_1, User.ID), Dns.WebApi.Projects.GetPermissions([projectID_1], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID_1)).done(function (parentRequests, requestTypes, workflowActivities, templates, fieldOptions, projPermissions, activityTree) {
                         if (parentRequests.length != 0) {
                             parentRequest = new Dns.ViewModels.RequestViewModel(parentRequests[0]);
                         }
                         workFlowActivity = workflowActivities[0];
-                        Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Global.GetQueryParam("ProjectID"), workFlowActivity.ID, requestTypeID, requestTypeWorkflowActivityPermissions)
+                        Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(projectID_1, workFlowActivity.ID, requestTypeID, requestTypeWorkflowActivityPermissions)
                             .done(function (permissions) {
                             request = new Dns.ViewModels.RequestViewModel();
                             request.Name(requestTypes[0].Name);
@@ -684,17 +667,26 @@ var Requests;
                             request.RequestTypeID(requestTypeID);
                             request.Priority(Dns.Enums.Priorities.Medium);
                             request.CurrentWorkFlowActivityID(workFlowActivity.ID);
-                            request.ProjectID(Global.GetQueryParam("ProjectID"));
+                            request.ProjectID(projectID_1);
                             request.OrganizationID(User.EmployerID);
                             request.WorkflowID(requestTypes[0].WorkflowID);
-                            request.ParentRequestID(parentRequestID);
-                            if (templates != null && templates.length > 0 && templates[0].Type == Dns.Enums.TemplateTypes.Request && templates[0].Data != null) {
-                                request.Query(templates[0].Data);
+                            request.ParentRequestID(parentRequestID_1);
+                            if (templates != null && templates.length > 0) {
+                                var sorted = templates.sort(function (a, b) { return a.Order - b.Order; });
+                                var mqViewModel = new Dns.ViewModels.QueryComposerRequestViewModel();
+                                mqViewModel.SchemaVersion("2.0");
+                                mqViewModel.Header.Priority(Dns.Enums.Priorities.Medium);
+                                for (var i = 0; i < sorted.length; i++) {
+                                    if (sorted[i].Type != Dns.Enums.TemplateTypes.Request)
+                                        continue;
+                                    mqViewModel.Queries.push(new Dns.ViewModels.QueryComposerQueryViewModel(JSON.parse(sorted[i].Data)));
+                                }
+                                request.Query(JSON.stringify(mqViewModel.toData()));
                             }
                             projPermissions.forEach(function (pItem) {
                                 permissions.push(pItem);
                             });
-                            bind(request, parentRequest, [], requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, [], [], fieldOptions, permissions, visualTerms, null, false, false, []);
+                            bind(request, parentRequest, [], requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, [], [], fieldOptions, permissions, null, false, false, []);
                         });
                     });
                 }
@@ -704,9 +696,7 @@ var Requests;
                         request = new Dns.ViewModels.RequestViewModel(requests[0]);
                         var projectID = request.ProjectID();
                         var parentRequestID = requests[0].ParentRequestID;
-                        $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.Requests.RequestDataMarts(request.ID()), Dns.WebApi.RequestTypes.Get(request.RequestTypeID()), Dns.WebApi.Workflow.GetWorkflowActivity(request.CurrentWorkFlowActivityID()), Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()), Dns.WebApi.RequestUsers.List('RequestID eq ' + id), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.ChangeRoutingsAfterSubmission, PMNPermissions.Project.ResubmitRequests, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Request.ChangeRoutingsAfterSubmission]), Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()), Dns.WebApi.Response.CanViewIndividualResponses(request.ID()), Dns.WebApi.Response.CanViewAggregateResponses(request.ID()), Dns.WebApi.Requests.GetModelIDsforRequest(request.ID())
-                        //Get the work flow activity that it's on
-                        ).done(function (parentRequests, requestDataMarts, requestTypes, workflowActivities, activityTree, requestUsers, fieldOptions, projPermissions, reqTypePermissions, responseGroups, canViewIndividualResponses, canViewAggregateResponses, requestTypeModels) {
+                        $.when(parentRequestID == null ? [] : Dns.WebApi.Requests.Get(parentRequestID), Dns.WebApi.Requests.RequestDataMarts(request.ID()), Dns.WebApi.RequestTypes.Get(request.RequestTypeID()), Dns.WebApi.Workflow.GetWorkflowActivity(request.CurrentWorkFlowActivityID()), Dns.WebApi.Projects.GetActivityTreeByProjectID(request.ProjectID()), Dns.WebApi.RequestUsers.List('RequestID eq ' + id), Dns.WebApi.Projects.GetFieldOptions(projectID, User.ID), Dns.WebApi.Projects.GetPermissions([request.ProjectID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.ChangeRoutingsAfterSubmission, PMNPermissions.Project.ResubmitRequests, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Organizations.GetPermissions([request.OrganizationID()], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Request.ChangeRoutingsAfterSubmission]), Dns.WebApi.Response.GetResponseGroupsByRequestID(request.ID()), Dns.WebApi.Response.CanViewIndividualResponses(request.ID()), Dns.WebApi.Response.CanViewAggregateResponses(request.ID()), Dns.WebApi.Requests.GetRequestTypeModels(request.ID()), Dns.WebApi.Templates.GetByRequestType(request.RequestTypeID(), null, null, "Order")).done(function (parentRequests, requestDataMarts, requestTypes, workflowActivities, activityTree, requestUsers, fieldOptions, projPermissions, reqTypePermissions, responseGroups, canViewIndividualResponses, canViewAggregateResponses, requestTypeModels, requestTypeTemplates) {
                             if (parentRequests.length != 0) {
                                 parentRequest = new Dns.ViewModels.RequestViewModel(parentRequests[0]);
                             }
@@ -721,7 +711,33 @@ var Requests;
                                         permissions.push(pItem);
                                     }
                                 });
-                                bind(request, parentRequest, requestDataMarts, requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, permissions, visualTerms, responseGroups, canViewIndividualResponses[0], canViewAggregateResponses[0], requestTypeModels);
+                                var obj = JSON.parse(request.Query());
+                                if (obj && obj.Header.hasOwnProperty('ComposerInterface')) {
+                                    //only a queryDTO will have ComposerInterface as a property of the Header.
+                                    //going to assume request type hasn't been converted to the new multi-query schema.
+                                    //Automactially upgrade, assume the current json only has a single query and it matches the first specifiec for the request type.
+                                    var queryObj = obj;
+                                    var requestTypeTemplate = requestTypeTemplates[0];
+                                    queryObj.Header.ID = requestTypeTemplate.ID;
+                                    queryObj.Header.ComposerInterface = requestTypeTemplate.ComposerInterface;
+                                    queryObj.Header.QueryType = requestTypeTemplate.QueryType;
+                                    if ((queryObj.Header.Name || '').length == 0) {
+                                        queryObj.Header.Name = requestTypeTemplate.Name;
+                                    }
+                                    //convert to multi-query
+                                    var mq = new Dns.ViewModels.QueryComposerRequestViewModel().toData();
+                                    mq.SchemaVersion = "2.0";
+                                    mq.Header.ID = id;
+                                    mq.Header.DueDate = request.DueDate();
+                                    mq.Header.Description = request.Description();
+                                    mq.Header.Name = request.Name();
+                                    mq.Header.Priority = request.Priority();
+                                    mq.Header.SubmittedOn = request.SubmittedOn();
+                                    mq.Header.ViewUrl = queryObj.Header.ViewUrl;
+                                    mq.Queries.push(queryObj);
+                                    request.Query(JSON.stringify(mq));
+                                }
+                                bind(request, parentRequest, requestDataMarts, requestTypes[0], workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, permissions, responseGroups, canViewIndividualResponses[0], canViewAggregateResponses[0], requestTypeModels);
                             });
                         });
                     });
@@ -729,7 +745,7 @@ var Requests;
             });
         }
         Details.init = init;
-        function bind(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, requestTypeModels) {
+        function bind(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResonses, requestTypeModels) {
             var _this = this;
             $(function () {
                 //Load the activity into the task panel.
@@ -747,8 +763,7 @@ var Requests;
                 }
                 var currentTask = ko.utils.arrayFirst(tasks, function (item) { return item.WorkflowActivityID == request.CurrentWorkFlowActivityID() && item.EndOn == null; });
                 var bindingControl = $("#ContentWrapper");
-                var queryComposerRequest = JSON.parse(request.Query());
-                Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, visualTerms, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels, queryComposerRequest);
+                Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels);
                 var taskID = Global.GetQueryParam("TaskID");
                 //If new, or TaskID passed, set the tab to the Task tab
                 if (workFlowActivity.End) {
@@ -765,8 +780,8 @@ var Requests;
                 var assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.Request.AssignRequestLevelNotifications.toLowerCase(); }) != null;
                 var viewTrackingTable = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase(); }) != null;
                 // Load the view of the criteria only if #viewQueryComposer element is present
-                if (viewOverview && $('#viewQueryComposer').length) {
-                    Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.init(queryComposerRequest, visualTerms, $('#overview-queryview'));
+                if (viewOverview && $('#QueryComposerOverview').length) {
+                    Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.initialize(JSON.parse(request.Query()), request, $('#overview-queryview'));
                 }
                 //Notifications
                 if (assignRequestNotifications) {
@@ -794,9 +809,9 @@ var Requests;
                 if (viewComments || viewOverview) {
                     $.when(Dns.WebApi.Comments.ByRequestID(request.ID() || Constants.GuidEmpty, null), Dns.WebApi.Comments.GetDocumentReferencesByRequest(request.ID() || Constants.GuidEmpty, null), Dns.WebApi.Documents.ByTask(tasks.map(function (m) { return m.ID; }), null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc')).done(function (comments, documentReferences, docs) {
                         if (viewOverview) {
-                            var nonTaskComments = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID == null; });
-                            var nonTaskDocumentReferences = ko.utils.arrayFilter(documentReferences, function (d) { return ko.utils.arrayFirst(nonTaskComments, function (c) { return c.ID == d.CommentID; }) != null; });
-                            overallCommentsVM.RefreshDataSource(nonTaskComments, nonTaskDocumentReferences);
+                            var nonTaskComments_1 = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID == null; });
+                            var nonTaskDocumentReferences = ko.utils.arrayFilter(documentReferences, function (d) { return ko.utils.arrayFirst(nonTaskComments_1, function (c) { return c.ID == d.CommentID; }) != null; });
+                            overallCommentsVM.RefreshDataSource(nonTaskComments_1, nonTaskDocumentReferences);
                         }
                         if (viewAttachments) {
                             var sets_1 = [];
@@ -833,9 +848,9 @@ var Requests;
                             Details.rovm.AttachmentsDocuments(sets_1);
                         }
                         if (viewComments) {
-                            var taskComments = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID != null; });
-                            var taskDocRefs = ko.utils.arrayFilter(documentReferences, function (d) { return ko.utils.arrayFirst(taskComments, function (c) { return c.ID == d.CommentID; }) != null; });
-                            activityCommentsVM.RefreshDataSource(taskComments, taskDocRefs);
+                            var taskComments_1 = ko.utils.arrayFilter(comments, function (c) { return c.WorkflowActivityID != null; });
+                            var taskDocRefs = ko.utils.arrayFilter(documentReferences, function (d) { return ko.utils.arrayFirst(taskComments_1, function (c) { return c.ID == d.CommentID; }) != null; });
+                            activityCommentsVM.RefreshDataSource(taskComments_1, taskDocRefs);
                         }
                     });
                 }
@@ -929,15 +944,7 @@ var Requests;
                 if (request.ID() == null) {
                     Global.Helpers.ShowDialog("Edit Request Metadata", "/workflow/workflowrequests/editwfrequestmetadatadialog", [], 700, 700, { DetailsViewModel: Details.rovm, AllowEditRequestID: alloweditrequestpermission || false, NewRequest: true })
                         .done(function (result) {
-                        //if (Plugins.Requests.QueryBuilder.Edit != undefined) {
-                        //    Plugins.Requests.QueryBuilder.Edit.vm.Priority(rovm.Request.Priority());
-                        //    Plugins.Requests.QueryBuilder.Edit.vm.DueDate(rovm.Request.DueDate());
-                        //}
-                        //if a template was specified need to refresh the datamarts available
-                        if (Plugins.Requests.QueryBuilder.MDQ != undefined && typeof Plugins.Requests.QueryBuilder.MDQ.vm !== "undefined") {
-                            Plugins.Requests.QueryBuilder.MDQ.vm.GetCompatibleDataMarts();
-                        }
-                        else if (!(typeof Plugins.Requests.QueryBuilder.Edit === "undefined") && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
+                        if (!(typeof Plugins.Requests.QueryBuilder.Edit === "undefined") && Plugins.Requests.QueryBuilder.Edit.vm.IsFileUpload) {
                             Plugins.Requests.QueryBuilder.Edit.vm.fileUploadDMLoad();
                         }
                         Controls.WFHistory.List.setRequestID(Details.rovm.Request.ID());

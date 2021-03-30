@@ -275,15 +275,12 @@ module Home.Index {
                 if (!result)
                     return;
                 var url;
-                if (!result.TemplateID && !result.WorkflowID) {
+                if (!result.WorkflowID) {
                     // Legacy Non-workflow request types
                     url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + project.ID();
-                } else if (!result.TemplateID) {
+                } else {
                     // Workflow based non-QueryComposer request types
                     url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + project.ID() + "&WorkflowID=" + result.WorkflowID;
-                } else {
-                    // QueryComposer request types
-                    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + project.ID() + "&templateID=" + result.TemplateID + "&WorkflowID=" + result.WorkflowID;
                 }
                 window.location.href = url;
             });

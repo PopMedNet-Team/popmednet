@@ -75,16 +75,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
             _requestId = requestId;
         }
 
-        public abstract DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL);
-
-        public abstract QueryComposerModelProcessor.DocumentEx[] OutputDocuments();
-
+        public abstract IEnumerable<DTO.QueryComposer.QueryComposerResponseQueryResultDTO> Execute(DTO.QueryComposer.QueryComposerQueryDTO query, bool viewSQL);
+        
         public virtual void GeneratePatientIdentifierLists(DTO.QueryComposer.QueryComposerRequestDTO request, IDictionary<Guid,string> outputSettings, string format)
         {
             throw new NotSupportedException("Generating Patient Identifier Lists is not supported by this adapter.");
         }
 
-        public virtual bool CanPostProcess(DTO.QueryComposer.QueryComposerResponseDTO response, out string message)
+        public virtual bool CanPostProcess(DTO.QueryComposer.QueryComposerResponseQueryResultDTO response, out string message)
         {
             message = string.Empty;
             bool hasErrors = response.Errors != null && response.Errors.Any();
@@ -121,14 +119,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
             return _lowThresholdValue.HasValue;
         }
 
-        protected virtual string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
+        protected virtual string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseQueryResultDTO response)
         {
             return new string[0];
         }
 
         public const string LowThresholdColumnName = "LowThreshold";
 
-        public virtual void PostProcess(DTO.QueryComposer.QueryComposerResponseDTO response)
+        public virtual void PostProcess(DTO.QueryComposer.QueryComposerResponseQueryResultDTO response)
         {
             string[] columnNames = LowThresholdColumns(response);
 

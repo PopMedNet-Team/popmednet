@@ -1,4 +1,5 @@
 ﻿using Lpp.Dns.Data;
+using Lpp.Dns.Data.Query;
 using Lpp.Dns.DTO.Security;
 using Lpp.Objects;
 using Lpp.Utilities;
@@ -866,26 +867,18 @@ namespace Lpp.Dns.Api.DataMartClient
                 fs.Dispose();
             }
 
-            HostingEnvironment.QueueBackgroundWorkItem(async cancellationToken =>
-            {
-                using (var db = new DataContext())
-                {
-                    foreach (var item in PostProcessorTypes)
-                    {
-                        try
-                        {
-                            IPostProcessDocumentContent postProcess = Activator.CreateInstance(item) as IPostProcessDocumentContent;
-                            postProcess.Initialize(db, uploadPath);
-                            await postProcess.ExecuteAsync(details.Document);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error("Error Occured", ex);
-                        }
-                    }
-                }
-
-            });
+            var docMetadata = new dmc.Criteria.DocumentMetadata { 
+                ID = details.Document.ID, 
+                DataMartID = details.DataMartID, 
+                CurrentChunkIndex = 0,
+                IsViewable = details.Document.Viewable,
+                Kind = details.Document.Kind,
+                MimeType = details.Document.MimeType,
+                Name = details.Document.Name,
+                RequestID = details.RequestID,
+                Size = details.Document.Length
+            };
+            Hangfire.BackgroundJob.Enqueue(() => PostProcessDocument(Identity.ID, docMetadata, cacheDocumentPath));
 
             return this.Request != null ? this.Request.CreateResponse(HttpStatusCode.OK) :  new HttpResponseMessage(HttpStatusCode.OK);
         }
@@ -945,6 +938,8 @@ namespace Lpp.Dns.Api.DataMartClient
 
                 await o.StreamDocumentToDatabase();
 
+                Hangfire.BackgroundJob.Enqueue(() => PostProcessDocument(Identity.ID, o.DocumentMetadata, o.CombindedTempDocumentFileName));
+
                 return Request.CreateResponse(HttpStatusCode.Created, o.DocumentMetadata.ID);
             }
             catch (Exception ex)
@@ -954,6 +949,53 @@ namespace Lpp.Dns.Api.DataMartClient
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occured while trying to upload the document content."));
             }
         }
+
+        /// <summary>
+        /// Executes document post processing for all the registered post processors.
+        /// </summary>
+        /// <param name="identityID">The ID of the user that initiated the document upload.</param>
+        /// <param name="documentMetadata">The document metadata.</param>
+        /// <param name="cachedDocumentFileName">The full path and name of the temp cached file.</param>
+        /// <returns></returns>
+        public async Task PostProcessDocument(Guid identityID, dmc.Criteria.DocumentMetadata documentMetadata, string cachedDocumentFileName)
+        {
+            using (var db = new DataContext())
+            {
+                Data.Document postProcessDocument = await db.Documents.FindAsync(documentMetadata.ID);
+                
+                if (!File.Exists(cachedDocumentFileName))
+                {
+                    using(var writer = File.OpenWrite(cachedDocumentFileName))
+                    using(var documentStream = postProcessDocument.GetStream(db))
+                    {
+                        documentStream.CopyTo(writer);
+                        writer.Flush();
+                    }
+                }
+                
+                foreach(var item in PostProcessorTypes)
+                {
+                    try
+                    {
+                        IPostProcessDocumentContent postProcess = Activator.CreateInstance(item) as IPostProcessDocumentContent;
+                        postProcess.Initialize(db, Path.GetDirectoryName(cachedDocumentFileName));
+                        await postProcess.ExecuteAsync(postProcessDocument, Path.GetFileName(cachedDocumentFileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"[RequestID: { documentMetadata.RequestID }, DataMartID: { documentMetadata.DataMartID }, UserID: { identityID }] Error post-processing document: { Newtonsoft.Json.JsonConvert.SerializeObject(documentMetadata) } ", ex);
+                    }
+                }
+            }
+
+            try
+            {
+                File.Delete(cachedDocumentFileName);
+            }
+            catch { }
+        }
+
+
 
         /// <summary>
         /// Sets the status of the specified request.
@@ -977,7 +1019,8 @@ namespace Lpp.Dns.Api.DataMartClient
         IQueryable<DataMart> GetGrantedDataMarts()
         {
             var identity = GetCurrentIdentity();
-            return DataContext.Secure<DataMart>(identity, PermissionIdentifiers.DataMartInProject.SeeRequests).Where(dm => dm.Deleted == false && DataContext.Users.Any(u => u.ID == identity.ID && u.Active && !u.Deleted));
+            var query = new GetDataMartsQuery(DataContext);
+            return query.Execute(identity).Where(dm => dm.Deleted == false && DataContext.Users.Any(u => u.ID == identity.ID && u.Active && !u.Deleted));
         }
 
         async Task<bool> CheckUploadPermission(Guid requestID, Guid datamartID)

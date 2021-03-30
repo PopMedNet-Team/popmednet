@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Dns.DTO</RootNamespace>
     <AssemblyName>Lpp.Dns.DTO</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -64,6 +64,10 @@
     <Compile Include="Activities\ActivityImportDTO.cs" />
     <Compile Include="DataMarts\DataMartAvailabilityPeriodV2DTO.cs" />
     <Compile Include="DataMarts\DataModelProcessorDTO.cs" />
+    <Compile Include="DMCS\DataMartDTO.cs" />
+    <Compile Include="DMCS\DMCSResponseDocument.cs" />
+    <Compile Include="DMCS\RoutesForRequests.cs" />
+    <Compile Include="DMCS\SetRequestDataMartStatus.cs" />
     <Compile Include="Enums\AgeRangeCalculationType.cs" />
     <Compile Include="Enums\LOINCQualitativeResultType.cs" />
     <Compile Include="Enums\LOINCResultModifierType.cs" />
@@ -134,7 +138,17 @@
     <Compile Include="Projects\ProjectDataMartUpdateDTO.cs" />
     <Compile Include="Projects\ProjectOrganizationUpdateDTO.cs" />
     <Compile Include="Projects\UpdateProjectRequestTypesDTO.cs" />
+    <Compile Include="QueryComposer\AvailableTermsRequestDTO.cs" />
     <Compile Include="QueryComposer\DistributedRegressionAnalysisCenterManifestItem.cs" />
+    <Compile Include="QueryComposer\QueryComposerDTOHelpers.cs" />
+    <Compile Include="QueryComposer\QueryComposerQueryDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerQueryHeaderDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerRequestHeaderDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponseAggregationDefinitionDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponseHeaderDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponsePropertyDefinitionConverter.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponsePropertyDefinitionDTO.cs" />
+    <Compile Include="QueryComposer\QueryComposerResponseQueryResultDTO.cs" />
     <Compile Include="QueryComposer\QueryComposerTemporalEventDTO.cs" />
     <Compile Include="QueryComposer\SectionSpecificTermDTO.cs" />
     <Compile Include="QueryComposer\TemplateTermDTO.cs" />
@@ -154,6 +168,7 @@
     <Compile Include="QueryComposer\TemplateDTO.cs" />
     <Compile Include="QueryComposer\TermDTO.cs" />
     <Compile Include="Requests\ApproveRejectResponseDTO.cs" />
+    <Compile Include="Requests\CreateCriteriaGroupTemplateDTO.cs" />
     <Compile Include="Requests\EnhancedEventLogItemDTO.cs" />
     <Compile Include="Requests\HomepageRequestDetailDTO.cs" />
     <Compile Include="Requests\HomepageRouteDetailDTO.cs" />

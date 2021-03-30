@@ -471,7 +471,7 @@ namespace Lpp.Dns.DataMart.Lib
                 byte[] buffer = new byte[0x400000];
                 int index = 0;
                 int bytesRead;
-                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) >= 0)
+                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     byte[] data = buffer;
                     if (bytesRead < data.Length)
@@ -489,12 +489,6 @@ namespace Lpp.Dns.DataMart.Lib
                     {
                         _log.Error($"{uploadIdentifier} - Unable to post response document content for: {doc.Name} (Chunk Index: {doc.CurrentChunkIndex}, ID: { doc.ID.ToString("D") }); RequestID: {doc.RequestID }, DataMartID: {doc.DataMartID.ToString("D") }.", ex);
                         throw new PostResponseDocumentContentFailed(ex);
-                    }
-
-                    if (bytesRead == 0)
-                    {
-                        //post zero content document, and do not continue.
-                        break;
                     }
 
                     index++;

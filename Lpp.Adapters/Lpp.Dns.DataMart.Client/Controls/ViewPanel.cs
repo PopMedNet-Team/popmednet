@@ -180,15 +180,12 @@ namespace Lpp.Dns.DataMart.Client.Controls
                         TransformToTreeView((string) value, (TreeView)View);
                         break;
                     case "JSON":
-                        //html = ((WebBrowser)View).Document.OpenNew(true);
-                        //html.Write(TransformJSONToHTMLTable((string)value));
-                        DataTable dt = (DataTable)TransformJSONToDataTable((string)value);
-                        ((DataGridView)View).DataSource = dt;
-                        if (dt.Rows.Count <= 0)
-                        {
-                            value = null;
-                        }
-                        lblNoResults.Visible = dt == null || dt.Rows.Count <= 0;
+
+                        this.JSON.InitializeDataSourceStream(_datasourceStream);
+                        this.JSON.Dock = DockStyle.Fill;
+                        this.JSON.AutoScroll = true;
+                        lblNoResults.Visible = this.JSON.HasResults == false;
+
                         break;     
                     default:
                         lblNoResults.Visible = false;
@@ -282,54 +279,6 @@ namespace Lpp.Dns.DataMart.Client.Controls
         #endregion // XML TreeView
 
 
-        #region JSONView
-
-        private DataTable TransformJSONToDataTable(string json)
-        {
-            try
-            {
-                var results = new DataTable();
-                var response = JObject.Parse(json);
-                foreach (var row in response["Results"][0])
-                {
-                    var datarow = results.NewRow();
-                    foreach (var jToken in row)
-                    {
-                        var jproperty = jToken as JProperty;
-                        if (jproperty == null) 
-                            continue;
-
-                        if (results.Columns[jproperty.Name] == null)
-                            results.Columns.Add(jproperty.Name, typeof(object));
-
-                        datarow[jproperty.Name] = jproperty.Value.ToObject(typeof(object));
-                    }
-                    if(!results.Columns.Contains("LowThreshold"))
-                    {
-                        results.Columns.Add("LowThreshold", typeof(string));
-                        datarow["LowThreshold"] = "False";
-                    }
-                    if (datarow["LowThreshold"].ToString() == "")
-                    { 
-                        datarow["LowThreshold"] = "False"; 
-                    }
-                    
-                    results.Rows.Add(datarow);
-                }
-
-                return results;
-            }
-            catch (Exception wx)
-            {
-                ShowView = DisplayType.FILELIST;
-                throw wx;
-            }
-            
-        }
-
-
-        #endregion
-
         // BMS: Move this outside the views, let the caller figure out how to build the values that populate the views
 
         private string TransformToHTML(string xslxml)
@@ -362,8 +311,16 @@ namespace Lpp.Dns.DataMart.Client.Controls
 
         }
 
+        System.IO.MemoryStream _datasourceStream = null;
+
         public void SetDataSourceStream(Stream value, ViewableDocumentStyle style = null)
         {
+            if(_datasourceStream != null)
+            {
+                _datasourceStream.Dispose();
+                _datasourceStream = null;
+            }
+
             switch (View.Name)
             {
                 case "PLAIN":
@@ -375,9 +332,14 @@ namespace Lpp.Dns.DataMart.Client.Controls
                     break;
 
                 case "JSON":
-                    string JSONcontent;
-                    JSONcontent = new StreamReader(value).ReadToEnd();
-                    DataSource = JSONcontent;
+
+                    _datasourceStream = new MemoryStream();
+                    value.CopyTo(_datasourceStream);
+                    value.Flush();
+                    _datasourceStream.Position = 0;
+
+                    DataSource = _datasourceStream;
+
                     break;
                     
                 case "DATASET":
@@ -489,13 +451,13 @@ namespace Lpp.Dns.DataMart.Client.Controls
                 e.Value = "<< NULL >>";
             }
 
-            if (this.JSON.Columns.Contains("LowThreshold") && StringComparer.OrdinalIgnoreCase.Equals(this.JSON.Rows[e.RowIndex].Cells["LowThreshold"].Value.ToString(), "true"))
+            if (this.JSON_OLD.Columns.Contains("LowThreshold") && StringComparer.OrdinalIgnoreCase.Equals(this.JSON_OLD.Rows[e.RowIndex].Cells["LowThreshold"].Value.ToString(), "true"))
             {
                 e.CellStyle.BackColor = Color.Yellow;
             }
-            this.JSON.Columns["LowThreshold"].Visible = false;
+            this.JSON_OLD.Columns["LowThreshold"].Visible = false;
 
-            
+
         }
 
         protected void RemoveSelectColumn()

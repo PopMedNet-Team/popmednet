@@ -46,31 +46,25 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         void Initialize(IDictionary<string, object> settings, string requestID);
 
         /// <summary>
-        /// Executes the specified request, if viewSQL is true only the response will only contain the sql for the query.
+        /// Executes the specified query, if viewSQL is true only the response will only contain the sql for the query.
         /// </summary>
-        /// <param name="request">The request criteria.</param>
+        /// <param name="query">The query criteria.</param>
         /// <param name="viewSQL">Indicates if the request should be fully executed and results returned, or just the query sql.</param>
-        /// <returns></returns>
-        QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL);
-
-        /// <summary>
-        /// Returns the output documents for the last execution of the model adapter.
-        /// </summary>
-        /// <returns></returns>
-        QueryComposerModelProcessor.DocumentEx[] OutputDocuments();
+        /// <returns>One or more query results for the specified query.</returns>
+        IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL);
 
         /// <summary>
         /// Indicates if the adapter can provide post processing for the response.
         /// </summary>
         /// <param name="response">The response that would have post processing performed on it.</param>
         /// <returns></returns>
-        bool CanPostProcess(QueryComposerResponseDTO response, out string message);
+        bool CanPostProcess(QueryComposerResponseQueryResultDTO response, out string message);
 
         /// <summary>
         /// Performs any post-processing required on the specified response.
         /// </summary>
         /// <param name="response"></param>
-        void PostProcess(QueryComposerResponseDTO response);
+        void PostProcess(QueryComposerResponseQueryResultDTO response);
 
         /// <summary>
         /// Executes the current queries to generate Patient Identifier Lists and save to the specified file paths.

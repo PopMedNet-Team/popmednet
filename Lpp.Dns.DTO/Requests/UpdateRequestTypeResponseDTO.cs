@@ -23,6 +23,6 @@ namespace Lpp.Dns.DTO
         /// Gets or sets the template associated with the request type.
         /// </summary>
         [DataMember]
-        public TemplateDTO Template { get; set; }
+        public IEnumerable<TemplateDTO> Queries { get; set; }
     }
 }

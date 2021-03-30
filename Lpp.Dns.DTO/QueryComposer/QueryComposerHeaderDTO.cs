@@ -7,52 +7,43 @@ using System.Threading.Tasks;
 
 namespace Lpp.Dns.DTO.QueryComposer
 {
-    /// <summary>
-    /// Query composer Header
-    /// </summary>
     [DataContract]
-    public class QueryComposerHeaderDTO
+    public abstract class QueryComposerHeaderDTO
     {
+        /// <summary>
+        /// Gets or sets the ID.
+        /// </summary>
+        [DataMember]
+        public virtual Guid ID { get; set; }
         /// <summary>
         /// Gets or sets the Name
         /// </summary>
         [DataMember]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
         /// <summary>
         /// Gets or set the Description
         /// </summary>
         [DataMember]
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
         /// <summary>
         /// Gets or sets the url to view the request criteria. This will typically point to a site that will provide the request details in html format.
         /// </summary>
         [DataMember]
-        public string ViewUrl { get; set; }
-        /// <summary>
-        /// Gets or sets the grammar.
-        /// </summary>
-        [DataMember]
-        public string Grammar { get; set; }
+        public virtual string ViewUrl { get; set; }
         /// <summary>
         /// Gets or sets the Priority
         /// </summary>
         [DataMember]
-        public Lpp.Dns.DTO.Enums.Priorities? Priority { get; set; }
+        public virtual Enums.Priorities? Priority { get; set; }
         ///<summary>
         /// Due Date
         /// </summary>
         [DataMember]
-        public DateTime? DueDate { get; set; }
-        /// <summary>
-        /// Gets or sets the sub type of the request.
-        /// </summary>
-        [DataMember]
-        public Enums.QueryComposerQueryTypes? QueryType { get; set; }
-
+        public virtual DateTimeOffset? DueDate { get; set; }
         /// <summary>
         /// Gets or sets the request submission date.
         /// </summary>
         [DataMember]
-        public DateTime? SubmittedOn { get; set; }
+        public virtual DateTimeOffset? SubmittedOn { get; set; }
     }
 }

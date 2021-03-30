@@ -2586,6 +2586,16 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Response/ExportAllAsZip' + params, doNotHandleFail);
             };
+            Response.ExportResponse = function (requestID, format, doNotHandleFail) {
+                var params = '';
+                if (requestID != null)
+                    params += '&requestID=' + requestID;
+                if (format != null)
+                    params += '&format=' + encodeURIComponent(format);
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Response/ExportResponse' + params, doNotHandleFail);
+            };
             Response.GetTrackingTableForAnalysisCenter = function (requestID, doNotHandleFail) {
                 var params = '';
                 if (requestID != null)
@@ -3130,6 +3140,9 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('RequestTypes/GetTermsFilteredBy' + params, doNotHandleFail);
             };
+            RequestTypes.TermsByAdapterAndDetail = function (details, doNotHandleFail) {
+                return Helpers.PostAPIValue('RequestTypes/TermsByAdapterAndDetail', details, doNotHandleFail);
+            };
             RequestTypes.UpdateRequestTypeTerms = function (updateInfo, doNotHandleFail) {
                 return Helpers.PostAPIValue('RequestTypes/UpdateRequestTypeTerms', updateInfo, doNotHandleFail);
             };
@@ -3239,6 +3252,42 @@ var Dns;
             };
             Templates.SaveCriteriaGroup = function (details, doNotHandleFail) {
                 return Helpers.PostAPIValue('Templates/SaveCriteriaGroup', details, doNotHandleFail);
+            };
+            Templates.ListHiddenTerms = function (ID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (ID != null)
+                    params += '&ID=' + ID;
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Templates/ListHiddenTerms' + params, doNotHandleFail);
+            };
+            Templates.ListHiddenTermsByRequestType = function (id, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
+                var params = '';
+                if (id != null)
+                    params += '&id=' + id;
+                if ($filter)
+                    params += '&$filter=' + $filter;
+                if ($select)
+                    params += '&$select=' + $select;
+                if ($orderby)
+                    params += '&$orderby=' + $orderby;
+                if ($skip)
+                    params += '&$skip=' + $skip;
+                if ($top)
+                    params += '&$top=' + $top;
+                if (params.length > 0)
+                    params = '?' + params.substr(1);
+                return Helpers.GetAPIResult('Templates/ListHiddenTermsByRequestType' + params, doNotHandleFail);
             };
             Templates.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';

@@ -121,6 +121,8 @@ namespace Lpp.Dns.DataMart.Client
             tlpResponseDetails.CellPaint += tlpRequestDetails_CellPaint;
 
             tlpHeaderDetails.BackColor = Color.Transparent;
+
+            tlpResponseDetails.PerformLayout();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -648,45 +650,91 @@ namespace Lpp.Dns.DataMart.Client
             this.Close();
         }
 
-        private DataTable TransformJSONToDataTable(string json)
+        const string LowThresholdColumnName = "LowThreshold";
+        DataSet TransformJSONToDataSet(string json)
         {
-            try
+            DataSet ds = new DataSet();
+
+            var serializationSettings = new Newtonsoft.Json.JsonSerializerSettings();
+            serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
+            serializationSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
+            Newtonsoft.Json.JsonSerializer serializer = Newtonsoft.Json.JsonSerializer.Create(serializationSettings);
+
+            JObject response = JObject.Parse(json);
+            if(response.Properties().Any(p => string.Equals("SchemaVersion", p.Name)))
             {
-                var results = new DataTable();
-                var response = JObject.Parse(json);
-                foreach (var row in response["Results"][0])
+
+                var multiQueryResponse = response.ToObject<DTO.QueryComposer.QueryComposerResponseDTO>(serializer);
+
+                foreach(var queryResponse in multiQueryResponse.Queries)
                 {
-                    var datarow = results.NewRow();
-                    foreach (var jToken in row)
+                    var table = new DataTable();
+                    table.TableName = queryResponse.Name;
+
+                    foreach(var property in queryResponse.Properties)
                     {
-                        var jproperty = jToken as JProperty;
-                        if (jproperty == null) continue;
-                        if (results.Columns[jproperty.Name] == null)
-                            results.Columns.Add(jproperty.Name, typeof(string));
-                        datarow[jproperty.Name] = jproperty.Value.ToString();
-                    }
-                    if (results.Columns.Contains("LowThreshold"))
-                    {
-                        results.Columns.Remove("LowThreshold");
+                        if (property.As == LowThresholdColumnName)
+                            continue;
+
+                        var column = new DataColumn();
+                        column.ColumnName = property.As;
+                        column.DataType = Nullable.GetUnderlyingType(property.AsType()) ?? property.AsType();
+                        column.Caption = property.As;
+                        table.Columns.Add(column);
                     }
 
-                    results.Rows.Add(datarow);
+                    table.BeginLoadData();
+                    foreach(var row in queryResponse.Results.First())
+                    {
+                        table.LoadDataRow(row.Where(r => r.Key != LowThresholdColumnName).Select(r => r.Value == null ? DBNull.Value : r.Value).ToArray(), true);
+                    }
+                    table.EndLoadData();
+
+                    ds.Tables.Add(table);
                 }
 
-                return results;
             }
-            catch (Exception wx)
+            else if(response.Properties().Any(p => string.Equals("Results", p.Name)))
             {
-                throw wx;
+                var singleQueryResponse = response.ToObject<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>(serializer);
+
+                var table = new DataTable();
+                table.TableName = string.IsNullOrEmpty(singleQueryResponse.Name) ? "Query 1" : singleQueryResponse.Name;
+
+                foreach (var property in singleQueryResponse.Properties)
+                {
+                    if (property.As == LowThresholdColumnName)
+                        continue;
+
+                    var column = new DataColumn();
+                    column.ColumnName = property.As;
+                    column.DataType = Nullable.GetUnderlyingType(property.AsType()) ?? property.AsType();
+                    column.Caption = property.As;
+                    table.Columns.Add(column);
+                }
+
+                table.BeginLoadData();
+                foreach (var row in singleQueryResponse.Results.First())
+                {
+                    table.LoadDataRow(row.Where(r => r.Key != LowThresholdColumnName).Select(r => r.Value == null ? DBNull.Value : r.Value).ToArray(), true);
+                }
+                table.EndLoadData();
+
+                ds.Tables.Add(table);
+
+            }
+            else
+            {
+                throw new NotSupportedException("Unable to translate json into table format.");
             }
 
+            return ds;
         }
 
         private void btnExportResults_Click(object sender, EventArgs e)
         {
             try
             {
-                DataTable tableToExport = null;
 
                 IEnumerable<Document> responseDocuments;
 
@@ -695,7 +743,7 @@ namespace Lpp.Dns.DataMart.Client
                 else
                     responseDocuments = Processor.Response(RequestId);
 
-                DataSet _dataSet = new DataSet();
+                DataSet dataSet = new DataSet();
                 foreach (Lpp.Dns.DataMart.Model.Document responseDocument in responseDocuments)
                 {
                     Stream contentStream = null;
@@ -714,13 +762,13 @@ namespace Lpp.Dns.DataMart.Client
 
                             if (responseDocument.MimeType != "application/json")
                             {
-                                _dataSet.ReadXml(contentStream);
+                                dataSet.ReadXml(contentStream);
                                 contentStream.Close();
                             }
                             else
                             {
                                 string content = new StreamReader(contentStream).ReadToEnd();
-                                tableToExport = TransformJSONToDataTable(content);
+                                dataSet = TransformJSONToDataSet(content);
                             }
                             break;
                         }
@@ -731,30 +779,31 @@ namespace Lpp.Dns.DataMart.Client
                     }
                 }
 
-                if (_dataSet != null && _dataSet.Tables.Count > 0)
-                    tableToExport = _dataSet.Tables[0];
-
-
-                if (tableToExport == null || tableToExport.Rows.Count == 0)
+                if (dataSet == null || dataSet.Tables.Count < 1 || dataSet.Tables.Cast<DataTable>().Sum(tbl => tbl.Rows.Count) == 0)
                 {
                     MessageBox.Show("No result data available for export.", "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 //Show Message To Get The File Name to Save Exported Content.
-                string FileName = string.Empty;
+                string filename = string.Empty;
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.Title = "Save file as...";
-                dialog.Filter = "Excel File (*.xls)|*.xls|CSV File (*.txt)|*.txt";
+                dialog.Filter = "Excel File (*.xlsx)|*.xlsx|CSV File (*.csv)|*.csv";
                 dialog.RestoreDirectory = true;
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    FileName = dialog.FileName;
+                    filename = dialog.FileName;
                     ExportData.ExportFormat fileFormat = (dialog.FilterIndex == 1) ? ExportData.ExportFormat.Excel : ExportData.ExportFormat.CSV;
 
                     ExportData objExport = new ExportData();
-                    objExport.ExportDetails(tableToExport, fileFormat, FileName);
-                    MessageBox.Show(string.Format("Result successfully exported to file {0}.", FileName), "Results Exported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string exportedFilename = objExport.ExportDetails(dataSet, fileFormat, filename);
+                    string exportMessage = $"Results successfully exported.{Environment.NewLine + Environment.NewLine}Export file: {exportedFilename}";
+                    if(exportedFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    {
+                        exportMessage += Environment.NewLine + Environment.NewLine + "** Please note that multi-query CSV exports will be saved as a Zip file with the specified filename.  Each query result will be saved to a separate file using the name of the cohort within the zip file. **";
+                    }
+                    MessageBox.Show(exportMessage, "Results Exported", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (ModelProcessorError ex)
@@ -1300,15 +1349,39 @@ namespace Lpp.Dns.DataMart.Client
                         var serializationSettings = new Newtonsoft.Json.JsonSerializerSettings();
                         serializationSettings.Converters.Add(new DTO.QueryComposer.QueryComposerResponsePropertyDefinitionConverter());
 
-                        var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>(json, serializationSettings);
-                        foreach (IEnumerable<Dictionary<string, object>> results in obj.Results)
+                        DTO.QueryComposer.QueryComposerResponseQueryResultDTO queryObj = null;
+                        try
                         {
-                            object val = null;
-                            if (results.First().TryGetValue("SQL", out val))
+                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>(json, serializationSettings);
+                            var queries = obj.Queries.ToArray();
+                            for (var i = 0; i < queries.Length; i++)
                             {
-                                sql.Add((string)val);
+                                if (queries[i].Results == null)
+                                    continue;
+
+                                foreach (var table in queries[i].Results)
+                                {
+                                    var row = table.First();
+                                    string queryName = Lpp.Utilities.ObjectEx.ToStringEx(row["QueryName"]);
+                                    string querySQL = Lpp.Utilities.ObjectEx.ToStringEx(row["SQL"]);
+                                    sql.Add($"### Query { i + 1 }: { queryName } ###{ Environment.NewLine }{querySQL}");
+                                }
                             }
                         }
+                        catch
+                        {
+                            queryObj = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>(json, serializationSettings);
+                            foreach (IEnumerable<Dictionary<string, object>> results in queryObj.Results)
+                            {
+                                object val = null;
+                                if (results.First().TryGetValue("SQL", out val))
+                                {
+                                    sql.Add((string)val);
+                                }
+                            }
+                        }
+                        
+                        
                     }
                     contentStream.Close();
                 }

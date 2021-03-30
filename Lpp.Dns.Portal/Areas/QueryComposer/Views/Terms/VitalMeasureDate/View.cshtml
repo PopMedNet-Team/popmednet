@@ -1,13 +1,13 @@
 ﻿@using Lpp.QueryComposer
 <script type="text/html" id="v_@ModelTermsFactory.VitalsMeasureDateID">
-    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
     <div class="row">
         <div class="col-sm-2 bold">Vital Measure Observation Period:</div>
         <div class="col-sm-4">
-            Start:&nbsp;<span data-bind="text: Values().Start() ? moment(Values().Start()).format('MM/DD/YYYY') : ''"></span>
+            Start:&nbsp;<span data-bind="text: Values.Start ? moment(Values.Start).format('MM/DD/YYYY') : ''"></span>
         </div>
         <div class="col-sm-4">
-            End:&nbsp;<span data-bind="text: Values().End() ? moment(Values().End()).format('MM/DD/YYYY') : ''"></span>
+            End:&nbsp;<span data-bind="text: Values.End ? moment(Values.End).format('MM/DD/YYYY') : ''"></span>
         </div>
     </div>
 </script>

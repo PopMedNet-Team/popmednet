@@ -5,10 +5,13 @@ var PMNTermValidators;
             var startDate = valueAccessor().values.Start;
             var endDate = valueAccessor().values.End;
             var isValid = ko.observable(true);
-            var uniqueID = Constants.Guid.newGuid();
             var errorMessage = "<br><small>Please enter a properly formatted (mm/dd/yyyy) start or end date range</small>";
             var jqElement = $(element);
-            jqElement.attr('id', uniqueID);
+            var uniqueID = jqElement.attr('id');
+            if (!uniqueID || uniqueID == '') {
+                uniqueID = Constants.Guid.newGuid();
+                jqElement.attr('id', uniqueID);
+            }
             var validate = function () {
                 if (startDate() == null && endDate() == null) {
                     errorMessage = "<br><small>Please enter a properly formatted (mm/dd/yyyy) start or end date range</small>";

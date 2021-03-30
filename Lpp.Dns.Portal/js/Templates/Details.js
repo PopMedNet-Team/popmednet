@@ -1,5 +1,5 @@
 /// <reference path="../_rootlayout.ts" />
-/// <reference path="../../areas/querycomposer/js/edit.ts" />
+///// <reference path="../../areas/querycomposer/js/edit.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,11 +19,10 @@ var Templates;
     (function (Details) {
         var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
-            function ViewModel(bindingControl, screenPermissions, templateData, permissionList, templatePermissions, securityGroupTree, globalPermission) {
+            function ViewModel(bindingControl, screenPermissions, templateData, permissionList, templatePermissions, securityGroupTree, globalPermission, visualTerms, criteriaGroupTemplates) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 _this.GlobalPermissionCheck = (globalPermission == undefined || null ? { CurrentUserHasGlobalPermission: false, SecurityGroupExistsForGlobalPermission: false } : globalPermission);
                 _this.Template = new Dns.ViewModels.TemplateViewModel(templateData);
-                Global.Helpers.GetEnumString(Dns.Enums.TemplateTypesTranslation, _this.Template.Type());
                 _this.TemplateAcls = ko.observableArray(templatePermissions.map(function (item) {
                     return new Dns.ViewModels.AclTemplateViewModel(item);
                 }));
@@ -34,20 +33,30 @@ var Templates;
                     }
                 ], Dns.ViewModels.AclTemplateViewModel);
                 _this.WatchTitle(_this.Template.Name, "Query Composer Template: ");
-                _this.Template.QueryType.subscribe(function (value) {
-                    Plugins.Requests.QueryBuilder.MDQ.vm.Request.Header.QueryType(value);
-                    Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList([], value, []);
+                var termsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
+                _this.QueryDesigner = new Plugins.Requests.QueryBuilder.QueryEditorHost({
+                    IsTemplateEdit: true,
+                    Templates: [_this.Template],
+                    RequestTypeModelIDs: null,
+                    RequestTypeTerms: null,
+                    TemplateType: Dns.Enums.TemplateTypes.CriteriaGroup,
+                    VisualTerms: visualTerms,
+                    CriteriaGroupTemplates: criteriaGroupTemplates,
+                    HiddenTerms: [],
+                    SupportsMultiQuery: ko.observable(false),
+                    TermsObserver: termsObserver
                 });
+                _this.CanSave = ko.observable(_this.Template.CreatedByID() == User.ID || _this.HasPermission(PMNPermissions.Templates.Edit));
                 return _this;
             }
             ViewModel.prototype.Save = function () {
-                var _this = this;
                 if (!_super.prototype.Validate.call(this))
                     return;
                 if (this.Template.Name().length == 0) {
                     Global.Helpers.ShowAlert("Required Field", "<p><i>Template Name</i> is a required field and may not be left blank.</p>");
                     return;
                 }
+                var deferred = null;
                 if (this.TemplateAcls().length == 0) {
                     if ((this.GlobalPermissionCheck.SecurityGroupExistsForGlobalPermission == false) && (this.GlobalPermissionCheck.CurrentUserHasGlobalPermission == false)) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have added at least one security group to the Permissions tab to be able to administer this template.</p>");
@@ -55,7 +64,7 @@ var Templates;
                     }
                     else {
                         if ((this.GlobalPermissionCheck.SecurityGroupExistsForGlobalPermission == true) && (this.GlobalPermissionCheck.CurrentUserHasGlobalPermission == false)) {
-                            Global.Helpers.ShowConfirm("Validation Error", "<p>You do not have permission to edit this template, you should add at least one security group to the Permissions tab if applicable. <br>Would you like to save anyway?</p>").done(function () { _this.VerifiedSave(); });
+                            deferred = Global.Helpers.ShowConfirm("Validation Error", "<p>You do not have permission to edit this template, you should add at least one security group to the Permissions tab if applicable. <br>Would you like to save anyway?</p>");
                             return;
                         }
                         else {
@@ -64,29 +73,26 @@ var Templates;
                         }
                     }
                 }
-                this.VerifiedSave();
-            };
-            ViewModel.prototype.VerifiedSave = function () {
-                var _this = this;
-                if (!_super.prototype.Validate.call(this))
-                    return;
-                if (this.Template.Type() == Dns.Enums.TemplateTypes.CriteriaGroup) {
-                    this.Template.Data(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.Where.Criteria()[0].toData()));
+                if (deferred == null) {
+                    deferred = $.Deferred();
+                    deferred.resolve();
                 }
-                else {
-                    this.Template.Data(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
-                }
-                var data = this.Template.toData();
-                Dns.WebApi.Templates.InsertOrUpdate([data]).done(function (results) {
-                    var template = results[0];
-                    _this.Template.ID(template.ID);
-                    _this.Template.Timestamp(template.Timestamp);
-                    window.history.replaceState(null, window.document.title, "/templates/details?ID=" + template.ID);
-                    var templateAcls = _this.TemplateAcls().map(function (a) {
-                        a.TemplateID(_this.Template.ID());
+                var self = this;
+                deferred.done(function () {
+                    self.Template.Data(JSON.stringify(self.QueryDesigner.Queries()[0].Where.Criteria()[0].toData()));
+                    var data = self.Template.toData();
+                    var templateID = self.Template.ID();
+                    var templateAcls = self.TemplateAcls().map(function (a) {
+                        a.TemplateID(templateID);
                         return a.toData();
                     });
-                    Dns.WebApi.Security.UpdateTemplatePermissions(templateAcls).done(function () {
+                    Dns.WebApi.Security.UpdateTemplatePermissions(templateAcls)
+                        .then(function () {
+                        return Dns.WebApi.Templates.Update([data]);
+                    })
+                        .done(function (results) {
+                        self.Template.Timestamp(results[0].Timestamp);
+                        window.history.replaceState(null, window.document.title, "/templates/details?ID=" + results[0].ID);
                         Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>");
                     });
                 });
@@ -95,8 +101,9 @@ var Templates;
                 window.location.href = "/templates";
             };
             ViewModel.prototype.Delete = function () {
+                var templateID = this.Template.ID();
                 Global.Helpers.ShowConfirm("Delete Confirmation", "<p>Are you sure you wish to delete this Template?</p>").done(function () {
-                    Dns.WebApi.Templates.Delete([Details.vm.Template.ID()]).done(function () {
+                    Dns.WebApi.Templates.Delete([templateID]).done(function () {
                         window.location.href = "/templates";
                     });
                 });
@@ -104,50 +111,15 @@ var Templates;
             return ViewModel;
         }(Global.PageViewModel));
         Details.ViewModel = ViewModel;
-        function GetVisualTerms() {
-            var d = $.Deferred();
-            $.ajax({ type: "GET", url: '/QueryComposer/VisualTerms', dataType: "json" })
-                .done(function (result) {
-                d.resolve(result);
-            }).fail(function (e, description, error) {
-                d.reject(e);
-            });
-            return d;
-        }
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.Templates.Get(id), id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Templates]), Dns.WebApi.Security.GetTemplatePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Templates.GetGlobalTemplatePermissions(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), GetVisualTerms()).done(function (templates, screenPermissions, permissionList, templatePermissions, globalPermissions, securityGroupTree, visualTerms) {
-                var template = templates == null ? {
-                    ID: null,
-                    Name: '',
-                    Description: '',
-                    CreatedBy: User.AuthInfo.UserName,
-                    CreatedByID: User.ID,
-                    CreatedOn: moment().utc().toDate(),
-                    Data: '{"Header":{},"Where":{"Criteria":[{"Name":"Group 1","Criteria":[],"Terms":[],"ObservationPeriod":{}}]}}',
-                    Timestamp: null,
-                    Type: Dns.Enums.TemplateTypes.Request,
-                    Notes: ''
-                } : templates[0];
-                var json = JSON.parse(((template.Data || '').trim() != '') ? template.Data : '{"Header":{},"Where":{"Criteria":[{"Name":"Group 1","Criteria":[],"Terms":[],"ObservationPeriod":{}}]}}');
-                var jTemplate;
-                if (template.Type == Dns.Enums.TemplateTypes.CriteriaGroup) {
-                    jTemplate = {
-                        Header: { Name: null, Description: null, ViewUrl: null, Grammar: null, SubmittedOn: null },
-                        Where: { Criteria: [json] },
-                        Select: { Fields: [json] },
-                        TemporalEvents: []
-                    };
-                }
-                else {
-                    jTemplate = json;
-                }
-                //may need to be changed to Plugins.Requests.QueryBuilder.Edit.init(..
-                Plugins.Requests.QueryBuilder.MDQ.init(jTemplate, [], null, null, '', [], null, visualTerms, true, template.ID);
+            $.when(id == null ? null : Dns.WebApi.Templates.Get(id), id == null ? null : Dns.WebApi.Templates.GetPermissions([id], [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Templates]), Dns.WebApi.Security.GetTemplatePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Templates.GetGlobalTemplatePermissions(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Plugins.Requests.QueryBuilder.MDQ.TermProvider.GetVisualTerms(), Dns.WebApi.Templates.CriteriaGroups()).done(function (templates, screenPermissions, permissionList, templatePermissions, globalPermissions, securityGroupTree, visualTerms, criteriaGroupTemplates) {
+                var template = templates[0];
                 $(function () {
                     var bindingControl = $('#Content');
-                    Details.vm = new ViewModel(bindingControl, screenPermissions || [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0]);
+                    Details.vm = new ViewModel(bindingControl, screenPermissions || [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0], visualTerms, criteriaGroupTemplates);
                     ko.applyBindings(Details.vm, bindingControl[0]);
+                    Details.vm.QueryDesigner.onKnockoutBind();
                 });
             });
         }

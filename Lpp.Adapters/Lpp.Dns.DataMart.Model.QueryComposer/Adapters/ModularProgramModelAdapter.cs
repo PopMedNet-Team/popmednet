@@ -44,14 +44,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ModularProgram
             }
         }
 
-        public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<DTO.QueryComposer.QueryComposerResponseQueryResultDTO> Execute(DTO.QueryComposer.QueryComposerQueryDTO query, bool viewSQL)
         {
             //modular program doesn't actually upload anything.
-            throw new NotImplementedException();
-        }
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
             throw new NotImplementedException();
         }
 

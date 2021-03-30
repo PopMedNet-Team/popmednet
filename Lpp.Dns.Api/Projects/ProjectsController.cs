@@ -254,8 +254,6 @@ namespace Lpp.Dns.Api.Projects
                                         Name = rt.RequestType.Name,
                                         PostProcess = rt.RequestType.PostProcess,
                                         RequiresProcessing = rt.RequestType.RequiresProcessing,
-                                        Template = rt.RequestType.Template.Name,
-                                        TemplateID = rt.RequestType.TemplateID,
                                         Timestamp = rt.RequestType.Timestamp,
                                         Workflow = rt.RequestType.Workflow.Name,
                                         WorkflowID = rt.RequestType.WorkflowID

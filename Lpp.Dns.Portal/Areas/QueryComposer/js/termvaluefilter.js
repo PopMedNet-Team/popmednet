@@ -282,6 +282,20 @@ var Plugins;
                         enumerable: false,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "FileUploadID", {
+                        get: function () {
+                            return '2F60504D-9B2F-4DB1-A961-6390117D3CAC';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "ModularProgramID", {
+                        get: function () {
+                            return 'A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
                     Terms.Compare = function (a, b) {
                         if ((a == null && b != null) || (a != null && b == null))
                             return false;
@@ -289,18 +303,171 @@ var Plugins;
                             return true;
                         return a.toLowerCase() === b.toLowerCase();
                     };
+                    /** Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria. */
+                    Terms.GroupedTerms = [
+                        //Condition
+                        Terms.ConditionID,
+                        //HCPCS Procedure Codes
+                        Terms.HCPCSProcedureCodesID,
+                        //Combined Diagnosis Codes
+                        Terms.CombinedDiagnosisCodesID,
+                        //ICD9 Diagnosis Codes 3 digit
+                        Terms.ICD9Diagnosis3digitID,
+                        //ICD9 Diagnosis Codes 4 digit
+                        Terms.ICD9Diagnosis4digitID,
+                        //ICD9 Diagnosis Codes 5 digit
+                        Terms.ICD9Diagnosis5digitID,
+                        //ICD9 Procedure Codes 3 digit
+                        Terms.ICD9Procedure3digitID,
+                        //ICD9 Procedure Codes 4 digit
+                        Terms.ICD9Procedure4digitID,
+                        //ESP Combined Diagnosis Codes
+                        Terms.ESPCombinedDiagnosisCodesID,
+                        //Drug Class
+                        Terms.DrugClassID,
+                        //Drug Name
+                        Terms.DrugNameID,
+                        //Visits
+                        Terms.VisitsID,
+                        //Age Range
+                        Terms.AgeRangeID,
+                        //Sex
+                        Terms.SexID,
+                        //Code Metric
+                        Terms.CodeMetricID,
+                        //Coverage
+                        Terms.CoverageID,
+                        //Criteria
+                        Terms.CriteriaID,
+                        //Dispensing Metric
+                        Terms.DispensingMetricID,
+                        //Ethnicity
+                        Terms.EthnicityID,
+                        //Facility
+                        Terms.FacilityID,
+                        //Height
+                        Terms.HeightID,
+                        //Hispanic
+                        Terms.HispanicID,
+                        //Observation Period
+                        Terms.ObservationPeriodID,
+                        //Quarter Year
+                        Terms.QuarterYearID,
+                        //Race
+                        Terms.RaceID,
+                        //Setting
+                        Terms.SettingID,
+                        //Tobacco Use
+                        Terms.TobaccoUseID,
+                        //Weight
+                        Terms.WeightID,
+                        //Year
+                        Terms.YearID,
+                        //Zip Code
+                        Terms.ZipCodeID,
+                        //Vitals Measure Date
+                        Terms.VitalsMeasureDateID,
+                        // Procedure Codes
+                        Terms.ProcedureCodesID,
+                        //TrialID
+                        Terms.TrialID,
+                        //PatientReportedOutcome
+                        Terms.PatientReportedOutcomeID,
+                        // LOINC Codes
+                        Terms.LOINCCodesID,
+                        //Prescribing Terms
+                        Terms.PrescribingCodesID
+                    ];
+                    /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
+                    Terms.NonCodeGroupedTerms = [
+                        //Visits
+                        Terms.VisitsID,
+                        //Age Range
+                        Terms.AgeRangeID,
+                        //Sex
+                        Terms.SexID,
+                        //Code Metric
+                        Terms.CodeMetricID,
+                        //Coverage
+                        Terms.CoverageID,
+                        //Criteria
+                        Terms.CriteriaID,
+                        //Dispensing Metric
+                        Terms.DispensingMetricID,
+                        //Ethnicity
+                        Terms.EthnicityID,
+                        //Facility
+                        Terms.FacilityID,
+                        //Height
+                        Terms.HeightID,
+                        //Hispanic
+                        Terms.HispanicID,
+                        //Observation Period
+                        Terms.ObservationPeriodID,
+                        //Quarter Year
+                        Terms.QuarterYearID,
+                        //Race
+                        Terms.RaceID,
+                        //Setting
+                        Terms.SettingID,
+                        //Tobacco Use
+                        Terms.TobaccoUseID,
+                        //Weight
+                        Terms.WeightID,
+                        //Year
+                        Terms.YearID,
+                        //Zip Code
+                        Terms.ZipCodeID,
+                        //Vitals Measure Date
+                        Terms.VitalsMeasureDateID,
+                        //TrialID
+                        Terms.TrialID,
+                        //PatientReportedOutcome
+                        Terms.PatientReportedOutcomeID
+                    ];
+                    /** DataChecker Procedure Code Types */
+                    Terms.DataCheckerProcedureCodeTypes = [
+                        { text: 'Any', value: '' },
+                        { text: 'ICD-9-CM', value: '09' },
+                        { text: 'ICD-10-CM', value: '10' },
+                        { text: 'ICD-11-CM', value: '11' },
+                        { text: 'CPT Category II', value: 'C2' },
+                        { text: 'CPT Category III', value: 'C3' },
+                        { text: 'CPT-4 (i.e., HCPCS Level I)', value: 'C4' },
+                        { text: 'HCPCS (i.e., HCPCS Level II)', value: 'HC' },
+                        { text: 'HCPCS Level III', value: 'H3' },
+                        { text: 'LOINC', value: 'LC' },
+                        { text: 'Local Homegrown', value: 'LO' },
+                        { text: 'NDC', value: 'ND' },
+                        { text: 'Revenue', value: 'RE' },
+                        { text: 'Other', value: 'OT' }
+                    ];
+                    /** DataChecker Diagnosis Code Types */
+                    Terms.DataCheckerDiagnosisCodeTypes = [
+                        { text: 'Any', value: '' },
+                        { text: 'ICD-9-CM', value: '09' },
+                        { text: 'ICD-10-CM', value: '10' },
+                        { text: 'ICD-11-CM', value: '11' },
+                        { text: 'SNOMED CT', value: 'SM' },
+                        { text: 'Other', value: 'OT' }
+                    ];
                     return Terms;
                 }());
                 MDQ.Terms = Terms;
                 var TermValueFilter = /** @class */ (function () {
                     function TermValueFilter(models) {
                         var _this = this;
-                        this._models = models || [];
-                        this._containsPCORnet = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models, TermValueFilter.PCORnetModelID); });
-                        this._containsSummaryTables = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models, TermValueFilter.SummaryTablesModelID); });
-                        this._containsESP = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models, TermValueFilter.ESPModelID); });
-                        this._containsDataChecker = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models, TermValueFilter.DataCheckerModelID); });
-                        this._containsModularProgram = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models, TermValueFilter.ModularProgramModelID); });
+                        this._models = ko.observableArray(models || []);
+                        this._containsPCORnet = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models(), TermValueFilter.PCORnetModelID); });
+                        this._containsSummaryTables = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models(), TermValueFilter.SummaryTablesModelID); });
+                        this._containsESP = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models(), TermValueFilter.ESPModelID); });
+                        this._containsDataChecker = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models(), TermValueFilter.DataCheckerModelID); });
+                        this._containsModularProgram = ko.pureComputed(function () { return TermValueFilter.ContainsModel(_this._models(), TermValueFilter.ModularProgramModelID); });
+                        this.SexValues = ko.pureComputed(this.getSexValues.bind(this));
+                        this.SettingsValues = ko.pureComputed(this.getSettingsValues.bind(this));
+                        this.RaceValues = ko.pureComputed(this.getRaceValues.bind(this));
+                        this.RaceEthnicityValues = ko.pureComputed(this.getRaceEthnicityValues.bind(this));
+                        this.AgeRangeStratifications = ko.pureComputed(this.getAgeRangeStratifications.bind(this));
                     }
                     Object.defineProperty(TermValueFilter, "PCORnetModelID", {
                         get: function () {
@@ -352,7 +519,11 @@ var Plugins;
                         configurable: true
                     });
                     TermValueFilter.ContainsModel = function (models, id) {
-                        return ko.utils.arrayFirst(models, function (i) { return i.toLowerCase() == id; }) != null;
+                        for (var i = 0; i < models.length; i++) {
+                            if (Constants.Guid.compare(models[i], id) == 0)
+                                return true;
+                        }
+                        return false;
                     };
                     TermValueFilter.GetTranslations = function (translations, values) {
                         var selected = [];
@@ -366,19 +537,22 @@ var Plugins;
                         }
                         return selected;
                     };
+                    TermValueFilter.prototype.UpdateModels = function (models) {
+                        this._models(models || []);
+                    };
                     /*Indicates if the models set for the helper contain the specified model.*/
                     TermValueFilter.prototype.HasModel = function (modelID) {
-                        return TermValueFilter.ContainsModel(this._models, modelID);
+                        return TermValueFilter.ContainsModel(this._models(), modelID);
                     };
                     /* Returns the valid values based on the models specified in initiation */
-                    TermValueFilter.prototype.SexValues = function () {
+                    TermValueFilter.prototype.getSexValues = function () {
                         var sexTranslations = [];
                         //Dont include MaleAndFemaleAggregated in the list of Sex Values
                         Dns.Enums.SexStratificationsTranslation.forEach(function (s) {
                             if (s.value != Dns.Enums.SexStratifications.MaleAndFemaleAggregated)
                                 sexTranslations.push(s);
                         });
-                        if (this._models.length == 0)
+                        if (this._models().length == 0)
                             return sexTranslations;
                         if (this._containsSummaryTables() == true)
                             return TermValueFilter.GetTranslations(Dns.Enums.SexStratificationsTranslation, [Dns.Enums.SexStratifications.FemaleOnly, Dns.Enums.SexStratifications.MaleOnly, Dns.Enums.SexStratifications.MaleAndFemale, Dns.Enums.SexStratifications.MaleAndFemaleAggregated, Dns.Enums.SexStratifications.Unknown]);
@@ -389,24 +563,24 @@ var Plugins;
                         return sexTranslations;
                     };
                     /* Returns the valid values based on the models specified in initiation */
-                    TermValueFilter.prototype.SettingsValues = function () {
-                        if (this._models.length == 0)
+                    TermValueFilter.prototype.getSettingsValues = function () {
+                        if (this._models().length == 0)
                             return Dns.Enums.SettingsTranslation;
                         var translations = [];
-                        if (this._containsSummaryTables() || this._containsPCORnet()) {
-                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED]).forEach(function (i) { return translations.push(i); });
+                        if (this._containsSummaryTables() && this._containsPCORnet()) {
+                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.AN, Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach(function (i) { return translations.push(i); });
                         }
                         if (this._containsSummaryTables()) {
-                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.AN]).forEach(function (i) { return translations.push(i); });
+                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.AN]).forEach(function (i) { return translations.push(i); });
                         }
                         if (this._containsPCORnet()) {
-                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach(function (i) { return translations.push(i); });
+                            TermValueFilter.GetTranslations(Dns.Enums.SettingsTranslation, [Dns.Enums.Settings.IP, Dns.Enums.Settings.AV, Dns.Enums.Settings.ED, Dns.Enums.Settings.EI, Dns.Enums.Settings.IS, Dns.Enums.Settings.OS, Dns.Enums.Settings.IC, Dns.Enums.Settings.OA, Dns.Enums.Settings.NI, Dns.Enums.Settings.UN, Dns.Enums.Settings.OT]).forEach(function (i) { return translations.push(i); });
                         }
                         return translations;
                     };
                     /* Returns the valid values based on the models specified in initiation */
-                    TermValueFilter.prototype.RaceValues = function () {
-                        if (this._models.length == 0 || this._containsPCORnet())
+                    TermValueFilter.prototype.getRaceValues = function () {
+                        if (this._models().length == 0 || this._containsPCORnet())
                             return Dns.Enums.RaceTranslation;
                         if (this._containsSummaryTables()) {
                             return TermValueFilter.GetTranslations(Dns.Enums.RaceTranslation, [Dns.Enums.Race.Native, Dns.Enums.Race.Asian, Dns.Enums.Race.Black, Dns.Enums.Race.Pacific, Dns.Enums.Race.White, Dns.Enums.Race.Unknown]);
@@ -414,8 +588,8 @@ var Plugins;
                         return [];
                     };
                     /* Returns the valid values based on the models specified in initiation */
-                    TermValueFilter.prototype.RaceEthnicityValues = function () {
-                        if (this._models.length == 0)
+                    TermValueFilter.prototype.getRaceEthnicityValues = function () {
+                        if (this._models().length == 0)
                             return Dns.Enums.EthnicitiesTranslation;
                         if (this._containsESP()) {
                             return TermValueFilter.GetTranslations(Dns.Enums.EthnicitiesTranslation, [Dns.Enums.Ethnicities.Unknown, Dns.Enums.Ethnicities.Native, Dns.Enums.Ethnicities.Asian, Dns.Enums.Ethnicities.Black, Dns.Enums.Ethnicities.White, Dns.Enums.Ethnicities.Hispanic]);
@@ -423,8 +597,8 @@ var Plugins;
                         return [];
                     };
                     /* Returns the valid values based on the models specified in initiation */
-                    TermValueFilter.prototype.AgeRangeStratifications = function () {
-                        if (this._models.length == 0)
+                    TermValueFilter.prototype.getAgeRangeStratifications = function () {
+                        if (this._models().length == 0)
                             return Dns.Enums.AgeStratificationsTranslation;
                         var translations = [];
                         if (this._containsSummaryTables()) {
@@ -439,17 +613,68 @@ var Plugins;
                         return translations;
                     };
                     /* Confirm all properties exist that have been addd to a template that may not exist on the request json*/
-                    TermValueFilter.prototype.ConfirmTemplateProperties = function (request, termTemplates) {
+                    TermValueFilter.prototype.ConfirmTemplateProperties = function (query, termTemplates) {
                         var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
                         //loop through all the terms on all the criteria and make sure each term is up to date
-                        for (var i = 0; i < request.Where.Criteria.length; i++) {
-                            var criteria = request.Where.Criteria[i];
+                        for (var i = 0; i < query.Where.Criteria.length; i++) {
+                            var criteria = query.Where.Criteria[i];
                             this.ConfirmCriteria(criteria, flattenedTerms);
                             if (criteria.Terms && criteria.Terms.length > 0) {
-                                for (var j = 0; j < criteria.Terms.length; j++) {
-                                    var term = criteria.Terms[i];
+                                var _loop_1 = function (j) {
+                                    var term = criteria.Terms[j];
                                     var termTemplate = ko.utils.arrayFirst(flattenedTerms, function (template) { return template.TermID == term.Type; });
-                                    this.ConfirmTermValues(criteria.Terms[j], termTemplate);
+                                    if (termTemplate) {
+                                        this_1.ConfirmTermValues(term, termTemplate);
+                                    }
+                                };
+                                var this_1 = this;
+                                for (var j = 0; j < criteria.Terms.length; j++) {
+                                    _loop_1(j);
+                                }
+                            }
+                        }
+                    };
+                    TermValueFilter.prototype.ConfirmTemplatePropertiesForViewModel = function (query, termTemplates) {
+                        var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
+                        //loop through all the terms on all the criteria and make sure each term is up to date
+                        var rootCriteria = query.Where.Criteria();
+                        for (var i = 0; i < rootCriteria.length; i++) {
+                            var criteria = rootCriteria[i];
+                            this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
+                            if (criteria.Terms() && criteria.Terms().length > 0) {
+                                var _loop_2 = function (j) {
+                                    var term = criteria.Terms()[j];
+                                    var termTemplate = ko.utils.arrayFirst(flattenedTerms, function (template) { return template.TermID == term.Type(); });
+                                    if (termTemplate) {
+                                        this_2.ConfirmTermValuesForViewModel(term, termTemplate);
+                                    }
+                                };
+                                var this_2 = this;
+                                for (var j = 0; j < criteria.Terms().length; j++) {
+                                    _loop_2(j);
+                                }
+                            }
+                        }
+                        //check the criteria for each temporal event
+                        var temporalEvents = query.TemporalEvents();
+                        for (var i = 0; i < temporalEvents.length; i++) {
+                            var temporalEvent = temporalEvents[i];
+                            var rootCriteria_1 = temporalEvent.Criteria();
+                            for (var j = 0; j < rootCriteria_1.length; j++) {
+                                var criteria = rootCriteria_1[j];
+                                this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
+                                if (criteria.Terms() && criteria.Terms().length > 0) {
+                                    var _loop_3 = function (k) {
+                                        var term = criteria.Terms()[k];
+                                        var termTemplate = ko.utils.arrayFirst(flattenedTerms, function (template) { return template.TermID == term.Type(); });
+                                        if (termTemplate) {
+                                            this_3.ConfirmTermValuesForViewModel(term, termTemplate);
+                                        }
+                                    };
+                                    var this_3 = this;
+                                    for (var k = 0; k < criteria.Terms().length; k++) {
+                                        _loop_3(k);
+                                    }
                                 }
                             }
                         }
@@ -467,17 +692,39 @@ var Plugins;
                     };
                     TermValueFilter.prototype.ConfirmCriteria = function (criteria, termTemplates) {
                         if (criteria.Terms) {
-                            var term;
-                            var termTemplate;
+                            var term_1;
+                            var termTemplate = void 0;
                             for (var i = 0; i < criteria.Terms.length; i++) {
-                                term = criteria.Terms[i];
-                                termTemplate = ko.utils.arrayFirst(termTemplates, function (template) { return template.TermID == term.Type; });
-                                this.ConfirmTermValues(term, termTemplate);
+                                term_1 = criteria.Terms[i];
+                                termTemplate = ko.utils.arrayFirst(termTemplates, function (template) { return template.TermID == term_1.Type; });
+                                if (termTemplate) {
+                                    this.ConfirmTermValues(term_1, termTemplate);
+                                }
                             }
                         }
                         if (criteria.Criteria && criteria.Criteria.length > 0) {
                             for (var j = 0; j < criteria.Criteria.length; j++) {
                                 this.ConfirmCriteria(criteria.Criteria[j], termTemplates);
+                            }
+                        }
+                    };
+                    TermValueFilter.prototype.ConfirmCriteriaForViewModel = function (criteria, termTemplates) {
+                        var terms = criteria.Terms();
+                        if (terms) {
+                            var term_2;
+                            var termTemplate = void 0;
+                            for (var i = 0; i < terms.length; i++) {
+                                term_2 = terms[i];
+                                termTemplate = ko.utils.arrayFirst(termTemplates, function (template) { return template.TermID == term_2.Type(); });
+                                if (termTemplate) {
+                                    this.ConfirmTermValuesForViewModel(term_2, termTemplate);
+                                }
+                            }
+                        }
+                        var subCriteria = criteria.Criteria();
+                        if (subCriteria && subCriteria.length > 0) {
+                            for (var j = 0; j < subCriteria.length; j++) {
+                                this.ConfirmCriteriaForViewModel(subCriteria[j], termTemplates);
                             }
                         }
                     };
@@ -491,6 +738,27 @@ var Plugins;
                                 term.Values[propertyName] = termTemplate.ValueTemplate[propertyName];
                             }
                         }
+                    };
+                    TermValueFilter.prototype.ConfirmTermValuesForViewModel = function (term, termTemplate) {
+                        var unwrapped = ko.unwrap(term.Values);
+                        var termProperties = Object.keys(unwrapped);
+                        var tvalProperties = Object.keys(termTemplate.ValueTemplate);
+                        var propertyName;
+                        var hasChanges = false;
+                        for (var i = 0; i < tvalProperties.length; i++) {
+                            propertyName = tvalProperties[i];
+                            if (termProperties.indexOf(propertyName) < 0) {
+                                unwrapped[propertyName] = termTemplate.ValueTemplate[propertyName];
+                                hasChanges = true;
+                            }
+                        }
+                        if (hasChanges) {
+                            //update the current instance of the term to include the added properties
+                            term.Values(unwrapped);
+                        }
+                        //update the instance term values to observables
+                        var values = Global.Helpers.ConvertTermObject(term.Values());
+                        term.Values(values);
                     };
                     return TermValueFilter;
                 }());

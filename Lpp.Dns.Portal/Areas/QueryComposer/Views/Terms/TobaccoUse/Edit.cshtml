@@ -4,19 +4,17 @@
     <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
     <div class="row row-noborder">
         <div class="col-sm-4 bold"><h4 id="lblTobaccoUsage" class="TermHeader bold">Tobacco Use<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
-        <div class="col-sm-4 form-group" data-bind="foreach: Dns.Enums.TobaccoUsesTranslation">
-            @*<select data-placeholder="Select tobacco usage" data-bind="attr: { id: 'cboTobaccoUsage' }, kendoMultiSelect: { data:Dns.Enums.TobaccoUsesTranslation, value: Values().TobaccoUses, dataTextField: 'text', dataValueField: 'value', selectedValue: '-1' }" style="min-width: 200px; padding: 2px; float: left"></select>*@
+        <div class="col-sm-6 form-group" data-bind="foreach: Dns.Enums.TobaccoUsesTranslation">
             <div class="checkbox">
-                <input type="checkbox" data-bind="value: value, checked: $parent.Values().TobaccoUses, attr: {id: 'chkTobaccoUsage' + value}" />
-                <label class="hover-ibeam" data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.TobaccoUsesTranslation, value), attr: {id: 'lblTobaccoUsage' + value ,for: 'chkTobaccoUsage' + value}"></label>
+                <label>
+                    <input type="checkbox" data-bind="value: value, checked: $parent.Values().TobaccoUses" />
+                    <span data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.TobaccoUsesTranslation, value)"></span>
+                </label>
             </div>
         </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
-        </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteDiseaseTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteDiseaseTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>
 </script>

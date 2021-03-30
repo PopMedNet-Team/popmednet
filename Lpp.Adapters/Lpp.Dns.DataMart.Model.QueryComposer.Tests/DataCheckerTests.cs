@@ -254,7 +254,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunDataCheckerRequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunDataCheckerRequest(string requestJsonFilepath)
         {
             var request = LoadDataCheckerRequest(requestJsonFilepath);
             using (var adapter = Helper.CreateQueryComposerModelProcessorForDataChecker(ConnectionString))
@@ -262,18 +262,20 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 return adapter.Execute(request, false);
             }
         }
-        Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO LoadDataCheckerRequest(string filename, string folder = ResourceFolder)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO LoadDataCheckerRequest(string filename, string folder = ResourceFolder)
         {
             string filepath = System.IO.Path.Combine(folder, filename);
             var json = System.IO.File.ReadAllText(filepath);
+
             Newtonsoft.Json.JsonSerializerSettings jsonSettings = new Newtonsoft.Json.JsonSerializerSettings();
             jsonSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
-            Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(json, jsonSettings);
+
+            var request = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO>(json, jsonSettings);
 
             return request;
         }
 
-        static string SerializeJsonToString(Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO response)
+        static string SerializeJsonToString(object response)
         {
             var settings = new Newtonsoft.Json.JsonSerializerSettings();
             settings.Formatting = Newtonsoft.Json.Formatting.Indented;

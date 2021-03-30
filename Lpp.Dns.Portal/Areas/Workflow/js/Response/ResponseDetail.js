@@ -77,43 +77,90 @@ var Workflow;
                                     return;
                                 //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var panels = [];
-                                responses.forEach(function (resp) {
-                                    var bucket = $('<div class="panel panel-default"></div>');
+                                responses.forEach(function (responseDTO) {
+                                    var _a;
+                                    var bucket = $('<section></section>');
                                     panels.push(bucket);
-                                    var datamartName = (resp.Aggregation == null || resp.Aggregation.Name == null) ? 'Aggregated or Grouped Results' : resp.Aggregation.Name;
-                                    if (resp.ID) {
-                                        var response_1 = ko.utils.arrayFirst(self.Responses, function (x) { return x.ID == resp.ID; });
-                                        if (response_1) {
-                                            var routing = ko.utils.arrayFirst(self.Routings, function (d) { return d.ID == response_1.RequestDataMartID; });
-                                            if (routing) {
-                                                datamartName = routing.DataMart;
-                                            }
-                                        }
-                                    }
-                                    if (resp.Results != null && resp.Results.length > 0) {
-                                        //The response has results
-                                        for (var i = 0; i < resp.Results.length; i++) {
-                                            //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
-                                            var resultID = (resp.ID || 'aggregate') + '-' + i;
-                                            var suppressedValues = false;
-                                            bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
-                                            var table = resp.Results[i];
-                                            var newTable = [];
-                                            var row = void 0;
-                                            for (var j = 0; j < table.length; j++) {
-                                                row = table[j];
-                                                newTable.push(row);
-                                                for (var prop in row) {
-                                                    var columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
-                                                    if (columnName != prop) {
-                                                        row[columnName] = row[prop];
-                                                        delete row[prop];
+                                    var datamartName = responseDTO.Header.DataMart;
+                                    if (datamartName && datamartName != null)
+                                        bucket.append($("<h4 style=\"margin:3px;\">" + datamartName + "</h4>"));
+                                    for (var q = 0; q < responseDTO.Queries.length; q++) {
+                                        //foreach cohort add a collapsible panel, the panel header will contain the cohort name, the body the results grid
+                                        var panelGroup = $('<div class="panel-group" id="cohort_' + q + '" role="tablist" aria-multiselectable="true"></div>');
+                                        var panel = $('<div class="panel panel-default"></div>');
+                                        panelGroup.append(panel);
+                                        var query = responseDTO.Queries[q];
+                                        $('<div class="panel-heading" role="tab" id="heading_' + q + '"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#cohort_' + q + '" href="#collapse_' + q + '" aria-expanded="true" aria-controls="collapse_' + q + '" title="Click to expand/collapse results.">Cohort: ' + ((_a = query.Name) !== null && _a !== void 0 ? _a : (q + 1)) + '</a></h4></div>')
+                                            .appendTo(panel);
+                                        var collapseContainer = $('<div id="collapse_' + q + '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_' + q + '"></div>');
+                                        if (query.Results && query.Results.length > 0) {
+                                            for (var i = 0; i < query.Results.length; i++) {
+                                                //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
+                                                var resultID = (query.ID || 'aggregate') + '-' + i;
+                                                var suppressedValues = false;
+                                                var table = query.Results[i];
+                                                var newTable = [];
+                                                var row = void 0;
+                                                for (var j = 0; j < table.length; j++) {
+                                                    row = table[j];
+                                                    newTable.push(row);
+                                                    for (var prop in row) {
+                                                        var columnName = prop.replace(/[^a-zA-Z0-9_]/g, '');
+                                                        if (columnName != prop) {
+                                                            row[columnName] = row[prop];
+                                                            delete row[prop];
+                                                        }
                                                     }
                                                 }
+                                                var kendoColumns = [];
+                                                for (var i_1 = 0; i_1 < query.Properties.length; i_1++) {
+                                                    var propertyDefinition = query.Properties[i_1];
+                                                    if (propertyDefinition.Name == "LowThreshold") {
+                                                        if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
+                                                            //only show the LowThreshold column in individual response view
+                                                            kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
+                                                            suppressedValues = true;
+                                                        }
+                                                    }
+                                                    else {
+                                                        kendoColumns.push({
+                                                            title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
+                                                        });
+                                                    }
+                                                }
+                                                var datasource = kendo.data.DataSource.create({ data: newTable });
+                                                //determine if there are less rows than the default grid height. Row height is controlled by css, default is 33px - use that for calculation.
+                                                var totalRowHeight = 33 * (newTable.length + 1);
+                                                var gridHeight = totalRowHeight < 520 ? totalRowHeight + 16 : 520;
+                                                var grid = $('<div id="grid' + resultID + '"></div>');
+                                                grid.kendoGrid({
+                                                    dataSource: datasource,
+                                                    filterable: Global.Helpers.GetColumnFilterOperatorDefaults(),
+                                                    height: gridHeight,
+                                                    columns: kendoColumns,
+                                                    resizable: true,
+                                                    columnMenu: { columns: true },
+                                                    groupable: false,
+                                                    pageable: false,
+                                                    scrollable: gridHeight >= 520
+                                                }).data('kendoGrid');
+                                                if (gridHeight >= 520) {
+                                                    grid.css('height', 'auto');
+                                                }
+                                                var gridContainer = $('<div class="panel-body"></div>');
+                                                if (suppressedValues) {
+                                                    gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
+                                                }
+                                                gridContainer.append(grid);
+                                                collapseContainer.append(gridContainer);
                                             }
+                                        }
+                                        else {
+                                            var resultID = (query.ID || 'aggregate') + '-1';
+                                            var suppressedValues = false;
                                             var kendoColumns = [];
-                                            for (var i_1 = 0; i_1 < resp.Properties.length; i_1++) {
-                                                var propertyDefinition = resp.Properties[i_1];
+                                            for (var i = 0; i < query.Properties.length; i++) {
+                                                var propertyDefinition = query.Properties[i];
                                                 if (propertyDefinition.Name == "LowThreshold") {
                                                     if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
                                                         //only show the LowThreshold column in individual response view
@@ -127,69 +174,32 @@ var Workflow;
                                                     });
                                                 }
                                             }
-                                            var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
-                                            var datasource = kendo.data.DataSource.create({ data: newTable });
+                                            var datasource = kendo.data.DataSource.create({ data: [] });
+                                            var gridHeight = 120;
+                                            var grid = $('<div id="grid' + resultID + '"></div>');
                                             grid.kendoGrid({
                                                 dataSource: datasource,
-                                                height: 520,
+                                                height: gridHeight,
                                                 columns: kendoColumns,
                                                 resizable: true,
-                                                filterable: true,
-                                                columnMenu: { columns: true },
+                                                filterable: false,
+                                                columnMenu: false,
                                                 groupable: false,
                                                 pageable: false,
-                                                scrollable: true
+                                                scrollable: false,
+                                                noRecords: {
+                                                    template: '<div style="width:993px;"><p class="alert alert-info" style="width:350px;display:inline-block;margin-top:12px;">No data available for the current response.</p></div>'
+                                                }
                                             }).data('kendoGrid');
                                             var gridContainer = $('<div class="panel-body"></div>');
                                             if (suppressedValues) {
                                                 gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
                                             }
                                             gridContainer.append(grid);
-                                            bucket.append(gridContainer);
-                                            bucket.append($('<br>'));
+                                            collapseContainer.append(gridContainer);
                                         }
-                                    }
-                                    else {
-                                        //No results, build the table with only the column headers and a no results message
-                                        var resultID = (resp.ID || 'aggregate') + '- 1';
-                                        var suppressedValues = false;
-                                        bucket.append($('<div ' + (resp.DocumentID ? ('id="' + resp.DocumentID + '" ') : '') + 'class="panel-heading" style= "margin-bottom:0px;" > <h4 class="panel-title" > ' + datamartName + ' </h4></div> '));
-                                        var kendoColumns = [];
-                                        for (var i = 0; i < resp.Properties.length; i++) {
-                                            var propertyDefinition = resp.Properties[i];
-                                            if (propertyDefinition.Name == "LowThreshold") {
-                                                kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
-                                                suppressedValues = true;
-                                            }
-                                            else {
-                                                kendoColumns.push({
-                                                    title: propertyDefinition.As, field: propertyDefinition.Name.replace(/[^a-zA-Z0-9_]/g, ''), width: 100
-                                                });
-                                            }
-                                        }
-                                        var grid = $('<div id="grid' + resultID + '" style="height: auto;"></div>');
-                                        var datasource = kendo.data.DataSource.create({ data: [] });
-                                        grid.kendoGrid({
-                                            dataSource: datasource,
-                                            height: 120,
-                                            columns: kendoColumns,
-                                            resizable: true,
-                                            filterable: false,
-                                            columnMenu: false,
-                                            groupable: false,
-                                            pageable: false,
-                                            scrollable: false,
-                                            noRecords: {
-                                                template: '<div style="width:993px;"><p class="alert alert-info" style="width:350px;display:inline-block;margin-top:12px;">No data available for the current response.</p></div>'
-                                            }
-                                        }).data('kendoGrid');
-                                        var gridContainer = $('<div class="panel-body"></div>');
-                                        if (suppressedValues) {
-                                            gridContainer.append($('<p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>'));
-                                        }
-                                        gridContainer.append(grid);
-                                        bucket.append(gridContainer);
-                                        bucket.append($('<br>'));
+                                        panel.append(collapseContainer);
+                                        panelGroup.appendTo(bucket);
                                     }
                                 });
                                 self.ResponseContentComplete(true);

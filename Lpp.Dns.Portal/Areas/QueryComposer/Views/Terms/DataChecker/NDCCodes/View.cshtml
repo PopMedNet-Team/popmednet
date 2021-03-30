@@ -9,8 +9,8 @@
             <strong>Selected Codes:</strong>
         </div>
         <div class="col-sm-6">
-            "<span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.TextSearchMethodTypeTranslation, Values().SearchMethodType() || Dns.Enums.TextSearchMethodType.ExactMatch)"></span>"<br />
-            <span data-bind="text:Values().CodeValues()"></span>
+            "<span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.TextSearchMethodTypeTranslation, Values.SearchMethodType || Dns.Enums.TextSearchMethodType.ExactMatch)"></span>"<br />
+            <span data-bind="text:Values.CodeValues"></span>
         </div>
     </div>
 </script>

@@ -21,6 +21,7 @@ namespace Lpp.Dns.Data
         {
             CreatedOn = DateTime.UtcNow;
             Type = TemplateTypes.Request;
+            Order = 0;
         }
         /// <summary>
         /// Gets or sets the template name.
@@ -60,22 +61,27 @@ namespace Lpp.Dns.Data
         /// Gets or sets the query sub type - Data Adapter Detail
         /// </summary>
         public QueryComposerQueryTypes? QueryType { get; set; }
-
         /// <summary>
         /// Gets or sets the Query Composer Interface capability
         /// </summary>
         public QueryComposerInterface? ComposerInterface { get; set; }
+        /// <summary>
+        /// Gets or sets the order of the template within the request type templates collection.
+        /// </summary>
+        public int Order { get; set; }
+
+        public Guid? RequestTypeID { get; set; }
+        public virtual RequestType RequestType { get; set; }
 
         public virtual ICollection<TemplateTerm> Terms { get; set; }
         public virtual ICollection<AclTemplate> TemplateAcls { get; set; }
-        public virtual ICollection<RequestType> RequestTypes { get; set; }
+        //public virtual ICollection<RequestType> RequestTypes { get; set; }
     }
 
     internal class TemplateConfiguration : EntityTypeConfiguration<Template>
     {
         public TemplateConfiguration()
         {
-            HasMany(t => t.RequestTypes).WithOptional(t => t.Template).HasForeignKey(t => t.TemplateID).WillCascadeOnDelete(true);
             HasMany(t => t.Terms).WithRequired(t => t.Template).HasForeignKey(t => t.TemplateID).WillCascadeOnDelete(true);
             HasMany(t => t.TemplateAcls).WithRequired(t => t.Template).HasForeignKey(t => t.TemplateID).WillCascadeOnDelete(true);
         }
@@ -120,6 +126,7 @@ namespace Lpp.Dns.Data
 
     internal class TemplateDTOMappingConfiguration : EntityMappingConfiguration<Template, TemplateDTO>
     {
+        public override string[] SkipPropertiesOnApply => new[] { "CreatedBy", "CreatedByID", "CreatedOn", "RequestType", "RequestTypeID" };
 
         public override System.Linq.Expressions.Expression<Func<Template, TemplateDTO>> MapExpression
         {
@@ -137,7 +144,10 @@ namespace Lpp.Dns.Data
                     Type = t.Type,
                     Notes = t.Notes,
                     QueryType = t.QueryType,
-                    ComposerInterface = t.ComposerInterface
+                    ComposerInterface = t.ComposerInterface,
+                    Order = t.Order,
+                    RequestTypeID = t.RequestTypeID,
+                    RequestType = t.RequestType.Name
                 };
             }
         }

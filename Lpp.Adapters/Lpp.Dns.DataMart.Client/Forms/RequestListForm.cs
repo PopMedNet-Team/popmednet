@@ -134,6 +134,8 @@ namespace Lpp.Dns.DataMart.Client
             tabs.SelectedIndexChanged += ( _, __ ) => ToggleDetailsButton();
 
             _cachRetentionService = new Lib.Caching.CacheRetentionService();
+
+            DebugTools.Tools.Inspector inspector = new DebugTools.Tools.Inspector();
         }
 
         #endregion
@@ -643,6 +645,9 @@ namespace Lpp.Dns.DataMart.Client
                     f.FormClosed += DetailForm_Closed_EventHandler;
 
                     _openRequestDetails.Add(f);
+
+                    //open the form just below and left of the parent form location.
+                    f.Location = new Point(this.Location.X + 14, this.Location.Y + 14);
 
                     f.Show();
                     //not setting the owner to allow bringing the parent form to the foreground on top of the request details.

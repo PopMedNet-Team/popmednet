@@ -1922,6 +1922,26 @@
             <param name="key"></param>
             <param name="options"></param>
         </member>
+        <member name="T:Microsoft.Owin.SameSiteMode">
+            <summary>
+            Indicates if the client should include a cookie on "same-site" or "cross-site" requests.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Owin.SameSiteMode.None">
+            <summary>
+            Indicates the client should send the cookie with every requests coming from any origin.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Owin.SameSiteMode.Lax">
+            <summary>
+            Indicates the client should send the cookie with "same-site" requests, and with "cross-site" top-level navigations.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Owin.SameSiteMode.Strict">
+            <summary>
+            Indicates the client should only send the cookie with "same-site" requests.
+            </summary>
+        </member>
         <member name="T:Microsoft.Owin.Security.AuthenticateResult">
             <summary>
             Acts as the return value from calls to the IAuthenticationManager's AuthenticeAsync methods.
@@ -2882,6 +2902,13 @@
             Gets or sets a value that indicates whether a cookie is accessible by client-side script.
             </summary>
             <returns>true if a cookie is accessible by client-side script; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Owin.CookieOptions.SameSite">
+            <summary>
+            Gets or sets a value that indicates on which requests client should or should not send cookie back to the server.
+            Set to null to do not include SameSite attribute at all.
+            </summary>
+            <returns>SameSite attribute value or null if attribute must not be set.</returns>
         </member>
         <member name="T:Microsoft.Owin.Helpers.WebHelpers">
             <summary>

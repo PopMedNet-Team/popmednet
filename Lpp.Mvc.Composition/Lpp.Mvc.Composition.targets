@@ -7,13 +7,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>12.0.30501</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <OldToolsVersion>4.0</OldToolsVersion>
     <OutputType>library</OutputType>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RuntimeCCCheck>False</RuntimeCCCheck>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
     <RestorePackages>true</RestorePackages>
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
@@ -38,7 +37,6 @@
     <DebugType>none</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

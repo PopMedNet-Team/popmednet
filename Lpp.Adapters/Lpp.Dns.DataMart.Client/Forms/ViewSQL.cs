@@ -19,10 +19,7 @@ namespace Lpp.Dns.DataMart.Client
 
         private void ViewSQL_Load(object sender, EventArgs e)
         {
-            foreach (string statement in Sql)
-            {
-                tbSQL.Text = statement + "\n\n";
-            }
+            tbSQL.Text = string.Join(Environment.NewLine + Environment.NewLine, Sql);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

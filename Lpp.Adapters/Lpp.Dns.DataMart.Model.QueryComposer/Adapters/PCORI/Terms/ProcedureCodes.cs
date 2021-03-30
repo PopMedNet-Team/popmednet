@@ -1,5 +1,6 @@
 ﻿using Lpp.Objects.Dynamic;
 using Lpp.QueryComposer;
+using Lpp.Dns.DTO.QueryComposer;
 using System;
 using System.Collections.Generic;
 using System.Linq;

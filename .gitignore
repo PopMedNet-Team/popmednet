@@ -333,6 +333,7 @@ ASALocalRun/
 /Lpp.Dns.Api/Scripts/*.js.map
 /Lpp.Dns.Api/Scripts/*.js
 /Lpp.Dns.Api/connectionstrings.config
+/Lpp.Dns.Api.Tests/connectionstrings.config
 /Lpp.Dns.Portal/Areas/**/*.js
 !/Lpp.Dns.Portal/Areas/DataChecker/js/WFDocuments/datachecker.charting.js
 /Lpp.Dns.Portal/Content/bootstrap
@@ -373,7 +374,9 @@ ASALocalRun/
 /Lpp.Adapters/PopMedNet.Adapters.AcceptanceTests/ConnectionStrings.config
 /Lpp.Adapters/Lpp.Dns.DataMart.Model.QueryComposer.Tests/ConnectionStrings.config
 /DMCS/PopMedNet.DMCS/wwwroot/assets
+/DMCS/PopMedNet.DMCS/wwwroot/scripts
 /DMCS/PopMedNet.DMCS/Scripts/**/*.js
 /DMCS/PopMedNet.DMCS/Scripts/**/*.js.map
 /Lpp.Dns.Api.Tests/ConnectionStrings.config
 Lpp.Dns.Portal/Scripts/PmnGrid/PmnGrid.js
+/DMCS/PopMedNet.DMCS/appsettings.Development.json

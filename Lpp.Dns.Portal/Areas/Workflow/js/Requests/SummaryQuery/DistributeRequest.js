@@ -120,40 +120,76 @@ var Workflow;
                     return _this;
                 }
                 ViewModel.prototype.PostComplete = function (resultID) {
-                    if (!Requests.Details.rovm.Validate())
-                        return;
-                    var self = this;
-                    var selectedDataMarts = ko.utils.arrayMap(ko.utils.arrayFilter(this.DataMarts(), function (route) {
-                        return self.SelectedDataMartIDs.indexOf(route.DataMartID) > -1;
-                    }), function (route) { return route.toRequestDataMartDTO(); });
-                    if (selectedDataMarts.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
-                        Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
-                        return;
-                    }
-                    Requests.Details.PromptForComment()
-                        .done(function (comment) {
-                        var dto = Requests.Details.rovm.Request.toData();
-                        var additionalInstructions = $('#DataMarts_AdditionalInstructions').val();
-                        dto.AdditionalInstructions = additionalInstructions;
-                        Dns.WebApi.Requests.CompleteActivity({
-                            DemandActivityResultID: resultID,
-                            Dto: dto,
-                            DataMarts: selectedDataMarts,
-                            Data: null,
-                            Comment: comment
-                        }).done(function (results) {
-                            var result = results[0];
-                            if (result.Uri) {
-                                Global.Helpers.RedirectTo(result.Uri);
-                            }
-                            else {
-                                //Update the request etc. here 
-                                Requests.Details.rovm.Request.ID(result.Entity.ID);
-                                Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
-                                Requests.Details.rovm.UpdateUrl();
-                            }
-                        });
-                    });
+                    //if (!(typeof Plugins.Requests.QueryBuilder.Edit === "undefined") && Plugins.Requests.QueryBuilder.Edit.vm.fileUpload()) {
+                    //    var deleteFilesDeferred = $.Deferred().resolve();
+                    //    if (Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel != null && Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.DocumentsToDelete().length > 0) {
+                    //        deleteFilesDeferred = Dns.WebApi.Documents.Delete(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.DocumentsToDelete(), (d) => { return d.ID; }));
+                    //    }
+                    //    deleteFilesDeferred.done(() => {
+                    //        if (!Requests.Details.rovm.Validate())
+                    //            return;
+                    //        var selectedDataMartIDs = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedDataMartIDs();
+                    //        if (selectedDataMartIDs.length == 0 && resultID != "DFF3000B-B076-4D07-8D83-05EDE3636F4D") {
+                    //            Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
+                    //            return;
+                    //        }
+                    //        var selectedDataMarts = Plugins.Requests.QueryBuilder.DataMartRouting.vm.SelectedRoutings();
+                    //        var uploadCriteria = Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.serializeCriteria();
+                    //        Requests.Details.rovm.Request.Query(uploadCriteria);
+                    //        var AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val()
+                    //        var dto = Requests.Details.rovm.Request.toData()
+                    //        dto.AdditionalInstructions = AdditionalInstructions;
+                    //        Requests.Details.PromptForComment().done((comment) => {
+                    //            Dns.WebApi.Requests.CompleteActivity({
+                    //                DemandActivityResultID: resultID,
+                    //                Dto: dto,
+                    //                DataMarts: selectedDataMarts,
+                    //                Data: JSON.stringify(ko.utils.arrayMap(Plugins.Requests.QueryBuilder.Edit.vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; })),
+                    //                Comment: comment
+                    //            }).done((results) => {
+                    //                var result = results[0];
+                    //                if (result.Uri) {
+                    //                    Global.Helpers.RedirectTo(result.Uri);
+                    //                } else {
+                    //                    //Update the request etc. here 
+                    //                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                    //                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                    //                    Requests.Details.rovm.UpdateUrl();
+                    //                }
+                    //            });
+                    //        });
+                    //    });
+                    //} else {
+                    //    if (!Requests.Details.rovm.Validate())
+                    //        return;
+                    //    var self = this;
+                    //    var selectedDataMarts = ko.utils.arrayMap(ko.utils.arrayFilter(this.DataMarts(), (route) => {
+                    //        return self.SelectedDataMartIDs.indexOf(route.DataMartID) > -1;
+                    //    }), (route) => route.toRequestDataMartDTO());
+                    //    Requests.Details.PromptForComment()
+                    //        .done((comment) => {
+                    //            var dto = Requests.Details.rovm.Request.toData();
+                    //            var additionalInstructions = $('#DataMarts_AdditionalInstructions').val();
+                    //            dto.AdditionalInstructions = additionalInstructions;
+                    //            Dns.WebApi.Requests.CompleteActivity({
+                    //                DemandActivityResultID: resultID,
+                    //                Dto: dto,
+                    //                DataMarts: selectedDataMarts,
+                    //                Data: null,
+                    //                Comment: comment
+                    //            }).done((results) => {
+                    //                var result = results[0];
+                    //                if (result.Uri) {
+                    //                    Global.Helpers.RedirectTo(result.Uri);
+                    //                } else {
+                    //                    //Update the request etc. here 
+                    //                    Requests.Details.rovm.Request.ID(result.Entity.ID);
+                    //                    Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
+                    //                    Requests.Details.rovm.UpdateUrl();
+                    //                }
+                    //            });
+                    //        });
+                    //}
                 };
                 return ViewModel;
             }(Global.WorkflowActivityViewModel));
@@ -175,15 +211,19 @@ var Workflow;
                         var existingRoute = ko.utils.arrayFirst(existingRequestDataMarts, function (r) { return r.DataMartID == dm.ID; });
                         routes.push(new Routings(dm, existingRoute));
                     }
-                    $(function () {
-                        var bindingControl = $("#DefaultDistributeRequest");
-                        var queryData = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
-                        DistributeRequest.vm = new ViewModel(queryData, routes, Requests.Details.rovm.FieldOptions, Requests.Details.rovm.Request.AdditionalInstructions(), bindingControl);
-                        ko.applyBindings(DistributeRequest.vm, bindingControl[0]);
-                        var visualTerms = Requests.Details.rovm.VisualTerms;
-                        //Hook up the Query Composer readonly view
-                        Plugins.Requests.QueryBuilder.View.init(queryData, visualTerms, $('#QCreadonly'));
-                    });
+                    //    $(() => {
+                    //        var bindingControl = $("#DefaultDistributeRequest");
+                    //        var queryData = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+                    //        vm = new ViewModel(queryData,
+                    //            routes,
+                    //            Requests.Details.rovm.FieldOptions,
+                    //            Requests.Details.rovm.Request.AdditionalInstructions(),
+                    //            bindingControl);
+                    //        ko.applyBindings(vm, bindingControl[0]);
+                    //    //    var visualTerms = Requests.Details.rovm.VisualTerms;
+                    //    //    //Hook up the Query Composer readonly view
+                    //    //    Plugins.Requests.QueryBuilder.View.init(queryData, visualTerms, $('#QCreadonly'));
+                    //    //});
                 });
             }
             init();

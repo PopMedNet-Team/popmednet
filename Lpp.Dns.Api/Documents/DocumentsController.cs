@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -582,6 +583,44 @@ namespace Lpp.Dns.Api.Documents
             };
 
             await o.StreamDocumentToDatabase();
+
+            if (o.Doc.MimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) && o.Doc.Kind.Equals(Lpp.Dns.DTO.Enums.DocumentKind.Request, StringComparison.OrdinalIgnoreCase) && o.Doc.ParentDocumentID.HasValue)
+            {
+                try
+                {
+                    using (var db = new DataContext())
+                    {
+                        //if the document has a mime type of json, and the document kind is for request assume it is an update to the request json. Replace the Query property of the request after updating the header of the request.
+                        var requestDocument = await db.Documents.FindAsync(o.Doc.ID);
+
+                        var json = System.Text.Encoding.UTF8.GetString(requestDocument.GetData(db));
+                        var requestDTO = Lpp.Dns.DTO.QueryComposer.QueryComposerDTOHelpers.DeserializeRequest(json);
+
+                        var request = await db.Requests.FindAsync(o.RequestID);
+
+                        requestDTO.Header.ID = request.ID;
+                        requestDTO.Header.Name = request.Name;
+                        requestDTO.Header.Priority = request.Priority;
+                        requestDTO.Header.SubmittedOn = request.SubmittedOn;
+
+                        var forgotPasswordUrl = new Uri(System.Web.Configuration.WebConfigurationManager.AppSettings["ResetPasswordUrl"]);
+                        var uriBuilder = new UriBuilder(forgotPasswordUrl.Scheme, forgotPasswordUrl.Host, forgotPasswordUrl.IsDefaultPort ? -1 : forgotPasswordUrl.Port, "querycomposer/summaryview");
+                        uriBuilder.Query = "ID=" + request.ID.ToString("D");
+                        requestDTO.Header.ViewUrl = uriBuilder.Uri.AbsoluteUri;
+
+                        request.Query = Newtonsoft.Json.JsonConvert.SerializeObject(requestDTO);
+                        await db.SaveChangesAsync();
+
+                        db.Database.ExecuteSqlCommand($"UPDATE Documents SET [Data] = NULL WHERE ID ='{ o.Doc.ID }'");
+                        o.Doc.SetData(db, System.Text.Encoding.UTF8.GetBytes(request.Query));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //DO NOT affect the saving of the document, log the error for debugging purposes.
+                    Logger.Error($"Error deserializing document to QueryComposerRequestDTO, DocumentID:{ o.Doc.ID }", ex);
+                }
+            }
 
             return Request.CreateResponse(HttpStatusCode.Created, result);
         }

@@ -40,17 +40,23 @@ namespace Lpp.Dns.Api.DataMartClient
             Identity = identity;
         }
 
+        public async Task<DMCRoutingStatusProcessorResult> UpdateStatusAsync(Guid requestDataMartID, DTO.Enums.RoutingStatus routingStatus, string message)
+        {
+            var details = await DataContext.RequestDataMarts.Where(rdm => rdm.ID == requestDataMartID).Select(rdm => new { rdm.RequestID, rdm.DataMartID }).FirstOrDefaultAsync();
+            return await UpdateStatusAsync(new dmc.Criteria.SetRequestStatusData { DataMartID = details.DataMartID, RequestID = details.RequestID, Message = message, Status = (dmc.Enums.DMCRoutingStatus)((int)routingStatus), Properties = null });
+        }
+
 
         public async Task<DMCRoutingStatusProcessorResult> UpdateStatusAsync(dmc.Criteria.SetRequestStatusData data)
         {
-            PermissionDefinition permission = data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Hold ? PermissionIdentifiers.DataMartInProject.HoldRequest : (data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected ? PermissionIdentifiers.DataMartInProject.RejectRequest : PermissionIdentifiers.DataMartInProject.UploadResults);
+            PermissionDefinition permission = data.Status == dmc.Enums.DMCRoutingStatus.Hold ? PermissionIdentifiers.DataMartInProject.HoldRequest : (data.Status == dmc.Enums.DMCRoutingStatus.RequestRejected ? PermissionIdentifiers.DataMartInProject.RejectRequest : PermissionIdentifiers.DataMartInProject.UploadResults);
 
             bool hasPermission = await CheckPermission(data.RequestID, data.DataMartID, permission, Identity.ID);
 
             if(hasPermission == false)
             {
-                string message = data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.Hold ? "You do not have permission to change the status of this request to Hold" :
-                                                (data.Status == DTO.DataMartClient.Enums.DMCRoutingStatus.RequestRejected ? "You do not have permission to change the status of this request to Rejected" : "You do not have permission to upload results.");
+                string message = data.Status == dmc.Enums.DMCRoutingStatus.Hold ? "You do not have permission to change the status of this request to Hold" :
+                                                (data.Status == dmc.Enums.DMCRoutingStatus.RequestRejected ? "You do not have permission to change the status of this request to Rejected" : "You do not have permission to upload results.");
 
                 return new DMCRoutingStatusProcessorResult(HttpStatusCode.Forbidden, message);
             }

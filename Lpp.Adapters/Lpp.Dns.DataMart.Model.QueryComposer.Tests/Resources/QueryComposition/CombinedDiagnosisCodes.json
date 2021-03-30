@@ -5,66 +5,30 @@
         "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=6a7d7929-391a-4cca-9c0d-a4bc0111e0f2"
     },
     "Where" : {
-      "Criteria": [
-        {
-          "Name": "Group 1",
-          "Criteria": [
-            {
-              "ID": "287ea67e-224f-422a-a7d4-5cfd7e882537",
-              "Name": "i_codeterms",
-              "Operator": 0,
-              "Criteria": [],
-              "Terms": [
-                {
-                  "Operator": 1,
-                  "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
-                  "Values": {
-                    "CodeType": 3,
-                    "CodeValues": "282;280;289;281;287",
-                    "SearchMethodType": 0
-                  },
-                  "Criteria": []
-                },
-                {
-                  "Operator": 1,
-                  "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
-                  "Values": {
-                    "CodeType": 3,
-                    "CodeValues": "343",
-                    "SearchMethodType": 0
-                  },
-                  "Criteria": []
-                }
-              ],
-              "Type": 0
+        "Criteria" : [{
+                "Name" : "Group 1",
+                "Criteria" : [{
+                        "ID" : "287ea67e-224f-422a-a7d4-5cfd7e882537",
+                        "Name" : "i_codeterms",
+                        "Operator" : 0,
+                        "Criteria" : [],
+                        "Terms" : [{
+                                "Operator" : 1,
+                                "Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                                "Values" : {
+                                    "CodeType" : 3,
+                                    "CodeValues" : "282;280;289;281;287",
+                                    "SearchMethodType" : 0
+                                },
+                                "Criteria" : []
+                            }
+                        ],
+                        "Type" : 0
+                    }
+                ],
+                "Terms" : []
             }
-          ],
-          "Terms": []
-        }
-        ,
-        {
-          "ID": "30ba67a8-47d2-4849-93ee-63ce5da61fb2",
-          "Name": "i_Observation_Period",
-          "Operator": 0,
-          "Criteria": [
-          ],
-          "Terms": [
-            {
-              "Operator": 1,
-              "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
-              "Values": {
-                "Start": "2015-01-01T05:00:00.000Z",
-                "End": "2015-12-31T05:00:00.000Z"
-              },
-              "Criteria": [
-              ],
-              "Design": {
-              }
-            }
-          ],
-          "Type": 0
-        }
-      ]
+        ]
     },
     "Select":
     {

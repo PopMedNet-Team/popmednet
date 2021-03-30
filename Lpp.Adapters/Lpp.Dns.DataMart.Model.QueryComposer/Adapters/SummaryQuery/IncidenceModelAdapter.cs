@@ -14,28 +14,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
         public IncidenceModelAdapter(RequestMetadata requestMetadata) : base(QueryComposerModelMetadata.SummaryTableModelID, requestMetadata) { }
 
-        public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             IQueryAdapter queryAdapter = null;
-            if (request.Where.Criteria.First().Terms.Any(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID))
+            if (query.Where.Criteria.First().Terms.Any(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID))
             {
                 logger.Debug("Sql Distribution term found, creating SummarySqlQueryAdapter.");
                 SummarySqlQueryAdapter sql = new SummarySqlQueryAdapter();
-                var result = sql.Execute(request, _settings, viewSQL);
-                _currentResponse = result;
-
-                return result;
+                var result = sql.Execute(query, _settings, viewSQL);
+                return new[] { result };
             }
 
-            if (request.Select.Fields.Any(t => t.Type == ModelTermsFactory.ICD9DiagnosisCodes3digitID))
+            if (query.Select.Fields.Any(t => t.Type == ModelTermsFactory.ICD9DiagnosisCodes3digitID))
             {
                 logger.Debug("ICD-9 Diagnoses Codes term found, creating IncidenceICD9DiagnosisQueryAdapter.");
 
                 queryAdapter = new IncidenceICD9DiagnosisQueryAdapter(_settings);
             }
-            else if (request.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugNameID) || request.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugClassID))
+            else if (query.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugNameID) || query.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugClassID))
             {
-                if (request.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugNameID))
+                if (query.Select.Fields.Any(t => t.Type == ModelTermsFactory.DrugNameID))
                     logger.Debug("Pharmacy dispensing generic drug name term found, creating IncidencePharmaDispensingQueryAdapter.");
                 else
                     logger.Debug("Pharmacy dispensing drug class term found, creating IncidencePharmaDispensingQueryAdapter.");
@@ -50,18 +48,15 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
             using (queryAdapter)
             {
-                var qcResponseDTO = queryAdapter.Execute(request, viewSQL);
-                qcResponseDTO.LowCellThrehold = _lowThresholdValue;
-
-                _currentResponse = qcResponseDTO;
-
+                var qcResponseDTO = queryAdapter.Execute(query, viewSQL);
+                foreach(var r in qcResponseDTO)
+                {
+                    r.LowCellThrehold = _lowThresholdValue;
+                }
                 return qcResponseDTO;
             }
         }
-        static IEnumerable<QueryComposerTermDTO> GetAllCriteriaTerms(QueryComposerCriteriaDTO paragraph, Guid termTypeID)
-        {
-            return paragraph.Terms.Where(t => t.Type == termTypeID).Concat(paragraph.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == termTypeID)));
-        }
+        
         public override void Dispose()
         {
         }

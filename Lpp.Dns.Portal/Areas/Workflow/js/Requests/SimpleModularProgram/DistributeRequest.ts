@@ -148,8 +148,14 @@ module Workflow.SimpleModularProgram.DistributeRequest {
                     self.ExistingRequestDataMarts = selectedDataMarts
                     self.SelectedDataMartIDs.removeAll();
                     self.SelectedDataMartIDs(ko.utils.arrayMap(selectedDataMarts, (i) => { return i.DataMartID; }));
-                    var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
-                    var uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
+
+                    let query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+
+                    if (query.hasOwnProperty('SchemaVersion')) {
+                        query = ko.utils.arrayFirst((<Dns.Interfaces.IQueryComposerRequestDTO>query).Queries, (q) => q != null)
+                    }
+
+                    let uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
                     self.UploadViewModel = uploadViewModel;
                     Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done((viewModel) => {
                         self.AttachmentsVM = viewModel;
@@ -174,8 +180,26 @@ module Workflow.SimpleModularProgram.DistributeRequest {
         }
 
         public PostComplete(resultID: string) {
-            var uploadCriteria = vm.UploadViewModel.serializeCriteria();
-            Requests.Details.rovm.Request.Query(uploadCriteria);
+
+            let requestDTO = new Dns.ViewModels.QueryComposerRequestViewModel();
+            requestDTO.SchemaVersion("2.0");
+            requestDTO.Header.ID(Requests.Details.rovm.Request.ID());
+            requestDTO.Header.Name(Requests.Details.rovm.Request.Name());
+            requestDTO.Header.DueDate(Requests.Details.rovm.Request.DueDate());
+            requestDTO.Header.Priority(Requests.Details.rovm.Request.Priority());
+            requestDTO.Header.ViewUrl(location.protocol + '//' + location.host + '/querycomposer/summaryview?ID=' + Requests.Details.rovm.Request.ID());
+            requestDTO.Header.Description(Requests.Details.rovm.Request.Description());
+
+            if (Constants.Guid.equals(resultID, "5445DC6E-72DC-4A6B-95B6-338F0359F89E")) {
+                //set the submit date if getting submitted
+                requestDTO.Header.SubmittedOn(new Date());
+            }
+
+            vm.UploadViewModel.ExportQueries().forEach((query) => {
+                requestDTO.Queries.push(new Dns.ViewModels.QueryComposerQueryViewModel(query));
+            });
+            
+            Requests.Details.rovm.Request.Query(JSON.stringify(requestDTO.toData()));
             var AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val()
             var dto = Requests.Details.rovm.Request.toData()
             dto.AdditionalInstructions = AdditionalInstructions;
@@ -252,7 +276,16 @@ module Workflow.SimpleModularProgram.DistributeRequest {
         .done((datamarts, selectedDataMarts) => {
 
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-            var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+            var obj = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+            //TODO: need to deserialize and initialize with single query, or pass the entire request dto.
+
+            let query: Dns.Interfaces.IQueryComposerQueryDTO = null;
+            if (obj.hasOwnProperty("SchemaVersion")) {
+                query = ko.utils.arrayFirst((<Dns.Interfaces.IQueryComposerRequestDTO>obj).Queries, (q) => q != null);
+            } else {
+                query = obj;
+            }
+
             var uploadViewModel = Requests.Details.rovm.Request.ID() != null ? Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID) : null;
             //Bind the view model for the activity
             var bindingControl = $("#MPDistributeRequest");

@@ -3,48 +3,31 @@
 <script type="text/html" id="e_@ModelTermsFactory.DC_DataPartners">
     <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
     <div class="row">
-        <div class="col-sm-4 bold">
+        <div class="col-sm-3 bold">
             <h4 id="lblDataPartners" class="TermHeader bold">Data Partners<em data-bind="visible:Design.Locked" style="color:red">*</em></h4>
-            <br/>
-            <div class="Row" id="msgDataPartners">*At least one Data Partner must be selected to produce valid results.</div>
         </div>
-        <div id="AllDataPartners">
-            <div class="col-sm-4 form-group">
-                @*add input here*@
-                <div id="AllDataPartners">
-                    <table id="DataPartnerTable" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <td><input type="checkbox" onchange="SelectAllDataPartners(this, 'chk')" /></td>
-                                <td>Data Partner</td>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="DataPartnerTypeExtender: '1',foreach: $root.AvailableOrganizations">
-                            <tr>
-                                <td><input type="checkbox" id="chk" name="chk[]" class="Checkbox" data-bind="value:$data.Acronym, checked: $parent.Values().DataPartnersValue" /></td>
-                                <td data-bind="text: $data.Name + ' ('+ $data.Acronym + ')'"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
+        <div class="col-sm-7 form-group">
+            <p class="help-block">At least one Data Partner must be selected to produce valid results.</p>
+            <table id="DataPartnerTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>
+                            <input type="checkbox" data-bind="CheckAllCheckboxExtender:{valuesCollection:$data.Values().DataPartnersValue, allValues:$component.TermProvider.AvailableOrganizations()}" />
+                        </td>
+                        <td>Data Partner</td>
+                    </tr>
+                </thead>
+                <tbody data-bind="DataPartnerTypeExtender: '1',foreach: $component.TermProvider.AvailableOrganizations">
+                    <tr>
+                        <td><input type="checkbox" id="chk" name="chk[]" class="Checkbox" data-bind="value:$data.Acronym, checked: $parent.Values().DataPartnersValue" /></td>
+                        <td data-bind="text: $data.Name + ' ('+ $data.Acronym + ')'"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteDataPartnersTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteDataPartnersTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>
-</script>
-
-<script type="text/javascript">
-    function SelectAllDataPartners(checker, checkID) {
-        var inputs = document.getElementsByName("chk[]");
-        for (var i = 0; i < inputs.length; i++) {
-            if (inputs[i].checked != checker.checked)
-                inputs[i].click();
-        }
-    }
 </script>

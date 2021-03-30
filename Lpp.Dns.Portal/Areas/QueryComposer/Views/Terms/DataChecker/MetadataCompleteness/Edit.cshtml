@@ -3,35 +3,33 @@
 <script type="text/html" id="e_@ModelTermsFactory.DC_MetadataCompleteness">
     <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
     <div class="row">
-        <div class="col-sm-4 bold"><h4 id="MetadataCompleteness" class="TermHeader bold">Metadata Completeness<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
-        <div class="col-sm-4 form-group">
+        <div class="col-sm-3 bold"><h4 id="MetadataCompleteness" class="TermHeader bold">Metadata Completeness<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-7 form-group">
             <div class="checkbox">
-                <input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="0" id="Diagnosis" />
-                <label class="hover-ibeam" for="Diagnosis">Diagnosis</label>
+                <label><input type="checkbox" data-bind="CheckAllCheckboxExtender:{ valuesCollection: Values().MetadataCompletenesses, allValues:['0','1','2','3','4'] }" />Select All</label>
             </div>
-            <div class="checkbox">
-                <input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="1" id="Dispensing" />
-                <label class="hover-ibeam" for="Dispensing">Dispensing</label>
+            <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="0" id="Diagnosis" />Diagnosis</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="1" id="Dispensing" />Dispensing</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="2" id="Encounter" />Encounter</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="3" id="Enrollment" />Enrollment</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="4" id="Procedure" />Procedure</label>
+                </div>
             </div>
-            <div class="checkbox">
-                <input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="2" id="Encounter" />
-                <label class="hover-ibeam" for="Encounter">Encounter</label>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="3" id="Enrollment" />
-                <label class="hover-ibeam" for="Enrollment">Enrollment</label>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" data-bind="checked: Values().MetadataCompletenesses" value="4" id="Procedure" />
-                <label class="hover-ibeam" for="Procedure">Procedure</label>
-            </div>
-        </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
         </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteMetadataCompletenessTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteMetadataCompletenessTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>
 </script>

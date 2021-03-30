@@ -20,12 +20,17 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public RequestTypeDTO RequestType { get; set; }
 
-
         /// <summary>
-        /// Gets or sets the template associated with the request type.
+        /// Gets or sets the permissions for the request type.
         /// </summary>
         [DataMember]
-        public TemplateDTO Template { get; set; }
+        public IEnumerable<AclRequestTypeDTO> Permissions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the query templates associated with the request type.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<TemplateDTO> Queries { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of term ids to associated the request type.

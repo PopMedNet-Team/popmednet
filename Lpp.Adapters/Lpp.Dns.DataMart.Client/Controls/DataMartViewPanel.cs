@@ -62,10 +62,10 @@ namespace Lpp.Dns.DataMart.Client.Controls
             // DataMartViewPanel
             // 
             this.Name = "DataMartViewPanel";
-            this.ResumeLayout(false);
-            this.PerformLayout();
 
-            FILELIST.CellContentClick += FILELIST_CellContentClick;
+            this.FILELIST.CellContentClick += FILELIST_CellContentClick;
+            this.ResumeLayout(false);
+
         }
 
         public void Initialize(NetWorkSetting networkSetting, IModelProcessor processor, string requestID, bool isRequestView)

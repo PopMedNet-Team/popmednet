@@ -6,118 +6,100 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "b920f12c-727b-4010-9bce-79825e6ae7e1",
+            "ID": "73ccbe65-3f45-418f-9475-b94417c6af3a",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "e1cc0001-1d9a-442a-94c4-a3ca014c7b94",
                 "Values": {
-                  "Codes": [],
+                  "Codes": [ ],
                   "CodeValues": [
                     {
-                      "Code": "54.1",
-                      "Name": "LAPAROTOMY",
-                      "ExpireDate": null
-                    },
-                    {
-                      "Code": "14.5",
-                      "Name": "OTHER REPAIR OF RETINAL DETACHMENT",
+                      "Code": "25.0",
+                      "Name": "DIAGNOSTIC PROCEDURES ON TONGUE",
                       "ExpireDate": null
                     }
                   ]
                 },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "1f444794-6b52-4a29-9808-865edebd025e",
+            "ID": "3cbfccb0-e172-4fa8-8dac-1b311fd42295",
             "Name": "i_Settings",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "1" },
-                "Criteria": [],
-                "Design": {}
+                "Values": { "Setting": "4" },
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "002aef3b-0a59-450a-8bf5-10f86c2d015c",
+            "ID": "ae2f082c-bb23-41b1-b921-98a67c3c6eb3",
             "Name": "i_Year_Observation Period",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "781a0001-1ff0-41ab-9e67-a3cb014c37f2",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2018
+                  "EndYear": 2010
                 },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "d12db8a5-59c5-4eba-8065-20791b7e426f",
+            "ID": "a5b46d29-a8b4-43fc-8835-ac2f2f644be6",
             "Name": "i_Sex",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
                 "Values": { "Sex": "3" },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": []
+        "Terms": [ ]
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "ICD-9 Procedures (3 digit)",
-        "Type": "e1cc0001-1d9a-442a-94c4-a3ca014c7b94",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": null,
-        "Select": [],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "ICD-9 Procedures (3 digit)_Count",
         "Type": "e1cc0001-1d9a-442a-94c4-a3ca014c7b94",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
-        "FieldName": "Sex",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "ICD-9 Procedures (3 digit)",
+        "Type": "e1cc0001-1d9a-442a-94c4-a3ca014c7b94",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -126,7 +108,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -135,7 +126,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -144,7 +135,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       }
     ]

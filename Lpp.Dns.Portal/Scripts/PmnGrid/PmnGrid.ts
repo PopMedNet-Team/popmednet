@@ -128,7 +128,6 @@ ko.bindingHandlers.pmnGrid = {
 
         if (binding.savedSetting !== undefined) {
             widget.bind("dataBound", function (e: any) {
-                debugger;
                 Users.SetSetting(binding.savedSetting.Key + User.ID, Global.Helpers.GetGridSettings(e.sender));
             });
         }

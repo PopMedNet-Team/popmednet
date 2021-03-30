@@ -2232,6 +2232,16 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<any[]>('Response/ExportAllAsZip' + params, doNotHandleFail);
 	 	 }
 
+	 	 public static ExportResponse(requestID: any, format: string, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 var params = '';
+	 	 	 if (requestID != null) params += '&requestID=' + requestID;
+	 	 	 if (format != null) params += '&format=' + encodeURIComponent(format);
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<any[]>('Response/ExportResponse' + params, doNotHandleFail);
+	 	 }
+
 	 	 public static GetTrackingTableForAnalysisCenter(requestID: any, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (requestID != null) params += '&requestID=' + requestID;
@@ -2712,6 +2722,10 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IRequestTypeTermDTO[]>('RequestTypes/GetTermsFilteredBy' + params, doNotHandleFail);
 	 	 }
 
+	 	 public static TermsByAdapterAndDetail(details: Dns.Interfaces.IAvailableTermsRequestDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('RequestTypes/TermsByAdapterAndDetail', details, doNotHandleFail);
+	 	 }
+
 	 	 public static UpdateRequestTypeTerms(updateInfo: Dns.Interfaces.IUpdateRequestTypeTermsDTO, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 return Helpers.PostAPIValue<any[]>('RequestTypes/UpdateRequestTypeTerms', updateInfo, doNotHandleFail);
 	 	 }
@@ -2797,8 +2811,36 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.IHasGlobalSecurityForTemplateDTO[]>('Templates/GetGlobalTemplatePermissions' + params, doNotHandleFail);
 	 	 }
 
-	 	 public static SaveCriteriaGroup(details: Dns.Interfaces.ISaveCriteriaGroupRequestDTO, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.ITemplateDTO[]>{
+	 	 public static SaveCriteriaGroup(details: Dns.Interfaces.ICreateCriteriaGroupTemplateDTO, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.ITemplateDTO[]>{
 	 	 	 return Helpers.PostAPIValue<Dns.Interfaces.ITemplateDTO[]>('Templates/SaveCriteriaGroup', details, doNotHandleFail);
+	 	 }
+
+	 	 public static ListHiddenTerms(ID: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.ITemplateTermDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (ID != null) params += '&ID=' + ID;
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.ITemplateTermDTO[]>('Templates/ListHiddenTerms' + params, doNotHandleFail);
+	 	 }
+
+	 	 public static ListHiddenTermsByRequestType(id: any,$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<Dns.Interfaces.ITemplateTermDTO[]>{
+	 	 	 var params = '';
+	 	 	 if (id != null) params += '&id=' + id;
+             if($filter) params += '&$filter=' + $filter;
+			if($select) params += '&$select=' + $select;
+			if($orderby) params += '&$orderby=' + $orderby;
+			if($skip) params += '&$skip=' + $skip;
+			if($top) params += '&$top=' + $top;
+	 	 	 if (params.length > 0)
+	 	 	 	 params = '?' + params.substr(1);
+
+	 	 	 return Helpers.GetAPIResult<Dns.Interfaces.ITemplateTermDTO[]>('Templates/ListHiddenTermsByRequestType' + params, doNotHandleFail);
 	 	 }
 
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{

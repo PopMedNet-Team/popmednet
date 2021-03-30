@@ -130,7 +130,10 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 var permissions = await db.HasGrantedPermissions<Request>(_workflow.Identity, _entity, filters, PermissionIdentifiers.Request.SkipSubmissionApproval);
                 await db.Entry(_entity).ReloadAsync();
 
-                if (Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query).Where.Criteria.Any(c => c.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC") || c.Criteria.Any(ic => ic.Terms.Any(t => t.Type.ToString().ToUpper() == "2F60504D-9B2F-4DB1-A961-6390117D3CAC"))))
+                var requestJSON = ParseRequestJSON();
+                var fileUploadTerms = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON);
+
+                if (fileUploadTerms.Any())
                 {
                     if (!permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
@@ -225,8 +228,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                     await db.Entry(_entity).ReloadAsync();
 
-                    DTO.QueryComposer.QueryComposerRequestDTO qcRequestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                    var fileUploadTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == FileUploadTermID)).FirstOrDefault();
+                    var fileUploadTerm = fileUploadTerms.FirstOrDefault();
                     var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
 
                     //update the request.json term value to include system generated documents revisionsetIDs
@@ -238,7 +240,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     }
 
                     fileUploadTerm.Values["Values"] = termValues;
-                    _entity.Query = Newtonsoft.Json.JsonConvert.SerializeObject(qcRequestDTO);
+                    _entity.Query = Newtonsoft.Json.JsonConvert.SerializeObject(requestJSON);
 
                     await db.SaveChangesAsync();
 
@@ -445,7 +447,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
             return sb.ToString();
         }
-        public static readonly Guid FileUploadTermID = new Guid("2F60504D-9B2F-4DB1-A961-6390117D3CAC");
         internal class FileUploadValues
         {
             public IList<Document> Documents { get; set; }

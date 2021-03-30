@@ -40,10 +40,10 @@ namespace Lpp.Dns.DTO
         /// </summary>
         [DataMember, ReadOnly(true)]
         public string Workflow { get; set; }
-        /// <summary>
-        /// Gets or set the template
-        /// </summary>
-        [DataMember, ReadOnly(true)]
-        public string Template { get; set; }
+        ///// <summary>
+        ///// Gets or set the template
+        ///// </summary>
+        //[DataMember, ReadOnly(true)]
+        //public string Template { get; set; }
     }
 }

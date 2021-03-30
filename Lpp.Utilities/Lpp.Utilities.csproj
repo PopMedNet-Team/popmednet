@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Utilities</RootNamespace>
     <AssemblyName>Lpp.Utilities</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -84,6 +84,7 @@
     <Compile Include="DatabaseEx.cs" />
     <Compile Include="Data\DisplayFieldAttribute.cs" />
     <Compile Include="EntityMapping.cs" />
+    <Compile Include="ExcelEx.cs" />
     <Compile Include="ExceptionHelpers.cs" />
     <Compile Include="FileEx.cs" />
     <Compile Include="GlobalSuppressions.cs" />

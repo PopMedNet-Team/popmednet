@@ -29,7 +29,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
             {
                 var req = db.Requests.Find(requestID);
                 QueryComposerRequestDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<QueryComposerRequestDTO>(req.Query);
-                var criteria = dto.Where.Criteria.Where(c => c.Terms.Any(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DispensingRXAmount)).FirstOrDefault();
+                var criteria = dto.Queries.First().Where.Criteria.Where(c => c.Terms.Any(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DispensingRXAmount)).FirstOrDefault();
                 var term = criteria.Terms.First(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.DC_DispensingRXAmount);
                 var termValues = term.Values.First(p => p.Key == "Values");
                 DispensingRXAmountValues val = Newtonsoft.Json.JsonConvert.DeserializeObject<DispensingRXAmountValues>(termValues.Value.ToString());
@@ -95,7 +95,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                     rsp = (Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO)deserializer.Deserialize(streamReader, queryComposerResponseDTOType);
                 }
 
-                dt = CreateTable(rsp.Results.First());
+                dt = CreateTable(rsp.Queries.First().Results.First());
             }
 
             if (dt == null)

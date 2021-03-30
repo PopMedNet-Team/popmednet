@@ -47,8 +47,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Utilities", "Lpp.Utilit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModelProcessorRestService", "Lpp.Adapters\SampleModelProcessorRestService\SampleModelProcessorRestService.csproj", "{C030CDF1-CF46-4C7D-A087-69400E0E86C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Processors.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Processors.Tests\Lpp.Dns.DataMart.Model.Processors.Tests.csproj", "{FD48D3B9-169B-4621-9023-B7A4BB48AE01}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.QueryComposer", "Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer\Lpp.Dns.DataMart.Model.QueryComposer.csproj", "{B22805C6-4152-400A-9567-C8F5E39FA400}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Objects", "Lpp.Objects\Lpp.Objects.csproj", "{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}"
@@ -78,8 +76,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO", "Lpp.Dns.DTO\Lpp.Dns.DTO.csproj", "{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data", "Lpp.Adapters\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data.csproj", "{1BCE7532-35EF-4875-A26D-FE690516983E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.QueryComposer.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer.Tests\Lpp.Dns.DataMart.Model.QueryComposer.Tests.csproj", "{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.Database", "Lpp.Adapters\Lpp.Dns.DataMart.Client.Database\Lpp.Dns.DataMart.Client.Database.csproj", "{BA4D9E91-641A-4080-9A92-5E3DE53C8360}"
 EndProject
@@ -158,12 +154,6 @@ Global
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C030CDF1-CF46-4C7D-A087-69400E0E86C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Adapters|Any CPU.Build.0 = Release|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD48D3B9-169B-4621-9023-B7A4BB48AE01}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Adapters|Any CPU.ActiveCfg = Adapters|Any CPU
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Adapters|Any CPU.Build.0 = Adapters|Any CPU
 		{B22805C6-4152-400A-9567-C8F5E39FA400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -230,12 +220,6 @@ Global
 		{1BCE7532-35EF-4875-A26D-FE690516983E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BCE7532-35EF-4875-A26D-FE690516983E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BCE7532-35EF-4875-A26D-FE690516983E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Adapters|Any CPU.Build.0 = Release|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Adapters|Any CPU.Build.0 = Release|Any CPU
 		{BA4D9E91-641A-4080-9A92-5E3DE53C8360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -258,7 +242,6 @@ Global
 		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{1BCE7532-35EF-4875-A26D-FE690516983E} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
-		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14476E95-1871-4452-BFFE-C0E67687681B}

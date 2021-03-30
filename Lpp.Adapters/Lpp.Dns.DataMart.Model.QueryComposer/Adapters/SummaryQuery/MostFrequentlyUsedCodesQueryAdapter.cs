@@ -1,4 +1,5 @@
 ﻿using Lpp.QueryComposer;
+using Lpp.Dns.DTO.QueryComposer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             }
         }
 
-        protected override SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerRequestDTO request)
+        protected override SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerQueryDTO query)
         {
             SummaryRequestModel model = new SummaryRequestModel();
 
-            var criteria = request.Where.Criteria.First();
+            var criteria = query.Where.Criteria.First();
 
             var observationPeriodTerm = GetAllCriteriaTerms(criteria, ModelTermsFactory.YearID).FirstOrDefault();
             if (observationPeriodTerm != null)
@@ -71,7 +72,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 model.Setting = settingValue.ToString();
             }
 
-            var ageStratification = GetAgeField(request.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
+            var ageStratification = GetAgeField(query.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
             if (ageStratification != null)
             {
                 QueryAdapter.SetAgeStratification(model, ageStratification);

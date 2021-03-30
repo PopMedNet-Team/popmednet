@@ -151,8 +151,7 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
             }
             else if (activityResultID.Value == AddDataMartsResultID)
             {
-                DTO.QueryComposer.QueryComposerRequestDTO requestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                var modularTerm = requestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == SimpleModularProgramWorkflowConfiguration.ModularProgramTermID)).FirstOrDefault();
+                var modularTerm = GetAllTerms(SimpleModularProgramWorkflowConfiguration.ModularProgramTermID, ParseRequestJSON()).FirstOrDefault();
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 string[] datamartIDs = data.Split(',');

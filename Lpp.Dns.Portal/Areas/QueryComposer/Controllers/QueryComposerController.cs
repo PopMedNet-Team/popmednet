@@ -33,6 +33,11 @@ namespace Lpp.Dns.Portal.Areas.QueryComposer.Controllers
             return View("~/areas/querycomposer/views/UploadCodeList.cshtml");
         }
 
+        public ActionResult QueryEditorMDQ()
+        {
+            return View("~/areas/querycomposer/views/QueryEditor-MDQ.cshtml");
+        }
+
         [HttpGet]
         public JsonResult VisualTerms()
         {

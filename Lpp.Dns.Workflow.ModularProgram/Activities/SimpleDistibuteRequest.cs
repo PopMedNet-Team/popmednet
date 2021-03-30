@@ -311,8 +311,8 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
                 //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                 await db.Entry(_entity).ReloadAsync();
 
-                DTO.QueryComposer.QueryComposerRequestDTO qcRequestDTO = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerRequestDTO>(_entity.Query);
-                var modularTerm = qcRequestDTO.Where.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == SimpleModularProgramWorkflowConfiguration.ModularProgramTermID)).FirstOrDefault();
+                var qcRequestDTO = ParseRequestJSON();
+                var modularTerm = GetAllTerms(SimpleModularProgramWorkflowConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault();
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 //update the request.json term value to include system generated documents revisionsetIDs
@@ -341,7 +341,7 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
         {
             await base.Start(comment);
 
-            if (!string.IsNullOrEmpty(_entity.Query) && !_entity.Query.StartsWith("{\"Header\"", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(_entity.Query) && !(_entity.Query.StartsWith("{\"Header\"", StringComparison.OrdinalIgnoreCase) || _entity.Query.StartsWith("{\"SchemaVersion\"", StringComparison.OrdinalIgnoreCase)))
             {
                 //make sure the query field is empty
                 _entity.Query = null;

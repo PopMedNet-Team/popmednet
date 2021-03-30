@@ -10,13 +10,19 @@ using System.Threading.Tasks;
 namespace Lpp.Dns.DTO.QueryComposer
 {
     /// <summary>
-    /// A DTO for a term with a section
+    /// A DTO for a term with a section that should be excluded from the term menu when not in template edit mode.
     /// </summary>
     [DataContract]
     public class SectionSpecificTermDTO
     {
         /// <summary>
-        /// Gets or Sets The ID of the Term
+        /// Gets or sets the ID of the Template the term should be excluded from.
+        /// </summary>
+        [DataMember]
+        public Guid TemplateID { get; set; }
+
+        /// <summary>
+        /// Gets or Sets The ID of the Term to exclude.
         /// </summary>
         [DataMember]
         public Guid TermID { get; set; }

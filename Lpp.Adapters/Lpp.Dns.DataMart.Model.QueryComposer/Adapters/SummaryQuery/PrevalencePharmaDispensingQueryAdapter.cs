@@ -1,4 +1,5 @@
 ﻿using Lpp.QueryComposer;
+using Lpp.Dns.DTO.QueryComposer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
         public PrevalencePharmaDispensingQueryAdapter(IDictionary<string, object> settings) : base(settings) { }
 
-        protected override SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerRequestDTO request)
+        protected override SummaryRequestModel ConvertToModel(DTO.QueryComposer.QueryComposerQueryDTO query)
         {
-            var criteria = request.Where.Criteria.First();
+            var criteria = query.Where.Criteria.First();
 
             SummaryRequestModel model = new SummaryRequestModel();
             var observationPeriodTerm = GetAllCriteriaTerms(criteria, ModelTermsFactory.QuarterYearID).FirstOrDefault();
@@ -41,7 +42,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 
             }
 
-            IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> codeTerms = criteria.Criteria.SelectMany(c => c.Terms.Where(t => t.Type == ModelTermsFactory.DrugNameID || t.Type == ModelTermsFactory.DrugClassID)).Concat(criteria.Terms.Where(t => t.Type == ModelTermsFactory.DrugNameID || t.Type == ModelTermsFactory.DrugClassID));
+            var codeTerms = criteria.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.DrugNameID || t.Type == ModelTermsFactory.DrugClassID);
             if (codeTerms.Any(t => t.Type == ModelTermsFactory.DrugNameID))
             {
                 _queryType = IncidencePharmaDispensingQueryType.DrugName;
@@ -65,7 +66,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             model.CodeNames = codeTermValues.Select(c => c.Name).ToArray();
 
             //These values are pulled from the stratification section of the request json
-            var ageStratification = GetAgeField(request.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
+            var ageStratification = GetAgeField(query.Select.Fields.Where(f => f.Type == ModelTermsFactory.AgeRangeID));
             if (ageStratification != null)
             {
                 QueryAdapter.SetAgeStratification(model, ageStratification);

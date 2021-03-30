@@ -6,20 +6,11 @@ var Plugins;
         (function (QueryBuilder) {
             var SummaryView;
             (function (SummaryView) {
-                function GetVisualTerms() {
-                    var d = $.Deferred();
-                    $.ajax({ type: "GET", url: '/QueryComposer/VisualTerms', dataType: "json" })
-                        .done(function (result) {
-                        d.resolve(result);
-                    }).fail(function (e, description, error) {
-                        d.reject(e);
-                    });
-                    return d;
-                }
                 function init() {
                     var ID = Global.GetQueryParam("ID");
-                    $.when(GetVisualTerms(), Dns.WebApi.Requests.Get(ID)).done(function (visualTerms, requests) {
-                        Plugins.Requests.QueryBuilder.View.init(JSON.parse(requests[0].Query), visualTerms, $('#queryview'));
+                    Dns.WebApi.Requests.Get(ID)
+                        .done(function (requests) {
+                        Plugins.Requests.QueryBuilder.View.initialize(JSON.parse(requests[0].Query), new Dns.ViewModels.RequestViewModel(requests[0]), $("#overview-queryview"));
                     });
                 }
                 SummaryView.init = init;

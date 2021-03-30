@@ -53,12 +53,7 @@ var RequestType;
         }(Global.PageViewModel));
         Index.ViewModel = ViewModel;
         function NameAchor(dataItem) {
-            if (!dataItem.TemplateID || dataItem.TemplateID == '00000000-0000-0000-0000-000000000000') {
-                return dataItem.Name;
-            }
-            else {
-                return "<a href=\"/requesttype/details?ID=" + dataItem.ID + "\">" + dataItem.Name + "</a>";
-            }
+            return "<a href=\"/requesttype/details?ID=" + dataItem.ID + "\">" + dataItem.Name + "</a>";
         }
         Index.NameAchor = NameAchor;
         function init() {

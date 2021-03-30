@@ -127,16 +127,13 @@ namespace Lpp.Dns.Api.Requests
                 var prtWFAcls = await DataContext.ProjectRequestTypeWorkflowActivities.Where(rt => rt.RequestTypeID == requestType.ID).ToArrayAsync();
                 DataContext.ProjectRequestTypeWorkflowActivities.RemoveRange(prtWFAcls);
 
+                //Delete the query templates
+                var templates = await DataContext.Templates.Where(t => t.RequestTypeID == requestType.ID).ToArrayAsync();
+                DataContext.Templates.RemoveRange(templates);
+
                 //Delete the request type
                 DataContext.RequestTypes.Remove(requestType);
 
-                //Delete the query template
-                if (requestType.TemplateID != null)
-                {
-                    var template = await DataContext.Templates.Where(t => t.ID == requestType.TemplateID).ToArrayAsync();
-                    DataContext.Templates.RemoveRange(template);
-                }
-                
             }
 
             await DataContext.SaveChangesAsync();
@@ -149,9 +146,9 @@ namespace Lpp.Dns.Api.Requests
         [HttpPost]
         public async Task<HttpResponseMessage> Save(UpdateRequestTypeRequestDTO details)
         {
-            if (details.Template == null)
+            if (details.Queries == null || !details.Queries.Any())
             {
-                throw new ArgumentException("Template cannot be null for the RequestType.", "details.Template");
+                throw new ArgumentException("Templates cannot be null for the RequestType, at least one template is required.", "details.Templates");
             }
 
             if (details.RequestType == null)
@@ -159,9 +156,7 @@ namespace Lpp.Dns.Api.Requests
                 throw new ArgumentException("RequestType cannot be null.", "details.RequestType");
             }
 
-            RequestType requestType = null;
-            Template template = null;
-            
+            RequestType requestType = null;            
 
             if (details.RequestType.ID.HasValue)
             {
@@ -172,8 +167,9 @@ namespace Lpp.Dns.Api.Requests
                 }
 
                 requestType = await DataContext.RequestTypes.FindAsync(details.RequestType.ID.Value);
+                await DataContext.LoadCollection(requestType, rt => rt.Queries);
+                await DataContext.LoadCollection(requestType, rt => rt.Terms);
 
-                await DataContext.Entry(requestType).Reference(t => t.Template).LoadAsync();
             } else
             {
                 if (!(await DataContext.HasPermissions<RequestType>(Identity, PermissionIdentifiers.Portal.CreateRequestTypes)))
@@ -184,34 +180,80 @@ namespace Lpp.Dns.Api.Requests
                 requestType = DataContext.RequestTypes.Add(new RequestType { ProcessorID = QueryComposerModelProcessorID, PackageIdentifier = QueryComposerPackageIdentifier, Models = new HashSet<RequestTypeModel>(), Terms = new HashSet<RequestTypeTerm>() });
             }
 
-            if (details.Template.ID.HasValue)
-            {
-                template = await DataContext.Templates.FindAsync(details.Template.ID.Value);
-            }
-            else
-            {
-                template = DataContext.Templates.Add(new Template { CreatedByID = Identity.ID, CreatedOn = DateTime.UtcNow, Type = DTO.Enums.TemplateTypes.Request, Terms = new HashSet<TemplateTerm>(), RequestTypes = new HashSet<RequestType>() });
-                details.Template.CreatedByID = Identity.ID;
-                details.Template.CreatedOn = DateTime.UtcNow;
-                details.Template.Type = DTO.Enums.TemplateTypes.Request;
-            }
-
-
             //update request type
             details.RequestType.Apply(DataContext.Entry(requestType));
 
-            if (requestType.TemplateID.HasValue == false || requestType.TemplateID.Value != template.ID)
+            //update the request type permissions
+            var updatedAcls = new List<AclRequestType>();
+            var dbAcls = await DataContext.RequestTypeAcls.Where(a => a.RequestTypeID == requestType.ID).ToArrayAsync();
+
+            foreach(var acl in dbAcls)
             {
-                requestType.TemplateID = template.ID;
-                requestType.Template = template;
+                var perm = details.Permissions.FirstOrDefault(p => requestType.ID == p.RequestTypeID && p.SecurityGroupID == acl.SecurityGroupID && p.PermissionID == acl.PermissionID);
+                if (perm == null || perm.Allowed == null)
+                {
+                    DataContext.RequestTypeAcls.Remove(acl);
+                }
+                else if (acl.Allowed != perm.Allowed.Value)
+                {
+                    acl.Allowed = perm.Allowed.Value;
+                    acl.Overridden = true;
+                    updatedAcls.Add(acl);
+                }
             }
 
-            //update template
-            details.Template.Apply(DataContext.Entry(template));
-            if (string.IsNullOrEmpty(template.Name))
+            var newAcls = details.Permissions.Where(p => (p.RequestTypeID == requestType.ID || p.RequestTypeID == Guid.Empty) && p.Allowed.HasValue && dbAcls.Any(a => p.SecurityGroupID == a.SecurityGroupID && p.PermissionID == a.PermissionID) == false).ToArray();
+            foreach (var acl in newAcls)
             {
-                template.Name = requestType.Name;
+                updatedAcls.Add(DataContext.RequestTypeAcls.Add(new AclRequestType
+                {
+                    Allowed = acl.Allowed.Value,
+                    Overridden = true,
+                    PermissionID = acl.PermissionID,
+                    RequestTypeID = requestType.ID,
+                    SecurityGroupID = acl.SecurityGroupID
+                }));
+            }            
+            
+            //update the queries for the requesttype 
+            foreach(var templateDTO in details.Queries)
+            {
+                Template template = null;
+                if (templateDTO.ID.HasValue)
+                {
+                    template = requestType.Queries.FirstOrDefault(t => t.ID == templateDTO.ID.Value);
+                }
+                
+                if(template == null)
+                {
+                    template = DataContext.Templates.Add(new Template
+                    {
+                        CreatedByID = Identity.ID,
+                        CreatedOn = DateTime.UtcNow,
+                        Type = DTO.Enums.TemplateTypes.Request,
+                        RequestType = requestType,
+                        RequestTypeID = requestType.ID
+                    });
+                    requestType.Queries.Add(template);
+                    templateDTO.ID = template.ID;
+                }
+
+                //these properties should never change after creation
+                templateDTO.CreatedByID = template.CreatedByID;
+                templateDTO.CreatedOn = template.CreatedOn;
+                templateDTO.Type = DTO.Enums.TemplateTypes.Request;
+                templateDTO.RequestTypeID = requestType.ID;
+
+                templateDTO.Apply(DataContext.Entry(template));
+
+                if (string.IsNullOrEmpty(template.Name))
+                {
+                    template.Name = "Cohort " + (template.Order + 1);
+                }
             }
+
+            //for requesttype templates remove all permissions - permission will be assumbed by the requesttype permissions
+            DataContext.TemplateAcls.RemoveRange(DataContext.TemplateAcls.Where(a => a.Template.RequestTypeID == requestType.ID));
 
             //update associated models
             if (details.RequestType.ID.HasValue)
@@ -242,11 +284,6 @@ namespace Lpp.Dns.Api.Requests
             }
 
             //update associated terms
-            if (details.RequestType.ID.HasValue)
-            {
-                await DataContext.Entry(requestType).Collection(t => t.Terms).LoadAsync();
-            }
-
             if (details.Terms != null && details.Terms.Any())
             {
                 //terms to delete
@@ -269,58 +306,64 @@ namespace Lpp.Dns.Api.Requests
                 requestType.Terms.Clear();
             }
 
-            
-             
-            //update associated templateTerms
+            /* NotAllowed Terms are the terms that are hidden from the end user when not in template edit mode - ie creating a new request. */
             if (details.NotAllowedTerms.Any())
             {
-                if (DataContext.TemplateTerms.Any())
+                foreach(var template in details.Queries)
                 {
-                    //remove templateterms in the DB that no longer correspond to templateterms in NotAllowedTerms
-                    foreach (TemplateTerm tt in DataContext.TemplateTerms.Where(term => term.TemplateID == template.ID))
-                    {
-                        if (!details.NotAllowedTerms.Any(nAT => nAT.TermID == tt.TermID && nAT.Section == tt.Section))
-                        {
-                            DataContext.TemplateTerms.Remove(tt);
-                        } 
-                    }
-                }
-                //add the unchecked terms
+                    //clear out the existing hidden terms for the template
+                    DataContext.TemplateTerms.RemoveRange(DataContext.TemplateTerms.Where(t => t.TemplateID == template.ID.Value));
 
-                foreach (SectionSpecificTermDTO uncheckedTerm in details.NotAllowedTerms)
-                {
-                    if (!DataContext.TemplateTerms.Any(tt => tt.TermID == uncheckedTerm.TermID && tt.Section == uncheckedTerm.Section && tt.TemplateID == template.ID))//it's already in the DB
+                    //add any specified term to the hidden terms collection
+                    foreach(var ht in details.NotAllowedTerms.Where(nt => nt.TemplateID == template.ID.Value).ToArray())
                     {
-                        TemplateTerm templateTerm = new TemplateTerm() { TermID = uncheckedTerm.TermID, Allowed = false, Section = uncheckedTerm.Section, Template = template, TemplateID = template.ID, Term = DataContext.Terms.SingleOrDefault(t => t.ID == uncheckedTerm.TermID) };
-                        DataContext.TemplateTerms.Add(templateTerm);
+                        DataContext.TemplateTerms.Add(new TemplateTerm { TermID = ht.TermID, TemplateID = ht.TemplateID, Section = ht.Section, Allowed = false });
                     }
-                    
-                }
-                                         
-            } else
-            {
-                if (DataContext.TemplateTerms.Any())
-                {
-                    foreach (TemplateTerm term in DataContext.TemplateTerms.Where(tt => tt.TemplateID == details.Template.ID.Value))
-                    {
-                        DataContext.TemplateTerms.Remove(term);
-                    }
+
                 }
             }
 
 
             await DataContext.SaveChangesAsync();
 
-            await DataContext.Entry(requestType).ReloadAsync();
-            await DataContext.Entry(template).ReloadAsync();
+            var responseDetail = await (from rt in DataContext.RequestTypes
+                                  where rt.ID == requestType.ID
+                                  select new UpdateRequestTypeResponseDTO
+                                  {
+                                      RequestType = new RequestTypeDTO
+                                      {
+                                          AddFiles = rt.AddFiles,
+                                          Description = rt.Description,
+                                          ID = rt.ID,
+                                          Metadata = rt.MetaData,
+                                          Name = rt.Name,
+                                          Notes = rt.Notes,
+                                          PostProcess = rt.PostProcess,
+                                          RequiresProcessing = rt.RequiresProcessing,
+                                          SupportMultiQuery = rt.SupportMultiQuery,
+                                          Timestamp = rt.Timestamp,
+                                          Workflow = rt.Workflow.Name,
+                                          WorkflowID = rt.WorkflowID
+                                      }, 
+                                      Queries = rt.Queries.OrderBy(q => q.Order).Select(q => new TemplateDTO {
+                                          ID = q.ID,
+                                          ComposerInterface = q.ComposerInterface,
+                                          CreatedBy = q.CreatedBy.UserName,
+                                          CreatedByID = q.CreatedByID,
+                                          CreatedOn = q.CreatedOn,
+                                          Data = q.Data,
+                                          Description = q.Description,
+                                          Name = q.Name,
+                                          Notes = q.Notes,
+                                          Order = q.Order,
+                                          QueryType = q.QueryType,
+                                          RequestType = rt.Name,
+                                          RequestTypeID = rt.ID,
+                                          Timestamp = q.Timestamp,
+                                          Type = q.Type
+                                      })
+                                  }).FirstOrDefaultAsync();
 
-            if (DataContext.Entry(template).Reference(t => t.CreatedBy).IsLoaded == false)
-                await DataContext.Entry(template).Reference(t => t.CreatedBy).LoadAsync();
-
-            if (DataContext.Entry(requestType).Reference(rt => rt.Workflow).IsLoaded == false)
-                await DataContext.Entry(requestType).Reference(rt => rt.Workflow).LoadAsync();
-
-            var responseDetail = new UpdateRequestTypeResponseDTO { RequestType = requestType.Map<RequestType, RequestTypeDTO>(), Template = template.Map<Template, TemplateDTO>() };
 
             var response = Request.CreateResponse(HttpStatusCode.Accepted, responseDetail);
             return response;
@@ -391,7 +434,7 @@ namespace Lpp.Dns.Api.Requests
         /// <param name="id">The ID of the request type.</param>
         /// <returns></returns>
         [HttpGet]
-        public IQueryable<RequestTypeTermDTO> GetFilteredTerms(Guid id)
+        public async Task<IQueryable<RequestTypeTermDTO>> GetFilteredTerms(Guid id)
         {
             RequestTypeTermDTO[] requestTypeTerms = DataContext.RequestTypes.Where(rt => rt.ID == id).SelectMany(rt => rt.Terms).Map<RequestTypeTerm, RequestTypeTermDTO>().ToArray();
             if (requestTypeTerms.Length == 0)
@@ -413,10 +456,10 @@ namespace Lpp.Dns.Api.Requests
                 requestTypeTerms = q.ToArray();
 
                 //filter even further if the query template has a sub-query type specified
-                var adapterDetailTerms = (from rt in DataContext.RequestTypes
-                                          join da in DataContext.DataAdapterDetailTerms on rt.Template.QueryType.Value equals da.QueryType
-                                          where rt.ID == id && rt.Template.QueryType.HasValue
-                                          select da.TermID).ToArray();
+                var adapterDetailTerms = await (from t in DataContext.Templates
+                                                join da in DataContext.DataAdapterDetailTerms on t.QueryType.Value equals da.QueryType
+                                                where t.RequestTypeID == id && t.QueryType.HasValue
+                                                select da.TermID).ToArrayAsync();
 
                 if (adapterDetailTerms.Length > 0)
                 {
@@ -425,7 +468,7 @@ namespace Lpp.Dns.Api.Requests
                         requestTypeTerms = requestTypeTerms.Where(t => adapterDetailTerms.Contains(t.TermID)).ToArray();
                     }
                     else {
-                        requestTypeTerms = DataContext.Terms
+                        requestTypeTerms = await DataContext.Terms
                             .Where(t => adapterDetailTerms.Contains(t.ID))
                             .Select(t => new RequestTypeTermDTO {
                                 TermID = t.ID,
@@ -434,7 +477,7 @@ namespace Lpp.Dns.Api.Requests
                                 ReferenceUrl = t.ReferenceUrl,
                                 Term = t.Name,
                                 RequestTypeID = id
-                            }).ToArray();
+                            }).ToArrayAsync();
                     }
                 }
             }
@@ -529,6 +572,33 @@ namespace Lpp.Dns.Api.Requests
                                     }).DistinctBy(t => t.TermID);
 
             return r;
+        }
+
+        /// <summary>
+        /// Gets the available terms based on the specified RestrictToTerms, Adapter, AdapterDetail, and/or TemplateID
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> TermsByAdapterAndDetail([FromBody] AvailableTermsRequestDTO details)
+        {
+            //initially filter only terms that are registered to Adapters that are supported by QueryComposer.
+            var query = DataContext.Terms.Where(t => t.DataModels.Any(m => m.DataModel.QueryComposer));
+            if(details.Adapters != null && details.Adapters.Any())
+            {
+                //filter by specified Adapters
+                query = query.Where(t => t.DataModels.Any(m => details.Adapters.Contains(m.DataModelID)));
+            }
+            if (details.QueryType.HasValue)
+            {
+                //filter by the data adapter detail
+                query = query.Where(t => DataContext.DataAdapterDetailTerms.Where(d => d.QueryType == details.QueryType.Value).Any(d => d.TermID == t.ID));
+            }
+
+            var result = await query.Select(t => t.ID).ToArrayAsync();
+
+            var response = Request.CreateResponse<Guid[]>(HttpStatusCode.OK, result);
+
+            return response;
         }
 
         /// <summary>

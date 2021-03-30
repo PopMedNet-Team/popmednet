@@ -4,8 +4,7 @@
 module Controls.WFFileUpload.Index {
 
     export class ViewModel extends Global.PageViewModel {
-
-        public Request: Dns.ViewModels.QueryComposerRequestViewModel;
+        public Query: Dns.ViewModels.QueryComposerQueryViewModel;
         public Term: Dns.ViewModels.QueryComposerTermViewModel;
         public Documents: KnockoutObservableArray<Dns.Interfaces.IExtendedDocumentDTO>;
         public DocumentsToDelete: KnockoutObservableArray<Dns.Interfaces.IExtendedDocumentDTO>;
@@ -27,21 +26,22 @@ module Controls.WFFileUpload.Index {
         public sFtpAddFiles: (data: ViewModel, event: JQueryEventObject) => void;
         public serializeCriteria: () => string;
 
-        constructor(bindingControl: JQuery, screenPermissions: any[], query: Dns.Interfaces.IQueryComposerRequestDTO, termID: any) {
+        constructor(bindingControl: JQuery, screenPermissions: any[], query: Dns.Interfaces.IQueryComposerQueryDTO, termID: any) {
             super(bindingControl, screenPermissions);
-            var self = this;
-            this.TermID = termID;
-            this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(query);
 
-            if (this.Request.Where.Criteria() == null || this.Request.Where.Criteria().length == 0) {
-                this.Request.Where.Criteria.push(new Dns.ViewModels.QueryComposerCriteriaViewModel(
+            let self = this;
+            this.TermID = termID;
+            this.Query = new Dns.ViewModels.QueryComposerQueryViewModel(query);
+
+            if (this.Query.Where.Criteria() == null || this.Query.Where.Criteria().length == 0) {
+                this.Query.Where.Criteria.push(new Dns.ViewModels.QueryComposerCriteriaViewModel(
                     {
                         Operator: Dns.Enums.QueryComposerOperators.And,
                         Name: 'Group 1',
                         Exclusion: false,
                         Terms: [],
                         Criteria: null,
-                        IndexEvent: null,
+                        IndexEvent: false,
                         Type: 0,
                         ID: Constants.Guid.newGuid()
                     }));
@@ -49,7 +49,7 @@ module Controls.WFFileUpload.Index {
             }
 
             //Get the modular program term
-            this.Term = ko.utils.arrayFirst(this.Request.Where.Criteria()[0].Terms(), (term) => { return term.Type().toUpperCase() === this.TermID.toUpperCase(); });
+            this.Term = ko.utils.arrayFirst(this.Query.Where.Criteria()[0].Terms(), (term) => { return term.Type().toUpperCase() === this.TermID.toUpperCase(); });
             if (!this.Term) {
                 this.Term = new Dns.ViewModels.QueryComposerTermViewModel(
                     {
@@ -59,7 +59,7 @@ module Controls.WFFileUpload.Index {
                         Criteria: null,
                         Design: null
                     });
-                this.Request.Where.Criteria()[0].Terms.push(this.Term);
+                this.Query.Where.Criteria()[0].Terms.push(this.Term);
             }
 
             //NOTE: this.Term.Values.Documents is not an observable but this.Term.Values is
@@ -68,7 +68,7 @@ module Controls.WFFileUpload.Index {
             }
 
             this.Documents = ko.observableArray([]);
-            var revisionsets = ko.utils.arrayMap(this.Term.Values().Documents, (i: any) => { return i.RevisionSetID; });
+            let revisionsets = ko.utils.arrayMap(this.Term.Values().Documents, (i: any) => { return i.RevisionSetID; });
             if (revisionsets.length > 0) {
                 Dns.WebApi.Documents.ByRevisionID(revisionsets)
                     .done((documents: Dns.Interfaces.IExtendedDocumentDTO[]) =>
@@ -129,7 +129,7 @@ module Controls.WFFileUpload.Index {
 
                 $(event.target).attr("disabled", "disabled");
 
-                var paths: Array<string> = [];
+                let paths: Array<string> = [];
 
                 data.sFtpSelectedFiles().forEach((item: string) => {
                     paths.push(item);
@@ -152,8 +152,8 @@ module Controls.WFFileUpload.Index {
                 }).done((result) => {
                         try {
                             self.sFtpSelectedFiles.removeAll();
-                            var result = JSON.parse(result.content);
-                            result.forEach((i) => self.Documents.push(i));
+                            let documents = JSON.parse(result.content);
+                            documents.forEach((i) => self.Documents.push(i));
                             Requests.Details.rovm.Save(false);
 
                         } catch (e) {
@@ -167,17 +167,20 @@ module Controls.WFFileUpload.Index {
             }
 
             self.serializeCriteria = () => {
-                var r = self.Request.toData();
-                var term = ko.utils.arrayFirst(r.Where.Criteria[0].Terms, (term) => { return term.Type.toUpperCase() == self.TermID.toUpperCase(); });
+                let r = self.Query.toData();
+                let term = ko.utils.arrayFirst(r.Where.Criteria[0].Terms, (term) => { return term.Type.toUpperCase() == self.TermID.toUpperCase(); });
                 term.Values.Documents = ko.utils.arrayMap(self.Documents(), (d) => { return { RevisionSetID: d.RevisionSetID } });
-                var json = JSON.stringify(r);
+
+                let json = JSON.stringify(r);
                 return json; 
             };
+        }
 
-            Requests.Details.rovm.RegisterRequestSaveFunction((requestViewModel) => {
-                requestViewModel.Query(self.serializeCriteria());
-                return true;
-            });
+        public ExportQueries(): Dns.Interfaces.IQueryComposerQueryDTO[] {
+            let r = this.Query.toData();
+            let term = ko.utils.arrayFirst(r.Where.Criteria[0].Terms, (term) => { return Constants.Guid.equals(term.Type, this.TermID); });
+            term.Values.Documents = ko.utils.arrayMap(this.Documents(), (d) => { return { RevisionSetID: d.RevisionSetID } });
+            return [r];
         }
 
         public onFileUpload(evt: any) {
@@ -189,12 +192,12 @@ module Controls.WFFileUpload.Index {
                 }
             });
             evt.data = {
-                comments: Requests.Details.rovm.WorkflowActivity.ID() == '931C0001-787C-464D-A90F-A64F00FB23E7' ? 'Modular Program specification document added.' : '',
+                comments: Constants.Guid.equals(Requests.Details.rovm.WorkflowActivity.ID(), '931C0001-787C-464D-A90F-A64F00FB23E7') ? 'Modular Program specification document added.' : '',
                 requestID: Requests.Details.rovm.Request.ID(),
                 taskID: Requests.Details.rovm.CurrentTask.ID,
                 taskItemType: Dns.Enums.TaskItemTypes.ActivityDataDocument
             };
-            var xhr = evt.XMLHttpRequest;
+            let xhr = evt.XMLHttpRequest;
             xhr.addEventListener("readystatechange", function (e) {
                 if (xhr.readyState == 1 /* OPENED */) {
                     xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
@@ -255,7 +258,7 @@ module Controls.WFFileUpload.Index {
                 })
             }).done((results: any[]) => {
                     item.Items.removeAll();
-                    var arr: sFtpItem[] = [];
+                    let arr: sFtpItem[] = [];
 
                     results.forEach((i) => {
                         arr.push(new sFtpItem(i.Name, i.Path, i.Type, i.Length));
@@ -269,11 +272,14 @@ module Controls.WFFileUpload.Index {
                 });
         }
 
+        public onKnockoutBind() {
+            ko.applyBindings(this, this._BindingControl[0]);
+        }
 
     }
 
-    export function init(bindingControl: JQuery, query: Dns.Interfaces.IQueryComposerRequestDTO, termID: any) { 
-        var vm = new ViewModel(bindingControl, [], query, termID);       
+    export function init(bindingControl: JQuery, query: Dns.Interfaces.IQueryComposerQueryDTO, termID: any) { 
+        let vm = new ViewModel(bindingControl, [], query, termID);       
         $(() => {   
             ko.applyBindings(vm, bindingControl[0]);
         });

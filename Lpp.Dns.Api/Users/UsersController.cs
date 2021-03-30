@@ -499,9 +499,14 @@ namespace Lpp.Dns.Api.Users
             if (userID != Identity.ID)
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to view notifications for the specified user."));
 
-            var notifications = DataContext.GetNotifications(userID);
+            // PMNDEV-3117 - Resolve performance issue as a stop gap measure by limiting it to 2 weeks of notifications.
+            var twoWeeksAgo = DateTimeOffset.UtcNow.AddDays(-14);
+            var notifications = DataContext.GetNotifications(userID); //.ToArray();
+            //var nn = from n in notifications
+            //         where n.Timestamp < twoWeeksAgo
+            //         select n;
 
-            return notifications;
+            return notifications; //.AsQueryable();
         }
 
         /// <summary>
@@ -1370,35 +1375,35 @@ namespace Lpp.Dns.Api.Users
         public async Task<MetadataEditPermissionsSummaryDTO> GetMetadataEditPermissionsSummary()
         {
             var result = new MetadataEditPermissionsSummaryDTO { CanEditRequestMetadata = false, EditableDataMarts = Enumerable.Empty<Guid>() };
+            var globalAcls = DataContext.GlobalAcls.FilterAcl(Identity, PermissionIdentifiers.Request.Edit);
+            var projectAcls = DataContext.ProjectAcls.FilterAcl(Identity, PermissionIdentifiers.Request.Edit, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata);
+            var projectOrganizationAcls = DataContext.ProjectOrganizationAcls.FilterAcl(Identity, PermissionIdentifiers.Request.Edit);
 
-            var editableRequestsQuery = from r in DataContext.Secure<Request>(Identity).AsNoTracking()
-                                        let userID = Identity.ID
-                                        let requestEditPermissionID = PermissionIdentifiers.Request.Edit.ID
-                                        let editRequestMetadataPermissionID = PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID
-                                        let requestEdit = DataContext.FilteredGlobalAcls(userID, requestEditPermissionID).Select(a => a.Allowed)
-                                        .Concat(DataContext.FilteredProjectAcls(userID, requestEditPermissionID, r.ProjectID).Select(a => a.Allowed))
-                                        .Concat(DataContext.FilteredProjectOrganizationsAcls(userID, requestEditPermissionID, r.ProjectID, r.OrganizationID).Select(a => a.Allowed))
-                                        let editRequestMetadata = DataContext.FilteredProjectAcls(userID, editRequestMetadataPermissionID, r.ProjectID).Select(a => a.Allowed)
-                                        .Concat(DataContext.ProjectRequestTypeWorkflowActivities.Where(a => a.PermissionID == editRequestMetadataPermissionID && a.ProjectID == r.ProjectID && a.RequestTypeID == r.RequestTypeID && a.WorkflowActivityID == r.WorkFlowActivityID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID)).Select(a => a.Allowed))
-                                        where (requestEdit.Any() && requestEdit.All(a => a))
-                                        && ((int)r.Status < 500 ? true : (editRequestMetadata.Any() && editRequestMetadata.All(a => a)))
-                                        select r;
+            result.CanEditRequestMetadata = await (from r in DataContext.Secure<Request>(Identity).AsNoTracking()
+                                             let gAcl = globalAcls
+                                             let pAcl = projectAcls.Where(a => a.ProjectID == r.ProjectID)
+                                             let poAcl = projectOrganizationAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID)
+                                             where ((gAcl.Any() || pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).Any() || poAcl.Any()) && (gAcl.All(a => a.Allowed) && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).All(a => a.Allowed) && poAcl.All(a => a.Allowed))) &&
+                                                    ((int)r.Status < 500 ? true : (pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).Any() && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).All(a => a.Allowed)))
+                                             select r).AnyAsync();
 
-            var editableDataMarts = await (from rdm in DataContext.RequestDataMarts
-                                           join dm in DataContext.DataMarts on rdm.DataMartID equals dm.ID
-                                           join r in editableRequestsQuery on rdm.RequestID equals r.ID
-                                           let seeRequestsPermissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
-                                           let userID = Identity.ID
-                                           let datamartAcls = DataContext.FilteredGlobalAcls(userID, seeRequestsPermissionID).Select(a => a.Allowed)
-                                           .Concat(DataContext.FilteredOrganizationAcls(userID, seeRequestsPermissionID, dm.OrganizationID).Select(a => a.Allowed))
-                                           .Concat(DataContext.FilteredProjectAcls(userID, seeRequestsPermissionID, r.ProjectID).Select(a => a.Allowed))
-                                           .Concat(DataContext.FilteredDataMartAcls(userID, seeRequestsPermissionID, rdm.DataMartID).Select(a => a.Allowed))
-                                           .Concat(DataContext.FilteredProjectDataMartAcls(userID, seeRequestsPermissionID, r.ProjectID, rdm.DataMartID).Select(a => a.Allowed))
-                                           where datamartAcls.Any() && datamartAcls.All(a => a)
-                                           select rdm.DataMartID).Distinct().ToArrayAsync();
+            if (result.CanEditRequestMetadata)
+            {
 
-            result.CanEditRequestMetadata = await editableRequestsQuery.AnyAsync();
-            result.EditableDataMarts = editableDataMarts;
+                var datamarts = DataContext.Secure<DataMart>(Identity, PermissionIdentifiers.DataMartInProject.SeeRequests);
+                var requests = DataContext.Secure<Request>(Identity);
+
+                result.EditableDataMarts = await (from rdm in DataContext.RequestDataMarts
+                                                  join dm in datamarts on rdm.DataMartID equals dm.ID
+                                                  join r in requests on rdm.RequestID equals r.ID
+                                                  let gAcl = globalAcls
+                                                  let pAcl = projectAcls.Where(a => a.ProjectID == r.ProjectID)
+                                                  let poAcl = projectOrganizationAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID)
+                                                  where ((gAcl.Any() || pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).Any() || poAcl.Any()) && (gAcl.All(a => a.Allowed) && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).All(a => a.Allowed) && poAcl.All(a => a.Allowed))) &&
+                                                          ((int)r.Status < 500 ? true : (pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).Any() && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).All(a => a.Allowed)))
+                                                  select rdm.DataMartID).GroupBy(k => k).Select(k => k.Key).ToArrayAsync();
+
+            }
 
             return result;
         }

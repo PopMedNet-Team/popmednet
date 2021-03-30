@@ -523,10 +523,5 @@ namespace PopMedNet.Adapters.AcceptanceTests
             var result = RunRequest(filename);
             var expected = ConfirmResponse(filename + "_response", result);
         }
-
-
-
     }
-
-
 }

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Dns.Workflow.Default</RootNamespace>
     <AssemblyName>Lpp.Dns.Workflow.Default</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -85,6 +85,10 @@
     <ProjectReference Include="..\Lpp.Objects\Lpp.Objects.csproj">
       <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
       <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.QueryComposer\Lpp.QueryComposer.csproj">
+      <Project>{b3374f4b-88a0-412d-90e5-79f2014d7721}</Project>
+      <Name>Lpp.QueryComposer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lpp.Utilities\Lpp.Utilities.csproj">
       <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>

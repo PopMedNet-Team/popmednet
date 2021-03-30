@@ -18,16 +18,16 @@ var RequestType;
     (function (Details) {
         var ViewModel = /** @class */ (function (_super) {
             __extends(ViewModel, _super);
-            function ViewModel(requestType, requestTypeModels, requestTypeTerms, bindingControl, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, template) {
+            function ViewModel(requestType, requestTypeModels, requestTypeTerms, bindingControl, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, visualTerms, criteriaGroupTemplates, hiddenTerms) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
                 var self = _this;
                 self.Workflows = workflows;
-                self.Templates = templates;
                 self.RequestType = new Dns.ViewModels.RequestTypeViewModel(requestType);
-                self.Template = new Dns.ViewModels.TemplateViewModel(template);
-                //set default template
-                if (self.Template.ComposerInterface() == null)
-                    self.Template.ComposerInterface(Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery);
+                self.RequestTypeID = requestType.ID;
+                self.RequestTypeTerms = ko.observableArray(requestTypeTerms.map(function (item) {
+                    return new Dns.ViewModels.RequestTypeTermViewModel(item);
+                }));
+                self.TermList = termList;
                 self.SelectedModels = ko.observableArray(ko.utils.arrayFilter(requestTypeModels, function (rtm) {
                     var modelID = rtm.DataModelID.toLowerCase();
                     return modelID == '321adaa1-a350-4dd0-93de-5de658a507df' || //Data Characterization
@@ -35,15 +35,23 @@ var RequestType;
                         modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' || //PCORnet
                         modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' || //Summary Tables
                         modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' || //Distributed Regression
-                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154' || //Modular Program
-                        modelID == '00bf515f-6539-405b-a617-ca9f8aa12970'; //File Distribution
+                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154'; //Modular Program
                 }).map(function (item) {
                     return item.DataModelID.toLowerCase();
-                }));
-                self.RequestTypeTerms = ko.observableArray(requestTypeTerms.map(function (item) {
-                    return new Dns.ViewModels.RequestTypeTermViewModel(item);
-                }));
-                self.TermList = termList;
+                })).extend({ rateLimit: 900, method: 'notifyWhenChangesStop' });
+                var termsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
+                _this.QueryDesigner = new Plugins.Requests.QueryBuilder.QueryEditorHost({
+                    Templates: ko.utils.arrayMap(templates, function (t) { return new Dns.ViewModels.TemplateViewModel(t); }),
+                    IsTemplateEdit: true,
+                    TemplateType: Dns.Enums.TemplateTypes.Request,
+                    RequestTypeTerms: self.RequestTypeTerms,
+                    RequestTypeModelIDs: self.SelectedModels,
+                    VisualTerms: visualTerms,
+                    CriteriaGroupTemplates: criteriaGroupTemplates,
+                    HiddenTerms: hiddenTerms,
+                    SupportsMultiQuery: ko.pureComputed(function () { return self.RequestType.SupportMultiQuery(); }),
+                    TermsObserver: termsObserver
+                });
                 self.AddableTerms = ko.computed(function () {
                     var results = self.TermList.filter(function (t) {
                         var exists = false;
@@ -63,67 +71,45 @@ var RequestType;
                 self.RequestTypeSecurity = new Security.Acl.AclEditViewModel(permissionList, securityGroupTree, self.RequestTypeAcls, [
                     {
                         Field: "RequestTypeID",
-                        Value: self.RequestType.ID()
+                        Value: self.RequestTypeID
                     }
                 ], Dns.ViewModels.AclRequestTypeViewModel);
-                self.Template.QueryType.subscribe(function (value) {
-                    if (self.Template.Type() == Dns.Enums.TemplateTypes.Request) {
-                        Plugins.Requests.QueryBuilder.MDQ.vm.Request.Header.QueryType(value);
-                        Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList(self.SelectedModels(), value, self.RequestTypeTerms().map(function (t) { return t.TermID(); }));
-                    }
-                });
-                self.SelectedModels.subscribe(function (values) {
-                    if (self.Template.Type() == Dns.Enums.TemplateTypes.Request) {
-                        Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList(values, self.Template.QueryType(), self.RequestTypeTerms().map(function (t) { return t.TermID(); }));
-                    }
-                });
-                self.RequestTypeTerms.subscribe(function (values) {
-                    if (self.Template.Type() == Dns.Enums.TemplateTypes.Request) {
-                        Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList(self.SelectedModels(), self.Template.QueryType(), values.map(function (t) { return t.TermID(); }));
-                    }
-                });
                 self.WatchTitle(_this.RequestType.Name, "Request Type: ");
                 self.Save = function () {
                     if (self.RequestType.WorkflowID() == null || self.RequestType.WorkflowID() == "") {
-                        Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have a Workflow Selected.</p>");
+                        Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have a Workflow selected.</p>");
                         return;
                     }
+                    //make sure that if the composer contains a file upload or modular term that it is only single query, and the interface is set to File Distribution and multi-query is disabled
                     if (!_super.prototype.Validate.call(_this))
                         return;
-                    if (!Plugins.Requests.QueryBuilder.MDQ.vm.AreTermsValid())
-                        return;
-                    if (self.RequestTypeAcls().length == 0) {
+                    var requestTypeAcls = self.RequestTypeAcls();
+                    if (requestTypeAcls.length == 0) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have added at least one security group to the Permissions tab to be able to administer this request type.</p>");
                         return;
                     }
-                    self.Template.Data(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
                     var update = new Dns.ViewModels.UpdateRequestTypeRequestViewModel().toData();
                     update.RequestType = self.RequestType.toData();
-                    update.Template = self.Template.toData();
+                    update.Queries = self.QueryDesigner.ExportTemplates();
                     update.Models = self.SelectedModels();
                     update.Terms = self.RequestTypeTerms().map(function (t) { return t.TermID(); });
-                    update.NotAllowedTerms = Plugins.Requests.QueryBuilder.MDQ.vm.NotAllowedTerms();
+                    update.NotAllowedTerms = self.QueryDesigner.ExportHiddenTerms();
+                    update.Permissions = requestTypeAcls.map(function (a) {
+                        a.RequestTypeID(self.RequestTypeID);
+                        return a.toData();
+                    });
                     Dns.WebApi.RequestTypes.Save(update).done(function (results) {
                         var result = results[0];
                         self.RequestType.ID(result.RequestType.ID);
+                        self.RequestTypeID = result.RequestType.ID;
                         self.RequestType.Timestamp(result.RequestType.Timestamp);
-                        self.RequestType.TemplateID(result.Template.ID);
-                        window.history.replaceState(null, window.document.title, "/requesttype/details?ID=" + self.RequestType.ID());
-                        self.Template.ID(result.Template.ID);
-                        self.Template.Timestamp(result.Template.Timestamp);
-                        self.Template.CreatedByID(result.Template.CreatedByID);
-                        var requestTypeAcls = self.RequestTypeAcls().map(function (a) {
-                            a.RequestTypeID(self.RequestType.ID());
-                            return a.toData();
-                        });
-                        Dns.WebApi.Security.UpdateRequestTypePermissions(requestTypeAcls).done(function () {
-                            Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>");
-                        });
+                        window.history.replaceState(null, window.document.title, "/requesttype/details?ID=" + self.RequestTypeID);
+                        Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>");
                     });
                 };
                 self.Delete = function () {
                     Global.Helpers.ShowConfirm("Delete Confirmation", "<p>Are you sure you wish to delete this Request Type?</p>").done(function () {
-                        Dns.WebApi.RequestTypes.Delete([self.RequestType.ID()]).done(function () {
+                        Dns.WebApi.RequestTypes.Delete([self.RequestTypeID]).done(function () {
                             window.location.href = "/requesttype";
                         });
                     });
@@ -136,62 +122,57 @@ var RequestType;
                         Description: term.Description,
                         OID: term.OID,
                         ReferenceUrl: term.ReferenceUrl,
-                        RequestTypeID: self.RequestType.ID(),
+                        RequestTypeID: self.RequestTypeID,
                         Term: term.Name,
                         TermID: term.ID
                     }));
                 };
                 return _this;
             }
+            ViewModel.prototype.onConfirmChangeToSingleQuery = function (data, evt) {
+                var self = this;
+                if (data.RequestType.SupportMultiQuery() && data.QueryDesigner.Queries().length > 1) {
+                    //changing from multi-query to single, warn will delete any queries after the first
+                    Global.Helpers.ShowConfirm('Please Confirm', '<p class="alert alert-warning">Changing to single Query will remove all Cohorts except for the first. Proceed?</p>')
+                        .done(function () {
+                        self.RequestType.SupportMultiQuery(false);
+                    });
+                    evt.stopImmediatePropagation();
+                    return false;
+                }
+                return true;
+            };
             ViewModel.prototype.Cancel = function () {
                 window.location.href = "/requesttype";
             };
             return ViewModel;
         }(Global.PageViewModel));
         Details.ViewModel = ViewModel;
-        function GetVisualTerms() {
-            var d = $.Deferred();
-            $.ajax({ type: "GET", url: '/QueryComposer/VisualTerms', dataType: "json" })
-                .done(function (result) {
-                d.resolve(result);
-            }).fail(function (e, description, error) {
-                d.reject(e);
-            });
-            return d;
-        }
         function init() {
             var id = $.url().param("ID");
-            $.when(id == null ? null : Dns.WebApi.RequestTypes.Get(id), id == null ? [] : Dns.WebApi.RequestTypes.GetRequestTypeModels(id), id == null ? null : Dns.WebApi.RequestTypes.GetRequestTypeTerms(id), id == null ? null : Dns.WebApi.RequestTypes.GetPermissions([id], [PMNPermissions.RequestTypes.Delete, PMNPermissions.RequestTypes.Edit, PMNPermissions.RequestTypes.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.RequestTypes]), Dns.WebApi.Security.GetRequestTypePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Workflow.List(null, "ID,Name", "Name"), Dns.WebApi.Templates.List("Type eq Lpp.Dns.DTO.Enums.TemplateTypes'" + Dns.Enums.TemplateTypes.Request + "'", "ID,Name", "Name"), Dns.WebApi.Terms.List(), GetVisualTerms()).done(function (requestTypes, requestTypeModels, requestTypeTerms, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, visualTerms) {
+            $.when(id == null ? null : Dns.WebApi.RequestTypes.Get(id), id == null ? null : Dns.WebApi.Templates.GetByRequestType(id), id == null ? [] : Dns.WebApi.RequestTypes.GetRequestTypeModels(id), id == null ? null : Dns.WebApi.RequestTypes.GetRequestTypeTerms(id), id == null ? null : Dns.WebApi.RequestTypes.GetPermissions([id], [PMNPermissions.RequestTypes.Delete, PMNPermissions.RequestTypes.Edit, PMNPermissions.RequestTypes.ManageSecurity]), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.RequestTypes]), Dns.WebApi.Security.GetRequestTypePermissions(id ? id : Constants.GuidEmpty), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Workflow.List(null, "ID,Name", "Name"), Dns.WebApi.Terms.List(), Plugins.Requests.QueryBuilder.MDQ.TermProvider.GetVisualTerms(), Dns.WebApi.Templates.CriteriaGroups(), Dns.WebApi.Templates.ListHiddenTermsByRequestType(id ? id : Constants.GuidEmpty)).done(function (requestTypes, templates, requestTypeModels, requestTypeTerms, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, termList, visualTerms, criteriaGroupTemplates, hiddenTerms) {
                 var requestType = (requestTypes == null || requestTypes.length == 0) ? new Dns.ViewModels.RequestTypeViewModel().toData() : requestTypes[0];
-                $.when(requestType.TemplateID == null ? null : Dns.WebApi.Templates.Get(requestType.TemplateID)).done(function (templates) {
-                    var template;
-                    if (templates == null || templates.length == 0) {
-                        template = new Dns.ViewModels.TemplateViewModel().toData();
-                        template.Type = Dns.Enums.TemplateTypes.Request;
-                        template.ComposerInterface = Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery;
-                        template.QueryType = null;
-                    }
-                    else {
-                        template = templates[0];
-                    }
-                    var json = JSON.parse(((template.Data || '').trim() != '') ? template.Data : '{"Header":{},"Where":{"Criteria":[{"Name":"Group 1","Criteria":[],"Terms":[],"ObservationPeriod":{}}]}}');
-                    $(function () {
-                        var bindingControl = $('#Content');
-                        Details.vm = new ViewModel(requestType, requestTypeModels || [], requestTypeTerms || [], bindingControl, screenPermissions || [PMNPermissions.RequestTypes.Delete,
-                            PMNPermissions.RequestTypes.Edit,
-                            PMNPermissions.RequestTypes.ManageSecurity], permissionList || [], requestTypePermissions || [], securityGroupTree || [], workflows, templates, termList, template);
-                        Plugins.Requests.QueryBuilder.Edit.init(json, [], null, null, '', [], null, visualTerms, true, null, requestType.TemplateID, null).done(function () {
-                            Plugins.Requests.QueryBuilder.MDQ.vm.UpdateTermList(Details.vm.SelectedModels(), Details.vm.Template.QueryType(), Details.vm.RequestTypeTerms().map(function (t) { return t.TermID(); }));
-                        });
-                        $('#tabs').kendoTabStrip().data('kendoTabStrip').bind('show', function (e) {
-                            if ($(e.contentElement).has('#txtNotes')) {
-                                //to make the kendo editor initialize correctly it needs to be refreshed when the tab is show
-                                var editor = $('#txtNotes').data('kendoEditor');
-                                editor.refresh();
-                            }
-                        });
-                        ko.applyBindings(Details.vm, bindingControl[0]);
+                if (templates == null || templates.length == 0) {
+                    var template = new Dns.ViewModels.TemplateViewModel().toData();
+                    template.Name = 'Cohort 1';
+                    template.Type = Dns.Enums.TemplateTypes.Request;
+                    template.ComposerInterface = Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery;
+                    template.QueryType = null;
+                    templates = [template];
+                }
+                $(function () {
+                    var bindingControl = $('#Content');
+                    Details.vm = new ViewModel(requestType, requestTypeModels || [], requestTypeTerms || [], bindingControl, screenPermissions || [PMNPermissions.RequestTypes.Delete, PMNPermissions.RequestTypes.Edit, PMNPermissions.RequestTypes.ManageSecurity], permissionList || [], requestTypePermissions || [], securityGroupTree || [], workflows, templates, termList, visualTerms, criteriaGroupTemplates, hiddenTerms);
+                    $('#tabs').kendoTabStrip().data('kendoTabStrip').bind('show', function (e) {
+                        if ($(e.contentElement).has('#txtNotes')) {
+                            //to make the kendo editor initialize correctly it needs to be refreshed when the tab is show
+                            var editor = $('#txtNotes').data('kendoEditor');
+                            editor.refresh();
+                        }
                     });
+                    ko.applyBindings(Details.vm, bindingControl[0]);
+                    Details.vm.QueryDesigner.onKnockoutBind();
+                    $('#PageLoadingMessage').remove();
                 });
             });
         }

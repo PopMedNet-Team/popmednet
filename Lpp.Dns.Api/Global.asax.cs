@@ -132,12 +132,10 @@ namespace Lpp.Dns.Api
             });
 
 
-            HangfireBootstrapper.Instance.Start();
         }
 
         protected void Application_End(object sender, EventArgs e)
         {
-            HangfireBootstrapper.Instance.Stop();
         }
 
 #if(!DEBUG)

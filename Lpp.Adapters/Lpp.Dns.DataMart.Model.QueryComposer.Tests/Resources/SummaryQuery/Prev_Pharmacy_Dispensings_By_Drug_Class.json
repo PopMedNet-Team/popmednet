@@ -6,126 +6,85 @@
         "Name": "Group 1",
         "Criteria": [
           {
-            "ID": "ce2c064c-76a2-4a33-94fd-15b23690dd62",
+            "ID": "e6fa264d-9c2c-4d75-8117-9cede6fa7fe5",
             "Name": "i_codeterms",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "75290001-0e78-490c-9635-a3ca01550704",
                 "Values": {
-                  "Codes": [],
+                  "Codes": [ ],
                   "CodeValues": [
                     {
-                      "Code": "Antimetabolite - Purine Analogs",
-                      "Name": "Antimetabolite - Purine Analogs",
-                      "ExpireDate": null
-                    },
-                    {
-                      "Code": "Dermatological - Antipsoriatic Agents Topical",
-                      "Name": "Dermatological - Antipsoriatic Agents Topical",
-                      "ExpireDate": null
-                    },
-                    {
-                      "Code": "Vitamins - Water Soluble",
-                      "Name": "Vitamins - Water Soluble",
+                      "Code": "Alcohol Abstinence Therapy",
+                      "Name": "Alcohol Abstinence Therapy",
                       "ExpireDate": null
                     }
                   ]
                 },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "c7db56e4-0d95-4bf2-9979-bcbb6387a9bb",
+            "ID": "ac2c1f53-b848-4050-afa2-49b16053f8b1",
             "Name": "i_Sex",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
                 "Values": { "Sex": "3" },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           },
           {
-            "ID": "5be7ede5-e15c-445c-9b39-0fa0d89e7b26",
+            "ID": "c9f448fe-ab1a-4e12-b568-0dec05bdcd6b",
             "Name": "i_Year/Quarter_Observation Period",
             "Operator": 0,
-            "Criteria": [],
+            "Criteria": [ ],
             "Terms": [
               {
                 "Operator": 1,
                 "Type": "d62f0001-3fe1-4910-99a9-a3cb014c2bc7",
                 "Values": {
                   "StartYear": 2000,
-                  "EndYear": 2018,
-                  "ByYearsOrQuarters": "ByQuarters",
-                  "StartQuarter": "Q2",
-                  "EndQuarter": "Q3"
+                  "EndYear": 2010
                 },
-                "Criteria": [],
-                "Design": {}
-              }
-            ],
-            "Type": 0
-          },
-          {
-            "ID": "61bd91f0-0ef9-4de4-b1d5-63b39e907e25",
-            "Name": "i_Settings",
-            "Operator": 0,
-            "Criteria": [],
-            "Terms": [
-              {
-                "Operator": 1,
-                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
-                "Values": { "Setting": "4" },
-                "Criteria": [],
-                "Design": {}
+                "Criteria": [ ]
               }
             ],
             "Type": 0
           }
         ],
-        "Terms": []
+        "Terms": [ ]
       }
     ]
   },
   "Select": {
     "Fields": [
       {
-        "FieldName": "Drug Class",
-        "Type": "75290001-0e78-490c-9635-a3ca01550704",
-        "GroupBy": null,
-        "StratifyBy": null,
-        "Aggregate": null,
-        "Select": [],
-        "OrderBy": 0
-      },
-      {
         "FieldName": "Drug Class_Count",
         "Type": "75290001-0e78-490c-9635-a3ca01550704",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
-        "FieldName": "Sex",
-        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "FieldName": "Drug Class",
+        "Type": "75290001-0e78-490c-9635-a3ca01550704",
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -134,7 +93,16 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -143,7 +111,7 @@
         "GroupBy": null,
         "StratifyBy": "1",
         "Aggregate": null,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       },
       {
@@ -152,7 +120,7 @@
         "GroupBy": null,
         "StratifyBy": null,
         "Aggregate": 1,
-        "Select": [],
+        "Select": [ ],
         "OrderBy": 0
       }
     ]

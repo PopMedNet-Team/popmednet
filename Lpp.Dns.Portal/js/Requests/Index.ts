@@ -111,21 +111,29 @@ module Requests.Index {
         }
 
         public onCreateRequest(proj: Dns.Interfaces.IProjectDTO) {
-            var projectID = proj.ID;
+            let projectID = proj.ID;
             vm.SelectedProjectID(proj.ID);
             Global.Helpers.ShowDialog("Choose Request Type", '/requests/createdialog', ["Close"], 400, 600, { ProjectID: projectID }).done((result: Dns.Interfaces.IRequestTypeDTO) => {
                 if (!result)
                     return;
-                var url;
-                if (!result.TemplateID && !result.WorkflowID) {
-                    // Legacy Non-workflow request types
+
+                let url;
+                //if (!result.TemplateID && !result.WorkflowID) {
+                //    // Legacy Non-workflow request types
+                //    url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + projectID;
+                //} else if (!result.TemplateID) {
+                //    // Workflow based non-QueryComposer request types
+                //    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&WorkflowID=" + result.WorkflowID;
+                //} else {
+                //    // QueryComposer request types
+                //    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&templateID=" + result.TemplateID + "&WorkflowID=" + result.WorkflowID;
+                //}
+
+                if (!result.WorkflowID) {
+                    //Legacy Non-workflow request types
                     url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + projectID;
-                } else if (!result.TemplateID) {
-                    // Workflow based non-QueryComposer request types
-                    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&WorkflowID=" + result.WorkflowID;
                 } else {
-                    // QueryComposer request types
-                    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&templateID=" + result.TemplateID + "&WorkflowID=" + result.WorkflowID;
+                    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&WorkflowID=" + result.WorkflowID;
                 }
                 window.location.href = url;
             });

@@ -1,153 +1,238 @@
 ﻿@using Lpp.Dns.Portal.Areas.QueryComposer
 @using Lpp.QueryComposer
 @using System.Linq;
-<script src="~/Areas/QueryComposer/js/View.js"></script>
+<script src="/Areas/QueryComposer/js/View.js"></script>
 <style>
     .criteria-block {
-        margin:8px -8px;
-        padding:8px;
-        background-color:#E0EEFF;
+        margin: 8px -8px;
+        padding: 8px;
+        background-color: #E0EEFF;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
     }
+
     .single-subcriteria-term {
         margin-left: -15px;
-        margin-right: -15px;        
-        border-bottom:1px solid silver;
+        margin-right: -15px;
+        margin-top:2rem;
+        margin-bottom:2rem;
     }
+
     p.operator {
-        margin-top:14px;
+        margin-top: 14px;
     }
 </style>
-<section id="viewQueryComposer">
-    <!-- ko if: Request.Header.Grammar() == null || Request.Header.Grammar().length == 0 -->
-    <h2>
-        Criteria Groups
-    </h2>
-    <ol class="cleanlist" data-bind="foreach: Request.Where.Criteria">
-        <h3 class="center" data-bind="visible:$index() > 0, text: Exclusion() ? 'And Not' : 'And'"></h3>
-        <li>
-            <article class="panel panel-default" data-bind="css: {visible: true}">
-                <div class="panel-heading">
-                    Criteria Group: <span data-bind="text: Name"></span>
-                </div>
+<section id="QueryComposerOverview">
 
+    <div class="collapse-group" data-bind="foreach:{ data: Request.Queries, as:'query' }">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" data-bind="attr:{ 'id':'view-' + query.Header.ID }">
+                <h4 class="panel-title">
+                    <button class="btn btn-link trigger" data-toggle="collapse" aria-expanded="true" data-bind="attr:{'id':'query-header-view-' + query.Header.ID, 'data-target':'#query-container-view-' + query.Header.ID, 'aria-controls':'query-container-view-' + query.Header.ID}"><span>Cohort: </span><span data-bind="text:query.Header.Name"></span></button>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" data-bind="attr:{ 'id': 'query-container-view-' + query.Header.ID, 'aria-labelledby': 'view-' + query.Header.ID}">
                 <div class="panel-body">
-                    <fieldset>
-                        <legend style="display: none;">Criteria Group Details</legend>
-                        <div class="row">
-                            <div class="col-sm-6 form-group">
-                                <label data-bind="attr:{'for':'txtGroupName' + $index() }, 'id':'lblGroupName' + $index()">Group Name</label>
-                                <input type="text" disabled maxlength="150" class="form-control" data-bind="value: Name, attr:{id: 'txtGroupName' + $index(), 'name':'txtGroupName' + $index() }" style="width: 98%;" />
+
+                    <h2>Criteria Groups</h2>
+                    <ol class="cleanlist" data-bind="foreach: query.Where.Criteria">
+                        <h3 class="center" data-bind="visible:$index() > 0, text: Exclusion ? 'And Not' : 'And'"></h3>
+                        <li>
+                            <article class="panel panel-default" data-bind="css: {visible: true}">
+                                <div class="panel-heading">
+                                    Criteria Group: <span data-bind="text: Name"></span>
+                                </div>
+
+                                <div class="panel-body">
+                                    <fieldset>
+                                        <legend style="display: none;">Criteria Group Details</legend>
+                                        <div class="row">
+                                            <div class="col-sm-6 form-group">
+                                                <label data-bind="attr:{'for': query.Header.ID + '_txtViewGroupName_' + $index() }, 'id': query.Header.ID + '_lblViewGroupName_' + $index()">Group Name<em>*</em></label>
+                                                <input type="text" disabled maxlength="150" class="form-control" data-bind="value: Name, attr:{id: query.Header.ID + '_txtViewGroupName_' + $index(), 'name': query.Header.ID + '_txtViewGroupName_' + $index() }" style="width: 98%;" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 checkbox" data-bind="visible: $index() > 0">
+                                                <label><input disabled type="checkbox" data-bind="checked: Exclusion" /> Exclusion Criteria</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <br class="clear" />
+                                    <section style="min-height: 225px;">
+                                        <fieldset style="margin-left: 180px;">
+                                            <legend style="display: none;">Selected Terms</legend>
+
+                                            <!-- Show the terms that are being OR'd together here -->
+
+                                            <div data-bind="foreach:{ data: Criteria, as: 'crit' }">
+                                                <div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms.length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                                <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms, afterRender: $root.onUpdateTemplateElements}, css:{'criteria-block': crit.Terms.length > 1 }"></div>
+                                            </div>
+
+                                            <div data-bind="visible:Terms.length > 0 && Criteria.length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                                            <div data-bind="template: {name: $root.TemplateSelector, foreach: Terms, afterRender: $root.onUpdateTemplateElements}"></div>
+
+                                        </fieldset>
+                                        <br class="clear" />
+                                    </section>
+                                </div>
+                            </article>
+                        </li>
+                    </ol>
+                    <h2>Report Selector</h2>
+                    <ol class="cleanlist">
+                        <li>
+                            <article class="panel panel-default" data-bind="css: {visible: true}">
+                                <div class="panel-heading">
+                                    Selected Stratification Fields:
+                                </div>
+                                <div class="panel-body" data-bind="with: query.Select">
+                                    <section style="min-height: 225px;">
+                                        <fieldset style="margin-left: 180px;">
+                                            <legend style="display: none;">Selected Fields</legend>
+                                            <div data-bind="template: {name: $root.StratifierTemplateSelector, foreach: $root.FilterForNonAggregateFields(query) , afterRender: $root.onUpdateTemplateElements}"></div>
+                                        </fieldset>
+                                        <br class="clear" />
+                                    </section>
+                                </div>
+                            </article>
+                        </li>
+                    </ol>
+                    <!--ko foreach:query.TemporalEvents-->
+                    <section>
+                        <div class="cleanlist">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3>Temporal Events</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row-noborder">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Index Event Identifier: </label>
+                                            <span type="text" data-bind="text: IndexEventDateIdentifier" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label style="display:block;">Time Window</label>
+                                            <span>Days Before: </span><span data-bind="text: DaysBefore"></span>
+                                            <span>Days After: </span><span data-bind="text: DaysAfter"></span>
+                                        </div>
+                                    </div>
+                                    <br class="clear" />
+                                    <!--ko foreach:{ data: Criteria, as : 'rootCrit'} -->
+                                    <section style="min-height: 225px;">
+                                        <fieldset style="margin-left: 180px;">
+                                            <p><label><input disabled type="checkbox" data-bind="checked: rootCrit.Exclusion" /> Exclusion Criteria</label></p>
+                                            <legend style="display: none;">Selected Terms</legend>
+                                            <div data-bind="foreach:{ data: rootCrit.Criteria, as: 'crit' }">
+                                                @*<div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>*@
+
+                                                <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms.length > 1 }"></div>
+                                            </div>
+
+                                            <div data-bind="visible:rootCrit.Terms.length > 0 && rootCrit.Criteria.length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                                            <div data-bind="template: {name: $root.TemplateSelector, foreach: rootCrit.Terms}"></div>
+
+                                        </fieldset>
+                                        <br class="clear" />
+                                    </section>
+                                    <!--/ko-->
+
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-12 checkbox" data-bind="visible: $index() > 0">
-                                <label for="chkExclusion" id="lblExclusion"><input id="chkExclusion" disabled type="checkbox" aria-labelledby="lblExclusion" data-bind="checked: Exclusion" /> Exclusion Criteria</label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <br class="clear" />
-                    <section style="min-height: 225px;">
-                        <fieldset style="margin-left: 180px;">
-                            <legend style="display: none;">Selected Terms</legend>
-
-                            @* Show the terms that are being OR'd together here *@
-
-                            <div data-bind="foreach:{ data: Criteria, as: 'crit' }">
-                                <div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
-
-                                <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
-                            </div>
-
-                            <div data-bind="visible:Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
-
-                            <div data-bind="template: {name: $root.TemplateSelector, foreach: Terms}"></div>
-
-                        </fieldset>
-                        <br class="clear" />
-                    </section>
-                </div>
-            </article>
-        </li>
-    </ol>
-    <h2>Report Selector</h2>
-    <ol class="cleanlist">
-        <li>
-            <article class="panel panel-default" data-bind="css: {visible: true}">
-                <div class="panel-heading">
-                    Selected Stratification Fields:
-                </div>
-                <div class="panel-body" data-bind="with: Request.Select">
-                    <section style="min-height: 225px;">
-                        <fieldset style="margin-left: 180px;">
-                            <legend style="display: none;">Selected Fields</legend>
-                            <div data-bind="template: {name: $root.StratifierTemplateSelector, foreach: $root.NonAggregateFields }">
-                            </div>
-                        </fieldset>
-                        <br class="clear" />
-                    </section>
-                </div>
-            </article>
-        </li>
-    </ol>
-    <!--ko foreach:Request.TemporalEvents-->
-    <section>
-        <div class="cleanlist">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Temporal Events</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row-noborder">
-                        <div class="col-sm-6 form-group">
-                            <label>Index Event Identifier: </label>
-                            <span type="text" data-bind="text: IndexEventDateIdentifier" />
-                        </div>
-                        <div class="col-sm-6 form-group">
-                            <label style="display:block;">Time Window</label>
-                            <span>Days Before: </span><span data-bind="text: DaysBefore"></span>
-                            <span>Days After: </span><span data-bind="text: DaysAfter"></span>
-                        </div>
-                    </div>
-                    <br class="clear" />
-                    <!--ko foreach:{ data: Criteria, as : 'rootCrit'} -->
-                    <section style="min-height: 225px;">
-                        <fieldset style="margin-left: 180px;">
-                            <p><label><input disabled type="checkbox" data-bind="checked: rootCrit.Exclusion" /> Exclusion Criteria</label></p>
-                            <legend style="display: none;">Selected Terms</legend>
-                            <div data-bind="foreach:{ data: rootCrit.Criteria, as: 'crit' }">
-                                @*<div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>*@
-
-                                <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
-                            </div>
-
-                            <div data-bind="visible:rootCrit.Terms().length > 0 && rootCrit.Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
-
-                            <div data-bind="template: {name: $root.TemplateSelector, foreach: rootCrit.Terms}"></div>
-
-                        </fieldset>
-                        <br class="clear" />
                     </section>
                     <!--/ko-->
+
 
                 </div>
             </div>
         </div>
-    </section>
-    <!--/ko-->
-    <!-- /ko -->
-    <!-- ko if: Request.Header.Grammar() != null && Request.Header.Grammar().length > 0 -->
-    <ol class="cleanlist">
-        <li>
-            <span style="white-space: pre-wrap;" data-bind="text: Request.Header.Grammar"></span>
-        </li>
-    </ol>
-    <!-- /ko -->
+    </div>
+
+
 </section>
 
 
+
+@*<section id="viewQueryComposer">
+        <h2>
+            Criteria Groups
+        </h2>
+        <ol class="cleanlist" data-bind="foreach: Query.Where.Criteria">
+            <h3 class="center" data-bind="visible:$index() > 0, text: Exclusion() ? 'And Not' : 'And'"></h3>
+            <li>
+                <article class="panel panel-default" data-bind="css: {visible: true}">
+                    <div class="panel-heading">
+                        Criteria Group: <span data-bind="text: Name"></span>
+                    </div>
+
+                    <div class="panel-body">
+                        <fieldset>
+                            <legend style="display: none;">Criteria Group Details</legend>
+                            <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <label data-bind="attr:{'for':'txtGroupName' + $index() }, 'id':'lblGroupName' + $index()">Group Name<em>*</em></label>
+                                    <input type="text" disabled maxlength="150" required validationmessage="Criteria Group Name is Required" class="form-control" data-bind="value: Name, attr:{id: 'txtGroupName' + $index(), 'name':'txtGroupName' + $index() }" style="width: 98%;" />
+                                </div>
+                              </div>
+                            <div class="row">
+                                <div class="col-sm-12 checkbox" data-bind="visible: $index() > 0">
+                                    <label for="chkExclusion" id="lblExclusion"><input id="chkExclusion" disabled type="checkbox" aria-labelledby="lblExclusion" data-bind="checked: Exclusion" /> Exclusion Criteria</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <br class="clear" />
+                        <section style="min-height: 225px;">
+                            <fieldset style="margin-left: 180px;">
+                                <legend style="display: none;">Selected Terms</legend>
+
+                                <!-- Show the terms that are being OR'd together here -->
+
+                                <div data-bind="foreach:{ data: Criteria, as: 'crit' }">
+                                    <div data-bind="visible:$root.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                    <div data-bind="template: {name: $root.TemplateSelector, foreach: crit.Terms}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
+                                </div>
+
+                                <div data-bind="visible:Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                                <div data-bind="template: {name: $root.TemplateSelector, foreach: Terms}"></div>
+
+                            </fieldset>
+                            <br class="clear" />
+                        </section>
+                    </div>
+                </article>
+            </li>
+        </ol>
+        <h2>Report Selector</h2>
+        <ol class="cleanlist">
+            <li>
+                <article class="panel panel-default" data-bind="css: {visible: true}">
+                    <div class="panel-heading">
+                        Selected Stratification Fields:
+                    </div>
+                    <div class="panel-body" data-bind="with: Query.Select">
+                        <section style="min-height: 225px;">
+                            <fieldset style="margin-left: 180px;">
+                                <legend style="display: none;">Selected Fields</legend>
+                                <div data-bind="template: {name: $root.StratifierTemplateSelector, foreach: $root.NonAggregateFields }">
+                                </div>
+                            </fieldset>
+                            <br class="clear" />
+                        </section>
+                    </div>
+                </article>
+            </li>
+        </ol>
+
+    </section>
+*@
 
 @foreach (var term in Lpp.Dns.Portal.Areas.QueryComposer.QueryComposerAreaRegistration.Terms)
 {

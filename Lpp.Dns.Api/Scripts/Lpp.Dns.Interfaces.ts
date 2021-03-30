@@ -1157,11 +1157,13 @@ module Dns.Enums
 	 	User = 0,
 	 	Sso = 1,
 	 	BackgroundTask = 2,
+	 	DMCSUser = 3,
 	 }
 	 export var UserTypesTranslation: Dns.Structures.KeyValuePair[] = [
 	 	 {value:UserTypes.User , text: 'User'},
 	 	 {value:UserTypes.Sso , text: 'Sso'},
 	 	 {value:UserTypes.BackgroundTask , text: 'BackgroundTask'},
+	 	 {value:UserTypes.DMCSUser , text: 'DMCSUser'},
 	 ]
 	 export enum RoutingStatus{
 	 	Draft = 1,
@@ -1398,6 +1400,20 @@ module Dns.Interfaces
 	 export var KendoModelApproveRejectResponseDTO: any = {
 	 	 fields: {
 	 	 	'ResponseID': { type:'any', nullable: false},
+	 	 }
+	 }
+	 export interface ICreateCriteriaGroupTemplateDTO{
+	 	 Name: string;
+	 	 Description: string;
+	 	 Json: string;
+	 	 AdapterDetail?: Dns.Enums.QueryComposerQueryTypes;
+	 }
+	 export var KendoModelCreateCriteriaGroupTemplateDTO: any = {
+	 	 fields: {
+	 	 	'Name': { type:'string', nullable: false},
+	 	 	'Description': { type:'string', nullable: false},
+	 	 	'Json': { type:'string', nullable: false},
+	 	 	'AdapterDetail': { type:'dns.enums.querycomposerquerytypes', nullable: true},
 	 	 }
 	 }
 	 export interface IEnhancedEventLogItemDTO{
@@ -1664,7 +1680,8 @@ module Dns.Interfaces
 	 }
 	 export interface IUpdateRequestTypeRequestDTO{
 	 	 RequestType: IRequestTypeDTO;
-	 	 Template: ITemplateDTO;
+	 	 Permissions: IAclRequestTypeDTO[];
+	 	 Queries: ITemplateDTO[];
 	 	 Terms: any[];
 	 	 NotAllowedTerms: ISectionSpecificTermDTO[];
 	 	 Models: any[];
@@ -1672,7 +1689,8 @@ module Dns.Interfaces
 	 export var KendoModelUpdateRequestTypeRequestDTO: any = {
 	 	 fields: {
 	 	 	'RequestType': { type:'any', nullable: false},
-	 	 	'Template': { type:'any', nullable: false},
+	 	 	'Permissions': { type:'any[]', nullable: false},
+	 	 	'Queries': { type:'any[]', nullable: false},
 	 	 	'Terms': { type:'any[]', nullable: false},
 	 	 	'NotAllowedTerms': { type:'any[]', nullable: false},
 	 	 	'Models': { type:'any[]', nullable: false},
@@ -1680,12 +1698,12 @@ module Dns.Interfaces
 	 }
 	 export interface IUpdateRequestTypeResponseDTO{
 	 	 RequestType: IRequestTypeDTO;
-	 	 Template: ITemplateDTO;
+	 	 Queries: ITemplateDTO[];
 	 }
 	 export var KendoModelUpdateRequestTypeResponseDTO: any = {
 	 	 fields: {
 	 	 	'RequestType': { type:'any', nullable: false},
-	 	 	'Template': { type:'any', nullable: false},
+	 	 	'Queries': { type:'any[]', nullable: false},
 	 	 }
 	 }
 	 export interface IUpdateRequestTypeTermsDTO{
@@ -4042,6 +4060,16 @@ module Dns.Interfaces
 	 	 	'ScheduleJSON': { type:'string', nullable: false},
 	 	 }
 	 }
+	 export interface IAvailableTermsRequestDTO{
+	 	 Adapters: any[];
+	 	 QueryType?: Dns.Enums.QueryComposerQueryTypes;
+	 }
+	 export var KendoModelAvailableTermsRequestDTO: any = {
+	 	 fields: {
+	 	 	'Adapters': { type:'any[]', nullable: false},
+	 	 	'QueryType': { type:'dns.enums.querycomposerquerytypes', nullable: true},
+	 	 }
+	 }
 	 export interface IDistributedRegressionManifestFile{
 	 	 Items: IDistributedRegressionAnalysisCenterManifestItem[];
 	 	 DataPartners: IDistributedRegressionManifestDataPartner[];
@@ -4086,6 +4114,92 @@ module Dns.Interfaces
 	 	 	'DataMartCode': { type:'string', nullable: false},
 	 	 }
 	 }
+	 export interface IQueryComposerQueryDTO{
+	 	 Header: IQueryComposerQueryHeaderDTO;
+	 	 Where: IQueryComposerWhereDTO;
+	 	 Select: IQueryComposerSelectDTO;
+	 	 TemporalEvents: IQueryComposerTemporalEventDTO[];
+	 }
+	 export var KendoModelQueryComposerQueryDTO: any = {
+	 	 fields: {
+	 	 	'Header': { type:'any', nullable: false},
+	 	 	'Where': { type:'any', nullable: false},
+	 	 	'Select': { type:'any', nullable: false},
+	 	 	'TemporalEvents': { type:'any[]', nullable: false},
+	 	 }
+	 }
+	 export interface IQueryComposerResponseAggregationDefinitionDTO{
+	 	 GroupBy: string[];
+	 	 Select: any[];
+	 	 Name: string;
+	 }
+	 export var KendoModelQueryComposerResponseAggregationDefinitionDTO: any = {
+	 	 fields: {
+	 	 	'GroupBy': { type:'string[]', nullable: false},
+	 	 	'Select': { type:'any[]', nullable: false},
+	 	 	'Name': { type:'string', nullable: false},
+	 	 }
+	 }
+	 export interface IQueryComposerResponseHeaderDTO{
+	 	 ID?: any;
+	 	 RequestID?: any;
+	 	 DocumentID?: any;
+	 	 QueryingStart?: Date;
+	 	 QueryingEnd?: Date;
+	 	 DataMart: string;
+	 }
+	 export var KendoModelQueryComposerResponseHeaderDTO: any = {
+	 	 fields: {
+	 	 	'ID': { type:'any', nullable: true},
+	 	 	'RequestID': { type:'any', nullable: true},
+	 	 	'DocumentID': { type:'any', nullable: true},
+	 	 	'QueryingStart': { type:'date', nullable: true},
+	 	 	'QueryingEnd': { type:'date', nullable: true},
+	 	 	'DataMart': { type:'string', nullable: false},
+	 	 }
+	 }
+	 export interface IQueryComposerResponsePropertyDefinitionDTO{
+	 	 Name: string;
+	 	 Type: string;
+	 	 As: string;
+	 	 Aggregate: string;
+	 }
+	 export var KendoModelQueryComposerResponsePropertyDefinitionDTO: any = {
+	 	 fields: {
+	 	 	'Name': { type:'string', nullable: false},
+	 	 	'Type': { type:'string', nullable: false},
+	 	 	'As': { type:'string', nullable: false},
+	 	 	'Aggregate': { type:'string', nullable: false},
+	 	 }
+	 }
+	 export interface IQueryComposerResponseQueryResultDTO{
+	 	 ID?: any;
+	 	 Name: string;
+	 	 QueryStart?: Date;
+	 	 QueryEnd?: Date;
+	 	 PostProcessStart?: Date;
+	 	 PostProcessEnd?: Date;
+	 	 Errors: IQueryComposerResponseErrorDTO[];
+	 	 Results: any[];
+	 	 LowCellThrehold?: number;
+	 	 Properties: IQueryComposerResponsePropertyDefinitionDTO[];
+	 	 Aggregation: IQueryComposerResponseAggregationDefinitionDTO;
+	 }
+	 export var KendoModelQueryComposerResponseQueryResultDTO: any = {
+	 	 fields: {
+	 	 	'ID': { type:'any', nullable: true},
+	 	 	'Name': { type:'string', nullable: false},
+	 	 	'QueryStart': { type:'date', nullable: true},
+	 	 	'QueryEnd': { type:'date', nullable: true},
+	 	 	'PostProcessStart': { type:'date', nullable: true},
+	 	 	'PostProcessEnd': { type:'date', nullable: true},
+	 	 	'Errors': { type:'any[]', nullable: false},
+	 	 	'Results': { type:'any[]', nullable: false},
+	 	 	'LowCellThrehold': { type:'number', nullable: true},
+	 	 	'Properties': { type:'any[]', nullable: false},
+	 	 	'Aggregation': { type:'any', nullable: false},
+	 	 }
+	 }
 	 export interface IQueryComposerTemporalEventDTO{
 	 	 IndexEventDateIdentifier: string;
 	 	 DaysBefore: number;
@@ -4101,11 +4215,13 @@ module Dns.Interfaces
 	 	 }
 	 }
 	 export interface ISectionSpecificTermDTO{
+	 	 TemplateID: any;
 	 	 TermID: any;
 	 	 Section: Dns.Enums.QueryComposerSections;
 	 }
 	 export var KendoModelSectionSpecificTermDTO: any = {
 	 	 fields: {
+	 	 	'TemplateID': { type:'any', nullable: false},
 	 	 	'TermID': { type:'any', nullable: false},
 	 	 	'Section': { type:'dns.enums.querycomposersections', nullable: false},
 	 	 }
@@ -4197,24 +4313,22 @@ module Dns.Interfaces
 	 	 }
 	 }
 	 export interface IQueryComposerHeaderDTO{
+	 	 ID: any;
 	 	 Name: string;
 	 	 Description: string;
 	 	 ViewUrl: string;
-	 	 Grammar: string;
 	 	 Priority?: Dns.Enums.Priorities;
 	 	 DueDate?: Date;
-	 	 QueryType?: Dns.Enums.QueryComposerQueryTypes;
 	 	 SubmittedOn?: Date;
 	 }
 	 export var KendoModelQueryComposerHeaderDTO: any = {
 	 	 fields: {
+	 	 	'ID': { type:'any', nullable: false},
 	 	 	'Name': { type:'string', nullable: false},
 	 	 	'Description': { type:'string', nullable: false},
 	 	 	'ViewUrl': { type:'string', nullable: false},
-	 	 	'Grammar': { type:'string', nullable: false},
 	 	 	'Priority': { type:'dns.enums.priorities', nullable: true},
 	 	 	'DueDate': { type:'date', nullable: true},
-	 	 	'QueryType': { type:'dns.enums.querycomposerquerytypes', nullable: true},
 	 	 	'SubmittedOn': { type:'date', nullable: true},
 	 	 }
 	 }
@@ -4226,12 +4340,26 @@ module Dns.Interfaces
 	 	 	'Direction': { type:'dns.enums.orderbydirections', nullable: false},
 	 	 }
 	 }
+	 export interface IQueryComposerRequestDTO{
+	 	 SchemaVersion: string;
+	 	 Header: IQueryComposerRequestHeaderDTO;
+	 	 Queries: IQueryComposerQueryDTO[];
+	 }
+	 export var KendoModelQueryComposerRequestDTO: any = {
+	 	 fields: {
+	 	 	'SchemaVersion': { type:'string', nullable: false},
+	 	 	'Header': { type:'any', nullable: false},
+	 	 	'Queries': { type:'any[]', nullable: false},
+	 	 }
+	 }
 	 export interface IQueryComposerResponseErrorDTO{
+	 	 QueryID?: any;
 	 	 Code: string;
 	 	 Description: string;
 	 }
 	 export var KendoModelQueryComposerResponseErrorDTO: any = {
 	 	 fields: {
+	 	 	'QueryID': { type:'any', nullable: true},
 	 	 	'Code': { type:'string', nullable: false},
 	 	 	'Description': { type:'string', nullable: false},
 	 	 }
@@ -4245,53 +4373,17 @@ module Dns.Interfaces
 	 	 }
 	 }
 	 export interface IQueryComposerResponseDTO{
-	 	 ID?: any;
-	 	 DocumentID?: any;
-	 	 ResponseDateTime: Date;
-	 	 RequestID: any;
+	 	 SchemaVersion: string;
+	 	 Header: IQueryComposerResponseHeaderDTO;
 	 	 Errors: IQueryComposerResponseErrorDTO[];
-	 	 Results: any[];
-	 	 LowCellThrehold?: number;
-	 	 Properties: IQueryComposerResponsePropertyDefinitionDTO[];
-	 	 Aggregation: IQueryComposerResponseAggregationDefinitionDTO;
+	 	 Queries: IQueryComposerResponseQueryResultDTO[];
 	 }
 	 export var KendoModelQueryComposerResponseDTO: any = {
 	 	 fields: {
-	 	 	'ID': { type:'any', nullable: true},
-	 	 	'DocumentID': { type:'any', nullable: true},
-	 	 	'ResponseDateTime': { type:'date', nullable: false},
-	 	 	'RequestID': { type:'any', nullable: false},
+	 	 	'SchemaVersion': { type:'string', nullable: false},
+	 	 	'Header': { type:'any', nullable: false},
 	 	 	'Errors': { type:'any[]', nullable: false},
-	 	 	'Results': { type:'any[]', nullable: false},
-	 	 	'LowCellThrehold': { type:'number', nullable: true},
-	 	 	'Properties': { type:'any[]', nullable: false},
-	 	 	'Aggregation': { type:'any', nullable: false},
-	 	 }
-	 }
-	 export interface IQueryComposerResponseAggregationDefinitionDTO{
-	 	 GroupBy: string[];
-	 	 Select: any[];
-	 	 Name: string;
-	 }
-	 export var KendoModelQueryComposerResponseAggregationDefinitionDTO: any = {
-	 	 fields: {
-	 	 	'GroupBy': { type:'string[]', nullable: false},
-	 	 	'Select': { type:'any[]', nullable: false},
-	 	 	'Name': { type:'string', nullable: false},
-	 	 }
-	 }
-	 export interface IQueryComposerResponsePropertyDefinitionDTO{
-	 	 Name: string;
-	 	 Type: string;
-	 	 As: string;
-	 	 Aggregate: string;
-	 }
-	 export var KendoModelQueryComposerResponsePropertyDefinitionDTO: any = {
-	 	 fields: {
-	 	 	'Name': { type:'string', nullable: false},
-	 	 	'Type': { type:'string', nullable: false},
-	 	 	'As': { type:'string', nullable: false},
-	 	 	'Aggregate': { type:'string', nullable: false},
+	 	 	'Queries': { type:'any[]', nullable: false},
 	 	 }
 	 }
 	 export interface IQueryComposerTermDTO{
@@ -4324,7 +4416,6 @@ module Dns.Interfaces
 	 	 RequestType: string;
 	 	 WorkflowID?: any;
 	 	 Workflow: string;
-	 	 Template: string;
 	 }
 	 export var KendoModelProjectRequestTypeDTO: any = {
 	 	 fields: {
@@ -4333,7 +4424,6 @@ module Dns.Interfaces
 	 	 	'RequestType': { type:'string', nullable: false},
 	 	 	'WorkflowID': { type:'any', nullable: true},
 	 	 	'Workflow': { type:'string', nullable: false},
-	 	 	'Template': { type:'string', nullable: false},
 	 	 }
 	 }
 	 export interface IRequestObserverEventSubscriptionDTO extends IEntityDto{
@@ -4510,6 +4600,36 @@ module Dns.Interfaces
 	 	 	'Setting': { type:'string', nullable: false},
 	 	 }
 	 }
+	 export interface IQueryComposerQueryHeaderDTO extends IQueryComposerHeaderDTO{
+	 	 QueryType?: Dns.Enums.QueryComposerQueryTypes;
+	 	 ComposerInterface?: Dns.Enums.QueryComposerInterface;
+	 }
+	 export var KendoModelQueryComposerQueryHeaderDTO: any = {
+	 	 fields: {
+	 	 	'QueryType': { type:'dns.enums.querycomposerquerytypes', nullable: true},
+	 	 	'ComposerInterface': { type:'dns.enums.querycomposerinterface', nullable: true},
+	 	 	'ID': { type:'any', nullable: false},
+	 	 	'Name': { type:'string', nullable: false},
+	 	 	'Description': { type:'string', nullable: false},
+	 	 	'ViewUrl': { type:'string', nullable: false},
+	 	 	'Priority': { type:'dns.enums.priorities', nullable: true},
+	 	 	'DueDate': { type:'date', nullable: true},
+	 	 	'SubmittedOn': { type:'date', nullable: true},
+	 	 }
+	 }
+	 export interface IQueryComposerRequestHeaderDTO extends IQueryComposerHeaderDTO{
+	 }
+	 export var KendoModelQueryComposerRequestHeaderDTO: any = {
+	 	 fields: {
+	 	 	'ID': { type:'any', nullable: false},
+	 	 	'Name': { type:'string', nullable: false},
+	 	 	'Description': { type:'string', nullable: false},
+	 	 	'ViewUrl': { type:'string', nullable: false},
+	 	 	'Priority': { type:'dns.enums.priorities', nullable: true},
+	 	 	'DueDate': { type:'date', nullable: true},
+	 	 	'SubmittedOn': { type:'date', nullable: true},
+	 	 }
+	 }
 	 export interface IWFCommentDTO extends IEntityDtoWithID{
 	 	 Comment: string;
 	 	 CreatedOn: Date;
@@ -4663,6 +4783,9 @@ module Dns.Interfaces
 	 	 Notes: string;
 	 	 QueryType?: Dns.Enums.QueryComposerQueryTypes;
 	 	 ComposerInterface?: Dns.Enums.QueryComposerInterface;
+	 	 Order: number;
+	 	 RequestTypeID?: any;
+	 	 RequestType: string;
 	 }
 	 export var KendoModelTemplateDTO: any = {
 	 	 fields: {
@@ -4676,6 +4799,9 @@ module Dns.Interfaces
 	 	 	'Notes': { type:'string', nullable: false},
 	 	 	'QueryType': { type:'dns.enums.querycomposerquerytypes', nullable: true},
 	 	 	'ComposerInterface': { type:'dns.enums.querycomposerinterface', nullable: true},
+	 	 	'Order': { type:'number', nullable: false},
+	 	 	'RequestTypeID': { type:'any', nullable: true},
+	 	 	'RequestType': { type:'string', nullable: false},
 	 	 	'ID': { type:'any', nullable: true},
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }
@@ -5388,10 +5514,10 @@ module Dns.Interfaces
 	 	 PostProcess: boolean;
 	 	 AddFiles: boolean;
 	 	 RequiresProcessing: boolean;
-	 	 TemplateID?: any;
-	 	 Template: string;
+	 	 Notes: string;
 	 	 WorkflowID?: any;
 	 	 Workflow: string;
+	 	 SupportMultiQuery: boolean;
 	 }
 	 export var KendoModelRequestTypeDTO: any = {
 	 	 fields: {
@@ -5401,10 +5527,10 @@ module Dns.Interfaces
 	 	 	'PostProcess': { type:'boolean', nullable: false},
 	 	 	'AddFiles': { type:'boolean', nullable: false},
 	 	 	'RequiresProcessing': { type:'boolean', nullable: false},
-	 	 	'TemplateID': { type:'any', nullable: true},
-	 	 	'Template': { type:'string', nullable: false},
+	 	 	'Notes': { type:'string', nullable: false},
 	 	 	'WorkflowID': { type:'any', nullable: true},
 	 	 	'Workflow': { type:'string', nullable: false},
+	 	 	'SupportMultiQuery': { type:'boolean', nullable: false},
 	 	 	'ID': { type:'any', nullable: true},
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }
@@ -5672,22 +5798,6 @@ module Dns.Interfaces
 	 	 	'Name': { type:'string', nullable: false},
 	 	 	'Description': { type:'string', nullable: false},
 	 	 	'IsRequestCreator': { type:'boolean', nullable: false},
-	 	 	'ID': { type:'any', nullable: true},
-	 	 	'Timestamp': { type:'any', nullable: false},
-	 	 }
-	 }
-	 export interface IQueryComposerRequestDTO extends IEntityDtoWithID{
-	 	 Header: IQueryComposerHeaderDTO;
-	 	 Where: IQueryComposerWhereDTO;
-	 	 Select: IQueryComposerSelectDTO;
-	 	 TemporalEvents: IQueryComposerTemporalEventDTO[];
-	 }
-	 export var KendoModelQueryComposerRequestDTO: any = {
-	 	 fields: {
-	 	 	'Header': { type:'any', nullable: false},
-	 	 	'Where': { type:'any', nullable: false},
-	 	 	'Select': { type:'any', nullable: false},
-	 	 	'TemporalEvents': { type:'any[]', nullable: false},
 	 	 	'ID': { type:'any', nullable: true},
 	 	 	'Timestamp': { type:'any', nullable: false},
 	 	 }

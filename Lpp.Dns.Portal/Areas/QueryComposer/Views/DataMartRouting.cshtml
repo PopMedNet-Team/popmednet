@@ -1,105 +1,99 @@
 ﻿<script src="/Areas/QueryComposer/js/DataMartRouting.js"></script>
-<article class="panel panel-default" data-bind="css: {visible: true}">
-    <div class="panel-heading">
-        <h3>Selected DataMarts: <small><span class="glyphicon glyphicon-question-sign" title="Results are stratified according to the criteria in the Primary Criteria Group. If no option is selected, a single patient count will be returned." data-html="true"></span></small></h3>
-    </div>
-    <div class="panel-body">
-        <div class="row" style="margin:3px;">
-            <article class="Request-Footer-DataMarts" id="RequestDataMarts">
-                <style scoped>
-                    #dmSelectGrid table {
-                        width: 100%;
-                        background-color: #f5f5f5;
-                    }
 
-                    /*The next 3 sections make the magic happen*/
-                    #dmSelectGrid > tbody tr {
-                        display: table;
-                        width: 100%;
-                        table-layout: fixed;
-                    }
-                    #dmSelectGrid > thead {
-                        display: table;
-                        width: 99%;
-                        table-layout: fixed;
-                    }
+<div class="row" style="margin:3px;">
+    <article class="Request-Footer-DataMarts" id="RequestDataMarts">
+        <style>
+            #dmSelectGrid table {
+                width: 100%;
+                background-color: #f5f5f5;
+            }
 
-                    #dmSelectGrid > tbody {
-                        display: block;
-                        max-height: 920px;
-                        overflow-x: hidden;
-                        overflow-y: scroll;
-                    }
+            /*The next 3 sections make the magic happen*/
+            #dmSelectGrid > tbody tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+            #dmSelectGrid > thead {
+                display: table;
+                width: 99%;
+                table-layout: fixed;
+            }
 
-                    #dmSelectGrid > tbody tr:nth-child(even) {
-                        background-color: white;
-                    }
+            #dmSelectGrid > tbody {
+                display: block;
+                max-height: 920px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
 
-                    td {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
+            #dmSelectGrid > tbody tr:nth-child(even) {
+                background-color: white;
+            }
 
-                    /*Use the following to make sure cols align correctly*/
-                    #dmSelectGrid > table, #dmSelectGrid tr, #dmSelectGrid th, #dmSelectGrid td {
-                        border-collapse: collapse;
-                        font-weight: normal;
-                    }
+            #dmSelectGrid td {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /*Use the following to make sure cols align correctly*/
+            #dmSelectGrid > table, #dmSelectGrid tr, #dmSelectGrid th, #dmSelectGrid td {
+                border-collapse: collapse;
+                font-weight: normal;
+            }
 
 
-                    /*Set your columns to where you want them to be, skip the one that you can have resize to any width*/
-                        #dmSelectGrid th:nth-child(1), #dmSelectGrid td:nth-child(1) {
-                            width: 5%;
-                        }
+            /*Set your columns to where you want them to be, skip the one that you can have resize to any width*/
+                #dmSelectGrid th:nth-child(1), #dmSelectGrid td:nth-child(1) {
+                    width: 5%;
+                }
 
-                        #dmSelectGrid th:nth-child(2), #dmSelectGrid td:nth-child(2) {
-                            width: 30%;
-                        }
+                #dmSelectGrid th:nth-child(2), #dmSelectGrid td:nth-child(2) {
+                    width: 30%;
+                }
 
-                        #dmSelectGrid th:nth-child(3), #dmSelectGrid td:nth-child(3) {
-                            width: 20%;
-                        }
+                #dmSelectGrid th:nth-child(3), #dmSelectGrid td:nth-child(3) {
+                    width: 20%;
+                }
 
-                        #dmSelectGrid th:nth-child(4), #dmSelectGrid td:nth-child(4) {
-                            width: 20%;
-                        }
+                #dmSelectGrid th:nth-child(4), #dmSelectGrid td:nth-child(4) {
+                    width: 20%;
+                }
 
-                        #dmSelectGrid th:nth-child(5), #dmSelectGrid td:nth-child(5) {
-                            width: 25%;
-                            border-right: none !important;
-                        }
-                </style>
-                <table id="dmSelectGrid" class="table table-striped table-bordered">
-                    <thead>
-                        <tr style="background-color:#f5f5f5">
-                            <th>
-                                <input type="checkbox" title="Select All/None" data-bind="checked:RoutesSelectAll, indeterminateValue:SelectedDataMartIDs().length > 0 && SelectedDataMartIDs().length < DataMarts().length" />
-                            </th>
-                            <th>Name</th>
-                            <th>Organization</th>
-                            <th>Priority</th>
-                            <th>Due Date</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: DataMarts">
-                        <tr role="row">
-                            <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
-                            <td data-bind="text: Name"></td>
-                            <td data-bind="text: Organization"></td>
-                            <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + $index() }"></td>
-                            <td><input type="text" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id:'RouteDueDate_' + $index() }"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="margin-top: 5px;">
-                    <button id="btnBulkEdit" data-bind="click: $root.DataMartsBulkEdit, enable: $root.SelectedDataMartIDs().length > 0, clickBubble:false" class="btn btn-primary pull-right">Bulk Edit</button>
-                </div>
-            </article>
+                #dmSelectGrid th:nth-child(5), #dmSelectGrid td:nth-child(5) {
+                    width: 25%;
+                    border-right: none !important;
+                }
+        </style>
+        <table id="dmSelectGrid" class="table table-striped table-bordered">
+            <thead>
+                <tr style="background-color:#f5f5f5">
+                    <th>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:RoutesSelectAll, indeterminateValue:SelectedDataMartIDs().length > 0 && SelectedDataMartIDs().length < DataMarts().length" />
+                    </th>
+                    <th>Name</th>
+                    <th>Organization</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: DataMarts">
+                <tr role="row">
+                    <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: Organization"></td>
+                    <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + $index() }"></td>
+                    <td><input type="text" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id:'RouteDueDate_' + $index() }"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 5px;">
+            <button id="btnBulkEdit" data-bind="click: $root.DataMartsBulkEdit, enable: $root.SelectedDataMartIDs().length > 0, clickBubble:false" class="btn btn-primary pull-right">Bulk Edit</button>
         </div>
-        <br />
-        <div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="Row" style="margin:3px;">
-            <label for="AdditionalInstructions">Additional Instructions <em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" , style="color:red;">* </em></label>
-            <textarea name="DataMartsAdditionalInstructions" id="DataMarts_AdditionalInstructions" rows="3" class="form-control" maxlength="3000" style="margin-right:10px;" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: $root.DataMartAdditionalInstructions"></textarea>
-        </div>
-    </div>
-</article>
+    </article>
+</div>
+<br />
+<div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="Row" style="margin:3px;">
+    <label for="AdditionalInstructions">Additional Instructions <em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" , style="color:red;">* </em></label>
+    <textarea name="DataMartsAdditionalInstructions" id="DataMarts_AdditionalInstructions" rows="3" class="form-control" maxlength="3000" style="margin-right:10px;" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: $root.DataMartAdditionalInstructions"></textarea>
+</div>

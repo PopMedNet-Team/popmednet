@@ -2,120 +2,38 @@
 module Plugins.Requests.QueryBuilder.View {
 
     export class ViewModel extends Global.PageViewModel {
-        public Request: Dns.ViewModels.QueryComposerRequestViewModel;
 
-        public NonAggregateFields: KnockoutComputed<Dns.ViewModels.QueryComposerFieldViewModel[]>;
+        public Request: Dns.Interfaces.IQueryComposerRequestDTO;
 
-        private static CodeTerms: any[] = [
-            //drug class
-            "75290001-0E78-490C-9635-A3CA01550704",
-            //drug name
-            "0E1F0001-CA0C-42D2-A9CC-A3CA01550E84",
-            //HCPCS Procedure Codes
-            "096A0001-73B4-405D-B45F-A3CA014C6E7D",
-            //ICD9 Diagnosis Codes 3 digit
-            "5E5020DC-C0E4-487F-ADF2-45431C2B7695",
-            //ICD9 Diagnosis Codes 4 digit
-            "D0800001-2810-48ED-96B9-A3D40146BAAE",
-            //ICD9 Diagnosis Codes 5 digit
-            "80750001-6C3B-4C2D-90EC-A3D40146C26D",
-            //ICD9 Procedure Codes 3 digit
-            "E1CC0001-1D9A-442A-94C4-A3CA014C7B94",
-            //ICD9 Procedure Codes 4 digit
-            "9E870001-1D48-4AA3-8889-A3D40146CCB3",
-            //Zip Code
-            "8B5FAA77-4A4B-4AC7-B817-69F1297E24C5",
-            //Combinded Diagnosis Codes
-            "86110001-4BAB-4183-B0EA-A4BC0125A6A7"
-        ];
-
-        constructor(query: Dns.Interfaces.IQueryComposerRequestDTO, visualTerms: IVisualTerm[], bindingControl: JQuery) {
+        constructor(request: Dns.Interfaces.IQueryComposerRequestDTO, bindingControl: JQuery) {
             super(bindingControl);
             
-            this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(query);
-            if (query == null) {
-                var criteria = new Dns.ViewModels.QueryComposerCriteriaViewModel();
-                criteria.ID(Constants.Guid.newGuid());
-                this.Request.Where.Criteria.push(criteria);
-            }
-
-            var self = this;
-            this.NonAggregateFields = ko.computed(() => {
-                //hide the aggregate fields from view since they are not editable anyhow
-                var filtered = ko.utils.arrayFilter(self.Request.Select.Fields(),(item: Dns.ViewModels.QueryComposerFieldViewModel) => { return item.Aggregate() == null; });
-                return filtered;
-            });
-
-            //Load the Concept's TermValues as observables.
-            if (this.Request == null || this.Request.Where.Criteria().length == 0) {
-                //This is a new request, no previously defined criteria found.
-            }
-            else {
-                var termValueFilter = new Plugins.Requests.QueryBuilder.MDQ.TermValueFilter([]);
-                termValueFilter.ConfirmTemplateProperties(query, visualTerms);
-
-                var convertTerms = (terms: Dns.ViewModels.QueryComposerTermViewModel[]) => {
-                    terms.forEach((term) => {
-                        var termValues = Global.Helpers.ConvertTermObject(term.Values());
-                        term.Values(termValues);
-
-                        if (ViewModel.CodeTerms.indexOf(term.Type().toUpperCase()) >= 0) {
-
-                            if (term.Values != null && term.Values().CodeValues != null) {
-                                //Do not re-map as the CodeValues property already exists...
-                            }
-                            else {
-                                visualTerms.forEach((item) => {
-                                    if (item.Terms == null || item.Terms.length == 0) {
-                                        if (term.Type() == item.TermID) {
-                                            var termValuesUpdated = Global.Helpers.CopyObject(item.ValueTemplate);
-                                            term.Values(termValuesUpdated);
-                                        }
-                                    }
-                                    if (item.Terms != null && item.Terms.length > 0) {
-                                        item.Terms.forEach((childTerm) => {
-                                            if (term.Type() == childTerm.TermID) {
-                                                var termValuesUpdated = Global.Helpers.CopyObject(childTerm.ValueTemplate);
-                                                term.Values(termValuesUpdated);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                };
-
-
-                this.Request.Where.Criteria().forEach((cvm) => {
-                    var selfVM = self;
-
-                    convertTerms(cvm.Terms());
-
-                    cvm.Criteria().forEach((subCriteria) => {
-                        convertTerms(subCriteria.Terms());
-                    });
-                });
-
-                this.Request.TemporalEvents().forEach((temporalEvent) => {
-                    temporalEvent.Criteria().forEach((cvm) => {
-                        convertTerms(cvm.Terms());
-                        cvm.Criteria().forEach((subCriteria) => {
-                            convertTerms(subCriteria.Terms());
-                        });
-                    });
-
-                });
-            }
+            //TODO: look into how to easily confirm the properties on an object without going back and forth between interface and viewmodel
+            this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(request).toData();
         }
 
-        public TemplateSelector(data: Dns.ViewModels.QueryComposerTermViewModel) {
-            return "v_" + data.Type().toLowerCase();
+        public FilterForNonAggregateFields(query: Dns.Interfaces.IQueryComposerQueryDTO): Dns.Interfaces.IQueryComposerFieldDTO[] {
+
+            return ko.utils.arrayFilter(query.Select.Fields, (f) => { return f.Aggregate == null; });
         }
 
-        public StratifierTemplateSelector(data: Dns.ViewModels.QueryComposerFieldViewModel) {
-            return "sv_" + data.Type().toLowerCase();
+        public ShowSubCriteriaConjuction(parentCriteria: Dns.Interfaces.IQueryComposerCriteriaDTO, subCriteria: Dns.Interfaces.IQueryComposerCriteriaDTO) {
+            if (parentCriteria.Criteria.length < 2)
+                return false;
+
+            if (parentCriteria.Criteria.indexOf(subCriteria) == 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public TemplateSelector(data: Dns.Interfaces.IQueryComposerTermDTO) {
+            return "v_" + data.Type.toLowerCase();
+        }
+
+        public StratifierTemplateSelector(data: Dns.Interfaces.IQueryComposerTermDTO) {
+            return "sv_" + data.Type.toLowerCase();
         }
 
         public static DataCheckerDiagnosisCodeTypes = new Array(
@@ -127,7 +45,7 @@ module Plugins.Requests.QueryBuilder.View {
             { Name: 'Other', Value: 'OT' });
 
         public static TranslateDataCheckerDiagnosisCodeType(value: string): string {
-            var item = ko.utils.arrayFirst(ViewModel.DataCheckerDiagnosisCodeTypes,(i) => i.Value.toUpperCase() == (value || '').toUpperCase());
+            let item = ko.utils.arrayFirst(ViewModel.DataCheckerDiagnosisCodeTypes,(i) => i.Value.toUpperCase() == (value || '').toUpperCase());
             if (item == null)
                 return value;
 
@@ -148,27 +66,64 @@ module Plugins.Requests.QueryBuilder.View {
             { Name: 'Local Homegrown', Value: 'LO' },
             { Name: 'NDC', Value: 'ND' },
             { Name: 'Revenue', Value: 'RE' },
-            { Name: 'Other', Value: 'OT' });
+            { Name: 'Other', Value: 'OT' }
+        );
+
+        /**
+         * Loops through all Element nodes of the template after render and update's the declare identifying attributes with a prefix unique to the instantiated template.
+         * @param nodes The collection of DOMnodes of the rendered template.
+         */
+        public onUpdateTemplateElements(nodes: Node[]) {
+            if (nodes == null || nodes.length == 0)
+                return;
+
+            let prefix: string = Constants.Guid.newGuid() + '_';
+
+            let updateAttributeValue = (elmt: Element, key: string) => {
+                if (elmt.hasAttribute(key)) {
+                    let v = elmt.getAttribute(key);
+                    if (v && v.trim().length > 0) {
+                        elmt.setAttribute(key, prefix + v);
+                    }
+                }
+            };
+
+            //recursive function to prepend the prefix to all defined id using attributes
+            let updateElementID = (element: Element) => {
+                let attr = element.id;
+                if (attr && attr.trim().length > 0) {
+                    element.id = prefix + attr;
+                }
+
+                updateAttributeValue(element, "for");
+                updateAttributeValue(element, "name");
+                updateAttributeValue(element, "aria-labelledby");
+                updateAttributeValue(element, "data-for");
+
+                if (element.children.length > 0) {
+                    for (let i = 0; i < element.children.length; i++) {
+                        updateElementID(element.children.item(i));
+                    }
+                }
+            };
+
+            nodes.forEach((node: Node) => {
+                if (node.nodeType != 1)
+                    return;
+
+                let element = node as Element;
+                updateElementID(element);
+
+            });
+        }
 
         public static TranslateDataCheckerProcedureCodeType(value: string): string {
-            var item = ko.utils.arrayFirst(ViewModel.DataCheckerProcedureCodeTypes,(i) => i.Value.toUpperCase() == (value || '').toUpperCase());
+            let item = ko.utils.arrayFirst(ViewModel.DataCheckerProcedureCodeTypes,(i) => i.Value.toUpperCase() == (value || '').toUpperCase());
             if (item == null)
                 return value;
 
             return item.Name;
         }
-
-        public ShowSubCriteriaConjuction(parentCriteria: Dns.ViewModels.QueryComposerCriteriaViewModel, subCriteria: Dns.ViewModels.QueryComposerCriteriaViewModel) {
-            if (parentCriteria.Criteria().length < 2)
-                return false;
-
-            if (parentCriteria.Criteria().indexOf(subCriteria) == 0) {
-                return false;
-            }
-
-            return true;
-        }
-
         
     }
 
@@ -180,8 +135,28 @@ module Plugins.Requests.QueryBuilder.View {
         return value.split(delimiter).map((s) => (s || '').trim()).join(delimiter.trim() + ' ');
     }
 
-    export function init(query: Dns.Interfaces.IQueryComposerRequestDTO, visualTerms: IVisualTerm[], bindingControl:JQuery) : ViewModel {
-        var vm = new ViewModel(query, visualTerms, bindingControl);
+    export function initialize(query: Object, requestVM: Dns.ViewModels.RequestViewModel, bindingControl: JQuery): ViewModel {
+        let queryRequestDTO: Dns.Interfaces.IQueryComposerRequestDTO;
+        if ((<any>query).hasOwnProperty('SchemaVersion') == false) {
+            //Only a multi-query request will have a SchemaVersion property.
+            //Going to assume request type hasn't been converted to the new multi-query schema.
+            //Automactially upgrade, assume the current json only has a single query and it matches the first specifiec for the request type.
+            //The 'query' parameter is original non-multi query json, need to wrap in new request json.
+            queryRequestDTO = new Dns.ViewModels.QueryComposerRequestViewModel().toData();
+            queryRequestDTO.Header.ID = requestVM.ID();
+            queryRequestDTO.Header.Name = requestVM.Name();
+            queryRequestDTO.Header.Description = requestVM.Description();
+            queryRequestDTO.Header.DueDate = requestVM.DueDate();
+            queryRequestDTO.Header.Priority = requestVM.Priority();
+            queryRequestDTO.Header.SubmittedOn = requestVM.SubmittedOn();
+
+            queryRequestDTO.Queries = [query as Dns.Interfaces.IQueryComposerQueryDTO];
+
+        } else {
+            queryRequestDTO = query as Dns.Interfaces.IQueryComposerRequestDTO;
+        }
+
+        let vm = new ViewModel(queryRequestDTO, bindingControl);
 
         $(() => {
             ko.applyBindings(vm, bindingControl[0]);
@@ -190,14 +165,20 @@ module Plugins.Requests.QueryBuilder.View {
         return vm;
     }
 
+    export function init(query: Object, visualTerms: IVisualTerm[], bindingControl: JQuery): ViewModel {
+        //deprecated for initialize()
+        throw new DOMException("Deprecated for initialize().");
+        return null;
+    }
+
 
     (<any>ko.bindingHandlers).DocumentsByRevision = {
         init: (element, valueAccessor, allBindings, viewModel, bindingContext) => {
             //element is the html element the binding is on
             //valueAccessor is[{RevisionSetID:''}]
 
-            var val = ko.utils.unwrapObservable(valueAccessor());            
-            var revisions = ko.utils.arrayMap(val,(d: any) => { return d.RevisionSetID });
+            let val = ko.utils.unwrapObservable(valueAccessor());            
+            let revisions = ko.utils.arrayMap(val,(d: any) => { return d.RevisionSetID });
             
             Dns.WebApi.Documents.ByRevisionID(revisions)
                 .done(results => {                    

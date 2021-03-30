@@ -56,7 +56,7 @@ namespace Lpp.Dns.DataMart.Client
             this.lblStartingUp.Location = new System.Drawing.Point(195, 135);
             this.lblStartingUp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStartingUp.Name = "lblStartingUp";
-            this.lblStartingUp.Size = new System.Drawing.Size(127, 13);
+            this.lblStartingUp.Size = new System.Drawing.Size(168, 17);
             this.lblStartingUp.TabIndex = 21;
             this.lblStartingUp.Text = "Starting up... Please wait.";
             this.lblStartingUp.Visible = false;
@@ -67,7 +67,7 @@ namespace Lpp.Dns.DataMart.Client
             this.lblArch.Location = new System.Drawing.Point(245, 80);
             this.lblArch.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblArch.Name = "lblArch";
-            this.lblArch.Size = new System.Drawing.Size(39, 13);
+            this.lblArch.Size = new System.Drawing.Size(51, 17);
             this.lblArch.TabIndex = 19;
             this.lblArch.Text = "lblArch";
             this.lblArch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -77,7 +77,7 @@ namespace Lpp.Dns.DataMart.Client
             this.lblVersion.AutoSize = true;
             this.lblVersion.Location = new System.Drawing.Point(245, 110);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(40, 13);
+            this.lblVersion.Size = new System.Drawing.Size(52, 17);
             this.lblVersion.TabIndex = 17;
             this.lblVersion.Text = "0.0.0.0";
             this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -88,10 +88,10 @@ namespace Lpp.Dns.DataMart.Client
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(23, 16);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(395, 39);
+            this.label4.Size = new System.Drawing.Size(502, 51);
             this.label4.TabIndex = 16;
-            this.label4.Text = "DataMart Client powered by PopMedNet(tm)\r\nDistributed Research Network Technologi" +
-    "es for Population Medicine\r\n\r\n";
+            this.label4.Text = "DataMart Client powered by PopMedNet™\r\nDistributed Research Network Technologies " +
+    "for Population Medicine\r\n\r\n";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnDebug
@@ -122,7 +122,7 @@ namespace Lpp.Dns.DataMart.Client
             this.label2.Location = new System.Drawing.Point(215, 53);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 13);
+            this.label2.Size = new System.Drawing.Size(135, 17);
             this.label2.TabIndex = 26;
             this.label2.Text = "www.popmednet.org";
             // 

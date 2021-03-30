@@ -39,18 +39,19 @@ namespace Lpp.Dns.Api.Controllers
         [HttpGet]
         public IQueryable<TemplateDTO> CriteriaGroups()
         {
-            return DataContext.Filter((DataContext.Templates.Where(t => t.Type == DTO.Enums.TemplateTypes.CriteriaGroup)), Identity, PermissionIdentifiers.Templates.View).Map<Template, TemplateDTO>();
+            //return all the criteria templates the user has permission to see or created
+            return DataContext.Filter((DataContext.Templates.Where(t => t.Type == DTO.Enums.TemplateTypes.CriteriaGroup)), Identity, PermissionIdentifiers.Templates.View).Union(DataContext.Templates.Where(t => t.Type == DTO.Enums.TemplateTypes.CriteriaGroup && t.CreatedByID == Identity.ID)).Map<Template, TemplateDTO>();
         }
 
         /// <summary>
-        /// Gets the template for the specified request type.
+        /// Gets the templates for the specified request type.
         /// </summary>
         /// <param name="requestTypeID">The ID of the request type.</param>
         /// <returns></returns>
         [HttpGet]
         public IQueryable<TemplateDTO> GetByRequestType(Guid requestTypeID)
         {
-            var result = DataContext.RequestTypes.Where(rt => rt.ID == requestTypeID && rt.TemplateID.HasValue).Select(rt => rt.Template).Map<Template, TemplateDTO>();
+            var result = DataContext.Templates.Where(t => t.RequestTypeID == requestTypeID && t.Type == DTO.Enums.TemplateTypes.Request).Map<Template, TemplateDTO>();
             return result;
         }
 
@@ -81,7 +82,7 @@ namespace Lpp.Dns.Api.Controllers
         /// <param name="details">The details of the criteria group to save, and parent entity to clone security from.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IEnumerable<TemplateDTO>> SaveCriteriaGroup([FromBody] SaveCriteriaGroupRequestDTO details)
+        public async Task<IEnumerable<TemplateDTO>> SaveCriteriaGroup([FromBody] CreateCriteriaGroupTemplateDTO details)
         {
             if (string.IsNullOrEmpty(details.Name))
                 throw new ArgumentException("The template Name is required.");
@@ -96,48 +97,69 @@ namespace Lpp.Dns.Api.Controllers
                 CreatedOn = DateTime.UtcNow,
                 Type = DTO.Enums.TemplateTypes.CriteriaGroup,
                 QueryType = details.AdapterDetail,
+                ComposerInterface = DTO.Enums.QueryComposerInterface.PresetQuery,
                 Data = details.Json
             });
 
             await DataContext.SaveChangesAsync();
 
-            //clone the parent template permissions
-            AclTemplate[] parentPermissions = null;
-            if (details.TemplateID.HasValue)
-            {
-                parentPermissions = await DataContext.TemplateAcls.Where(a => a.TemplateID == details.TemplateID.Value).ToArrayAsync();
-            }
-            else if (details.RequestTypeID.HasValue)
-            {
-                parentPermissions = await DataContext.TemplateAcls.Where(a => a.Template.RequestTypes.Any(t => t.ID == details.RequestTypeID.Value)).ToArrayAsync();
-            }
-            else if (details.RequestID.HasValue)
-            {
-                parentPermissions = await DataContext.TemplateAcls.Where(a => DataContext.Requests.Where(r => r.RequestType.TemplateID == a.TemplateID).Any()).ToArrayAsync();
-            }
+            var templateDTO = new TemplateDTO {
+                ID = template.ID,
+                ComposerInterface = template.ComposerInterface,
+                CreatedByID = Identity.ID,
+                CreatedOn = template.CreatedOn,
+                Data = template.Data,
+                Description = template.Description,
+                Name = template.Name,
+                Order = template.Order,
+                QueryType = template.QueryType,
+                Type = template.Type
+            };
 
-            if(parentPermissions != null && parentPermissions.Length > 0)
-            {
-                foreach (var acl in parentPermissions)
-                {
-                    DataContext.TemplateAcls.Add(
-                        new AclTemplate { 
-                            TemplateID = template.ID,
-                            SecurityGroupID = acl.SecurityGroupID,
-                            PermissionID = acl.PermissionID,
-                            Overridden = acl.Overridden,
-                            Allowed = acl.Allowed
-                        }
-                    );
-                }
+            return new[] { templateDTO };
+        }
 
-                await DataContext.SaveChangesAsync();
-            }
+        /// <summary>
+        /// Gets the collection of template terms for the specified template.
+        /// </summary>
+        /// <param name="ID">The ID of the template</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<DTO.QueryComposer.TemplateTermDTO>> ListHiddenTerms(Guid ID)
+        {
+            var result = from tt in DataContext.TemplateTerms
+                         join template in DataContext.Templates on tt.TemplateID equals template.ID
+                         where template.ID == ID
+                         select new DTO.QueryComposer.TemplateTermDTO {
+                             Allowed = tt.Allowed,
+                             Section = tt.Section,
+                             TemplateID = tt.TemplateID,
+                             TermID = tt.TermID
+                         };
 
-            //load the creator for use in dto mapping.
-            await DataContext.Entry(template).Reference(t => t.CreatedBy).LoadAsync();
+            return await result.ToArrayAsync();
+        }
 
-            return new[] { template.Map<Template, TemplateDTO>() };
+        /// <summary>
+        /// Returns all the hidden terms associated to templates for the specified request type.
+        /// </summary>
+        /// <param name="id">The id of the request type.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<DTO.QueryComposer.TemplateTermDTO>> ListHiddenTermsByRequestType(Guid id)
+        {
+            var result = from tt in DataContext.TemplateTerms
+                         join template in DataContext.Templates on tt.TemplateID equals template.ID
+                         where template.RequestTypeID == id
+                         select new DTO.QueryComposer.TemplateTermDTO
+                         {
+                             Allowed = tt.Allowed,
+                             Section = tt.Section,
+                             TemplateID = tt.TemplateID,
+                             TermID = tt.TermID
+                         };
+
+            return await result.ToArrayAsync();
         }
     }
 }

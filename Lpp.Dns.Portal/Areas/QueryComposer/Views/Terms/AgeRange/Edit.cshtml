@@ -3,33 +3,28 @@
 <script type="text/html" id="e_@ModelTermsFactory.AgeRangeID">
     <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>   
     <div class="row row-noborder">
-        <div class="col-sm-8">
-            <div class="col-sm-4 bold"><h4 class="TermHeader bold">Age Range<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
-        </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
-        </div>
         <div class="col-sm-2">
-            <button id="btnDeleteAgeRangeTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
-        </div>        
+            <h4 id="lblAgeRange" class="TermHeader bold">Age Range<em data-bind="visible:Design.Locked" style="color:red">*</em></h4>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="AgeRangeMin">Min</label>
+            <input id="AgeRangeMin" name="neAgeRangeMin" type="number" maxlength="3" data-bind="kendoNumericTextBox: {value: Values().MinAge, min: 0, max: 200, decimals: 0, format: 'n0'}" min="0" max="200" style="width: 100px;">
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="AgeRangeMax">Max</label>
+            <input id="AgeRangeMax" name="AgeRangeMax" type="number" maxlength="3" data-bind="kendoNumericTextBox: {value: Values().MaxAge, min: 0, max: 200, decimals: 0, format: 'n0'}" min="0" max="200" style="width: 100px;">
+        </div>
+        <div class="col-sm-2 col-sm-offset-4">
+            <button class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
     </div>
     <div class="row" style="border-top:none;margin-top:0px;">
-        <div class="col-sm-2 form-group">
-            <label id="lblAgeRangeMin" for="neAgeRangeMin">Min</label>
-            <input id="neAgeRangeMin" name="AgeRangeMin" type="number" maxlength="3" data-bind="kendoNumericTextBox: {value: Values().MinAge, min: 0, max: 200, decimals: 0, format: 'n0'}" min="0" max="200" style="width: 100px;">
+        <div class="col-sm-7 form-group" data-bind="visible:$component.TermProvider.ShowAgeRangeCalculationSelections">
+            <input id="AgeRangeCalculationType" name="AgeRangeCalculationType" data-bind="AgeRangeCalculationTypeExtender: Values().CalculationType, kendoDropDownList: {value: Values().CalculationType, dataSource: $component.AgeRangeCalculationSelections.bind($component)(), dataTextField: 'text', dataValueField: 'value', optionLabel: { text: 'Select how to calculate age...', value: '' }, required:$component.TermProvider.ShowAgeRangeCalculationSelections }" validationmessage="Calculation Type is required" style="width: 100%;" />
         </div>
-        <div class="col-sm-2 form-group">
-            <label id="lblAgeRangeMax" for="neAgeRangeMax">Max</label>
-            <input id="neAgeRangeMax" name="AgeRangeMax" type="number" maxlength="3" data-bind="kendoNumericTextBox: {value: Values().MaxAge, min: 0, max: 200, decimals: 0, format: 'n0'}" min="0" max="200" style="width: 100px;">
-        </div>
-        <div class="col-sm-5 form-group" data-bind="visible:$root.ShowAgeRangeCalculationSelections">
-            <label>&nbsp;</label>
-            <input id="cboAgeRangeCalculationType" name="AgeRangeCalculationType" data-bind="AgeRangeCalculationTypeExtender: Values().CalculationType, kendoDropDownList: {value: Values().CalculationType, dataSource: $root.AgeRangeCalculationSelections($parentContext.$parentContext.$data, $parents[2]), dataTextField: 'text', dataValueField: 'value', optionLabel: { text: 'Select how to calculate age...', value: '' } },attr:{ id: 'cboAgeRangeCalculationType' + $index(), required:$root.ShowAgeRangeCalculationSelections }" validationmessage="Calculation Type is required" style="width: 100%;" />
-        </div>
-        <div class="col-sm-3 form-group" data-bind="visible:Values().CalculationType() == '7' && $root.ShowAgeRangeCalculationSelections">
-            <label>&nbsp;</label>
-            <input id="dtAgeRangeCalculateAsOf" name="AgeRangeCalculateAsOf" type="date" pattern="\d{2}/\d{1,2}/\d{4}" maxlength="10" minlength="9" validationmessage="Invalid date, use (MM/DD/YYYY)" data-bind="attr: {placeholder: Values().CalculateAsOf() == null ? 'mm/dd/yyyy' : moment(Values().CalculateAsOf()).format('L'), required: Values().CalculateAsOfRequired }, kendoDatePicker: {value: Values().CalculateAsOf, format: 'MM/d/yyyy'}" data-format="MM/dd/yyyy" style="width:100%;" />
+        <div class="col-sm-3 form-group" data-bind="visible:Values().CalculationType() == '7' && $component.TermProvider.ShowAgeRangeCalculationSelections">
+            <input id="AgeRangeCalculateAsOf" name="AgeRangeCalculateAsOf" type="date" pattern="\d{2}/\d{1,2}/\d{4}" maxlength="10" minlength="9" validationmessage="Invalid date, use (MM/DD/YYYY)" data-bind="attr: {placeholder: Values().CalculateAsOf() == null ? 'mm/dd/yyyy' : moment(Values().CalculateAsOf()).format('L'), required: Values().CalculateAsOfRequired }, kendoDatePicker: {value: Values().CalculateAsOf, format: 'MM/d/yyyy'}" data-format="MM/dd/yyyy" style="width:100%;" />
             <span class="k-invalid-msg" data-for="AgeRangeCalculateAsOf"></span>
         </div>
     </div>    

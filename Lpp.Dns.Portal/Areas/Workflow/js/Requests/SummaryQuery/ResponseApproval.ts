@@ -46,7 +46,8 @@ module Workflow.SummaryQuery.RequestResponse {
     $(() => {
         //Override the save function on the page that is already there and inject what's needed.
         Requests.Details.rovm.RegisterRequestSaveFunction((request: Dns.ViewModels.RequestViewModel) => {
-            request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Request.toData()));
+            throw new DOMException("Need to update for multiquery!");
+            //request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Query.toData()));
             return true;
         });
         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");

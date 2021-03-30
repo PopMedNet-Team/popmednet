@@ -47,15 +47,10 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public bool RequiresProcessing { get; set; }
         /// <summary>
-        /// Gets or sets the ID of template
+        /// Gets or sets the notes for the request type.
         /// </summary>
         [DataMember]
-        public Guid? TemplateID { get; set; }
-        /// <summary>
-        /// Template
-        /// </summary>
-        [DataMember]
-        public string Template { get; set; }
+        public string Notes { get; set; }
         /// <summary>
         /// Gets or sets the ID of workflow
         /// </summary>
@@ -66,5 +61,10 @@ namespace Lpp.Dns.DTO
         /// </summary>
         [DataMember]
         public string Workflow { get; set; }
+        /// <summary>
+        /// Gets or sets if the request type supportes multi-query.
+        /// </summary>
+        [DataMember]
+        public bool SupportMultiQuery { get; set; }
     }
 }

@@ -51,7 +51,7 @@ module Global {
         public ValidationMessage: KnockoutObservable<string>;
         
         public Validator: kendo.ui.Validator;
-        private _BindingControl: JQuery;
+        protected _BindingControl: JQuery;
         /**
          * 
          * @param bindingControl The control the page viewmodel is bound to.
@@ -1314,6 +1314,20 @@ module Global {
     export function GetQueryParam(param: string) : string{
         return $.url(window.location.href.toLowerCase()).param(param.toLowerCase());
     }    
+
+    /* A class representing a key/value pair */
+    export class KeyValuePair<k, v>{
+
+        constructor(_key: k, _value: v) {
+            this.key = _key;
+            this.value = _value;
+        }
+
+        /*The key property of type k*/
+        key: k;
+        /*The value property of type v*/
+        value: v;
+    }
 }
 
 var User: any = new Global.UserInfo();
@@ -1353,6 +1367,29 @@ module Constants {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
+        }
+
+        static compare(a: any, b: any): number {
+            if (a == null && b == null)
+                return 0;
+
+            if (a != null && b == null) {
+                return 1;
+            }
+
+            if (a == null && b != null) {
+                return -1;
+            }
+
+            return a.localeCompare(b, 'en', { usage: 'search', sensitivity: 'accent' });
+        }
+
+        static equals(a: any, b: any): boolean {
+            if ((a == null && b != null) || (a != null && b == null)) {
+                return false;
+            }
+
+            return (a == null && b == null) || a.toLowerCase() === b.toLowerCase();
         }
     }
 }

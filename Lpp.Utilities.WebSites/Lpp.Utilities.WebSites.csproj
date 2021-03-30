@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lpp.Utilities.WebSites</RootNamespace>
     <AssemblyName>Lpp.Utilities.WebSites</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -150,6 +150,7 @@
     <Compile Include="Controllers\LppApiController.cs" />
     <Compile Include="Controllers\LppApiDataController.cs" />
     <Compile Include="Controllers\LppApiWorkflowController.cs" />
+    <Compile Include="Filters\FeatureFlagFilter.cs" />
     <Compile Include="Filters\NoCookieReset.cs" />
     <Compile Include="Handlers\HttpResponseMessageHandler.cs" />
     <Compile Include="Hubs\BroadcastEndPoint.cs" />

@@ -16,7 +16,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
         static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         string _connectionString = string.Empty;        
         DataContext db = null;
-        QueryComposerResponseDTO _currentResponse = null;
 
         public ESPModelAdapter(RequestMetadata requestMetadata) : base(new Guid("7C69584A-5602-4FC0-9F3F-A27F329B1113"), requestMetadata) { }
 
@@ -33,32 +32,34 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
             };            
         }
 
-        protected override string[] LowThresholdColumns(DTO.QueryComposer.QueryComposerResponseDTO response)
+        protected override string[] LowThresholdColumns(QueryComposerResponseQueryResultDTO response)
         {
             return new string[] {"Patients"};
         }
 
-        public override QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             //This is based on the xsl for QueryComposer in The ESPQueryBuilder project 
 
             //TODO: need to see how multiple criteria are handled by the current xsl
-            if(request.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ESPDiagnosisCodesID)).Any())
+            if(query.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ESPDiagnosisCodesID)).Any())
             {
                 throw new NotImplementedException("The Term ESP Diagnosis Codes is currently not implemented and cannot be apart of the query.");
             }
-            bool hasSQLTerm = request.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.SqlDistributionID)).Any();
+            bool hasSQLTerm = query.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.SqlDistributionID)).Any();
 
             if (hasSQLTerm)
             {
-                if (request.Where.Criteria.Where(c => c.Terms.Any(d => d.Type != ModelTermsFactory.SqlDistributionID)).Any())
+                if (query.Where.Criteria.Where(c => c.Terms.Any(d => d.Type != ModelTermsFactory.SqlDistributionID)).Any())
                 {
                     throw new NotSupportedException("Another Term is Included with Sql Distribution and this is not Supported");
                 }
-                var sqlCriteria = request.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID);
+                var sqlCriteria = query.Where.Criteria.First().Terms.FirstOrDefault(t => t.Type == Lpp.QueryComposer.ModelTermsFactory.SqlDistributionID);
                 string sql = (sqlCriteria.GetStringValue("Sql"));
+
                 List<DTO.QueryComposer.QueryComposerResponsePropertyDefinitionDTO> columnProperties = new List<QueryComposerResponsePropertyDefinitionDTO>();
-                List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<DTO.QueryComposer.QueryComposerResponseErrorDTO>();
+                var results = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, QueryStart = DateTimeOffset.UtcNow };
+
                 List<Dictionary<string, object>> queryResults = new List<Dictionary<string, object>>();
                 using (var cmd = db.Database.Connection.CreateCommand())
                 {
@@ -98,29 +99,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                     }
                 }
 
-                var results = new QueryComposerResponseDTO
-                {
-                    Errors = errors,
-                    RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                    ResponseDateTime = DateTime.UtcNow,
-                    Results = new[] { queryResults },
-                    Properties = columnProperties
-                };
+                results.QueryEnd = DateTimeOffset.UtcNow;
+                results.Results = new[] { queryResults };
+                results.Properties = columnProperties;
 
-                Guid requestID;
-                if (results.RequestID == default(Guid) && Guid.TryParse(_requestId, out requestID))
-                    results.RequestID = requestID;
-
-                _currentResponse = results;
-
-                return results;
+                return new[] { results };
             }
             else
             {
-                bool hasConditionsTerm = request.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ConditionsID)).Any();
-                bool hasICD9CodesTerm = request.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ICD9DiagnosisCodes3digitID)).Any();
+                bool hasConditionsTerm = query.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ConditionsID)).Any();
+                bool hasICD9CodesTerm = query.Where.Criteria.SelectMany(c => GetAllTermsWithinCriteria(c, ModelTermsFactory.ICD9DiagnosisCodes3digitID)).Any();
 
-                var firstCriteria = request.Where.Criteria.First();
+                var firstCriteria = query.Where.Criteria.First();
                 QueryComposerTermDTO ageRangeTerm = GetAllTermsWithinCriteria(firstCriteria, ModelTermsFactory.AgeRangeID).FirstOrDefault();
 
                 var diagnosisQuery = from d in db.Diagnosis select d;
@@ -170,7 +160,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 //TODO: need to determine the precision of icd9 code from somewhere
                 int icd9Precision = hasICD9CodesTerm ? 3 : 0;//0 == exclude, 3,4,5
 
-                var query = from demographics in db.Demographics
+                var entityQuery = from demographics in db.Demographics
                             join race in db.UVT_Race on demographics.Race equals race.Code
                             join sex in db.UVT_Sex on demographics.Sex equals sex.Code
                             join ethnicity in db.UVT_Race_Ethnicity on demographics.Ethnicity equals ethnicity.Code
@@ -196,7 +186,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
                 if (icd9Precision == 3)
                 {
-                    query = from o in query
+                    entityQuery = from o in entityQuery
                             from diagnosis_inc in diagnosisQuery.Where(d => d.PatID == o.PatientID).DefaultIfEmpty()
                             from dx in db.UVT_Dx3Digit.Where(x => x.Code == diagnosis_inc.DxCode3digit).DefaultIfEmpty()
                             select new ESPQueryResult
@@ -226,7 +216,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 }
                 else if (icd9Precision == 4)
                 {
-                    query = from o in query
+                    entityQuery = from o in entityQuery
                             from diagnosis_inc in diagnosisQuery.Where(d => d.PatID == o.PatientID).DefaultIfEmpty()
                             from dx in db.UVT_Dx4Digit.Where(x => x.Code == diagnosis_inc.DxCode4digitWithDec).DefaultIfEmpty()
                             select new ESPQueryResult
@@ -256,7 +246,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 }
                 else if (icd9Precision == 5)
                 {
-                    query = from o in query
+                    entityQuery = from o in entityQuery
                             from diagnosis_inc in diagnosisQuery.Where(d => d.PatID == o.PatientID).DefaultIfEmpty()
                             from dx in db.UVT_Dx5Digit.Where(x => x.Code == diagnosis_inc.DxCode5digitWithDec).DefaultIfEmpty()
                             select new ESPQueryResult
@@ -287,7 +277,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
                 if (hasConditionsTerm)
                 {
-                    query = from o in query
+                    entityQuery = from o in entityQuery
                             from disease_inc in diseasesQuery.Where(d => d.PatID == o.PatientID).DefaultIfEmpty()
                             select new ESPQueryResult
                             {
@@ -319,18 +309,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 List<string> selectProperties = new List<string> { "Patients" };//Patient aggregate is always included.
 
                 bool primaryCriteria = true;
-                foreach (var criteria in request.Where.Criteria)
+                foreach (var criteria in query.Where.Criteria)
                 {
                     if (!primaryCriteria && criteria.Exclusion)
                     {
                         //exclusion is a not exists in the where clause
                         var subQuery = ApplyCriteria(criteria);
-                        query = query.Where(q => !subQuery.Where(s => s.PatID == q.PatientID).Any());
+                        entityQuery = entityQuery.Where(q => !subQuery.Where(s => s.PatID == q.PatientID).Any());
                     }
                     else if (!primaryCriteria)
                     {
                         var subQuery = ApplyCriteria(criteria);
-                        query = query.Where(q => subQuery.Where(s => s.PatID == q.PatientID).Any());
+                        entityQuery = entityQuery.Where(q => subQuery.Where(s => s.PatID == q.PatientID).Any());
                     }
                     else
                     {
@@ -386,7 +376,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                                 }
 
                                 if (ethnicityExpression != null)
-                                    query = query.Where(ethnicityExpression);
+                                    entityQuery = entityQuery.Where(ethnicityExpression);
                             }
                             else if (termID == Lpp.QueryComposer.ModelTermsFactory.SexID)
                             {
@@ -396,7 +386,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                                 logger.Debug(sexs);
                                 if (sexs.Any())
                                 {
-                                    query = query.Where(q => sexs.Contains(q.Sex.ToUpper()));
+                                    entityQuery = entityQuery.Where(q => sexs.Contains(q.Sex.ToUpper()));
                                 }
                             }
                             else if (termID == Lpp.QueryComposer.ModelTermsFactory.ICD9DiagnosisCodes3digitID)
@@ -448,7 +438,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
                                     if (!hasConditionsTerm && !hasICD9CodesTerm)
                                     {
-                                        query = query.Join(encountersAppliedQuery.Where(q => q.Count >= visits), o => o.PatientID, i => i.PatID, (o, i) => new ESPQueryResult
+                                        entityQuery = entityQuery.Join(encountersAppliedQuery.Where(q => q.Count >= visits), o => o.PatientID, i => i.PatID, (o, i) => new ESPQueryResult
                                         {
                                             PatientID = o.PatientID,
                                             Patients = null,
@@ -469,7 +459,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                                     }
                                     else
                                     {
-                                        query = query.Join(encountersAppliedQuery.Where(q => q.Count >= visits), o => o.PatientID, i => i.PatID, (o, i) => o);
+                                        entityQuery = entityQuery.Join(encountersAppliedQuery.Where(q => q.Count >= visits), o => o.PatientID, i => i.PatID, (o, i) => o);
                                     }
                                 }
                                 catch { }
@@ -483,7 +473,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
                                 if (zipCodes.Any())
                                 {
-                                    query = query.Where(q => zipCodes.Contains(q.Code));
+                                    entityQuery = entityQuery.Where(q => zipCodes.Contains(q.Code));
                                 }
                             }
                             else
@@ -494,12 +484,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
                         if (icdDiseasePredicate != null)
                         {
-                            query = query.Where(icdDiseasePredicate);
+                            entityQuery = entityQuery.Where(icdDiseasePredicate);
                         }
                     }
                 }
 
-                query = query.GroupBy(k => new
+                entityQuery = entityQuery.GroupBy(k => new
                 {
                     k.Sex,
                     k.EthnicityCode,
@@ -556,12 +546,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                  * http://www.singingeels.com/Blogs/Nullable/2008/03/26/Dynamic_LINQ_OrderBy_using_String_Names.aspx
                  * */
 
+                var response = new QueryComposerResponseQueryResultDTO { ID = query.Header.ID, QueryStart = DateTimeOffset.UtcNow };
                 List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
                 if (!viewSQL)
                 {
-                    logger.Debug(query.ToString());
+                    logger.Debug(entityQuery.ToString());
 
-                    foreach (var item in query)
+                    foreach (var item in entityQuery)
                     {
                         Dictionary<string, object> row = new Dictionary<string, object>();
                         Type itemType = item.GetType();
@@ -584,32 +575,25 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
                 else
                 {
                     Dictionary<string, object> row = new Dictionary<string, object>();
-                    row.Add("SQL", query.ToString());
+                    row.Add("SQL", entityQuery.ToString());
                     results.Add(row);
                 }
 
                 logger.Debug("Number of results found:" + results.Count);
 
-                QueryComposerResponseDTO response = new QueryComposerResponseDTO
-                {
-                    ResponseDateTime = DateTime.UtcNow,
-                    Results = new[] { results }
-                };
+                //QueryComposerResponseDTO response = new QueryComposerResponseDTO
+                //{
+                //    ResponseDateTime = DateTime.UtcNow,
+                //    Results = new[] { results }
+                //};
 
-                if (request.ID.HasValue)
-                {
-                    response.RequestID = request.ID.Value;
-                }
-                else
-                {
-                    Guid requestID;
-                    if (Guid.TryParse(_requestId, out requestID))
-                        response.RequestID = requestID;
+                //if (query.ID.HasValue)
+                //    response.RequestID = query.ID.Value;
 
-                    _currentResponse = response;
-                }
+                response.QueryEnd = DateTimeOffset.UtcNow;
+                response.Results = new[] { results };
 
-                return response; 
+                return new[] { response }; 
             }
         }
 
@@ -777,21 +761,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.ESP
 
             }
             return query;
-        }
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            if (_currentResponse == null)
-                return new QueryComposerModelProcessor.DocumentEx[0];
-
-            return new[] { SerializeResponse(_currentResponse, QueryComposerModelProcessor.NewGuid(), "response.json") };
-        }
-
-        public override void PostProcess(QueryComposerResponseDTO response)
-        {
-            base.PostProcess(response);
-
-            _currentResponse = response;
         }
 
         public override void Dispose()

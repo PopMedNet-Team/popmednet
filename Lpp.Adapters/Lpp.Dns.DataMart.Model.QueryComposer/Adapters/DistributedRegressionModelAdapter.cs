@@ -81,27 +81,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DistributedRegression
                 EventLog.Clear();
         }
 
-        public override DTO.QueryComposer.QueryComposerResponseDTO Execute(DTO.QueryComposer.QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             throw new NotSupportedException("This model adapter does not support processing a QueryComposerRequestDTO, execute the adapter by calling StartRequest.");
         }
 
-        public override bool CanPostProcess(QueryComposerResponseDTO response, out string message)
+        public override bool CanPostProcess(QueryComposerResponseQueryResultDTO response, out string message)
         {
             message = string.Empty;
             return false;
         }
 
-        public override void PostProcess(QueryComposerResponseDTO response)
+        public override void PostProcess(QueryComposerResponseQueryResultDTO response)
         {
             //Stupid autoprocessing does not check to see if can postprocess, it just goes ahead and does it.
             //throw new NotSupportedException("This model adapter does not support post processing.");
-        }
-
-
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            throw new NotSupportedException("This model adapter does not support providing output documents via OutputDocuments(), execute the adapter by calling StartRequest.");
         }
 
         public IEnumerable<QueryComposerModelProcessor.DocumentEx> StartRequest(Model.DocumentWithStream[] requestDocs)

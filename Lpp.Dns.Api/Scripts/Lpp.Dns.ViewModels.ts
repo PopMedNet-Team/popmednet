@@ -506,6 +506,39 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class CreateCriteriaGroupTemplateViewModel extends ViewModel<Dns.Interfaces.ICreateCriteriaGroupTemplateDTO>{
+	 	 public Name: KnockoutObservable<string>;
+	 	 public Description: KnockoutObservable<string>;
+	 	 public Json: KnockoutObservable<string>;
+	 	 public AdapterDetail: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
+	 	 constructor(CreateCriteriaGroupTemplateDTO?: Dns.Interfaces.ICreateCriteriaGroupTemplateDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (CreateCriteriaGroupTemplateDTO== null) {
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	 	 this.Description = ko.observable<any>();
+	 	 	 	 this.Json = ko.observable<any>();
+	 	 	 	 this.AdapterDetail = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.Name = ko.observable(CreateCriteriaGroupTemplateDTO.Name);
+	 	 	 	 this.Description = ko.observable(CreateCriteriaGroupTemplateDTO.Description);
+	 	 	 	 this.Json = ko.observable(CreateCriteriaGroupTemplateDTO.Json);
+	 	 	 	 this.AdapterDetail = ko.observable(CreateCriteriaGroupTemplateDTO.AdapterDetail);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.ICreateCriteriaGroupTemplateDTO{
+	 	 	  return {
+	 	 	 	Name: this.Name(),
+	 	 	 	Description: this.Description(),
+	 	 	 	Json: this.Json(),
+	 	 	 	AdapterDetail: this.AdapterDetail(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class EnhancedEventLogItemViewModel extends ViewModel<Dns.Interfaces.IEnhancedEventLogItemDTO>{
 	 	 public Step: KnockoutObservable<number>;
 	 	 public Timestamp: KnockoutObservable<Date>;
@@ -1102,7 +1135,8 @@ module Dns.ViewModels {
 	 }
 	 export class UpdateRequestTypeRequestViewModel extends ViewModel<Dns.Interfaces.IUpdateRequestTypeRequestDTO>{
 	 	 public RequestType: RequestTypeViewModel;
-	 	 public Template: TemplateViewModel;
+	 	 public Permissions: KnockoutObservableArray<AclRequestTypeViewModel>;
+	 	 public Queries: KnockoutObservableArray<TemplateViewModel>;
 	 	 public Terms: KnockoutObservableArray<any>;
 	 	 public NotAllowedTerms: KnockoutObservableArray<SectionSpecificTermViewModel>;
 	 	 public Models: KnockoutObservableArray<any>;
@@ -1111,13 +1145,15 @@ module Dns.ViewModels {
 	 	 	  super();
 	 	 	 if (UpdateRequestTypeRequestDTO== null) {
 	 	 	 	 this.RequestType = new RequestTypeViewModel();
-	 	 	 	 this.Template = new TemplateViewModel();
+	 	 	 	 this.Permissions = ko.observableArray<AclRequestTypeViewModel>();
+	 	 	 	 this.Queries = ko.observableArray<TemplateViewModel>();
 	 	 	 	 this.Terms = ko.observableArray<any>();
 	 	 	 	 this.NotAllowedTerms = ko.observableArray<SectionSpecificTermViewModel>();
 	 	 	 	 this.Models = ko.observableArray<any>();
 	 	 	  }else{
 	 	 	 	 this.RequestType = new RequestTypeViewModel(UpdateRequestTypeRequestDTO.RequestType);
-	 	 	 	 this.Template = new TemplateViewModel(UpdateRequestTypeRequestDTO.Template);
+	 	 	 	 this.Permissions = ko.observableArray<AclRequestTypeViewModel>(UpdateRequestTypeRequestDTO.Permissions == null ? null : UpdateRequestTypeRequestDTO.Permissions.map((item) => {return new AclRequestTypeViewModel(item);}));
+	 	 	 	 this.Queries = ko.observableArray<TemplateViewModel>(UpdateRequestTypeRequestDTO.Queries == null ? null : UpdateRequestTypeRequestDTO.Queries.map((item) => {return new TemplateViewModel(item);}));
 	 	 	 	 this.Terms = ko.observableArray<any>(UpdateRequestTypeRequestDTO.Terms == null ? null : UpdateRequestTypeRequestDTO.Terms.map((item) => {return item;}));
 	 	 	 	 this.NotAllowedTerms = ko.observableArray<SectionSpecificTermViewModel>(UpdateRequestTypeRequestDTO.NotAllowedTerms == null ? null : UpdateRequestTypeRequestDTO.NotAllowedTerms.map((item) => {return new SectionSpecificTermViewModel(item);}));
 	 	 	 	 this.Models = ko.observableArray<any>(UpdateRequestTypeRequestDTO.Models == null ? null : UpdateRequestTypeRequestDTO.Models.map((item) => {return item;}));
@@ -1127,7 +1163,8 @@ module Dns.ViewModels {
 	 	 public toData(): Dns.Interfaces.IUpdateRequestTypeRequestDTO{
 	 	 	  return {
 	 	 	 	RequestType: this.RequestType.toData(),
-	 	 	 	Template: this.Template.toData(),
+	 	 	 	Permissions: this.Permissions == null ? null : this.Permissions().map((item) => {return item.toData();}),
+	 	 	 	Queries: this.Queries == null ? null : this.Queries().map((item) => {return item.toData();}),
 	 	 	 	Terms: this.Terms(),
 	 	 	 	NotAllowedTerms: this.NotAllowedTerms == null ? null : this.NotAllowedTerms().map((item) => {return item.toData();}),
 	 	 	 	Models: this.Models(),
@@ -1139,23 +1176,23 @@ module Dns.ViewModels {
 	 }
 	 export class UpdateRequestTypeResponseViewModel extends ViewModel<Dns.Interfaces.IUpdateRequestTypeResponseDTO>{
 	 	 public RequestType: RequestTypeViewModel;
-	 	 public Template: TemplateViewModel;
+	 	 public Queries: KnockoutObservableArray<TemplateViewModel>;
 	 	 constructor(UpdateRequestTypeResponseDTO?: Dns.Interfaces.IUpdateRequestTypeResponseDTO)
 	 	  {
 	 	 	  super();
 	 	 	 if (UpdateRequestTypeResponseDTO== null) {
 	 	 	 	 this.RequestType = new RequestTypeViewModel();
-	 	 	 	 this.Template = new TemplateViewModel();
+	 	 	 	 this.Queries = ko.observableArray<TemplateViewModel>();
 	 	 	  }else{
 	 	 	 	 this.RequestType = new RequestTypeViewModel(UpdateRequestTypeResponseDTO.RequestType);
-	 	 	 	 this.Template = new TemplateViewModel(UpdateRequestTypeResponseDTO.Template);
+	 	 	 	 this.Queries = ko.observableArray<TemplateViewModel>(UpdateRequestTypeResponseDTO.Queries == null ? null : UpdateRequestTypeResponseDTO.Queries.map((item) => {return new TemplateViewModel(item);}));
 	 	 	 }
 	 	 }
 
 	 	 public toData(): Dns.Interfaces.IUpdateRequestTypeResponseDTO{
 	 	 	  return {
 	 	 	 	RequestType: this.RequestType.toData(),
-	 	 	 	Template: this.Template.toData(),
+	 	 	 	Queries: this.Queries == null ? null : this.Queries().map((item) => {return item.toData();}),
 	 	 	  };
 	 	  }
 
@@ -6110,6 +6147,31 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class AvailableTermsRequestViewModel extends ViewModel<Dns.Interfaces.IAvailableTermsRequestDTO>{
+	 	 public Adapters: KnockoutObservableArray<any>;
+	 	 public QueryType: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
+	 	 constructor(AvailableTermsRequestDTO?: Dns.Interfaces.IAvailableTermsRequestDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (AvailableTermsRequestDTO== null) {
+	 	 	 	 this.Adapters = ko.observableArray<any>();
+	 	 	 	 this.QueryType = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.Adapters = ko.observableArray<any>(AvailableTermsRequestDTO.Adapters == null ? null : AvailableTermsRequestDTO.Adapters.map((item) => {return item;}));
+	 	 	 	 this.QueryType = ko.observable(AvailableTermsRequestDTO.QueryType);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IAvailableTermsRequestDTO{
+	 	 	  return {
+	 	 	 	Adapters: this.Adapters(),
+	 	 	 	QueryType: this.QueryType(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class DistributedRegressionManifestFile extends ViewModel<Dns.Interfaces.IDistributedRegressionManifestFile>{
 	 	 public Items: KnockoutObservableArray<DistributedRegressionAnalysisCenterManifestItem>;
 	 	 public DataPartners: KnockoutObservableArray<DistributedRegressionManifestDataPartner>;
@@ -6213,6 +6275,203 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class QueryComposerQueryViewModel extends ViewModel<Dns.Interfaces.IQueryComposerQueryDTO>{
+	 	 public Header: QueryComposerQueryHeaderViewModel;
+	 	 public Where: QueryComposerWhereViewModel;
+	 	 public Select: QueryComposerSelectViewModel;
+	 	 public TemporalEvents: KnockoutObservableArray<QueryComposerTemporalEventViewModel>;
+	 	 constructor(QueryComposerQueryDTO?: Dns.Interfaces.IQueryComposerQueryDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerQueryDTO== null) {
+	 	 	 	 this.Header = new QueryComposerQueryHeaderViewModel();
+	 	 	 	 this.Where = new QueryComposerWhereViewModel();
+	 	 	 	 this.Select = new QueryComposerSelectViewModel();
+	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>();
+	 	 	  }else{
+	 	 	 	 this.Header = new QueryComposerQueryHeaderViewModel(QueryComposerQueryDTO.Header);
+	 	 	 	 this.Where = new QueryComposerWhereViewModel(QueryComposerQueryDTO.Where);
+	 	 	 	 this.Select = new QueryComposerSelectViewModel(QueryComposerQueryDTO.Select);
+	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>(QueryComposerQueryDTO.TemporalEvents == null ? null : QueryComposerQueryDTO.TemporalEvents.map((item) => {return new QueryComposerTemporalEventViewModel(item);}));
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerQueryDTO{
+	 	 	  return {
+	 	 	 	Header: this.Header.toData(),
+	 	 	 	Where: this.Where.toData(),
+	 	 	 	Select: this.Select.toData(),
+	 	 	 	TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map((item) => {return item.toData();}),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class QueryComposerResponseAggregationDefinitionViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO>{
+	 	 public GroupBy: KnockoutObservableArray<string>;
+	 	 public Select: KnockoutObservableArray<any>;
+	 	 public Name: KnockoutObservable<string>;
+	 	 constructor(QueryComposerResponseAggregationDefinitionDTO?: Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerResponseAggregationDefinitionDTO== null) {
+	 	 	 	 this.GroupBy = ko.observableArray<string>();
+	 	 	 	 this.Select = ko.observableArray<any>();
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.GroupBy = ko.observableArray<string>(QueryComposerResponseAggregationDefinitionDTO.GroupBy == null ? null : QueryComposerResponseAggregationDefinitionDTO.GroupBy.map((item) => {return item;}));
+	 	 	 	 this.Select = ko.observableArray<any>(QueryComposerResponseAggregationDefinitionDTO.Select == null ? null : QueryComposerResponseAggregationDefinitionDTO.Select.map((item) => {return item;}));
+	 	 	 	 this.Name = ko.observable(QueryComposerResponseAggregationDefinitionDTO.Name);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO{
+	 	 	  return {
+	 	 	 	GroupBy: this.GroupBy == null ? null : this.GroupBy().map((item) => {return item;}),
+	 	 	 	Select: this.Select(),
+	 	 	 	Name: this.Name(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class QueryComposerResponseHeaderViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseHeaderDTO>{
+	 	 public ID: KnockoutObservable<any>;
+	 	 public RequestID: KnockoutObservable<any>;
+	 	 public DocumentID: KnockoutObservable<any>;
+	 	 public QueryingStart: KnockoutObservable<Date>;
+	 	 public QueryingEnd: KnockoutObservable<Date>;
+	 	 public DataMart: KnockoutObservable<string>;
+	 	 constructor(QueryComposerResponseHeaderDTO?: Dns.Interfaces.IQueryComposerResponseHeaderDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerResponseHeaderDTO== null) {
+	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.RequestID = ko.observable<any>();
+	 	 	 	 this.DocumentID = ko.observable<any>();
+	 	 	 	 this.QueryingStart = ko.observable<any>();
+	 	 	 	 this.QueryingEnd = ko.observable<any>();
+	 	 	 	 this.DataMart = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.ID = ko.observable(QueryComposerResponseHeaderDTO.ID);
+	 	 	 	 this.RequestID = ko.observable(QueryComposerResponseHeaderDTO.RequestID);
+	 	 	 	 this.DocumentID = ko.observable(QueryComposerResponseHeaderDTO.DocumentID);
+	 	 	 	 this.QueryingStart = ko.observable(QueryComposerResponseHeaderDTO.QueryingStart);
+	 	 	 	 this.QueryingEnd = ko.observable(QueryComposerResponseHeaderDTO.QueryingEnd);
+	 	 	 	 this.DataMart = ko.observable(QueryComposerResponseHeaderDTO.DataMart);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerResponseHeaderDTO{
+	 	 	  return {
+	 	 	 	ID: this.ID(),
+	 	 	 	RequestID: this.RequestID(),
+	 	 	 	DocumentID: this.DocumentID(),
+	 	 	 	QueryingStart: this.QueryingStart(),
+	 	 	 	QueryingEnd: this.QueryingEnd(),
+	 	 	 	DataMart: this.DataMart(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class QueryComposerResponsePropertyDefinitionViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO>{
+	 	 public Name: KnockoutObservable<string>;
+	 	 public Type: KnockoutObservable<string>;
+	 	 public As: KnockoutObservable<string>;
+	 	 public Aggregate: KnockoutObservable<string>;
+	 	 constructor(QueryComposerResponsePropertyDefinitionDTO?: Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerResponsePropertyDefinitionDTO== null) {
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	 	 this.Type = ko.observable<any>();
+	 	 	 	 this.As = ko.observable<any>();
+	 	 	 	 this.Aggregate = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.Name = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Name);
+	 	 	 	 this.Type = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Type);
+	 	 	 	 this.As = ko.observable(QueryComposerResponsePropertyDefinitionDTO.As);
+	 	 	 	 this.Aggregate = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Aggregate);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO{
+	 	 	  return {
+	 	 	 	Name: this.Name(),
+	 	 	 	Type: this.Type(),
+	 	 	 	As: this.As(),
+	 	 	 	Aggregate: this.Aggregate(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class QueryComposerResponseQueryResultViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseQueryResultDTO>{
+	 	 public ID: KnockoutObservable<any>;
+	 	 public Name: KnockoutObservable<string>;
+	 	 public QueryStart: KnockoutObservable<Date>;
+	 	 public QueryEnd: KnockoutObservable<Date>;
+	 	 public PostProcessStart: KnockoutObservable<Date>;
+	 	 public PostProcessEnd: KnockoutObservable<Date>;
+	 	 public Errors: KnockoutObservableArray<QueryComposerResponseErrorViewModel>;
+	 	 public Results: KnockoutObservableArray<any>;
+	 	 public LowCellThrehold: KnockoutObservable<number>;
+	 	 public Properties: KnockoutObservableArray<QueryComposerResponsePropertyDefinitionViewModel>;
+	 	 public Aggregation: QueryComposerResponseAggregationDefinitionViewModel;
+	 	 constructor(QueryComposerResponseQueryResultDTO?: Dns.Interfaces.IQueryComposerResponseQueryResultDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerResponseQueryResultDTO== null) {
+	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	 	 this.QueryStart = ko.observable<any>();
+	 	 	 	 this.QueryEnd = ko.observable<any>();
+	 	 	 	 this.PostProcessStart = ko.observable<any>();
+	 	 	 	 this.PostProcessEnd = ko.observable<any>();
+	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>();
+	 	 	 	 this.Results = ko.observableArray<any>();
+	 	 	 	 this.LowCellThrehold = ko.observable<any>();
+	 	 	 	 this.Properties = ko.observableArray<QueryComposerResponsePropertyDefinitionViewModel>();
+	 	 	 	 this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel();
+	 	 	  }else{
+	 	 	 	 this.ID = ko.observable(QueryComposerResponseQueryResultDTO.ID);
+	 	 	 	 this.Name = ko.observable(QueryComposerResponseQueryResultDTO.Name);
+	 	 	 	 this.QueryStart = ko.observable(QueryComposerResponseQueryResultDTO.QueryStart);
+	 	 	 	 this.QueryEnd = ko.observable(QueryComposerResponseQueryResultDTO.QueryEnd);
+	 	 	 	 this.PostProcessStart = ko.observable(QueryComposerResponseQueryResultDTO.PostProcessStart);
+	 	 	 	 this.PostProcessEnd = ko.observable(QueryComposerResponseQueryResultDTO.PostProcessEnd);
+	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>(QueryComposerResponseQueryResultDTO.Errors == null ? null : QueryComposerResponseQueryResultDTO.Errors.map((item) => {return new QueryComposerResponseErrorViewModel(item);}));
+	 	 	 	 this.Results = ko.observableArray<any>(QueryComposerResponseQueryResultDTO.Results == null ? null : QueryComposerResponseQueryResultDTO.Results.map((item) => {return item;}));
+	 	 	 	 this.LowCellThrehold = ko.observable(QueryComposerResponseQueryResultDTO.LowCellThrehold);
+	 	 	 	 this.Properties = ko.observableArray<QueryComposerResponsePropertyDefinitionViewModel>(QueryComposerResponseQueryResultDTO.Properties == null ? null : QueryComposerResponseQueryResultDTO.Properties.map((item) => {return new QueryComposerResponsePropertyDefinitionViewModel(item);}));
+	 	 	 	 this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseQueryResultDTO.Aggregation);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerResponseQueryResultDTO{
+	 	 	  return {
+	 	 	 	ID: this.ID(),
+	 	 	 	Name: this.Name(),
+	 	 	 	QueryStart: this.QueryStart(),
+	 	 	 	QueryEnd: this.QueryEnd(),
+	 	 	 	PostProcessStart: this.PostProcessStart(),
+	 	 	 	PostProcessEnd: this.PostProcessEnd(),
+	 	 	 	Errors: this.Errors == null ? null : this.Errors().map((item) => {return item.toData();}),
+	 	 	 	Results: this.Results(),
+	 	 	 	LowCellThrehold: this.LowCellThrehold(),
+	 	 	 	Properties: this.Properties == null ? null : this.Properties().map((item) => {return item.toData();}),
+	 	 	 	Aggregation: this.Aggregation.toData(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class QueryComposerTemporalEventViewModel extends ViewModel<Dns.Interfaces.IQueryComposerTemporalEventDTO>{
 	 	 public IndexEventDateIdentifier: KnockoutObservable<string>;
 	 	 public DaysBefore: KnockoutObservable<number>;
@@ -6247,15 +6506,18 @@ module Dns.ViewModels {
 
 	 }
 	 export class SectionSpecificTermViewModel extends ViewModel<Dns.Interfaces.ISectionSpecificTermDTO>{
+	 	 public TemplateID: KnockoutObservable<any>;
 	 	 public TermID: KnockoutObservable<any>;
 	 	 public Section: KnockoutObservable<Dns.Enums.QueryComposerSections>;
 	 	 constructor(SectionSpecificTermDTO?: Dns.Interfaces.ISectionSpecificTermDTO)
 	 	  {
 	 	 	  super();
 	 	 	 if (SectionSpecificTermDTO== null) {
+	 	 	 	 this.TemplateID = ko.observable<any>();
 	 	 	 	 this.TermID = ko.observable<any>();
 	 	 	 	 this.Section = ko.observable<any>();
 	 	 	  }else{
+	 	 	 	 this.TemplateID = ko.observable(SectionSpecificTermDTO.TemplateID);
 	 	 	 	 this.TermID = ko.observable(SectionSpecificTermDTO.TermID);
 	 	 	 	 this.Section = ko.observable(SectionSpecificTermDTO.Section);
 	 	 	 }
@@ -6263,6 +6525,7 @@ module Dns.ViewModels {
 
 	 	 public toData(): Dns.Interfaces.ISectionSpecificTermDTO{
 	 	 	  return {
+	 	 	 	TemplateID: this.TemplateID(),
 	 	 	 	TermID: this.TermID(),
 	 	 	 	Section: this.Section(),
 	 	 	  };
@@ -6469,47 +6732,43 @@ module Dns.ViewModels {
 
 	 }
 	 export class QueryComposerHeaderViewModel extends ViewModel<Dns.Interfaces.IQueryComposerHeaderDTO>{
+	 	 public ID: KnockoutObservable<any>;
 	 	 public Name: KnockoutObservable<string>;
 	 	 public Description: KnockoutObservable<string>;
 	 	 public ViewUrl: KnockoutObservable<string>;
-	 	 public Grammar: KnockoutObservable<string>;
 	 	 public Priority: KnockoutObservable<Dns.Enums.Priorities>;
 	 	 public DueDate: KnockoutObservable<Date>;
-	 	 public QueryType: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
 	 	 public SubmittedOn: KnockoutObservable<Date>;
 	 	 constructor(QueryComposerHeaderDTO?: Dns.Interfaces.IQueryComposerHeaderDTO)
 	 	  {
 	 	 	  super();
 	 	 	 if (QueryComposerHeaderDTO== null) {
+	 	 	 	 this.ID = ko.observable<any>();
 	 	 	 	 this.Name = ko.observable<any>();
 	 	 	 	 this.Description = ko.observable<any>();
 	 	 	 	 this.ViewUrl = ko.observable<any>();
-	 	 	 	 this.Grammar = ko.observable<any>();
 	 	 	 	 this.Priority = ko.observable<any>();
 	 	 	 	 this.DueDate = ko.observable<any>();
-	 	 	 	 this.QueryType = ko.observable<any>();
 	 	 	 	 this.SubmittedOn = ko.observable<any>();
 	 	 	  }else{
+	 	 	 	 this.ID = ko.observable(QueryComposerHeaderDTO.ID);
 	 	 	 	 this.Name = ko.observable(QueryComposerHeaderDTO.Name);
 	 	 	 	 this.Description = ko.observable(QueryComposerHeaderDTO.Description);
 	 	 	 	 this.ViewUrl = ko.observable(QueryComposerHeaderDTO.ViewUrl);
-	 	 	 	 this.Grammar = ko.observable(QueryComposerHeaderDTO.Grammar);
 	 	 	 	 this.Priority = ko.observable(QueryComposerHeaderDTO.Priority);
 	 	 	 	 this.DueDate = ko.observable(QueryComposerHeaderDTO.DueDate);
-	 	 	 	 this.QueryType = ko.observable(QueryComposerHeaderDTO.QueryType);
 	 	 	 	 this.SubmittedOn = ko.observable(QueryComposerHeaderDTO.SubmittedOn);
 	 	 	 }
 	 	 }
 
 	 	 public toData(): Dns.Interfaces.IQueryComposerHeaderDTO{
 	 	 	  return {
+	 	 	 	ID: this.ID(),
 	 	 	 	Name: this.Name(),
 	 	 	 	Description: this.Description(),
 	 	 	 	ViewUrl: this.ViewUrl(),
-	 	 	 	Grammar: this.Grammar(),
 	 	 	 	Priority: this.Priority(),
 	 	 	 	DueDate: this.DueDate(),
-	 	 	 	QueryType: this.QueryType(),
 	 	 	 	SubmittedOn: this.SubmittedOn(),
 	 	 	  };
 	 	  }
@@ -6538,16 +6797,48 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class QueryComposerRequestViewModel extends ViewModel<Dns.Interfaces.IQueryComposerRequestDTO>{
+	 	 public SchemaVersion: KnockoutObservable<string>;
+	 	 public Header: QueryComposerRequestHeaderViewModel;
+	 	 public Queries: KnockoutObservableArray<QueryComposerQueryViewModel>;
+	 	 constructor(QueryComposerRequestDTO?: Dns.Interfaces.IQueryComposerRequestDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerRequestDTO== null) {
+	 	 	 	 this.SchemaVersion = ko.observable<any>();
+	 	 	 	 this.Header = new QueryComposerRequestHeaderViewModel();
+	 	 	 	 this.Queries = ko.observableArray<QueryComposerQueryViewModel>();
+	 	 	  }else{
+	 	 	 	 this.SchemaVersion = ko.observable(QueryComposerRequestDTO.SchemaVersion);
+	 	 	 	 this.Header = new QueryComposerRequestHeaderViewModel(QueryComposerRequestDTO.Header);
+	 	 	 	 this.Queries = ko.observableArray<QueryComposerQueryViewModel>(QueryComposerRequestDTO.Queries == null ? null : QueryComposerRequestDTO.Queries.map((item) => {return new QueryComposerQueryViewModel(item);}));
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerRequestDTO{
+	 	 	  return {
+	 	 	 	SchemaVersion: this.SchemaVersion(),
+	 	 	 	Header: this.Header.toData(),
+	 	 	 	Queries: this.Queries == null ? null : this.Queries().map((item) => {return item.toData();}),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class QueryComposerResponseErrorViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseErrorDTO>{
+	 	 public QueryID: KnockoutObservable<any>;
 	 	 public Code: KnockoutObservable<string>;
 	 	 public Description: KnockoutObservable<string>;
 	 	 constructor(QueryComposerResponseErrorDTO?: Dns.Interfaces.IQueryComposerResponseErrorDTO)
 	 	  {
 	 	 	  super();
 	 	 	 if (QueryComposerResponseErrorDTO== null) {
+	 	 	 	 this.QueryID = ko.observable<any>();
 	 	 	 	 this.Code = ko.observable<any>();
 	 	 	 	 this.Description = ko.observable<any>();
 	 	 	  }else{
+	 	 	 	 this.QueryID = ko.observable(QueryComposerResponseErrorDTO.QueryID);
 	 	 	 	 this.Code = ko.observable(QueryComposerResponseErrorDTO.Code);
 	 	 	 	 this.Description = ko.observable(QueryComposerResponseErrorDTO.Description);
 	 	 	 }
@@ -6555,6 +6846,7 @@ module Dns.ViewModels {
 
 	 	 public toData(): Dns.Interfaces.IQueryComposerResponseErrorDTO{
 	 	 	  return {
+	 	 	 	QueryID: this.QueryID(),
 	 	 	 	Code: this.Code(),
 	 	 	 	Description: this.Description(),
 	 	 	  };
@@ -6585,114 +6877,32 @@ module Dns.ViewModels {
 
 	 }
 	 export class QueryComposerResponseViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseDTO>{
-	 	 public ID: KnockoutObservable<any>;
-	 	 public DocumentID: KnockoutObservable<any>;
-	 	 public ResponseDateTime: KnockoutObservable<Date>;
-	 	 public RequestID: KnockoutObservable<any>;
+	 	 public SchemaVersion: KnockoutObservable<string>;
+	 	 public Header: QueryComposerResponseHeaderViewModel;
 	 	 public Errors: KnockoutObservableArray<QueryComposerResponseErrorViewModel>;
-	 	 public Results: KnockoutObservableArray<any>;
-	 	 public LowCellThrehold: KnockoutObservable<number>;
-	 	 public Properties: KnockoutObservableArray<QueryComposerResponsePropertyDefinitionViewModel>;
-	 	 public Aggregation: QueryComposerResponseAggregationDefinitionViewModel;
+	 	 public Queries: KnockoutObservableArray<QueryComposerResponseQueryResultViewModel>;
 	 	 constructor(QueryComposerResponseDTO?: Dns.Interfaces.IQueryComposerResponseDTO)
 	 	  {
 	 	 	  super();
 	 	 	 if (QueryComposerResponseDTO== null) {
-	 	 	 	 this.ID = ko.observable<any>();
-	 	 	 	 this.DocumentID = ko.observable<any>();
-	 	 	 	 this.ResponseDateTime = ko.observable<any>();
-	 	 	 	 this.RequestID = ko.observable<any>();
+	 	 	 	 this.SchemaVersion = ko.observable<any>();
+	 	 	 	 this.Header = new QueryComposerResponseHeaderViewModel();
 	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>();
-	 	 	 	 this.Results = ko.observableArray<any>();
-	 	 	 	 this.LowCellThrehold = ko.observable<any>();
-	 	 	 	 this.Properties = ko.observableArray<QueryComposerResponsePropertyDefinitionViewModel>();
-	 	 	 	 this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel();
+	 	 	 	 this.Queries = ko.observableArray<QueryComposerResponseQueryResultViewModel>();
 	 	 	  }else{
-	 	 	 	 this.ID = ko.observable(QueryComposerResponseDTO.ID);
-	 	 	 	 this.DocumentID = ko.observable(QueryComposerResponseDTO.DocumentID);
-	 	 	 	 this.ResponseDateTime = ko.observable(QueryComposerResponseDTO.ResponseDateTime);
-	 	 	 	 this.RequestID = ko.observable(QueryComposerResponseDTO.RequestID);
+	 	 	 	 this.SchemaVersion = ko.observable(QueryComposerResponseDTO.SchemaVersion);
+	 	 	 	 this.Header = new QueryComposerResponseHeaderViewModel(QueryComposerResponseDTO.Header);
 	 	 	 	 this.Errors = ko.observableArray<QueryComposerResponseErrorViewModel>(QueryComposerResponseDTO.Errors == null ? null : QueryComposerResponseDTO.Errors.map((item) => {return new QueryComposerResponseErrorViewModel(item);}));
-	 	 	 	 this.Results = ko.observableArray<any>(QueryComposerResponseDTO.Results == null ? null : QueryComposerResponseDTO.Results.map((item) => {return item;}));
-	 	 	 	 this.LowCellThrehold = ko.observable(QueryComposerResponseDTO.LowCellThrehold);
-	 	 	 	 this.Properties = ko.observableArray<QueryComposerResponsePropertyDefinitionViewModel>(QueryComposerResponseDTO.Properties == null ? null : QueryComposerResponseDTO.Properties.map((item) => {return new QueryComposerResponsePropertyDefinitionViewModel(item);}));
-	 	 	 	 this.Aggregation = new QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseDTO.Aggregation);
+	 	 	 	 this.Queries = ko.observableArray<QueryComposerResponseQueryResultViewModel>(QueryComposerResponseDTO.Queries == null ? null : QueryComposerResponseDTO.Queries.map((item) => {return new QueryComposerResponseQueryResultViewModel(item);}));
 	 	 	 }
 	 	 }
 
 	 	 public toData(): Dns.Interfaces.IQueryComposerResponseDTO{
 	 	 	  return {
-	 	 	 	ID: this.ID(),
-	 	 	 	DocumentID: this.DocumentID(),
-	 	 	 	ResponseDateTime: this.ResponseDateTime(),
-	 	 	 	RequestID: this.RequestID(),
+	 	 	 	SchemaVersion: this.SchemaVersion(),
+	 	 	 	Header: this.Header.toData(),
 	 	 	 	Errors: this.Errors == null ? null : this.Errors().map((item) => {return item.toData();}),
-	 	 	 	Results: this.Results(),
-	 	 	 	LowCellThrehold: this.LowCellThrehold(),
-	 	 	 	Properties: this.Properties == null ? null : this.Properties().map((item) => {return item.toData();}),
-	 	 	 	Aggregation: this.Aggregation.toData(),
-	 	 	  };
-	 	  }
-
-
-
-	 }
-	 export class QueryComposerResponseAggregationDefinitionViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO>{
-	 	 public GroupBy: KnockoutObservableArray<string>;
-	 	 public Select: KnockoutObservableArray<any>;
-	 	 public Name: KnockoutObservable<string>;
-	 	 constructor(QueryComposerResponseAggregationDefinitionDTO?: Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO)
-	 	  {
-	 	 	  super();
-	 	 	 if (QueryComposerResponseAggregationDefinitionDTO== null) {
-	 	 	 	 this.GroupBy = ko.observableArray<string>();
-	 	 	 	 this.Select = ko.observableArray<any>();
-	 	 	 	 this.Name = ko.observable<any>();
-	 	 	  }else{
-	 	 	 	 this.GroupBy = ko.observableArray<string>(QueryComposerResponseAggregationDefinitionDTO.GroupBy == null ? null : QueryComposerResponseAggregationDefinitionDTO.GroupBy.map((item) => {return item;}));
-	 	 	 	 this.Select = ko.observableArray<any>(QueryComposerResponseAggregationDefinitionDTO.Select == null ? null : QueryComposerResponseAggregationDefinitionDTO.Select.map((item) => {return item;}));
-	 	 	 	 this.Name = ko.observable(QueryComposerResponseAggregationDefinitionDTO.Name);
-	 	 	 }
-	 	 }
-
-	 	 public toData(): Dns.Interfaces.IQueryComposerResponseAggregationDefinitionDTO{
-	 	 	  return {
-	 	 	 	GroupBy: this.GroupBy == null ? null : this.GroupBy().map((item) => {return item;}),
-	 	 	 	Select: this.Select(),
-	 	 	 	Name: this.Name(),
-	 	 	  };
-	 	  }
-
-
-
-	 }
-	 export class QueryComposerResponsePropertyDefinitionViewModel extends ViewModel<Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO>{
-	 	 public Name: KnockoutObservable<string>;
-	 	 public Type: KnockoutObservable<string>;
-	 	 public As: KnockoutObservable<string>;
-	 	 public Aggregate: KnockoutObservable<string>;
-	 	 constructor(QueryComposerResponsePropertyDefinitionDTO?: Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO)
-	 	  {
-	 	 	  super();
-	 	 	 if (QueryComposerResponsePropertyDefinitionDTO== null) {
-	 	 	 	 this.Name = ko.observable<any>();
-	 	 	 	 this.Type = ko.observable<any>();
-	 	 	 	 this.As = ko.observable<any>();
-	 	 	 	 this.Aggregate = ko.observable<any>();
-	 	 	  }else{
-	 	 	 	 this.Name = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Name);
-	 	 	 	 this.Type = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Type);
-	 	 	 	 this.As = ko.observable(QueryComposerResponsePropertyDefinitionDTO.As);
-	 	 	 	 this.Aggregate = ko.observable(QueryComposerResponsePropertyDefinitionDTO.Aggregate);
-	 	 	 }
-	 	 }
-
-	 	 public toData(): Dns.Interfaces.IQueryComposerResponsePropertyDefinitionDTO{
-	 	 	  return {
-	 	 	 	Name: this.Name(),
-	 	 	 	Type: this.Type(),
-	 	 	 	As: this.As(),
-	 	 	 	Aggregate: this.Aggregate(),
+	 	 	 	Queries: this.Queries == null ? null : this.Queries().map((item) => {return item.toData();}),
 	 	 	  };
 	 	  }
 
@@ -6763,7 +6973,6 @@ module Dns.ViewModels {
 	 	 public RequestType: KnockoutObservable<string>;
 	 	 public WorkflowID: KnockoutObservable<any>;
 	 	 public Workflow: KnockoutObservable<string>;
-	 	 public Template: KnockoutObservable<string>;
 	 	 constructor(ProjectRequestTypeDTO?: Dns.Interfaces.IProjectRequestTypeDTO)
 	 	  {
 	 	 	  super();
@@ -6773,14 +6982,12 @@ module Dns.ViewModels {
 	 	 	 	 this.RequestType = ko.observable<any>();
 	 	 	 	 this.WorkflowID = ko.observable<any>();
 	 	 	 	 this.Workflow = ko.observable<any>();
-	 	 	 	 this.Template = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.ProjectID = ko.observable(ProjectRequestTypeDTO.ProjectID);
 	 	 	 	 this.RequestTypeID = ko.observable(ProjectRequestTypeDTO.RequestTypeID);
 	 	 	 	 this.RequestType = ko.observable(ProjectRequestTypeDTO.RequestType);
 	 	 	 	 this.WorkflowID = ko.observable(ProjectRequestTypeDTO.WorkflowID);
 	 	 	 	 this.Workflow = ko.observable(ProjectRequestTypeDTO.Workflow);
-	 	 	 	 this.Template = ko.observable(ProjectRequestTypeDTO.Template);
 	 	 	 }
 	 	 }
 
@@ -6791,7 +6998,6 @@ module Dns.ViewModels {
 	 	 	 	RequestType: this.RequestType(),
 	 	 	 	WorkflowID: this.WorkflowID(),
 	 	 	 	Workflow: this.Workflow(),
-	 	 	 	Template: this.Template(),
 	 	 	  };
 	 	  }
 
@@ -7207,6 +7413,90 @@ module Dns.ViewModels {
 
 
 	 }
+	 export class QueryComposerQueryHeaderViewModel extends QueryComposerHeaderViewModel{
+	 	 public QueryType: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
+	 	 public ComposerInterface: KnockoutObservable<Dns.Enums.QueryComposerInterface>;
+	 	 constructor(QueryComposerQueryHeaderDTO?: Dns.Interfaces.IQueryComposerQueryHeaderDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerQueryHeaderDTO== null) {
+	 	 	 	 this.QueryType = ko.observable<any>();
+	 	 	 	 this.ComposerInterface = ko.observable<any>();
+	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	 	 this.Description = ko.observable<any>();
+	 	 	 	 this.ViewUrl = ko.observable<any>();
+	 	 	 	 this.Priority = ko.observable<any>();
+	 	 	 	 this.DueDate = ko.observable<any>();
+	 	 	 	 this.SubmittedOn = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.QueryType = ko.observable(QueryComposerQueryHeaderDTO.QueryType);
+	 	 	 	 this.ComposerInterface = ko.observable(QueryComposerQueryHeaderDTO.ComposerInterface);
+	 	 	 	 this.ID = ko.observable(QueryComposerQueryHeaderDTO.ID);
+	 	 	 	 this.Name = ko.observable(QueryComposerQueryHeaderDTO.Name);
+	 	 	 	 this.Description = ko.observable(QueryComposerQueryHeaderDTO.Description);
+	 	 	 	 this.ViewUrl = ko.observable(QueryComposerQueryHeaderDTO.ViewUrl);
+	 	 	 	 this.Priority = ko.observable(QueryComposerQueryHeaderDTO.Priority);
+	 	 	 	 this.DueDate = ko.observable(QueryComposerQueryHeaderDTO.DueDate);
+	 	 	 	 this.SubmittedOn = ko.observable(QueryComposerQueryHeaderDTO.SubmittedOn);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerQueryHeaderDTO{
+	 	 	  return {
+	 	 	 	QueryType: this.QueryType(),
+	 	 	 	ComposerInterface: this.ComposerInterface(),
+	 	 	 	ID: this.ID(),
+	 	 	 	Name: this.Name(),
+	 	 	 	Description: this.Description(),
+	 	 	 	ViewUrl: this.ViewUrl(),
+	 	 	 	Priority: this.Priority(),
+	 	 	 	DueDate: this.DueDate(),
+	 	 	 	SubmittedOn: this.SubmittedOn(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class QueryComposerRequestHeaderViewModel extends QueryComposerHeaderViewModel{
+	 	 constructor(QueryComposerRequestHeaderDTO?: Dns.Interfaces.IQueryComposerRequestHeaderDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (QueryComposerRequestHeaderDTO== null) {
+	 	 	 	 this.ID = ko.observable<any>();
+	 	 	 	 this.Name = ko.observable<any>();
+	 	 	 	 this.Description = ko.observable<any>();
+	 	 	 	 this.ViewUrl = ko.observable<any>();
+	 	 	 	 this.Priority = ko.observable<any>();
+	 	 	 	 this.DueDate = ko.observable<any>();
+	 	 	 	 this.SubmittedOn = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.ID = ko.observable(QueryComposerRequestHeaderDTO.ID);
+	 	 	 	 this.Name = ko.observable(QueryComposerRequestHeaderDTO.Name);
+	 	 	 	 this.Description = ko.observable(QueryComposerRequestHeaderDTO.Description);
+	 	 	 	 this.ViewUrl = ko.observable(QueryComposerRequestHeaderDTO.ViewUrl);
+	 	 	 	 this.Priority = ko.observable(QueryComposerRequestHeaderDTO.Priority);
+	 	 	 	 this.DueDate = ko.observable(QueryComposerRequestHeaderDTO.DueDate);
+	 	 	 	 this.SubmittedOn = ko.observable(QueryComposerRequestHeaderDTO.SubmittedOn);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IQueryComposerRequestHeaderDTO{
+	 	 	  return {
+	 	 	 	ID: this.ID(),
+	 	 	 	Name: this.Name(),
+	 	 	 	Description: this.Description(),
+	 	 	 	ViewUrl: this.ViewUrl(),
+	 	 	 	Priority: this.Priority(),
+	 	 	 	DueDate: this.DueDate(),
+	 	 	 	SubmittedOn: this.SubmittedOn(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
 	 export class WFCommentViewModel extends EntityDtoWithIDViewModel<Dns.Interfaces.IWFCommentDTO>{
 	 	 public Comment: KnockoutObservable<string>;
 	 	 public CreatedOn: KnockoutObservable<Date>;
@@ -7537,6 +7827,9 @@ module Dns.ViewModels {
 	 	 public Notes: KnockoutObservable<string>;
 	 	 public QueryType: KnockoutObservable<Dns.Enums.QueryComposerQueryTypes>;
 	 	 public ComposerInterface: KnockoutObservable<Dns.Enums.QueryComposerInterface>;
+	 	 public Order: KnockoutObservable<number>;
+	 	 public RequestTypeID: KnockoutObservable<any>;
+	 	 public RequestType: KnockoutObservable<string>;
 	 	 constructor(TemplateDTO?: Dns.Interfaces.ITemplateDTO)
 	 	  {
 	 	 	  super();
@@ -7551,6 +7844,9 @@ module Dns.ViewModels {
 	 	 	 	 this.Notes = ko.observable<any>();
 	 	 	 	 this.QueryType = ko.observable<any>();
 	 	 	 	 this.ComposerInterface = ko.observable<any>();
+	 	 	 	 this.Order = ko.observable<any>();
+	 	 	 	 this.RequestTypeID = ko.observable<any>();
+	 	 	 	 this.RequestType = ko.observable<any>();
 	 	 	 	 this.ID = ko.observable<any>();
 	 	 	 	 this.Timestamp = ko.observable<any>();
 	 	 	  }else{
@@ -7564,6 +7860,9 @@ module Dns.ViewModels {
 	 	 	 	 this.Notes = ko.observable(TemplateDTO.Notes);
 	 	 	 	 this.QueryType = ko.observable(TemplateDTO.QueryType);
 	 	 	 	 this.ComposerInterface = ko.observable(TemplateDTO.ComposerInterface);
+	 	 	 	 this.Order = ko.observable(TemplateDTO.Order);
+	 	 	 	 this.RequestTypeID = ko.observable(TemplateDTO.RequestTypeID);
+	 	 	 	 this.RequestType = ko.observable(TemplateDTO.RequestType);
 	 	 	 	 this.ID = ko.observable(TemplateDTO.ID);
 	 	 	 	 this.Timestamp = ko.observable(TemplateDTO.Timestamp);
 	 	 	 }
@@ -7581,6 +7880,9 @@ module Dns.ViewModels {
 	 	 	 	Notes: this.Notes(),
 	 	 	 	QueryType: this.QueryType(),
 	 	 	 	ComposerInterface: this.ComposerInterface(),
+	 	 	 	Order: this.Order(),
+	 	 	 	RequestTypeID: this.RequestTypeID(),
+	 	 	 	RequestType: this.RequestType(),
 	 	 	 	ID: this.ID(),
 	 	 	 	Timestamp: this.Timestamp(),
 	 	 	  };
@@ -9203,10 +9505,10 @@ module Dns.ViewModels {
 	 	 public PostProcess: KnockoutObservable<boolean>;
 	 	 public AddFiles: KnockoutObservable<boolean>;
 	 	 public RequiresProcessing: KnockoutObservable<boolean>;
-	 	 public TemplateID: KnockoutObservable<any>;
-	 	 public Template: KnockoutObservable<string>;
+	 	 public Notes: KnockoutObservable<string>;
 	 	 public WorkflowID: KnockoutObservable<any>;
 	 	 public Workflow: KnockoutObservable<string>;
+	 	 public SupportMultiQuery: KnockoutObservable<boolean>;
 	 	 constructor(RequestTypeDTO?: Dns.Interfaces.IRequestTypeDTO)
 	 	  {
 	 	 	  super();
@@ -9217,10 +9519,10 @@ module Dns.ViewModels {
 	 	 	 	 this.PostProcess = ko.observable<any>();
 	 	 	 	 this.AddFiles = ko.observable<any>();
 	 	 	 	 this.RequiresProcessing = ko.observable<any>();
-	 	 	 	 this.TemplateID = ko.observable<any>();
-	 	 	 	 this.Template = ko.observable<any>();
+	 	 	 	 this.Notes = ko.observable<any>();
 	 	 	 	 this.WorkflowID = ko.observable<any>();
 	 	 	 	 this.Workflow = ko.observable<any>();
+	 	 	 	 this.SupportMultiQuery = ko.observable<any>();
 	 	 	 	 this.ID = ko.observable<any>();
 	 	 	 	 this.Timestamp = ko.observable<any>();
 	 	 	  }else{
@@ -9230,10 +9532,10 @@ module Dns.ViewModels {
 	 	 	 	 this.PostProcess = ko.observable(RequestTypeDTO.PostProcess);
 	 	 	 	 this.AddFiles = ko.observable(RequestTypeDTO.AddFiles);
 	 	 	 	 this.RequiresProcessing = ko.observable(RequestTypeDTO.RequiresProcessing);
-	 	 	 	 this.TemplateID = ko.observable(RequestTypeDTO.TemplateID);
-	 	 	 	 this.Template = ko.observable(RequestTypeDTO.Template);
+	 	 	 	 this.Notes = ko.observable(RequestTypeDTO.Notes);
 	 	 	 	 this.WorkflowID = ko.observable(RequestTypeDTO.WorkflowID);
 	 	 	 	 this.Workflow = ko.observable(RequestTypeDTO.Workflow);
+	 	 	 	 this.SupportMultiQuery = ko.observable(RequestTypeDTO.SupportMultiQuery);
 	 	 	 	 this.ID = ko.observable(RequestTypeDTO.ID);
 	 	 	 	 this.Timestamp = ko.observable(RequestTypeDTO.Timestamp);
 	 	 	 }
@@ -9247,10 +9549,10 @@ module Dns.ViewModels {
 	 	 	 	PostProcess: this.PostProcess(),
 	 	 	 	AddFiles: this.AddFiles(),
 	 	 	 	RequiresProcessing: this.RequiresProcessing(),
-	 	 	 	TemplateID: this.TemplateID(),
-	 	 	 	Template: this.Template(),
+	 	 	 	Notes: this.Notes(),
 	 	 	 	WorkflowID: this.WorkflowID(),
 	 	 	 	Workflow: this.Workflow(),
+	 	 	 	SupportMultiQuery: this.SupportMultiQuery(),
 	 	 	 	ID: this.ID(),
 	 	 	 	Timestamp: this.Timestamp(),
 	 	 	  };
@@ -9893,45 +10195,6 @@ module Dns.ViewModels {
 	 	 	 	Name: this.Name(),
 	 	 	 	Description: this.Description(),
 	 	 	 	IsRequestCreator: this.IsRequestCreator(),
-	 	 	 	ID: this.ID(),
-	 	 	 	Timestamp: this.Timestamp(),
-	 	 	  };
-	 	  }
-
-
-
-	 }
-	 export class QueryComposerRequestViewModel extends EntityDtoWithIDViewModel<Dns.Interfaces.IQueryComposerRequestDTO>{
-	 	 public Header: QueryComposerHeaderViewModel;
-	 	 public Where: QueryComposerWhereViewModel;
-	 	 public Select: QueryComposerSelectViewModel;
-	 	 public TemporalEvents: KnockoutObservableArray<QueryComposerTemporalEventViewModel>;
-	 	 constructor(QueryComposerRequestDTO?: Dns.Interfaces.IQueryComposerRequestDTO)
-	 	  {
-	 	 	  super();
-	 	 	 if (QueryComposerRequestDTO== null) {
-	 	 	 	 this.Header = new QueryComposerHeaderViewModel();
-	 	 	 	 this.Where = new QueryComposerWhereViewModel();
-	 	 	 	 this.Select = new QueryComposerSelectViewModel();
-	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>();
-	 	 	 	 this.ID = ko.observable<any>();
-	 	 	 	 this.Timestamp = ko.observable<any>();
-	 	 	  }else{
-	 	 	 	 this.Header = new QueryComposerHeaderViewModel(QueryComposerRequestDTO.Header);
-	 	 	 	 this.Where = new QueryComposerWhereViewModel(QueryComposerRequestDTO.Where);
-	 	 	 	 this.Select = new QueryComposerSelectViewModel(QueryComposerRequestDTO.Select);
-	 	 	 	 this.TemporalEvents = ko.observableArray<QueryComposerTemporalEventViewModel>(QueryComposerRequestDTO.TemporalEvents == null ? null : QueryComposerRequestDTO.TemporalEvents.map((item) => {return new QueryComposerTemporalEventViewModel(item);}));
-	 	 	 	 this.ID = ko.observable(QueryComposerRequestDTO.ID);
-	 	 	 	 this.Timestamp = ko.observable(QueryComposerRequestDTO.Timestamp);
-	 	 	 }
-	 	 }
-
-	 	 public toData(): Dns.Interfaces.IQueryComposerRequestDTO{
-	 	 	  return {
-	 	 	 	Header: this.Header.toData(),
-	 	 	 	Where: this.Where.toData(),
-	 	 	 	Select: this.Select.toData(),
-	 	 	 	TemporalEvents: this.TemporalEvents == null ? null : this.TemporalEvents().map((item) => {return item.toData();}),
 	 	 	 	ID: this.ID(),
 	 	 	 	Timestamp: this.Timestamp(),
 	 	 	  };

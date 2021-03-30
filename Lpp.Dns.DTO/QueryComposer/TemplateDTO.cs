@@ -46,7 +46,7 @@ namespace Lpp.Dns.DTO
         [DataMember]
         public string Data { get; set; }
         /// <summary>
-        /// Gets or set the type of Template types 
+        /// Gets or set the type of template: Request = 1, Criteria Group = 2
         /// </summary>
         [DataMember]
         public TemplateTypes Type { get; set; }
@@ -65,5 +65,20 @@ namespace Lpp.Dns.DTO
         /// </summary>
         [DataMember]
         public Enums.QueryComposerInterface? ComposerInterface { get; set; }
+        /// <summary>
+        /// Gets or sets the position of the template within the request types template collection.
+        /// </summary>
+        [DataMember]
+        public int Order { get; set; }
+        /// <summary>
+        /// Gets or sets the request type the template belongs to.
+        /// </summary>
+        [DataMember]
+        public Guid? RequestTypeID { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the request type the template belongs to.
+        /// </summary>
+        [DataMember]
+        public string RequestType { get; set; }
     }
 }

@@ -3,66 +3,42 @@
 <script type="text/html" id="e_@ModelTermsFactory.DC_SexDistribution">
     <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
     <div class="row">
-        <div class="col-sm-4 bold"><h4 id="SexDistribution" class="TermHeader bold">Sex Distribution<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
-        <div class="col-sm-4 form-group">
+        <div class="col-sm-3 bold"><h4 id="SexDistribution" class="TermHeader bold">Sex Distribution<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-7 form-group">
             <div class="checkbox">
-                <input type="checkbox" onchange="SelectAll(this, 'SexDistributionGrid')" />
-                <label for="ethnicityAll">Select All</label>
+                <label><input type="checkbox" data-bind="CheckAllCheckboxExtender:{ valuesCollection: Values().SexDistributions, allValues:['0','1','2','3','4','5','6','7'] }" />Select All</label>
             </div>
             <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
             <div id="SexDistributionGrid">
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="0" id="sexAmbiguous" />
-                    <label class="hover-ibeam" for="sexAmbiguous">Ambiguous</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="0" id="sexAmbiguous" />Ambiguous</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="1" id="sexFemale" />
-                    <label class="hover-ibeam" for="sexFemale">Female</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="1" id="sexFemale" />Female</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="2" id="sexMale" />
-                    <label class="hover-ibeam" for="sexMale">Male</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="2" id="sexMale" />Male</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="3" id="sexNoInformation" />
-                    <label class="hover-ibeam" for="sexNoInformation">No Information</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="3" id="sexNoInformation" />No Information</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="4" id="sexNullOrMissing" />
-                    <label class="hover-ibeam" for="sexNullOrMissing">NULL or Missing</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="4" id="sexNullOrMissing" />NULL or Missing</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="5" id="sexOther" />
-                    <label class="hover-ibeam" for="sexOther">Other</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="5" id="sexOther" />Other</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="6" id="sexUnknown" />
-                    <label class="hover-ibeam" for="sexUnknown">Unknown</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="6" id="sexUnknown" />Unknown</label>
                 </div>
                 <div class="checkbox">
-                    <input type="checkbox" data-bind="checked: Values().SexDistributions" value="7" id="sexValuesOutsideOfCdmSpecifications" />
-                    <label class="hover-ibeam" for="sexValuesOutsideOfCdmSpecifications">Values Outside of CDM Specifications</label>
+                    <label><input type="checkbox" data-bind="checked: Values().SexDistributions" value="7" id="sexValuesOutsideOfCdmSpecifications" />Values Outside of CDM Specifications</label>
                 </div>
             </div>
         </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
-        </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteSexDistributionTerm" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button id="btnDeleteSexDistributionTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>
-</script>
-
-@*Select ALL*@
-<script type="text/javascript">
-    function SelectAll(checker, container) {
-
-        $("#" + container + " div input[type=checkbox]").each(function () {
-            if (this.checked != checker.checked)
-                $(this).click();
-        });
-    }
-
 </script>

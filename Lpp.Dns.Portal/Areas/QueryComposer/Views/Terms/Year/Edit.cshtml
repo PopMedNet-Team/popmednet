@@ -12,12 +12,9 @@
             <label id="lblEndYear" for="neEndYear">End</label>
             <input id="neEndYear" type="number" maxlength="4" data-bind="kendoNumericTextBox: {value: Values().EndYear, min: 1800, max: 9999, decimals: 0, format: '0000'}" style="width: 100px;"/>
         </div>
-        <div class="col-sm-2" data-bind="visible: $root.IsTemplateEdit">
-            <input type="checkbox" data-bind="checked: Design.Locked" />
-            <span>Locked</span>
-        </div>
-        <div class="col-sm-2">
-            <button id="btnDeleteYears" class="btn btn-danger pull-right" data-bind="click: function(data, event) { $root.DeleteTerm(data, $parent, event);}, visible: $root.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button id="btnDeleteYears" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>
 </script>

@@ -18,16 +18,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
 
         }
 
-        protected DTO.QueryComposer.QueryComposerResponseDTO _currentViewableResponse = null;
-        protected DTO.QueryComposer.QueryComposerResponseDTO _currentNonViewableResponse = null;
-
-        public override QueryComposerResponseDTO Execute(QueryComposerRequestDTO request, bool viewSQL)
+        public override IEnumerable<QueryComposerResponseQueryResultDTO> Execute(QueryComposerQueryDTO query, bool viewSQL)
         {
             List<Dictionary<string, object>> formattedResults = new List<Dictionary<string, object>>();
             List<Dictionary<string, object>> unFormattedResults = new List<Dictionary<string, object>>();
             List<MetadataRefreshResult> results = new List<MetadataRefreshResult>();
-            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<QueryComposerResponseErrorDTO>();           
+            List<DTO.QueryComposer.QueryComposerResponseErrorDTO> errors = new List<QueryComposerResponseErrorDTO>();
 
+            DateTimeOffset queryStart = DateTimeOffset.UtcNow;
             System.Data.IDbConnection conn = null;
             try
             {
@@ -277,19 +275,25 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
                 }
             }
 
-            var viewableResponse = new DTO.QueryComposer.QueryComposerResponseDTO
+            DateTimeOffset queryEnd = DateTimeOffset.UtcNow;
+
+            var viewableResponse = new QueryComposerResponseQueryResultDTO
             {
                 Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
+                ID = query.Header.ID,
+                QueryStart = queryStart,
+                QueryEnd = queryEnd,
+                LowCellThrehold = _lowThresholdValue,
                 Results = new[] { formattedResults }
             };
 
-            var nonViewableResponse = new DTO.QueryComposer.QueryComposerResponseDTO
+            var nonViewableResponse = new QueryComposerResponseQueryResultDTO
             {
                 Errors = errors,
-                RequestID = request.ID.HasValue ? request.ID.Value : default(Guid),
-                ResponseDateTime = DateTime.UtcNow,
+                ID = query.Header.ID,
+                QueryStart = queryStart,
+                QueryEnd = queryEnd,
+                LowCellThrehold = _lowThresholdValue,
                 Results = new[] { unFormattedResults }
             };
 
@@ -299,31 +303,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.SummaryQuery
             nonViewableResponse.Properties = GetNonViewableResponsePropertyDefinitions();
             nonViewableResponse.Aggregation = GetNonViewableResponseAggregationDefinition();
 
-            _currentViewableResponse = viewableResponse;
-
-            _currentNonViewableResponse = nonViewableResponse;
-
-            return _currentViewableResponse;
+            return new[] { viewableResponse, nonViewableResponse };
         }
 
-        public override QueryComposerModelProcessor.DocumentEx[] OutputDocuments()
-        {
-            List<QueryComposerModelProcessor.DocumentEx> docs = new List<QueryComposerModelProcessor.DocumentEx>();
-
-            if(_currentViewableResponse == null || _currentNonViewableResponse == null)
-                return new QueryComposerModelProcessor.DocumentEx[0];
-
-            return new[] { SerializeResponse(_currentViewableResponse, QueryComposerModelProcessor.NewGuid(), "response.json"), SerializeResponse(_currentNonViewableResponse, QueryComposerModelProcessor.NewGuid(), "refresh-dates.json", "SummaryTables.RefreshDates", false) };
-        }
-
-        public override bool CanPostProcess(QueryComposerResponseDTO response, out string message)
+        public override bool CanPostProcess(QueryComposerResponseQueryResultDTO response, out string message)
         {
             message = "Post processing not supported by Metadata Refresh queries.";
 
             return false;
         }
 
-        public override void PostProcess(QueryComposerResponseDTO response)
+        public override void PostProcess(QueryComposerResponseQueryResultDTO response)
         {
             
         }

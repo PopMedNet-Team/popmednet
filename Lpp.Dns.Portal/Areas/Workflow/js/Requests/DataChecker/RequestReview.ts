@@ -61,8 +61,8 @@ module Workflow.WFDataChecker.RequestReview {
 
             //Hook up the Query Composer
             var query = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
-            var visualTerms = Requests.Details.rovm.VisualTerms;
-            Plugins.Requests.QueryBuilder.View.init(query, visualTerms, view);
+            //var visualTerms = Requests.Details.rovm.VisualTerms;
+            //Plugins.Requests.QueryBuilder.View.init(query, visualTerms, view);
 
             Requests.Details.rovm.ReadOnly(true);
         });

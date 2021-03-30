@@ -177,7 +177,12 @@ module Workflow.VerticalDistributedRegression.Distribution {
                     self.ExistingRequestDataMarts = selectedDataMarts
                     self.SelectedDataMartIDs.removeAll();
                     self.SelectedDataMartIDs(ko.utils.arrayMap(selectedDataMarts, (i) => { return i.DataMartID; }));
+
                     let query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+                    if (query.hasOwnProperty('SchemaVersion')) {
+                        query = ko.utils.arrayFirst((<Dns.Interfaces.IQueryComposerRequestDTO>query).Queries, (q) => q != null)
+                    }
+
                     let uploadViewModel = Controls.WFFileUpload.Index.init($('#DRUpload'), query, modularProgramTermID);
                     self.UploadViewModel = uploadViewModel;
 
@@ -196,11 +201,31 @@ module Workflow.VerticalDistributedRegression.Distribution {
 
         public PostComplete(resultID: string) {
             let self = this;
-            let uploadCriteria = vm.UploadViewModel.serializeCriteria();
-            Requests.Details.rovm.Request.Query(uploadCriteria);
+
+            let requestDTO = new Dns.ViewModels.QueryComposerRequestViewModel();
+            requestDTO.SchemaVersion("2.0");
+            requestDTO.Header.ID(Requests.Details.rovm.Request.ID());
+            requestDTO.Header.Name(Requests.Details.rovm.Request.Name());
+            requestDTO.Header.DueDate(Requests.Details.rovm.Request.DueDate());
+            requestDTO.Header.Priority(Requests.Details.rovm.Request.Priority());
+            requestDTO.Header.ViewUrl(location.protocol + '//' + location.host + '/querycomposer/summaryview?ID=' + Requests.Details.rovm.Request.ID());
+            requestDTO.Header.Description(Requests.Details.rovm.Request.Description());
+
+            if (Constants.Guid.equals(resultID, "5445DC6E-72DC-4A6B-95B6-338F0359F89E")) {
+                //set the submit date if getting submitted
+                requestDTO.Header.SubmittedOn(new Date());
+            }
+
+            vm.UploadViewModel.ExportQueries().forEach((query) => {
+                requestDTO.Queries.push(new Dns.ViewModels.QueryComposerQueryViewModel(query));
+            });
+
+            Requests.Details.rovm.Request.Query(JSON.stringify(requestDTO.toData()));
+
             let AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val()
             let dto = Requests.Details.rovm.Request.toData()
             dto.AdditionalInstructions = AdditionalInstructions;
+
             let acCount: number = 0;
             let dpCount: number = 0
             let requestDataMarts = ko.utils.arrayMap(vm.SelectedDataMartIDs(), (datamartID) => {
@@ -222,10 +247,13 @@ module Workflow.VerticalDistributedRegression.Distribution {
 
                 return dm;
             });
+
             let badDms = ko.utils.arrayFilter(requestDataMarts, (rdm) => {
                 return rdm.RoutingType == undefined || rdm.RoutingType == null || rdm.RoutingType == -1
             });
+
             if (badDms.length == 0 && acCount == 1 && dpCount > 0) {
+
                 let obj = {
                     Documents: ko.utils.arrayMap(vm.UploadViewModel.Documents(), (d) => { return d.RevisionSetID; }), TrustMatrix: self.FilteredMatrixBody().map((item) => {
                         return {
@@ -235,7 +263,9 @@ module Workflow.VerticalDistributedRegression.Distribution {
                         }
                     })
                 };
+
                 if (self.UploadViewModel.Documents().length === 0) {
+
                     Global.Helpers.ShowConfirm("No Documents Uploaded", "<p>No documents have been uploaded.  Do you want to continue submitting the request?").done(() => {
                         Dns.WebApi.Requests.CompleteActivity({
                             DemandActivityResultID: resultID,
@@ -255,8 +285,11 @@ module Workflow.VerticalDistributedRegression.Distribution {
                             }
                         });
                     }).fail(() => { return; });
+
                 }
-                else {
+                else
+                {
+
                     Dns.WebApi.Requests.CompleteActivity({
                         DemandActivityResultID: resultID,
                         Dto: dto,
@@ -274,9 +307,11 @@ module Workflow.VerticalDistributedRegression.Distribution {
                             Requests.Details.rovm.UpdateUrl();
                         }
                     });
+
                 }
             }
-            else {
+            else
+            {
                 if (badDms.length > 0)
                     Global.Helpers.ShowAlert('DataMart Type Not Selected', '<p>Please Verify that all selected DataMarts have their Type specified</p>');
                 else if (acCount == 0 || acCount > 1)
@@ -357,7 +392,17 @@ module Workflow.VerticalDistributedRegression.Distribution {
         .done((datamarts, selectedDataMarts) => {
 
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-            let query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+            
+            let obj = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+
+            let query: Dns.Interfaces.IQueryComposerQueryDTO = null;
+            if (obj.hasOwnProperty('SchemaVersion')) {
+                query = ko.utils.arrayFirst((<Dns.Interfaces.IQueryComposerRequestDTO>obj).Queries, (q) => q != null);
+            }
+            else {
+                query = obj;
+            }
+
             let uploadViewModel = Requests.Details.rovm.Request.ID() != null ? Controls.WFFileUpload.Index.init($('#DRUpload'), query, modularProgramTermID) : null;
             //Bind the view model for the activity
             let bindingControl = $("#DRDistribution");

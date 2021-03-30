@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PopMedNet.Adapters.AcceptanceTests
 {
-    [TestClass]
+    [TestClass, Ignore]
     public class HelperTasks
     {
         [TestMethod, Ignore]

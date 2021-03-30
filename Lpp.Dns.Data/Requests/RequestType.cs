@@ -22,7 +22,15 @@ namespace Lpp.Dns.Data
     {
         public RequestType()
         {
+            Models = new HashSet<RequestTypeModel>();
             RequestTypeAcls = new HashSet<AclRequestType>();
+            DataMartRequestTypeAcls = new HashSet<AclDataMartRequestType>();
+            ProjectDataMartRequestType = new HashSet<AclProjectDataMartRequestType>();
+            ProjectRequestTypeWorkflowActivityAcls = new HashSet<AclProjectRequestTypeWorkflowActivity>();
+            Projects = new HashSet<ProjectRequestType>();
+            Terms = new HashSet<RequestTypeTerm>();
+            Queries = new HashSet<Template>();
+            SupportMultiQuery = false;
         }
 
         [Required, MaxLength(100)]
@@ -37,12 +45,17 @@ namespace Lpp.Dns.Data
         /// Gets or set the identifier for the folder container the processor's plugin package.
         /// </summary>
         public string PackageIdentifier { get; set; }
-
-        public Guid? TemplateID { get; set; }
-        public virtual Template Template { get; set; }
+        /// <summary>
+        /// Gets or sets notes for the request type.
+        /// </summary>
+        public string Notes { get; set; }
 
         public Guid? WorkflowID { get; set; }
         public virtual Workflow Workflow { get; set; }
+        /// <summary>
+        /// Gets or sets if the request type will support multi-query.
+        /// </summary>
+        public bool SupportMultiQuery { get; set; }
 
         public virtual ICollection<RequestTypeModel> Models { get; set; }
         public virtual ICollection<AclRequestType> RequestTypeAcls { get; set; }
@@ -51,6 +64,7 @@ namespace Lpp.Dns.Data
         public virtual ICollection<AclProjectRequestTypeWorkflowActivity> ProjectRequestTypeWorkflowActivityAcls { get; set; }
         public virtual ICollection<ProjectRequestType> Projects { get; set; }
         public virtual ICollection<RequestTypeTerm> Terms { get; set; }
+        public virtual ICollection<Template> Queries { get; set; }
     
     }
 
@@ -81,6 +95,7 @@ namespace Lpp.Dns.Data
             HasMany(t => t.Projects).WithRequired(r => r.RequestType).HasForeignKey(t => t.RequestTypeID).WillCascadeOnDelete(true);
             HasMany(t => t.Terms).WithRequired(t => t.RequestType).HasForeignKey(t => t.RequestTypeID).WillCascadeOnDelete(true);
             HasMany(t => t.ProjectRequestTypeWorkflowActivityAcls).WithRequired(t => t.RequestType).HasForeignKey(t => t.RequestTypeID).WillCascadeOnDelete(true);
+            HasMany(t => t.Queries).WithOptional(t => t.RequestType).HasForeignKey(t => t.RequestTypeID).WillCascadeOnDelete(true);
         }
     }
 
@@ -146,11 +161,11 @@ namespace Lpp.Dns.Data
                     Name = rt.Name,
                     PostProcess = rt.PostProcess,
                     RequiresProcessing = rt.RequiresProcessing,
+                    Notes = rt.Notes,
                     Timestamp = rt.Timestamp,
-                    Template = rt.Template.Name,
-                    TemplateID = rt.TemplateID,
                     Workflow = rt.Workflow.Name,
-                    WorkflowID = rt.WorkflowID
+                    WorkflowID = rt.WorkflowID,
+                    SupportMultiQuery = rt.SupportMultiQuery
                 };
             }
         }

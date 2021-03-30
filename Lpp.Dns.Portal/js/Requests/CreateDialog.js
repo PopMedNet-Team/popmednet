@@ -23,7 +23,6 @@ var Requests;
                 var _this = _super.call(this, bindingControl) || this;
                 var self = _this;
                 self.RequestTypes = requestTypes;
-                debugger;
                 _this.onSelectRequestType = function (requestType) {
                     self.Close(requestType);
                 };

@@ -1,8 +1,8 @@
 ﻿@using Lpp.QueryComposer
 <script type="text/html" id="v_@ModelTermsFactory.CriteriaID">
-    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
     <div class="row">
         <div class="col-sm-2 bold">Criteria:</div>
-        <div class="col-sm-10" data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.OutputCriteriaTranslation, Values().Criteria())"></div>
+        <div class="col-sm-10" data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.OutputCriteriaTranslation, Values.Criteria)"></div>
     </div>
 </script>

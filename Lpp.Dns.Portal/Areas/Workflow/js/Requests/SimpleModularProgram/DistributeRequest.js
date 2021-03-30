@@ -124,6 +124,9 @@ var Workflow;
                             self.SelectedDataMartIDs.removeAll();
                             self.SelectedDataMartIDs(ko.utils.arrayMap(selectedDataMarts, function (i) { return i.DataMartID; }));
                             var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+                            if (query.hasOwnProperty('SchemaVersion')) {
+                                query = ko.utils.arrayFirst(query.Queries, function (q) { return q != null; });
+                            }
                             var uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
                             self.UploadViewModel = uploadViewModel;
                             Controls.WFFileUpload.ForAttachments.init($('#attachments_upload'), true).done(function (viewModel) {
@@ -148,8 +151,22 @@ var Workflow;
                     return _this;
                 }
                 ViewModel.prototype.PostComplete = function (resultID) {
-                    var uploadCriteria = vm.UploadViewModel.serializeCriteria();
-                    Requests.Details.rovm.Request.Query(uploadCriteria);
+                    var requestDTO = new Dns.ViewModels.QueryComposerRequestViewModel();
+                    requestDTO.SchemaVersion("2.0");
+                    requestDTO.Header.ID(Requests.Details.rovm.Request.ID());
+                    requestDTO.Header.Name(Requests.Details.rovm.Request.Name());
+                    requestDTO.Header.DueDate(Requests.Details.rovm.Request.DueDate());
+                    requestDTO.Header.Priority(Requests.Details.rovm.Request.Priority());
+                    requestDTO.Header.ViewUrl(location.protocol + '//' + location.host + '/querycomposer/summaryview?ID=' + Requests.Details.rovm.Request.ID());
+                    requestDTO.Header.Description(Requests.Details.rovm.Request.Description());
+                    if (Constants.Guid.equals(resultID, "5445DC6E-72DC-4A6B-95B6-338F0359F89E")) {
+                        //set the submit date if getting submitted
+                        requestDTO.Header.SubmittedOn(new Date());
+                    }
+                    vm.UploadViewModel.ExportQueries().forEach(function (query) {
+                        requestDTO.Queries.push(new Dns.ViewModels.QueryComposerQueryViewModel(query));
+                    });
+                    Requests.Details.rovm.Request.Query(JSON.stringify(requestDTO.toData()));
                     var AdditionalInstructions = $('#DataMarts_AdditionalInstructions').val();
                     var dto = Requests.Details.rovm.Request.toData();
                     dto.AdditionalInstructions = AdditionalInstructions;
@@ -218,7 +235,15 @@ var Workflow;
             $.when(Requests.Details.rovm.Request.ID() != null ? Dns.WebApi.Requests.GetCompatibleDataMarts({ TermIDs: [modularProgramTermID], ProjectID: Requests.Details.rovm.Request.ProjectID(), Request: "", RequestID: Requests.Details.rovm.Request.ID() }) : null, Requests.Details.rovm.Request.ID() != null ? Dns.WebApi.Requests.RequestDataMarts(Requests.Details.rovm.Request.ID()) : null)
                 .done(function (datamarts, selectedDataMarts) {
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
-                var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+                var obj = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
+                //TODO: need to deserialize and initialize with single query, or pass the entire request dto.
+                var query = null;
+                if (obj.hasOwnProperty("SchemaVersion")) {
+                    query = ko.utils.arrayFirst(obj.Queries, function (q) { return q != null; });
+                }
+                else {
+                    query = obj;
+                }
                 var uploadViewModel = Requests.Details.rovm.Request.ID() != null ? Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID) : null;
                 //Bind the view model for the activity
                 var bindingControl = $("#MPDistributeRequest");

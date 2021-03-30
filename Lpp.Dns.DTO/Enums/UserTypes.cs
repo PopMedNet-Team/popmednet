@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Lpp.Dns.DTO.Enums
 {
@@ -27,6 +22,11 @@ namespace Lpp.Dns.DTO.Enums
         /// BackgroundTask
         /// </summary>
         [EnumMember]
-        BackgroundTask = 2
+        BackgroundTask = 2,
+        /// <summary>
+        /// DMCS Sync User
+        /// </summary>
+        [EnumMember]
+        DMCSUser = 3
     }
 }

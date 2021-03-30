@@ -21,7 +21,7 @@ module Workflow.Default.RequestReview {
             if (!Requests.Details.rovm.Validate())
                 return;
 
-            var rejected: boolean = resultID.toUpperCase() == "EA120001-7A35-4829-9F2D-A3B600E25013";
+            let rejected: boolean = resultID.toUpperCase() == "EA120001-7A35-4829-9F2D-A3B600E25013";
 
             Requests.Details.PromptForComment()
                 .done((comment) => {
@@ -61,17 +61,16 @@ module Workflow.Default.RequestReview {
             Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
 
             //Bind the view model for the activity
-            var bindingControl = $("#DefaultCreateRequest");
+            let bindingControl = $("#DefaultRequestReview");
             vm = new ViewModel(bindingControl, approveRejectPermisssion[0]);
             ko.applyBindings(vm, bindingControl[0]);
 
-            var view = $("#qcViewWrapper").find("#viewQueryComposer");
-            view.attr("id", "taskViewQueryComposer");
+            let querySummaryContainer = $("#qcViewWrapper");
+            let view = querySummaryContainer.find("#QueryComposerOverview");
+            view.attr("id", "taskViewQueryComposerOverview");
 
-            //Hook up the Query Composer
-            var query = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
-            var visualTerms = Requests.Details.rovm.VisualTerms;
-            Plugins.Requests.QueryBuilder.View.init(query, visualTerms, view);
+            Plugins.Requests.QueryBuilder.View.initialize(JSON.parse(vm.Request().Query()), vm.Request(), querySummaryContainer);
+
 
             Requests.Details.rovm.ReadOnly(true);
         });
