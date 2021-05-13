@@ -25,6 +25,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             string connectionTimeout = settings.GetAsString("ConnectionTimeout", "15");
             string commandTimeout = settings.GetAsString("CommandTimeout", "120");
             string dataSource = settings.GetAsString("Data Source", "");
+            string encrypted = settings.GetAsString("Encrypt", "False");
 
             logger.Debug("Connection timeout: " + connectionTimeout + ", Command timeout: " + commandTimeout);
 
@@ -58,7 +59,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
 
                     if (port == null || port == string.Empty)
                         port = "5432";
-                    connectionString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};Timeout={5};CommandTimeout={6}", server, port, userId, password, database, connectionTimeout, commandTimeout);
+                    connectionString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};Timeout={5};CommandTimeout={6};SSL Mode={7};Trust Server Certificate={8}", server, port, userId, password, database, connectionTimeout, commandTimeout, encrypted.ToUpper() == "TRUE" ? "Require" : "Prefer", encrypted);
                     break;
 
                 case Model.Settings.SQLProvider.SQLServer:
@@ -76,8 +77,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
                     }
 
                     if (port != null && port != string.Empty) server += ", " + port;
-                    connectionString = userId != null && userId != string.Empty ? String.Format("server={0};User ID={1};Password={2};Database={3}; Connection Timeout={4}", server, userId, password, database, connectionTimeout) :
-                                                                                  String.Format("server={0};integrated security=True;Database={1}; Connection Timeout={2}", server, database, connectionTimeout);
+                    connectionString = userId != null && userId != string.Empty ? String.Format("server={0};User ID={1};Password={2};Database={3}; Connection Timeout={4}; Encrypt={5}; TrustServerCertificate={5};", server, userId, password, database, connectionTimeout, encrypted) : String.Format("server={0};integrated security=True;Database={1}; Connection Timeout={2}; Encrypt={3}; TrustServerCertificate={3};", server, database, connectionTimeout, encrypted);
                     break;
 
                 case Model.Settings.SQLProvider.MySQL:
@@ -113,6 +113,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
                         throw new Exception(CommonMessages.Exception_MissingDatabasePassword);
                     }
                     Oracle.ManagedDataAccess.Client.OracleConnectionStringBuilder builder = new Oracle.ManagedDataAccess.Client.OracleConnectionStringBuilder();
+
                     //If userID is set to "/", password is not needed
                     if (string.IsNullOrWhiteSpace(password) && (userId == "/"))
                     {

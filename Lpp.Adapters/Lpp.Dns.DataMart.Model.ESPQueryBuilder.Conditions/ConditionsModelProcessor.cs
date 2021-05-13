@@ -228,6 +228,7 @@ namespace Lpp.Dns.DataMart.Model
                 string database = Settings.GetAsString("Database", "");
                 string connectionTimeout = Settings.GetAsString("ConnectionTimeout", "15");
                 string commandTimeout = Settings.GetAsString("CommandTimeout", "120");
+                string encrypted = Settings.GetAsString("Encrypt", "False");
 
                 if (string.IsNullOrEmpty(server))
                 {
@@ -254,7 +255,7 @@ namespace Lpp.Dns.DataMart.Model
                     case Lpp.Dns.DataMart.Model.Settings.SQLProvider.PostgreSQL:
                     if (port == null || port == string.Empty)
                         port = "5432";
-                        connectionString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};;Timeout={5};CommandTimeout={6}", server, port, userId, password, database, connectionTimeout, commandTimeout);
+                        connectionString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};Timeout={5};CommandTimeout={6}; SSL Mode={7}; TrustServerCertificate={8};", server, port, userId, password, database, connectionTimeout, commandTimeout, encrypted.ToUpper() == "TRUE" ? "Require" : "Prefer", encrypted);
                         // Making connection with Npgsql provider
                         using (NpgsqlConnection connnection = new NpgsqlConnection(connectionString))
                         {
@@ -279,8 +280,7 @@ namespace Lpp.Dns.DataMart.Model
 
                     case Lpp.Dns.DataMart.Model.Settings.SQLProvider.SQLServer:
                         if (port != null && port != string.Empty) server += ", " + port;
-                        connectionString = userId != null && userId != string.Empty ?  String.Format("server={0};User ID={1};Password={2};Database={3}; Connection Timeout={4}", server, userId, password, database, connectionTimeout) :
-                                                                                        String.Format("server={0};integrated security=True;Database={1}; Connection Timeout={2}", server, database, connectionTimeout);
+                        connectionString = userId != null && userId != string.Empty ? String.Format("server={0};User ID={1};Password={2};Database={3}; Connection Timeout={4}; Encrypt={5}; TrustServerCertificate={5};", server, userId, password, database, connectionTimeout, encrypted) : String.Format("server={0};integrated security=True;Database={1}; Connection Timeout={2}; Encrypt={3}; TrustServerCertificate={3};", server, database, connectionTimeout, encrypted);
                         using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
                         {
                             try

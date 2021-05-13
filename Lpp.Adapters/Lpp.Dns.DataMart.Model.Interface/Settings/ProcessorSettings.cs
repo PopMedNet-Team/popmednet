@@ -29,11 +29,13 @@ namespace Lpp.Dns.DataMart.Model.Settings
                 yield return new ProcessorSetting { Title = "Data Source", Key = "DataSourceName", ValueType = typeof(string) };
             }
 
+            yield return new ProcessorSetting { Title = "Encrypt Connection", Key = "Encrypt", ValueType = typeof(bool) };
+
             yield return new ProcessorSetting { Title = "Connection Timeout", Key = "ConnectionTimeout", ValueType = typeof(string) };
             yield return new ProcessorSetting { Title = "Command Timeout", Key = "CommandTimeout", ValueType = typeof(string) };
         }
 
-        public static readonly string[] DbSettingKeys = new[] { "DataProvider", "Server", "Port", "UserID", "Password", "Database", "DataSourceName", "ConnectionTimeout", "CommandTimeout" };
+        public static readonly string[] DbSettingKeys = new[] { "DataProvider", "Server", "Port", "UserID", "Password", "Database", "DataSourceName", "Encrypt", "ConnectionTimeout", "CommandTimeout" };
 
         public static void AddDbSettingKeys(IDictionary<string, string> properties, IEnumerable<SQLProvider> providers)
         {
@@ -55,6 +57,8 @@ namespace Lpp.Dns.DataMart.Model.Settings
             {
                 properties.Add("DataSourceName", string.Empty);
             }
+
+            properties.Add("Encrypt", false.ToString());
 
             properties.Add("ConnectionTimeout", "");
             properties.Add("CommandTimeout", "");

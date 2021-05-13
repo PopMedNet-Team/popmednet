@@ -410,6 +410,7 @@ namespace Lpp.Dns.DataMart.Model
                     string database = GetSetting("Database", string.Empty);
                     string connectionTimout = GetSetting("ConnectionTimeout", "15");
                     string commandTimeout = GetSetting("CommandTimeout", "120");
+                    string encrypted = Settings.GetAsString("Encrypt", "False");
 
                     if (string.IsNullOrEmpty(server))
                     {
@@ -424,7 +425,7 @@ namespace Lpp.Dns.DataMart.Model
                         throw new Exception(CommonMessages.Exception_MissingDatabasePassword);
                     }
 
-                    string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};Timeout={5};CommandTimeout={6}", server, port, userId, password, database, connectionTimout, commandTimeout);
+                    string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};Timeout={5};CommandTimeout={6}; SSL Mode={7}; TrustServerCertificate={8};", server, port, userId, password, database, connectionTimout, commandTimeout, encrypted.ToUpper() == "TRUE" ? "Require" : "Prefer", encrypted);
                     log.Debug("Connection timeout: " + connectionTimout + ", Command timeout: " + commandTimeout);
                     
                     

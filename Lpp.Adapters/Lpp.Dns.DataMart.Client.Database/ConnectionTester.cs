@@ -20,7 +20,7 @@ namespace Lpp.Dns.DataMart.Client.Database
                 return TestODBC((settings["DataSourceName"] ?? string.Empty).ToString());
             }
 
-            object server, port, database, userID, password, connectionTimeout, commandTimeout;
+            object server, port, database, userID, password, connectionTimeout, commandTimeout, encrypted;
             settings.TryGetValue("Server", out server);
             settings.TryGetValue("Port", out port);
             settings.TryGetValue("Database", out database);
@@ -28,14 +28,14 @@ namespace Lpp.Dns.DataMart.Client.Database
             settings.TryGetValue("Password", out password);
             settings.TryGetValue("ConnectionTimeout", out connectionTimeout);
             settings.TryGetValue("CommandTimeout", out commandTimeout);
-
+            settings.TryGetValue("Encrypt", out encrypted);
 
             switch (sqlProvider)
             {
                 case Model.Settings.SQLProvider.SQLServer:
-                    return TestSQLServer((server ?? string.Empty).ToString(), (port ?? string.Empty).ToString(), (database ?? string.Empty).ToString(), (userID ?? string.Empty).ToString(), (password ?? string.Empty).ToString(), Convert.ToInt32(connectionTimeout ?? 0));
+                    return TestSQLServer((server ?? string.Empty).ToString(), (port ?? string.Empty).ToString(), (database ?? string.Empty).ToString(), (userID ?? string.Empty).ToString(), (password ?? string.Empty).ToString(), Convert.ToInt32(connectionTimeout ?? 0), bool.Parse(encrypted.ToString()));
                 case Model.Settings.SQLProvider.PostgreSQL:
-                    return TestPostgreSQL((server ?? string.Empty).ToString(), (port ?? string.Empty).ToString(), (database ?? string.Empty).ToString(), (userID ?? string.Empty).ToString(), (password ?? string.Empty).ToString(), Convert.ToInt32(connectionTimeout ?? 0), Convert.ToInt32(commandTimeout ?? 0));
+                    return TestPostgreSQL((server ?? string.Empty).ToString(), (port ?? string.Empty).ToString(), (database ?? string.Empty).ToString(), (userID ?? string.Empty).ToString(), (password ?? string.Empty).ToString(), Convert.ToInt32(connectionTimeout ?? 0), Convert.ToInt32(commandTimeout ?? 0), bool.Parse(encrypted.ToString()));
                 //case Model.Settings.SQLProvider.MySQL:
                 //    return TestMySQL((server ?? string.Empty).ToString(), (port ?? string.Empty).ToString(), (database ?? string.Empty).ToString(), (userID ?? string.Empty).ToString(), (password ?? string.Empty).ToString(), Convert.ToInt32(connectionTimeout ?? 0));
                 case Model.Settings.SQLProvider.Oracle:
@@ -53,12 +53,14 @@ namespace Lpp.Dns.DataMart.Client.Database
             }
         }
 
-        bool TestSQLServer(string server, string port, string database, string userID, string password, int connectionTimeout)
+        bool TestSQLServer(string server, string port, string database, string userID, string password, int connectionTimeout, bool encrypted)
         {
             System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder();
             builder.DataSource = server + (string.IsNullOrWhiteSpace(port) ? string.Empty : ", " + port);
             builder.InitialCatalog = database;
             builder.ConnectTimeout = connectionTimeout;
+            builder.Encrypt = encrypted;
+            builder.TrustServerCertificate = encrypted;
             if (!string.IsNullOrWhiteSpace(userID))
             {
                 builder.UserID = userID;
@@ -75,7 +77,7 @@ namespace Lpp.Dns.DataMart.Client.Database
             }
         }
 
-        bool TestPostgreSQL(string server, string port, string database, string userID, string password, int connectionTimeout, int commandTimeout)
+        bool TestPostgreSQL(string server, string port, string database, string userID, string password, int connectionTimeout, int commandTimeout, bool encrypted)
         {
             Npgsql.NpgsqlConnectionStringBuilder builder = new Npgsql.NpgsqlConnectionStringBuilder();
             builder.Host = server;
@@ -88,6 +90,8 @@ namespace Lpp.Dns.DataMart.Client.Database
             builder.Password = password;
             builder.Timeout = connectionTimeout;
             builder.CommandTimeout = commandTimeout;
+            builder.SslMode = encrypted ? Npgsql.SslMode.Require : Npgsql.SslMode.Prefer;
+            builder.TrustServerCertificate = encrypted;
             using (var conn = new Npgsql.NpgsqlConnection(builder.ToString()))
             {
                 return TestConnection(conn);

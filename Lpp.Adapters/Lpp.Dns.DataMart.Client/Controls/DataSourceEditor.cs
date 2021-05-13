@@ -95,7 +95,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
                             cmbDataSourceName.SelectedItem = value;
                         }
                         break;
-             
+                    case "ENCRYPT":
+                        this.chkEncrypt.Checked = string.IsNullOrWhiteSpace(value) ? false : value.ToBool();
+                        break;
                     case "CONNECTIONTIMEOUT":
                         int connectionTimeout;
                         if (int.TryParse(value, out connectionTimeout))
@@ -130,6 +132,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             settings.Add(new DataMart.Lib.PropertyData("DataSourceName", isODBC ? cmbDataSourceName.SelectedItem.ToString() : string.Empty));
             settings.Add(new DataMart.Lib.PropertyData("ConnectionTimeout", txtConnectionTimeout.Value.ToString()));
             settings.Add(new DataMart.Lib.PropertyData("CommandTimeout", txtCommandTimeout.Value.ToString()));
+            settings.Add(new DataMart.Lib.PropertyData("Encrypt", isODBC ? false.ToString() : chkEncrypt.Checked.ToString()));
 
             return settings;
         }
@@ -184,6 +187,8 @@ namespace Lpp.Dns.DataMart.Client.Controls
             }
             string dsn = (cmbDataSourceName.SelectedItem ?? string.Empty).ToString();
 
+            string encrypted = chkEncrypt.Checked.ToString();
+
             Model.Settings.SQLProvider sqlProvider = (Model.Settings.SQLProvider)Enum.Parse(typeof(Model.Settings.SQLProvider), cmbDataProvider.SelectedItem.ToString(), true);
 
             Dictionary<string, object> settings = new Dictionary<string, object>();
@@ -195,6 +200,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
             settings.Add("Password", password);
             settings.Add("ConnectionTimeout", connectionTimeout);
             settings.Add("CommandTimeout", commandTimeout);
+            settings.Add("Encrypt", encrypted);
 
             if (sqlProvider == Model.Settings.SQLProvider.ODBC)
             {
@@ -245,7 +251,9 @@ namespace Lpp.Dns.DataMart.Client.Controls
         {
             var selectedProvider = (Model.Settings.SQLProvider)cmbDataProvider.SelectedItem;
             pnlDirect.Visible = selectedProvider != Model.Settings.SQLProvider.ODBC;
-            pnlODBC.Visible = selectedProvider == Model.Settings.SQLProvider.ODBC;            
+            pnlODBC.Visible = selectedProvider == Model.Settings.SQLProvider.ODBC;
+
+            chkEncrypt.Visible = selectedProvider != Model.Settings.SQLProvider.Oracle;
         }
         
     }

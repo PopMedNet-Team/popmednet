@@ -50,6 +50,7 @@
             this.btnTestConnection = new System.Windows.Forms.Button();
             this.cmbDataProvider = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.chkEncrypt = new System.Windows.Forms.CheckBox();
             this.grpDataSource.SuspendLayout();
             this.pnlDirect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtCommandTimeout)).BeginInit();
@@ -68,7 +69,7 @@
             this.grpDataSource.Controls.Add(this.label1);
             this.grpDataSource.Location = new System.Drawing.Point(3, 3);
             this.grpDataSource.Name = "grpDataSource";
-            this.grpDataSource.Size = new System.Drawing.Size(384, 222);
+            this.grpDataSource.Size = new System.Drawing.Size(384, 266);
             this.grpDataSource.TabIndex = 0;
             this.grpDataSource.TabStop = false;
             this.grpDataSource.Text = "Data Source";
@@ -77,6 +78,7 @@
             // 
             this.pnlDirect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlDirect.Controls.Add(this.chkEncrypt);
             this.pnlDirect.Controls.Add(this.txtPort);
             this.pnlDirect.Controls.Add(this.label8);
             this.pnlDirect.Controls.Add(this.txtServer);
@@ -93,7 +95,7 @@
             this.pnlDirect.Controls.Add(this.label5);
             this.pnlDirect.Location = new System.Drawing.Point(11, 41);
             this.pnlDirect.Name = "pnlDirect";
-            this.pnlDirect.Size = new System.Drawing.Size(367, 132);
+            this.pnlDirect.Size = new System.Drawing.Size(367, 172);
             this.pnlDirect.TabIndex = 18;
             // 
             // txtPort
@@ -145,7 +147,11 @@
             // 
             this.txtCommandTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCommandTimeout.Location = new System.Drawing.Point(291, 107);
-            this.txtCommandTimeout.Maximum = decimal.MaxValue;
+            this.txtCommandTimeout.Maximum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            0});
             this.txtCommandTimeout.Name = "txtCommandTimeout";
             this.txtCommandTimeout.Size = new System.Drawing.Size(71, 20);
             this.txtCommandTimeout.TabIndex = 6;
@@ -177,7 +183,11 @@
             // txtConnectionTimeout
             // 
             this.txtConnectionTimeout.Location = new System.Drawing.Point(114, 107);
-            this.txtConnectionTimeout.Maximum = decimal.MaxValue;
+            this.txtConnectionTimeout.Maximum = new decimal(new int[] {
+            -1,
+            -1,
+            -1,
+            0});
             this.txtConnectionTimeout.Name = "txtConnectionTimeout";
             this.txtConnectionTimeout.Size = new System.Drawing.Size(71, 20);
             this.txtConnectionTimeout.TabIndex = 5;
@@ -266,7 +276,7 @@
             // btnTestConnection
             // 
             this.btnTestConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestConnection.Location = new System.Drawing.Point(206, 176);
+            this.btnTestConnection.Location = new System.Drawing.Point(206, 220);
             this.btnTestConnection.Name = "btnTestConnection";
             this.btnTestConnection.Size = new System.Drawing.Size(172, 40);
             this.btnTestConnection.TabIndex = 1;
@@ -295,6 +305,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Data Provider:";
             // 
+            // chkEncrypt
+            // 
+            this.chkEncrypt.AutoSize = true;
+            this.chkEncrypt.Location = new System.Drawing.Point(6, 133);
+            this.chkEncrypt.Name = "chkEncrypt";
+            this.chkEncrypt.Size = new System.Drawing.Size(119, 17);
+            this.chkEncrypt.TabIndex = 18;
+            this.chkEncrypt.Text = "Encrypt Connection";
+            this.chkEncrypt.UseVisualStyleBackColor = true;
+            // 
             // DataSourceEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,7 +322,7 @@
             this.Controls.Add(this.grpDataSource);
             this.MinimumSize = new System.Drawing.Size(390, 230);
             this.Name = "DataSourceEditor";
-            this.Size = new System.Drawing.Size(390, 230);
+            this.Size = new System.Drawing.Size(390, 271);
             this.Load += new System.EventHandler(this.DataSourceEditor_Load);
             this.grpDataSource.ResumeLayout(false);
             this.grpDataSource.PerformLayout();
@@ -340,5 +360,6 @@
         private System.Windows.Forms.TextBox txtPort;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel pnlODBC;
+        private System.Windows.Forms.CheckBox chkEncrypt;
     }
 }
