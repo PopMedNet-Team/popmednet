@@ -63,7 +63,14 @@ module Plugins.Requests.QueryBuilder.Edit {
 
             this.TermsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
 
-            if (this.RequestDTO.Queries[0].Header.ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution) {
+            if (this.RequestDTO.Queries != null && this.RequestDTO.Queries.length > 0 &&
+                (this.RequestDTO.Queries[0].Header.ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution ||
+                Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.QueryContainsTerm(this.RequestDTO.Queries[0], Plugins.Requests.QueryBuilder.MDQ.Terms.FileUploadID) ||
+                Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.QueryContainsTerm(this.RequestDTO.Queries[0], Plugins.Requests.QueryBuilder.MDQ.Terms.ModularProgramID))
+            ) {
+                if (this.RequestDTO.Queries[0].Header.ComposerInterface != Dns.Enums.QueryComposerInterface.FileDistribution) {
+                    this.RequestDTO.Queries[0].Header.ComposerInterface = Dns.Enums.QueryComposerInterface.FileDistribution;
+                }
                 this.IsFileUpload = true;
                 this.FileUpload_Host = new Controls.WFFileUpload.Index.ViewModel($('#FileUploadControl'), this.ScreenPermissions, this.RequestDTO.Queries[0], QueryBuilder.MDQ.Terms.FileUploadID);
                 let currentTerms = Plugins.Requests.QueryBuilder.MDQ.TermProvider.FlattenToAllTermIDs(this.RequestDTO.Queries[0]);

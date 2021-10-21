@@ -34,7 +34,7 @@ namespace Lpp.Dns.Portal.Areas.QueryComposer
 
         private void RegisterTerms()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().FullName.StartsWith("System."));
+            var assemblies = Lpp.Utilities.ObjectEx.GetNonSystemAssemblies();
 
             Terms.AddRange(assemblies.SelectMany(a => a.GetTypes().Where(type => typeof(IVisualTerm).IsAssignableFrom(type) && type != typeof(IVisualTerm)).Select(t => (IVisualTerm)Activator.CreateInstance(t))));
         }

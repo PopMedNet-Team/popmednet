@@ -52,6 +52,21 @@ var Dns;
             { value: AgeRangeCalculationType.AsOfDateOfRequestSubmission, text: 'As of the date of the request submission' },
             { value: AgeRangeCalculationType.AsOfSpecifiedDate, text: 'As of [select date]* ' },
         ];
+        var ClinicalObservationsCodeSet;
+        (function (ClinicalObservationsCodeSet) {
+            ClinicalObservationsCodeSet[ClinicalObservationsCodeSet["UN"] = 0] = "UN";
+            ClinicalObservationsCodeSet[ClinicalObservationsCodeSet["NI"] = 1] = "NI";
+            ClinicalObservationsCodeSet[ClinicalObservationsCodeSet["OT"] = 2] = "OT";
+            ClinicalObservationsCodeSet[ClinicalObservationsCodeSet["LC"] = 3] = "LC";
+            ClinicalObservationsCodeSet[ClinicalObservationsCodeSet["SM"] = 4] = "SM";
+        })(ClinicalObservationsCodeSet = Enums.ClinicalObservationsCodeSet || (Enums.ClinicalObservationsCodeSet = {}));
+        Enums.ClinicalObservationsCodeSetTranslation = [
+            { value: ClinicalObservationsCodeSet.UN, text: 'Unknown' },
+            { value: ClinicalObservationsCodeSet.NI, text: 'No Information' },
+            { value: ClinicalObservationsCodeSet.OT, text: 'Other' },
+            { value: ClinicalObservationsCodeSet.LC, text: 'LOINC' },
+            { value: ClinicalObservationsCodeSet.SM, text: 'SNOMED CT' },
+        ];
         var LOINCQualitativeResultType;
         (function (LOINCQualitativeResultType) {
             LOINCQualitativeResultType[LOINCQualitativeResultType["Positive"] = 1] = "Positive";

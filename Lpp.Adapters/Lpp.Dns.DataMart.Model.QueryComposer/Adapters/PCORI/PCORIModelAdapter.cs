@@ -455,9 +455,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             }
             else
             {
+                //outputs the sql with the parameter values inlined
+                //string traceQuery = queryResult.ToTraceQuery();
+                //outputs the sql with paramters in the query and the paramters listed afterward close to what can be used
+                //string sqlString = queryResult.ToTraceString();
+
                 Dictionary<string, object> row = new Dictionary<string, object>();
                 row.Add("QueryName", query.Header.Name);
-                row.Add("SQL", queryResult.ToString());
+                row.Add("SQL", queryResult.ToTraceQuery());
                 results.Add(row);
             }
 
@@ -1845,18 +1850,26 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
         Expression<Func<pcori.Patient, bool>> ApplyCombinedDiagnosisAndProcedureCodeTerms(QueryComposerCriteriaDTO paragraph, Expression<Func<pcori.Patient, bool>> patientPredicate)
         {
             //the terms could exist in the main terms collection or in the subcriteria holding multiple combined diagnosis terms
-            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.CombinedDiagnosisCodesID || t.Type == ModelTermsFactory.ProcedureCodesID || t.Type == ModelTermsFactory.LOINCCodesID || t.Type == ModelTermsFactory.PrescribingID).ToArray();
+            Guid[] codeTypeTermIDs = new[] {
+                ModelTermsFactory.CombinedDiagnosisCodesID,
+                ModelTermsFactory.ProcedureCodesID,
+                ModelTermsFactory.LOINCCodesID,
+                ModelTermsFactory.PrescribingID,
+                ModelTermsFactory.ClinicalObservationsID
+            };
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => codeTypeTermIDs.Contains(t.Type)).ToArray();
             var diagnosisTerms = terms.Where(t => t.Type == ModelTermsFactory.CombinedDiagnosisCodesID).ToArray();
             var procedureTerms = terms.Where(t => t.Type == ModelTermsFactory.ProcedureCodesID).ToArray();
             var loincTerms = terms.Where(t => t.Type == ModelTermsFactory.LOINCCodesID).ToArray();
             var prescribingTerms = terms.Where(t => t.Type == ModelTermsFactory.PrescribingID).ToArray();
+            var clinicalObsTerms = terms.Where(t => t.Type == ModelTermsFactory.ClinicalObservationsID).ToArray();
 
             //The encounter predicate
             //This starts off with any criteria in the paragraph dictated by the Settings + Observation Period terms, if any.
             Expression<Func<pcori.Encounter, bool>> encounterPredicate = GetParagraphEncounterPredicate(paragraph);
 
             //Return the patient predicate if neither the diagnosis and procedure terms exist in the paragraph, and the encounter predicate is not defined.
-            if (!diagnosisTerms.Any() && !procedureTerms.Any() && !loincTerms.Any() && !prescribingTerms.Any() && encounterPredicate == null)
+            if (!diagnosisTerms.Any() && !procedureTerms.Any() && !loincTerms.Any() && !prescribingTerms.Any() && !clinicalObsTerms.Any() && encounterPredicate == null)
             {
                 return patientPredicate;
             }
@@ -1928,7 +1941,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                                     (d.Encounter.AdmittedOn.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.Encounter.AdmittedOn.Month && (d.Patient.BornOn.Value.Month > d.Encounter.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.Encounter.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.Encounter.AdmittedOn.Day)) ? 1 : 0))));
                             }
                         }
-                        if (range.MinAge.HasValue)
+                        if (range.MaxAge.HasValue)
                         {
                             int maxAge = range.MaxAge.Value;
                             if (_sqlProvider != Settings.SQLProvider.Oracle)
@@ -2065,7 +2078,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                                     (d.Encounter.AdmittedOn.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.Encounter.AdmittedOn.Month && (d.Patient.BornOn.Value.Month > d.Encounter.AdmittedOn.Month || (d.Patient.BornOn.Value.Month == d.Encounter.AdmittedOn.Month && d.Patient.BornOn.Value.Day > d.Encounter.AdmittedOn.Day)) ? 1 : 0))));
                             }
                         }
-                        if (range.MinAge.HasValue)
+                        if (range.MaxAge.HasValue)
                         {
                             int maxAge = range.MaxAge.Value;
                             if (_sqlProvider != Settings.SQLProvider.Oracle)
@@ -2144,7 +2157,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             if (loincTerms.Any() && (loincObservationPeriodRanges.Any() || loincSettingValues.Any()))
             {
-                loincObservationPeriodPredicate = BuildLOINCEncouterPredicate(loincObservationPeriodRanges, loincSettingValues);
+                loincObservationPeriodPredicate = BuildLOINCEncounterPredicate(loincObservationPeriodRanges, loincSettingValues);
 
                 if (loincObservationPeriodRanges.Any())
                 {
@@ -2231,7 +2244,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                                     ((d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.SpecimenCollectedOn.HasValue ? d.SpecimenCollectedOn : d.ResultDate.HasValue ? d.ResultDate : d.OrderedOn).Value.Day)) ? 1 : 0))));
                             }
                         }
-                        if (range.MinAge.HasValue)
+                        if (range.MaxAge.HasValue)
                         {
                             int maxAge = range.MaxAge.Value;
                             if (_sqlProvider != Settings.SQLProvider.Oracle)
@@ -2474,7 +2487,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             if (prescribingTerms.Any() && (prescribingObservationPeriodRanges.Any() || prescribingSettingValues.Any()))
             {
-                prescribingObservationPeriodPredicate = BuildPerscribingEncouterPredicate(prescribingObservationPeriodRanges, loincSettingValues);
+                prescribingObservationPeriodPredicate = BuildPrescribingEncounterPredicate(prescribingObservationPeriodRanges, loincSettingValues);
 
                 if (prescribingObservationPeriodRanges.Any())
                 {
@@ -2562,7 +2575,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                                     ((d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && (d.Patient.BornOn.Value.Month > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month || (d.Patient.BornOn.Value.Month == (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Month && d.Patient.BornOn.Value.Day > (d.OrderedOn.HasValue ? d.OrderedOn : d.StartedOn).Value.Day)) ? 1 : 0))));
                             }
                         }
-                        if (range.MinAge.HasValue)
+                        if (range.MaxAge.HasValue)
                         {
                             int maxAge = range.MaxAge.Value;
                             if (_sqlProvider != Settings.SQLProvider.Oracle)
@@ -2655,10 +2668,280 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             }
             #endregion
 
+            #region Clinical Observations
+            Expression<Func<pcori.ClinicalObservation, bool>> clinicalObsGroupingPredicate = null;
+            DateRangeValues[] clinicalObsObservationPeriodRanges = _queryInterrogator.ParagraphObservationPeriodDateRanges(paragraph).ToArray();
+            List<string> clinicalObsSettingValues = _queryInterrogator.ParagraphEncounterTypes(paragraph);
+            Expression<Func<pcori.ClinicalObservation, bool>> clinicalObsObservationPeriodPredicate = null;
+
+            if (clinicalObsTerms.Length > 0 && (clinicalObsObservationPeriodRanges.Length > 0 || clinicalObsSettingValues.Count > 0))
+            {
+                clinicalObsObservationPeriodPredicate = BuildClinicalObservationEncounterPredicate(clinicalObsObservationPeriodRanges, clinicalObsSettingValues);
+
+                if (clinicalObsObservationPeriodRanges.Length > 0)
+                {
+                    Expression<Func<pcori.ClinicalObservation, bool>> obsPred = null;
+                    foreach (var range in clinicalObsObservationPeriodRanges)
+                    {
+                        DateTime? start = null;
+                        if (range.StartDate.HasValue)
+                            start = range.StartDate.Value.DateTime.Date;
+
+                        DateTime? end = null;
+                        if (range.EndDate.HasValue)
+                            end = range.EndDate.Value.Date;
+
+                        Expression<Func<pcori.ClinicalObservation, bool>> innerObsPred = null;
+
+                        if (start.HasValue && end.HasValue)
+                        {
+                            innerObsPred = (d) => d.StartDate.HasValue && d.StartDate.Value >= start && d.StartDate.Value <= end;
+                        }
+                        else if (start.HasValue)
+                        {
+                            innerObsPred = (d) => d.StartDate.HasValue && d.StartDate.Value >= start;
+                        }
+                        else if (end.HasValue)
+                        {
+                            innerObsPred = (d) => d.StartDate.HasValue && d.StartDate.Value <= end;
+                        }
+
+                        if (obsPred == null)
+                        {
+                            obsPred = innerObsPred;
+                        }
+                        else
+                        {
+                            obsPred = obsPred.Or(innerObsPred);
+                        }
+                    }
+
+                    clinicalObsObservationPeriodPredicate = clinicalObsObservationPeriodPredicate.And(obsPred.Expand());
+                }
+
+            }
+
+            foreach (var term in clinicalObsTerms)
+            {
+                //limit to the encounters where the patient age falls within the specified range.
+                DTO.Enums.AgeRangeCalculationType[] calculationTypes = new[] {
+                    DTO.Enums.AgeRangeCalculationType.AtFirstMatchingEncounterWithinCriteriaGroup,
+                    DTO.Enums.AgeRangeCalculationType.AtLastMatchingEncounterWithinCriteriaGroup
+                };
+
+                AgeRangeValues[] ageRanges = AdapterHelpers.ParseAgeRangeValues(paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.AgeRangeID), calculationTypes).ToArray();
+
+                Expression<Func<pcori.ClinicalObservation,bool>> ageGroupingPredicate = null;
+                if(ageRanges.Length > 0)
+                {
+                    foreach (var range in ageRanges.Where(r => r.MinAge.HasValue || r.MaxAge.HasValue))
+                    {
+                        Expression<Func<pcori.ClinicalObservation, bool>> ageRangePredicate = (d) => true;
+                        if (range.MinAge.HasValue)
+                        {
+                            int minAge = range.MinAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => !string.IsNullOrEmpty(d.EncounterID) && d.StartDate.HasValue && minAge <= ((d.Patient.BornOn > d.StartDate) ?
+                                    (DbFunctions.DiffYears(d.Patient.BornOn.Value, d.StartDate).Value + ((d.Patient.BornOn.Value.Month < d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day < d.StartDate.Value.Day)) ? 1 : 0))
+                                    :
+                                    (DbFunctions.DiffYears(d.Patient.BornOn, d.StartDate).Value - (((d.Patient.BornOn.Value.Month > d.StartDate.Value.Month) || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day > d.StartDate.Value.Day)) ? 1 : 0))));
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => !string.IsNullOrEmpty(d.EncounterID) && d.StartDate.HasValue && minAge <= ((d.Patient.BornOn > d.StartDate) ?
+                                    (d.StartDate.Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day < d.StartDate.Value.Day)) ? 1 : 0))
+                                    :
+                                    (d.StartDate.Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.StartDate.Value.Month && (d.Patient.BornOn.Value.Month > d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day > d.StartDate.Value.Day)) ? 1 : 0))));
+                            }
+                        }
+                        if (range.MaxAge.HasValue)
+                        {
+                            int maxAge = range.MaxAge.Value;
+                            if (_sqlProvider != Settings.SQLProvider.Oracle)
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => !string.IsNullOrEmpty(d.EncounterID) && d.StartDate.HasValue && ((d.Patient.BornOn > d.StartDate) ?
+                                    (DbFunctions.DiffYears(d.Patient.BornOn.Value, d.StartDate).Value + ((d.Patient.BornOn.Value.Month < d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day < d.StartDate.Value.Day)) ? 1 : 0))
+                                    :
+                                    (DbFunctions.DiffYears(d.Patient.BornOn, d.StartDate).Value - (((d.Patient.BornOn.Value.Month > d.StartDate.Value.Month) || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day > d.StartDate.Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                            else
+                            {
+                                ageRangePredicate = ageRangePredicate.And(d => !string.IsNullOrEmpty(d.EncounterID) && d.StartDate.HasValue && ((d.Patient.BornOn.Value > d.StartDate) ?
+                                    (d.StartDate.Value.Year - d.Patient.BornOn.Value.Year + ((d.Patient.BornOn.Value.Month < d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day < d.StartDate.Value.Day)) ? 1 : 0))
+                                    :
+                                    (d.StartDate.Value.Year - d.Patient.BornOn.Value.Year - (d.Patient.BornOn.Value.Month >= d.StartDate.Value.Month && (d.Patient.BornOn.Value.Month > d.StartDate.Value.Month || (d.Patient.BornOn.Value.Month == d.StartDate.Value.Month && d.Patient.BornOn.Value.Day > d.StartDate.Value.Day)) ? 1 : 0))) <= maxAge);
+                            }
+                        }
+
+                        if (ageGroupingPredicate == null)
+                        {
+                            ageGroupingPredicate = ageRangePredicate;
+                        }
+                        else
+                        {
+                            ageGroupingPredicate = ageGroupingPredicate.Or(ageRangePredicate);
+                        }
+                    }
+                }
+
+
+                Expression<Func<pcori.ClinicalObservation, bool>> valuesPredicate = null;                
+
+                DTO.Enums.TextSearchMethodType searchMethod;
+                if (!Enum.TryParse<DTO.Enums.TextSearchMethodType>(term.GetStringValue("SearchMethodType"), out searchMethod))
+                {
+                    searchMethod = DTO.Enums.TextSearchMethodType.ExactMatch;
+                }
+
+                var codes = (term.GetStringValue("CodeValues") ?? "").Split(new[] { ';' }).Where(x => !string.IsNullOrEmpty(x.Trim())).Select(s => s.Trim()).Distinct().ToArray();
+
+                if (searchMethod == DTO.Enums.TextSearchMethodType.ExactMatch)
+                {
+                    if (codes.Length == 0)
+                    {
+                        valuesPredicate = d => true;
+                    }
+                    else if (codes.Length == 1)
+                    {
+                        string codeValue = codes[0];
+                        valuesPredicate = d => d.Code == codeValue;
+                    }
+                    else
+                    {
+                        valuesPredicate = d => d.Code != null && codes.Contains(d.Code);
+                    }
+                }
+                else if (searchMethod == DTO.Enums.TextSearchMethodType.StartsWith)
+                {
+                    if (codes.Length == 0)
+                    {
+                        valuesPredicate = d => true;
+                    }
+                    else
+                    {
+                        string value = codes[0];
+                        valuesPredicate = d => d.Code.StartsWith(value);
+                        for (int i = 1; i < codes.Length; i++)
+                        {
+                            string valueinner = codes[i];
+                            valuesPredicate = valuesPredicate.Or(d => d.Code.StartsWith(valueinner));
+                        }
+                        valuesPredicate = valuesPredicate.And(d => d.Code != null);
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException("The search method type '" + searchMethod + "' is not supported.");
+                }
+                
+                if (Enum.TryParse<DTO.Enums.ClinicalObservationsCodeSet>(term.GetStringValue("CodeSet"), out var codeSetEnum))
+                {
+                    string codeSetValue = codeSetEnum.ToString("G");
+                    valuesPredicate = valuesPredicate.And(d => d.Type == codeSetValue);
+                }
+
+                string qualResult = (term.GetStringValue("QualitativeResult") ?? string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(qualResult))
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.QualitativeResult == qualResult);
+                }
+
+                if (Enum.TryParse<DTO.Enums.LOINCResultModifierType>(term.GetStringValue("ResultModifier"), out var resultModifier))
+                {
+                    switch (resultModifier)
+                    {
+                        case DTO.Enums.LOINCResultModifierType.EQ:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "EQ");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.GE:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GE");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.GT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "GT");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.LE:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LE");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.LT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "LT");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.Text:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "TX");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.NI:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "NI");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.UN:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "UN");
+                            break;
+                        case DTO.Enums.LOINCResultModifierType.OT:
+                            valuesPredicate = valuesPredicate.And(d => d.ResultModifier == "OT");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                double minVal = -1;
+                double maxVal = -1;
+
+                var hadMin = double.TryParse(term.GetStringValue("ResultRangeMin"), out minVal);
+                var hadMax = double.TryParse(term.GetStringValue("ResultRangeMax"), out maxVal);
+                if ((hadMin && minVal >= 0) && (hadMax && maxVal >= 0))
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.QuantitativeResult >= minVal && d.QuantitativeResult <= maxVal);
+                }
+                else if (hadMin && minVal >= 0)
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.QuantitativeResult >= minVal);
+                }
+                else if (hadMax && maxVal >= 0)
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.QuantitativeResult <= maxVal);
+                }
+
+                string resultUnit = (term.GetStringValue("ResultUnit") ?? string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(resultUnit))
+                {
+                    valuesPredicate = valuesPredicate.And(d => d.ResultUnit == resultUnit);
+                }
+
+                //if there are more than one term they need to be OR'd not AND'd, the grouping will then be AND'd against the other terms
+
+                if (ageGroupingPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(ageGroupingPredicate);
+                }
+
+                if (clinicalObsObservationPeriodPredicate != null)
+                {
+                    valuesPredicate = valuesPredicate.And(clinicalObsObservationPeriodPredicate);
+                }
+
+                
+                if (clinicalObsGroupingPredicate == null)
+                {
+                    clinicalObsGroupingPredicate = valuesPredicate;
+                }
+                else
+                {
+                    clinicalObsGroupingPredicate = clinicalObsGroupingPredicate.Or(valuesPredicate);
+                }
+
+
+            }//end of foreach for clinical observation terms
+
+            #endregion
+
             //PMNDEV-6287: Previously diagnosis and procedures were being mapped through Encounters, which was performing a lateral inline view in Oracle.
             //Since Oracle 11 doesn't support lateral inline views or cross joins, we had to update the implementation below to apply the encounter
             //predicate separately to both procedures and diagnosis.
-            if (diagnosisTermGroupingPredicate != null || procedureTermGroupingPredicate != null || loincTermGroupingPredicate != null || prescribingTermGroupingPredicate != null)
+            if (diagnosisTermGroupingPredicate != null || 
+                procedureTermGroupingPredicate != null || 
+                loincTermGroupingPredicate != null || 
+                prescribingTermGroupingPredicate != null ||
+                clinicalObsGroupingPredicate != null)
             {
                 Expression<Func<pcori.Patient, bool>> innerPredicate = (p) => false;
                 if (diagnosisTermGroupingPredicate != null)
@@ -2697,6 +2980,11 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                     innerPredicate = innerPredicate.Or((p) => p.Prescriptions.AsQueryable().Any(prescribingTermGroupingPredicate));
                 }
 
+                if(clinicalObsGroupingPredicate != null)
+                {
+                    innerPredicate = innerPredicate.Or(p => p.ClinicalObservations.AsQueryable().Any(clinicalObsGroupingPredicate));
+                }
+
                 return patientPredicate.And(innerPredicate);
             }
             else if (encounterPredicate == null)
@@ -2708,64 +2996,36 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return patientPredicate.And((p) => p.Encounters.AsQueryable().Any(encounterPredicate));
         }
 
-        Expression<Func<LabResult, bool>> BuildLOINCEncouterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        Expression<Func<ClinicalObservation, bool>> BuildClinicalObservationsEncounterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
         {
-            Expression<Func<pcori.Encounter, bool>> obsPred = null;
-            Expression<Func<pcori.Encounter, bool>> settingPred = null;
+            Expression<Func<pcori.Encounter, bool>> obsPred = PredicateHelper.ApplyDateRangesToEncounter(observationPeriodRanges);
+            Expression<Func<pcori.Encounter, bool>> settingPred = PredicateHelper.ApplySettingsToEncounter(settingValues);
+            
 
-            foreach (var range in observationPeriodRanges)
+            if (settingPred != null && obsPred == null)
             {
-                DateTime? start = null;
-                if (range.StartDate.HasValue)
-                    start = range.StartDate.Value.DateTime.Date;
-
-                DateTime? end = null;
-                if (range.EndDate.HasValue)
-                    end = range.EndDate.Value.Date;
-
-                Expression<Func<pcori.Encounter, bool>> obsPredicate = null;
-
-                if (start.HasValue && end.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn >= start && d.AdmittedOn <= end;
-                }
-                else if (start.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn >= start;
-                }
-                else if (end.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn <= end;
-                }
-
-                if (obsPred == null)
-                {
-                    obsPred = obsPredicate;
-                }
-                else
-                {
-                    obsPred = obsPred.Or(obsPredicate);
-                }
+                Expression<Func<ClinicalObservation, bool>> setReturn = clinicalObservation => clinicalObservation.Patient.Encounters.Any(e => settingPred.Invoke(e));
+                return setReturn;
+            } 
+            else if (settingPred == null && obsPred != null)
+            {
+                Expression<Func<ClinicalObservation, bool>> obsReturn = clinicalObservation => clinicalObservation.Patient.Encounters.Any(e => obsPred.Invoke(e));
+                return obsReturn;
+            }
+            else if(settingPred == null && obsPred == null)
+            {
+                return null;
             }
 
-            foreach (var value in settingValues)
-            {
-                Expression<Func<pcori.Encounter, bool>> innerSettingPred = null;
+            var combingedPred = obsPred.And(settingPred);
+            Expression<Func<ClinicalObservation, bool>> encReturn = clinicalObservation => clinicalObservation.Patient.Encounters.Any(e => combingedPred.Invoke(e));
+            return encReturn;
+        }
 
-                if (value == "AN")
-                    innerSettingPred = (enc) => !string.IsNullOrEmpty(enc.EncounterType);
-                else
-                    innerSettingPred = (enc) => enc.EncounterType == value;
-
-                if (settingPred == null)
-                {
-                    settingPred = innerSettingPred;
-                }
-                else
-                {
-                    settingPred = settingPred.Or(innerSettingPred);
-                }
-            }
+        Expression<Func<LabResult, bool>> BuildLOINCEncounterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        {
+            Expression<Func<pcori.Encounter, bool>> obsPred = PredicateHelper.ApplyDateRangesToEncounter(observationPeriodRanges);
+            Expression<Func<pcori.Encounter, bool>> settingPred = PredicateHelper.ApplySettingsToEncounter(settingValues);
 
             if (settingPred != null && obsPred == null)
             {
@@ -2784,64 +3044,10 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             return encReturn;
         }
 
-        Expression<Func<Prescription, bool>> BuildPerscribingEncouterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        Expression<Func<Prescription, bool>> BuildPrescribingEncounterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
         {
-            Expression<Func<pcori.Encounter, bool>> obsPred = null;
-            Expression<Func<pcori.Encounter, bool>> settingPred = null;
-
-            foreach (var range in observationPeriodRanges)
-            {
-                DateTime? start = null;
-                if (range.StartDate.HasValue)
-                    start = range.StartDate.Value.DateTime.Date;
-
-                DateTime? end = null;
-                if (range.EndDate.HasValue)
-                    end = range.EndDate.Value.Date;
-
-                Expression<Func<pcori.Encounter, bool>> obsPredicate = null;
-
-                if (start.HasValue && end.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn >= start && d.AdmittedOn <= end;
-                }
-                else if (start.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn >= start;
-                }
-                else if (end.HasValue)
-                {
-                    obsPredicate = d => d.AdmittedOn <= end;
-                }
-
-                if (obsPred == null)
-                {
-                    obsPred = obsPredicate;
-                }
-                else
-                {
-                    obsPred = obsPred.Or(obsPredicate);
-                }
-            }
-
-            foreach (var value in settingValues)
-            {
-                Expression<Func<pcori.Encounter, bool>> innerSettingPred = null;
-
-                if (value == "AN")
-                    innerSettingPred = (enc) => !string.IsNullOrEmpty(enc.EncounterType);
-                else
-                    innerSettingPred = (enc) => enc.EncounterType == value;
-
-                if (settingPred == null)
-                {
-                    settingPred = innerSettingPred;
-                }
-                else
-                {
-                    settingPred = settingPred.Or(innerSettingPred);
-                }
-            }
+            Expression<Func<pcori.Encounter, bool>> obsPred = PredicateHelper.ApplyDateRangesToEncounter(observationPeriodRanges);
+            Expression<Func<pcori.Encounter, bool>> settingPred = PredicateHelper.ApplySettingsToEncounter(settingValues);
 
             if (settingPred != null && obsPred == null)
             {
@@ -2857,6 +3063,28 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             var combingedPred = obsPred.And(settingPred);
             Expression<Func<Prescription, bool>> encReturn = lab => lab.Patient.Encounters.Any(e => combingedPred.Invoke(e));
+            return encReturn;
+        }
+
+        Expression<Func<pcori.ClinicalObservation, bool>> BuildClinicalObservationEncounterPredicate(DateRangeValues[] observationPeriodRanges, List<string> settingValues)
+        {
+            Expression<Func<pcori.Encounter, bool>> obsPred = PredicateHelper.ApplyDateRangesToEncounter(observationPeriodRanges);
+            Expression<Func<pcori.Encounter, bool>> settingPred = PredicateHelper.ApplySettingsToEncounter(settingValues);
+
+            if (settingPred != null && obsPred == null)
+            {
+                Expression<Func<ClinicalObservation, bool>> setReturn = obs => obs.Patient.Encounters.Any(e => settingPred.Invoke(e));
+                return setReturn;
+            }
+
+            if (settingPred == null && obsPred != null)
+            {
+                Expression<Func<ClinicalObservation, bool>> obsReturn = obs => obs.Patient.Encounters.Any(e => obsPred.Invoke(e));
+                return obsReturn;
+            }
+
+            var combingedPred = obsPred.And(settingPred);
+            Expression<Func<ClinicalObservation, bool>> encReturn = lab => lab.Patient.Encounters.Any(e => combingedPred.Invoke(e));
             return encReturn;
         }
 

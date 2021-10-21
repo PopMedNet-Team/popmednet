@@ -543,6 +543,47 @@ namespace Plugins.Requests.QueryBuilder {
 
         }
 
+        public onAddCommonCodeToClinicalObservations(codeType: string) {
+            
+            let self = <any>this as Dns.ViewModels.QueryComposerTermViewModel;
+            let codeValue = "";
+            switch (codeType.toUpperCase()) {
+                case "HEIGHT":
+                    codeValue = "3137-7";
+                    break;
+                case "WEIGHT":
+                    codeValue = "3141-9";
+                    break;
+                case "BMI":
+                    codeValue = "39156-5";
+                    break;
+                case "SMOKING":
+                    codeValue = "72166-2";
+                    break;
+                default:
+                    return;
+            }
+
+            let termValue = self.Values() as IClinicalObservationsTermValues;
+            let currentCodes = termValue.CodeValues();
+
+            if (currentCodes.indexOf(codeValue) >= 0)
+                return;
+
+            if (currentCodes.length > 0 && currentCodes.charAt(currentCodes.length - 1) != ';') {
+                currentCodes += ';';
+            }
+
+            currentCodes += (codeValue + ';');
+
+            termValue.CodeValues(currentCodes);
+
+
+            //this == the Dns.ViewModels.QueryComposerTermViewModel
+            //data == the string descriptor value
+            //codeType == this
+        }
+
         public onDeleteTermFromCriteria(data: Dns.ViewModels.QueryComposerTermViewModel, criteriaGroup: Dns.ViewModels.QueryComposerCriteriaViewModel) {
             //context of 'this' is vm.Options.Query[n], need to cast 'this' as any before casting as QueryComposerViewModel to satisfy typescript
             let self = <any>this as MDQViewModel;

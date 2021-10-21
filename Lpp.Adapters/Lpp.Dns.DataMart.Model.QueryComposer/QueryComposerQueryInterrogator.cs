@@ -105,7 +105,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             }
         }
 
-        public DateTimeOffset? QuerySubmissionDate{
+        public DateTimeOffset? QuerySubmissionDate {
             get
             {
                 return _query.Header.SubmittedOn;
@@ -155,19 +155,22 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
         /// <returns></returns>
         public List<Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DateRangeValues> ParagraphObservationPeriodDateRanges(DTO.QueryComposer.QueryComposerCriteriaDTO paragraph)
         {
-            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.ObservationPeriodID);
+            return ParagraphDateRanges(paragraph, ModelTermsFactory.ObservationPeriodID);
+        }
 
+        /// <summary>
+        /// For all the terms matching the specified termID parse the date ranges into a DateRangeValues object.
+        /// </summary>
+        /// <param name="paragraph">The paragraph to get the date ranges for.</param>
+        /// <param name="termID">The ID of the term containing the date ranges.</param>
+        /// <returns></returns>
+        public List<Adapters.DateRangeValues> ParagraphDateRanges(QueryComposerCriteriaDTO paragraph, Guid termID)
+        {
+            var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == termID).ToArray();
             List<Adapters.DateRangeValues> ranges = new List<Adapters.DateRangeValues>();
-            if (terms != null || terms.Any())
+            if (terms != null && terms.Length > 0)
             {
-                foreach(var term in terms)
-                {
-                    var range = Lpp.Dns.DataMart.Model.QueryComposer.Adapters.AdapterHelpers.ParseDateRangeValues(term);
-                    if (range.StartDate.HasValue || range.EndDate.HasValue)
-                    {
-                        ranges.Add(range);
-                    }
-                }
+                ranges.AddRange(terms.Select(t => Adapters.AdapterHelpers.ParseDateRangeValues(t)).Where(t => t.HasValue));
             }
             return ranges;
         }

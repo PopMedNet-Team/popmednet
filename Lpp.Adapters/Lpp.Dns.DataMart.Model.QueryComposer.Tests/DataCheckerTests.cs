@@ -28,7 +28,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerRace()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Race.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Race.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -45,7 +45,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerDiagCodes()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_DiagCodes.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_DiagCodes.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -62,7 +62,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerEthnicity()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Ethnicity.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Ethnicity.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -79,7 +79,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerMetadata()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_MetaData.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_MetaData.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -96,7 +96,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerNDC()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_NDC.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_NDC.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -133,7 +133,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
 
 
-            var response = RunDataCheckerRequest("DiagnosisPDX.json");
+            var response = RunDataCheckerRequestForFirstResult("DiagnosisPDX.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -157,7 +157,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerRxAmt()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_RxAmt.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_RxAmt.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -171,7 +171,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerRxSup()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_RxSup.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_RxSup.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -185,7 +185,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerAge()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Age.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Age.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -199,7 +199,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckerHeight()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Height.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Height.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -214,7 +214,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckersSex()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Sex.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Sex.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -229,7 +229,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckersWeight()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_Weight.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_Weight.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -243,7 +243,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void DataCheckersSqlDistribution()
         {
 
-            var response = RunDataCheckerRequest("DataChecker_SqlDistribution.json");
+            var response = RunDataCheckerRequestForFirstResult("DataChecker_SqlDistribution.json");
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -254,12 +254,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunDataCheckerRequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunDataCheckerRequestForFirstResult(string requestJsonFilepath)
         {
             var request = LoadDataCheckerRequest(requestJsonFilepath);
             using (var adapter = Helper.CreateQueryComposerModelProcessorForDataChecker(ConnectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(request, false).FirstOrDefault();
             }
         }
         Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO LoadDataCheckerRequest(string filename, string folder = ResourceFolder)

@@ -64,7 +64,8 @@ namespace Lpp.Dns.Api.Controllers
 
             var Logging = new ConcurrentBag<object>();
             //Get all of the loggers
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().AsParallel())
+            var assemblies = ObjectEx.GetNonSystemAssemblies();
+            foreach (var assembly in assemblies.AsParallel())
             {
                 var logTypesToRegister = assembly.GetTypes().Where(
                                                     type => type.BaseType != null && !type.IsAbstract &&

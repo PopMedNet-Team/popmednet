@@ -604,44 +604,99 @@ namespace Lpp.Dns.DataMart.Client
 
         private void btnHold_Click(object sender, EventArgs e)
         {
-            NetWorkSetting netWorkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
-
-            // Prompt user to enter the reason
-            RejectReasonForm f = new RejectReasonForm();
-            f.Text = "DataMart Client - Hold Reason";
-            f.ButtonText = "Hold";
-            f.FormText = "Enter a reason for holding the query below. Query results can still be executed after holding the results. The query status will be marked as 'Awaiting Approval on the Portal and the reason entered below will be returned to the originator of the query.";
-            f.ShowDialog();
-
-            // If user clicked cancel, bail out
-            if (f.DialogResult == DialogResult.Cancel)
-                return;
-
-            // Update the query status
-            try
+            if(Request.RoutingStatus != DTO.DataMartClient.Enums.DMCRoutingStatus.Hold)
             {
-                DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold, f.RejectReason), Request.Properties, netWorkSetting);
-                Request.RejectReason = f.RejectReason;
-                Request.RoutingStatus = Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold;
+                NetWorkSetting netWorkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
 
-                MessageBox.Show("The status of the request has been successfully updated to \"Hold\".", Application.ProductName);
+                // Prompt user to enter the reason
+                RejectReasonForm f = new RejectReasonForm();
+                f.Text = "DataMart Client - Hold Reason";
+                f.ButtonText = "Hold";
+                //f.FormText = "Enter a reason for holding the query below. Query results can still be executed after holding the results. The query status will be marked as 'Awaiting Approval on the Portal and the reason entered below will be returned to the originator of the query.";
+                f.FormText = "Enter a reason for holding the query below. The query status will be marked as 'Awaiting Approval' on the Portal and the reason entered below will be returned to the originator of the query.";
+                f.ShowDialog();
 
-                // Notify parent that the record has changed
-                RefreshRequestHeader();
+                // If user clicked cancel, bail out
+                if (f.DialogResult == DialogResult.Cancel)
+                    return;
 
-                log.Info(String.Format("User {0} put the following request {2} (ID: {1}) on hold.",
-                    netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Identifier));
+                // Update the query status
+                try
+                {
+                    DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold, f.RejectReason), Request.Properties, netWorkSetting);
+                    Request.RejectReason = f.RejectReason;
+                    Request.RoutingStatus = Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Hold;
 
-                this.Close();
+                    MessageBox.Show("The status of the request has been successfully updated to \"Hold\".", Application.ProductName);
+
+                    // Notify parent that the record has changed
+                    RefreshRequestHeader();
+
+                    log.Info(String.Format("User {0} put the following request {2} (ID: {1}) on hold.",
+                        netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Identifier));
+
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    ShowUnexpectedError(ex);
+                }
+                finally
+                {
+                    EnableDisableButtons();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                log.Error(ex);
-                ShowUnexpectedError(ex);
-            }
-            finally
-            {
-                EnableDisableButtons();
+                NetWorkSetting netWorkSetting = Configuration.Instance.GetNetworkSetting(Request.NetworkId);
+
+                // Prompt user to enter the reason
+                RejectReasonForm f = new RejectReasonForm();
+                f.Text = "DataMart Client - Resume Reason";
+                f.ButtonText = "Resume";
+                f.FormText = "Enter a reason for resuming the query below. The query status will be marked as 'Submitted/Re-Submitted' on the Portal and the reason entered below will be returned to the originator of the query.";
+                f.ShowDialog();
+
+                // If user clicked cancel, bail out
+                if (f.DialogResult == DialogResult.Cancel)
+                    return;
+
+                // Update the query status
+                try
+                {
+                    DnsServiceManager.SetRequestStatus(Request, new HubRequestStatus(Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Submitted, f.RejectReason), Request.Properties, netWorkSetting);
+
+                    var updatedRequest = DnsServiceManager.GetRequests(netWorkSetting, new Guid[] { Request.Source.ID }, Request.DataMartId).GetAwaiter().GetResult();
+
+                    Request.RejectReason = f.RejectReason;
+                    Request.RoutingStatus = updatedRequest.Routings.FirstOrDefault(x => x.DataMartID == Request.DataMartId).Status;
+
+                    if (Request.RoutingStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Resubmitted) {
+                        MessageBox.Show("The status of the request has been successfully updated to \"Re-Submitted\".", Application.ProductName);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The status of the request has been successfully updated to \"Submitted\".", Application.ProductName);
+                    }
+
+                    // Notify parent that the record has changed
+                    RefreshRequestHeader();
+
+                    log.Info(String.Format("User {0} put the following request {2} (ID: {1}) on hold.",
+                        netWorkSetting.Profile.Username, Request.Source.ID, Request.Source.Identifier));
+
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    ShowUnexpectedError(ex);
+                }
+                finally
+                {
+                    EnableDisableButtons();
+                }
             }
         }
 
@@ -1074,13 +1129,13 @@ namespace Lpp.Dns.DataMart.Client
         /// Button states:
         /// 
         /// REQUEST STATUS     Submitted   InProgress   AwaitingApproval   Completed   Hold   Rejected   Failed   Cancelled
-        /// Run:                  Y            N              Y             Y (warn)    Y        Y         Y          Y
-        /// Hold:                 Y            Y              Y                N        N        N         Y          N
-        /// Reject:               Y            Y              Y                N        Y        N         Y          N
-        /// Add File:             Y            Y              Y                Y        Y        Y         Y          Y
-        /// Delete File:          Y            Y              Y                Y        Y        Y         Y          Y
-        /// Export Results:       Y            N              Y                Y        Y        Y         N          Y
-        /// Upload Results:       N            N              Y                N        Y        N         N          N
+        /// Run:                  Y            N              Y             Y (warn)    N        Y         Y          Y
+        /// Hold/Resume:          Y            Y              Y                N        Y        N         Y          N
+        /// Reject:               Y            Y              Y                N        N        N         Y          N
+        /// Add File:             Y            Y              Y                Y        N        Y         Y          Y
+        /// Delete File:          Y            Y              Y                Y        N        Y         Y          Y
+        /// Export Results:       Y            N              Y                Y        N        Y         N          Y
+        /// Upload Results:       N            N              Y                N        N        N         N          N
         /// Close:                Y            Y              Y                Y        Y        Y         Y          Y
         /// </summary>
         private void EnableDisableButtons()
@@ -1102,6 +1157,14 @@ namespace Lpp.Dns.DataMart.Client
             bool CanRunAndUpload = true;
             bool CanUploadWithoutRun = false;
             bool CanViewSQL = false;
+
+            if(hubStatus == DTO.DataMartClient.Enums.DMCRoutingStatus.Hold)
+            {              
+                btnHold.Text = "Resume";
+                btnHold.Enabled = true;
+                btnRejectQuery.Enabled = btnRun.Enabled = btnAddFile.Enabled = btnDeleteFile.Enabled = btnExportResults.Enabled = btnUploadResults.Enabled = false;
+                return;
+            }
 
             if (Processor != null
                 && Processor.ModelMetadata != null
@@ -1353,6 +1416,14 @@ namespace Lpp.Dns.DataMart.Client
                         try
                         {
                             var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO>(json, serializationSettings);
+                            if(obj.Errors != null && obj.Errors.Any())
+                            {
+                                foreach(var error in obj.Errors)
+                                {
+                                    sql.Add($"### Error building SQL: ###{ Environment.NewLine }{ error.Description}");
+                                }
+                            }
+
                             var queries = obj.Queries.ToArray();
                             for (var i = 0; i < queries.Length; i++)
                             {
@@ -1364,13 +1435,20 @@ namespace Lpp.Dns.DataMart.Client
                                     var row = table.First();
                                     string queryName = Lpp.Utilities.ObjectEx.ToStringEx(row["QueryName"]);
                                     string querySQL = Lpp.Utilities.ObjectEx.ToStringEx(row["SQL"]);
-                                    sql.Add($"### Query { i + 1 }: { queryName } ###{ Environment.NewLine }{querySQL}");
+                                    sql.Add($"--### Query { i + 1 }: { queryName } ###{ Environment.NewLine }{querySQL}");
                                 }
                             }
                         }
                         catch
                         {
                             queryObj = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>(json, serializationSettings);
+                            if (queryObj.Errors != null && queryObj.Errors.Any())
+                            {
+                                foreach (var error in queryObj.Errors)
+                                {
+                                    sql.Add($"### Error building SQL: ###{ Environment.NewLine }{ error.Description}");
+                                }
+                            }
                             foreach (IEnumerable<Dictionary<string, object>> results in queryObj.Results)
                             {
                                 object val = null;

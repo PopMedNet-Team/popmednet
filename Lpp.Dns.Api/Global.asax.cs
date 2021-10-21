@@ -28,6 +28,8 @@ namespace Lpp.Dns.Api
 #pragma warning disable 1591
     public class WebApiApplication : System.Web.HttpApplication
     {
+        
+
         protected void Application_Start()
         {
             //force load all assemblies to ensure availability
@@ -132,6 +134,7 @@ namespace Lpp.Dns.Api
             });
 
 
+            
         }
 
         protected void Application_End(object sender, EventArgs e)

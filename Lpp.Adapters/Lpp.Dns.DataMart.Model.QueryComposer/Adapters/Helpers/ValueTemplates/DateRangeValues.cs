@@ -9,5 +9,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters
     {
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
+
+        public bool HasValue
+        {
+            get
+            {
+                return StartDate.HasValue || EndDate.HasValue;
+            }
+        }
     }
 }

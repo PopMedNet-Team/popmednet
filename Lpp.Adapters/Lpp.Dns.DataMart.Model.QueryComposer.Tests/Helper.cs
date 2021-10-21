@@ -161,7 +161,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
         #endregion PCORI
@@ -204,7 +204,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
         #endregion
@@ -226,7 +226,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -246,7 +246,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -266,7 +266,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 
@@ -292,7 +292,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 CreatedOn = DateTime.UtcNow,
                 MSRequestID = "Unit Test Request"
             });
-            adapter.Initialize(adapterSettings);
+            adapter.Initialize(adapterSettings, Guid.NewGuid().ToString("D"));
             return adapter;
         }
 

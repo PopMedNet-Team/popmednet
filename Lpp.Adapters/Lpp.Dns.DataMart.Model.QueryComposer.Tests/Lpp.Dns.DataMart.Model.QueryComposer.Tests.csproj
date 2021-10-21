@@ -204,6 +204,12 @@
     <None Include="Resources\QueryComposition\180192_request.json" />
     <None Include="Resources\QueryComposition\180193_request.json" />
     <None Include="Resources\QueryComposition\180194_request.json" />
+    <None Include="Resources\QueryComposition\20210325-PCORNet issue request.json" />
+    <None Include="Resources\QueryComposition\ClinObs_AllValuesSpecified.json" />
+    <None Include="Resources\QueryComposition\ClinObs_MultipleTerms.json" />
+    <None Include="Resources\QueryComposition\ClinObs_PMNDEV-8465_request.json" />
+    <None Include="Resources\QueryComposition\ClinObs_SingleTerm.json" />
+    <None Include="Resources\QueryComposition\ClinObs_WithOtherTermsSameCriteria.json" />
     <None Include="Resources\QueryComposition\json1.json" />
     <None Include="Resources\QueryComposition\LabRecord-request-27396.json" />
     <None Include="Resources\QueryComposition\LabRecord-request-27424.json" />
@@ -234,6 +240,7 @@
     <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex - Copy.json" />
     <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex_WithExclusion.json" />
     <None Include="Resources\QueryComposition\PMNDEV-7691_PerscribingTest.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-8463-D9_request.json" />
     <None Include="Resources\QueryComposition\PrescribingTermNullCodesNoObservation.json" />
     <None Include="Resources\QueryComposition\PrescribingTermWithOtherCodeTypes.json" />
     <None Include="Resources\QueryComposition\Prescribing_NullTerm.json" />

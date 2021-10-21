@@ -6,6 +6,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -80,6 +82,8 @@ var RequestType;
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have a Workflow selected.</p>");
                         return;
                     }
+                    if (_this.QueryDesigner.onValidateEditors() == false)
+                        return;
                     //make sure that if the composer contains a file upload or modular term that it is only single query, and the interface is set to File Distribution and multi-query is disabled
                     if (!_super.prototype.Validate.call(_this))
                         return;

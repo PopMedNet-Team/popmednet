@@ -24,18 +24,18 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void ESP_All_Terms()
         {
-            var response = RunRequest("ESP_All_Terms.json");
+            var response = RunRequestForSingleResult("ESP_All_Terms.json");
             Logger.Debug(SerializeJsonToString(response));
 
             //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunRequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunRequestForSingleResult(string requestJsonFilepath)
         {
             var request = LoadRequest(requestJsonFilepath);
             using (var adapter = Helper.CreateESPModelAdapterAdapter(ConnectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(request, false).FirstOrDefault();
             }
         }
 

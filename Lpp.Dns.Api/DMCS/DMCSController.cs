@@ -44,7 +44,7 @@ namespace Lpp.Dns.Api.DMCS
             lock (_lock)
             {
                 var type = typeof(IPostProcessDocumentContent);
-                PostProcessorTypes = AppDomain.CurrentDomain.GetAssemblies()
+                PostProcessorTypes = ObjectEx.GetNonSystemAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract);
             }
@@ -77,6 +77,51 @@ namespace Lpp.Dns.Api.DMCS
             return await (from dm in DataContext.DataMarts
                              where ids.Contains(dm.ID) && !dm.Deleted
                              select dm).Map<DataMart, DTO.DataMartDTO>().ToArrayAsync();
+        }
+
+        /// <summary>
+        /// Checks if the authenticated user has permission to configure the specified DataMart. The user must also be able to see the datamart's request queue.
+        /// </summary>
+        /// <param name="id">The ID of the datamart.</param>
+        /// <returns>An OK result (status 200) if the user has permission, else a BadRequest result is returned.</returns>
+        [HttpGet]
+        public async Task<IHttpActionResult> CanConfigureDataMart(Guid id)
+        {
+            var currentUser = GetCurrentIdentity();
+            var result = from dm in DataContext.DataMarts
+                         let userID = currentUser.ID
+                         let manageDataMartConfigurationPermissionID = PermissionIdentifiers.Organization.ManageDMCSConfiguration.ID
+                         let seeRequestsPermissionID = PermissionIdentifiers.DataMartInProject.SeeRequests.ID
+                         let globalAcls = DataContext.GlobalAcls.Where(a => a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID))
+                         let projectAcls = DataContext.ProjectAcls.Where(a => a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID) && a.Project.DataMarts.Any(pdm => pdm.DataMartID == id))
+                         let projectDataMartAcls = DataContext.ProjectDataMartAcls.Where(a => a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID) && a.DataMartID == id)
+                         let datamartAcls = DataContext.DataMartAcls.Where(a => a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID) && a.DataMartID == id)
+                         let organizationAcls = DataContext.OrganizationAcls.Where(a => a.PermissionID == manageDataMartConfigurationPermissionID && a.SecurityGroup.Users.Any(sgu => sgu.UserID == userID) && a.Organization.DataMarts.Any(odm => odm.ID == id))
+                         where dm.ID == id
+                         && 
+                         (
+                         //check for permission to configure
+                            (datamartAcls.Where(a => a.PermissionID == manageDataMartConfigurationPermissionID).Any(a => a.Allowed) || organizationAcls.Where(a => a.PermissionID == manageDataMartConfigurationPermissionID).Any(a => a.Allowed))
+                            &&
+                            (datamartAcls.Where(a => a.PermissionID == manageDataMartConfigurationPermissionID).All(a => a.Allowed) && organizationAcls.Where(a => a.PermissionID == manageDataMartConfigurationPermissionID).All(a => a.Allowed))
+                         )
+                         &&
+                         (
+                            //check for permission to see the datamart - based on the see request queue permission
+                            (globalAcls.Where(a => a.PermissionID == seeRequestsPermissionID).Any(a => a.Allowed) || projectAcls.Where(a => a.PermissionID == seeRequestsPermissionID).Any(a => a.Allowed) || projectDataMartAcls.Where(a => a.PermissionID == seeRequestsPermissionID).Any(a => a.Allowed) || datamartAcls.Where(a => a.PermissionID == seeRequestsPermissionID).Any(a => a.Allowed) || organizationAcls.Where(a => a.PermissionID == seeRequestsPermissionID).Any(a => a.Allowed))
+                            &&
+                            (globalAcls.Where(a => a.PermissionID == seeRequestsPermissionID).All(a => a.Allowed) && projectAcls.Where(a => a.PermissionID == seeRequestsPermissionID).All(a => a.Allowed) && projectDataMartAcls.Where(a => a.PermissionID == seeRequestsPermissionID).All(a => a.Allowed) && datamartAcls.Where(a => a.PermissionID == seeRequestsPermissionID).All(a => a.Allowed) && organizationAcls.Where(a => a.PermissionID == seeRequestsPermissionID).All(a => a.Allowed))
+                         )
+                         select dm;
+
+            if(await result.CountAsync() > 0)
+            {
+                return Ok(true);
+            }
+            else
+            {
+                return BadRequest("Not authorized to configure the datamart.");
+            }
         }
 
         [HttpGet]
@@ -249,7 +294,7 @@ namespace Lpp.Dns.Api.DMCS
             try
             {
                 string FileDistributionTermID = Lpp.QueryComposer.ModelTermsFactory.FileUploadID.ToString("D");
-                string ModularFileTermID = QueryComposer.ModelTermsFactory.FileUploadID.ToString("D");
+                string ModularFileTermID = QueryComposer.ModelTermsFactory.ModularProgramID.ToString("D");
 
                 DateTime maxRequestCreatedOnDate = DateTime.UtcNow.AddYears(-1);
                 var requestsQuery = from r in DataContext.Requests
@@ -273,7 +318,7 @@ namespace Lpp.Dns.Api.DMCS
                                     ActivityDescription = req.ActivityDescription,
                                     AdditionalInstructions = req.AdditionalInstructions,
                                     Description = req.Description,
-                                    MSRequestID = req.MSRequestID,
+                                    MSRequestID = req.MSRequestID,                                    
                                     Project = req.Project.Name,
                                     PurposeOfUse = req.PurposeOfUse,
                                     RequestorCenter = req.RequesterCenter.Name,
@@ -300,7 +345,7 @@ namespace Lpp.Dns.Api.DMCS
                               {
                                   ID = rdm.ID,
                                   DataMartID = rdm.DataMartID,
-                                  DueDate = rdm.DueDate,
+                                  DueDate = rdm.DueDate.HasValue ? rdm.DueDate : rdm.Request.DueDate,
                                   ModelID = rdm.DataMart.AdapterID.Value,
                                   ModelText = rdm.DataMart.Adapter.Name,
                                   Priority = rdm.Priority,
@@ -342,6 +387,7 @@ namespace Lpp.Dns.Api.DMCS
                                         }).ToArrayAsync();
 
                 res.Documents = await (from doc in DataContext.Documents
+                                       let user = doc.UploadedBy
                                        where (
                                         from rdoc in DataContext.RequestDocuments
                                         join rsp in DataContext.Responses on rdoc.ResponseID equals rsp.ID
@@ -366,7 +412,9 @@ namespace Lpp.Dns.Api.DMCS
                                            CreatedOn = doc.CreatedOn,
                                            ContentCreatedOn = doc.ContentCreatedOn,
                                            ContentModifiedOn = doc.ContentModifiedOn,
-                                           UploadedByID = doc.UploadedByID
+                                           UploadedByID = doc.UploadedByID,
+                                           UploadedByUserName = user.UserName ?? "",
+                                           UploadedByEmail = user.Email ?? ""
                                        }
                                      ).ToArrayAsync();
 
@@ -491,8 +539,37 @@ namespace Lpp.Dns.Api.DMCS
 
             return await query.AnyAsync();
         }
-    }
 
+        /// <summary>
+        /// Returns details about the user specified.
+        /// </summary>
+        /// <param name="ids">The ID's of the users to return the information for.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IHttpActionResult> UserDetails([FromBody]IEnumerable<Guid> ids)
+        {
+            //TODO: assert that only a service account user can access the endpoint.
+
+            var query = from u in DataContext.Users
+                        where ids.Contains(u.ID)
+                        select new
+                        {
+                            u.ID,
+                            u.UserName,
+                            u.Email,
+                            u.PasswordHash,
+                            u.Active,
+                            u.Deleted
+                        };
+
+            var result = new
+            {
+                results = await query.ToArrayAsync()
+            };
+
+            return Json(result);
+        }
+    }
 
     public class UserDMPerm
     {

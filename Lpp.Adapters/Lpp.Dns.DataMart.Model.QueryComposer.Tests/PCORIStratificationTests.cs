@@ -63,7 +63,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(connectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(request, false).FirstOrDefault();
             }
         }
 

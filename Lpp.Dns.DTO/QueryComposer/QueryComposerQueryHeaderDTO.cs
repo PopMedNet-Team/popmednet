@@ -21,6 +21,7 @@ namespace Lpp.Dns.DTO.QueryComposer
         /// <summary>
         /// Gets or sets the type of composition interface to use for the query.
         /// </summary>
+        [DataMember]
         public Enums.QueryComposerInterface? ComposerInterface { get; set; }
     }
 }

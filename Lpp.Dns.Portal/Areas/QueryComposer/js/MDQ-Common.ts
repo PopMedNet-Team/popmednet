@@ -132,5 +132,13 @@ namespace Plugins.Requests.QueryBuilder {
 
     export const YearlyQuarters: string[] = ['Q1', 'Q2', 'Q3', 'Q4'];
 
-
+    export class IClinicalObservationsTermValues {
+        CodeSet: KnockoutObservable<Dns.Enums.ClinicalObservationsCodeSet>;
+        CodeValues: KnockoutObservable<string>;
+        SearchMethodType: KnockoutObservable<Dns.Enums.TextSearchMethodType>;
+        ResultRangeMin: KnockoutObservable<number>;
+        ResultRangeMax: KnockoutObservable<number>;
+        QualitativeResult: KnockoutObservable<Dns.Enums.LOINCQualitativeResultType>;
+        ResultModifier: KnockoutObservable<Dns.Enums.LOINCResultModifierType>;
+    }
 }

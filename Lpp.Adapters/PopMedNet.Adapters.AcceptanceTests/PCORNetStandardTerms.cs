@@ -95,6 +95,34 @@ GROUP BY demo.""HISPANIC"", demo.""RACE"";
             ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
         }
 
+        [DataTestMethod, DataRow("DX_Term_09"), Ignore]
+        public override void DX_Term_09(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("Race_Term_NoInfo"), Ignore]
+        public override void Race_Term_NoInfo(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("DX_Term_NI"), Ignore]
+        public virtual void DX_Term_NI(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("Race_Term_Unknown"), Ignore]
+        public virtual void Race_Term_Unknown(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
         protected override DbConnection GetDbConnection()
         {
             var psConn = new NpgsqlConnection(ConnectionString);
@@ -187,6 +215,34 @@ GROUP BY demo.""HISPANIC"", demo.""RACE"";
             var expectedResponse = LoadResponse(responseFileName);
             ManualQueryForExpectedResults(newQuery, expectedResponse);
             ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("DX_Term_09"), Ignore]
+        public override void DX_Term_09(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("Race_Term_NoInfo"), Ignore]
+        public override void Race_Term_NoInfo(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("DX_Term_NI"), Ignore]
+        public virtual void DX_Term_NI(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("Race_Term_Unknown"), Ignore]
+        public virtual void Race_Term_Unknown(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
         }
 
         protected override DbConnection GetDbConnection()
@@ -304,6 +360,20 @@ GROUP BY demo.HISPANIC, demo.RACE
             ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
         }
 
+        [DataTestMethod, DataRow("DX_Term_09"), Ignore]
+        public override void DX_Term_09(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("DX_Term_NI"), Ignore]
+        public virtual void DX_Term_NI(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
         protected override DbConnection GetDbConnection()
         {
             var oraCon = new OracleConnection(ConnectionString);
@@ -417,6 +487,20 @@ GROUP BY demo.HISPANIC, demo.RACE
             var expectedResponse = LoadResponse(responseFileName);
             ManualQueryForExpectedResults(query, expectedResponse);
             ConfirmResponse(expectedResponse, result, System.IO.Path.Combine(ErrorOutputFolder, responseFileName + ".json"));
+        }
+
+        [DataTestMethod, DataRow("DX_Term_09"), Ignore]
+        public override void DX_Term_09(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
+        }
+
+        [DataTestMethod, DataRow("DX_Term_NI"), Ignore]
+        public virtual void DX_Term_NI(string filename)
+        {
+            var result = RunRequest(filename);
+            var expected = ConfirmResponse(filename + "_response", result, new[] { "LowThreshold" });
         }
 
         protected override DbConnection GetDbConnection()

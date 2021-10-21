@@ -151,6 +151,24 @@ namespace Lpp.QueryComposer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A term to allow querying against the OBS_CLIN table in the PCORNet Common Data Model for clinical observations.
+        /// </summary>
+        public static string ClinicalObservations_Description {
+            get {
+                return ResourceManager.GetString("ClinicalObservations_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clinical Observations.
+        /// </summary>
+        public static string ClinicalObservations_Name {
+            get {
+                return ResourceManager.GetString("ClinicalObservations_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A list of code metric types.
         /// </summary>
         public static string CodeMetric_Description {

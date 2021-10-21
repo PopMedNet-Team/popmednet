@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using dmc = Lpp.Dns.DTO.DataMartClient;
 using System.Net;
+using Lpp.Utilities;
 
 namespace Lpp.Dns.Api.DataMartClient
 {
@@ -91,7 +92,11 @@ namespace Lpp.Dns.Api.DataMartClient
 
             hasPermission = await CheckPermission(data.RequestID, data.DataMartID, PermissionIdentifiers.DataMartInProject.SkipResponseApproval, request.CreatedByID);
 
-            if (originalStatus == DTO.Enums.RoutingStatus.Completed || originalStatus == DTO.Enums.RoutingStatus.ResultsModified)
+            if (originalStatus == DTO.Enums.RoutingStatus.Hold && data.Status == dmc.Enums.DMCRoutingStatus.Submitted && currentResponse.Count > 1)
+            {
+                routing.Status = DTO.Enums.RoutingStatus.Resubmitted;
+            }
+            else if (originalStatus == DTO.Enums.RoutingStatus.Completed || originalStatus == DTO.Enums.RoutingStatus.ResultsModified)
             {
                 routing.Status = hasPermission ? DTO.Enums.RoutingStatus.ResultsModified : DTO.Enums.RoutingStatus.AwaitingResponseApproval;
             }
@@ -155,6 +160,15 @@ namespace Lpp.Dns.Api.DataMartClient
             await DataContext.SaveChangesAsync();
 
             await DataContext.Entry(request).ReloadAsync();
+           
+            if (!data.Message.IsEmpty())
+            {
+                var log = await DataContext.LogsRoutingStatusChange.OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync(x => x.ResponseID == currentResponse.ID);
+                log.Description += $" {data.Message}";
+
+
+                await DataContext.SaveChangesAsync();
+            }            
 
             if (request.WorkflowID.HasValue && request.WorkflowID.Value == VerticalDistributedRegressionWorkflowID && (routing.Status == DTO.Enums.RoutingStatus.Completed || routing.Status == DTO.Enums.RoutingStatus.ResultsModified))
             {

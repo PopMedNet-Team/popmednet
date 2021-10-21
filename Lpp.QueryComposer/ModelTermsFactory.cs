@@ -8,18 +8,17 @@ namespace Lpp.QueryComposer
     public static class ModelTermsFactory
     {
         static readonly List<ModelTerm> terms;
-        //static readonly List<ModelTerm> advancedTerms;
 
         static ModelTermsFactory()
         {
-            terms = new List<ModelTerm>() 
-            { 
+            terms = new List<ModelTerm>()
+            {
                 new ModelTerm{ ID = AgeRangeID, Name = ModelTermResources.AgeRange_Name, Description = ModelTermResources.AgeRange_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = FacilityID, Name = ModelTermResources.Facility_Name, Description = ModelTermResources.Facility_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = ConditionsID, Name = ModelTermResources.Conditions_Name, Description = ModelTermResources.Conditions_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = EthnicityID, Name = ModelTermResources.Ethnicity_Name, Description = ModelTermResources.Ethnicity_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = RaceID, Name = ModelTermResources.Race_Name, Description = ModelTermResources.Race_Description, OID = null, ReferenceUrl = null },
-                new ModelTerm{ ID = SexID, Name = ModelTermResources.Sex_Name, Description = ModelTermResources.Sex_Description, OID = null, ReferenceUrl = null},  
+                new ModelTerm{ ID = SexID, Name = ModelTermResources.Sex_Name, Description = ModelTermResources.Sex_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = HeightID, Name = ModelTermResources.Height_Name, Description = ModelTermResources.Height_Description, OID = null, ReferenceUrl = null },
 
                 new ModelTerm{ ID = TrialID, Name = ModelTermResources.Trial_Name, Description = ModelTermResources.Trial_Description, OID = null, ReferenceUrl = null },
@@ -40,13 +39,14 @@ namespace Lpp.QueryComposer
                 new ModelTerm{ ID = CriteriaID, Name = ModelTermResources.Criteria_Name, Description = ModelTermResources.Criteria_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = WeightID, Name = ModelTermResources.Weight_Name, Description = ModelTermResources.Weight_Description, OID = null, ReferenceUrl = null },
                 new ModelTerm{ ID = HispanicID, Name = ModelTermResources.Hispanic_Name, Description = ModelTermResources.Hispanic_Description, OID = null, ReferenceUrl = null},
-                 
+
                 new ModelTerm{ ID = HCPCSProcedureCodesID, Name = ModelTermResources.HCPCSCodes_Name, Description = ModelTermResources.HCPCSCodes_Description, OID = null, ReferenceUrl = null},
 
-                 new ModelTerm{ ID = ProcedureCodesID, Name = ModelTermResources.ProcedureCode_Name, Description = ModelTermResources.ProcedureCode_Description, OID = null, ReferenceUrl = null},
-                 new ModelTerm{ ID = LOINCCodesID, Name = ModelTermResources.LOINCCode_Name, Description = ModelTermResources.LOINCCode_Description, OID = null, ReferenceUrl = null},
-                 new ModelTerm{ ID = PrescribingID, Name = ModelTermResources.Prescribing_Name, Description = ModelTermResources.Prescribing_Description, OID = null, ReferenceUrl = null},
-                //ICD-9 Procedure Codes
+                new ModelTerm{ ID = ProcedureCodesID, Name = ModelTermResources.ProcedureCode_Name, Description = ModelTermResources.ProcedureCode_Description, OID = null, ReferenceUrl = null},
+                new ModelTerm{ ID = LOINCCodesID, Name = ModelTermResources.LOINCCode_Name, Description = ModelTermResources.LOINCCode_Description, OID = null, ReferenceUrl = null},
+                new ModelTerm{ ID = PrescribingID, Name = ModelTermResources.Prescribing_Name, Description = ModelTermResources.Prescribing_Description, OID = null, ReferenceUrl = null},
+                new ModelTerm{ ID = ClinicalObservationsID, Name = ModelTermResources.ClinicalObservations_Name, Description = ModelTermResources.ClinicalObservations_Description, OID = null, ReferenceUrl = null },
+                 //ICD-9 Procedure Codes
                 new ModelTerm{ ID = ICD9ProcedureCodes3digitID, Name = ModelTermResources.ICD9ProcedureCodes3digit_Name, Description = ModelTermResources.ICD9ProcedureCodes3digit_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = ICD9ProcedureCodes4digitID, Name = ModelTermResources.ICD9ProcedureCodes4digit_Name, Description = ModelTermResources.ICD9ProcedureCodes4digit_Description, OID = null, ReferenceUrl = null},
 
@@ -54,7 +54,6 @@ namespace Lpp.QueryComposer
                 new ModelTerm{ ID = ICD9DiagnosisCodes3digitID, Name = ModelTermResources.ICD9DiagnosisCodes3digit_Name, Description = ModelTermResources.ICD9DiagnosisCodes3digit_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = ICD9DiagnosisCodes4digitID, Name = ModelTermResources.ICD9DiagnosisCodes4digit_Name, Description = ModelTermResources.ICD9DiagnosisCodes4digit_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = ICD9DiagnosisCodes5digitID, Name = ModelTermResources.ICD9DiagnosisCodes5digit_Name, Description = ModelTermResources.ICD9DiagnosisCodes5digit_Description, OID = null, ReferenceUrl = null},
-
                 new ModelTerm{ ID = CombinedDiagnosisCodesID, Name = ModelTermResources.CombinedDiagnosisCodes_Name, Description = ModelTermResources.CombinedDiagnosisCodes_Description, OID = null, ReferenceUrl = null},
 
                 new ModelTerm{ ID = MetaDataRefreshID, Name = ModelTermResources.MetaDataRefresh_Name, Description = ModelTermResources.MetaDataRefresh_Description, OID = null, ReferenceUrl = null},
@@ -64,7 +63,8 @@ namespace Lpp.QueryComposer
                 new ModelTerm{ ID = TobaccoUseID, Name = ModelTermResources.TobaccoUse_Name, Description = ModelTermResources.TobaccoUse_Description, OID = null, ReferenceUrl = null },
                 new ModelTerm{ ID = VitalsMeasureDateID, Name = ModelTermResources.VitalsMeasureDate_Name, Description = ModelTermResources.VitalsMeasureDate_Description, OID = null, ReferenceUrl = null },
                 new ModelTerm{ ID = ESPDiagnosisCodesID, Name = ModelTermResources.ESPDiagnosisCodes_Name, Description = ModelTermResources.ESPDiagnosisCodes_Description, OID = null, ReferenceUrl = null},
-                 new ModelTerm{ ID = SqlDistributionID, Name = ModelTermResources.SQLDistibution_Name, Description = ModelTermResources.SQLDistibution_Description, OID = null, ReferenceUrl = null},
+                new ModelTerm{ ID = SqlDistributionID, Name = ModelTermResources.SQLDistibution_Name, Description = ModelTermResources.SQLDistibution_Description, OID = null, ReferenceUrl = null},
+                
                 //DataChecker QE ONLY
                 new ModelTerm{ ID = DC_AgeDistribution, Name = ModelTermResources.DC_AgeDistribution_Name, Description = ModelTermResources.DC_AgeDistribution_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = DC_DataPartners, Name = ModelTermResources.DC_DataPartners_Name, Description = ModelTermResources.DC_DataPartners_Description, OID = null, ReferenceUrl = null},
@@ -82,11 +82,6 @@ namespace Lpp.QueryComposer
                 new ModelTerm{ ID = DC_HeightDistribution, Name = ModelTermResources.DC_HeightDistribution_Name, Description = ModelTermResources.DC_HeightDistribution_Description, OID = null, ReferenceUrl = null},
                 new ModelTerm{ ID = DC_Race, Name = ModelTermResources.DC_Race_Name, Description = ModelTermResources.DC_Race_Description, OID =null, ReferenceUrl = null }
             };
-
-            //advancedTerms = new List<ModelTerm>() 
-            //{ 
-            //    new ModelTerm{ ID = SqlID, Name = ModelTermResources.SQL_Name, Description = ModelTermResources.SQL_Description, OID = null, ReferenceUrl = null },
-            //};
         }
 
         public static IEnumerable<ModelTerm> Terms
@@ -96,14 +91,6 @@ namespace Lpp.QueryComposer
                 return terms;
             }
         }
-
-        //public static IEnumerable<ModelTerm> AdvancedTerms
-        //{
-        //    get
-        //    {
-        //        return advancedTerms;
-        //    }
-        //}
 
         public static readonly Guid AgeRangeID = new Guid("D9DD6E82-BBCA-466A-8022-B54FF3D99A3C");
         public static readonly Guid CodeMetricID = new Guid("E39D0001-07A1-4DFD-9299-A3CB00F2474B");
@@ -150,6 +137,7 @@ namespace Lpp.QueryComposer
         public static readonly Guid ProcedureCodesID = new Guid("F81AE5DE-7B35-4D7A-B398-A72200CE7419");
         public static readonly Guid LOINCCodesID = new Guid("F5903376-D2A5-486F-92D3-1F97D598A221");
         public static readonly Guid PrescribingID = new Guid("793BD948-C90C-45DA-B4B7-F8E2387E1A78");
+        public static readonly Guid ClinicalObservationsID = new Guid("7A51AB7A-AEC5-4A4B-A073-FBFF754EA478");
         //SqlDistribution is the term registered with QE model adapters
         public static readonly Guid SqlDistributionID = new Guid("9FCCD255-EEC2-49D5-A446-997EA2853BD5");
 

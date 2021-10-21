@@ -1,0 +1,53 @@
+{
+  "Header": {
+    "QueryType": null,
+    "ComposerInterface": 0,
+    "ID": "d4810001-660e-445e-9bd5-a62800f9d8d7",
+    "Name": "[PCORNet] Default",
+    "Description": ""
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7955f616-4391-4d0d-b494-f6a11e35b3c5",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [
+            ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "7a51ab7a-aec5-4a4b-a073-fbff754ea478",
+                "Values": {
+                  "CodeSet": 3,
+                  "CodeValues": "3137-7;",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": 0,
+                  "ResultRangeMax": 72,
+                  "QualitativeResult": null,
+                  "ResultModifier": null
+                },
+                "Criteria": [
+                ],
+                "Design": {
+                }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [
+        ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+    ]
+  },
+  "TemporalEvents": [
+  ]
+}

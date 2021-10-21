@@ -28,7 +28,7 @@ namespace Lpp.Workflow.Engine
 
         static Workflow()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().FullName.StartsWith("System."));
+            var assemblies = ObjectEx.GetNonSystemAssemblies();
             WorkflowConfigurations = assemblies.SelectMany(a => a.GetTypes().Where(type => typeof(IWorkflowConfiguration).IsAssignableFrom(type) && type != typeof(IWorkflowConfiguration)).Select(t => (IWorkflowConfiguration)Activator.CreateInstance(t))).ToDictionary<IWorkflowConfiguration, Guid>(k => k.ID);
         }
 

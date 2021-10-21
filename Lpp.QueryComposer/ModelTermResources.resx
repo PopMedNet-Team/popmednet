@@ -567,4 +567,10 @@
   <data name="Prescribing_Name" xml:space="preserve">
     <value>Prescribing</value>
   </data>
+  <data name="ClinicalObservations_Description" xml:space="preserve">
+    <value>A term to allow querying against the OBS_CLIN table in the PCORNet Common Data Model for clinical observations</value>
+  </data>
+  <data name="ClinicalObservations_Name" xml:space="preserve">
+    <value>Clinical Observations</value>
+  </data>
 </root>

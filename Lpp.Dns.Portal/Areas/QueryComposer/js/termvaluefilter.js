@@ -296,6 +296,13 @@ var Plugins;
                         enumerable: false,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "ClinicalObservationsID", {
+                        get: function () {
+                            return '7A51AB7A-AEC5-4A4B-A073-FBFF754EA478';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
                     Terms.Compare = function (a, b) {
                         if ((a == null && b != null) || (a != null && b == null))
                             return false;
@@ -376,7 +383,9 @@ var Plugins;
                         // LOINC Codes
                         Terms.LOINCCodesID,
                         //Prescribing Terms
-                        Terms.PrescribingCodesID
+                        Terms.PrescribingCodesID,
+                        //Clinical Observations
+                        Terms.ClinicalObservationsID
                     ];
                     /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
                     Terms.NonCodeGroupedTerms = [
@@ -522,6 +531,35 @@ var Plugins;
                         for (var i = 0; i < models.length; i++) {
                             if (Constants.Guid.compare(models[i], id) == 0)
                                 return true;
+                        }
+                        return false;
+                    };
+                    TermValueFilter.QueryContainsTerm = function (query, termID) {
+                        if (query == null || termID == null)
+                            return false;
+                        for (var i = 0; i < query.Where.Criteria.length; i++) {
+                            var criteria = query.Where.Criteria[i];
+                            if (this.CriteriaContainsTerm(criteria, termID)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    TermValueFilter.CriteriaContainsTerm = function (criteria, termID) {
+                        if (criteria == null || termID == null) {
+                            return false;
+                        }
+                        for (var i = 0; i < criteria.Terms.length; i++) {
+                            var term = criteria.Terms[i];
+                            if (Terms.Compare(term.Type, termID))
+                                return true;
+                        }
+                        if (criteria.Criteria) {
+                            for (var j = 0; j < criteria.Criteria.length; j++) {
+                                if (this.CriteriaContainsTerm(criteria.Criteria[j], termID)) {
+                                    return true;
+                                }
+                            }
                         }
                         return false;
                     };

@@ -174,7 +174,7 @@ namespace Lpp.Utilities
             if (mappings == null)
             {
                 mappings = new List<EntityMappingConfiguration>();
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().FullName.StartsWith("System."));
+                var assemblies = ObjectEx.GetNonSystemAssemblies();
                 mappings.AddRange(assemblies.SelectMany(a => a.GetTypes().Where(type => type.BaseType != null &&
                             type.BaseType.IsGenericType &&
                             type.BaseType.GetGenericTypeDefinition() == typeof(EntityMappingConfiguration<,>)).Select(t => (EntityMappingConfiguration)Activator.CreateInstance(t))));

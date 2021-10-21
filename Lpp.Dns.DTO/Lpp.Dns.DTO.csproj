@@ -69,6 +69,7 @@
     <Compile Include="DMCS\RoutesForRequests.cs" />
     <Compile Include="DMCS\SetRequestDataMartStatus.cs" />
     <Compile Include="Enums\AgeRangeCalculationType.cs" />
+    <Compile Include="Enums\ClinicalObservationsCodeSet.cs" />
     <Compile Include="Enums\LOINCQualitativeResultType.cs" />
     <Compile Include="Enums\LOINCResultModifierType.cs" />
     <Compile Include="Enums\ProcedureCode.cs" />

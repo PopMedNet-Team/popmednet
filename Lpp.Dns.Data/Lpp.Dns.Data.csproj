@@ -3006,6 +3006,14 @@
     <Compile Include="Migrations\202101251749558_UpdateRequestTypeForMultiQuery.designer.cs">
       <DependentUpon>202101251749558_UpdateRequestTypeForMultiQuery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103181901103_AddClinicalObservationsTerm_Dev.cs" />
+    <Compile Include="Migrations\202103181901103_AddClinicalObservationsTerm_Dev.designer.cs">
+      <DependentUpon>202103181901103_AddClinicalObservationsTerm_Dev.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103251419311_ManageDMCSConfigurationACL.cs" />
+    <Compile Include="Migrations\202103251419311_ManageDMCSConfigurationACL.Designer.cs">
+      <DependentUpon>202103251419311_ManageDMCSConfigurationACL.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networks\Group.cs" />
     <Compile Include="Networks\Network.cs" />
     <Compile Include="Networks\NetworkMessage.cs" />
@@ -3824,6 +3832,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101251749558_UpdateRequestTypeForMultiQuery.resx">
       <DependentUpon>202101251749558_UpdateRequestTypeForMultiQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103181901103_AddClinicalObservationsTerm_Dev.resx">
+      <DependentUpon>202103181901103_AddClinicalObservationsTerm_Dev.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103251419311_ManageDMCSConfigurationACL.resx">
+      <DependentUpon>202103251419311_ManageDMCSConfigurationACL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\SQLCommands\Census2010_Zip_Age_Sex_Race_Ethnicity.sql" />
   </ItemGroup>

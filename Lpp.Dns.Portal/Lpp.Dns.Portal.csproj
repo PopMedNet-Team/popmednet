@@ -28,10 +28,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Aspose.Cells, Version=7.4.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Aspose.Cells.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -252,6 +248,7 @@
     <Content Include="App_Code\Terms\MetadataRefresh.cs" />
     <Content Include="App_Code\Terms\LOINC.cs" />
     <Content Include="App_Code\Terms\Prescribing.cs" />
+    <Content Include="App_Code\Terms\ClinicalObservations.cs" />
     <Compile Include="App_Code\UI.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1456,6 +1453,10 @@
     <Content Include="Areas\Workflow\Views\Requests\VerticalDistributedRegression\VerticalDistributedRegressionCompleted.cshtml" />
     <Content Include="Areas\Workflow\Views\Requests\VerticalDistributedRegression\VerticalDistributedRegressionCompleteDistribution.cshtml" />
     <Content Include="Areas\Workflow\Views\Requests\VerticalDistributedRegression\VerticalDistributedRegressionDistribution.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ClinicalObservations\Edit.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ClinicalObservations\View.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ClinicalObservations\EditStratifierView.cshtml" />
+    <Content Include="Areas\QueryComposer\Views\Terms\ClinicalObservations\StratifierView.cshtml" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>

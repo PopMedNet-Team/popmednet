@@ -147,6 +147,7 @@
     <Compile Include="Adapters\PCORI\TermImplementation.cs" />
     <Compile Include="Adapters\PCORI\PCORIModelAdapter.cs" />
     <Compile Include="Adapters\PCORI\Terms\AgeRange.cs" />
+    <Compile Include="Adapters\PCORI\Terms\ClinicalObservation.cs" />
     <Compile Include="Adapters\PCORI\Terms\CombinedDiagnosisCodes.cs" />
     <Compile Include="Adapters\PCORI\Terms\EncounterObservationPeriod.cs" />
     <Compile Include="Adapters\PCORI\Terms\Height.cs" />

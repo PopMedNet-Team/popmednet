@@ -55,6 +55,20 @@ module Dns.Enums
 	 	 {value:AgeRangeCalculationType.AsOfDateOfRequestSubmission , text: 'As of the date of the request submission'},
 	 	 {value:AgeRangeCalculationType.AsOfSpecifiedDate , text: 'As of [select date]* '},
 	 ]
+	 export enum ClinicalObservationsCodeSet{
+	 	UN = 0,
+	 	NI = 1,
+	 	OT = 2,
+	 	LC = 3,
+	 	SM = 4,
+	 }
+	 export var ClinicalObservationsCodeSetTranslation: Dns.Structures.KeyValuePair[] = [
+	 	 {value:ClinicalObservationsCodeSet.UN , text: 'Unknown'},
+	 	 {value:ClinicalObservationsCodeSet.NI , text: 'No Information'},
+	 	 {value:ClinicalObservationsCodeSet.OT , text: 'Other'},
+	 	 {value:ClinicalObservationsCodeSet.LC , text: 'LOINC'},
+	 	 {value:ClinicalObservationsCodeSet.SM , text: 'SNOMED CT'},
+	 ]
 	 export enum LOINCQualitativeResultType{
 	 	Positive = 1,
 	 	Negative = 2,

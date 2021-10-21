@@ -179,6 +179,36 @@ namespace Lpp.Utilities
             Type attributeType = typeof(T);
             return obj.GetType().GetCustomAttributes(true).Any(x => x.GetType() == attributeType);
         }
+
+        /// <summary>
+        /// Returns a filtered list of assemblies in the current domain that are not system or obvious dependencies.
+        /// </summary>
+        /// <returns>A list of assemblies.</returns>
+        [DebuggerStepThrough]
+        public static IEnumerable<System.Reflection.Assembly> GetNonSystemAssemblies()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().FullName.StartsWith("System.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Antlr3.") &&
+                                                                                    !a.GetName().FullName.StartsWith("BouncyCastle.") &&
+                                                                                    !a.GetName().FullName.StartsWith("CodeFirstStoreFunctions.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Common.Logging.") &&
+                                                                                    !a.GetName().FullName.StartsWith("DocumentFormat.OpenXml.") &&
+                                                                                    !a.GetName().FullName.StartsWith("EntityFramework.") &&
+                                                                                    !a.GetName().FullName.StartsWith("FluentValidationNA.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Hangfire.") &&
+                                                                                    !a.GetName().FullName.StartsWith("ICSharpCode.") &&
+                                                                                    !a.GetName().FullName.StartsWith("LinqKit.") &&
+                                                                                    !a.GetName().FullName.StartsWith("log4net.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Microsoft.") &&
+                                                                                    !a.GetName().FullName.StartsWith("MigrationHelpers.") &&
+                                                                                    !a.GetName().FullName.StartsWith("NCrontab.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Newtonsoft.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Owin.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Renci.") &&
+                                                                                    !a.GetName().FullName.StartsWith("Theme.") &&
+                                                                                    !a.GetName().FullName.StartsWith("WebGrease.")
+                                                                                  );
+        }
         
     }
 }

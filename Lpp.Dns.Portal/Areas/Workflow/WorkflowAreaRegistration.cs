@@ -30,7 +30,7 @@ namespace Lpp.Dns.Portal.Areas.Workflow
 
         private void RegisterActivities()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().FullName.StartsWith("System."));
+            var assemblies = Lpp.Utilities.ObjectEx.GetNonSystemAssemblies();
 
             Activities.AddRange(assemblies.SelectMany(a => a.GetTypes().Where(type => typeof(IVisualWorkflowActivity).IsAssignableFrom(type) && type != typeof(IVisualWorkflowActivity)).Select(t => (IVisualWorkflowActivity)Activator.CreateInstance(t))));
 

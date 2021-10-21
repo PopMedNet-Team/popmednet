@@ -57,6 +57,7 @@ namespace Plugins.Requests.QueryBuilder {
         readonly Options: QueryEditorHostInitializationParameters;
         Queries: KnockoutObservableArray<Dns.ViewModels.QueryComposerQueryViewModel>;
         private QueryIDs: KnockoutComputed<any[]>;
+        private QueryNames: KnockoutComputed<any[]>;
         RequestTypeID: any;
         VisualTerms: IVisualTerm[];
         CriteriaGroupTemplates: Dns.Interfaces.ITemplateDTO[];
@@ -106,6 +107,10 @@ namespace Plugins.Requests.QueryBuilder {
             this.QueryIDs = ko.pureComputed<any[]>(() => {
                 return ko.utils.arrayFilter(this.Queries().map((q) => q.Header.ID()), (id) => { return id != null && id != ''; });
             });
+
+            this.QueryNames = ko.pureComputed<any[]>(() => {
+                return ko.utils.arrayFilter(this.Queries().map((q) => q.Header.Name()), (name) => { return name != null && name != ''; });
+            })
 
             this.RequestTypeID = this.Options.Templates[0].ID();
 
@@ -203,13 +208,19 @@ namespace Plugins.Requests.QueryBuilder {
             let queryIDs = this.QueryIDs();
             for (let i = 0; i < queryIDs.length; i++) {
                 let editor = ko.contextFor(document.getElementById('queryeditor-mdq-' + queryIDs[i]).children[0]).$component as MDQViewModel;
-                if (editor) {                    
+                if (editor) {      
                     if (editor.AreTermsValid() == false) {
                         return false;
                     }
                 }
             }
 
+            let cohortNames = this.QueryNames();
+            let duplicates = cohortNames.filter((item, index) => cohortNames.indexOf(item) != index);
+            if (duplicates.length > 0) {
+                Global.Helpers.ShowAlert("Valiation Error", "Cohort names must be unique.");
+                return false;
+            }
             return true;
         }
 

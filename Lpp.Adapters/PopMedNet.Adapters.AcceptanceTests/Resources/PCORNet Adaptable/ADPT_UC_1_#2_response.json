@@ -1,375 +1,386 @@
 {
-  "ID": null,
-  "DocumentID": null,
-  "ResponseDateTime": "2020-09-15T00:10:10.0362107+00:00",
-  "RequestID": "00000000-0000-0000-0000-000000000000",
-  "Errors": [
+  "SchemaVersion": "2.0",
+  "Header": {
+    "ID": "cd21baca-9934-4d06-8553-09b0c1ca27f0",
+    "RequestID": "00000000-0000-0000-0000-000000000000",
+    "DocumentID": "95359f8a-e42c-4c9d-960e-44cd64d0333f",
+    "QueryingStart": "2021-10-04T16:08:27.2882279+00:00",
+    "QueryingEnd": "2021-10-04T16:08:27.4011012+00:00",
+    "DataMart": null
+  },
+  "Errors": [],
+  "Queries": [
     {
-      "Code": null,
-      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"ENCOUNTERID\":\"PK_897\",\"ENC_TYPE\":\"ED\",\"ADMIT_DATE\":\"6/22/1912 12:00:00 AM\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"6/22/1912\",\"PRO_RESPONSE_NUM\":\"-17359\",\"PRO_MEASURE_SEQ\":\"17.03\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Priscilla\"}]\r\nActual result: [{\"ENCOUNTERID\":\"PK_1173\",\"ENC_TYPE\":\"ED\",\"ADMIT_DATE\":\"1912-06-22T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"6/22/1912\",\"PRO_RESPONSE_NUM\":-17359.0,\"PRO_MEASURE_SEQ\":\"17.03\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Priscilla\"},{\"ENCOUNTERID\":\"PK_1159\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-08-15T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":19585.0,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Ivo_B\"},{\"ENCOUNTERID\":\"PK_1159\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2013-08-15T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"8/15/2013\",\"PRO_RESPONSE_NUM\":19585.0,\"PRO_MEASURE_SEQ\":\"9.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Ivo_C\"},{\"ENCOUNTERID\":\"PK_1189\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2014-11-08T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":\"92937\",\"PX_TYPE\":\"CH\",\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"11/9/2014\",\"PRO_RESPONSE_NUM\":20036.0,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_1189\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2014-11-08T00:00:00\",\"DX\":\"I21.9\",\"DX_TYPE\":\"10\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"11/9/2014\",\"PRO_RESPONSE_NUM\":20036.0,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_1188\",\"ENC_TYPE\":\"OA\",\"ADMIT_DATE\":\"2014-11-09T00:00:00\",\"DX\":\"434.91\",\"DX_TYPE\":\"09\",\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"11/9/2014\",\"PRO_RESPONSE_NUM\":20036.0,\"PRO_MEASURE_SEQ\":\"26.02\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Boris\"},{\"ENCOUNTERID\":\"PK_1177\",\"ENC_TYPE\":\"EI\",\"ADMIT_DATE\":\"2018-05-07T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/31/2018\",\"PRO_RESPONSE_NUM\":21305.0,\"PRO_MEASURE_SEQ\":\"19.03\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Sonia\"},{\"ENCOUNTERID\":\"PK_1175\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2018-10-30T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"10/31/2018\",\"PRO_RESPONSE_NUM\":21488.0,\"PRO_MEASURE_SEQ\":\"18.01\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Raymond\"},{\"ENCOUNTERID\":\"PK_1176\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2018-11-01T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"10/31/2018\",\"PRO_RESPONSE_NUM\":21488.0,\"PRO_MEASURE_SEQ\":\"18.01\",\"TRIALID\":\"ADAPTABLE_3\",\"PARTICIPANTID\":\"Raymond\"},{\"ENCOUNTERID\":\"PK_1164\",\"ENC_TYPE\":\"OS\",\"ADMIT_DATE\":\"2018-12-31T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"43463\",\"PRO_RESPONSE_NUM\":21547.0,\"PRO_MEASURE_SEQ\":\"11.01\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Kiko\"},{\"ENCOUNTERID\":\"PK_1165\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2019-01-02T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"43463\",\"PRO_RESPONSE_NUM\":21547.0,\"PRO_MEASURE_SEQ\":\"11.01\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Kiko\"},{\"ENCOUNTERID\":\"PK_1167\",\"ENC_TYPE\":\"IC\",\"ADMIT_DATE\":\"2100-04-11T00:00:00\",\"DX\":null,\"DX_TYPE\":null,\"PX\":null,\"PX_TYPE\":null,\"PRO_ITEM_NAME\":\"HOSPITALIZATION_DATE\",\"PRO_RESPONSE_TEXT\":\"4/8/2100\",\"PRO_RESPONSE_NUM\":51232.0,\"PRO_MEASURE_SEQ\":\"12.03\",\"TRIALID\":\"ADAPTABLE_2\",\"PARTICIPANTID\":\"Lorena\"}]"
-    }
-  ],
-  "Results": [
-    [
-      {
-        "ENCOUNTERID": "PK_1173",
-        "ENC_TYPE": "ED",
-        "ADMIT_DATE": "1912-06-22T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "6/22/1912",
-        "PRO_RESPONSE_NUM": -17359.0,
-        "PRO_MEASURE_SEQ": "17.03",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Priscilla"
-      },
-      {
-        "ENCOUNTERID": "PK_1159",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2013-08-15T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "8/15/2013",
-        "PRO_RESPONSE_NUM": 19585.0,
-        "PRO_MEASURE_SEQ": "9.02",
-        "TRIALID": "ADAPTABLE_2",
-        "PARTICIPANTID": "Ivo_B"
-      },
-      {
-        "ENCOUNTERID": "PK_1159",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2013-08-15T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "8/15/2013",
-        "PRO_RESPONSE_NUM": 19585.0,
-        "PRO_MEASURE_SEQ": "9.02",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Ivo_C"
-      },
-      {
-        "ENCOUNTERID": "PK_1189",
-        "ENC_TYPE": "EI",
-        "ADMIT_DATE": "2014-11-08T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": "92937",
-        "PX_TYPE": "CH",
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "11/9/2014",
-        "PRO_RESPONSE_NUM": 20036.0,
-        "PRO_MEASURE_SEQ": "26.02",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Boris"
-      },
-      {
-        "ENCOUNTERID": "PK_1189",
-        "ENC_TYPE": "EI",
-        "ADMIT_DATE": "2014-11-08T00:00:00",
-        "DX": "I21.9",
-        "DX_TYPE": "10",
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "11/9/2014",
-        "PRO_RESPONSE_NUM": 20036.0,
-        "PRO_MEASURE_SEQ": "26.02",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Boris"
-      },
-      {
-        "ENCOUNTERID": "PK_1188",
-        "ENC_TYPE": "OA",
-        "ADMIT_DATE": "2014-11-09T00:00:00",
-        "DX": "434.91",
-        "DX_TYPE": "09",
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "11/9/2014",
-        "PRO_RESPONSE_NUM": 20036.0,
-        "PRO_MEASURE_SEQ": "26.02",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Boris"
-      },
-      {
-        "ENCOUNTERID": "PK_1177",
-        "ENC_TYPE": "EI",
-        "ADMIT_DATE": "2018-05-07T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "4/31/2018",
-        "PRO_RESPONSE_NUM": 21305.0,
-        "PRO_MEASURE_SEQ": "19.03",
-        "TRIALID": "ADAPTABLE_2",
-        "PARTICIPANTID": "Sonia"
-      },
-      {
-        "ENCOUNTERID": "PK_1175",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2018-10-30T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "10/31/2018",
-        "PRO_RESPONSE_NUM": 21488.0,
-        "PRO_MEASURE_SEQ": "18.01",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Raymond"
-      },
-      {
-        "ENCOUNTERID": "PK_1176",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2018-11-01T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "10/31/2018",
-        "PRO_RESPONSE_NUM": 21488.0,
-        "PRO_MEASURE_SEQ": "18.01",
-        "TRIALID": "ADAPTABLE_3",
-        "PARTICIPANTID": "Raymond"
-      },
-      {
-        "ENCOUNTERID": "PK_1164",
-        "ENC_TYPE": "OS",
-        "ADMIT_DATE": "2018-12-31T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "43463",
-        "PRO_RESPONSE_NUM": 21547.0,
-        "PRO_MEASURE_SEQ": "11.01",
-        "TRIALID": "ADAPTABLE_2",
-        "PARTICIPANTID": "Kiko"
-      },
-      {
-        "ENCOUNTERID": "PK_1165",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2019-01-02T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "43463",
-        "PRO_RESPONSE_NUM": 21547.0,
-        "PRO_MEASURE_SEQ": "11.01",
-        "TRIALID": "ADAPTABLE_2",
-        "PARTICIPANTID": "Kiko"
-      },
-      {
-        "ENCOUNTERID": "PK_1167",
-        "ENC_TYPE": "IC",
-        "ADMIT_DATE": "2100-04-11T00:00:00",
-        "DX": null,
-        "DX_TYPE": null,
-        "PX": null,
-        "PX_TYPE": null,
-        "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
-        "PRO_RESPONSE_TEXT": "4/8/2100",
-        "PRO_RESPONSE_NUM": 51232.0,
-        "PRO_MEASURE_SEQ": "12.03",
-        "TRIALID": "ADAPTABLE_2",
-        "PARTICIPANTID": "Lorena"
+      "ID": "00000000-0000-0000-0000-000000000000",
+      "Name": "Use Case 1: Test 2",
+      "QueryStart": "2021-10-04T16:08:27.2882279+00:00",
+      "QueryEnd": "2021-10-04T16:08:27.4011012+00:00",
+      "PostProcessStart": null,
+      "PostProcessEnd": null,
+      "Errors": null,
+      "Results": [
+        [
+          {
+            "ENCOUNTERID": "PK_4401",
+            "ENC_TYPE": "ED",
+            "ADMIT_DATE": "1912-06-22T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "6/22/1912",
+            "PRO_RESPONSE_NUM": -17359.0,
+            "PRO_MEASURE_SEQ": "17.03",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Priscilla"
+          },
+          {
+            "ENCOUNTERID": "PK_4387",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2013-08-15T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "8/15/2013",
+            "PRO_RESPONSE_NUM": 19585.0,
+            "PRO_MEASURE_SEQ": "9.02",
+            "TRIALID": "ADAPTABLE_2",
+            "PARTICIPANTID": "Ivo_B"
+          },
+          {
+            "ENCOUNTERID": "PK_4387",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2013-08-15T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "8/15/2013",
+            "PRO_RESPONSE_NUM": 19585.0,
+            "PRO_MEASURE_SEQ": "9.02",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Ivo_C"
+          },
+          {
+            "ENCOUNTERID": "PK_4417",
+            "ENC_TYPE": "EI",
+            "ADMIT_DATE": "2014-11-08T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": "92937",
+            "PX_TYPE": "CH",
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "11/9/2014",
+            "PRO_RESPONSE_NUM": 20036.0,
+            "PRO_MEASURE_SEQ": "26.02",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Boris"
+          },
+          {
+            "ENCOUNTERID": "PK_4417",
+            "ENC_TYPE": "EI",
+            "ADMIT_DATE": "2014-11-08T00:00:00",
+            "DX": "I21.9",
+            "DX_TYPE": "10",
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "11/9/2014",
+            "PRO_RESPONSE_NUM": 20036.0,
+            "PRO_MEASURE_SEQ": "26.02",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Boris"
+          },
+          {
+            "ENCOUNTERID": "PK_4416",
+            "ENC_TYPE": "OA",
+            "ADMIT_DATE": "2014-11-09T00:00:00",
+            "DX": "434.91",
+            "DX_TYPE": "09",
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "11/9/2014",
+            "PRO_RESPONSE_NUM": 20036.0,
+            "PRO_MEASURE_SEQ": "26.02",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Boris"
+          },
+          {
+            "ENCOUNTERID": "PK_4405",
+            "ENC_TYPE": "EI",
+            "ADMIT_DATE": "2018-05-07T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "4/31/2018",
+            "PRO_RESPONSE_NUM": 21305.0,
+            "PRO_MEASURE_SEQ": "19.03",
+            "TRIALID": "ADAPTABLE_2",
+            "PARTICIPANTID": "Sonia"
+          },
+          {
+            "ENCOUNTERID": "PK_4403",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2018-10-30T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "10/31/2018",
+            "PRO_RESPONSE_NUM": 21488.0,
+            "PRO_MEASURE_SEQ": "18.01",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Raymond"
+          },
+          {
+            "ENCOUNTERID": "PK_4404",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2018-11-01T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "10/31/2018",
+            "PRO_RESPONSE_NUM": 21488.0,
+            "PRO_MEASURE_SEQ": "18.01",
+            "TRIALID": "ADAPTABLE_3",
+            "PARTICIPANTID": "Raymond"
+          },
+          {
+            "ENCOUNTERID": "PK_4392",
+            "ENC_TYPE": "OS",
+            "ADMIT_DATE": "2018-12-31T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "43463",
+            "PRO_RESPONSE_NUM": 21547.0,
+            "PRO_MEASURE_SEQ": "11.01",
+            "TRIALID": "ADAPTABLE_2",
+            "PARTICIPANTID": "Kiko"
+          },
+          {
+            "ENCOUNTERID": "PK_4393",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2019-01-02T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "43463",
+            "PRO_RESPONSE_NUM": 21547.0,
+            "PRO_MEASURE_SEQ": "11.01",
+            "TRIALID": "ADAPTABLE_2",
+            "PARTICIPANTID": "Kiko"
+          },
+          {
+            "ENCOUNTERID": "PK_4395",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2100-04-11T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "4/8/2100",
+            "PRO_RESPONSE_NUM": 51232.0,
+            "PRO_MEASURE_SEQ": "12.03",
+            "TRIALID": "ADAPTABLE_2",
+            "PARTICIPANTID": "Lorena"
+          }
+        ]
+      ],
+      "LowCellThrehold": null,
+      "Properties": [
+        {
+          "Name": "ENCOUNTERID",
+          "Type": "System.String",
+          "As": "ENCOUNTERID",
+          "Aggregate": null
+        },
+        {
+          "Name": "ENC_TYPE",
+          "Type": "System.String",
+          "As": "ENC_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "ADMIT_DATE",
+          "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "ADMIT_DATE",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX",
+          "Type": "System.String",
+          "As": "DX",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX_TYPE",
+          "Type": "System.String",
+          "As": "DX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX",
+          "Type": "System.String",
+          "As": "PX",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX_TYPE",
+          "Type": "System.String",
+          "As": "PX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_ITEM_NAME",
+          "Type": "System.String",
+          "As": "PRO_ITEM_NAME",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_TEXT",
+          "Type": "System.String",
+          "As": "PRO_RESPONSE_TEXT",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_NUM",
+          "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "PRO_RESPONSE_NUM",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_MEASURE_SEQ",
+          "Type": "System.String",
+          "As": "PRO_MEASURE_SEQ",
+          "Aggregate": null
+        },
+        {
+          "Name": "TRIALID",
+          "Type": "System.String",
+          "As": "TRIALID",
+          "Aggregate": null
+        },
+        {
+          "Name": "PARTICIPANTID",
+          "Type": "System.String",
+          "As": "PARTICIPANTID",
+          "Aggregate": null
+        }
+      ],
+      "Aggregation": {
+        "GroupBy": [
+          "ENCOUNTERID",
+          "ENC_TYPE",
+          "ADMIT_DATE",
+          "DX",
+          "DX_TYPE",
+          "PX",
+          "PX_TYPE",
+          "PRO_ITEM_NAME",
+          "PRO_RESPONSE_TEXT",
+          "PRO_RESPONSE_NUM",
+          "PRO_MEASURE_SEQ",
+          "TRIALID",
+          "PARTICIPANTID"
+        ],
+        "Select": [
+          {
+            "Name": "ENCOUNTERID",
+            "Type": "System.String",
+            "As": "ENCOUNTERID",
+            "Aggregate": null
+          },
+          {
+            "Name": "ENC_TYPE",
+            "Type": "System.String",
+            "As": "ENC_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "ADMIT_DATE",
+            "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "ADMIT_DATE",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX",
+            "Type": "System.String",
+            "As": "DX",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX_TYPE",
+            "Type": "System.String",
+            "As": "DX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX",
+            "Type": "System.String",
+            "As": "PX",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX_TYPE",
+            "Type": "System.String",
+            "As": "PX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_ITEM_NAME",
+            "Type": "System.String",
+            "As": "PRO_ITEM_NAME",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_TEXT",
+            "Type": "System.String",
+            "As": "PRO_RESPONSE_TEXT",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_NUM",
+            "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "PRO_RESPONSE_NUM",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_MEASURE_SEQ",
+            "Type": "System.String",
+            "As": "PRO_MEASURE_SEQ",
+            "Aggregate": null
+          },
+          {
+            "Name": "TRIALID",
+            "Type": "System.String",
+            "As": "TRIALID",
+            "Aggregate": null
+          },
+          {
+            "Name": "PARTICIPANTID",
+            "Type": "System.String",
+            "As": "PARTICIPANTID",
+            "Aggregate": null
+          }
+        ],
+        "Name": null
       }
-    ]
-  ],
-  "LowCellThrehold": null,
-  "Properties": [
-    {
-      "Name": "ENCOUNTERID",
-      "Type": "System.String",
-      "As": "ENCOUNTERID",
-      "Aggregate": null
-    },
-    {
-      "Name": "ENC_TYPE",
-      "Type": "System.String",
-      "As": "ENC_TYPE",
-      "Aggregate": null
-    },
-    {
-      "Name": "ADMIT_DATE",
-      "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
-      "As": "ADMIT_DATE",
-      "Aggregate": null
-    },
-    {
-      "Name": "DX",
-      "Type": "System.String",
-      "As": "DX",
-      "Aggregate": null
-    },
-    {
-      "Name": "DX_TYPE",
-      "Type": "System.String",
-      "As": "DX_TYPE",
-      "Aggregate": null
-    },
-    {
-      "Name": "PX",
-      "Type": "System.String",
-      "As": "PX",
-      "Aggregate": null
-    },
-    {
-      "Name": "PX_TYPE",
-      "Type": "System.String",
-      "As": "PX_TYPE",
-      "Aggregate": null
-    },
-    {
-      "Name": "PRO_ITEM_NAME",
-      "Type": "System.String",
-      "As": "PRO_ITEM_NAME",
-      "Aggregate": null
-    },
-    {
-      "Name": "PRO_RESPONSE_TEXT",
-      "Type": "System.String",
-      "As": "PRO_RESPONSE_TEXT",
-      "Aggregate": null
-    },
-    {
-      "Name": "PRO_RESPONSE_NUM",
-      "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
-      "As": "PRO_RESPONSE_NUM",
-      "Aggregate": null
-    },
-    {
-      "Name": "PRO_MEASURE_SEQ",
-      "Type": "System.String",
-      "As": "PRO_MEASURE_SEQ",
-      "Aggregate": null
-    },
-    {
-      "Name": "TRIALID",
-      "Type": "System.String",
-      "As": "TRIALID",
-      "Aggregate": null
-    },
-    {
-      "Name": "PARTICIPANTID",
-      "Type": "System.String",
-      "As": "PARTICIPANTID",
-      "Aggregate": null
     }
-  ],
-  "Aggregation": {
-    "GroupBy": [
-      "ENCOUNTERID",
-      "ENC_TYPE",
-      "ADMIT_DATE",
-      "DX",
-      "DX_TYPE",
-      "PX",
-      "PX_TYPE",
-      "PRO_ITEM_NAME",
-      "PRO_RESPONSE_TEXT",
-      "PRO_RESPONSE_NUM",
-      "PRO_MEASURE_SEQ",
-      "TRIALID",
-      "PARTICIPANTID"
-    ],
-    "Select": [
-      {
-        "Name": "ENCOUNTERID",
-        "Type": "System.String",
-        "As": "ENCOUNTERID",
-        "Aggregate": null
-      },
-      {
-        "Name": "ENC_TYPE",
-        "Type": "System.String",
-        "As": "ENC_TYPE",
-        "Aggregate": null
-      },
-      {
-        "Name": "ADMIT_DATE",
-        "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
-        "As": "ADMIT_DATE",
-        "Aggregate": null
-      },
-      {
-        "Name": "DX",
-        "Type": "System.String",
-        "As": "DX",
-        "Aggregate": null
-      },
-      {
-        "Name": "DX_TYPE",
-        "Type": "System.String",
-        "As": "DX_TYPE",
-        "Aggregate": null
-      },
-      {
-        "Name": "PX",
-        "Type": "System.String",
-        "As": "PX",
-        "Aggregate": null
-      },
-      {
-        "Name": "PX_TYPE",
-        "Type": "System.String",
-        "As": "PX_TYPE",
-        "Aggregate": null
-      },
-      {
-        "Name": "PRO_ITEM_NAME",
-        "Type": "System.String",
-        "As": "PRO_ITEM_NAME",
-        "Aggregate": null
-      },
-      {
-        "Name": "PRO_RESPONSE_TEXT",
-        "Type": "System.String",
-        "As": "PRO_RESPONSE_TEXT",
-        "Aggregate": null
-      },
-      {
-        "Name": "PRO_RESPONSE_NUM",
-        "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
-        "As": "PRO_RESPONSE_NUM",
-        "Aggregate": null
-      },
-      {
-        "Name": "PRO_MEASURE_SEQ",
-        "Type": "System.String",
-        "As": "PRO_MEASURE_SEQ",
-        "Aggregate": null
-      },
-      {
-        "Name": "TRIALID",
-        "Type": "System.String",
-        "As": "TRIALID",
-        "Aggregate": null
-      },
-      {
-        "Name": "PARTICIPANTID",
-        "Type": "System.String",
-        "As": "PARTICIPANTID",
-        "Aggregate": null
-      }
-    ],
-    "Name": null
-  }
+  ]
 }

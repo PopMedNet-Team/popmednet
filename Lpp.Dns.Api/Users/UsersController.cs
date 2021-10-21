@@ -63,7 +63,7 @@ namespace Lpp.Dns.Api.Users
             User contact = null;
             if (!DataContext.ValidateUser2(login.UserName, login.Password, out user))
             {
-                if(user == null)
+                if (user == null)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid user name or password."));
                 }
@@ -89,7 +89,7 @@ namespace Lpp.Dns.Api.Users
                     Success = false,
                     IPAddress = login.IPAddress,
                     Environment = login.Enviorment,
-                    Details = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + login.UserName + " was attempted with Password:" + login.Password,"AuthenticationLog", contact.ID.ToString("D"))
+                    Details = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + login.UserName + " was attempted with Password:" + login.Password, "AuthenticationLog", contact.ID.ToString("D"))
                 };
 
                 DataContext.LogsUserAuthentication.Add(failedAudit);
@@ -98,8 +98,8 @@ namespace Lpp.Dns.Api.Users
                 if (!contact.Active)
                 {
                     System.Threading.Thread.Sleep(contact.FailedLoginCount * 3000);
-                }   
-                
+                }
+
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, errorMessage));
             }
 
@@ -110,7 +110,7 @@ namespace Lpp.Dns.Api.Users
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User Account is locked"));
             }
 
-            if(contact.FailedLoginCount > 0)
+            if (contact.FailedLoginCount > 0)
             {
                 contact.FailedLoginCount = 0;
             }
@@ -196,7 +196,7 @@ namespace Lpp.Dns.Api.Users
                 Subject = "A new user has registered: " + user.FirstName + " " + user.LastName,
                 DueDate = DateTime.UtcNow,
                 Status = TaskStatuses.InProgress,
-                Type = TaskTypes.NewUserRegistration | TaskTypes.Task                
+                Type = TaskTypes.NewUserRegistration | TaskTypes.Task
             };
 
             action.References.Add(new TaskReference
@@ -210,9 +210,10 @@ namespace Lpp.Dns.Api.Users
 
 
             //Add the users here based on a query of people that can process it.
-            var userIds = await (from u in DataContext.Users where
-                              (DataContext.GlobalAcls.Where(a => a.SecurityGroup.Users.Any(usr => usr.UserID == u.ID) && a.PermissionID == PermissionIdentifiers.Organization.ApproveRejectRegistrations).Any() &&
-                              DataContext.GlobalAcls.Where(a => a.SecurityGroup.Users.Any(usr => usr.UserID == u.ID) && a.PermissionID == PermissionIdentifiers.Organization.ApproveRejectRegistrations).All(a => a.Allowed))
+            var userIds = await (from u in DataContext.Users
+                                 where
+  (DataContext.GlobalAcls.Where(a => a.SecurityGroup.Users.Any(usr => usr.UserID == u.ID) && a.PermissionID == PermissionIdentifiers.Organization.ApproveRejectRegistrations).Any() &&
+  DataContext.GlobalAcls.Where(a => a.SecurityGroup.Users.Any(usr => usr.UserID == u.ID) && a.PermissionID == PermissionIdentifiers.Organization.ApproveRejectRegistrations).All(a => a.Allowed))
                                  select u.ID).ToArrayAsync();
 
             foreach (var userId in userIds)
@@ -395,7 +396,7 @@ namespace Lpp.Dns.Api.Users
             user.FailedLoginCount = 0;
 
             await DataContext.SaveChangesAsync();
-            
+
             return Request.CreateResponse(HttpStatusCode.Accepted);
         }
 
@@ -449,7 +450,7 @@ namespace Lpp.Dns.Api.Users
                                e.RegistryEvents.Any(r => r.SecurityGroup.Users.Any(u => u.UserID == userID) && r.Allowed) && !e.RegistryEvents.Any(r => r.SecurityGroup.Users.Any(u => u.UserID == userID) && !r.Allowed)
                                ) ||
                                (
-                               e.UserEvents.Any(ue => ue.SecurityGroup.Users.Any(u => u.UserID == userID)  && ue.Allowed) &&
+                               e.UserEvents.Any(ue => ue.SecurityGroup.Users.Any(u => u.UserID == userID) && ue.Allowed) &&
                                !e.UserEvents.Any(ue => ue.SecurityGroup.Users.Any(u => u.UserID == userID) && !ue.Allowed)
                                ) ||
                                (
@@ -466,7 +467,7 @@ namespace Lpp.Dns.Api.Users
                                )
                                || //Special case for Request Status Changed
                                e.ID == EventIdentifiers.Request.RequestStatusChanged.ID
-                               
+
                            select e).Map<Event, EventDTO>();
 
             return results;
@@ -523,20 +524,20 @@ namespace Lpp.Dns.Api.Users
                     let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
                     let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
                     let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
-                    let uAcls = DataContext.UserAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.ID == x.UserID)            
-                    
+                    let uAcls = DataContext.UserAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.ID == x.UserID)
+
                     where identityID == audit.UserID ||
                     (
                         (gAcls.Any() || oAcls.Any() || uAcls.Any())
                         &&
-                        (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) &&  uAcls.All(a => a.Allowed))
+                        (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) && uAcls.All(a => a.Allowed))
                     )
                     select new UserAuthenticationDTO
                     {
                         ID = u.ID,
                         DateTime = audit.TimeStamp,
                         UserID = audit.UserID,
-                        Success = audit.Success,                        
+                        Success = audit.Success,
                         Description = audit.Description,
                         Source = audit.Source,
                         IPAddress = audit.IPAddress,
@@ -558,12 +559,12 @@ namespace Lpp.Dns.Api.Users
                     let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
                     let uAcls = DataContext.UserAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.ID == x.UserID)
 
-                    where  audit.UserID == userID && (identityID == audit.UserID ||
+                    where audit.UserID == userID && (identityID == audit.UserID ||
                     (
                         (gAcls.Any() || oAcls.Any() || uAcls.Any())
                         &&
                         (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) && uAcls.All(a => a.Allowed))
-                         
+
                     ))
                     select new UserAuthenticationDTO
                     {
@@ -578,7 +579,8 @@ namespace Lpp.Dns.Api.Users
         /// <param name="subscribedEvents"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<HttpResponseMessage> UpdateSubscribedEvents(IEnumerable<UserEventSubscriptionDTO> subscribedEvents) {
+        public async Task<HttpResponseMessage> UpdateSubscribedEvents(IEnumerable<UserEventSubscriptionDTO> subscribedEvents)
+        {
 
             if (!subscribedEvents.Any())
                 return Request.CreateResponse(HttpStatusCode.Accepted);
@@ -588,7 +590,7 @@ namespace Lpp.Dns.Api.Users
 
             var userID = subscribedEvents.Select(s => (Guid?)s.UserID).First();
 
-            if (userID != Identity.ID && !(await DataContext.HasGrantedPermissions<User>(Identity, (Guid) userID, PermissionIdentifiers.User.ManageNotifications)).Contains(PermissionIdentifiers.User.ManageNotifications))
+            if (userID != Identity.ID && !(await DataContext.HasGrantedPermissions<User>(Identity, (Guid)userID, PermissionIdentifiers.User.ManageNotifications)).Contains(PermissionIdentifiers.User.ManageNotifications))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to manage notifications for the specified user."));
 
             var existing = await (from s in DataContext.UserEventSubscriptions where s.UserID == userID select s).ToArrayAsync();
@@ -611,9 +613,10 @@ namespace Lpp.Dns.Api.Users
             }
 
             //Get current matches and update frequencies as necessary
-            var sameSubs = from ss in existing join se in subscribedEvents on new { ss.EventID, ss.UserID } equals new { se.EventID, se.UserID }
+            var sameSubs = from ss in existing
+                           join se in subscribedEvents on new { ss.EventID, ss.UserID } equals new { se.EventID, se.UserID }
                            where (((se.Frequency.HasValue && ss.Frequency != se.Frequency.Value) || (se.FrequencyForMy.HasValue && ss.FrequencyForMy != se.FrequencyForMy.Value))
-                           || (!se.FrequencyForMy.HasValue && ss.FrequencyForMy.HasValue )
+                           || (!se.FrequencyForMy.HasValue && ss.FrequencyForMy.HasValue)
                            || (!se.Frequency.HasValue && ss.Frequency.HasValue)
                            )
                            select new { existing = ss, newSub = se };
@@ -626,7 +629,7 @@ namespace Lpp.Dns.Api.Users
 
             //Delete ones that are no longer there.
             var deleteSubs = from ee in existing
-                             where !subscribedEvents.Any(se => se.EventID == ee.EventID && se.UserID == ee.UserID) || 
+                             where !subscribedEvents.Any(se => se.EventID == ee.EventID && se.UserID == ee.UserID) ||
                              subscribedEvents.Any(se => se.EventID == ee.EventID && se.UserID == ee.UserID && !se.Frequency.HasValue && !se.FrequencyForMy.HasValue)
                              select ee;
 
@@ -666,18 +669,18 @@ namespace Lpp.Dns.Api.Users
                           let request = DataContext.Requests.Where(r => t.References.Any(rf => rf.ItemID == r.ID && rf.Type == TaskItemTypes.Request)).FirstOrDefault()
                           let newUser = DataContext.Users.Where(u => t.References.Any(rf => rf.ItemID == u.ID && rf.Type == TaskItemTypes.User)).FirstOrDefault()
                           let isRegistration = (t.Type & TaskTypes.NewUserRegistration) == TaskTypes.NewUserRegistration
-                          where t.Users.Any(u => u.UserID == userID.Value && u.User.Deleted == false) 
+                          where t.Users.Any(u => u.UserID == userID.Value && u.User.Deleted == false)
                           && t.Status != TaskStatuses.Complete
                           select new HomepageTaskSummaryDTO
                           {
                               TaskID = t.ID,
                               TaskName = !string.IsNullOrEmpty(t.Subject) ? t.Subject : t.WorkflowActivityID.HasValue ? t.WorkflowActivity.Name : (isRegistration ? "Registration Review" : "Task"),
                               TaskStatus = t.Status,
-                              TaskStatusText = t.Status == TaskStatuses.Cancelled ? "Cancelled":
-                                               t.Status == TaskStatuses.NotStarted ? "Not Started":
-                                               t.Status == TaskStatuses.InProgress ? "In Progress":
-                                               t.Status == TaskStatuses.Deferred ? "Deferred":
-                                               t.Status == TaskStatuses.Blocked ? "Blocked":
+                              TaskStatusText = t.Status == TaskStatuses.Cancelled ? "Cancelled" :
+                                               t.Status == TaskStatuses.NotStarted ? "Not Started" :
+                                               t.Status == TaskStatuses.InProgress ? "In Progress" :
+                                               t.Status == TaskStatuses.Deferred ? "Deferred" :
+                                               t.Status == TaskStatuses.Blocked ? "Blocked" :
                                                t.Status == TaskStatuses.Complete ? "Complete" : "Unknown",
                               CreatedOn = t.CreatedOn,
                               StartOn = t.StartOn,
@@ -688,10 +691,10 @@ namespace Lpp.Dns.Api.Users
                               NewUserID = newUser.ID,
                               Name = isRegistration ? (newUser != null ? (newUser.FirstName + " " + newUser.LastName) : "") : request != null ? request.Name : t.Subject,
                               Identifier = newUser != null ? newUser.UserName : request != null ? request.Identifier.ToString() : string.Empty,
-                              RequestID = request.ID, 
+                              RequestID = request.ID,
                               RequestStatus = request.Status,
                               RequestStatusText = DataContext.GetRequestStatusDisplayText(request.ID),
-                             AssignedResources = DataContext.GetRequestAssigneesForTask(t.ID, "<br/>")
+                              AssignedResources = DataContext.GetRequestAssigneesForTask(t.ID, "<br/>")
                           };
 
             return results;
@@ -706,7 +709,7 @@ namespace Lpp.Dns.Api.Users
         public IQueryable<HomepageTaskRequestUserDTO> GetWorkflowTaskUsers(Guid? userID = null)
         {
             Guid ID = userID ?? Identity.ID;
-            
+
             //get all the tasks the user is associated with
             var tasks = from t in DataContext.Actions
                         where t.Status != TaskStatuses.Complete
@@ -715,23 +718,24 @@ namespace Lpp.Dns.Api.Users
                         select t;
 
             var results = (from u in DataContext.RequestUsers
-                          join tr in DataContext.ActionReferences on u.RequestID equals tr.ItemID
-                          join t in tasks on tr.TaskID equals t.ID
-                          select new
-                          {
-                              RequestID = u.RequestID,
-                              TaskID = tr.TaskID,
-                              UserID = u.UserID,
-                              UserName = u.User.UserName,
-                              FirstName = u.User.FirstName,
-                              LastName = u.User.LastName,
-                              WorkflowRoleID = u.WorkflowRoleID,
-                              WorkflowRole = u.WorkflowRole.Name,
-                              WorkflowID = u.WorkflowRole.WorkflowID,
-                              Workflow = u.WorkflowRole.Workflow.Name
-                          })
+                           join tr in DataContext.ActionReferences on u.RequestID equals tr.ItemID
+                           join t in tasks on tr.TaskID equals t.ID
+                           select new
+                           {
+                               RequestID = u.RequestID,
+                               TaskID = tr.TaskID,
+                               UserID = u.UserID,
+                               UserName = u.User.UserName,
+                               FirstName = u.User.FirstName,
+                               LastName = u.User.LastName,
+                               WorkflowRoleID = u.WorkflowRoleID,
+                               WorkflowRole = u.WorkflowRole.Name,
+                               WorkflowID = u.WorkflowRole.WorkflowID,
+                               Workflow = u.WorkflowRole.Workflow.Name
+                           })
                           .GroupBy(g => new { g.RequestID, g.TaskID, g.UserID, g.WorkflowRoleID })
-                          .Select(s => new HomepageTaskRequestUserDTO {
+                          .Select(s => new HomepageTaskRequestUserDTO
+                          {
                               RequestID = s.Key.RequestID,
                               TaskID = s.Key.TaskID,
                               UserID = s.Key.UserID,
@@ -835,8 +839,8 @@ namespace Lpp.Dns.Api.Users
                 PermissionIdentifiers.Portal.RunEventsReport,
                 PermissionIdentifiers.Portal.ListDataMarts,
                 PermissionIdentifiers.Portal.ListGroups,
-                PermissionIdentifiers.Project.View, 
-                PermissionIdentifiers.Project.Edit, 
+                PermissionIdentifiers.Project.View,
+                PermissionIdentifiers.Project.Edit,
                 PermissionIdentifiers.Request.ViewRequest,
                 PermissionIdentifiers.Request.ViewHistory,
                 PermissionIdentifiers.Request.ViewResults,
@@ -919,7 +923,7 @@ namespace Lpp.Dns.Api.Users
                     url = "/reports/NetworkActivityReport"
                 });
 
-            if (reportItems.Any())                        
+            if (reportItems.Any())
                 menu.Add(new MenuItemDTO
                 {
                     text = "Reports",
@@ -929,10 +933,11 @@ namespace Lpp.Dns.Api.Users
 
             var setupItems = new List<MenuItemDTO>();
             if (permissions.Contains(PermissionIdentifiers.Portal.ListDataMarts))
-                setupItems.Add(new MenuItemDTO {
-                        text = "DataMarts",
-                        url = "/datamarts"
-                    });
+                setupItems.Add(new MenuItemDTO
+                {
+                    text = "DataMarts",
+                    url = "/datamarts"
+                });
 
             if (permissions.Contains(PermissionIdentifiers.Portal.ListGroups))
                 setupItems.Add(new MenuItemDTO
@@ -956,7 +961,7 @@ namespace Lpp.Dns.Api.Users
                 permissions.Contains(PermissionIdentifiers.DataMartInProject.HoldRequest) ||
                 permissions.Contains(PermissionIdentifiers.DataMartInProject.RejectRequest) ||
                 permissions.Contains(PermissionIdentifiers.DataMartInProject.SeeRequests) ||
-                permissions.Contains(PermissionIdentifiers.DataMartInProject.SkipResponseApproval) || 
+                permissions.Contains(PermissionIdentifiers.DataMartInProject.SkipResponseApproval) ||
                 permissions.Contains(PermissionIdentifiers.Group.ListProjects))
                 setupItems.Add(new MenuItemDTO
                 {
@@ -1001,7 +1006,8 @@ namespace Lpp.Dns.Api.Users
 
             if (permissions.Contains(PermissionIdentifiers.Portal.ListTemplates))
             {
-                setupItems.Add(new MenuItemDTO { 
+                setupItems.Add(new MenuItemDTO
+                {
                     text = "Criteria Group Templates",
                     url = "/templates"
                 });
@@ -1024,7 +1030,8 @@ namespace Lpp.Dns.Api.Users
                 });
 
             if (setupItems.Any())
-                menu.Add(new MenuItemDTO {
+                menu.Add(new MenuItemDTO
+                {
                     text = "Network",
                     url = null,
                     items = setupItems
@@ -1060,7 +1067,7 @@ namespace Lpp.Dns.Api.Users
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "External service configuration is incomplete, make sure the service url and credentials have been configured correctly.");
             }
-            
+
             return Request.CreateResponse(HttpStatusCode.OK, "Test was successful.");
         }
 
@@ -1082,7 +1089,7 @@ namespace Lpp.Dns.Api.Users
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid credentials.");
             }
-            
+
             string serviceUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["LookupLists.Url"];
             string serviceUser = (System.Web.Configuration.WebConfigurationManager.AppSettings["LookupLists.Import.User"] ?? string.Empty).DecryptString();
             string servicePassword = (System.Web.Configuration.WebConfigurationManager.AppSettings["LookupLists.Import.Password"] ?? string.Empty).DecryptString();
@@ -1132,11 +1139,11 @@ namespace Lpp.Dns.Api.Users
 
             var threeDigitProcedureUpdater = new CodeLookupListsUpdater(DataContext, serviceUrl, serviceUser, servicePassword, procedureCategory, procedureSource, procedureCodeClass, "3", Lpp.Dns.DTO.Enums.Lists.ICD9Procedures);
             await threeDigitProcedureUpdater.DoUpdate();
-            
+
             //PX ICD-9 4 digit
             var fourDigitProcedureUpdater = new CodeLookupListsUpdater(DataContext, serviceUrl, serviceUser, servicePassword, procedureCategory, procedureSource, procedureCodeClass, "4", Lpp.Dns.DTO.Enums.Lists.ICD9Procedures4Digits);
             await fourDigitProcedureUpdater.DoUpdate();
-            
+
             //HCPCS Procedures
             string hcpcsCategory = "px";
             string hcpcsSource = "optum";
@@ -1158,7 +1165,8 @@ namespace Lpp.Dns.Api.Users
         /// <param name="setting"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<HttpResponseMessage> SaveSetting(UserSettingDTO setting) {
+        public async Task<HttpResponseMessage> SaveSetting(UserSettingDTO setting)
+        {
             if (setting.UserID != Identity.ID)
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to save settings on the specified user.");
 
@@ -1190,13 +1198,16 @@ namespace Lpp.Dns.Api.Users
         /// <param name="key">The array of keys of the settings to retrieve. You may specify more than one.</param>
         /// <returns>A list of settings by key</returns>
         [HttpGet]
-        public async Task<IEnumerable<UserSettingDTO>> GetSetting([FromUri]IEnumerable<string> key) {
-            var setting = await (from s in DataContext.UserSettings where s.UserID == Identity.ID && key.Contains(s.Key) select new UserSettingDTO
-            {
-                Key = s.Key,
-                Setting = s.Setting,
-                UserID = s.UserID
-            }).ToArrayAsync();
+        public async Task<IEnumerable<UserSettingDTO>> GetSetting([FromUri] IEnumerable<string> key)
+        {
+            var setting = await (from s in DataContext.UserSettings
+                                 where s.UserID == Identity.ID && key.Contains(s.Key)
+                                 select new UserSettingDTO
+                                 {
+                                     Key = s.Key,
+                                     Setting = s.Setting,
+                                     UserID = s.UserID
+                                 }).ToArrayAsync();
 
             return setting;
         }
@@ -1206,7 +1217,7 @@ namespace Lpp.Dns.Api.Users
         /// </summary>
         [HttpGet]
         public async Task<bool> AllowApproveRejectRequest(Guid requestID)
-        { 
+        {
             //Locations: Global, Organizations, Projects, Users, Project Organizations
             var globalAcls = DataContext.GlobalAcls.FilterAcl(Identity, PermissionIdentifiers.Request.ApproveRejectSubmission);
             var organizationAcls = DataContext.OrganizationAcls.FilterAcl(Identity, PermissionIdentifiers.Request.ApproveRejectSubmission);
@@ -1215,22 +1226,22 @@ namespace Lpp.Dns.Api.Users
             var projectOrgAcls = DataContext.ProjectOrganizationAcls.FilterAcl(Identity, PermissionIdentifiers.Request.ApproveRejectSubmission);
 
 
-            var results = await ( from r in DataContext.Secure<Request>(Identity)
-                          where r.ID == requestID
-                          let gAcls = globalAcls
-                          let oAcls = organizationAcls.Where(a => a.OrganizationID == r.OrganizationID )
-                          let pAcls = projectAcls.Where(a => a.ProjectID == r.ProjectID )
-                          let uAcls = userAcls.Where(a => a.UserID == r.SubmittedByID )
-                          let poAcls = projectOrgAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID )
-                          where (
-                            (gAcls.Any() || oAcls.Any() || pAcls.Any() || uAcls.Any() || poAcls.Any())
-                            &&
-                            (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) && pAcls.All(a => a.Allowed) && uAcls.All(a => a.Allowed) && poAcls.All(a => a.Allowed))
-                          )
-                          select r.ID).AnyAsync();
+            var results = await (from r in DataContext.Secure<Request>(Identity)
+                                 where r.ID == requestID
+                                 let gAcls = globalAcls
+                                 let oAcls = organizationAcls.Where(a => a.OrganizationID == r.OrganizationID)
+                                 let pAcls = projectAcls.Where(a => a.ProjectID == r.ProjectID)
+                                 let uAcls = userAcls.Where(a => a.UserID == r.SubmittedByID)
+                                 let poAcls = projectOrgAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID)
+                                 where (
+                                   (gAcls.Any() || oAcls.Any() || pAcls.Any() || uAcls.Any() || poAcls.Any())
+                                   &&
+                                   (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed) && pAcls.All(a => a.Allowed) && uAcls.All(a => a.Allowed) && poAcls.All(a => a.Allowed))
+                                 )
+                                 select r.ID).AnyAsync();
 
             return results;
-            
+
         }
 
         /// <summary>
@@ -1251,7 +1262,7 @@ namespace Lpp.Dns.Api.Users
         /// <param name="ID"></param>
         /// <returns></returns>
         [HttpDelete]
-        public override async Task Delete([FromUri]IEnumerable<Guid> ID)
+        public override async Task Delete([FromUri] IEnumerable<Guid> ID)
         {
             if (!await DataContext.CanDelete<User>(Identity, ID.ToArray()))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You do not have permission to delete this User."));
@@ -1349,10 +1360,10 @@ namespace Lpp.Dns.Api.Users
                     if (!currentUser.Active && user.Active && currentUser.PasswordHash.IsNullOrEmpty())
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, user.FirstName + " " + user.LastName + " must be assigned a password before the can be marked active."));
 
-                    if (currentUser.OrganizationID == null & user.OrganizationID != null && 
-                        user.OrganizationID.Value != Identity.EmployerID.Value && 
-                        !await DataContext.GlobalAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID)) && 
-                        !await DataContext.OrganizationAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.OrganizationID == currentUser.OrganizationID.Value && 
+                    if (currentUser.OrganizationID == null & user.OrganizationID != null &&
+                        user.OrganizationID.Value != Identity.EmployerID.Value &&
+                        !await DataContext.GlobalAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID)) &&
+                        !await DataContext.OrganizationAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.OrganizationID == currentUser.OrganizationID.Value &&
                             a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID)))
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You may only set the organization for " + user.FirstName + " " + user.LastName + " to any organization for which you have the right to accept/reject registrations."));
 
@@ -1380,12 +1391,12 @@ namespace Lpp.Dns.Api.Users
             var projectOrganizationAcls = DataContext.ProjectOrganizationAcls.FilterAcl(Identity, PermissionIdentifiers.Request.Edit);
 
             result.CanEditRequestMetadata = await (from r in DataContext.Secure<Request>(Identity).AsNoTracking()
-                                             let gAcl = globalAcls
-                                             let pAcl = projectAcls.Where(a => a.ProjectID == r.ProjectID)
-                                             let poAcl = projectOrganizationAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID)
-                                             where ((gAcl.Any() || pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).Any() || poAcl.Any()) && (gAcl.All(a => a.Allowed) && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).All(a => a.Allowed) && poAcl.All(a => a.Allowed))) &&
-                                                    ((int)r.Status < 500 ? true : (pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).Any() && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).All(a => a.Allowed)))
-                                             select r).AnyAsync();
+                                                   let gAcl = globalAcls
+                                                   let pAcl = projectAcls.Where(a => a.ProjectID == r.ProjectID)
+                                                   let poAcl = projectOrganizationAcls.Where(a => a.ProjectID == r.ProjectID && a.OrganizationID == r.OrganizationID)
+                                                   where ((gAcl.Any() || pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).Any() || poAcl.Any()) && (gAcl.All(a => a.Allowed) && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.Request.Edit.ID).All(a => a.Allowed) && poAcl.All(a => a.Allowed))) &&
+                                                          ((int)r.Status < 500 ? true : (pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).Any() && pAcl.Where(a => a.PermissionID == PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditRequestMetadata.ID).All(a => a.Allowed)))
+                                                   select r).AnyAsync();
 
             if (result.CanEditRequestMetadata)
             {
@@ -1418,16 +1429,16 @@ namespace Lpp.Dns.Api.Users
             var dateTimeNow = DateTime.Now;
 
             var hasPermission = await (from secGroups in DataContext.SecurityGroupUsers
-                                  let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
-                                  let identityID = Identity.ID
-                                  let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
-                                  let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
-                                  let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
-                                  where secGroups.UserID == identityID &&
-                                  (gAcls.Any() || oAcls.Any())
-                                   &&
-                                   (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
-                                   select secGroups.SecurityGroupID
+                                       let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
+                                       let identityID = Identity.ID
+                                       let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                                       let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                                       let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                                       where secGroups.UserID == identityID &&
+                                       (gAcls.Any() || oAcls.Any())
+                                        &&
+                                        (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
+                                       select secGroups.SecurityGroupID
                                   ).AnyAsync();
 
             if (!hasPermission)
@@ -1437,17 +1448,17 @@ namespace Lpp.Dns.Api.Users
 
 
             var userIDs = await (from u in DataContext.Users
-                               let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
-                               let identityID = Identity.ID
-                               let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
-                               let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
-                               let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
-                               where
-                               !u.Deleted && u.PasswordExpiration.HasValue && u.PasswordExpiration.Value > dateTimeNow &&
-                                   (gAcls.Any() || oAcls.Any())
-                                   &&
-                                   (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
-                               select u.ID).ToArrayAsync();
+                                 let permissionID = PermissionIdentifiers.Organization.ExpireUsersPassword.ID
+                                 let identityID = Identity.ID
+                                 let secGrps = DataContext.SecurityGroupUsers.Where(x => x.UserID == identityID).Select(x => x.SecurityGroupID)
+                                 let gAcls = DataContext.GlobalAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID)
+                                 let oAcls = DataContext.OrganizationAcls.Where(x => secGrps.Contains(x.SecurityGroupID) && x.PermissionID == permissionID && u.OrganizationID == x.OrganizationID)
+                                 where
+                                 !u.Deleted && u.PasswordExpiration.HasValue && u.PasswordExpiration.Value > dateTimeNow &&
+                                     (gAcls.Any() || oAcls.Any())
+                                     &&
+                                     (gAcls.All(a => a.Allowed) && oAcls.All(a => a.Allowed))
+                                 select u.ID).ToArrayAsync();
 
             using (var tran = DataContext.Database.BeginTransaction())
             {
@@ -1471,5 +1482,18 @@ namespace Lpp.Dns.Api.Users
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        /// <summary>
+        /// Queues a background task to deactivate stale users.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult TriggerUserDeactivation()
+        {
+            Logger.Info("User deactivation job manually triggered by: " + Identity.UserName);
+            Hangfire.RecurringJob.Trigger(Lpp.Dns.Api.Startup.HANGFIRE_DEACTIVATEUSERS_JOBID);
+            return Ok();
+        }
+
     }
 }

@@ -179,7 +179,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PatientCountForTrials_Adapter()
         {
             //var response = RunRequest("PCORNET_PatientCount_TrialID.json", ConnectionString);
-            var response = RunRequest("PCORNET_PatientCount_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PatientCount_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -189,7 +189,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PatientCountForTrials_ByTrial_Adapter()
         {
             //var response = RunRequest("PCORNET_PatientCount_ByTrial_TrialID.json", ConnectionString);
-            var response = RunRequest("PCORNET_PatientCount_ByTrial_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PatientCount_ByTrial_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -198,7 +198,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void SingleTrialStratifiedByTrialIDAndSex_Adapter()
         {
-            var response = RunRequest("PCORNET_TrialID_TrialIDAndSex.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_TrialID_TrialIDAndSex.json", ConnectionString);
             //var response = RunRequest("PCORNET_TrialID_TrialIDAndSex.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
@@ -208,7 +208,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void SingleTrialStratifiedByTrialIDAndSex_WithExclusion_Adapter()
         {
-            var response = RunRequest("PCORNET_TrialID_TrialIDAndSex_WithExclusion.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_TrialID_TrialIDAndSex_WithExclusion.json", ConnectionString);
             //var response = RunRequest("PCORNET_TrialID_TrialIDAndSex_WithExclusion.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
@@ -219,7 +219,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PatientCountForPRO_Adapter()
         {
             //var response = RunRequest("PCORNET_PRO_PatientCount.json", ConnectionString);
-            var response = RunRequest("PCORNET_PRO_PatientCount.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_PatientCount.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -229,7 +229,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PRO_StratifiedByPRO_Adapter()
         {
             //var response = RunRequest("PCORNET_PRO_StratifyByPRO.json", ConnectionString);
-            var response = RunRequest("PCORNET_PRO_StratifyByPRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_StratifyByPRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -239,7 +239,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PRO_StratifiedBySex_Adapter()
         {
             //var response = RunRequest("PCORNET_PRO_StratifyBySex.json", ConnectionString);
-            var response = RunRequest("PCORNET_PRO_StratifyBySex.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_StratifyBySex.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -250,7 +250,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PRO_StratifiedBySexAndTrial_Adapter()
         {
             //var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrial.json", ConnectionString);
-            var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrial.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_StratifyBySexAndTrial.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -260,7 +260,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PRO_StratifiedBySexAndTrialAndPRO_Adapter()
         {
             //var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrialAndPRO.json", ConnectionString);
-            var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrialAndPRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_StratifyBySexAndTrialAndPRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
@@ -269,7 +269,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PRO_StratifiedBySexAndTrialAndPRO_WithExclusion_Adapter()
         {
-            var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrialAndPRO_WithExclusion.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_PRO_StratifyBySexAndTrialAndPRO_WithExclusion.json", ConnectionString);
             //var response = RunRequest("PCORNET_PRO_StratifyBySexAndTrialAndPRO_WithExclusion.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var serialized = SerializeJsonToString(response);
 
@@ -279,13 +279,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_TimeWindow_TrialID()
         {
-            var response = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID.json", ConnectionString);            
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID.json", ConnectionString);            
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
 
             Logger.Debug("### ORACLE ###");
-            var oracleResponse = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var oracleResponse = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var oracleSerialized = SerializeJsonToString(oracleResponse);
             Logger.Debug(oracleSerialized);
         }
@@ -293,13 +293,13 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_TimeWindow_MultiTrialID()
         {
-            var response = RunRequest("PCORNET_Adaptable_TimeWindow_MultiTrialID.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_MultiTrialID.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
 
             Logger.Debug(serialized);
 
             Logger.Debug("### ORACLE ###");
-            var oracleResponse = RunRequest("PCORNET_Adaptable_TimeWindow_MultiTrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var oracleResponse = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_MultiTrialID.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var oracleSerialized = SerializeJsonToString(oracleResponse);
             Logger.Debug(oracleSerialized);
         }
@@ -307,12 +307,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_TimeWindow_TrialID_PRO()
         {
-            var response = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID_PRO.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID_PRO.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
             Logger.Debug("### ORACLE ###");
-            var oracleResponse = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID_PRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var oracleResponse = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID_PRO.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var oracleSerialized = SerializeJsonToString(oracleResponse);
             Logger.Debug(oracleSerialized);
         }
@@ -320,12 +320,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria()
         {
-            var response = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
             Logger.Debug("### ORACLE ###");
-            var oracleResponse = RunRequest("PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var oracleResponse = RunRequestForSingleQueryResult("PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var oracleSerialized = SerializeJsonToString(oracleResponse);
             Logger.Debug(oracleSerialized);
         }
@@ -333,12 +333,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_UC2_PMNDEV_7294()
         {
-            var response = RunRequest("PCORNET_Adaptable_UC2_PMNDEV-7294.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_UC2_PMNDEV-7294.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
             Logger.Debug("### ORACLE ###");
-            var oracleResponse = RunRequest("PCORNET_Adaptable_UC2_PMNDEV-7294.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
+            var oracleResponse = RunRequestForSingleQueryResult("PCORNET_Adaptable_UC2_PMNDEV-7294.json", Oracle12ConnectionString, Settings.SQLProvider.Oracle, "C##PCORNET_4_1_UPDATE");
             var oracleSerialized = SerializeJsonToString(oracleResponse);
             Logger.Debug(oracleSerialized);
         }
@@ -346,7 +346,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_UC2_PMNDEV_7297_1()
         {
-            var response = RunRequest("PCORNET_Adaptable_UC2_PMNDEV-7297-1.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_UC2_PMNDEV-7297-1.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
@@ -359,7 +359,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_json47766()
         {
-            var response = RunRequest("PCORNET_Adaptable_json47766.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_json47766.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
@@ -372,11 +372,12 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PCORNET_Adaptable_json47760_PMNDEV_7296()
         {
-            var response = RunRequest("PCORNET_Adaptable_json47760_PMNDEV_7296.json", ConnectionString);
+            var response = RunRequestForSingleQueryResult("PCORNET_Adaptable_json47760_PMNDEV_7296.json", ConnectionString);
             var serialized = SerializeJsonToString(response);
             Logger.Debug(serialized);
 
-            foreach (var table in response.Results)
+            var firstResult = response.Queries.FirstOrDefault();
+            foreach (var table in firstResult.Results)
             {
                 foreach (var row in table)
                 {
@@ -391,12 +392,31 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         }
 
 
-        static Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequest(string requestJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider = Settings.SQLProvider.SQLServer, string schema = null)
+        static Lpp.Dns.DTO.QueryComposer.QueryComposerResponseDTO RunRequestForSingleQueryResult(string requestJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider = Settings.SQLProvider.SQLServer, string schema = null)
         {
             var request = LoadRequest(requestJsonFilepath);
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(connectionString, sqlProvider, schema))
             {
-                return adapter.Execute(request, false);
+                List<DTO.QueryComposer.QueryComposerResponseQueryResultDTO> queryResults = new List<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>();
+                foreach(var query in request.Queries)
+                {
+                    foreach(var result in adapter.Execute(query, false))
+                    {
+                        queryResults.Add(result);
+                    }
+                }
+                var response = new DTO.QueryComposer.QueryComposerResponseDTO {
+                    Header = new DTO.QueryComposer.QueryComposerResponseHeaderDTO
+                    {
+                        DocumentID = Guid.NewGuid(),
+                        RequestID = Guid.NewGuid()
+                    },
+                    Queries = queryResults
+                };
+                response.RefreshQueryDates();
+                response.RefreshErrors();
+
+                return response;
             }
         }
 

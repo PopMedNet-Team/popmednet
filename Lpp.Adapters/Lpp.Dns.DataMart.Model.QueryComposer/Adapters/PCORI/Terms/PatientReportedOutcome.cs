@@ -109,39 +109,6 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI.Terms
                     Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_MEASURE_SEQ"))
                     )
             };
-
-
-
-            //string patientIDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "PatientID" : "PRO_PatientID";
-            //string IDProperty = sourceTypeParameter.Type == typeof(PCORIQueryBuilder.Model.ReportedOutcome) ? "ID" : "PRO_CM_ID";
-
-            //return new[] {
-            //    Expression.Bind(
-            //            selectType.GetProperty("PRO_CM_ID"),
-            //            Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(IDProperty))
-            //        ),
-            //    Expression.Bind(
-            //        selectType.GetProperty("PRO_PatientID"),
-            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty(patientIDProperty))
-            //        ),
-            //    Expression.Bind(
-            //        selectType.GetProperty("PRO_ITEM_NAME"),
-            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ItemName"))
-            //        )
-            //        ,
-            //    Expression.Bind(
-            //        selectType.GetProperty("PRO_RESPONSE_TEXT"),
-            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseText"))
-            //        ),
-            //    Expression.Bind(
-            //        selectType.GetProperty("PRO_RESPONSE_NUM"),
-            //        Expression.Convert(Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("ResponseNumber")), typeof(double?))
-            //        ),
-            //    Expression.Bind(
-            //        selectType.GetProperty("PRO_MEASURE_SEQ"),
-            //        Expression.Property(sourceTypeParameter, sourceTypeParameter.Type.GetProperty("PRO_MEASURE_SEQ"))
-            //        )
-            //};
         }
 
         public override IPropertyDefinition[] GroupKeyPropertyDefinitions()

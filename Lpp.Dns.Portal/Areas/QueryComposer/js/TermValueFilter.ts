@@ -123,6 +123,9 @@
         public static get ModularProgramID(): any {
             return 'A1AE0001-E5B4-46D2-9FAD-A3D8014FFFD8';
         }
+        public static get ClinicalObservationsID(): any {
+            return '7A51AB7A-AEC5-4A4B-A073-FBFF754EA478';
+        }
 
 
         public static Compare(a: any, b: any): boolean {
@@ -208,7 +211,9 @@
             // LOINC Codes
             Terms.LOINCCodesID,
             //Prescribing Terms
-            Terms.PrescribingCodesID
+            Terms.PrescribingCodesID,
+            //Clinical Observations
+            Terms.ClinicalObservationsID
         ];
 
         /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
@@ -314,6 +319,42 @@
             for (let i = 0; i < models.length; i++) {
                 if (Constants.Guid.compare(models[i], id) == 0)
                     return true;
+            }
+
+            return false;
+        }
+
+        public static QueryContainsTerm(query: Dns.Interfaces.IQueryComposerQueryDTO, termID: any): boolean {
+            if (query == null || termID == null)
+                return false;
+
+            for (let i = 0; i < query.Where.Criteria.length; i++) {
+                let criteria = query.Where.Criteria[i];
+                if (this.CriteriaContainsTerm(criteria, termID)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static CriteriaContainsTerm(criteria: Dns.Interfaces.IQueryComposerCriteriaDTO, termID: any): boolean {
+            if (criteria == null || termID == null) {
+                return false;
+            }
+
+            for (let i = 0; i < criteria.Terms.length; i++) {
+                let term = criteria.Terms[i];
+                if (Terms.Compare(term.Type, termID))
+                    return true;                
+            }
+
+            if (criteria.Criteria) {
+                for (let j = 0; j < criteria.Criteria.length; j++) {
+                    if (this.CriteriaContainsTerm(criteria.Criteria[j], termID)) {
+                        return true;
+                    }
+                }
             }
 
             return false;

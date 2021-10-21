@@ -28,7 +28,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_INC_ICD9_Diagnosis_3Digit()
         {
 
-            var response = RunIncRequest("INC_ICD9_Diagnosis_3Digit.json");
+            var response = RunIncRequestForSingleResult("INC_ICD9_Diagnosis_3Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -45,7 +45,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_INC_Pharmacy_Dispensings_By_Drug_Class()
         {
             
-            var response = RunIncRequest("INC_Pharmacy_Dispensings_By_Drug_Class.json");
+            var response = RunIncRequestForSingleResult("INC_Pharmacy_Dispensings_By_Drug_Class.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -62,7 +62,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_INC_Pharmacy_Dispensings_By_Drug_Name()
         {
 
-            var response = RunIncRequest("INC_Pharmacy_Dispensings_By_Drug_Name.json");
+            var response = RunIncRequestForSingleResult("INC_Pharmacy_Dispensings_By_Drug_Name.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -79,7 +79,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_HCPCS_Procedures()
         {
             
-            var response = RunMFURequest("MFU_HCPCS Procedures.json");
+            var response = RunMFURequestForSingleResult("MFU_HCPCS Procedures.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -96,7 +96,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_ICD9_Diagnosis_3Digit()
         {
 
-            var response = RunMFURequest("MFU_ICD9_Diagnosis_3Digit.json");
+            var response = RunMFURequestForSingleResult("MFU_ICD9_Diagnosis_3Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -113,7 +113,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_ICD9_Diagnosis_4Digit()
         {
 
-            var response = RunMFURequest("MFU_ICD9_Diagnosis_4Digit.json");
+            var response = RunMFURequestForSingleResult("MFU_ICD9_Diagnosis_4Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -130,7 +130,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_ICD9_Diagnosis_5Digit()
         {
 
-            var response = RunMFURequest("MFU_ICD9_Diagnosis_5Digit.json");
+            var response = RunMFURequestForSingleResult("MFU_ICD9_Diagnosis_5Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -147,7 +147,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_ICD9_Procedure_3Digit()
         {
 
-            var response = RunMFURequest("MFU_ICD9_Procedure_3Digit.json");
+            var response = RunMFURequestForSingleResult("MFU_ICD9_Procedure_3Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -164,7 +164,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_ICD9_Procedure_4Digit()
         {
 
-            var response = RunMFURequest("MFU_ICD9_Procedure_4Digit.json");
+            var response = RunMFURequestForSingleResult("MFU_ICD9_Procedure_4Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -181,7 +181,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_Pharmacy_Dispensings_By_Drug_Class()
         {
 
-            var response = RunMFURequest("MFU_Pharmacy_Dispensings_By_Drug_Class.json");
+            var response = RunMFURequestForSingleResult("MFU_Pharmacy_Dispensings_By_Drug_Class.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -198,7 +198,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_MFU_Pharmacy_Dispensings_By_Drug_Name()
         {
 
-            var response = RunMFURequest("MFU_Pharmacy_Dispensings_By_Drug_Name.json");
+            var response = RunMFURequestForSingleResult("MFU_Pharmacy_Dispensings_By_Drug_Name.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -215,7 +215,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_Enrollment()
         {
 
-            var response = RunPrevRequest("Prev_Enrollment.json");
+            var response = RunPrevRequestForSingleResult("Prev_Enrollment.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -232,7 +232,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_HCPCS_Procedures()
         {
 
-            var response = RunPrevRequest("Prev_HCPCS_Procedures.json");
+            var response = RunPrevRequestForSingleResult("Prev_HCPCS_Procedures.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -250,7 +250,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_ICD9_Diagnosis_3Digit()
         {
 
-            var response = RunPrevRequest("Prev_ICD9_Diagnosis_3Digit.json");
+            var response = RunPrevRequestForSingleResult("Prev_ICD9_Diagnosis_3Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -267,7 +267,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_ICD9_Diagnosis_4Digit()
         {
 
-            var response = RunPrevRequest("Prev_ICD9_Diagnosis_4Digit.json");
+            var response = RunPrevRequestForSingleResult("Prev_ICD9_Diagnosis_4Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -284,7 +284,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_ICD9_Diagnosis_5Digit()
         {
 
-            var response = RunPrevRequest("Prev_ICD9_Diagnosis_5Digit.json");
+            var response = RunPrevRequestForSingleResult("Prev_ICD9_Diagnosis_5Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -301,7 +301,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_ICD9_Procedure_3Digit()
         {
 
-            var response = RunPrevRequest("Prev_ICD9_Procedure_3Digit.json");
+            var response = RunPrevRequestForSingleResult("Prev_ICD9_Procedure_3Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -318,7 +318,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_ICD9_Procedure_4Digit()
         {
 
-            var response = RunPrevRequest("Prev_ICD9_Procedure_4Digit.json");
+            var response = RunPrevRequestForSingleResult("Prev_ICD9_Procedure_4Digit.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -335,7 +335,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void Simple_Prev_Pharmacy_Dispensings_By_Drug_Class()
         {
 
-            var response = RunPrevRequest("Prev_Pharmacy_Dispensings_By_Drug_Class.json");
+            var response = RunPrevRequestForSingleResult("Prev_Pharmacy_Dispensings_By_Drug_Class.json");
             Logger.Debug(SerializeJsonToString(response));
             
             Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
@@ -350,7 +350,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PMNDEV5164()
         {
 
-            var response = RunIncRequest("PMNDEV-5164.json");
+            var response = RunIncRequestForSingleResult("PMNDEV-5164.json");
             Logger.Debug(SerializeJsonToString(response));
 
         }
@@ -359,7 +359,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PMNDEV5186()
         {
 
-            var response = RunPrevRequest("PMNDEV-5186.json");
+            var response = RunPrevRequestForSingleResult("PMNDEV-5186.json");
             Logger.Debug(SerializeJsonToString(response));
 
         }
@@ -368,34 +368,34 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         public void PMNDEV5194()
         {
 
-            var response = RunPrevRequest("PMNDEV-5194.json");
+            var response = RunPrevRequestForSingleResult("PMNDEV-5194.json");
             Logger.Debug(SerializeJsonToString(response));
 
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunIncRequest(string queryJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunIncRequestForSingleResult(string queryJsonFilepath)
         {
             var query = LoadQuery(queryJsonFilepath);
             using (var adapter = Helper.CreateINCSummaryModelAdapterAdapter(ConnectionString))
             {
-                return adapter.Execute(query, false);
+                return adapter.Execute(query, false).FirstOrDefault();
             }
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunMFURequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunMFURequestForSingleResult(string requestJsonFilepath)
         {
             var request = LoadQuery(requestJsonFilepath);
             using (var adapter = Helper.CreateMFUSummaryModelAdapterAdapter(ConnectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(request, false).FirstOrDefault();
             }
         }
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunPrevRequest(string requestJsonFilepath)
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunPrevRequestForSingleResult(string requestJsonFilepath)
         {
             var request = LoadQuery(requestJsonFilepath);
             using (var adapter = Helper.CreatePrevSummaryModelAdapterAdapter(ConnectionString))
             {
-                return adapter.Execute(request, false);
+                return adapter.Execute(request, false).FirstOrDefault();
             }
         }
 

@@ -47,6 +47,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 var procedure = db.Procedures.FirstOrDefault();
                 var reportedOutcome = db.ReportedOutcomeCommonMeasures.FirstOrDefault();
                 var vital = db.Vitals.FirstOrDefault();
+                var clinicalObservations = db.ClinicalObservations.FirstOrDefault();
             }
 
         }
@@ -70,6 +71,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 var procedure = db.Procedures.FirstOrDefault();
                 var reportedOutcome = db.ReportedOutcomeCommonMeasures.FirstOrDefault();
                 var vital = db.Vitals.FirstOrDefault();
+                var clinicalObservations = db.ClinicalObservations.FirstOrDefault();
             }
         }
 
@@ -172,6 +174,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 var procedure = db.Procedures.FirstOrDefault();
                 var reportedOutcome = db.ReportedOutcomeCommonMeasures.FirstOrDefault();
                 var vital = db.Vitals.FirstOrDefault();
+                var clinicalObservations = db.ClinicalObservations.FirstOrDefault();
             }
         }
 
@@ -213,6 +216,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
                 var procedure = db.Procedures.FirstOrDefault();
                 var reportedOutcome = db.ReportedOutcomeCommonMeasures.FirstOrDefault();
                 var vital = db.Vitals.FirstOrDefault();
+                var clinicalObservations = db.ClinicalObservations.FirstOrDefault();
             }
         }
 

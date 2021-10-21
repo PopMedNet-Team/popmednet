@@ -16,7 +16,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         }
 
         [Key, Column("PRESCRIBINGID")]
-        public Guid ID { get; set; }
+        public string ID { get; set; }
 
         [Column("PATID")]
         public string PatientID { get; set; }
@@ -39,22 +39,22 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public DateTime? EndedOn { get; set; }
 
         [Column("RX_DOSE_ORDERED")]
-        public float? DoseOrdered { get; set; }
+        public double? DoseOrdered { get; set; }
 
         [Column("RX_DOSE_ORDERED_UNIT")]
         public string DoseOrderedUnit { get; set; }
 
         [Column("RX_QUANTITY")]
-        public float? QuantityOrdered { get; set; }
+        public double? QuantityOrdered { get; set; }
 
         [Column("RX_DOSE_FORM")]
         public string DoseForm { get; set; }
 
         [Column("RX_REFILLS")]
-        public float? RefillsOrdered { get; set; }
+        public double? RefillsOrdered { get; set; }
 
         [Column("RX_DAYS_SUPPLY")]
-        public float? DaysSupplyOrdered { get; set; }
+        public double? DaysSupplyOrdered { get; set; }
 
         [Column("RX_FREQUENCY")]
         public string Frequency { get; set; }

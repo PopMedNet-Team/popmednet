@@ -33,6 +33,8 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder
 
         public DbSet<Model.ClinicalTrial> ClinicalTrials { get; set; }
 
+        public DbSet<Model.ClinicalObservation> ClinicalObservations { get; set; }
+
         public DbSet<Model.Death> Deaths { get; set; }
 
         public DbSet<Model.CauseOfDeath> CauseOfDeaths { get; set; }

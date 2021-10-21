@@ -45,7 +45,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL, "PCORNET_MAIN_TEST_3_1");
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL, "PCORNET_MAIN_TEST_3_1");
                 Assert.IsNull(npgsqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -67,21 +67,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -103,21 +103,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -142,21 +142,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(
                 table.Count(), mysqlResponse.Results.First().Count());
@@ -187,21 +187,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(
                 table.Count(), mysqlResponse.Results.First().Count());
@@ -228,21 +228,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 //Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -270,21 +270,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(
                 table.Count(), mysqlResponse.Results.First().Count());
@@ -317,21 +317,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(
                 table.Count(), mysqlResponse.Results.First().Count());
@@ -366,21 +366,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(
                 table.Count(), mysqlResponse.Results.First().Count());
@@ -412,21 +412,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -458,21 +458,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -491,14 +491,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -506,7 +506,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             if (RunMySql)
             {
                 /* MySql fails due to DiffYears function */
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -525,7 +525,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
 
@@ -533,7 +533,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
 
@@ -542,7 +542,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             if (RunMySql)
             {
                 /* MySql fails due to DiffYears function */
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -564,21 +564,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -600,21 +600,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -636,21 +636,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -672,21 +672,21 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -722,14 +722,14 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             var table = response.Results.First();
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -746,7 +746,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void PMNDEV_6163_AgeRangeForPostgres()
         {
-            var npgsqlResponse = RunQuery("PMNDEV-6163.json", PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+            var npgsqlResponse = RunQueryForSingleResult("PMNDEV-6163.json", PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
             Assert.IsNull(npgsqlResponse.Errors);
             Assert.IsTrue(npgsqlResponse.Results != null && npgsqlResponse.Results.Count() > 0);
         }
@@ -803,21 +803,21 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
              */
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -876,21 +876,21 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -947,13 +947,13 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
              */
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -1000,7 +1000,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 */
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1058,21 +1058,21 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
 */
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1094,21 +1094,21 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1130,21 +1130,21 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1166,14 +1166,14 @@ at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnect
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -1219,7 +1219,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 */
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1241,21 +1241,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1277,14 +1277,14 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
@@ -1331,7 +1331,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 */
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1353,21 +1353,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1389,21 +1389,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1449,21 +1449,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1482,7 +1482,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
         [TestMethod]
         public void PMNDEV4557_PostgreSQL(){
-            var response = RunQuery("PMNDEV-4557.json", PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+            var response = RunQueryForSingleResult("PMNDEV-4557.json", PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsNull(response.Errors);
@@ -1493,7 +1493,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
         [TestMethod]
         public void PMNDEV4769()
         {
-            var response = RunQuery("PMNDEV-4769.json", MSSqlConnectionString, Settings.SQLProvider.SQLServer);
+            var response = RunQueryForSingleResult("PMNDEV-4769.json", MSSqlConnectionString, Settings.SQLProvider.SQLServer);
             Logger.Debug(SerializeJsonToString(response));
 
             Assert.IsNull(response.Errors);
@@ -1517,21 +1517,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1553,21 +1553,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -1669,7 +1669,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             //if (RunOracle)
             //{
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 //Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             //}
@@ -1744,7 +1744,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             var response = RunRequest(filename);
             Logger.Debug(SerializeJsonToString(response));
 
-            var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+            var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
             Logger.Debug(SerializeJsonToString(oracleResponse));
 
             var sqlserverResults = response.Results.SelectMany(t => t.Select(r => new Tuple<string, int>(r["Age"].ToString(), Convert.ToInt32(r["Patients"])))).OrderBy(k => Convert.ToInt32(k.Item1));
@@ -2036,7 +2036,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
 
@@ -2059,14 +2059,14 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -2212,7 +2212,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             var request = LoadQuery("PMNDEV-5330-5yr Age Groupings.json");
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(MSSqlConnectionString, Settings.SQLProvider.SQLServer))
             {
-                var response = adapter.Execute(request, false);
+                var response = adapter.Execute(request, false).FirstOrDefault();
                 //Logger.Debug(SerializeJsonToString(response));
 
 
@@ -2238,7 +2238,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(OracleConnectionString, Settings.SQLProvider.Oracle))
             {
-                var response = adapter.Execute(request, false);
+                var response = adapter.Execute(request, false).FirstOrDefault();
                 Logger.Debug(SerializeJsonToString(response));
 
                 var results = new List<Tuple<int, int>>();
@@ -2294,7 +2294,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             var request = LoadQuery("PMNDEV-5395-WeightStratificationByMeasureDate.json");
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(MSSqlConnectionString, Settings.SQLProvider.SQLServer))
             {
-                var response = adapter.Execute(request, false);
+                var response = adapter.Execute(request, false).FirstOrDefault();
                 //Logger.Debug(SerializeJsonToString(response));
 
 
@@ -2349,7 +2349,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             var request = LoadQuery("PMNDEV-5395-WeightStratificationNoCriteria.json");
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(MSSqlConnectionString, Settings.SQLProvider.SQLServer))
             {
-                var response = adapter.Execute(request, false);
+                var response = adapter.Execute(request, false).FirstOrDefault();
                 //Logger.Debug(SerializeJsonToString(response));
 
 
@@ -2391,7 +2391,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             var request = LoadQuery("PMNDEV-5396-HeightStratificationByMeasuredDate.json");
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(MSSqlConnectionString, Settings.SQLProvider.SQLServer))
             {
-                var response = adapter.Execute(request, false);
+                var response = adapter.Execute(request, false).FirstOrDefault();
                 //Logger.Debug(SerializeJsonToString(response));
 
 
@@ -2780,21 +2780,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -2816,21 +2816,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunOracle)
             {
-                var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
+                var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle);
                 Assert.IsNull(oracleResponse.Errors);
                 Assert.AreEqual(table.Count(), oracleResponse.Results.First().Count());
             }
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
             }
 
             if (RunMySql)
             {
-                var mysqlResponse = RunQuery(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
+                var mysqlResponse = RunQueryForSingleResult(filename, MySQLConnectionString, Settings.SQLProvider.MySQL);
                 Assert.IsNull(mysqlResponse.Errors);
                 Assert.AreEqual(table.Count(), mysqlResponse.Results.First().Count());
             }
@@ -2864,7 +2864,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -2901,7 +2901,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -2939,7 +2939,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -2981,7 +2981,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -3023,7 +3023,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -3065,7 +3065,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             if (RunPostgreSQL)
             {
-                var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+                var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
                 Assert.IsNull(npgsqlResponse.Errors);
                 Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
                 Console.WriteLine("Response Count from Postgres is " + (response.Results.First().First().First().Value));
@@ -3103,7 +3103,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
 			if (RunPostgreSQL)
 			{
-				var npgsqlResponse = RunQuery(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
+				var npgsqlResponse = RunQueryForSingleResult(filename, PostgreSQLConnectionString, Settings.SQLProvider.PostgreSQL);
 				Assert.IsNull(npgsqlResponse.Errors);
 				//Assert.AreEqual(table.Count(), npgsqlResponse.Results.First().Count());
 				Console.WriteLine("Response Count from Postgres is " + (response.Results.Count()));
@@ -3129,7 +3129,7 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
             Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
 
-            var oracleResponse = RunQuery(filename, OracleConnectionString, Settings.SQLProvider.Oracle, schema: "PCORNET_MAIN_TEST_3_1");
+            var oracleResponse = RunQueryForSingleResult(filename, OracleConnectionString, Settings.SQLProvider.Oracle, schema: "PCORNET_MAIN_TEST_3_1");
             Assert.IsTrue(oracleResponse.Errors == null || response.Errors.Any() == false, "There were errors");
 
             //var table = response.Results.First();
@@ -3151,17 +3151,94 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
 
         }
 
-		Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunRequest(string queryJsonFilepath)
+        [TestMethod]
+        public void UnexpectedResultsForPCORNetQuery_20210325()
         {
-            return RunQuery(queryJsonFilepath, MSSqlConnectionString, Settings.SQLProvider.SQLServer);
+            string filename = "20210325-PCORNet issue request.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
         }
 
-        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunQuery(string queryJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider, string schema = null)
+        [TestMethod]
+        public void ClinObs_SingleTerm()
+        {
+            string filename = "ClinObs_SingleTerm.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+
+        }
+
+        [TestMethod]
+        public void ClinObs_MultipleTerms()
+        {
+            string filename = "ClinObs_MultipleTerms.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            //Assert.IsTrue(response.Results.FirstOrDefault(r => r.Any()) != null, "There were no results");
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+        }
+
+        [TestMethod]
+        public void ClinObs_WithOtherTermsSameCriteria()
+        {
+            string filename = "ClinObs_WithOtherTermsSameCriteria.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+        }
+
+        [TestMethod]
+        public void ClinObs_AllValuesSpecified()
+        {
+            string filename = "ClinObs_AllValuesSpecified.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+        }
+
+        [TestMethod]
+        public void ClinObs_PMNDEV8463()
+        {
+            string filename = "PMNDEV-8463-D9_request.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+        }
+
+        [TestMethod]
+        public void ClinObs_PMNDEV8465()
+        {
+            string filename = "ClinObs_PMNDEV-8465_request.json";
+            var response = RunRequest(filename);
+            Logger.Debug(SerializeJsonToString(response));
+
+            Assert.IsTrue(response.Errors == null || response.Errors.Any() == false, "There were errors");
+        }
+
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunRequest(string queryJsonFilepath)
+        {
+            return RunQueryForSingleResult(queryJsonFilepath, MSSqlConnectionString, Settings.SQLProvider.SQLServer);
+        }
+
+        Lpp.Dns.DTO.QueryComposer.QueryComposerResponseQueryResultDTO RunQueryForSingleResult(string queryJsonFilepath, string connectionString, Settings.SQLProvider sqlProvider, string schema = null)
         {
             var query = LoadQuery(queryJsonFilepath);
             using (var adapter = Helper.CreatePCORIModelAdapterAdapter(connectionString, sqlProvider, schema))
             {
-                return adapter.Execute(query, false);
+                return adapter.Execute(query, false).FirstOrDefault();
             }
         }
 
@@ -3173,8 +3250,21 @@ at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
             Newtonsoft.Json.JsonSerializerSettings jsonSettings = new Newtonsoft.Json.JsonSerializerSettings();
             jsonSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.IgnoreAndPopulate;
 
-            var query = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO>(json, jsonSettings);
+            var jobj = Newtonsoft.Json.Linq.JObject.Parse(json, new Newtonsoft.Json.Linq.JsonLoadSettings { DuplicatePropertyNameHandling = Newtonsoft.Json.Linq.DuplicatePropertyNameHandling.Error, CommentHandling = Newtonsoft.Json.Linq.CommentHandling.Ignore, LineInfoHandling = Newtonsoft.Json.Linq.LineInfoHandling.Ignore });
+            
+            if(jobj != null && jobj["SchemaVersion"] != null && jobj.Value<string>("SchemaVersion") == "2.0")
+            {
+                var request = jobj.ToObject<DTO.QueryComposer.QueryComposerRequestDTO>();
+                return request.Queries.FirstOrDefault();
+            }
 
+            if (json.StartsWith("["))
+            {
+                var queries = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<DTO.QueryComposer.QueryComposerQueryDTO>>(json, jsonSettings);
+                return queries.FirstOrDefault();
+            }
+
+            var query = Newtonsoft.Json.JsonConvert.DeserializeObject<Lpp.Dns.DTO.QueryComposer.QueryComposerQueryDTO>(json, jsonSettings);
             return query;
         }
 

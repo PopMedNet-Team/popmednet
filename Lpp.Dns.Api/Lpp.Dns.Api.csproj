@@ -389,6 +389,7 @@
     <Compile Include="Terms\TermsController.cs" />
     <Compile Include="Themes\ThemeController.cs" />
     <Compile Include="Users\CodeLookupListsUpdater.cs" />
+    <Compile Include="Users\UserDeactivationJob.cs" />
     <Compile Include="Wbd\NetworkTokenData.cs" />
     <Compile Include="Wbd\WbdController.cs" />
     <Compile Include="Workflows\WorkflowController.cs" />

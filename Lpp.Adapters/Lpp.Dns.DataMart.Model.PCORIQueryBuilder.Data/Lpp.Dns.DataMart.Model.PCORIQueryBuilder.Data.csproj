@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="DataContext.cs" />
     <Compile Include="Model\CauseOfDeath.cs" />
+    <Compile Include="Model\ClinicalObservation.cs" />
     <Compile Include="Model\Condition.cs" />
     <Compile Include="Model\Death.cs" />
     <Compile Include="Model\Dispensing.cs" />

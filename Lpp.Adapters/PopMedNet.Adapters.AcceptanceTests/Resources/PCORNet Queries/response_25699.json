@@ -12,6 +12,16 @@
   "Results": [
     [
       {
+        "Hispanic": "Kate",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Alex",
+        "Patients": 1
+      },
+      {
         "Hispanic": "Y",
         "Race": "Lee",
         "Patients": 1

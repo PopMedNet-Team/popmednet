@@ -1187,6 +1187,50 @@ namespace Lpp.Dns.Api.Requests
                 Query = request.Query
             });
 
+            if (!string.IsNullOrEmpty(r.Query))
+            {
+                //deserialize the request.json
+                var query = Data.QueryComposer.Helpers.ParseRequestJSON(r.ID, request.Name, null, Priorities.Medium, request.Query);
+
+                //sanitize request specific information
+                query.Header.Description = string.Empty;
+                query.Header.DueDate = null;
+                query.Header.ID = r.ID;
+                query.Header.SubmittedOn = null;
+                query.Header.ViewUrl = null;
+
+                var subQueries = query.Queries.ToArray();
+                foreach (var q in subQueries)
+                {
+                    q.Header.ID = r.ID;
+                    q.Header.DueDate = null;
+                    q.Header.SubmittedOn = null;
+                    q.Header.ViewUrl = null;
+
+                    if (query.Queries.Count() == 1 && q.FlattenToTerms().Any(t => t.Type == QueryComposer.ModelTermsFactory.FileUploadID || t.Type == QueryComposer.ModelTermsFactory.ModularProgramID))
+                    {
+                        q.Header.ComposerInterface = QueryComposerInterface.FileDistribution;
+
+                        //clear out any files uploaded
+                        var terms = Data.QueryComposer.Helpers.GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, q.Where.Criteria);
+                        foreach (var t in terms)
+                        {
+                            var values = t.Values["Values"] as Newtonsoft.Json.Linq.JObject;
+                            values["Documents"] = Newtonsoft.Json.Linq.JToken.FromObject(Array.Empty<object>());
+                            t.Values = new Dictionary<string, object>() { { "Values", values } };                            
+                        }
+                    }
+                    else
+                    {
+                        q.Header.ComposerInterface = QueryComposerInterface.FlexibleMenuDrivenQuery;
+                    }
+                }
+                query.Queries = subQueries;
+
+                //serialize to the Query property
+                r.Query = Newtonsoft.Json.JsonConvert.SerializeObject(query);
+            }
+
             //update the rest of the metadata
             r.PurposeOfUse = request.PurposeOfUse;
             r.PhiDisclosureLevel = request.PhiDisclosureLevel;

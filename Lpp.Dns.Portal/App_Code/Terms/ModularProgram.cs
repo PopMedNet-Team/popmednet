@@ -25,7 +25,7 @@ namespace Lpp.Dns.Portal.App_Code.Terms
 
         public string Category
         {
-            get { return "Criteria"; }
+            get { return null; }
         }
 
         public string CriteriaEditRelativePath

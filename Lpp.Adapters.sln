@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Client.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Client.Tests\Lpp.Dns.DataMart.Client.Tests.csproj", "{C21F1A05-3615-4375-AD60-D820B206A2A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.QueryComposer.Tests", "Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer.Tests\Lpp.Dns.DataMart.Model.QueryComposer.Tests.csproj", "{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Adapters|Any CPU = Adapters|Any CPU
@@ -232,6 +234,12 @@ Global
 		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C21F1A05-3615-4375-AD60-D820B206A2A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Adapters|Any CPU.ActiveCfg = Debug|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Adapters|Any CPU.Build.0 = Debug|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +250,7 @@ Global
 		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 		{1BCE7532-35EF-4875-A26D-FE690516983E} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
+		{2456D187-A88B-4DEF-ABC8-B30CFF1A0387} = {9A75954B-0820-4A47-AF8B-5ED59495FB10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14476E95-1871-4452-BFFE-C0E67687681B}

@@ -115,6 +115,9 @@ module RequestType.Details {
                     return;
                 }
 
+                if (this.QueryDesigner.onValidateEditors() == false)
+                    return;
+
                 //make sure that if the composer contains a file upload or modular term that it is only single query, and the interface is set to File Distribution and multi-query is disabled
                 
 

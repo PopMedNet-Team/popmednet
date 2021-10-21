@@ -28,7 +28,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.TermProviders
             ModelTermsFactory.ModularProgramID,
             ModelTermsFactory.ProcedureCodesID,
             ModelTermsFactory.LOINCCodesID,
-            ModelTermsFactory.PrescribingID
+            ModelTermsFactory.PrescribingID,
+            ModelTermsFactory.ClinicalObservationsID
         };
 
         public Guid ModelID

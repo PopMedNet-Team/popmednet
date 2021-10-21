@@ -9,12 +9,18 @@ using Lpp.Dns.Data;
 using Lpp.Dns.DTO.Security;
 using Hangfire;
 using Hangfire.SqlServer;
+using System.Web.Configuration;
 
 [assembly: OwinStartup(typeof(Lpp.Dns.Api.Startup))]
 namespace Lpp.Dns.Api
 {
     public class Startup
     {
+        /// <summary>
+        /// The Hangfire job ID for deactivating users.
+        /// </summary>
+        public const string HANGFIRE_DEACTIVATEUSERS_JOBID = "deactivate-users";
+
         public void Configuration(IAppBuilder app)
         {
 
@@ -22,6 +28,16 @@ namespace Lpp.Dns.Api
 #if DEBUG
             app.UseHangfireDashboard();
 #endif
+            //Register Hangfire recurring jobs
+            if (bool.Parse(WebConfigurationManager.AppSettings["Users.EnableDeactivationService"]))
+            {
+                string cronString = WebConfigurationManager.AppSettings["Users.DeactivationServiceCron"];
+                Hangfire.RecurringJob.AddOrUpdate<Users.UserDeactivationJob>(HANGFIRE_DEACTIVATEUSERS_JOBID, j => j.DeactivateStaleUsers(), cronString, timeZone: TimeZoneInfo.Local);
+            }
+            else
+            {
+                Hangfire.RecurringJob.RemoveIfExists(HANGFIRE_DEACTIVATEUSERS_JOBID);
+            }
 
             // Any connection or hub wire up and configuration should go here
             app.Map("/signalr", map =>

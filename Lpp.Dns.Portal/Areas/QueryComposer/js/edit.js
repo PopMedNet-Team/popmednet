@@ -9,6 +9,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -47,7 +49,13 @@ var Plugins;
                             _this.RequestDTO.SchemaVersion = "2.0";
                         }
                         _this.TermsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
-                        if (_this.RequestDTO.Queries[0].Header.ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution) {
+                        if (_this.RequestDTO.Queries != null && _this.RequestDTO.Queries.length > 0 &&
+                            (_this.RequestDTO.Queries[0].Header.ComposerInterface == Dns.Enums.QueryComposerInterface.FileDistribution ||
+                                Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.QueryContainsTerm(_this.RequestDTO.Queries[0], Plugins.Requests.QueryBuilder.MDQ.Terms.FileUploadID) ||
+                                Plugins.Requests.QueryBuilder.MDQ.TermValueFilter.QueryContainsTerm(_this.RequestDTO.Queries[0], Plugins.Requests.QueryBuilder.MDQ.Terms.ModularProgramID))) {
+                            if (_this.RequestDTO.Queries[0].Header.ComposerInterface != Dns.Enums.QueryComposerInterface.FileDistribution) {
+                                _this.RequestDTO.Queries[0].Header.ComposerInterface = Dns.Enums.QueryComposerInterface.FileDistribution;
+                            }
                             _this.IsFileUpload = true;
                             _this.FileUpload_Host = new Controls.WFFileUpload.Index.ViewModel($('#FileUploadControl'), _this.ScreenPermissions, _this.RequestDTO.Queries[0], QueryBuilder.MDQ.Terms.FileUploadID);
                             var currentTerms = Plugins.Requests.QueryBuilder.MDQ.TermProvider.FlattenToAllTermIDs(_this.RequestDTO.Queries[0]);

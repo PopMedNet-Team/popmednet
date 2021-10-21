@@ -380,3 +380,4 @@ ASALocalRun/
 /Lpp.Dns.Api.Tests/ConnectionStrings.config
 Lpp.Dns.Portal/Scripts/PmnGrid/PmnGrid.js
 /DMCS/PopMedNet.DMCS/appsettings.Development.json
+/PopMedNet.Hangfire.ServerManagement/ConnectionStrings.config

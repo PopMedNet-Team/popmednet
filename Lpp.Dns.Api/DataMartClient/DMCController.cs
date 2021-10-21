@@ -38,7 +38,7 @@ namespace Lpp.Dns.Api.DataMartClient
             lock (_lock)
             {
                 var type = typeof(IPostProcessDocumentContent);
-                PostProcessorTypes = AppDomain.CurrentDomain.GetAssemblies()
+                PostProcessorTypes = ObjectEx.GetNonSystemAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract);
             }

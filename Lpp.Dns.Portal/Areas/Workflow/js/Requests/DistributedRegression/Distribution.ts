@@ -236,7 +236,7 @@ module Workflow.DistributedRegression.Distribution {
             });
 
             let badDms = ko.utils.arrayFilter(requestDataMarts, (rdm) => {
-                return rdm.RoutingType == undefined || rdm.RoutingType == null || rdm.RoutingType == -1
+                return rdm.RoutingType == undefined || rdm.RoutingType == null || <number>rdm.RoutingType == -1
             });
 
             if (badDms.length == 0 && acCount == 1 && dpCount > 0) {

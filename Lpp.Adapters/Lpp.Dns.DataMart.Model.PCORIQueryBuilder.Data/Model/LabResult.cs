@@ -17,12 +17,9 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string PatientID { get; set; }
         public virtual Patient Patient { get; set; }
 
-        //[Column("ENCOUNTERID")]
-        //public string EncounterID { get; set; }
-        //public virtual Encounter Encounter { get; set; }
-
-        [Column("LAB_NAME")]
-        public string LabName { get; set; }
+        [Column("ENCOUNTERID")]
+        public string EncounterID { get; set; }
+        public virtual Encounter Encounter { get; set; }
 
         [Column("SPECIMEN_SOURCE")]
         public string SpecimenSource { get; set; }
@@ -68,7 +65,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public string ResultSNOMED { get; set; }
 
         [Column("RESULT_NUM")]
-        public float? ResultQuantitative { get; set; }
+        public double? ResultQuantitative { get; set; }
 
         [Column("RESULT_MODIFIER")]
         public string ResultModifier { get; set; }

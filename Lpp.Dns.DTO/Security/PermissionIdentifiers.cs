@@ -238,6 +238,14 @@ namespace Lpp.Dns.DTO.Security
                 ID = new Guid("AB53BECB-4ADE-44E8-995F-15511C4D0D19"),
                 Locations = new PermissionAclTypes[] { PermissionAclTypes.Organizations, PermissionAclTypes.Global }
             };
+            /// <summary>
+            /// Managing a DataMart's configuration within DMCS
+            /// </summary>
+            public static readonly PermissionDefinition ManageDMCSConfiguration = new PermissionDefinition
+            {
+                ID = new Guid("631EA13B-9456-42C5-B70D-18CC5D28904C"),
+                Locations = new PermissionAclTypes[] { PermissionAclTypes.DataMarts, PermissionAclTypes.Organizations }
+            };
 
             static Organization()
             {
@@ -253,7 +261,8 @@ namespace Lpp.Dns.DTO.Security
                     ApproveRejectRegistrations,
                     AdministerWebBasedDatamart,
                     Copy,
-                    ExpireUsersPassword
+                    ExpireUsersPassword,
+                    ManageDMCSConfiguration
                 });
             }
         }

@@ -27,6 +27,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
             ClinicalTrials = new HashSet<ClinicalTrial>();
             Deaths = new HashSet<Death>();
             CausesOfDeath = new HashSet<CauseOfDeath>();
+            ClinicalObservations = new HashSet<ClinicalObservation>();
         }
 
         [Key, Column("PATID")]
@@ -66,6 +67,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
         public virtual ICollection<ClinicalTrial> ClinicalTrials { get; set; }
         public virtual ICollection<Death> Deaths { get; set; }
         public virtual ICollection<CauseOfDeath> CausesOfDeath { get; set; }
+        public virtual ICollection<ClinicalObservation> ClinicalObservations { get; set; }
     }
 
     internal class PatientConfiguration : EntityTypeConfiguration<Patient>
@@ -85,6 +87,7 @@ namespace Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Model
             HasMany(t => t.ClinicalTrials).WithRequired(t => t.Patient).HasForeignKey(t => t.PatientID).WillCascadeOnDelete(true);
             HasMany(t => t.Deaths).WithRequired(t => t.Patient).HasForeignKey(t => t.PatientID).WillCascadeOnDelete(true);
             HasMany(t => t.CausesOfDeath).WithRequired(t => t.Patient).HasForeignKey(t => t.PatientID).WillCascadeOnDelete(true);
+            HasMany(t => t.ClinicalObservations).WithRequired(t => t.Patient).HasForeignKey(t => t.PatientID).WillCascadeOnDelete(true);
         }
     }
 }

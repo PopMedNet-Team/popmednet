@@ -88,7 +88,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void DataPartnerSetup()
         {
-            _adapter.Initialize(CreateSettings(MonitorFolderDataPartner));
+            _adapter.Initialize(CreateSettings(MonitorFolderDataPartner), Guid.NewGuid().ToString("D"));
 
             var timer = new System.Timers.Timer(TimeSpan.FromSeconds(2).TotalMilliseconds);
             timer.AutoReset = true;
@@ -120,7 +120,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
         [TestMethod]
         public void AnalysisCenterWithNewPayloadFromDataPartners()
         {
-            _adapter.Initialize(CreateSettings(MonitorFolderAnalysisCenter));
+            _adapter.Initialize(CreateSettings(MonitorFolderAnalysisCenter), Guid.NewGuid().ToString("D"));
 
 
             //remove all the directories
@@ -207,7 +207,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Tests
             //the analysis center provides multiple documents that are distributed to each data partner, the files are extracted into the "inputfiles" folder of the data partner
             //the SAS app will drop an output files manifest and documents into the "msoc" folder, the files listed in the manifest file will be uploaded when the trigger file exists
 
-            _adapter.Initialize(CreateSettings(MonitorFolderDataPartner));
+            _adapter.Initialize(CreateSettings(MonitorFolderDataPartner), Guid.NewGuid().ToString());
 
             string outputFolder = Path.Combine(MonitorFolderDataPartner, "msoc");
             var timer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);

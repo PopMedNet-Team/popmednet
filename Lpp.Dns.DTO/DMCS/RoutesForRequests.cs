@@ -96,5 +96,7 @@ namespace Lpp.Dns.DTO.DMCS
         public DateTime? ContentCreatedOn { get; set; }
         public DateTime? ContentModifiedOn { get; set; }
         public Guid? UploadedByID { get; set; }
+        public string UploadedByUserName { get; set; }
+        public string UploadedByEmail { get; set; }
     }
 }
