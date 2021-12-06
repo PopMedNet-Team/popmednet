@@ -159,6 +159,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.WorkFlow.Engine", "Lpp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.QueryComposer", "Lpp.QueryComposer\Lpp.QueryComposer.csproj", "{B3374F4B-88A0-412D-90E5-79F2014D7721}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopMedNet.UITests", "Tests\PopMedNet.UITests\PopMedNet.UITests.csproj", "{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -392,6 +394,10 @@ Global
 		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -450,6 +456,7 @@ Global
 		{B8DE912F-6691-4D6F-AA52-595D7BA31274} = {F6A54BA3-CF60-4751-A602-EF9639114CF9}
 		{A41FF6E2-ED19-4CC8-AD29-B5E5BFDA2009} = {206D225A-1300-4D2F-89DA-BD45C5CEE912}
 		{4D4083AF-75EE-4C9A-AFE1-F0C8F4C6C051} = {5548201A-0CAB-47DA-9AF6-DAB2734F3F20}
+		{92EB2B8B-6CA3-46DE-BFCC-99C76ABE9BB6} = {206D225A-1300-4D2F-89DA-BD45C5CEE912}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CDF27817-8B7B-48E5-9EAA-0A984036923C}

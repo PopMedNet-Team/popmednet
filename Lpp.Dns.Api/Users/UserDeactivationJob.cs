@@ -34,7 +34,7 @@ namespace Lpp.Dns.Api.Users
         /// </summary>
         /// <remarks>The Hangfire job is set to attempt only once, and on fail only mark the job as failed.</remarks>
         /// <returns></returns>
-        [Hangfire.AutomaticRetry(Attempts = 1, OnAttemptsExceeded = Hangfire.AttemptsExceededAction.Fail)]
+        [Hangfire.AutomaticRetry(Attempts = 3, OnAttemptsExceeded = Hangfire.AttemptsExceededAction.Fail)]
         public async Task DeactivateStaleUsers()
         {
             int deactivateAfterDays = int.Parse(WebConfigurationManager.AppSettings["Users.DeactivateAfterNumberOfDays"]);
@@ -46,7 +46,9 @@ namespace Lpp.Dns.Api.Users
                                     select
                                     new
                                     {
-                                        User = u,
+                                        UserID = u.ID,
+                                        UserName = u.UserName,
+                                        OrganizationID = u.OrganizationID,
                                         Organization = u.Organization.Name,
                                         OrganizationAcronym = u.Organization.Acronym,
                                         LastSuccessfullAuthentication = _db.LogsUserAuthentication.Where(l => l.Success && l.UserID == u.ID).OrderByDescending(l => l.TimeStamp).FirstOrDefault()
@@ -59,36 +61,39 @@ namespace Lpp.Dns.Api.Users
             {
                 foreach (var su in staleUsers)
                 {
-                    var user = su.User;
-
-                    user.Active = false;
-                    user.DeactivatedOn = DateTime.UtcNow;
-                    user.DeactivationReason = $"User was deactivated via system service due to not having successfully authenticated within {deactivateAfterDays} days.";
-
-                    var validationErrors = _db.GetValidationErrors();
-                    if (validationErrors.Any())
+                    using (var database = new DataContext())
                     {
-                        //log validation error to email
-                        var errors = validationErrors.SelectMany(err => err.ValidationErrors.Select(ex => ex.ErrorMessage)).ToArray();
-                        validationErrorUsers.Add(user.ID, errors);
+                        var user = await database.Users.FindAsync(su.UserID);
+                        if(user == null)
+                        {
+                            continue;
+                        }
 
-                        continue;
+                        user.Active = false;
+                        user.DeactivatedOn = DateTime.UtcNow;
+                        user.DeactivationReason = $"User was deactivated via system service due to not having successfully authenticated within {deactivateAfterDays} days.";
+
+                        var validationErrors = database.GetValidationErrors();
+                        if (validationErrors.Any())
+                        {
+                            //log validation error to email
+                            var errors = validationErrors.SelectMany(err => err.ValidationErrors.Select(ex => ex.ErrorMessage)).ToArray();
+                            validationErrorUsers.Add(user.ID, errors);
+
+                            continue;
+                        }
+
+                        database.LogsUserChange.Add(new UserChangeLog
+                        {
+                            UserID = Guid.Empty,
+                            UserChangedID = user.ID,
+                            Reason = EntityState.Modified,
+                            Description = $"User '{ su.OrganizationAcronym }\\{ user.UserName }' was deactivated via system service due to not having successfully authenticated within { deactivateAfterDays } days."
+                        });
+
+                        await database.SaveChangesAsync();
                     }
-
-                    _db.LogsUserChange.Add(new UserChangeLog
-                    {
-                        UserID = Guid.Empty,
-                        UserChangedID = user.ID,
-                        Reason = EntityState.Modified,
-                        Description = $"User '{ su.OrganizationAcronym }\\{ user.UserName }' was deactivated via system service due to not having successfully authenticated within { deactivateAfterDays } days."
-                    });
-
-                    await _db.SaveChangesAsync();
                 }
-
-                
-
-                
 
             }
 
@@ -108,7 +113,7 @@ namespace Lpp.Dns.Api.Users
             };
             message.To.Add(notifyAddresses);
 
-            var deactivatedUsersDetails = staleUsers.GroupBy(k => k.User.OrganizationID).SelectMany(g => g.Select(v => new { Organization = v.Organization, v.OrganizationAcronym, UserID = v.User.ID, v.User.UserName, v.LastSuccessfullAuthentication })).OrderBy(s => s.Organization).ThenBy(s => s.UserName).ToArray();
+            var deactivatedUsersDetails = staleUsers.GroupBy(k => k.OrganizationID).SelectMany(g => g.Select(v => new { Organization = v.Organization, v.OrganizationAcronym, UserID = v.UserID, v.UserName, v.LastSuccessfullAuthentication })).OrderBy(s => s.Organization).ThenBy(s => s.UserName).ToArray();
 
             var html = new System.Text.StringBuilder();
             html.AppendLine("<!doctype html><html><head>");
@@ -143,8 +148,8 @@ namespace Lpp.Dns.Api.Users
                 html.AppendLine("<tr><td colspan=\"4\"><strong>** ERRORS Updating Users **</strong></td></tr>");
                 foreach(var pair in validationErrorUsers)
                 {
-                    var user = staleUsers.First(u => u.User.ID == pair.Key);
-                    html.AppendLine($"<tr><td>{ user.Organization } ({ user.OrganizationAcronym })</td><td>{ user.User.UserName }</td><td colspan=\"2\">{ string.Join("<br/>", pair.Value) }</td></tr>");
+                    var user = staleUsers.First(u => u.UserID == pair.Key);
+                    html.AppendLine($"<tr><td>{ user.Organization } ({ user.OrganizationAcronym })</td><td>{ user.UserName }</td><td colspan=\"2\">{ string.Join("<br/>", pair.Value) }</td></tr>");
                 }
             }
             
@@ -188,8 +193,8 @@ namespace Lpp.Dns.Api.Users
                 textBody.AppendLine("#####** ERRORS Updating Users **#####");
                 foreach (var pair in validationErrorUsers)
                 {
-                    var user = staleUsers.First(u => u.User.ID == pair.Key);
-                    textBody.AppendLine(string.Format("{0} ({1})", user.Organization, user.OrganizationAcronym).PadRight(padOrganization) + user.User.UserName.PadRight(padUsername));
+                    var user = staleUsers.First(u => u.UserID == pair.Key);
+                    textBody.AppendLine(string.Format("{0} ({1})", user.Organization, user.OrganizationAcronym).PadRight(padOrganization) + user.UserName.PadRight(padUsername));
                     foreach(var err in pair.Value)
                     {
                         textBody.AppendLine(err.PadLeft(err.Length + 8));

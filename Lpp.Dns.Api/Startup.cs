@@ -25,9 +25,8 @@ namespace Lpp.Dns.Api
         {
 
             app.UseHangfireAspNet(GetHangfireServers);
-#if DEBUG
             app.UseHangfireDashboard();
-#endif
+
             //Register Hangfire recurring jobs
             if (bool.Parse(WebConfigurationManager.AppSettings["Users.EnableDeactivationService"]))
             {

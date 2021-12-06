@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<add key="baseUrl" value=""/>
+		<add key="adminUser" value=""/>
+		<add key="adminPassword" value=""/>
+	</appSettings>
+</configuration>
