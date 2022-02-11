@@ -62,7 +62,7 @@ In PopMedNet&trade;, the Portal handles all the governance and acts as a hub for
 
 The DMC allows data partners to control access to their data before sending it to the Portal. For the data partners, it will:
 
-* Provide protection of PHI
+* Provide protection of Protected Health Information (PHI is defined as any personal health information that can potentially identify an individual)
 * Prevent loss of control over proprietary information
 
 The researcher will have no direct access to data but is shielded from the differences among networks’ data models.
@@ -79,8 +79,8 @@ A typical PopMedNet&trade; request-response cycle is as follows:
 
 PopMedNet&trade; [@PopMedNet] was developed and has been extended as part of several contracts awarded by a range of federal, state, and industry stakeholders:
 
-* FDA's Sentinel Initiative
-* PCORI’s National Patient-Centered Clinical Research Network (PCORnet)
+* FDA's [Sentinel Initiative](https://www.sentinelinitiative.org)
+* PCORI’s National Patient-Centered Clinical Research Network ([PCORnet](https://pcornet.org))
 
 In addition, Harvard Pilgrim Health Care Institute 
 serves as the coordinating center for several other initiatives that use PMN and its associated software ecosystem including:
