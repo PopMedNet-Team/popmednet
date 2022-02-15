@@ -18,6 +18,10 @@ PopMedNet&trade; features include distributed querying, customizable workflows, 
 * The starter databases are located at [Starter Databases](https://popmednet.atlassian.net/wiki/spaces/DOC/pages/124685521/Starter+Databases).
     * Please note the that PMN-Starter-2020.5.bak file is the most up to date backup.   
 
+# Regression Tests
+
+* Instruction for running the adapter tests supplied with the source code is located at [How to Run Adapter Regression Tests](https://popmednet.atlassian.net/wiki/spaces/GDSD/pages/3051552797/How+to+Run+Adapter+Regression+Tests)
+
 # Reporting issues
 Please reach out to us at [PopMedNet&trade; Service Desk](https://popmednet.atlassian.net/servicedesk/customer/portal/1/group/10) to report any problems and to seek software assistance.
 
