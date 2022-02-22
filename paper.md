@@ -75,6 +75,22 @@ A typical PopMedNet&trade; request-response cycle is as follows:
 
 ![PopMedNet Workflow.\label{fig:PopMedNet}](joss_figures/Query_Process_Generic_Numbered.jpg)
 
+# Comparison to i2b2 and SHRINE
+
+i2b2 (Informatics for Integrating Biology & the Bedside) is a flexible query tool in use many hospitals nationwide.
+Each i2b2 instance comprises a collection of cells called a “hive”. This architecture supports extensibility via add-ons through 
+additional cells.
+
+SHRINE (Shared Health Research Informatis NEtwork) is an i2b2 extension for supporting distributed queries. Each SHRINE instance consists of two hives, 
+the client and the server. SHRINE instances communicate through 
+the SPIN federated query language [@McMurray:2013].
+
+Architecturally, PopMedNet&trade; uses a more tightly coupled hub-and-spoke distribution strategy while SHRINE uses a more loosely coupled, mesh strategy.
+While SHRINE requires immediate query response from the data sources in a single session, PopMedNet&trade; allows request-responses to be conducted over multiple sessions.
+From a user-interface perspective, i2b2/SHRINE uses a drag-and-drop model, while PopMedNet&trade; uses a menu-driven model.
+
+A SHRINE-PopMedNet&trade; was prototyped to give SHRINE queries the ability to span sessions and conversely to give PopMedNet&trade; the ability to participate in a SHRINE network.
+
 # Acknowledgements
 
 PopMedNet&trade; [@PopMedNet] was developed and has been extended as part of several contracts awarded by a range of federal, state, and industry stakeholders:
