@@ -83,7 +83,7 @@ additional cells.
 
 SHRINE (Shared Health Research Informatis NEtwork) is an i2b2 extension for supporting distributed queries. Each SHRINE instance consists of two hives, 
 the client and the server. SHRINE instances communicate through 
-the SPIN federated query language [@McMurray:2013].
+the SPIN federated query language [@McMurry:2013].
 
 Architecturally, PopMedNet&trade; uses a more tightly coupled hub-and-spoke distribution strategy while SHRINE uses a more loosely coupled, mesh strategy.
 While SHRINE requires immediate query response from the data sources in a single session, PopMedNet&trade; allows request-responses to be conducted over multiple sessions.
