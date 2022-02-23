@@ -68,6 +68,7 @@ The DMC allows data partners to control access to their data before sending it t
 The researcher will have no direct access to data but is shielded from the differences among networks’ data models.
 
 A typical PopMedNet&trade; request-response cycle is as follows:
+
 1. Request: Investigators distribute data requests constructed in the point and click web interface
 2. Review: Data Partners receive and review requests in their DataMart Client
 3. Respond: Data partners execute the requests against their local data and upload results 
@@ -77,7 +78,7 @@ A typical PopMedNet&trade; request-response cycle is as follows:
 
 # Comparison to i2b2 and SHRINE
 
-i2b2 (Informatics for Integrating Biology & the Bedside) is a flexible query tool in use many hospitals nationwide.
+i2b2 (Informatics for Integrating Biology & the Bedside) is a flexible query tool in use in many US hospitals.
 Each i2b2 instance comprises a collection of cells called a “hive”. This architecture supports extensibility via add-ons through 
 additional cells.
 
