@@ -74,7 +74,7 @@ A typical PopMedNet&trade; request-response cycle is as follows:
 3. Respond: Data partners execute the requests against their local data and upload results 
 4. Download: Investigators access results in the query tool
 
-![PopMedNet Workflow.\label{fig:PopMedNet}](joss_figures/Query_Process_Generic_Numbered.jpg)
+![PopMedNet Workflow.\label{fig:PopMedNetWorkflow}](joss_figures/Query_Process_Generic_Numbered.jpg)
 
 # Comparison to i2b2 and SHRINE
 
