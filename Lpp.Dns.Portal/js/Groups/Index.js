@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../_rootlayout.ts" />
 var Groups;
 (function (Groups) {
     var Index;
     (function (Index) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gGroupsSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;

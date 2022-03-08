@@ -1,6 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
-/// <reference path="../security/aclviewmodel.ts" />
-/// <reference path="../events/editeventpermissions.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +18,7 @@ var Home;
     var DefaultSecurityPermissions;
     (function (DefaultSecurityPermissions) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(permissions, acls, securityGroups, events, eventAcls, fieldOptions, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -31,7 +28,6 @@ var Home;
                 _this.EventAcls = ko.observableArray(eventAcls.map(function (e) {
                     return new Dns.ViewModels.BaseEventPermissionViewModel(e);
                 }));
-                //Permissions
                 _this.Global = new Security.Acl.AclEditViewModel(permissions.filter(function (p) {
                     return (p.Locations.length == 1 || p.Locations.indexOf(Dns.Enums.PermissionAclTypes.RequestTypes) > -1 || p.Locations.indexOf(Dns.Enums.PermissionAclTypes.Templates) > -1) && p.Locations[0] == Dns.Enums.PermissionAclTypes.Global;
                 }), securityGroups, _this.Acls, [], Dns.ViewModels.AclViewModel, "Global");
@@ -54,7 +50,6 @@ var Home;
                     return new Dns.ViewModels.AclGlobalFieldOptionViewModel(e);
                 }));
                 _this.FieldOptions = new Security.Acl.FieldOption.AclFieldOptionEditViewModel(fieldOptions, securityGroups, _this.FieldOptionAcl, [], Dns.ViewModels.AclGlobalFieldOptionViewModel);
-                //Events
                 _this.GlobalEvents = new Events.Acl.EventAclEditViewModel(events.filter(function (p) {
                     return p.Locations.length == 1 && p.Locations[0] == Dns.Enums.PermissionAclTypes.Global;
                 }), securityGroups, _this.EventAcls, [], Dns.ViewModels.BaseEventPermissionViewModel, "GlobalEvents");

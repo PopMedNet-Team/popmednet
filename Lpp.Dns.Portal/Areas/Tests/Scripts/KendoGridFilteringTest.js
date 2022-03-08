@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../js/_layout.ts" />
 var Tests;
 (function (Tests) {
     var KendoGridFilteringTest;
     (function (KendoGridFilteringTest) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;

@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Home;
     var Login;
     (function (Login) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 return _super.call(this, bindingControl) || this;

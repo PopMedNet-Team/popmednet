@@ -42,7 +42,8 @@ namespace Lpp.Dns.DataMart.Client.Utils
                         }
                         try
                         {
-                            reg.Close();
+                            if(reg != null)
+                                reg.Close();
                         }
                         catch { /* ignore this exception if we couldn't close */ }
                     }
@@ -80,7 +81,8 @@ namespace Lpp.Dns.DataMart.Client.Utils
                         }
                         try
                         {
-                            reg.Close();
+                            if(reg != null)
+                                reg.Close();
                         }
                         catch { /* ignore this exception if we couldn't close */ }
                     }

@@ -1,5 +1,3 @@
-/// <reference path="../../../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="listroutings.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22,7 +20,7 @@ var Workflow;
         var AddDataMartDialog;
         (function (AddDataMartDialog) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, currentRoutings, allDataMarts, projectID) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -32,7 +30,6 @@ var Workflow;
                     _this.SelectedDataMartIDs = ko.observableArray([]);
                     self.RoutesSelectAll = ko.pureComputed({
                         read: function () {
-                            //return self.AllUnfilteredDataMarts.length > 0 && self.SelectedDataMartIDs().length === self.AllUnfilteredDataMarts.length
                             return self.AllUnfilteredDataMarts.length > 0 && self.SelectedDataMartIDs().length === self.AllUnfilteredDataMarts.length;
                         },
                         write: function (value) {

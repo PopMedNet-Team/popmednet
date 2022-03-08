@@ -387,8 +387,8 @@ namespace Lpp.Dns.DataMart.Model
         public void Start(string requestId, bool viewSQL = false)
         {
 
-            if (_request == null && !IsDistributedRegressionRequest)
-                throw new NullReferenceException("The deserialized request is null, please make sure that RequestDocument is called first and that the request document is not null.");
+            if (_request == null)
+                throw new NullReferenceException("The deserialized request is null, please make sure that model processor is properly initialized and that the request document is not null.");
 
             var queryResults = new List<DTO.QueryComposer.QueryComposerResponseQueryResultDTO>();
             var queryCanPostProcess = new List<Tuple<Guid, bool, string>>();

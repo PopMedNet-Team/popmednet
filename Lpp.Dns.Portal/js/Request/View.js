@@ -8,7 +8,7 @@ var Requests;
         View.AllowEditRequestID = null;
         View.vmRoutings = null;
         var vmHeader = null;
-        var HeaderViewModel = /** @class */ (function () {
+        var HeaderViewModel = (function () {
             function HeaderViewModel(fieldOptions) {
                 this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 var self = this;
@@ -37,7 +37,7 @@ var Requests;
             return HeaderViewModel;
         }());
         View.HeaderViewModel = HeaderViewModel;
-        var RoutingsViewModel = /** @class */ (function () {
+        var RoutingsViewModel = (function () {
             function RoutingsViewModel(modelData, overrideableRoutingIDs, request) {
                 var _this = this;
                 var self = this;
@@ -63,7 +63,6 @@ var Requests;
                     });
                 });
                 self.CanOverrideRoutingStatus = ko.computed(function () { return self.OverrideableRoutings().length > 0; });
-                //this.AggregationModes = [{ ID: 'proj', Name: 'Projected View' }, { ID: 'dont', Name: 'Individual View' }, { ID: 'do', Name: 'Aggregate View' }]; 
                 self.incompleteRoutesSelectAll = ko.pureComputed({
                     read: function () {
                         return self.IncompleteRoutings().length > 0 && self.SelectedRoutings().length === self.IncompleteRoutings().length;
@@ -125,7 +124,6 @@ var Requests;
                     }
                 });
                 if (invalidRoutes.length > 0) {
-                    //show warning message that invalid routes have been selected.
                     var msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
                     msg = msg + invalidRoutes.map(function (ir) { return ir.DataMart; }).join();
                     msg = msg + "</p></div>";
@@ -164,7 +162,6 @@ var Requests;
                         if (result.UpdateDueDate) {
                             newDueDate = result.DueDateValue;
                         }
-                        // update selected datamarts here
                         _this.Routings().forEach(function (dm) {
                             if (_this.SelectedRoutings().indexOf(dm.RequestDataMartID) != -1) {
                                 if (newPriority != null) {
@@ -191,10 +188,6 @@ var Requests;
             };
             RoutingsViewModel.prototype.ConvertDateToLocal = function (date) {
                 return moment(moment(date).format("M/D/YYYY h:mm:ss A UTC")).local().format('M/D/YYYY h:mm:ss A');
-                // Moment and Javascript appears to treat ASP.net Date as localtime as it has no TZ embedded.
-                //var b = moment(date);
-                //b.local();
-                //return b.format('M/D/YYYY h:mm:ss A');
             };
             RoutingsViewModel.prototype.onView = function () {
                 View.vmRoutings.DisplayResultsClicked('true');
@@ -206,7 +199,6 @@ var Requests;
                 $('#frmRoutings').submit();
             };
             RoutingsViewModel.prototype.onReject = function () {
-                //capture reject message and submit form
                 var message = prompt('Please enter rejection message', '');
                 if (message == null || message == '')
                     return false;
@@ -215,7 +207,6 @@ var Requests;
                 return true;
             };
             RoutingsViewModel.prototype.onResubmit = function () {
-                //capture message and submit form
                 var message = prompt('Please enter resubmit message', '');
                 if (message == null || message == '')
                     return false;
@@ -223,7 +214,6 @@ var Requests;
                 return true;
             };
             RoutingsViewModel.prototype.onGroup = function () {
-                //capture group name and submit
                 var message = prompt('Please specify a name for this group', '');
                 if (message == null || message == '')
                     return false;
@@ -334,7 +324,7 @@ var Requests;
             return translated;
         }
         View.TranslatePriority = TranslatePriority;
-        var VirtualResponseViewModel = /** @class */ (function () {
+        var VirtualResponseViewModel = (function () {
             function VirtualResponseViewModel(data) {
                 this.ID = data.ID;
                 this.RequestDataMartID = data.RequestDataMartID;

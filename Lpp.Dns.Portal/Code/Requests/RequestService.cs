@@ -981,7 +981,7 @@ namespace Lpp.Dns.Portal
                     var from = trn.UpdateDocuments.First(u => u.Key.ID == d.ID).Value;
                     d.Viewable = from.Viewable;
                     d.MimeType = from.MimeType;
-                    d.FileName = d.FileName;
+                    d.FileName = from.FileName;
                     d.Name = from.Name;
                     d.Kind = from.Kind;
                     return new { from, d };

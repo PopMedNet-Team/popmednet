@@ -6,7 +6,7 @@ var Plugins;
         (function (QueryBuilder) {
             var MDQ;
             (function (MDQ) {
-                var Terms = /** @class */ (function () {
+                var Terms = (function () {
                     function Terms() {
                     }
                     Object.defineProperty(Terms, "DataCheckerQueryTypeID", {
@@ -310,131 +310,69 @@ var Plugins;
                             return true;
                         return a.toLowerCase() === b.toLowerCase();
                     };
-                    /** Grouped terms are to be combined using OR within a sub-criteria that will be AND'd with the other terms of the parent criteria. */
                     Terms.GroupedTerms = [
-                        //Condition
                         Terms.ConditionID,
-                        //HCPCS Procedure Codes
                         Terms.HCPCSProcedureCodesID,
-                        //Combined Diagnosis Codes
                         Terms.CombinedDiagnosisCodesID,
-                        //ICD9 Diagnosis Codes 3 digit
                         Terms.ICD9Diagnosis3digitID,
-                        //ICD9 Diagnosis Codes 4 digit
                         Terms.ICD9Diagnosis4digitID,
-                        //ICD9 Diagnosis Codes 5 digit
                         Terms.ICD9Diagnosis5digitID,
-                        //ICD9 Procedure Codes 3 digit
                         Terms.ICD9Procedure3digitID,
-                        //ICD9 Procedure Codes 4 digit
                         Terms.ICD9Procedure4digitID,
-                        //ESP Combined Diagnosis Codes
                         Terms.ESPCombinedDiagnosisCodesID,
-                        //Drug Class
                         Terms.DrugClassID,
-                        //Drug Name
                         Terms.DrugNameID,
-                        //Visits
                         Terms.VisitsID,
-                        //Age Range
                         Terms.AgeRangeID,
-                        //Sex
                         Terms.SexID,
-                        //Code Metric
                         Terms.CodeMetricID,
-                        //Coverage
                         Terms.CoverageID,
-                        //Criteria
                         Terms.CriteriaID,
-                        //Dispensing Metric
                         Terms.DispensingMetricID,
-                        //Ethnicity
                         Terms.EthnicityID,
-                        //Facility
                         Terms.FacilityID,
-                        //Height
                         Terms.HeightID,
-                        //Hispanic
                         Terms.HispanicID,
-                        //Observation Period
                         Terms.ObservationPeriodID,
-                        //Quarter Year
                         Terms.QuarterYearID,
-                        //Race
                         Terms.RaceID,
-                        //Setting
                         Terms.SettingID,
-                        //Tobacco Use
                         Terms.TobaccoUseID,
-                        //Weight
                         Terms.WeightID,
-                        //Year
                         Terms.YearID,
-                        //Zip Code
                         Terms.ZipCodeID,
-                        //Vitals Measure Date
                         Terms.VitalsMeasureDateID,
-                        // Procedure Codes
                         Terms.ProcedureCodesID,
-                        //TrialID
                         Terms.TrialID,
-                        //PatientReportedOutcome
                         Terms.PatientReportedOutcomeID,
-                        // LOINC Codes
                         Terms.LOINCCodesID,
-                        //Prescribing Terms
                         Terms.PrescribingCodesID,
-                        //Clinical Observations
                         Terms.ClinicalObservationsID
                     ];
-                    /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
                     Terms.NonCodeGroupedTerms = [
-                        //Visits
                         Terms.VisitsID,
-                        //Age Range
                         Terms.AgeRangeID,
-                        //Sex
                         Terms.SexID,
-                        //Code Metric
                         Terms.CodeMetricID,
-                        //Coverage
                         Terms.CoverageID,
-                        //Criteria
                         Terms.CriteriaID,
-                        //Dispensing Metric
                         Terms.DispensingMetricID,
-                        //Ethnicity
                         Terms.EthnicityID,
-                        //Facility
                         Terms.FacilityID,
-                        //Height
                         Terms.HeightID,
-                        //Hispanic
                         Terms.HispanicID,
-                        //Observation Period
                         Terms.ObservationPeriodID,
-                        //Quarter Year
                         Terms.QuarterYearID,
-                        //Race
                         Terms.RaceID,
-                        //Setting
                         Terms.SettingID,
-                        //Tobacco Use
                         Terms.TobaccoUseID,
-                        //Weight
                         Terms.WeightID,
-                        //Year
                         Terms.YearID,
-                        //Zip Code
                         Terms.ZipCodeID,
-                        //Vitals Measure Date
                         Terms.VitalsMeasureDateID,
-                        //TrialID
                         Terms.TrialID,
-                        //PatientReportedOutcome
                         Terms.PatientReportedOutcomeID
                     ];
-                    /** DataChecker Procedure Code Types */
                     Terms.DataCheckerProcedureCodeTypes = [
                         { text: 'Any', value: '' },
                         { text: 'ICD-9-CM', value: '09' },
@@ -451,7 +389,6 @@ var Plugins;
                         { text: 'Revenue', value: 'RE' },
                         { text: 'Other', value: 'OT' }
                     ];
-                    /** DataChecker Diagnosis Code Types */
                     Terms.DataCheckerDiagnosisCodeTypes = [
                         { text: 'Any', value: '' },
                         { text: 'ICD-9-CM', value: '09' },
@@ -463,7 +400,7 @@ var Plugins;
                     return Terms;
                 }());
                 MDQ.Terms = Terms;
-                var TermValueFilter = /** @class */ (function () {
+                var TermValueFilter = (function () {
                     function TermValueFilter(models) {
                         var _this = this;
                         this._models = ko.observableArray(models || []);
@@ -578,14 +515,11 @@ var Plugins;
                     TermValueFilter.prototype.UpdateModels = function (models) {
                         this._models(models || []);
                     };
-                    /*Indicates if the models set for the helper contain the specified model.*/
                     TermValueFilter.prototype.HasModel = function (modelID) {
                         return TermValueFilter.ContainsModel(this._models(), modelID);
                     };
-                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.getSexValues = function () {
                         var sexTranslations = [];
-                        //Dont include MaleAndFemaleAggregated in the list of Sex Values
                         Dns.Enums.SexStratificationsTranslation.forEach(function (s) {
                             if (s.value != Dns.Enums.SexStratifications.MaleAndFemaleAggregated)
                                 sexTranslations.push(s);
@@ -595,12 +529,10 @@ var Plugins;
                         if (this._containsSummaryTables() == true)
                             return TermValueFilter.GetTranslations(Dns.Enums.SexStratificationsTranslation, [Dns.Enums.SexStratifications.FemaleOnly, Dns.Enums.SexStratifications.MaleOnly, Dns.Enums.SexStratifications.MaleAndFemale, Dns.Enums.SexStratifications.MaleAndFemaleAggregated, Dns.Enums.SexStratifications.Unknown]);
                         if (this._containsPCORnet() == false) {
-                            //models collection does not contain PCORnet, return subset of values. They are the same for Summary Tables and ESP
                             return TermValueFilter.GetTranslations(Dns.Enums.SexStratificationsTranslation, [Dns.Enums.SexStratifications.FemaleOnly, Dns.Enums.SexStratifications.MaleOnly, Dns.Enums.SexStratifications.MaleAndFemale]);
                         }
                         return sexTranslations;
                     };
-                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.getSettingsValues = function () {
                         if (this._models().length == 0)
                             return Dns.Enums.SettingsTranslation;
@@ -616,7 +548,6 @@ var Plugins;
                         }
                         return translations;
                     };
-                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.getRaceValues = function () {
                         if (this._models().length == 0 || this._containsPCORnet())
                             return Dns.Enums.RaceTranslation;
@@ -625,7 +556,6 @@ var Plugins;
                         }
                         return [];
                     };
-                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.getRaceEthnicityValues = function () {
                         if (this._models().length == 0)
                             return Dns.Enums.EthnicitiesTranslation;
@@ -634,7 +564,6 @@ var Plugins;
                         }
                         return [];
                     };
-                    /* Returns the valid values based on the models specified in initiation */
                     TermValueFilter.prototype.getAgeRangeStratifications = function () {
                         if (this._models().length == 0)
                             return Dns.Enums.AgeStratificationsTranslation;
@@ -650,10 +579,8 @@ var Plugins;
                         }
                         return translations;
                     };
-                    /* Confirm all properties exist that have been addd to a template that may not exist on the request json*/
                     TermValueFilter.prototype.ConfirmTemplateProperties = function (query, termTemplates) {
                         var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
-                        //loop through all the terms on all the criteria and make sure each term is up to date
                         for (var i = 0; i < query.Where.Criteria.length; i++) {
                             var criteria = query.Where.Criteria[i];
                             this.ConfirmCriteria(criteria, flattenedTerms);
@@ -674,7 +601,6 @@ var Plugins;
                     };
                     TermValueFilter.prototype.ConfirmTemplatePropertiesForViewModel = function (query, termTemplates) {
                         var flattenedTerms = this.FlattenTermTemplates(termTemplates, []);
-                        //loop through all the terms on all the criteria and make sure each term is up to date
                         var rootCriteria = query.Where.Criteria();
                         for (var i = 0; i < rootCriteria.length; i++) {
                             var criteria = rootCriteria[i];
@@ -693,7 +619,6 @@ var Plugins;
                                 }
                             }
                         }
-                        //check the criteria for each temporal event
                         var temporalEvents = query.TemporalEvents();
                         for (var i = 0; i < temporalEvents.length; i++) {
                             var temporalEvent = temporalEvents[i];
@@ -791,10 +716,8 @@ var Plugins;
                             }
                         }
                         if (hasChanges) {
-                            //update the current instance of the term to include the added properties
                             term.Values(unwrapped);
                         }
-                        //update the instance term values to observables
                         var values = Global.Helpers.ConvertTermObject(term.Values());
                         term.Values(values);
                     };

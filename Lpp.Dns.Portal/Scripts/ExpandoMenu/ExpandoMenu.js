@@ -8,9 +8,7 @@ var Controls;
                 var header = $(item).children("h2").first();
                 var buttons = header.prepend('<nav id="ExpandoButtons"></nav>');
             });
-            //Get all of the ones that also have the Maximize css on it
             var minimizable = expandos.filter(".Minimizable");
-            //Add the button manually in code and enable it's hook up for what it does.
             $.each(minimizable, function (count, item) {
                 var header = $(item).children("h2").first();
                 if (header.length == 0)
@@ -47,7 +45,7 @@ var Controls;
                 var expSiblings = expando.siblings("section.ExpandoFrame");
                 var state = expando.data("state") || "normal";
                 switch (state) {
-                    case "maximized": //Return the others to normal state
+                    case "maximized":
                         expSiblings.children("article").slideDown("slow");
                         expSiblings.children("nav").slideDown("slow");
                         expSiblings.data("state", "normal");
@@ -64,7 +62,6 @@ var Controls;
                 }
                 expando.data("state", state);
             });
-            //Get all of the ones that have help css on it and add the help button
             var help = expandos.filter(".Help");
             $.each(help, function (count, item) {
                 var header = $(item).children("h2").first();
@@ -77,7 +74,6 @@ var Controls;
                 var helpText = expando.find("aside.Help").html();
                 Global.Helpers.ShowAlert("Help", helpText);
             });
-            //Handle other buttons that you want to add to the header here.
         });
     })(ExpandoMenu = Controls.ExpandoMenu || (Controls.ExpandoMenu = {}));
 })(Controls || (Controls = {}));

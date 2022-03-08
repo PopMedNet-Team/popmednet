@@ -300,6 +300,7 @@ namespace Lpp.Dns.Data
         public DbSet<Audit.NewDataMartClientLog> LogsNewDataMartClient { get; set; }
         public DbSet<Audit.PmnTaskChangeLog> LogsTaskChange { get; set; }
         public DbSet<Audit.PmnTaskReminderLog> LogsTaskReminder { get; set; }
+        public DbSet<Audit.DocumentDeleteLog> LogsDeletedDocumentArchive { get; set; }
         public DbSet<Audit.DocumentChangeLog> LogsDocumentChange { get; set; }
         public DbSet<Audit.RequestAssignmentChangeLog> LogsRequestAssignmentChange { get; set; }
         public DbSet<Audit.RequestDocumentChangeLog> LogsRequestDocumentChange { get; set; }
@@ -570,6 +571,14 @@ namespace Lpp.Dns.Data
             Dictionary<DbEntityEntry, IEnumerable<AuditLog>> logs = new Dictionary<DbEntityEntry, IEnumerable<AuditLog>>();
 
             foreach (var entry in ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged && e.State != EntityState.Detached && e.State != EntityState.Deleted))
+            {
+                var newLogs = LogEntry(entry);
+                if (newLogs.Any())
+                    logs.Add(entry, newLogs);
+            }
+
+            foreach (var entry in ChangeTracker.Entries()
+                .Where(e => e.Entity.GetType() == typeof(Document) && e.State == EntityState.Deleted))
             {
                 var newLogs = LogEntry(entry);
                 if (newLogs.Any())

@@ -1,4 +1,3 @@
-/// <reference path="_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 var NetworkBrowser;
 (function (NetworkBrowser) {
     var vm;
-    var ViewModel = /** @class */ (function (_super) {
+    var ViewModel = (function (_super) {
         __extends(ViewModel, _super);
         function ViewModel(bindingControl) {
             var _this = _super.call(this, bindingControl) || this;
@@ -237,7 +236,6 @@ var NetworkBrowser;
             });
             _this.SelectedGroup = function (e) {
                 var data = $('#Grouptreeview').data('kendoTreeView').dataItem(e.node);
-                //console.log(data.id);
                 var url = (data.treenodeurl + data.id);
                 location.href = url;
                 return true;
@@ -294,7 +292,6 @@ var NetworkBrowser;
             });
             _this.SelectedOrganization = function (e) {
                 var data = $('#Organizationtreeview').data('kendoTreeView').dataItem(e.node);
-                //console.log(data.id);
                 var url = (data.treenodeurl + data.id);
                 location.href = url;
                 return true;

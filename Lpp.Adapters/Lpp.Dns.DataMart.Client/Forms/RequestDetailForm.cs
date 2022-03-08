@@ -1197,12 +1197,12 @@ namespace Lpp.Dns.DataMart.Client
                 CanViewSQL = true;
             }
 
-            bool isFileBasedRequest = Processor.ModelProcessorId == FileDistributionProcessorID ||
+            bool isFileBasedRequest =   (Processor != null && Processor.ModelProcessorId == FileDistributionProcessorID) ||
                                         Request.Source.ModelID == ModularProgramModelID ||
                                         Request.Source.ModelID == FileDistributionModelID ||
                                         Request.Source.ModelID == DistributedRegressionModelID ||
                                         //The adapter will indicate that it is a file based request based on the specified terms and updated the capability.
-                                        (Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]);
+                                        (Processor != null && Processor.ModelMetadata.Capabilities.ContainsKey("IsFileDistributionRequest") && Processor.ModelMetadata.Capabilities["IsFileDistributionRequest"]);
 
             btnRun.Enabled = CanRunAndUpload && DnsServiceManager.CheckUserRight(Request, HubRequestRights.Run, networkSetting) && processorStatusCode != RequestStatus.StatusCode.InProgress;
 

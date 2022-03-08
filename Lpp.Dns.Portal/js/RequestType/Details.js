@@ -13,12 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../_rootlayout.ts" />
 var RequestType;
 (function (RequestType) {
     var Details;
     (function (Details) {
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestType, requestTypeModels, requestTypeTerms, bindingControl, screenPermissions, permissionList, requestTypePermissions, securityGroupTree, workflows, templates, termList, visualTerms, criteriaGroupTemplates, hiddenTerms) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -32,12 +31,12 @@ var RequestType;
                 self.TermList = termList;
                 self.SelectedModels = ko.observableArray(ko.utils.arrayFilter(requestTypeModels, function (rtm) {
                     var modelID = rtm.DataModelID.toLowerCase();
-                    return modelID == '321adaa1-a350-4dd0-93de-5de658a507df' || //Data Characterization
-                        modelID == '7c69584a-5602-4fc0-9f3f-a27f329b1113' || //ESP
-                        modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' || //PCORnet
-                        modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' || //Summary Tables
-                        modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' || //Distributed Regression
-                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154'; //Modular Program
+                    return modelID == '321adaa1-a350-4dd0-93de-5de658a507df' ||
+                        modelID == '7c69584a-5602-4fc0-9f3f-a27f329b1113' ||
+                        modelID == '85ee982e-f017-4bc4-9acd-ee6ee55d2446' ||
+                        modelID == 'cc14e6a2-99a8-4ef8-b4cb-779a7b93a7bb' ||
+                        modelID == '4c8a25dc-6816-4202-88f4-6d17e72a43bc' ||
+                        modelID == '1b0ffd4c-3eef-479d-a5c4-69d8ba0d0154';
                 }).map(function (item) {
                     return item.DataModelID.toLowerCase();
                 })).extend({ rateLimit: 900, method: 'notifyWhenChangesStop' });
@@ -84,7 +83,6 @@ var RequestType;
                     }
                     if (_this.QueryDesigner.onValidateEditors() == false)
                         return;
-                    //make sure that if the composer contains a file upload or modular term that it is only single query, and the interface is set to File Distribution and multi-query is disabled
                     if (!_super.prototype.Validate.call(_this))
                         return;
                     var requestTypeAcls = self.RequestTypeAcls();
@@ -136,7 +134,6 @@ var RequestType;
             ViewModel.prototype.onConfirmChangeToSingleQuery = function (data, evt) {
                 var self = this;
                 if (data.RequestType.SupportMultiQuery() && data.QueryDesigner.Queries().length > 1) {
-                    //changing from multi-query to single, warn will delete any queries after the first
                     Global.Helpers.ShowConfirm('Please Confirm', '<p class="alert alert-warning">Changing to single Query will remove all Cohorts except for the first. Proceed?</p>')
                         .done(function () {
                         self.RequestType.SupportMultiQuery(false);
@@ -169,7 +166,6 @@ var RequestType;
                     Details.vm = new ViewModel(requestType, requestTypeModels || [], requestTypeTerms || [], bindingControl, screenPermissions || [PMNPermissions.RequestTypes.Delete, PMNPermissions.RequestTypes.Edit, PMNPermissions.RequestTypes.ManageSecurity], permissionList || [], requestTypePermissions || [], securityGroupTree || [], workflows, templates, termList, visualTerms, criteriaGroupTemplates, hiddenTerms);
                     $('#tabs').kendoTabStrip().data('kendoTabStrip').bind('show', function (e) {
                         if ($(e.contentElement).has('#txtNotes')) {
-                            //to make the kendo editor initialize correctly it needs to be refreshed when the tab is show
                             var editor = $('#txtNotes').data('kendoEditor');
                             editor.refresh();
                         }

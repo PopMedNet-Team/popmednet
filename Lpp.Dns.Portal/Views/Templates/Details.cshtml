@@ -4,10 +4,26 @@
     Layout = "~/Views/_Layout.cshtml";
 }
 
-@section Head{
-    <script src="~/js/Security/AclViewModel.js"></script>
-    <script src="~/js/Templates/Details.js"></script>
+@section Head {
+<link href="@Url.Content("~/Areas/QueryComposer/js/QueryEditor.css")" rel="stylesheet" />
 }
+
+@section Scripts {
+<script src="~/js/Security/AclViewModel.js"></script>
+<script src="~/js/Templates/Details.js"></script>
+}
+
+<div id="PageLoadingMessage">
+    <div style="width:350px;margin-left:auto;margin-right:auto;margin-top:50px;">
+        <div class="panel panel-default">
+            <div class="panel-body" style="text-align:center;padding:24px;">
+                <img src="@this.ResourceUrl("/images/loading.gif")" height="40" />
+                <span style="padding-left:8px;font-weight:bold;color:dimgray">Loading criteria group template details...</span>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <article class="panel panel-default" data-bind="css: {visible: true}">
     <div class="panel-heading">
@@ -53,9 +69,9 @@
         <div class="tab-content" style="min-height:500px;">
             <div class="tab-pane fade in active" id="tbDesign">
                 <div style="margin:0px;padding:8px;">
-                <!-- ko stopBinding: true -->
-                @Html.Partial("~/areas/QueryComposer/Views/edit.cshtml")
-                <!-- /ko -->
+                    <!-- ko stopBinding: true -->
+                    @Html.Partial("~/areas/QueryComposer/Views/QueryEditor-Host.cshtml")
+                    <!-- /ko -->
                 </div>
             </div>
             <div class="tab-pane fade" id="tbPermissions">

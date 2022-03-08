@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Home;
     var ExpiredPassword;
     (function (ExpiredPassword) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -35,7 +34,7 @@ var Home;
                 if (!this.Validate())
                     return false;
                 if (this.ConfirmPassword() != this.ExpiredPassword.Password()) {
-                    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that the passwords enter match.</p>");
+                    Global.Helpers.ShowAlert("Validation Error", "<p>Passwords do not match.</p>");
                     return false;
                 }
                 if (this.PasswordScore() < 5) {

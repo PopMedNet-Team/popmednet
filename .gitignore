@@ -328,6 +328,16 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Kendo Licensing
+kendo-ui-license
+kendo-ui-license.cmd
+kendo-ui-license.ps1
+semver
+semver.cmd
+semver.ps1
+
+# PopMedNet File Rules
 /Lpp.Dns.Api/App_Data/**/*.*
 !/Lpp.Dns.Api/App_Data/placeholder
 /Lpp.Dns.Api/Scripts/*.js.map
@@ -340,6 +350,7 @@ ASALocalRun/
 /Lpp.Dns.Portal/Content/FormValidation
 /Lpp.Dns.Portal/Content/jqplot
 /Lpp.Dns.Portal/js/**/*.js
+/Lpp.Dns.Portal/**/*.js.map
 /Lpp.Dns.Portal/Scripts/jquery
 !/Lpp.Dns.Portal/Scripts/jquery/1.11.2
 /Lpp.Dns.Portal/Scripts/jqplot/*.js
@@ -382,3 +393,4 @@ Lpp.Dns.Portal/Scripts/PmnGrid/PmnGrid.js
 /DMCS/PopMedNet.DMCS/appsettings.Development.json
 /PopMedNet.Hangfire.ServerManagement/ConnectionStrings.config
 /Tests/PopMedNet.UITests/App.config
+/DMCS/PopMedNet.DMCS.Tests/appsettings.json

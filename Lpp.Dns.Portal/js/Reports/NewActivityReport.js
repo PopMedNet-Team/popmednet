@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../Scripts/Common.ts" />
 var Reports;
 (function (Reports) {
     var NewActivityReport;
     (function (NewActivityReport) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(projects, bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -60,11 +59,9 @@ var Reports;
                 this.SelectedProjects().forEach(function (projectID) {
                     url += "&Projects=" + projectID;
                 });
-                //Execute and display the data retrieved
                 $.getJSON(url).done(function (data) {
                     var model = JSON.parse(data);
                     _this.Results(model.Results);
-                    //Calculate the summary data here
                     _this.Summary(model.Summary);
                     _this.Total(model.Results.length);
                     _this.HeaderStartDate(dStartDate);

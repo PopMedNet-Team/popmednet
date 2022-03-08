@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../Scripts/page/Page.ts" />
 var Dialog;
 (function (Dialog) {
     var RoutingHistory;
     (function (RoutingHistory) {
         var vm;
-        var SessionExpiringViewModel = /** @class */ (function (_super) {
+        var SessionExpiringViewModel = (function (_super) {
             __extends(SessionExpiringViewModel, _super);
             function SessionExpiringViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -32,7 +31,6 @@ var Dialog;
             }
             SessionExpiringViewModel.prototype.Timer = function () {
                 var self = this;
-                ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
                 if (Global.Helpers.DetectInternetExplorer()) {
                     localStorage.setItem("ieFix", null);
                 }

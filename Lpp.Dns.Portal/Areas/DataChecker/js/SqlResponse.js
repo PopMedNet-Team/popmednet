@@ -1,12 +1,10 @@
-/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var Sql;
     (function (Sql) {
         var vm;
         var _bindingControl;
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel(parameters) {
                 this.requestID = ko.observable(null);
                 this.responseID = ko.observable(null);
@@ -75,7 +73,6 @@ var DataChecker;
                     self.isLoaded(true);
                     self.HasResults = true;
                     $('#gResults').append(grid);
-                    //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
                 }).fail(function (error) {
                     alert(error);

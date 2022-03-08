@@ -76,7 +76,7 @@ namespace Lpp.Dns.Api.Projects
                           && (
                             (gAcl.Any(a => a.Allowed) || pAcl.Any(a => a.Allowed))
                             &&
-                            (gAcl.All(a => a.Allowed) && gAcl.All(a => a.Allowed))
+                            (gAcl.All(a => a.Allowed) && pAcl.All(a => a.Allowed))
                           )
                           select p;
 

@@ -289,6 +289,7 @@ namespace Lpp.Dns.DataMart.Model
 
                                 string translatorJARFolderPath = Settings.GetAsString("AppFolderPath", "") + @"\HQMF\HQMF_SQL_Translator";
 
+                                translatorJARStartInfo = new ProcessStartInfo();
                                 translatorJARStartInfo.FileName = "java";
                                 translatorJARStartInfo.WorkingDirectory = translatorJARFolderPath;
                                 translatorJARStartInfo.UseShellExecute = false;
@@ -299,7 +300,7 @@ namespace Lpp.Dns.DataMart.Model
                                 string quotedJARPath = @" """ + translatorJARFolderPath + @"\HQMF_SQL_Translator.jar"" ";
                                 string quotedXMLPath = @" """ + tempHQMFFolderPath + @"\Intermediate.xml"" ";
 
-                                translatorJARStartInfo = new ProcessStartInfo(); 
+                                
                                 translatorJARStartInfo.Arguments = "-jar " + quotedJARPath + " " + quotedXMLPath;
                                 translatorJARProcess = new Process();
                                 translatorJARProcess.StartInfo = translatorJARStartInfo;

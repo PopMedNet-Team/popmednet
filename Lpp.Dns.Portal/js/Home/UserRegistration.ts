@@ -25,7 +25,7 @@ module Home.UserRegistration {
                 return;
 
             if (this.ConfirmPassword() != this.Registration.Password()) {
-                Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that the passwords enter match.</p>");
+                Global.Helpers.ShowAlert("Validation Error", "<p>Passwords do not match.</p>");
                 return;
             }
 

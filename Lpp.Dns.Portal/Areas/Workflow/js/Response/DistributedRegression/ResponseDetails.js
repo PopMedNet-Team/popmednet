@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22,7 +21,7 @@ var Workflow;
         (function (ResponseDetail) {
             var vm;
             var rootVM;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, routings, responses, documents, canViewPendingApprovalResponses, exportForFileDistribution) {
                     var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
@@ -97,7 +96,7 @@ var Workflow;
                 }
                 Utils.formatDate = formatDate;
             })(Utils = ResponseDetail.Utils || (ResponseDetail.Utils = {}));
-            var RevisionSet = /** @class */ (function () {
+            var RevisionSet = (function () {
                 function RevisionSet(id) {
                     var _this = this;
                     this.gridData = null;
@@ -151,7 +150,6 @@ var Workflow;
                     this.add = function (document) {
                         self.Revisions.unshift(document);
                         self.Revisions.sort(function (a, b) {
-                            //sort by version number - highest to lowest, and then date created - newest to oldest
                             if (a.MajorVersion === b.MajorVersion) {
                                 if (a.MinorVersion === b.MinorVersion) {
                                     if (a.BuildVersion === b.BuildVersion) {
@@ -166,7 +164,6 @@ var Workflow;
                             }
                             return b.MajorVersion - a.MajorVersion;
                         });
-                        //set the first revision after the sort
                         self.Current(self.Revisions()[0]);
                         self.TaskID = self.Current().ItemID;
                         self.TaskName = self.Current().ItemTitle;
@@ -180,7 +177,6 @@ var Workflow;
                     };
                     this.refreshGridDataSource = function () {
                         if (self.gridData) {
-                            //TODO: also need to update the main grid for the current revision name stuff
                             self.gridData.setDataSource(new kendo.data.DataSource({ data: self.Revisions() }));
                         }
                     };

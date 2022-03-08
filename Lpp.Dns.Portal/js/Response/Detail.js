@@ -1,4 +1,3 @@
-/// <reference path="../../Scripts/typings/bootstrap.dns.d.ts" />
 var Responses;
 (function (Responses) {
     var Detail;
@@ -6,7 +5,7 @@ var Responses;
         Detail.InitialGroupName = '';
         var vm;
         var vmHeader = null;
-        var HeaderViewModel = /** @class */ (function () {
+        var HeaderViewModel = (function () {
             function HeaderViewModel(fieldOptions) {
                 this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                 var self = this;
@@ -35,7 +34,7 @@ var Responses;
             return HeaderViewModel;
         }());
         Detail.HeaderViewModel = HeaderViewModel;
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel() {
                 var self = this;
                 this.GroupName = ko.observable(Responses.Detail.InitialGroupName || '');

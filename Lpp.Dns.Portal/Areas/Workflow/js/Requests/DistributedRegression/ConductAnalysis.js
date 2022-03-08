@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -21,7 +20,7 @@ var Workflow;
         var ConductAnalysis;
         (function (ConductAnalysis) {
             var vm;
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -83,7 +82,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             ConductAnalysis.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, responses, viewResponseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     var _this = _super.call(this, bindingControl) || this;

@@ -1,4 +1,3 @@
-/// <reference path="../typings/bootstrap.dns.d.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,10 +13,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-//V5.1.0
 var Global;
 (function (Global) {
-    var WorkflowActivityViewModel = /** @class */ (function () {
+    var WorkflowActivityViewModel = (function () {
         function WorkflowActivityViewModel(bindingControl, screenPermissions) {
             if (screenPermissions === void 0) { screenPermissions = null; }
             var self = this;
@@ -46,13 +44,7 @@ var Global;
         return WorkflowActivityViewModel;
     }());
     Global.WorkflowActivityViewModel = WorkflowActivityViewModel;
-    var PageViewModel = /** @class */ (function () {
-        /**
-         *
-         * @param bindingControl The control the page viewmodel is bound to.
-         * @param screenPermissions The permissions for controlling the UI the user has.
-         * @param validationContainer The container to use for validation other than the root binding container. If not specified the 'bindingControl' element is used.
-         */
+    var PageViewModel = (function () {
         function PageViewModel(bindingControl, screenPermissions, validationContainer) {
             var _this = this;
             if (screenPermissions === void 0) { screenPermissions = null; }
@@ -104,7 +96,7 @@ var Global;
         return PageViewModel;
     }());
     Global.PageViewModel = PageViewModel;
-    var DialogViewModel = /** @class */ (function (_super) {
+    var DialogViewModel = (function (_super) {
         __extends(DialogViewModel, _super);
         function DialogViewModel(bindingControl) {
             var _this = _super.call(this, bindingControl) || this;
@@ -129,7 +121,7 @@ var Global;
         return DialogViewModel;
     }(PageViewModel));
     Global.DialogViewModel = DialogViewModel;
-    var UserInfo = /** @class */ (function () {
+    var UserInfo = (function () {
         function UserInfo() {
             this.ID = null;
             this.AuthToken = null;
@@ -150,7 +142,6 @@ var Global;
             if (this.AuthInfo.UserName) {
                 this.AuthToken = this.AuthInfo.Authorization;
                 this.Employers = this.AuthInfo.Employers || [];
-                //See if there is an employerID. If not and there is only one employer, set it.
                 if (!this.AuthInfo.EmployerID && this.Employers.length > 0)
                     this.SetEmployer(this.Employers[0].ID);
                 if (this.AuthInfo.EmployerID) {
@@ -183,7 +174,6 @@ var Global;
         UserInfo.prototype.SessionExiring = function () {
             var self = this;
             setTimeout(function () { }, 1000);
-            ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
             if (Helpers.DetectInternetExplorer()) {
                 localStorage.setItem("ieFix", null);
             }
@@ -211,7 +201,6 @@ var Global;
                     });
                 }
                 else {
-                    ///Due to regression in IE if we want to get an updated local storage item that may have been updated cross tab, we need to set a random Item first which will force a refresh of the localStorage.
                     if (Helpers.DetectInternetExplorer()) {
                         localStorage.setItem("ieFix", null);
                     }
@@ -282,8 +271,7 @@ var Global;
         return UserInfo;
     }());
     Global.UserInfo = UserInfo;
-    //this class is a temporary fix until jquery.cookie can handle % correctly.
-    var Cookies = /** @class */ (function () {
+    var Cookies = (function () {
         function Cookies() {
         }
         Cookies.get = function (name) {
@@ -295,13 +283,12 @@ var Global;
         return Cookies;
     }());
     Global.Cookies = Cookies;
-    var Helpers = /** @class */ (function () {
+    var Helpers = (function () {
         function Helpers() {
         }
         Helpers.ToPercent = function (count, total) {
             return total <= 0 ? 0 : parseFloat((count / total * 100).toFixed(2));
         };
-        //Create a copy of an object when type is not known.
         Helpers.CopyObject = function (object) {
             var objectCopy = {};
             for (var prop in object) {
@@ -326,12 +313,11 @@ var Global;
             }
             return objectCopy;
         };
-        //Tests the passed password for strength, with 0 being blank, and 5 being very strong.
         Helpers.TestPasswordStrength = function (password) {
             if (password == null || password.length == 0 || password.indexOf(":") > -1 || password.indexOf(";") > -1 || password.indexOf("<") > -1)
-                return 0; //Blank/invalid
+                return 0;
             if (password.length <= 4)
-                return 1; //Weak
+                return 1;
             var score = 1;
             if (password.length >= 8)
                 score++;
@@ -384,7 +370,6 @@ var Global;
             menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
             menu.bind("select", function (e) {
                 if ($(e.item).text() == "Clear All Filters") {
-                    //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
                     grid.dataSource.filter({});
                     menu.close();
                     popup.close();
@@ -435,9 +420,7 @@ var Global;
                 var filteredMembers = [];
                 var filter;
                 var x = function () {
-                    //reset filtered members
                     filteredMembers = [];
-                    //dataSource has been updated already so use the grid's dataSource for the filters instead of the settings variable s
                     var gridFitler = grid.dataSource.filter();
                     if (gridFitler != null) {
                         filter = gridFitler.filters;
@@ -460,8 +443,6 @@ var Global;
                     }
                 };
                 grid.bind("dataBound", x);
-                //PMNDEV-5197: We need to remove/hide the columns that are set as hidden first.
-                //The previous code below was moving columns and changing/updating indexes which caused the wrong columns to appear in the UI with invalid values at times.
                 s.columns.forEach(function (col) {
                     if (col.hidden == true) {
                         grid.hideColumn(col.field);
@@ -469,7 +450,6 @@ var Global;
                 });
                 for (var i = 0; i < s.columns.length; i++) {
                     if (grid.columns[i].field == s.columns[i].field) {
-                        //Do Nothing
                     }
                     if (grid.columns[i].field != s.columns[i].field) {
                         for (var j = 0; j < grid.columns.length; j++) {
@@ -521,9 +501,7 @@ var Global;
                 var filteredMembers = [];
                 var filter;
                 var x = function () {
-                    //reset filtered members
                     filteredMembers = [];
-                    //dataSource has been updated already so use the grid's dataSource for the filters instead of the settings variable s
                     var gridFitler = grid.dataSource.filter();
                     if (gridFitler != null) {
                         filter = gridFitler.filters;
@@ -650,7 +628,6 @@ var Global;
         };
         Helpers.PersistDataSourceSettingsToUrl = function (ds, setCurrentUrl) {
             var params = "";
-            //Build up the url based on the sort etc
             if (ds.sort()) {
                 ds.sort().forEach(function (item) {
                     if ((item.field == "SubmittedOn" && item.dir == "desc"))
@@ -663,7 +640,6 @@ var Global;
                     params += "&filter=" + encodeURIComponent(item.field) + "|" + encodeURIComponent(item.operator.toString()) + "|" + encodeURIComponent(item.value);
                 });
             }
-            //Create the entire url
             var url = window.location.href;
             if (url.indexOf("?") == -1) {
                 url = url.substr(0, url.indexOf("?") + 1);
@@ -758,15 +734,7 @@ var Global;
                 return window.btoa(data);
             var str = String(data);
             var output = "";
-            for (
-            // initialize result and counter
-            var block, charCode, idx = 0, map = Helpers.chars, output = ''; 
-            // if the next str index does not exist:
-            //   change the mapping table to "="
-            //   check if d has no fractional digits
-            str.charAt(idx | 0) || (map = '=', idx % 1); 
-            // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-            output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
+            for (var block, charCode, idx = 0, map = Helpers.chars, output = ''; str.charAt(idx | 0) || (map = '=', idx % 1); output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
                 charCode = str.charCodeAt(idx += 3 / 4);
                 if (charCode > 0xFF) {
                     throw "'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.";
@@ -804,11 +772,9 @@ var Global;
                 parameters: parameters,
                 close: function (e) {
                     if (e.userTriggered) {
-                        //userTriggered will be true if the close action has been triggered by the user clicking the close button or escape key -> cancel.
                         deferred.reject();
                     }
                     else {
-                        //close was triggered programatically by clicking an action button in the window
                         deferred.resolve(kendoWindow.data("kendoWindow").options.returnResults);
                     }
                 }
@@ -839,7 +805,6 @@ var Global;
                 iframe: true
             });
             var lcHtml = '';
-            //Strip out the <html> and <body> tags
             if ($.isPlainObject(html)) {
                 if (html.errors && html.errors.length > 0) {
                     lcHtml = (html.errors[0].Description || '').toLowerCase();
@@ -878,13 +843,12 @@ var Global;
         Helpers.ProcessAjaxError = function (error) {
             if (error.responseText != null && error.responseText.toLowerCase().indexOf("<body") > -1)
                 return error.responseText;
-            if (typeof error == "string") //It's just a string of text, return it.
+            if (typeof error == "string")
                 return error;
             if (error.message) {
                 return error.message;
             }
             var errorString = "Status: " + error.status + "<br/>Server Message: " + error.statusText;
-            //Should parse the error text etc. from the array
             if (error.responseText != null && error.responseText != "") {
                 try {
                     var result = JSON.parse(error.responseText);
@@ -918,7 +882,6 @@ var Global;
             }
             return errorString;
         };
-        //Confirms an operation
         Helpers.ShowConfirm = function (title, html) {
             var d = jQuery.Deferred();
             var kendoWindow = $("<div/>").kendoWindow({
@@ -992,7 +955,6 @@ var Global;
                 return (length / this.kilobyte).toFixed(2) + ' Kb';
             return length + ' bytes';
         };
-        /*Checks the specified url has a value, and appends a / to it if missing before initiating the redirect.*/
         Helpers.RedirectTo = function (url) {
             if (url == null || url == undefined || url == '')
                 return;
@@ -1013,13 +975,11 @@ var Global;
                 return false;
             return content.slice(0, value.length).toLowerCase() == value.toLowerCase();
         };
-        /* Replaces the current page history item with new details */
         Helpers.HistoryReplaceState = function (pageTitle, uri) {
             if (Helpers.StartsWith(uri, '/') == false)
                 uri = '/' + uri;
             window.history.replaceState(null, pageTitle, uri);
         };
-        /** Helper that replaces filter parameter values with a custom object that allows for specific formatting of the odata filter string for the specified field. */
         Helpers.UpdateKendoGridFilterOptions = function (options, customFilterStrings) {
             var updateFilterValue = function (filters) {
                 for (var j = 0; j < filters.length; j++) {
@@ -1058,8 +1018,7 @@ var Global;
         return Helpers;
     }());
     Global.Helpers = Helpers;
-    /** Custom class that overrides the default toString implementation to return the value specified using the a specific string format. */
-    var ODataCustomFilterValueFormatter = /** @class */ (function (_super) {
+    var ODataCustomFilterValueFormatter = (function (_super) {
         __extends(ODataCustomFilterValueFormatter, _super);
         function ODataCustomFilterValueFormatter(value, format) {
             var _this = _super.call(this) || this;
@@ -1097,7 +1056,6 @@ var Global;
         Helpers.ShowDialog("Information", "/home/info", ["close"], 800, 600, param).done(function () { });
     }
     Global.ShowInfo = ShowInfo;
-    //Gets or sets session data
     function Session(key, data) {
         if (data) {
             sessionStorage.setItem(key, JSON.stringify(data));
@@ -1111,7 +1069,6 @@ var Global;
         sessionStorage.removeItem(key);
     }
     Global.SessionRemoveKey = SessionRemoveKey;
-    //Gets or sets local data
     function Local(key, data) {
         if (data) {
             localStorage.setItem(key, JSON.stringify(data));
@@ -1121,13 +1078,11 @@ var Global;
         }
     }
     Global.Local = Local;
-    //Gets a query parameter and is not case sensitive.
     function GetQueryParam(param) {
         return $.url(window.location.href.toLowerCase()).param(param.toLowerCase());
     }
     Global.GetQueryParam = GetQueryParam;
-    /* A class representing a key/value pair */
-    var KeyValuePair = /** @class */ (function () {
+    var KeyValuePair = (function () {
         function KeyValuePair(_key, _value) {
             this.key = _key;
             this.value = _value;
@@ -1161,7 +1116,7 @@ var Constants;
         return kendo.toString(date, Constants.DateTimeFormat);
     }
     Constants.FormatDateTime = FormatDateTime;
-    var Guid = /** @class */ (function () {
+    var Guid = (function () {
         function Guid() {
         }
         Guid.newGuid = function () {

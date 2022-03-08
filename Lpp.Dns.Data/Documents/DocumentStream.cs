@@ -58,9 +58,6 @@ namespace Lpp.Dns.Data.Documents
             if (source == null)
                 throw new ArgumentNullException("source");
 
-            if (this == null)
-                throw new ArgumentNullException("destination");
-
             if (bufferSize <= 0)
                 throw new ArgumentOutOfRangeException("bufferSize", "bufferSize must be greater than zero");
 

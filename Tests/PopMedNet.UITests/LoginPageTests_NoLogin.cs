@@ -21,7 +21,7 @@ namespace PopMedNet.UITests
             playwright = await Playwright.CreateAsync();
             browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                //Headless = false,
+                Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
                 //SlowMo = 50,
             });
             context = await browser.NewContextAsync();
@@ -36,6 +36,18 @@ namespace PopMedNet.UITests
 
             singlePage = GetPage().Result;
 
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            browser.CloseAsync();
+        }
+
+        private async Task CloseDialog(IPage page)
+        {
+            var closeButton = await page.WaitForSelectorAsync("[aria-label=\"close\"]");
+            await closeButton.ClickAsync();
         }
 
         [Test]
@@ -102,6 +114,8 @@ namespace PopMedNet.UITests
             await newPage.WaitForLoadStateAsync();
             var title = await newPage.TitleAsync();
             Assert.That(title, Is.EqualTo("PopMedNet Support - Jira Service Management"));
+            
+            await singlePage.BringToFrontAsync();
         }
 
         [Test]
@@ -116,6 +130,7 @@ namespace PopMedNet.UITests
             // Then 
             var dialogTitle = await singlePage.WaitForSelectorAsync(".k-window-title");
             Assert.That(dialogTitle.InnerTextAsync, Is.EqualTo("Terms And Conditions"));
+            await CloseDialog(singlePage);
         }
 
         [Test]
@@ -130,6 +145,7 @@ namespace PopMedNet.UITests
             // Then 
             var dialogTitle = await singlePage.WaitForSelectorAsync(".k-window-title");
             Assert.That(dialogTitle.InnerTextAsync, Is.EqualTo("Terms And Conditions"));
+            await CloseDialog(singlePage);
         }
 
         [Test]
@@ -144,7 +160,10 @@ namespace PopMedNet.UITests
             // Then 
             var dialogTitle = await singlePage.WaitForSelectorAsync(".k-window-title");
             Assert.That(dialogTitle.InnerTextAsync, Is.EqualTo("Information"));
+            await CloseDialog(singlePage);
         }
+
+       
 
         [Test]
         public async Task ForgotPasswordClick_DisplaysForgotPasswordDialog()
@@ -163,7 +182,7 @@ namespace PopMedNet.UITests
         }
 
         [Test]
-        public async Task LoginWithIncorrectUsername_DisplaysInvalidUserNameOrPassword()
+        public async Task Login_IncorrectUsername_DisplaysInvalidUserNameOrPassword()
         {
             // Given
 
@@ -184,7 +203,7 @@ namespace PopMedNet.UITests
         }
 
         [Test]
-        public async Task LoginWithIncorrectPassword_DisplaysInvalidUserNameOrPassword()
+        public async Task Login_IncorrectPassword_DisplaysInvalidUserNameOrPassword()
         {
             // Given
 

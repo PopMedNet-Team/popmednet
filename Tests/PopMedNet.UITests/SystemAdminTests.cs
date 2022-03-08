@@ -10,19 +10,19 @@ namespace PopMedNet.UITests
 {
     class SystemAdminTests
     {
-        static IPlaywright playwright;
-        static IBrowser browser;
-        static IBrowserContext context;
-        static IPage singlePage;
+        IPlaywright playwright;
+        IBrowser browser;
+        IBrowserContext context;
+        IPage singlePage;
 
-        public static string testUrl;
+        public string testUrl;
 
         public async Task<IPage> GetPage()
         {
             playwright = await Playwright.CreateAsync();
             browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                //Headless = false,
+                Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
                 //SlowMo = 50,
             });
             context = await browser.NewContextAsync();

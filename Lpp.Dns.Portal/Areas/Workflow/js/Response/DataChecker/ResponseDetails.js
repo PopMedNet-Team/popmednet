@@ -1,7 +1,3 @@
-/// <reference path="../../../../DataChecker/js/Common.ts" />
-/// <reference path="../../../../DataChecker/js/RxAmtResponse.ts" />
-/// <reference path="../../../../DataChecker/js/RxSupResponse.ts" />
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20,22 +16,16 @@ var __extends = (this && this.__extends) || (function () {
 var templateFromUrlLoader = {
     loadTemplate: function (name, templateConfig, callback) {
         if (templateConfig.fromUrl) {
-            // Uses jQuery's ajax facility to load the markup from a file
             var fullUrl = '/DataChecker/' + templateConfig.fromUrl;
             $.get(fullUrl, function (markupString) {
-                // We need an array of DOM nodes, not a string.
-                // We can use the default loader to convert to the
-                // required format.                
                 ko.components.defaultLoader.loadTemplate(name, markupString, callback);
             });
         }
         else {
-            // Unrecognized config format. Let another loader handle it.
             callback(null);
         }
     }
 };
-// Register the loaders
 ko.components.loaders.unshift(templateFromUrlLoader);
 ko.components.register('datachecker-default', {
     template: '<span>...</span>'
@@ -106,7 +96,7 @@ var Workflow;
             (function (ResponseDetails) {
                 var vm;
                 var rootVM;
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, requestID, routings, responses, documents, req, canViewPendingApprovalResponses, exportForFileDistribution) {
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
@@ -153,7 +143,6 @@ var Workflow;
                                             }
                                         }
                                     }
-                                    //Does the response contain suppressed cells? Check for LowThreshold column
                                     for (var i = 0; i < resp.Queries[0].Results.length; i++) {
                                         var table = resp.Queries[0].Results[i];
                                         var row = table[0];
@@ -166,7 +155,6 @@ var Workflow;
                                     }
                                 });
                                 var reqQuery = JSON.parse(req.Query);
-                                //NOTE:when the json is parsed the QueryType is a string representation of the enum numeric value, need to parse to a number for the switch statement to work.
                                 switch (parseInt((reqQuery.Queries[0].Header.QueryType || '-1').toString())) {
                                     case Dns.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_AgeRange:
                                         self.DataCheckerResponseBinding('datachecker-agedistribution');
@@ -222,9 +210,7 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
-                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
-                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 })
                                     .fail(function (err) {
@@ -239,9 +225,7 @@ var Workflow;
                                 var responseIDs = ko.utils.arrayMap(responses, function (x) { return x.ID; });
                                 Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: responseIDs }, true)
                                     .done(function () {
-                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
-                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 }).fail(function (err) {
                                     var errorMessage = err.responseJSON.errors[0].Description;

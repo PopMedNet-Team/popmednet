@@ -331,7 +331,7 @@ namespace Lpp.Dns.DataMart.Client
             }
             else
             {
-                Log.Info(string.Format("No documents to upload for query: {0} (DataMart:{1}, Network:{2}, RequestID: {3:D})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID, responseDocuments.Length));
+                Log.Info(string.Format("No documents to upload for query: {0} (DataMart:{1}, Network:{2}, RequestID: {3:D})", request.Source.Identifier, request.DataMartName, request.NetworkName, request.Source.ID, (responseDocuments != null ? responseDocuments.Length : 0)));
             }
 
             if (request.RoutingStatus == Lpp.Dns.DTO.DataMartClient.Enums.DMCRoutingStatus.Failed)

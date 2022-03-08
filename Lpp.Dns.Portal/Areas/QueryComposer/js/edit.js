@@ -1,6 +1,3 @@
-/// <reference path="../../../js/_rootlayout.ts" />
-/// <reference path="termvaluefilter.ts" />
-/// <reference path="../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24,15 +21,8 @@ var Plugins;
         (function (QueryBuilder) {
             var Edit;
             (function (Edit) {
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
-                    /**
-                     * Initializes the edit container holding the QueryComposer editor
-                     * @param bindingControl The binding element for knockout.
-                     * @param requestDTO The QueryComposer RequestDTO.
-                     * @param requestID The ID of the actual request.
-                     * @param requestTypeDTO The request type DTO.
-                     */
                     function ViewModel(bindingControl, requestDTO, projectID, requestID, requestTypeDTO, requestTypeModelIDs, requestTypeTerms, visualTerms, criteriaGroupTemplates, hiddenTerms, routingsEditor, attachmentsEditor) {
                         var _this = _super.call(this, bindingControl) || this;
                         _this.IsFileUpload = false;
@@ -114,7 +104,6 @@ var Plugins;
                     });
                     ViewModel.prototype.Validate = function () {
                         if (this.MDQ_Host != null) {
-                            //check that there are no empty criteria groups
                             var emptyCriteriaGroupQuery = ko.utils.arrayFirst(this.MDQ_Host.ExportQueries(), function (query) {
                                 if (ko.utils.arrayFirst(query.Where.Criteria, function (criteria) { return (criteria.Terms == null || criteria.Terms.length == 0) && (criteria.Criteria == null || criteria.Criteria.length == 0); }) != null) {
                                     return true;
@@ -129,6 +118,12 @@ var Plugins;
                                 return false;
                             }
                             _super.prototype.Validate.call(this);
+                        }
+                        return true;
+                    };
+                    ViewModel.prototype.VerifyNoDuplicates = function () {
+                        if (this.MDQ_Host != null) {
+                            return this.MDQ_Host.VerifyNoDuplicates();
                         }
                         return true;
                     };
@@ -147,7 +142,6 @@ var Plugins;
                         }
                     };
                     ViewModel.prototype.exportRequestDTO = function () {
-                        //clone the requestDTO object, and update the query dto's
                         var requestDTO = JSON.parse(JSON.stringify(this.RequestDTO));
                         requestDTO.Queries = this.MDQ_Host == null ? this.FileUpload_Host.ExportQueries() : this.MDQ_Host.ExportQueries();
                         return requestDTO;

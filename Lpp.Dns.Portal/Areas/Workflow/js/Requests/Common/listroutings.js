@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20,7 +19,7 @@ var Workflow;
     (function (Common) {
         var ListRoutings;
         (function (ListRoutings) {
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -83,7 +82,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             ListRoutings.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, responses, responseGroups, overrideableRoutingIDs, canViewIndividualResponses, canViewAggregateResponses, requestTypeModels, requestPermissions) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -137,7 +136,6 @@ var Workflow;
                     self.AllowCopy = Requests.Details.rovm.AllowCopy();
                     self.AllowViewRoutingHistory = ko.utils.arrayFirst(requestPermissions, function (p) { return p.toUpperCase() == PMNPermissions.Request.ViewHistory; }) != null;
                     self.AllowAggregateView = true;
-                    //Do not allow Aggregate view for request types models associated with DataChecker, ModularProgram Models, and File Distribution Models.  Also Metadata Refrsh Query Type       
                     var containsMetaDataRefresh = function (rtt) {
                         for (var i = 0; i++; i < rtt.Queries.length) {
                             if (rtt.Queries[i].Header.QueryType != null && rtt.Queries[i].Header.QueryType == Dns.Enums.QueryComposerQueryTypes.SummaryTable_Metadata_Refresh) {
@@ -187,7 +185,6 @@ var Workflow;
                         showRoutingHistory(item.ID, item.RequestID);
                     };
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
-                        //call function on the composer to update routing info
                         _this.UpdateRoutings(info);
                     });
                     self.CompletedRoutings = ko.computed(function () {
@@ -210,7 +207,6 @@ var Workflow;
                             }
                         });
                     });
-                    //may need edits to not hide rejected?
                     self.IncompleteRoutings = ko.observable(ko.utils.arrayFilter(self.Routings(), function (routing) {
                         return routing.Status != Dns.Enums.RoutingStatus.Completed &&
                             routing.Status != Dns.Enums.RoutingStatus.ResultsModified &&
@@ -262,7 +258,6 @@ var Workflow;
                         return self.SelectedIncompleteRoutings().length > 0;
                     });
                     self.VirtualRoutings = ko.observableArray([]);
-                    //create the virtual routings, do the groups first
                     if (responseGroups.length > 0) {
                         ko.utils.arrayForEach(responseGroups, function (group) {
                             var routing = ko.utils.arrayFirst(self.Routings(), function (r) { return r.ResponseGroupID == group.ID; });
@@ -280,9 +275,7 @@ var Workflow;
                         }
                     });
                     Requests.Details.rovm.ReloadRoutingsRequired.subscribe(function () {
-                        //reload the response groups and responses
                         $.when(Dns.WebApi.Response.GetForWorkflowRequest(Requests.Details.rovm.Request.ID(), false), Dns.WebApi.Response.GetResponseGroupsByRequestID(Requests.Details.rovm.Request.ID())).done(function (rts, rg) {
-                            //redo the virtual routes
                             var virtualRoutes = [];
                             if (rg != null && rg.length > 0) {
                                 ko.utils.arrayForEach(rg, function (group) {
@@ -320,13 +313,11 @@ var Workflow;
                             Request: Requests.Details.rovm.Request.Query(),
                             RequestID: Requests.Details.rovm.Request.ID()
                         }).done(function (dataMarts) {
-                            //compatible datamarts
                             var newDataMarts = dataMarts;
                             var i = 0;
                             var allRoutes = self.Routings();
                             while (i < 100) {
                                 var dm = allRoutes[i];
-                                //removing already submitted DMs from the list of available DMs
                                 if (dm != null || undefined) {
                                     var exisitngDataMarts = ko.utils.arrayFirst(newDataMarts, function (datamart) { return datamart.ID == dm.DataMartID; });
                                     ko.utils.arrayRemoveItem(newDataMarts, exisitngDataMarts);
@@ -350,7 +341,6 @@ var Workflow;
                         });
                     };
                     self.onEditRoutingStatusDialog = function () {
-                        //only pass the routes that are selected and overrideable
                         var invalidRoutes = [];
                         var validRoutes = [];
                         ko.utils.arrayForEach(self.SelectedIncompleteRoutings(), function (r) {
@@ -365,7 +355,6 @@ var Workflow;
                             }
                         });
                         if (invalidRoutes.length > 0) {
-                            //show warning message that invalid routes have been selected.
                             var msg = "<div class=\"alert alert-warning\"><p>You do not have permission to override the routing status of the following DataMarts: </p><p style= \"padding:10px;\">";
                             msg = msg + invalidRoutes.map(function (ir) { return ir.DataMart; }).join();
                             msg = msg + "</p></div>";
@@ -375,7 +364,6 @@ var Workflow;
                         Global.Helpers.ShowDialog("Edit DataMart Routing Status", "/Dialogs/EditRoutingStatus", ["Close"], 950, 475, { IncompleteDataMartRoutings: validRoutes })
                             .done(function (result) {
                             for (var dm in result) {
-                                //code in this loop should never be hit, handled in EditRoutingStatus.
                                 if (result[dm].NewStatus == null || result[dm].NewStatus <= 0) {
                                     Global.Helpers.ShowAlert("Validation Error", "Every checked Datamart Routing must have a specified New Routing Status.");
                                     return;
@@ -394,7 +382,6 @@ var Workflow;
                         Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: Requests.Details.rovm.Request.Priority(), defaultDueDate: Requests.Details.rovm.Request.DueDate() })
                             .done(function (result) {
                             if (result != null) {
-                                //update values for selected incomplete routings
                                 var routings = self.IncompleteRoutings();
                                 var updatedRoutings = [];
                                 self.IncompleteRoutings([]);
@@ -411,7 +398,6 @@ var Workflow;
                                     updatedRoutings.push(dm);
                                 });
                                 self.IncompleteRoutings(updatedRoutings);
-                                //save values for selected incomplete routings
                                 self.PostComplete('4F7E1762-E453-4D12-8037-BAE8A95523F7');
                             }
                         });
@@ -424,7 +410,6 @@ var Workflow;
                             Data: null,
                             Comment: null
                         }).done(function (results) {
-                            //force a reload of the page
                             window.location.href = "/requests/details?ID=" + Requests.Details.rovm.Request.ID();
                         });
                     };
@@ -436,12 +421,10 @@ var Workflow;
                             Data: null,
                             Comment: null
                         }).done(function (results) {
-                            //force a reload of the page
                             window.location.href = "/requests/details?ID=" + Requests.Details.rovm.Request.ID();
                         });
                     };
                     self.onGroupResponses = function () {
-                        //show a dialog to get the group name
                         Global.Helpers.ShowPrompt('Group Name', 'Please enter a name for the grouping:', 600, true).done(function (result) {
                             self.NewGroupingName = result;
                             self.PostComplete('49F9C682-9FAD-4AE5-A2C5-19157E227186');
@@ -478,7 +461,6 @@ var Workflow;
                         var resultID = ctl.attr("data-ResultID");
                         var responseView = Dns.Enums.TaskItemTypes.Response;
                         if (resultID.toUpperCase() == '354A8015-5C1D-42F7-BE31-B9FCEF4A8798') {
-                            //aggregate view
                             responseView = Dns.Enums.TaskItemTypes.AggregateResponse;
                         }
                         var tabID = 'responsedetail_' + self.responseIndex;
@@ -572,7 +554,6 @@ var Workflow;
                     var triggerRefresh = true;
                     var groupResultID = '49F9C682-9FAD-4AE5-A2C5-19157E227186';
                     var ungroupResultID = '7821FC45-9FD5-4597-A405-B021E5ED14FA';
-                    //The viewResponseID is not directly called by the viewing button but used when calling the PostComplete. The Individual and Aggregate ID's are on the view result buttons.
                     var viewResponseID = '1C1D0001-65F4-4E02-9BB7-A3B600E27A2F';
                     var viewIndiviualResultsID = '8BB67F67-764F-433B-9B61-0307836E61D8';
                     var viewAggregateResultsID = '354A8015-5C1D-42F7-BE31-B9FCEF4A8798';
@@ -594,11 +575,9 @@ var Workflow;
                         resultID = viewResponseID;
                     }
                     else if (resultID.toUpperCase() == ungroupResultID) {
-                        //will be collection of group IDs.
                         data = this.SelectedCompleteResponses().join(',');
                     }
                     else if (resultID.toUpperCase() == groupResultID) {
-                        //include the group name and selected responses
                         data = JSON.stringify({
                             GroupName: this.NewGroupingName,
                             Responses: this.SelectedCompleteResponses()
@@ -623,7 +602,6 @@ var Workflow;
                             ResubmissionMessage: this.ResubmissionMessage
                         });
                     }
-                    //clear out the grouping name so that it doesn't accidentally get used again.
                     this.NewGroupingName = null;
                     this.ResubmissionMessage = null;
                     var datamarts = this.Routings();
@@ -642,14 +620,12 @@ var Workflow;
                                     Global.Helpers.RedirectTo(result.Uri);
                                 }
                                 else {
-                                    //Update the request etc. here 
                                     Requests.Details.rovm.Request.ID(result.Entity.ID);
                                     Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                     Requests.Details.rovm.UpdateUrl();
                                 }
                             }
                             else {
-                                //Need to go back to the endpoint cause the results information doesnt contain anything about DM Statuses
                                 Dns.WebApi.Requests.RequestDataMarts(result.Entity.ID, "Status ne Lpp.Dns.DTO.Enums.RoutingStatus'" + Dns.Enums.RoutingStatus.Canceled + "'").done(function (response) {
                                     if (response.length == 0) {
                                         Dns.WebApi.Requests.TerminateRequest(result.Entity.ID).done(function () {
@@ -661,7 +637,6 @@ var Workflow;
                                             Global.Helpers.RedirectTo(result.Uri);
                                         }
                                         else {
-                                            //Update the request etc. here 
                                             Requests.Details.rovm.Request.ID(result.Entity.ID);
                                             Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                             Requests.Details.rovm.UpdateUrl();

@@ -508,6 +508,8 @@ namespace Lpp.Dns.Api.DMCS
 
                 await o.StreamDocumentToDatabase();
 
+                Hangfire.BackgroundJob.Enqueue(() => PostProcessDocument(Identity.ID, o.DocumentMetadata, o.CombindedTempDocumentFileName));
+
                 return Request.CreateResponse(HttpStatusCode.Created, o.DocumentMetadata.DocumentID);
             }
             catch (Exception ex)
@@ -516,6 +518,53 @@ namespace Lpp.Dns.Api.DMCS
 
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occured while trying to upload the document content."));
             }
+        }
+
+        /// <summary>
+        /// Executes document post processing for all the registered post processors.
+        /// </summary>
+        /// <param name="identityID">The ID of the user that initiated the document upload.</param>
+        /// <param name="documentMetadata">The document metadata.</param>
+        /// <param name="cachedDocumentFileName">The full path and name of the temp cached file.</param>
+        /// <returns></returns>
+        public async Task PostProcessDocument(Guid identityID, Lpp.Dns.DTO.DMCS.DMCSResponseDocument documentMetadata, string cachedDocumentFileName)
+        {
+            using (var db = new DataContext())
+            {
+                Data.Document postProcessDocument = await db.Documents.FindAsync(documentMetadata.DocumentID);
+
+                if (!File.Exists(cachedDocumentFileName))
+                {
+                    using (var writer = File.OpenWrite(cachedDocumentFileName))
+                    using (var documentStream = postProcessDocument.GetStream(db))
+                    {
+                        documentStream.CopyTo(writer);
+                        writer.Flush();
+                    }
+                }
+
+                foreach (var item in PostProcessorTypes)
+                {
+                    try
+                    {
+                        Logger.Debug($"[RequestID: { documentMetadata.RequestID }, DataMartID: { documentMetadata.DataMartID }, UserID: { identityID }] Starting post-processing document: { Newtonsoft.Json.JsonConvert.SerializeObject(documentMetadata) } ");
+
+                        IPostProcessDocumentContent postProcess = Activator.CreateInstance(item) as IPostProcessDocumentContent;
+                        postProcess.Initialize(db, Path.GetDirectoryName(cachedDocumentFileName));
+                        await postProcess.ExecuteAsync(postProcessDocument, Path.GetFileName(cachedDocumentFileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"[RequestID: { documentMetadata.RequestID }, DataMartID: { documentMetadata.DataMartID }, UserID: { identityID }] Error post-processing document: { Newtonsoft.Json.JsonConvert.SerializeObject(documentMetadata) } ", ex);
+                    }
+                }
+            }
+
+            try
+            {
+                File.Delete(cachedDocumentFileName);
+            }
+            catch { }
         }
 
         async Task<bool> CheckPermission(Guid requestID, Guid dataMartID, PermissionDefinition permission, Guid identityID)
@@ -549,6 +598,10 @@ namespace Lpp.Dns.Api.DMCS
         public async Task<IHttpActionResult> UserDetails([FromBody]IEnumerable<Guid> ids)
         {
             //TODO: assert that only a service account user can access the endpoint.
+            if(DataContext.Users.Where(u => u.ID == Identity.ID).Select(u => u.UserType).FirstOrDefault() != UserTypes.DMCSUser)
+            {
+                return Unauthorized();
+            }
 
             var query = from u in DataContext.Users
                         where ids.Contains(u.ID)

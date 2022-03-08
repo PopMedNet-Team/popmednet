@@ -1,5 +1,3 @@
-/// <reference path="../../../../controls/js/wffileupload/fortask.ts" />
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22,7 +20,7 @@ var Workflow;
         var DraftRequest;
         (function (DraftRequest) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -84,7 +82,6 @@ var Workflow;
                                     Global.Helpers.RedirectTo(result.Uri);
                                 }
                                 else {
-                                    //Update the request etc. here 
                                     Requests.Details.rovm.Request.ID(result.Entity.ID);
                                     Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                     Requests.Details.rovm.UpdateUrl();

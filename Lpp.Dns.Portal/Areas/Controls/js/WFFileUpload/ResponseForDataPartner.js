@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -21,7 +20,7 @@ var Controls;
         var ResposnseForDataPartner;
         (function (ResposnseForDataPartner) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -60,9 +59,7 @@ var Controls;
                             return false;
                         }
                         item.Selected(true);
-                        //See if we have any with this path. If not, load it
                         if (!item.Loaded()) {
-                            //Load data for the given path.                
                             self.sFtpLoadPath(item, self.Credentials);
                         }
                         else {
@@ -157,7 +154,7 @@ var Controls;
                     };
                     var xhr = evt.XMLHttpRequest;
                     xhr.addEventListener("readystatechange", function (e) {
-                        if (xhr.readyState == 1 /* OPENED */) {
+                        if (xhr.readyState == 1) {
                             xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
                         }
                     });
@@ -181,7 +178,6 @@ var Controls;
                         Password: data.sFtpPassword(),
                         Port: data.sFtpPort()
                     };
-                    //Do an ajax call to validate the server credentials
                     $.ajax({
                         url: "/controls/wffileupload/VerifyFTPCredentials",
                         type: "POST",
@@ -226,7 +222,6 @@ var Controls;
             }(Global.DialogViewModel));
             ResposnseForDataPartner.ViewModel = ViewModel;
             function init() {
-                //In this case we do all of the data stuff in the view model because it has the parameters.
                 $(function () {
                     var bindingControl = $("body");
                     vm = new ViewModel(bindingControl);
@@ -234,7 +229,7 @@ var Controls;
                 });
             }
             init();
-            var ReponseSFtpItem = /** @class */ (function () {
+            var ReponseSFtpItem = (function () {
                 function ReponseSFtpItem(name, path, type, length) {
                     var _this = this;
                     this.Name = ko.observable(name);

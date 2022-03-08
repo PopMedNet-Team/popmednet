@@ -20,6 +20,8 @@ namespace Lpp.Dns.Data.Audit
         [Key, Column(Order = 3)]
         public Guid DocumentID { get; set; }
         public virtual Document Document { get; set; }
+        [Key, Column(Order = 4)]
+        public Guid ItemID { get; set; }
 
     }
 }

@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var SimpleModularProgram;
@@ -21,7 +20,7 @@ var Workflow;
         var DistributeRequest;
         (function (DistributeRequest) {
             var vm;
-            var Routings = /** @class */ (function () {
+            var Routings = (function () {
                 function Routings(dataMart) {
                     this.Priority = ko.observable(dataMart.Priority);
                     this.DueDate = ko.observable(dataMart.DueDate);
@@ -33,7 +32,7 @@ var Workflow;
                 return Routings;
             }());
             DistributeRequest.Routings = Routings;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, fieldOptions, datamarts, existingRequestDataMarts, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -63,7 +62,6 @@ var Workflow;
                                 if (!result.UpdateDueDate) {
                                     newDueDate = null;
                                 }
-                                // update selected datamarts here
                                 self.DataMarts().forEach(function (dm) {
                                     if (self.SelectedDataMartIDs().indexOf(dm.DataMartID) != -1) {
                                         if (result.UpdatePriority) {
@@ -162,7 +160,6 @@ var Workflow;
                     requestDTO.Header.ViewUrl(location.protocol + '//' + location.host + '/querycomposer/summaryview?ID=' + Requests.Details.rovm.Request.ID());
                     requestDTO.Header.Description(Requests.Details.rovm.Request.Description());
                     if (Constants.Guid.equals(resultID, "5445DC6E-72DC-4A6B-95B6-338F0359F89E")) {
-                        //set the submit date if getting submitted
                         requestDTO.Header.SubmittedOn(new Date());
                     }
                     vm.UploadViewModel.ExportQueries().forEach(function (query) {
@@ -201,7 +198,6 @@ var Workflow;
                                     Global.Helpers.RedirectTo(result.Uri);
                                 }
                                 else {
-                                    //Update the request etc. here 
                                     Requests.Details.rovm.Request.ID(result.Entity.ID);
                                     Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                     Requests.Details.rovm.UpdateUrl();
@@ -222,7 +218,6 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -238,7 +233,6 @@ var Workflow;
                 .done(function (datamarts, selectedDataMarts) {
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 var obj = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
-                //TODO: need to deserialize and initialize with single query, or pass the entire request dto.
                 var query = null;
                 if (obj.hasOwnProperty("SchemaVersion")) {
                     query = ko.utils.arrayFirst(obj.Queries, function (q) { return q != null; });
@@ -247,7 +241,6 @@ var Workflow;
                     query = obj;
                 }
                 var uploadViewModel = Requests.Details.rovm.Request.ID() != null ? Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID) : null;
-                //Bind the view model for the activity
                 var bindingControl = $("#MPDistributeRequest");
                 vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
                 if (Requests.Details.rovm.Request.ID() != null) {

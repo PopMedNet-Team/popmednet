@@ -25,7 +25,7 @@ module Home.RestorePassword {
                 return;     
 
             if (this.Password() != this.ConfirmPassword()) {
-                Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that the passwords match</p>");
+                Global.Helpers.ShowAlert("Validation Error", "<p>Passwords do not match.</p>");
                 return;
             }      
 

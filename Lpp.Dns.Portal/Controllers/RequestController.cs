@@ -810,7 +810,7 @@ namespace Lpp.Dns.Portal.Controllers
                 OriginalFolder = folder.ToString(),
                 RequestType = ctx.RequestType,
                 DataMarts = datamarts,
-                SelectedDataMarts = selectedDms ?? post.SelectedDataMartIDs,
+                SelectedDataMarts = selectedDms ?? (post != null ? post.SelectedDataMartIDs : ""),
                 SelectedRequestDataMarts = selectedDataMarts,
                 PluginBody = post != null ? ctx.Plugin.EditRequestReDisplay(ctx, new PostContext(ValueProvider)) : ctx.Plugin.EditRequestView(ctx),
                 Activities = ctx.Request.Project == null ? DataContext.Activities.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Name).Map<Activity, ActivityDTO>().AsEnumerable() : DataContext.Activities.Where(a => a.ProjectID == ctx.Request.ProjectID).OrderBy(p => p.DisplayOrder).ThenBy(p => p.Name).Map<Activity, ActivityDTO>().AsEnumerable(),

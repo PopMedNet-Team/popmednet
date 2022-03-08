@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +20,7 @@ var Workflow;
         var Completed;
         (function (Completed) {
             var vm;
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group) {
                     this.Name = '';
                     this.IsGroup = false;
@@ -63,7 +62,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, routings, responseGroups, canViewIndividualResults, canViewAggregateResponses, requestTypeModels) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -74,7 +73,6 @@ var Workflow;
                     self.AllowViewAggregateResults = ko.observable(canViewAggregateResponses);
                     self.AllowViewIndividualResults = ko.observable(canViewIndividualResults);
                     self.AllowAggregateView = ko.observable(true);
-                    //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                     requestTypeModels.forEach(function (rt) {
                         if (rt.toUpperCase() == '321ADAA1-A350-4DD0-93DE-5DE658A507DF' || rt.toUpperCase() == '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154' || rt.toUpperCase() == 'CE347EF9-3F60-4099-A221-85084F940EDE')
                             self.AllowAggregateView(false);
@@ -94,7 +92,6 @@ var Workflow;
                         return self.SelectedCompleteResponses().length > 0;
                     });
                     self.VirtualRoutings = [];
-                    //create the virtual routings, do the groups first
                     if (responseGroups.length > 0) {
                         ko.utils.arrayForEach(responseGroups, function (group) {
                             var routing = ko.utils.arrayFirst(self.Routings, function (r) { return r.ResponseGroupID == group.ID; });
@@ -169,8 +166,6 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
-                //TODO: should be able to pull request datamarts from the root viewmodel
-                //TODO: look at moving canviewresponse
                 $.when(Dns.WebApi.Requests.RequestDataMarts(id).promise(), Dns.WebApi.Response.CanViewIndividualResponses(id).promise(), Dns.WebApi.Response.CanViewAggregateResponses(id).promise(), Dns.WebApi.Response.GetResponseGroupsByRequestID(id).promise(), Dns.WebApi.Requests.GetRequestTypeModels(id).promise()).done(function (routings, canViewIndividualResponses, canViewAggregateResponses, responseGroups, requestTypeModels) {
                     $(function () {
                         Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");

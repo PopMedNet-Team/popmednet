@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../controls/js/wffileupload/common.ts" />
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -23,7 +22,7 @@ var Plugins;
             var UploadCodeList;
             (function (UploadCodeList) {
                 var vm;
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl) {
                         var _this = _super.call(this, bindingControl) || this;
@@ -82,7 +81,7 @@ var Plugins;
                         });
                         var xhr = evt.XMLHttpRequest;
                         xhr.addEventListener("readystatechange", function (e) {
-                            if (xhr.readyState == 1 /* OPENED */) {
+                            if (xhr.readyState == 1) {
                                 xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
                             }
                         });
@@ -94,7 +93,6 @@ var Plugins;
                 }(Global.DialogViewModel));
                 UploadCodeList.ViewModel = ViewModel;
                 function init() {
-                    //In this case we do all of the data stuff in the view model because it has the parameters.
                     $(function () {
                         var bindingControl = $("body");
                         vm = new ViewModel(bindingControl);

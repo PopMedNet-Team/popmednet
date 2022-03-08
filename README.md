@@ -1,6 +1,8 @@
 # PopMedNet&trade;
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04062/status.svg)](https://doi.org/10.21105/joss.04062)
 
 PopMedNet&trade; is an open-source application used to facilitate multi-site health data networks. It uses a distributed network design that enables data holders to retain full control of their data. Investigators send questions to data holders for review and response. PopMedNet eliminates the need for assembling patient records in a centralized repository, thus preserving patient privacy and confidentiality.
+
 
 # Statement of need
 
@@ -36,6 +38,7 @@ For end user of PopMedNet&trade;, the usage documentation is [PopMedNet&trade; U
 
 # Software Paper
 An overview of PopMedNet&trade; can be found in the accompanying [software paper](paper.md).
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04062/status.svg)](https://doi.org/10.21105/joss.04062)
 
 # Core functionality
 For a description of the core functionality, see the  section "How does PopMedNet&trade; work?" in the accompanying [software paper](paper.md).

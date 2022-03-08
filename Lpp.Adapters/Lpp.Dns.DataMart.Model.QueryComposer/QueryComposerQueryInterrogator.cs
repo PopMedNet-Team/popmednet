@@ -180,7 +180,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer
             var terms = paragraph.FlattenCriteriaToTerms().Where(t => t.Type == ModelTermsFactory.SettingID);
 
             List<string> values = new List<string>();
-            if (terms != null || terms.Any())
+            if (terms != null)
             {
                 foreach (var term in terms)
                 {

@@ -1,4 +1,3 @@
-/// <reference path="../../Lpp.Mvc.Composition/Lpp.Mvc.Controls.Interfaces/utilities.d.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -32,13 +31,10 @@ var Dns;
         });
     }
     Dns.EnableValidation = EnableValidation;
-    var PageViewModel = /** @class */ (function () {
+    var PageViewModel = (function () {
         function PageViewModel(hiddenDataControl) {
             this.validationGroup = ko.validation.group(this);
-            //Store the hidden data control information here so that we can persist to it on the save
             this.HiddenDataControl = hiddenDataControl;
-            //Register the save method that is here with the handler. Beware this might not work because of javascript not knowing about inheritence.
-            //Will have to test this implementation once we have a stub page working.
             var form = $("form.trackChanges");
             var self = this;
             form.submit(function () {
@@ -82,8 +78,8 @@ var Dns;
             var sJson = JSON.stringify(json);
             this.HiddenDataControl.val(sJson);
             var form = $(".Content form");
-            if (form && form.formChanged) //This is done for the places where this isn't available
-                form.formChanged(false); //This forces it to a generic variable because this is hacked into other code that cannot be pulled out right now.
+            if (form && form.formChanged)
+                form.formChanged(false);
             $("input[name=save]").prop("disabled", true);
             $("input[name=Copy]").prop("disabled", false);
             return true;
@@ -91,7 +87,7 @@ var Dns;
         return PageViewModel;
     }());
     Dns.PageViewModel = PageViewModel;
-    var ChildViewModel = /** @class */ (function () {
+    var ChildViewModel = (function () {
         function ChildViewModel() {
             this.validationGroup = ko.validation.group(this);
             this.validationGroup.showAllMessages();
@@ -110,7 +106,6 @@ var Dns;
             for (var prop in par) {
                 if (this[prop] && this[prop].subscribe) {
                     this[prop].subscribe(function (value) {
-                        //console.log("raising change for value: " + value);
                         _this.raiseChange();
                     });
                 }
@@ -119,7 +114,7 @@ var Dns;
         return ChildViewModel;
     }());
     Dns.ChildViewModel = ChildViewModel;
-    var KeyValuePairData = /** @class */ (function () {
+    var KeyValuePairData = (function () {
         function KeyValuePairData(key, value) {
             this.Key = key;
             this.Value = value;
@@ -127,7 +122,7 @@ var Dns;
         return KeyValuePairData;
     }());
     Dns.KeyValuePairData = KeyValuePairData;
-    var KeyValuePair = /** @class */ (function () {
+    var KeyValuePair = (function () {
         function KeyValuePair(key, value) {
             this.Key = ko.observable(key);
             this.Value = ko.observable(value);
@@ -135,8 +130,7 @@ var Dns;
         return KeyValuePair;
     }());
     Dns.KeyValuePair = KeyValuePair;
-    // this class is used to create drop down lists
-    var SelectItem = /** @class */ (function (_super) {
+    var SelectItem = (function (_super) {
         __extends(SelectItem, _super);
         function SelectItem(display, value) {
             return _super.call(this, display, (typeof value === "undefined") ? display : value) || this;
@@ -145,9 +139,7 @@ var Dns;
     }(KeyValuePairData));
     Dns.SelectItem = SelectItem;
 })(Dns || (Dns = {}));
-//Fix Fyodor
 $.fn.alternateClasses = function jQuery$alternateClasses(arrayClasses) {
-    //if (typeof arrayClasses != "Array") arrayClasses = arguments;
     if ((arrayClasses instanceof Array) == false)
         arrayClasses = arguments;
     arrayClasses = $.makeArray(arrayClasses);

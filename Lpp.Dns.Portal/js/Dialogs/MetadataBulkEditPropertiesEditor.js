@@ -13,14 +13,13 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../Scripts/page/Page.ts" />
 var Dialog;
 (function (Dialog) {
     var MetadataBulkEditPropertiesEditor;
     (function (MetadataBulkEditPropertiesEditor) {
         var vm;
         var dvm;
-        var DataMartsViewModel = /** @class */ (function () {
+        var DataMartsViewModel = (function () {
             function DataMartsViewModel(routing) {
                 var self = this;
                 self.DataMartID = routing.DataMartID;
@@ -31,7 +30,7 @@ var Dialog;
             return DataMartsViewModel;
         }());
         MetadataBulkEditPropertiesEditor.DataMartsViewModel = DataMartsViewModel;
-        var MetadataBulkEditPropertiesEditorViewModel = /** @class */ (function (_super) {
+        var MetadataBulkEditPropertiesEditorViewModel = (function (_super) {
             __extends(MetadataBulkEditPropertiesEditorViewModel, _super);
             function MetadataBulkEditPropertiesEditorViewModel(bindingControl, defaultPriority, defaultDueDate, isRequestLevel) {
                 var _this = _super.call(this, bindingControl) || this;

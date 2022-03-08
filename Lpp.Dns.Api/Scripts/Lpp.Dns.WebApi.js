@@ -1,10 +1,8 @@
-/// <reference path='../../node_modules/@types/jquery/index.d.ts' />
-/// <reference path='Lpp.Dns.ViewModels.ts' />
 var Dns;
 (function (Dns) {
     var WebApi;
     (function (WebApi) {
-        var Workflow = /** @class */ (function () {
+        var Workflow = (function () {
             function Workflow() {
             }
             Workflow.GetWorkflowEntryPointByRequestTypeID = function (requestTypeID, doNotHandleFail) {
@@ -129,7 +127,7 @@ var Dns;
             return Workflow;
         }());
         WebApi.Workflow = Workflow;
-        var Wbd = /** @class */ (function () {
+        var Wbd = (function () {
             function Wbd() {
             }
             Wbd.ApproveRequest = function (requestID, doNotHandleFail) {
@@ -203,7 +201,7 @@ var Dns;
             return Wbd;
         }());
         WebApi.Wbd = Wbd;
-        var SsoEndpoints = /** @class */ (function () {
+        var SsoEndpoints = (function () {
             function SsoEndpoints() {
             }
             SsoEndpoints.Get = function (ID, doNotHandleFail) {
@@ -276,7 +274,7 @@ var Dns;
             return SsoEndpoints;
         }());
         WebApi.SsoEndpoints = SsoEndpoints;
-        var Users = /** @class */ (function () {
+        var Users = (function () {
             function Users() {
             }
             Users.Get = function (ID, doNotHandleFail) {
@@ -670,7 +668,7 @@ var Dns;
             return Users;
         }());
         WebApi.Users = Users;
-        var Theme = /** @class */ (function () {
+        var Theme = (function () {
             function Theme() {
             }
             Theme.GetText = function (keys, doNotHandleFail) {
@@ -692,7 +690,7 @@ var Dns;
             return Theme;
         }());
         WebApi.Theme = Theme;
-        var Terms = /** @class */ (function () {
+        var Terms = (function () {
             function Terms() {
             }
             Terms.ListTemplateTerms = function (id, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -786,7 +784,7 @@ var Dns;
             return Terms;
         }());
         WebApi.Terms = Terms;
-        var Security = /** @class */ (function () {
+        var Security = (function () {
             function Security() {
             }
             Security.ListSecurityEntities = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1202,7 +1200,7 @@ var Dns;
             return Security;
         }());
         WebApi.Security = Security;
-        var SecurityGroups = /** @class */ (function () {
+        var SecurityGroups = (function () {
             function SecurityGroups() {
             }
             SecurityGroups.Get = function (ID, doNotHandleFail) {
@@ -1275,7 +1273,7 @@ var Dns;
             return SecurityGroups;
         }());
         WebApi.SecurityGroups = SecurityGroups;
-        var Organizations = /** @class */ (function () {
+        var Organizations = (function () {
             function Organizations() {
             }
             Organizations.Get = function (ID, doNotHandleFail) {
@@ -1403,7 +1401,7 @@ var Dns;
             return Organizations;
         }());
         WebApi.Organizations = Organizations;
-        var OrganizationRegistries = /** @class */ (function () {
+        var OrganizationRegistries = (function () {
             function OrganizationRegistries() {
             }
             OrganizationRegistries.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1431,7 +1429,7 @@ var Dns;
             return OrganizationRegistries;
         }());
         WebApi.OrganizationRegistries = OrganizationRegistries;
-        var Registries = /** @class */ (function () {
+        var Registries = (function () {
             function Registries() {
             }
             Registries.Get = function (ID, doNotHandleFail) {
@@ -1525,7 +1523,7 @@ var Dns;
             return Registries;
         }());
         WebApi.Registries = Registries;
-        var RegistryItemDefinition = /** @class */ (function () {
+        var RegistryItemDefinition = (function () {
             function RegistryItemDefinition() {
             }
             RegistryItemDefinition.GetList = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1547,7 +1545,7 @@ var Dns;
             return RegistryItemDefinition;
         }());
         WebApi.RegistryItemDefinition = RegistryItemDefinition;
-        var NetworkMessages = /** @class */ (function () {
+        var NetworkMessages = (function () {
             function NetworkMessages() {
             }
             NetworkMessages.Get = function (ID, doNotHandleFail) {
@@ -1638,7 +1636,7 @@ var Dns;
             return NetworkMessages;
         }());
         WebApi.NetworkMessages = NetworkMessages;
-        var LookupListCategory = /** @class */ (function () {
+        var LookupListCategory = (function () {
             function LookupListCategory() {
             }
             LookupListCategory.GetList = function (listID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1662,7 +1660,7 @@ var Dns;
             return LookupListCategory;
         }());
         WebApi.LookupListCategory = LookupListCategory;
-        var LookupList = /** @class */ (function () {
+        var LookupList = (function () {
             function LookupList() {
             }
             LookupList.GetList = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1684,7 +1682,7 @@ var Dns;
             return LookupList;
         }());
         WebApi.LookupList = LookupList;
-        var LookupListValue = /** @class */ (function () {
+        var LookupListValue = (function () {
             function LookupListValue() {
             }
             LookupListValue.GetList = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1729,7 +1727,7 @@ var Dns;
             return LookupListValue;
         }());
         WebApi.LookupListValue = LookupListValue;
-        var Groups = /** @class */ (function () {
+        var Groups = (function () {
             function Groups() {
             }
             Groups.Get = function (ID, doNotHandleFail) {
@@ -1802,7 +1800,7 @@ var Dns;
             return Groups;
         }());
         WebApi.Groups = Groups;
-        var OrganizationGroups = /** @class */ (function () {
+        var OrganizationGroups = (function () {
             function OrganizationGroups() {
             }
             OrganizationGroups.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -1830,7 +1828,7 @@ var Dns;
             return OrganizationGroups;
         }());
         WebApi.OrganizationGroups = OrganizationGroups;
-        var Events = /** @class */ (function () {
+        var Events = (function () {
             function Events() {
             }
             Events.GetEventsByLocation = function (locations, doNotHandleFail) {
@@ -2076,7 +2074,7 @@ var Dns;
             return Events;
         }());
         WebApi.Events = Events;
-        var Tasks = /** @class */ (function () {
+        var Tasks = (function () {
             function Tasks() {
             }
             Tasks.ByRequestID = function (requestID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -2177,7 +2175,7 @@ var Dns;
             return Tasks;
         }());
         WebApi.Tasks = Tasks;
-        var LegacyRequests = /** @class */ (function () {
+        var LegacyRequests = (function () {
             function LegacyRequests() {
             }
             LegacyRequests.ScheduleLegacyRequest = function (dto, doNotHandleFail) {
@@ -2189,7 +2187,7 @@ var Dns;
             return LegacyRequests;
         }());
         WebApi.LegacyRequests = LegacyRequests;
-        var ReportAggregationLevel = /** @class */ (function () {
+        var ReportAggregationLevel = (function () {
             function ReportAggregationLevel() {
             }
             ReportAggregationLevel.Delete = function (ID, doNotHandleFail) {
@@ -2262,7 +2260,7 @@ var Dns;
             return ReportAggregationLevel;
         }());
         WebApi.ReportAggregationLevel = ReportAggregationLevel;
-        var RequestObservers = /** @class */ (function () {
+        var RequestObservers = (function () {
             function RequestObservers() {
             }
             RequestObservers.Insert = function (values, doNotHandleFail) {
@@ -2388,7 +2386,7 @@ var Dns;
             return RequestObservers;
         }());
         WebApi.RequestObservers = RequestObservers;
-        var RequestUsers = /** @class */ (function () {
+        var RequestUsers = (function () {
             function RequestUsers() {
             }
             RequestUsers.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -2423,7 +2421,7 @@ var Dns;
             return RequestUsers;
         }());
         WebApi.RequestUsers = RequestUsers;
-        var Response = /** @class */ (function () {
+        var Response = (function () {
             function Response() {
             }
             Response.Get = function (ID, doNotHandleFail) {
@@ -2676,7 +2674,7 @@ var Dns;
             return Response;
         }());
         WebApi.Response = Response;
-        var Requests = /** @class */ (function () {
+        var Requests = (function () {
             function Requests() {
             }
             Requests.CompleteActivity = function (request, doNotHandleFail) {
@@ -3000,7 +2998,7 @@ var Dns;
             return Requests;
         }());
         WebApi.Requests = Requests;
-        var RequestTypes = /** @class */ (function () {
+        var RequestTypes = (function () {
             function RequestTypes() {
             }
             RequestTypes.Insert = function (values, doNotHandleFail) {
@@ -3171,7 +3169,7 @@ var Dns;
             return RequestTypes;
         }());
         WebApi.RequestTypes = RequestTypes;
-        var Templates = /** @class */ (function () {
+        var Templates = (function () {
             function Templates() {
             }
             Templates.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -3333,7 +3331,7 @@ var Dns;
             return Templates;
         }());
         WebApi.Templates = Templates;
-        var Notifications = /** @class */ (function () {
+        var Notifications = (function () {
             function Notifications() {
             }
             Notifications.ExecuteScheduledNotifications = function (userName, password, doNotHandleFail) {
@@ -3349,7 +3347,7 @@ var Dns;
             return Notifications;
         }());
         WebApi.Notifications = Notifications;
-        var DataMartInstalledModels = /** @class */ (function () {
+        var DataMartInstalledModels = (function () {
             function DataMartInstalledModels() {
             }
             DataMartInstalledModels.InsertOrUpdate = function (updateInfo, doNotHandleFail) {
@@ -3361,7 +3359,7 @@ var Dns;
             return DataMartInstalledModels;
         }());
         WebApi.DataMartInstalledModels = DataMartInstalledModels;
-        var ProjectDataMarts = /** @class */ (function () {
+        var ProjectDataMarts = (function () {
             function ProjectDataMarts() {
             }
             ProjectDataMarts.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -3415,7 +3413,7 @@ var Dns;
             return ProjectDataMarts;
         }());
         WebApi.ProjectDataMarts = ProjectDataMarts;
-        var ProjectOrganizations = /** @class */ (function () {
+        var ProjectOrganizations = (function () {
             function ProjectOrganizations() {
             }
             ProjectOrganizations.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -3443,7 +3441,7 @@ var Dns;
             return ProjectOrganizations;
         }());
         WebApi.ProjectOrganizations = ProjectOrganizations;
-        var Projects = /** @class */ (function () {
+        var Projects = (function () {
             function Projects() {
             }
             Projects.Get = function (ID, doNotHandleFail) {
@@ -3701,7 +3699,7 @@ var Dns;
             return Projects;
         }());
         WebApi.Projects = Projects;
-        var Documents = /** @class */ (function () {
+        var Documents = (function () {
             function Documents() {
             }
             Documents.ByTask = function (tasks, filterByTaskItemType, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -3821,7 +3819,7 @@ var Dns;
             return Documents;
         }());
         WebApi.Documents = Documents;
-        var DataMartAvailability = /** @class */ (function () {
+        var DataMartAvailability = (function () {
             function DataMartAvailability() {
             }
             DataMartAvailability.List = function ($filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -3843,7 +3841,7 @@ var Dns;
             return DataMartAvailability;
         }());
         WebApi.DataMartAvailability = DataMartAvailability;
-        var DataModels = /** @class */ (function () {
+        var DataModels = (function () {
             function DataModels() {
             }
             DataModels.Get = function (ID, doNotHandleFail) {
@@ -3932,7 +3930,7 @@ var Dns;
             return DataModels;
         }());
         WebApi.DataModels = DataModels;
-        var DataMarts = /** @class */ (function () {
+        var DataMarts = (function () {
             function DataMarts() {
             }
             DataMarts.Get = function (ID, doNotHandleFail) {
@@ -4077,7 +4075,7 @@ var Dns;
             return DataMarts;
         }());
         WebApi.DataMarts = DataMarts;
-        var Comments = /** @class */ (function () {
+        var Comments = (function () {
             function Comments() {
             }
             Comments.ByRequestID = function (requestID, workflowActivityID, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
@@ -4211,7 +4209,7 @@ var Dns;
             return Comments;
         }());
         WebApi.Comments = Comments;
-        var Helpers = /** @class */ (function () {
+        var Helpers = (function () {
             function Helpers() {
             }
             Helpers.RegisterFailMethod = function (method) {
@@ -4257,7 +4255,6 @@ var Dns;
                     }
                     if (!$.isArray(result.results))
                         result.results = [result.results];
-                    //Fix dates from strings into real dates.
                     _this.FixStringDatesInResults(result.results);
                     d.resolve(result.results);
                 }).fail(function (e, description, error) {
@@ -4412,7 +4409,7 @@ var Dns;
             return _SignalRConnection;
         }
         WebApi.SignalRConnection = SignalRConnection;
-        var RequestsHub = /** @class */ (function () {
+        var RequestsHub = (function () {
             function RequestsHub() {
             }
             RequestsHub.Proxy = function () {

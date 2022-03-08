@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../js/_rootlayout.ts" />
 var Plugins;
 (function (Plugins) {
     var Requests;
@@ -22,11 +21,10 @@ var Plugins;
         (function (QueryBuilder) {
             var View;
             (function (View) {
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(request, bindingControl) {
                         var _this = _super.call(this, bindingControl) || this;
-                        //TODO: look into how to easily confirm the properties on an object without going back and forth between interface and viewmodel
                         _this.Request = new Dns.ViewModels.QueryComposerRequestViewModel(request).toData();
                         return _this;
                     }
@@ -53,10 +51,6 @@ var Plugins;
                             return value;
                         return item.Name;
                     };
-                    /**
-                     * Loops through all Element nodes of the template after render and update's the declare identifying attributes with a prefix unique to the instantiated template.
-                     * @param nodes The collection of DOMnodes of the rendered template.
-                     */
                     ViewModel.prototype.onUpdateTemplateElements = function (nodes) {
                         if (nodes == null || nodes.length == 0)
                             return;
@@ -69,7 +63,6 @@ var Plugins;
                                 }
                             }
                         };
-                        //recursive function to prepend the prefix to all defined id using attributes
                         var updateElementID = function (element) {
                             var attr = element.id;
                             if (attr && attr.trim().length > 0) {
@@ -114,10 +107,6 @@ var Plugins;
                 function initialize(query, requestVM, bindingControl) {
                     var queryRequestDTO;
                     if (query.hasOwnProperty('SchemaVersion') == false) {
-                        //Only a multi-query request will have a SchemaVersion property.
-                        //Going to assume request type hasn't been converted to the new multi-query schema.
-                        //Automactially upgrade, assume the current json only has a single query and it matches the first specifiec for the request type.
-                        //The 'query' parameter is original non-multi query json, need to wrap in new request json.
                         queryRequestDTO = new Dns.ViewModels.QueryComposerRequestViewModel().toData();
                         queryRequestDTO.Header.ID = requestVM.ID();
                         queryRequestDTO.Header.Name = requestVM.Name();
@@ -138,15 +127,12 @@ var Plugins;
                 }
                 View.initialize = initialize;
                 function init(query, visualTerms, bindingControl) {
-                    //deprecated for initialize()
                     throw new DOMException("Deprecated for initialize().");
                     return null;
                 }
                 View.init = init;
                 ko.bindingHandlers.DocumentsByRevision = {
                     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                        //element is the html element the binding is on
-                        //valueAccessor is[{RevisionSetID:''}]
                         var val = ko.utils.unwrapObservable(valueAccessor());
                         var revisions = ko.utils.arrayMap(val, function (d) { return d.RevisionSetID; });
                         Dns.WebApi.Documents.ByRevisionID(revisions)

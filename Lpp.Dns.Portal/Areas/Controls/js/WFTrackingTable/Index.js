@@ -19,7 +19,7 @@ var Controls;
     (function (WFTrackingTable) {
         var Display;
         (function (Display) {
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -29,7 +29,6 @@ var Controls;
                     _this.DataPartnerExpanded = ko.observable(true);
                     var self = _this;
                     if (requestID != null) {
-                        //start the request to load the tracking table grids
                         Dns.WebApi.Response.GetTrackingTableForAnalysisCenter(requestID).done(function (r) {
                             var result = r[0];
                             if (result != null && result.Data != null && result.Data.length > 0) {
@@ -103,7 +102,6 @@ var Controls;
                         });
                     }
                     else {
-                        //brand new request nothing to show
                     }
                     return _this;
                 }

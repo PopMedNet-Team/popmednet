@@ -19,7 +19,7 @@ var Dialog;
     (function (EditRoutingStatus) {
         var vm;
         var dvm;
-        var DataMartsViewModel = /** @class */ (function () {
+        var DataMartsViewModel = (function () {
             function DataMartsViewModel(routing) {
                 var self = this;
                 self.DataMartID = routing.DataMartID;
@@ -32,7 +32,7 @@ var Dialog;
             return DataMartsViewModel;
         }());
         EditRoutingStatus.DataMartsViewModel = DataMartsViewModel;
-        var EditRoutingStatusViewModel = /** @class */ (function (_super) {
+        var EditRoutingStatusViewModel = (function (_super) {
             __extends(EditRoutingStatusViewModel, _super);
             function EditRoutingStatusViewModel(bindingControl, incompleteRoutings) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -75,7 +75,6 @@ var Dialog;
                     $('#diaBulkChange').modal('hide');
                 };
                 $('#diaBulkChange').on('show.bs.modal', function (e) {
-                    //reset the bulk change status and message values on open of bulk editor.
                     self.bulkChangeMessage(null);
                     self.bulkChangeStatus(null);
                 });

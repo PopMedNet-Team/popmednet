@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Groups;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, group, allOrganizations, organizationGroups, groupProjects, events, permissionList, groupPermissions, securityGroupTree, eventList, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -28,9 +27,6 @@ var Groups;
                 _this.AllOrganizations = ko.observableArray(allOrganizations.map(function (item) {
                     return new Dns.ViewModels.OrganizationViewModel(item);
                 }));
-                //this.OrganizationGroups = ko.observableArray(organizationGroups.map((item) => {
-                //    return new Dns.ViewModels.OrganizationGroupViewModel(item);
-                //}));
                 _this.OrganizationGroups = ko.observableArray(ko.utils.arrayMap(organizationGroups, function (item) { return new Dns.ViewModels.OrganizationGroupViewModel(item); }));
                 _this.AddableOrganizationList = ko.computed(function () {
                     var results = self.AllOrganizations().filter(function (o) {
@@ -54,7 +50,6 @@ var Groups;
                     }
                 ], Dns.ViewModels.AclGroupViewModel);
                 _this.WatchTitle(_this.Group.Name, "Group: ");
-                //Events
                 _this.GroupEvents = ko.observableArray(events != null ? events.map(function (e) {
                     return new Dns.ViewModels.GroupEventViewModel(e);
                 }) : null);
@@ -89,10 +84,8 @@ var Groups;
                 if (!_super.prototype.Validate.call(this))
                     return;
                 Dns.WebApi.Groups.InsertOrUpdate([this.Group.toData()]).done(function (group) {
-                    //Update the values for the ID and timestamp as necessary.
                     _this.Group.ID(group[0].ID);
                     _this.Group.Timestamp(group[0].Timestamp);
-                    // Save everything else
                     var organizations = _this.OrganizationGroups().map(function (o) {
                         o.GroupID(_this.Group.ID());
                         return o.toData();

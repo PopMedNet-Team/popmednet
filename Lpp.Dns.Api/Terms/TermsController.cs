@@ -120,12 +120,11 @@ namespace Lpp.Dns.Api.Terms
 
                 //Fetch all the rows present in the Worksheet.
                 IEnumerable<Row> rows = worksheet.GetFirstChild<SheetData>().Descendants<Row>();
-                Dictionary<string, string> headers = null;
+                Dictionary<string, string> headers = new Dictionary<string, string>();
                 foreach (var row in rows)
                 {
                     if (row.RowIndex.Value == 1)
                     {
-                        headers = new Dictionary<string, string>();
                         foreach (Cell cell in row.Descendants<Cell>())
                         {
                             if (cell.CellReference.HasValue == false)

@@ -1,4 +1,3 @@
-/// <reference path="../../Scripts/page/Page.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Dialog;
     var CodeSelector;
     (function (CodeSelector) {
         var vm;
-        var CodeSelectorViewModel = /** @class */ (function (_super) {
+        var CodeSelectorViewModel = (function (_super) {
             __extends(CodeSelectorViewModel, _super);
             function CodeSelectorViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -45,7 +44,6 @@ var Dialog;
                         if (typeof code === 'object') {
                             code.Name.replace('&#44;', ',');
                             code.Code.replace('&#44;', ',');
-                            //existingCodes.push(code.replace('&#44;', ','));
                             existingCodes.push(code);
                         }
                         else {
@@ -106,7 +104,6 @@ var Dialog;
                     _this.CategoriesValue(-1);
                     if (_this.queryTimer > -1)
                         clearTimeout(_this.queryTimer);
-                    //Set a timer that gets cancelled so that we can time it out.
                     _this.queryTimer = setTimeout(function () {
                         var grid = $("#gResults").data("kendoGrid");
                         var lookup = _this.Query();
@@ -144,16 +141,7 @@ var Dialog;
                 return _this;
             }
             CodeSelectorViewModel.prototype.Save = function (data, event) {
-                //var codes = this.dsSelected.data().map((item: any) => {
-                //    return item.ItemCode.trim();
-                //});
-                //this.Close(codes);
                 var codes = this.dsSelected.data().map(function (item) {
-                    //var val: Dns.ViewModels.CodeSelectorValueViewModel;
-                    //val = new Dns.ViewModels.CodeSelectorValueViewModel();
-                    //val.Code(item.ItemCode.trim());
-                    //val.Name(item.ItemName.trim());
-                    //val.ExpireDate = item.ExpireDate;
                     var val = { Code: item.ItemCode.trim(), Name: item.ItemName.trim(), ExpireDate: null };
                     return val;
                 });
@@ -196,7 +184,6 @@ var Dialog;
         }(Global.DialogViewModel));
         CodeSelector.CodeSelectorViewModel = CodeSelectorViewModel;
         function init() {
-            //In this case we do all of the data stuff in the view model because it has the parameters.
             $(function () {
                 var bindingControl = $("body");
                 vm = new CodeSelectorViewModel(bindingControl);

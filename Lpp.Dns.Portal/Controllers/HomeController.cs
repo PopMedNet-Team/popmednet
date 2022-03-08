@@ -140,7 +140,7 @@ namespace Lpp.Dns.Portal.Controllers
             if (!string.IsNullOrWhiteSpace(errors))
             {
                 var url = ssoUrl + "?error=" + HttpUtility.UrlEncode(errors) + "&ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
-                Response.Redirect(url);
+                return Redirect(url);
             }
 
             Auth.SetCurrentUser(user, AuthenticationScope.WebSession);

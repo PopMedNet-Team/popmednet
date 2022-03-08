@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Registries;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, registry, allOrganizations, organizationRegistries, allRegistryItemDefinitions, registryItemDefinitions, permissionList, registryPermissions, securityGroupTree, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -93,17 +92,10 @@ var Registries;
                 var _this = this;
                 if (!_super.prototype.Validate.call(this))
                     return;
-                // Remove SG check per PMNDEV-3110
-                //if (this.RegistryAcls().length == 0) {
-                //    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have added at least one security group to be able to administer this registry.</p>");
-                //    return;
-                //}
                 Dns.WebApi.Registries.InsertOrUpdate([this.Registry.toData()]).done(function (registry) {
-                    //Update the values for the ID and timestamp as necessary.
                     _this.Registry.ID(registry[0].ID);
                     _this.Registry.Timestamp(registry[0].Timestamp);
                     window.history.replaceState(null, window.document.title, "/registries/details?ID=" + registry[0].ID);
-                    // Save everything else
                     var organizations = _this.OrganizationRegistries().map(function (o) {
                         o.RegistryID(_this.Registry.ID());
                         return o.toData();

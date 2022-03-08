@@ -5,6 +5,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@progress/kendo-licensing": "1.2.2",
     "@types/bootstrap": "3.4.0",
     "@types/history": "^4.7.8",
     "@types/jquery": "2.0.34",

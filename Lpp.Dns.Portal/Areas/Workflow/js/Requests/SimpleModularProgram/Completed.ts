@@ -117,7 +117,6 @@ module Workflow.SimpleModularProgram.Completed{
         private completedRoutesSelectAll: KnockoutComputed<boolean>;
 
         constructor(bindingControl: JQuery, screenPermissions: any[], responses: Dns.Interfaces.ICommonResponseDetailDTO, responseGroups: Dns.Interfaces.IResponseGroupDTO[], responseSearchTerms: Dns.Interfaces.IRequestSearchTermDTO[], viewResponseDetailPermissions: any[], requestPermissions: any[]) {
-            super(bindingControl)
             super(bindingControl, screenPermissions);
             this.ViewResponseDetailPermissions = viewResponseDetailPermissions || [];
 

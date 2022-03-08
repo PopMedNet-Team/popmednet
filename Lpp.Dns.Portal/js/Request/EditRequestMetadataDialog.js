@@ -20,7 +20,7 @@ var Requests;
         var EditRequestMetadataDialog;
         (function (EditRequestMetadataDialog) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(request, requesterCenterList, workplanList, reportAggregationLevelsList, activityTree, fieldOptions, allowEditRequestID, bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -28,8 +28,7 @@ var Requests;
                     _this.FieldOptions = fieldOptions;
                     _this.Request = request;
                     _this.RequestName = ko.observable(self.Request.Name);
-                    //this.DueDate = ko.observable(moment(self.Request.DueDate).toDate());
-                    _this.DueDate = ko.observable(self.Request.DueDate); //
+                    _this.DueDate = ko.observable(self.Request.DueDate);
                     _this.Priority = ko.observable(self.Request.Priority);
                     _this.Priorities = new Array({ Name: 'Low', Value: 0 }, { Name: 'Medium', Value: 1 }, { Name: 'High', Value: 2 }, { Name: 'Urgent', Value: 3 });
                     _this.ProjectID = ko.observable(self.Request.ProjectID);
@@ -79,21 +78,16 @@ var Requests;
                         return null;
                     };
                     if (_this.Request.ActivityID) {
-                        //determine what the current budget activity is
                         var currentBudgetActivity = _this.findActivity(self.Request.ActivityID);
                         if (currentBudgetActivity != null) {
                             if (currentBudgetActivity.TaskLevel == 1) {
-                                //task order
                                 self.BudgetTaskOrderID(currentBudgetActivity.ID);
                             }
                             else if (currentBudgetActivity.TaskLevel == 2) {
-                                //activity
                                 self.BudgetTaskOrderID(currentBudgetActivity.ParentActivityID);
                                 self.BudgetActivityID(currentBudgetActivity.ID);
                             }
                             else {
-                                //activity project
-                                //find the activity (parent) of the activity project to get the task order id
                                 var activity = _this.findActivity(currentBudgetActivity.ParentActivityID);
                                 self.BudgetTaskOrderID(activity.ParentActivityID);
                                 self.BudgetActivityID(currentBudgetActivity.ParentActivityID);
@@ -101,7 +95,6 @@ var Requests;
                             }
                         }
                     }
-                    //Task/Activity/Activity Project
                     _this.dsTaskOrders = new kendo.data.DataSource({
                         data: []
                     });
@@ -173,9 +166,6 @@ var Requests;
                             Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>Request Name is required.</p></div>');
                             return;
                         }
-                        //if (self.DueDate() != null) {
-                        //    self.DueDate().setHours(12);
-                        //}
                         var update = {
                             ID: self.Request.ID,
                             Timestamp: null,
@@ -221,9 +211,7 @@ var Requests;
                         var sourcetaskordername = $('#SourceTaskOrderID').data("kendoDropDownList").text();
                         var sourceactivityname = $('#SourceActivityID').data("kendoDropDownList").text();
                         var sourceactivityprojectname = $('#SourceActivityProjectID').data("kendoDropDownList").text();
-                        //push DTO to server
                         Dns.WebApi.Requests.UpdateRequestMetadata(update).done(function () {
-                            //information to push back to dialog
                             self.Close({
                                 MetadataUpdate: update,
                                 priorityname: priorityname,

@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../js/_layout.ts" />
 var Controls;
 (function (Controls) {
     var WFDocuments;
@@ -21,7 +20,7 @@ var Controls;
         var Upload;
         (function (Upload) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -59,14 +58,12 @@ var Controls;
                         };
                         var xhr = e.XMLHttpRequest;
                         xhr.addEventListener("readystatechange", function (e) {
-                            if (xhr.readyState == 1 /* OPENED */) {
+                            if (xhr.readyState == 1) {
                                 xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
                             }
                         });
                     };
                     _this.onSuccess = function (e) {
-                        //fires when upload is complete with or without errors
-                        //on success should close the dialog with the document information
                         self.Close(e.response.Result);
                     };
                     _this.onCancel = function () { self.Close(); };

@@ -675,7 +675,8 @@ namespace Lpp.Dns.Data
                 {
                     Subject = forRegistrant ? "Registration Submitted" : "Registration Submitted Notification", //log.RegisteredUser.FirstName + " "  + log.RegisteredUser.LastName + " registered",
                     Body = body,
-                    Recipients = recipients
+                    Recipients = recipients,
+                    NeedsPostScript = forRegistrant ? false : true
                 };
                 IList<Notification> notifies = new List<Notification>();
                 notifies.Add(notification);

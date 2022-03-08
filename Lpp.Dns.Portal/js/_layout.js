@@ -1,7 +1,6 @@
-/// <reference path="../Scripts/page/Page.ts" />
 var Layout;
 (function (Layout) {
-    var FooterViewModel = /** @class */ (function () {
+    var FooterViewModel = (function () {
         function FooterViewModel(themeing) {
             this.Theme = new Dns.ViewModels.ThemeViewModel(themeing);
         }
@@ -14,7 +13,7 @@ var Layout;
         return FooterViewModel;
     }());
     Layout.FooterViewModel = FooterViewModel;
-    var HeaderViewModel = /** @class */ (function () {
+    var HeaderViewModel = (function () {
         function HeaderViewModel(menu, themeing, themeimg) {
             this.MainMenu = ko.observable(menu);
             this.Theme = new Dns.ViewModels.ThemeViewModel(themeing);

@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +20,7 @@ var Workflow;
         var ApproveResponse;
         (function (ApproveResponse) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(completeddms, incompleteddms, bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -48,7 +47,6 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -60,11 +58,9 @@ var Workflow;
             }(Global.WorkflowActivityViewModel));
             ApproveResponse.ViewModel = ViewModel;
             $(function () {
-                //Override the save function on the page that is already there and inject what's needed.
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 Requests.Details.rovm.RegisterRequestSaveFunction(function (request) {
                     throw new DOMException("Need to update for multiquery!");
-                    //request.Query(JSON.stringify(Plugins.Requests.QueryBuilder.MDQ.vm.Query.toData()));
                     return true;
                 });
                 var dmStatuses;
@@ -92,7 +88,7 @@ var Workflow;
                     });
                 });
             });
-            var RequestDataMartViewModel = /** @class */ (function (_super) {
+            var RequestDataMartViewModel = (function (_super) {
                 __extends(RequestDataMartViewModel, _super);
                 function RequestDataMartViewModel(requestDataMart) {
                     var _this = _super.call(this, requestDataMart) || this;

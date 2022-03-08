@@ -52,6 +52,9 @@ module Workflow.Default.CreateRequest {
             if (!this.QueryEditor.Validate())
                 return;
 
+            if (!this.QueryEditor.VerifyNoDuplicates())
+                return;
+
             let selectedDataMarts = this.QueryEditor.SelectedRoutings;
             if (selectedDataMarts.length == 0 && resultID != SaveResultID) {
                 Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');

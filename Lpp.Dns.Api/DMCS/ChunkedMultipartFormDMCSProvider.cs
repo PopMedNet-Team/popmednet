@@ -212,11 +212,11 @@ namespace Lpp.Dns.Api.DMCS
         /// <returns></returns>
         public async Task CombineChunks()
         {
-            using (var combinedFile = new FileStream(Path.Combine(this.RootPath, string.Format("{0:D}_Finished.part", DocumentMetadata.DocumentID)), FileMode.CreateNew, FileAccess.Write))
+            using (var combinedFile = new FileStream(CombindedTempDocumentFileName, FileMode.CreateNew, FileAccess.Write))
             {
                 for (int i = 1; i <= DocumentMetadata.TotalChunks; i++)
                 {
-                    using (var chunkedFile = new FileStream(Path.Combine(this.RootPath, string.Format("{0:D}_{1}.part", DocumentMetadata.DocumentID, i)), FileMode.Open, FileAccess.Read))
+                    using (var chunkedFile = new FileStream(GetChunkDocumentFileName(i), FileMode.Open, FileAccess.Read))
                     {
                         await chunkedFile.CopyToAsync(combinedFile);
                     }
@@ -230,7 +230,7 @@ namespace Lpp.Dns.Api.DMCS
                 //only cleanup the parts if the combined file was successfuly created
                 for (int i = 1; i <= DocumentMetadata.TotalChunks; i++)
                 {
-                    File.Delete(Path.Combine(this.RootPath, string.Format("{0:D}_{1}.part", DocumentMetadata.DocumentID, i)));
+                    File.Delete(GetChunkDocumentFileName(i));
                 }
             }
             catch { }
@@ -245,7 +245,7 @@ namespace Lpp.Dns.Api.DMCS
             if (db.Database.Connection.State != ConnectionState.Open)
                 db.Database.Connection.Open();
 
-            using (var fs = new FileStream(Path.Combine(this.RootPath, string.Format("{0:D}_Finished.part", DocumentMetadata.DocumentID)), FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(CombindedTempDocumentFileName, FileMode.Open, FileAccess.Read))
             {
 
                 using (var conn = (SqlConnection)db.Database.Connection)
@@ -277,9 +277,30 @@ namespace Lpp.Dns.Api.DMCS
             try
             {
                 //cleanup the uploaded file
-                File.Delete(Path.Combine(this.RootPath, string.Format("{0:D}_Finished.part", DocumentMetadata.DocumentID)));
+                File.Delete(CombindedTempDocumentFileName);
             }
             catch { }
+        }
+
+        /// <summary>
+        /// Gets the name of the documents combined parts after all chunks have been uploaded. Format: {DocumentID}_Finished.part
+        /// </summary>
+        public string CombindedTempDocumentFileName
+        {
+            get
+            {
+                return Path.Combine(this.RootPath, string.Format("{0:D}_Finished.part", DocumentMetadata.DocumentID));
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of a document chunk. Format: {DocumentID}_{chunk index}.part
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public string GetChunkDocumentFileName(int index)
+        {
+            return Path.Combine(this.RootPath, string.Format("{0:D}_{1}.part", DocumentMetadata.DocumentID, index));
         }
     }
 }

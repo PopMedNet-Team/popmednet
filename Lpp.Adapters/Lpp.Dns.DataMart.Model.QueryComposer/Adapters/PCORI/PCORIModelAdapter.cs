@@ -430,18 +430,17 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
                         if (_lowThresholdValue.HasValue && row.ContainsKey("Patients"))
                         {
                             double value = Convert.ToDouble(row["Patients"]);
-                            if (value > 0 && value < _lowThresholdValue)
+                            bool belowThreshold = value > 0 && value < _lowThresholdValue;                            
+                            
+                            if (!row.ContainsKey(LowThresholdColumnName))
                             {
-                                //need to mark that the value is less than the low threshold - not zero'd until post process triggered
-                                if (!row.ContainsKey(LowThresholdColumnName))
-                                {
-                                    row.Add(LowThresholdColumnName, true);
-                                }
-                                else
-                                {
-                                    row[LowThresholdColumnName] = true;
-                                }
+                                row.Add(LowThresholdColumnName, belowThreshold);
                             }
+                            else
+                            {
+                                row[LowThresholdColumnName] = belowThreshold;
+                            }
+
                         }
 
                         results.Add(row);
@@ -1594,8 +1593,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
             {
                 IEnumerable<string> values = term.GetStringCollection("Race").ToArray();
 
-                if (values == null && !values.Any())
-                    throw new Exception("Value for Race Term is not Valid");
+                if (values == null || values.Count() == 0)
+                    throw new Exception("No values specified for the Race term.");
 
                 foreach (string value in values)
                 {
@@ -1656,8 +1655,8 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.PCORI
 
             IEnumerable<string> values = term.GetStringCollection("Race").ToArray();
 
-            if (values == null && !values.Any())
-                throw new Exception("Value for Race Term is not Valid");
+            if (values == null || values.Count() == 0)
+                throw new Exception("No values specified for the Race term.");
 
             foreach (string value in values)
             {

@@ -163,6 +163,8 @@ module Templates.Details {
 
                 ko.applyBindings(vm, bindingControl[0]);
                 vm.QueryDesigner.onKnockoutBind();
+
+                $('#PageLoadingMessage').remove();
             });
 
         });

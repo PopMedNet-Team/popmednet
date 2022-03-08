@@ -1,4 +1,3 @@
-/// <reference path="../../Scripts/page/Page.ts" /> 
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,17 +18,15 @@ var Requests;
     var Index;
     (function (Index) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gResultsSettings, bindingControl, projects, projectID, requestableProjecs) {
                 var _this = _super.call(this, bindingControl) || this;
                 var self = _this;
-                //projects are the ones the user is able to see
                 _this.Projects = ko.observableArray(projects.map(function (project) {
                     return new Dns.ViewModels.ProjectViewModel(project);
                 }));
                 _this.SelectedProjectID = ko.observable(projectID);
-                //requestable project are the ones that the user can create new requests for.
                 _this.RequestableProjects = requestableProjecs;
                 var dsRequestSettings = gResultsSettings.filter(function (item) { return item.Key === "Requests.Index.gResults.User:" + User.ID; });
                 _this.dataSourceSetting = (dsRequestSettings.length > 0 && dsRequestSettings[0] !== null) ? dsRequestSettings[0] : null;
@@ -49,16 +46,11 @@ var Requests;
                     },
                     sort: Global.Helpers.GetSortsFromUrl() || { field: "SubmittedOn", dir: "desc" },
                 });
-                // Save the reference to the original filter function.
                 var originalFilter = _this.dataSource.filter;
-                // Replace the original filter function.
                 _this.dataSource.filter = function () {
-                    //
                     if (arguments.length > 0) {
-                        //Saving filter chnages right back to the DB.  
                         Users.SetSetting("Requests.Index.gResults.User:" + User.ID, Global.Helpers.GetGridSettings($("#gResults").data("kendoGrid")));
                     }
-                    // Call the original filter function.
                     var result = originalFilter.apply(this, arguments);
                     return result;
                 };
@@ -67,7 +59,6 @@ var Requests;
             ViewModel.prototype.SelectProject = function (project) {
                 vm.SelectedProjectID(project.ID());
                 var originalFilters = vm.dataSource.filter();
-                //PMNDEV-5057 - We need to keep the filters intact on project change, otherwise they are not retained.
                 var filter = { logic: "and", filters: [] };
                 originalFilters.filters.forEach(function (item) {
                     if (item.field != "ProjectID") {
@@ -91,7 +82,6 @@ var Requests;
                 menu.append({ text: "Clear All Filters", spriteCssClass: 'k-i-filter-clear' });
                 menu.bind("select", function (e) {
                     if ($(e.item).text() == "Clear All Filters") {
-                        //First Clear the Filter of the grid, then close the menu, then Popup.  Must be done in this order.  See https://www.telerik.com/forums/close-menu-on-custom-column-menu-item
                         if (vm.SelectedProjectID() != Constants.GuidEmpty) {
                             grid.dataSource.filter({ field: "ProjectID", operator: "equals", value: vm.SelectedProjectID() });
                         }
@@ -113,18 +103,7 @@ var Requests;
                     if (!result)
                         return;
                     var url;
-                    //if (!result.TemplateID && !result.WorkflowID) {
-                    //    // Legacy Non-workflow request types
-                    //    url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + projectID;
-                    //} else if (!result.TemplateID) {
-                    //    // Workflow based non-QueryComposer request types
-                    //    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&WorkflowID=" + result.WorkflowID;
-                    //} else {
-                    //    // QueryComposer request types
-                    //    url = '/requests/details?requestTypeID=' + result.ID + '&projectID=' + projectID + "&templateID=" + result.TemplateID + "&WorkflowID=" + result.WorkflowID;
-                    //}
                     if (!result.WorkflowID) {
-                        //Legacy Non-workflow request types
                         url = '/request/create?requestTypeID=' + result.ID + '&projectID=' + projectID;
                     }
                     else {

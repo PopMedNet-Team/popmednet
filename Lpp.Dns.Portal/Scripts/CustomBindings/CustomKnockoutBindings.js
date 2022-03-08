@@ -1,5 +1,3 @@
-/// <reference path="../typings/bootstrap.d.ts" />
-//Adds href binding instead of using attr: {href: ...}
 ko.bindingHandlers.href = {
     update: function (element, valueAccessor) {
         ko.bindingHandlers.attr.update(element, function () {
@@ -7,7 +5,6 @@ ko.bindingHandlers.href = {
         });
     }
 };
-//Adds src binding instead of using attr: {src: ...}
 ko.bindingHandlers.src = {
     update: function (element, valueAccessor) {
         ko.bindingHandlers.attr.update(element, function () {
@@ -15,18 +12,15 @@ ko.bindingHandlers.src = {
         });
     }
 };
-//Adds reciprical hidden binding that is the opposite of visible
 ko.bindingHandlers.hidden = {
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
         ko.bindingHandlers.visible.update(element, function () { return !value; });
     }
 };
-//Implements value change on keypress instead of blur
 ko.bindingHandlers.instantValue = {
     init: function (element, valueAccessor, allBindings) {
         var newAllBindings = function () {
-            // for backwards compatibility w/ knockout  < 3.0
             return ko.utils.extend(allBindings(), { valueUpdate: 'afterkeydown' });
         };
         newAllBindings.get = function (a) {
@@ -39,7 +33,6 @@ ko.bindingHandlers.instantValue = {
     },
     update: ko.bindingHandlers.value.update
 };
-//Toogles a value based on a click. Highly useful for expand/contracts etc.
 ko.bindingHandlers.toggle = {
     init: function (element, valueAccessor) {
         var value = valueAccessor();
@@ -50,7 +43,6 @@ ko.bindingHandlers.toggle = {
         });
     }
 };
-//Currency formatter
 ko.bindingHandlers.currency = {
     symbol: ko.observable('$'),
     update: function (element, valueAccessor, allBindingsAccessor) {
@@ -62,7 +54,6 @@ ko.bindingHandlers.currency = {
         });
     }
 };
-//Prevents binding a specific section so that the view model won't bind. This allows binding separately to a different view model. Use <!-- ko stopBinding: true --> and <!-- /ko --> to wrap HTML elements you don't want to be bound.
 ko.bindingHandlers.stopBinding = {
     init: function () {
         return { controlsDescendantBindings: true };
@@ -96,17 +87,14 @@ ko.bindingHandlers.date = {
 };
 ko.bindingHandlers.fadeVisible = {
     init: function (element, valueAccessor) {
-        // Initially set the element to be instantly visible/hidden depending on the value
         var value = valueAccessor();
-        $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+        $(element).toggle(ko.unwrap(value));
     },
     update: function (element, valueAccessor) {
-        // Whenever the value subsequently changes, slowly fade the element in or out
         var value = valueAccessor();
         ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
     }
 };
-// Allows a checkbox to be used as tri-state.
 ko.bindingHandlers.indeterminateValue = {
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());

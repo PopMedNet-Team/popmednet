@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var DistributedRegression;
@@ -21,7 +20,7 @@ var Workflow;
         var CompleteDistribution;
         (function (CompleteDistribution) {
             var vm;
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -83,7 +82,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             CompleteDistribution.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, responses, viewResponseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -218,7 +217,6 @@ var Workflow;
                         Global.Helpers.ShowDialog("Edit Routings", "/dialogs/metadatabulkeditpropertieseditor", ["Close"], 500, 400, { defaultPriority: Requests.Details.rovm.Request.Priority(), defaultDueDate: Requests.Details.rovm.Request.DueDate() })
                             .done(function (result) {
                             if (result != null) {
-                                //update values for selected incomplete routings
                                 var routings = self.IncompleteRoutings();
                                 var updatedRoutings_1 = [];
                                 self.IncompleteRoutings([]);
@@ -235,7 +233,6 @@ var Workflow;
                                     updatedRoutings_1.push(dm);
                                 });
                                 self.IncompleteRoutings(updatedRoutings_1);
-                                //save values for selected incomplete routings
                                 self.PostComplete('4F7E1762-E453-4D12-8037-BAE8A95523F7');
                             }
                         });
@@ -268,12 +265,10 @@ var Workflow;
                             Request: "",
                             RequestID: Requests.Details.rovm.Request.ID()
                         }).done(function (dataMarts) {
-                            //compatible datamarts
                             var newDataMarts = dataMarts;
                             var i = 0;
                             var _loop_1 = function () {
                                 var dm = self.Routings()[i];
-                                //removing already submitted DMs from the list of available DMs
                                 if (dm != null || undefined) {
                                     var exisitngDataMarts = ko.utils.arrayFirst(newDataMarts, function (datamart) { return datamart.ID == dm.DataMartID; });
                                     ko.utils.arrayRemoveItem(newDataMarts, exisitngDataMarts);
@@ -332,7 +327,6 @@ var Workflow;
                         showRoutingHistory(item.ID, item.RequestID);
                     };
                     Requests.Details.rovm.RoutingsChanged.subscribe(function (info) {
-                        //call function on the composer to update routing info
                         _this.UpdateRoutings(info);
                     });
                     self.onCompleteRouting = function () {
@@ -466,14 +460,12 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
                             }
                         }
                         else {
-                            //Need to go back to the endpoint cause the results information doesnt contain anything about DM Statuses
                             Dns.WebApi.Requests.RequestDataMarts(result.Entity.ID, "Status ne Lpp.Dns.DTO.Enums.RoutingStatus'" + Dns.Enums.RoutingStatus.Canceled + "'").done(function (response) {
                                 if (response.length == 0) {
                                     Dns.WebApi.Requests.TerminateRequest(result.Entity.ID).done(function () {
@@ -485,7 +477,6 @@ var Workflow;
                                         Global.Helpers.RedirectTo(result.Uri);
                                     }
                                     else {
-                                        //Update the request etc. here 
                                         Requests.Details.rovm.Request.ID(result.Entity.ID);
                                         Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                         Requests.Details.rovm.UpdateUrl();
@@ -547,7 +538,6 @@ var Workflow;
             CompleteDistribution.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
-                //get the permissions for the view response detail, use to control the dialog view showing the result files
                 var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
                 $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), getResponseDetailPermissions, Dns.WebApi.Requests.GetOverrideableRequestDataMarts(id, null, 'ID'), Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])).done(function (responses, responseDetailPermissions, overrideableRoutingIDs, requestPermissions) {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");

@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23,7 +22,7 @@ var Workflow;
             var vm;
             var SaveResultID = 'DFF3000B-B076-4D07-8D83-05EDE3636F4D';
             var SubmitResultID = '48B20001-BD0B-425D-8D49-A3B5015A2258';
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;
@@ -52,6 +51,8 @@ var Workflow;
                     }
                     if (!this.QueryEditor.Validate())
                         return;
+                    if (!this.QueryEditor.VerifyNoDuplicates())
+                        return;
                     var selectedDataMarts = this.QueryEditor.SelectedRoutings;
                     if (selectedDataMarts.length == 0 && resultID != SaveResultID) {
                         Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>A DataMart needs to be selected</p></div>');
@@ -76,7 +77,6 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -88,7 +88,6 @@ var Workflow;
             }(Global.WorkflowActivityViewModel));
             CreateRequest.ViewModel = ViewModel;
             $(function () {
-                //Bind the view model for the activity
                 var bindingControl = $("#DefaultCreateRequest");
                 vm = new ViewModel(bindingControl);
                 ko.applyBindings(vm, bindingControl[0]);

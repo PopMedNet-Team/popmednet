@@ -13,16 +13,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../_rootlayout.ts" />
 var Users;
 (function (Users) {
     var Details;
     (function (Details) {
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, canApproveReject, user, securityGroups, userAcls, userEvents, subscribedEvents, organizationList, securityGroupTree, permissionList, eventList, subscribableEventsList, assignedNotificationsList, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
-                //For temporarily stopping this.Active subscription callback
                 _this.StopActiveCallback = false;
                 _this.self = _this;
                 _this.IsProfile = User.ID == user.ID;
@@ -30,8 +28,6 @@ var Users;
                 _this.SecurityGroups = ko.observableArray(securityGroups.map(function (sg) {
                     return new Dns.ViewModels.SecurityGroupViewModel(sg);
                 }));
-                // Allow activate visibility for the login user only if s/he has Approve Registration rights
-                // for the new user's organization either via group ownership or the new user's organization is null.
                 _this.ShowActivation = ko.computed(function () {
                     return canApproveReject;
                 });
@@ -90,17 +86,14 @@ var Users;
                         });
                     }
                 });
-                //Permissions
                 _this.UserAcls = ko.observableArray(userAcls.map(function (a) {
                     return new Dns.ViewModels.AclUserViewModel(a);
                 }));
                 _this.Security = new Security.Acl.AclEditViewModel(permissionList, securityGroupTree, _this.UserAcls, [{ Field: "UserID", Value: _this.User ? _this.User.ID() : null }], Dns.ViewModels.AclUserViewModel);
-                //Events
                 _this.UserEvents = ko.observableArray(userEvents.map(function (e) {
                     return new Dns.ViewModels.UserEventViewModel(e);
                 }));
                 _this.Events = new Events.Acl.EventAclEditViewModel(eventList, securityGroupTree, _this.UserEvents, [{ Field: "UserID", Value: _this.User.ID() }], Dns.ViewModels.UserEventViewModel);
-                //Subscriptions
                 _this.Subscriptions = ko.observableArray(subscribedEvents.map(function (se) {
                     return new Dns.ViewModels.UserEventSubscriptionViewModel(se);
                 }));
@@ -110,7 +103,6 @@ var Users;
                 _this.AssignedNotificationsList = ko.observableArray(assignedNotificationsList.map(function (el) {
                     return new Dns.ViewModels.AssignedUserNotificationViewModel(el);
                 }));
-                //Lists
                 _this.OrganizationList = organizationList;
                 _this.OrganizationList.sort(function (a, b) {
                     if (a.Name > b.Name) {
@@ -150,7 +142,6 @@ var Users;
                         }
                     });
                     if (!hasGroup) {
-                        //Do the add of the group here with an empty Acl
                         _this.self.SecurityGroups.push(new Dns.ViewModels.SecurityGroupViewModel({
                             ID: node.id,
                             Name: node["Name"],
@@ -164,20 +155,16 @@ var Users;
                             Type: 1
                         }));
                     }
-                    //Close the drop down.
                     $('#btnAddSecurityGroup').dropdown('toggle');
                     return false;
                 };
-                //Account Status Badge
                 _this.AccountStatus = ko.computed(function () {
                     return _this.User.Deleted() ? "Deleted" : _this.User.RejectedOn() != null ? "Rejected" : _this.User.DeactivatedOn() != null ? "Deactivated" : _this.User.ActivatedOn() == null && !_this.User.Active() ? "Pending" : _this.User.Active() ? "Active" : "Locked";
                 });
-                //Title
                 _this.Name = ko.observable(user.FirstName + " " + user.LastName);
                 _this.User.FirstName.subscribe(_this.UpdateName);
                 _this.User.LastName.subscribe(_this.UpdateName);
                 _this.WatchTitle(_this.Name, "User: ");
-                //Events
                 _this.RemoveSecurityGroup = function (data) {
                     Global.Helpers.ShowConfirm("Removal Confirmation", "<p>Are you sure that you wish to remove " + _this.self.Name() + " from the " + data.Path() + " group?</p>").done(function () {
                         _this.self.SecurityGroups.remove(data);
@@ -221,7 +208,6 @@ var Users;
                                     if (img.hasClass('k-i-expand')) {
                                         img.removeClass('k-i-expand');
                                         img.addClass('k-i-collapse');
-                                        // When the grid is hidden, size and virtual scroll options are not set.  Due to this, we need to show it, then resize and reset the virtual options.
                                         child.show();
                                         childGrid.data("kendoGrid").resize();
                                         childGrid.data("kendoGrid").setOptions({
@@ -373,7 +359,7 @@ var Users;
                         });
                     }
                     else {
-                        window.location.href = "/users"; //Return if they're new.
+                        window.location.href = "/users";
                     }
                 });
             };
@@ -398,19 +384,12 @@ var Users;
                         deferred.reject();
                         return;
                     }
-                    // Removed per PMNDEV-3085       
-                    //if (this.UserAcls().filter((a) => { return a.PermissionID() != null && (<string> a.PermissionID()).toUpperCase() == "2B42D2D7-F7A7-4119-9CC5-22991DC12AD3"; }).length == 0 ||
-                    //    this.UserAcls().filter((a) => { return a.PermissionID() != null && (<string> a.PermissionID()).toUpperCase() == "268E7007-E95F-435C-8FAF-0B9FBC9CA997"; }).length == 0) {
-                    //    Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that you have selected at least one security group for this who has permission to edit this user and manage user security.</p>");
-                    //    return;
-                    //}
                     if (this.User.Active() && this.HasPermission(PMNPermissions.User.ManageSecurity) && this.SecurityGroups().length == 0) {
                         Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that this active user belongs to at least one security group.</p>");
                         return;
                     }
                 }
                 var user = this.User.toData();
-                //Always test save the primary entity first before anything else.
                 Dns.WebApi.Users.InsertOrUpdate([user]).done(function (users) {
                     _this.User.ID(users[0].ID);
                     _this.User.Timestamp(users[0].Timestamp);
@@ -494,9 +473,6 @@ var Users;
             };
             ViewModel.prototype.GetEventNotificationDetails = function (eventID) {
                 var filtered = this.AssignedNotificationsList().filter(function (item) { return item.EventID() == eventID(); });
-                //    forEach((v) => {
-                //        v.Description(v.Level() == "Global" && v.Description() == "" ? "Global" : v.Description());
-                //});
                 var arrItems = [];
                 filtered.forEach(function (item) {
                     if (item.Level() == "Global" && item.Description() == "")
@@ -533,22 +509,18 @@ var Users;
             $.when(id == null ? null : Dns.WebApi.Users.GetPermissions([id], defaultScreenPermissions), id == null ? null : Dns.WebApi.Users.Get(id), id == null ? null : Dns.WebApi.Security.GetUserPermissions(id), id == null ? null : Dns.WebApi.Events.GetUserEventPermissions(id), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.ApproveRejectRegistrations), Dns.WebApi.Organizations.List(), Dns.WebApi.Security.GetAvailableSecurityGroupTree(), Dns.WebApi.Security.GetPermissionsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == User.ID ? Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users, Dns.Enums.PermissionAclTypes.UserProfile]) : Dns.WebApi.Events.GetEventsByLocation([Dns.Enums.PermissionAclTypes.Users]), id == null ? null : Dns.WebApi.Users.GetSubscribableEvents(id, null, null, "Name"), id == null ? null : Dns.WebApi.Users.GetAssignedNotifications(id)).done(function (screenPermissions, users, userAcls, userEvents, canApproveRejectGlobally, organizationList, securityGroupTree, permissionList, eventList, subscribableEventsList, assignedNotificationsList) {
                 var user;
                 if (users == null || users.length == 0) {
-                    // New user
                     user = new Dns.ViewModels.UserViewModel().toData();
                     user.FirstName = "";
                     user.MiddleName = "";
                     user.LastName = "";
                     user.OrganizationID = organizationId;
-                    //user.SignedUpOn = new Date(Date.now());
                     user.Active = false;
                     user.Deleted = false;
                     screenPermissions = defaultScreenPermissions;
                 }
                 else {
-                    // Existing user
                     user = users[0];
                 }
-                // If it's the current user (editing own profile), ensure they have view, edit and manage notification rights
                 if (user.ID == User.ID) {
                     $.merge(screenPermissions, [PMNPermissions.User.View.toLowerCase(), PMNPermissions.User.Edit.toLowerCase(), PMNPermissions.User.ChangeLogin.toLowerCase(), PMNPermissions.User.ManageNotifications.toLowerCase()]);
                     screenPermissions = $.unique(screenPermissions);
@@ -556,7 +528,7 @@ var Users;
                 var deferred = $.Deferred();
                 var subscribedEvents = [];
                 var securityGroups = [];
-                var canApproveRejectOrgLevel = false; //Set in the deferred below
+                var canApproveRejectOrgLevel = false;
                 deferred.done(function () {
                     $(function () {
                         var bindingControl = $("#Content");
@@ -573,7 +545,7 @@ var Users;
             });
         }
         init();
-        var EventViewModel = /** @class */ (function (_super) {
+        var EventViewModel = (function (_super) {
             __extends(EventViewModel, _super);
             function EventViewModel(vm, event) {
                 var _this = _super.call(this, event) || this;

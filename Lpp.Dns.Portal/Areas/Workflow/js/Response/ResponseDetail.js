@@ -1,4 +1,3 @@
-/// <reference path="../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24,7 +23,7 @@ var Workflow;
             (function (ResponseDetail) {
                 var vm;
                 var rootVM;
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, routings, responses, documents, canViewPendingApprovalResponses, exportForFileDistribution) {
                         var _this = _super.call(this, bindingControl, rootVM.ScreenPermissions) || this;
@@ -54,12 +53,10 @@ var Workflow;
                         _this.hasResponseResultsContent = (ko.utils.arrayFirst(documents, function (d) { return d.FileName.toLowerCase() == 'response.json'; }) != null) || ko.utils.arrayFirst(responses, function (d) { return d.ResponseGroupID != null; }) != null;
                         _this.showApproveReject = ko.observable(canViewPendingApprovalResponses && _this.ResponsesToApprove.length > 0 && responseView != Dns.Enums.TaskItemTypes.AggregateResponse);
                         _this.DownloadAllForFDVisible = ko.pureComputed(function () {
-                            //must be export for FD, at least one output document, and no route is pending approval
                             return exportForFileDistribution && (ko.utils.arrayFirst(self.Documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null)
                                 && (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses);
                         });
                         _this.DownloadAllForMDQVisible = ko.pureComputed(function () {
-                            //must NOT be export for FD, at least one output document, and no route is pending approval
                             return !exportForFileDistribution &&
                                 (ko.utils.arrayFirst(self.Documents, function (d) { return d.DocumentType == Dns.Enums.RequestDocumentType.Output; }) != null) &&
                                 (self.ResponsesToApprove.length == 0 || canViewPendingApprovalResponses) &&
@@ -77,7 +74,6 @@ var Workflow;
                             Dns.WebApi.Response.GetWorkflowResponseContent(currentResponseIDs, responseView).done(function (responses) {
                                 if (responses == null || responses.length == 0)
                                     return;
-                                //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 var panels = [];
                                 responses.forEach(function (responseDTO) {
                                     var _a;
@@ -87,7 +83,6 @@ var Workflow;
                                     if (datamartName && datamartName != null)
                                         bucket.append($("<h4 style=\"margin:3px;\">" + datamartName + "</h4>"));
                                     for (var q = 0; q < responseDTO.Queries.length; q++) {
-                                        //foreach cohort add a collapsible panel, the panel header will contain the cohort name, the body the results grid
                                         var panelGroup = $('<div class="panel-group" id="cohort_' + q + '" role="tablist" aria-multiselectable="true"></div>');
                                         var panel = $('<div class="panel panel-default"></div>');
                                         panelGroup.append(panel);
@@ -97,7 +92,6 @@ var Workflow;
                                         var collapseContainer = $('<div id="collapse_' + q + '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_' + q + '"></div>');
                                         if (query.Results && query.Results.length > 0) {
                                             for (var i = 0; i < query.Results.length; i++) {
-                                                //the id of the result grid will be a combination of the response ID and the index of the resultset in the responses results.
                                                 var resultID = (query.ID || 'aggregate') + '-' + i;
                                                 var suppressedValues = false;
                                                 var table = query.Results[i];
@@ -119,7 +113,6 @@ var Workflow;
                                                     var propertyDefinition = query.Properties[i_1];
                                                     if (propertyDefinition.Name == "LowThreshold") {
                                                         if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
-                                                            //only show the LowThreshold column in individual response view
                                                             kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
                                                             suppressedValues = true;
                                                         }
@@ -131,7 +124,6 @@ var Workflow;
                                                     }
                                                 }
                                                 var datasource = kendo.data.DataSource.create({ data: newTable });
-                                                //determine if there are less rows than the default grid height. Row height is controlled by css, default is 33px - use that for calculation.
                                                 var totalRowHeight = 33 * (newTable.length + 1);
                                                 var gridHeight = totalRowHeight < 520 ? totalRowHeight + 16 : 520;
                                                 var grid = $('<div id="grid' + resultID + '"></div>');
@@ -165,7 +157,6 @@ var Workflow;
                                                 var propertyDefinition = query.Properties[i];
                                                 if (propertyDefinition.Name == "LowThreshold") {
                                                     if (self.ResponseView() != Dns.Enums.TaskItemTypes.AggregateResponse) {
-                                                        //only show the LowThreshold column in individual response view
                                                         kendoColumns.push({ title: propertyDefinition.As, field: propertyDefinition.As.replace(/[^a-zA-Z0-9_]/g, ''), width: 100, hidden: true });
                                                         suppressedValues = true;
                                                     }
@@ -205,13 +196,11 @@ var Workflow;
                                     }
                                 });
                                 self.ResponseContentComplete(true);
-                                //response grids will get added to bucket before the bucket is added to the dom to help prevent extra ui paint calls by the dom
                                 $('#gResults').append(panels);
                             }).fail(function () {
                                 self.IsResponseLoadFailed(true);
                                 self.ResponseContentComplete(true);
                             }).always(function () {
-                                //resize the iframe to the contents 
                                 var intervalID = setInterval(function () {
                                     var scrollHeight = window.document.documentElement.scrollHeight || document.body.scrollHeight;
                                     var frameHeight = $(window.frameElement).height();
@@ -233,9 +222,7 @@ var Workflow;
                                 .done(function (comment) {
                                 Dns.WebApi.Response.ApproveResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                                     .done(function () {
-                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
-                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 })
                                     .fail(function (err) {
@@ -249,9 +236,7 @@ var Workflow;
                                 .done(function (comment) {
                                 Dns.WebApi.Response.RejectResponses({ Message: comment, ResponseIDs: self.ResponsesToApprove }, true)
                                     .done(function () {
-                                    //Send notification that routes need to be reloaded
                                     rootVM.NotifyReloadRoutes();
-                                    //hide the approve/reject buttons
                                     self.showApproveReject(false);
                                 }).fail(function (err) {
                                     var errorMessage = err.responseJSON.errors[0].Description;

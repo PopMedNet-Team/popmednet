@@ -48,6 +48,11 @@ namespace Lpp.Dns.Api
                         metadata = JsonConvert.DeserializeObject<DMCMetadata>(unsplitToken.Substring(decodedToken[0].Length + decodedToken[1].Length + 2));
                     }
 
+                    if (metadata == null)
+                    {
+                        metadata = new DMCMetadata { DMCProductVersion = "<unknown>", DMCFileVersion = "<unknown>" };
+                    }
+
                     using (var db = new DataContext())
                     {
                         Dns.Data.Audit.UserAuthenticationLogs successAudit = new UserAuthenticationLogs
@@ -94,6 +99,11 @@ namespace Lpp.Dns.Api
                                     metadata = JsonConvert.DeserializeObject<DMCMetadata>(unsplitToken.Substring(decodedToken[0].Length + decodedToken[1].Length + 2));
                                     metadata.InvalidCredentials = Lpp.Utilities.Crypto.EncryptStringAES("UserName: " + username + " was attempted with Password:" + password, "AuthenticationLog", user.ID.ToString("D"));
                                     reserializedJson = JsonConvert.SerializeObject(metadata);
+                                }
+
+                                if (metadata == null)
+                                {
+                                    metadata = new DMCMetadata { DMCProductVersion = "<unknown>", DMCFileVersion = "<unknown>" };
                                 }
 
                                 UserAuthenticationLogs failedAudit = new UserAuthenticationLogs

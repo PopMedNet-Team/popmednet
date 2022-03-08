@@ -39,7 +39,9 @@ namespace Lpp.Utilities.WebSites
                             var postscript = HasPostscript ? "\r\n<br/><br/><p style=\"font-size: 0.8em;\">We are notifying you of this change because you have subscribed to this notification. If you do not wish to receive this notification again, please login and change your subscription settings in your profile.</p>" : "";
                             msg.To.Add(new MailAddress(recipient.Email, recipient.Name));
                             msg.Subject = notification.Subject;
-                            msg.Body = salutation + notification.Body + postscript;
+                            msg.Body = salutation + notification.Body;
+                            if (notification.NeedsPostScript) 
+                                msg.Body += postscript;
                             msg.IsBodyHtml = true;
 
                             try

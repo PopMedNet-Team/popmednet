@@ -1,13 +1,10 @@
-/// <reference path="rxamtresponse.ts" />
-/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var Ethnicity;
     (function (Ethnicity) {
         var vm;
         var _bindingControl;
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel(parameters) {
                 this.requestID = ko.observable(null);
                 this.responseID = ko.observable(null);
@@ -25,7 +22,6 @@ var DataChecker;
                 }
                 self.buildCharts = function (rxData) {
                     var plotArr = [];
-                    //overall metrics charts
                     var overallPercentBarSrc = new DataChecker.ChartSource($.Enumerable.From(self.OverallMetrics).Select(function (x) { return [x.Hispanic_Display, x.Percent]; }).ToArray());
                     overallPercentBarSrc.yaxis_label = '%';
                     overallPercentBarSrc.xaxis_label = 'Ethnicity';
@@ -37,13 +33,11 @@ var DataChecker;
                     overallPercentPieSrc.title = 'Ethnicity Distribution among Selected Data Partners*';
                     plotArr.push(DataChecker.Charting.plotPieChart($('#OverallMetricsPieChart'), overallPercentPieSrc));
                     var index = 1;
-                    //percent within data partners charts
                     var percentByDataPartnerContainer = $('#DataPartnerMetricsPercent');
                     var percentByDataPartnerContainerPie = $('#DataPartnersMetricsPie');
                     self.CodesByPartner.forEach(function (item) {
                         var id = 'procedures_' + index++;
                         var d2 = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
-                        //$(d2).width(Math.max($(d2).width(), codes.length * 55));
                         $(percentByDataPartnerContainer).append(d2);
                         id = 'procedures_' + index++;
                         var p = $('<div class="halfwidth-piechart-dpp">').attr('id', id);
@@ -63,13 +57,11 @@ var DataChecker;
                         s3.title = 'Ethnicity Distribution within ' + item.Partner;
                         plotArr.push(DataChecker.Charting.plotPieChart(p, s3));
                     });
-                    //percent data partner contribution charts
                     var contributionContainerBar = $('#PercentDataPartnerContribution');
                     var contributionContainerPie = $('#PercentDataPartnerContribution_Pie');
                     self.PartnersByCode.forEach(function (item) {
                         var id = 'contrib_percent_' + index++;
                         var d = $('<div>').attr('id', id).addClass("fullwidth-barchart-dpc");
-                        //$(d).width(Math.max((self.DataPartners.length * 80), 450));
                         $(contributionContainerBar).append(d);
                         id = 'contrib_percent_' + index++;
                         var p = $('<div>').attr('id', id).addClass(self.DataPartners.length > 11 ? "fullwidth-piechart-dpc" : "halfwidth-piechart-dpc");
@@ -104,12 +96,10 @@ var DataChecker;
                         self.chartPlots.forEach(function (chart) {
                             chart.replot({ resetAxes: true });
                         });
-                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     });
                     if (self.HasResults) {
                         self.chartPlots = self.buildCharts(self.ToHispanicValues(rxHispanics));
-                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     }
                 }).fail(function (error) {

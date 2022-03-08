@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +20,7 @@ var Workflow;
         var Completed;
         (function (Completed) {
             var vm;
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -83,7 +82,7 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, routings, responseGroups, canViewIndividualResponses, canViewAggregateResponses) {
                     var _this = _super.call(this, bindingControl, Requests.Details.rovm.ScreenPermissions) || this;

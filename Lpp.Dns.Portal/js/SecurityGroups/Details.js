@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var SecurityGroups;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, securityGroup, organizationList, projectList, securityGroupList, isOwnerOrganization, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -50,7 +49,6 @@ var SecurityGroups;
                 Global.Helpers.ShowConfirm("Delete Confirmation", "<p>Are you sure you wish to delete this security group?</p>").done(function () {
                     var ownerLink = vm.OwnerLink();
                     Dns.WebApi.SecurityGroups.Delete([vm.SecurityGroup.ID()]).done(function () {
-                        //not using history.back() so that firefox bfcache does not kick in - forcing page to reload.
                         window.location.href = ownerLink;
                     });
                 });

@@ -414,15 +414,21 @@ namespace Lpp.Dns.Api.Requests
             public override bool Equals(object obj)
             {
                 QueryResultKey other = obj as QueryResultKey;
-                if ((QueryID == null && other != null) || (QueryID != null && other == null))
-                    return false;
+                string otherQueryID = null;
+                if(other != null)
+                {
+                    otherQueryID = other.QueryID;
+                }
 
-                if(QueryID == null && other.QueryID == null)
+                if(QueryID == null && otherQueryID == null)
                 {
                     return true;
                 }
 
-                return QueryID.Equals(other.QueryID);
+                if ((QueryID == null && otherQueryID != null) || (QueryID != null && otherQueryID == null))
+                    return false;
+
+                return QueryID.Equals(otherQueryID);
             }
 
             public bool Equals(QueryResultKey other)

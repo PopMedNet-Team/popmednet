@@ -13,12 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../_rootlayout.ts" />
 var Requests;
 (function (Requests) {
     var Details;
     (function (Details) {
-        var RequestOverviewViewModel = /** @class */ (function (_super) {
+        var RequestOverviewViewModel = (function (_super) {
             __extends(RequestOverviewViewModel, _super);
             function RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResponses, currentTask, requestTypeModels) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -41,11 +40,9 @@ var Requests;
                 _this.FieldOptions = fieldOptions;
                 _this.ReadOnly = ko.observable(false);
                 _this.SaveRequestID = ko.observable("");
-                //Lists
                 _this.RequestType = requestType;
                 _this.RequesterCenterList = requesterCenterList;
                 _this.WorkPlanTypeList = workPlanTypeList;
-                //remove RALs that have been deleted
                 _this.ReportAggregationLevelList = reportAggregationLevelList.filter(function (ral) { return ((ral.DeletedOn == undefined) || (ral.DeletedOn == null)); });
                 _this.Priority_Display = ko.computed(function () {
                     var pair = ko.utils.arrayFirst(Dns.Enums.PrioritiesTranslation, function (i) { return i.value == self.Request.Priority(); });
@@ -112,7 +109,6 @@ var Requests;
                 _this.ActivityProjectName = ko.observable();
                 _this.RefreshBudgetActivities = function () {
                     if (self.Request.ActivityID()) {
-                        //determine what the current budget activity is
                         var findActivity = function (id) {
                             if (id == null)
                                 return null;
@@ -139,20 +135,17 @@ var Requests;
                         var currentBudgetActivity = findActivity(self.Request.ActivityID());
                         if (currentBudgetActivity != null) {
                             if (currentBudgetActivity.TaskLevel == 1) {
-                                //task order
                                 self.TaskOrderName(currentBudgetActivity.Name);
                                 self.ActivityName('');
                                 self.ActivityProjectName('');
                             }
                             else if (currentBudgetActivity.TaskLevel == 2) {
-                                //activity
                                 var taskOrder = findActivity(currentBudgetActivity.ParentActivityID);
                                 self.TaskOrderName(taskOrder.Name);
                                 self.ActivityName(currentBudgetActivity.Name);
                                 self.ActivityProjectName('');
                             }
                             else {
-                                //activity project
                                 self.ActivityProjectName(currentBudgetActivity.Name);
                                 currentBudgetActivity = findActivity(currentBudgetActivity.ParentActivityID);
                                 self.ActivityName(currentBudgetActivity.Name);
@@ -177,7 +170,6 @@ var Requests;
                 self.CanViewIndividualResponses = canViewIndividualResponses;
                 self.CanViewAggregateResponses = canViewAggregateResponses;
                 self.AllowAggregateView = true;
-                //Do not allow Aggregate view for request types associated with DataChecker and ModularProgram Models            
                 requestTypeModels.forEach(function (rt) {
                     if (Constants.Guid.equals(rt, '321ADAA1-A350-4DD0-93DE-5DE658A507DF') || Constants.Guid.equals(rt, '1B0FFD4C-3EEF-479D-A5C4-69D8BA0D0154') || Constants.Guid.equals(rt, 'CE347EF9-3F60-4099-A221-85084F940EDE')) {
                         self.AllowAggregateView = false;
@@ -220,7 +212,6 @@ var Requests;
                         }
                     });
                 });
-                ////may need edits to not hide rejected?
                 self.IncompleteRoutings = ko.computed(function () {
                     return ko.utils.arrayFilter(self.VirtualRoutings(), function (routing) {
                         return routing.Status != Dns.Enums.RoutingStatus.Completed &&
@@ -244,9 +235,7 @@ var Requests;
                 self.AllRoutings = ko.pureComputed(function () {
                     return $.Enumerable.From(self.VirtualRoutings()).OrderBy(function (x) { return x.Status; }).ThenBy(function (x) { return x.Name; }).ToArray();
                 });
-                //Workflow
                 _this.WorkflowActivity = new Dns.ViewModels.WorkflowActivityViewModel(workFlowActivity);
-                //Boolean to hide Edit Metadata button if activity is "Terminate Request"
                 _this.IsNotTerminatedRequest = ko.computed(function () {
                     if (self.WorkflowActivity.ID() == "cc2e0001-9b99-4c67-8ded-a3b600e1c696")
                         return false;
@@ -305,7 +294,6 @@ var Requests;
                 _this.onAddRequestUser = function () {
                     var action = null;
                     if (!self.Request.ID()) {
-                        //save the request in current state   
                         if (!_this.Validate())
                             return;
                         if (!_this.ValidateRequest())
@@ -336,11 +324,9 @@ var Requests;
                 var editidpermission = _this.HasPermission(PMNPermissions.Project.EditRequestID);
                 _this.onEditWFRequestMetadata = function () {
                     if (!self.Validate()) {
-                        //trigger validation on the form before allowing edit of metadata
                         Global.Helpers.ShowErrorAlert('Validation Error', '<p class="alert alert-warning" role="alert">One or more validation errors were found in the current task editor, and need to be addressed before continuing Metadata edit.</p>');
                         return;
                     }
-                    //save current Priority and Due Date settings in order to monitor changes after metadata has been edited
                     var oldRequestPriority = self.Request.Priority();
                     var oldRequestDueDate = self.Request.DueDate();
                     Global.Helpers.ShowDialog("Edit Request Metadata", "/workflow/workflowrequests/editwfrequestmetadatadialog", [], 700, 700, { DetailsViewModel: self, AllowEditRequestID: editidpermission, NewRequest: false, OldRequestPriority: oldRequestPriority, OldRequestDueDate: oldRequestDueDate })
@@ -355,7 +341,6 @@ var Requests;
                 }
                 _this.onCopy = function () {
                     Dns.WebApi.Requests.CopyRequest(self.Request.ID()).done(function (reqID) {
-                        //load new request page using the new request ID
                         var q = '//' + window.location.host + '/requests/details?ID=' + reqID[0];
                         window.location.assign(q);
                     }).fail(function (ex) {
@@ -365,7 +350,6 @@ var Requests;
                     self.RoutingsChanged.notifySubscribers(item);
                 };
                 _this.NotifyReloadRoutes = function () {
-                    //notify subscribers that the routes have changed and should be reloaded
                     self.ReloadRoutingsRequired.notifySubscribers();
                 };
                 _this.onRequestUserRowSelected = function (e) {
@@ -488,7 +472,6 @@ var Requests;
                 }).done(function (results) {
                     var result = results[0];
                     if (result.Uri) {
-                        //// Need to Go back to API cause results dont return back FULL DTO info
                         $.when(Dns.WebApi.Requests.Get(result.Entity.ID), Dns.WebApi.Tasks.ByRequestID(result.Entity.ID))
                             .done(function (res, tasks) {
                             self.Request.update(res[0]);
@@ -503,7 +486,6 @@ var Requests;
                         });
                     }
                     else {
-                        //Update the request etc. here 
                         self.Request.ID(result.Entity.ID);
                         self.Request.Timestamp(result.Entity.Timestamp);
                         Global.Helpers.HistoryReplaceState(self.Request.Name(), '/requests/details?ID=' + self.Request.ID());
@@ -550,7 +532,6 @@ var Requests;
                     return deferred.reject();
                 if (!this.SaveRequest(false))
                     return deferred.reject();
-                //Post the request as is to the server
                 return this.PostSave(showMessage);
             };
             RequestOverviewViewModel.prototype.Cancel = function () {
@@ -575,7 +556,6 @@ var Requests;
                     if (!this.SaveFunctions[i](this.Request))
                         return false;
                 }
-                //Do whatever other common save stuff happens here.
                 return true;
             };
             RequestOverviewViewModel.prototype.SaveFormRequest = function (submit) {
@@ -583,20 +563,15 @@ var Requests;
                     if (!this.SaveFormFunctions[i](this.SaveFormDTO))
                         return false;
                 }
-                //Do whatever other common save stuff happens here.
                 return true;
             };
             RequestOverviewViewModel.prototype.PostSave = function (showMessage) {
                 var deferred = $.Deferred();
                 var request = this.Request.toData();
-                //Post it as a save
                 Dns.WebApi.Requests.InsertOrUpdate([request]).done(function (results) {
                     Details.rovm.Request.ID(results[0].ID);
                     Details.rovm.Request.Timestamp(results[0].Timestamp);
-                    //Update the history
                     window.history.replaceState(null, window.document.title, "/requests/details?ID=" + results[0].ID);
-                    //Save the datamarts here
-                    //Save anything else here if you want.
                     if (showMessage)
                         Global.Helpers.ShowAlert("Save", "<p>Save completed successfully!</p>").done(function () {
                             deferred.resolve(true);
@@ -644,13 +619,10 @@ var Requests;
             ];
             $.when(Dns.WebApi.Requests.ListRequesterCenters(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListWorkPlanTypes(null, "ID,Name", "Name"), Dns.WebApi.Requests.ListReportAggregationLevels(null, "ID,Name,DeletedOn", "Name")).done(function (requesterCenterList, workPlanTypeList, reportAggregationLevelList) {
                 if (!id) {
-                    //Get the starting workflow activity
                     requestTypeID = Global.GetQueryParam("requestTypeID");
                     var projectID_1 = Global.GetQueryParam("ProjectID");
-                    //let templateID: any = Global.GetQueryParam("templateID");
                     var parentRequestID_1 = Global.GetQueryParam("ParentRequestID");
                     var userID = Global.GetQueryParam("UserID");
-                    //This is new, we need to get extensive information about the workflow, request type, etc.
                     $.when(parentRequestID_1 == null ? [] : Dns.WebApi.Requests.Get(parentRequestID_1), Dns.WebApi.RequestTypes.Get(requestTypeID), Dns.WebApi.Workflow.GetWorkflowEntryPointByRequestTypeID(requestTypeID), Dns.WebApi.Templates.GetByRequestType(requestTypeID, null, null, "Order"), Dns.WebApi.Projects.GetFieldOptions(projectID_1, User.ID), Dns.WebApi.Projects.GetPermissions([projectID_1], [PMNPermissions.Request.AssignRequestLevelNotifications, PMNPermissions.Project.EditRequestID, PMNPermissions.Request.OverrideDataMartRoutingStatus, PMNPermissions.Request.ApproveRejectResponse, PMNPermissions.Request.SkipSubmissionApproval]), Dns.WebApi.Projects.GetActivityTreeByProjectID(projectID_1)).done(function (parentRequests, requestTypes, workflowActivities, templates, fieldOptions, projPermissions, activityTree) {
                         if (parentRequests.length != 0) {
                             parentRequest = new Dns.ViewModels.RequestViewModel(parentRequests[0]);
@@ -693,7 +665,6 @@ var Requests;
                     });
                 }
                 else {
-                    //This is an existing request, need to look for the task and workflowactivity id and display accordingly.
                     $.when(Dns.WebApi.Requests.Get(id), Dns.WebApi.Tasks.ByRequestID(id)).done(function (requests, tasks) {
                         request = new Dns.ViewModels.RequestViewModel(requests[0]);
                         var projectID = request.ProjectID();
@@ -715,9 +686,6 @@ var Requests;
                                 });
                                 var obj = JSON.parse(request.Query());
                                 if (obj && obj.Header.hasOwnProperty('ComposerInterface')) {
-                                    //only a queryDTO will have ComposerInterface as a property of the Header.
-                                    //going to assume request type hasn't been converted to the new multi-query schema.
-                                    //Automactially upgrade, assume the current json only has a single query and it matches the first specifiec for the request type.
                                     var queryObj = obj;
                                     var requestTypeTemplate = requestTypeTemplates[0];
                                     queryObj.Header.ID = requestTypeTemplate.ID;
@@ -726,7 +694,6 @@ var Requests;
                                     if ((queryObj.Header.Name || '').length == 0) {
                                         queryObj.Header.Name = requestTypeTemplate.Name;
                                     }
-                                    //convert to multi-query
                                     var mq = new Dns.ViewModels.QueryComposerRequestViewModel().toData();
                                     mq.SchemaVersion = "2.0";
                                     mq.Header.ID = id;
@@ -750,7 +717,6 @@ var Requests;
         function bind(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, tasks, requestUsers, fieldOptions, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResonses, requestTypeModels) {
             var _this = this;
             $(function () {
-                //Load the activity into the task panel.
                 var activity = ko.utils.arrayFirst(WorkflowActivityList, function (item) {
                     return item.WorkflowID.toLowerCase() == request.WorkflowID().toLowerCase() && item.ID.toLowerCase() == workFlowActivity.ID.toLowerCase();
                 });
@@ -767,7 +733,6 @@ var Requests;
                 var bindingControl = $("#ContentWrapper");
                 Details.rovm = new RequestOverviewViewModel(request, parentRequest, requestDataMarts, requestType, workFlowActivity, requesterCenterList, workPlanTypeList, reportAggregationLevelList, activityTree, requestUsers, fieldOptions, bindingControl, screenPermissions, responseGroups, canViewIndividualResponses, canViewAggregateResonses, currentTask, requestTypeModels);
                 var taskID = Global.GetQueryParam("TaskID");
-                //If new, or TaskID passed, set the tab to the Task tab
                 if (workFlowActivity.End) {
                 }
                 else if (!request.ID() || taskID) {
@@ -781,30 +746,23 @@ var Requests;
                 var viewAttachments = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments.toLowerCase(); }) != null;
                 var assignRequestNotifications = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.Request.AssignRequestLevelNotifications.toLowerCase(); }) != null;
                 var viewTrackingTable = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.toLowerCase(); }) != null;
-                // Load the view of the criteria only if #viewQueryComposer element is present
                 if (viewOverview && $('#QueryComposerOverview').length) {
                     Details.rovm.OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.initialize(JSON.parse(request.Query()), request, $('#overview-queryview'));
                 }
-                //Notifications
                 if (assignRequestNotifications) {
                     Controls.WFNotifications.List.init($('#WFNotifications'), screenPermissions, Details.rovm.Request.ID(), request.CurrentWorkFlowActivity(), request.CurrentWorkFlowActivityID());
                 }
-                //history
                 Controls.WFHistory.List.init(request.ID() || Constants.GuidEmpty);
                 Controls.WFHistory.List.HistoryItemsChanged.subscribe(function (hasHistory) { Details.rovm.HasHistory(hasHistory); });
-                //init activity specific comments
                 var activityCommentsVM = viewComments ? Controls.WFComments.List.init($('#Comments'), screenPermissions, Details.rovm.Request.ID(), request.CurrentWorkFlowActivity(), request.CurrentWorkFlowActivityID()) : null;
-                //init all comments for request; user needs to have permission to view the overview
                 var overallCommentsVM = (viewOverview) ? Controls.WFComments.List.init($('#OverallComments'), screenPermissions, Details.rovm.Request.ID(), null, null) : null;
                 if (viewComments) {
                     activityCommentsVM.OnNewCommentAdded.subscribe(function (newComments) {
-                        //there will never be document references for new comments from the comment control.
                         activityCommentsVM.AddCommentToDataSource(newComments, null);
                     });
                 }
                 if (overallCommentsVM) {
                     overallCommentsVM.OnNewCommentAdded.subscribe(function (newComments) {
-                        //there will never be document references for new comments from the comment control.
                         overallCommentsVM.AddCommentToDataSource(newComments, null);
                     });
                 }
@@ -824,7 +782,6 @@ var Requests;
                                         var filtered = ko.utils.arrayFilter(docs, function (childItems) { return item.RevisionSetID === childItems.RevisionSetID; });
                                         if (filtered.length > 1) {
                                             filtered.sort(function (a, b) {
-                                                //sort by version number - highest to lowest, and then date created - newest to oldest
                                                 if (a.MajorVersion === b.MajorVersion) {
                                                     if (a.MinorVersion === b.MinorVersion) {
                                                         if (a.BuildVersion === b.BuildVersion) {
@@ -858,14 +815,11 @@ var Requests;
                 }
                 if (viewDocuments || viewAttachments) {
                     var activityDocumentsVM = null;
-                    //task specific documents                
                     if (currentTask != null) {
                         activityDocumentsVM = Controls.WFDocuments.List.init(currentTask, tasks.map(function (m) { return m.ID; }), $('#TaskDocuments'), screenPermissions);
                         Details.rovm.SetTaskDocumentsViewModel(activityDocumentsVM);
                         activityDocumentsVM.NewDocumentUploaded.subscribe(function (newDocument) {
-                            //get comments for the document
                             Dns.WebApi.Comments.ByDocumentID(newDocument.ID).done(function (comments) {
-                                //create the document references
                                 var documentReferences = ko.utils.arrayMap(comments, function (c) {
                                     return {
                                         CommentID: c.ID,
@@ -875,7 +829,6 @@ var Requests;
                                         RevisionSetID: newDocument.RevisionSetID
                                     };
                                 });
-                                //add the new document to the comment grids.
                                 if (viewOverview) {
                                     overallCommentsVM.AddCommentToDataSource(comments, documentReferences);
                                 }
@@ -890,8 +843,6 @@ var Requests;
                         });
                     }
                     else {
-                        //on the completed step, need to list the previous task documents, but do not allow or expect upload
-                        //create a dummy complete task to pass the documents view model.
                         var tt = new Dns.ViewModels.TaskViewModel();
                         tt.ID(null);
                         tt.PercentComplete(100);
@@ -901,13 +852,10 @@ var Requests;
                         Details.rovm.SetTaskDocumentsViewModel(activityDocumentsVM);
                     }
                     var overallDocumentsVM = null;
-                    //non-task specific documents (request documents)
                     if (viewOverview && viewDocuments) {
                         overallDocumentsVM = Controls.WFDocuments.List.initForRequest(request.ID(), $('#OverviewDocuments'), screenPermissions);
                         overallDocumentsVM.NewDocumentUploaded.subscribe(function (newDocument) {
-                            //get comments for the document
                             Dns.WebApi.Comments.ByDocumentID(newDocument.ID).done(function (comments) {
-                                //create the document references
                                 var documentReferences = ko.utils.arrayMap(comments, function (c) {
                                     return {
                                         CommentID: c.ID,
@@ -917,7 +865,6 @@ var Requests;
                                         RevisionSetID: newDocument.RevisionSetID
                                     };
                                 });
-                                //refresh the comment grids
                                 if (viewOverview) {
                                     overallCommentsVM.AddCommentToDataSource(comments, documentReferences);
                                 }
@@ -931,16 +878,13 @@ var Requests;
                             });
                         });
                     }
-                } //end view documents permission
+                }
                 if (viewTask && Controls.WFTrackingTable && Controls.WFTrackingTable.Display) {
                     Controls.WFTrackingTable.Display.init(request.ID(), screenPermissions);
                 }
                 if (viewTask && Controls.WFEnhancedEventLog && Controls.WFEnhancedEventLog.Display) {
                     Controls.WFEnhancedEventLog.Display.init(request.ID(), screenPermissions);
                 }
-                //Load other tabs here.
-                //Use the workflow to use jquery load to load the partial for the task view as required
-                //If new request, open Edit Request Metadata Dialog automatically
                 var alloweditrequestpermission = ko.utils.arrayFirst(screenPermissions, function (p) { return p.toLowerCase() == PMNPermissions.Project.EditRequestID.toLowerCase(); }) != null;
                 ;
                 if (request.ID() == null) {
@@ -952,7 +896,6 @@ var Requests;
                         Controls.WFHistory.List.setRequestID(Details.rovm.Request.ID());
                     });
                 }
-                // ===== Scroll to Top ==== 
                 $(window).scroll(function () {
                     if ($(_this).scrollTop() >= 450) {
                         $('#return-to-top').fadeIn(200);
@@ -965,7 +908,7 @@ var Requests;
             });
         }
         init();
-        var RequestDataMartViewModel = /** @class */ (function (_super) {
+        var RequestDataMartViewModel = (function (_super) {
             __extends(RequestDataMartViewModel, _super);
             function RequestDataMartViewModel(requestDataMart) {
                 var _this = _super.call(this, requestDataMart) || this;
@@ -977,12 +920,11 @@ var Requests;
             return RequestDataMartViewModel;
         }(Dns.ViewModels.RequestDataMartViewModel));
         Details.RequestDataMartViewModel = RequestDataMartViewModel;
-        /** Shows a dialog that allows the user to enter a comment. The comment entered will be returned as the result. */
         function PromptForComment() {
             return Global.Helpers.ShowDialog('Enter a Comment', '/controls/wfcomments/simplecomment-dialog', ['Close'], 600, 320, null).promise();
         }
         Details.PromptForComment = PromptForComment;
-        var VirtualRoutingViewModel = /** @class */ (function () {
+        var VirtualRoutingViewModel = (function () {
             function VirtualRoutingViewModel(routing, group) {
                 this.DataMartID = null;
                 this.ResponseGroupID = null;

@@ -31,7 +31,8 @@ namespace Lpp.Utilities.Logging
         {
             return from l in logs where subscriptions.Any(s => s.EventID == eventId 
                    && l.EventID == s.EventID 
-                   && (s.LastRunTime == null || l.TimeStamp >= s.LastRunTime.Value) 
+                   && l.TimeStamp >= DbFunctions.AddMonths(DateTime.UtcNow, -1)
+                   && (s.LastRunTime == null || l.TimeStamp >= s.LastRunTime.Value)
                    && 
                       (
                          (
@@ -75,6 +76,7 @@ namespace Lpp.Utilities.Logging
         public string Subject {get; set;}
         public string Body {get; set;}
         public IEnumerable<Recipient> Recipients {get; set;}
+        public bool NeedsPostScript { get; set; } = true;
     }
 
     public sealed class Recipient

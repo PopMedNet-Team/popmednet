@@ -23,6 +23,7 @@
 
 <article class="panel panel-default" data-bind="css: {visible: true}">
     <div class="panel-heading">
+        <span class="label label-danger pull-right" style="padding: 7px;" data-bind="visible: DataMart.Deleted">Deleted</span>
         <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
             <li><a href="/datamarts">DataMarts</a></li>
@@ -151,28 +152,7 @@
             <fieldset>
                 <legend></legend>
                 <div class="col-sm-6 form-group">
-                    <div class="row">
-                        <label>Unattended Operations</label>
-                        <div class="col-sm-12 checkbox" style="margin-top: 10px;">
-                            <div><label><input id="unattendedMode" type="checkbox" data-bind="checked: UnattendedMode.UnattendedMode" /> Allow unattended operation</label></div>
-                        </div>
-                        <article>
-                            <div class="row" style="margin-left: 25px;">
-                                <div class="col-sm-12 checkbox" style="margin-top: 10px;">
-                                    <div>
-                                        <div><label><input id="cbNotifyOnly" type="radio" data-bind="checkedValue:true, checked: UnattendedMode.NotifyOnly, enable: UnattendedMode.UnattendedMode" /> Notify me of new requests, but do not process them automatically</label></div>
-                                    </div>
-                                    <div>
-                                        <div><label><input id="cbProcessNoUpload" type="radio" data-bind="checkedValue:true, checked: UnattendedMode.ProcessNoUpload, enable: UnattendedMode.UnattendedMode" /> Process new request automatically but do not upload results</label></div>
-                                    </div>
-                                    <div>
-                                        <div><label><input id="cbProcessAndUpload" type="radio" data-bind="checkedValue:true, checked: UnattendedMode.ProcessAndUpload, enable: UnattendedMode.UnattendedMode" /> Process new request automatically and upload results</label></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </div>  
-                    <div class="row">
+                    <div class="row"  style="display:none">
                         <div class="col-sm-12 checkbox" style="margin-top: 10px;">
                             <div><label><input id="chkIsLocal" type="checkbox" data-bind="checked: DataMart.IsLocal, enable: (HasPermission(PMNPermissions.DataMart.InstallModels) || HasPermission(PMNPermissions.DataMart.UninstallModels)) && HasMetadataModelInstalled" /> Local DataMart</label></div>
                         </div>
@@ -750,10 +730,15 @@
         </div>
     </div>
     <nav class="panel-footer right">
-        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(PMNPermissions.DataMart.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.DataMart.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(PMNPermissions.DataMart.Copy), disable: DataMart.Deleted"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
+        <button class="btn btn-danger btn-sm pull-right" 
+                id="btnDelete" 
+                data-bind="click: Delete, visible: HasPermission(PMNPermissions.DataMart.Delete), disable: DataMart.Deleted" 
+                style="margin-left: 30px;">
+            <img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete
+        </button>
         <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.DataMart.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.DataMart.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.DataMart.Edit), disable: DataMart.Deleted"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
         <br class="clear" />
     </nav>
 </article>

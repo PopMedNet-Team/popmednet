@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +20,7 @@ var Workflow;
         var WorkingSpecification;
         (function (WorkingSpecification) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -48,7 +47,6 @@ var Workflow;
                         return;
                     this.AbortRejectMessage = ko.observable("");
                     if (vm.UploadViewModel.DocumentsToDelete().length > 0) {
-                        //don't wait for return, if fails on delete the user can delete from documents tab.
                         Dns.WebApi.Documents.Delete(ko.utils.arrayMap(this.UploadViewModel.DocumentsToDelete(), function (d) { return d.ID; }));
                     }
                     Requests.Details.PromptForComment()
@@ -68,7 +66,6 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();

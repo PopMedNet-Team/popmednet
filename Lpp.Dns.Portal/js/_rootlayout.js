@@ -1,8 +1,6 @@
-/// <reference path="../Scripts/page/Page.ts" />
 var RootLayout;
 (function (RootLayout) {
     $(function () {
-        //Set all of the items with title tags to have qtip enabled
         var title = $('img[title!=""], span[title!=""]');
         title.tooltip({
             html: true,
@@ -18,10 +16,6 @@ var RootLayout;
         });
     });
     function LoadSpinner() {
-        //var form = <any> $(".Content form");
-        //if (!form.checkValidity || form.checkValidity()) {
-        //    form.showLoadingSign({ foregroundClass: "BodyLoadingSign" });
-        //}
     }
 })(RootLayout || (RootLayout = {}));
 var Users;
@@ -80,7 +74,7 @@ var Users;
 })(Users || (Users = {}));
 var PMNPermissions;
 (function (PMNPermissions) {
-    var Group = /** @class */ (function () {
+    var Group = (function () {
         function Group() {
         }
         Group.CreateProject = '93623C60-6425-40A0-91A0-01FA34920913';
@@ -92,7 +86,7 @@ var PMNPermissions;
         return Group;
     }());
     PMNPermissions.Group = Group;
-    var Organization = /** @class */ (function () {
+    var Organization = (function () {
         function Organization() {
         }
         Organization.Edit = '0B42D2D7-F7A7-4119-9CC5-22991DC12AD3';
@@ -107,7 +101,7 @@ var PMNPermissions;
         return Organization;
     }());
     PMNPermissions.Organization = Organization;
-    var Project = /** @class */ (function () {
+    var Project = (function () {
         function Project() {
         }
         Project.Copy = '25BD0001-4739-41D8-BC74-A2AF01733B64';
@@ -121,7 +115,7 @@ var PMNPermissions;
         return Project;
     }());
     PMNPermissions.Project = Project;
-    var User = /** @class */ (function () {
+    var User = (function () {
         function User() {
         }
         User.Edit = '2B42D2D7-F7A7-4119-9CC5-22991DC12AD3';
@@ -135,7 +129,7 @@ var PMNPermissions;
         return User;
     }());
     PMNPermissions.User = User;
-    var DataMart = /** @class */ (function () {
+    var DataMart = (function () {
         function DataMart() {
         }
         DataMart.Edit = '6B42D2D7-F7A7-4119-9CC5-22991DC12AD3';
@@ -149,7 +143,7 @@ var PMNPermissions;
         return DataMart;
     }());
     PMNPermissions.DataMart = DataMart;
-    var Registry = /** @class */ (function () {
+    var Registry = (function () {
         function Registry() {
         }
         Registry.Edit = '2B42D2E7-F7A7-4119-9CC5-22991DC12AD3';
@@ -159,7 +153,7 @@ var PMNPermissions;
         return Registry;
     }());
     PMNPermissions.Registry = Registry;
-    var Portal = /** @class */ (function () {
+    var Portal = (function () {
         function Portal() {
         }
         Portal.CreateGroup = '064FBC63-B8F1-4C31-B5AB-AB42DE5779C7';
@@ -171,7 +165,7 @@ var PMNPermissions;
         return Portal;
     }());
     PMNPermissions.Portal = Portal;
-    var Templates = /** @class */ (function () {
+    var Templates = (function () {
         function Templates() {
         }
         Templates.Edit = '47F80001-6C45-4144-A02B-A3B00131E7D6';
@@ -181,7 +175,7 @@ var PMNPermissions;
         return Templates;
     }());
     PMNPermissions.Templates = Templates;
-    var RequestTypes = /** @class */ (function () {
+    var RequestTypes = (function () {
         function RequestTypes() {
         }
         RequestTypes.Edit = '47F80021-6C45-4144-A02B-A3B00131E7D6';
@@ -191,7 +185,7 @@ var PMNPermissions;
         return RequestTypes;
     }());
     PMNPermissions.RequestTypes = RequestTypes;
-    var ProjectRequestTypeWorkflowActivities = /** @class */ (function () {
+    var ProjectRequestTypeWorkflowActivities = (function () {
         function ProjectRequestTypeWorkflowActivities() {
         }
         ProjectRequestTypeWorkflowActivities.ViewTask = 'DD20EE1B-C433-49F8-8A91-76AD10DB1BEC';
@@ -211,7 +205,7 @@ var PMNPermissions;
         return ProjectRequestTypeWorkflowActivities;
     }());
     PMNPermissions.ProjectRequestTypeWorkflowActivities = ProjectRequestTypeWorkflowActivities;
-    var Request = /** @class */ (function () {
+    var Request = (function () {
         function Request() {
         }
         Request.ViewHistory = '0475D452-4B7A-4D3A-8295-4FC122F6A546';

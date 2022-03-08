@@ -1,4 +1,3 @@
-/// <reference path="../../../scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Tests;
     var LocationSelector;
     (function (LocationSelector) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel() {
                 var _this = _super.call(this, null) || this;
@@ -41,7 +40,6 @@ var Tests;
                         vm.Towns(results.Towns);
                     }).fail(function (error) {
                     });
-                    //Get the census data here
                     vm.UpdateCensus();
                 }
                 else {
@@ -51,7 +49,6 @@ var Tests;
             };
             ViewModel.prototype.UpdateCensus = function () {
                 if (vm.Location()) {
-                    //Selected, go look it up, first determine if it's a region or a town.
                     var selected = $(":selected", $("#cboLocation"));
                     var optGroup = selected.closest("optgroup").attr("label");
                     switch (optGroup) {
@@ -70,7 +67,6 @@ var Tests;
                     });
                 }
                 else {
-                    //Nothing selected, hide projection data.
                     vm.CensusData.removeAll();
                 }
             };

@@ -215,13 +215,17 @@ namespace Plugins.Requests.QueryBuilder {
                 }
             }
 
+            return true;
+        }
+
+        public VerifyNoDuplicates(): boolean {
             let cohortNames = this.QueryNames();
             let duplicates = cohortNames.filter((item, index) => cohortNames.indexOf(item) != index);
             if (duplicates.length > 0) {
-                Global.Helpers.ShowAlert("Valiation Error", "Cohort names must be unique.");
+                Global.Helpers.ShowAlert("Validation Error", "Cohort names must be unique.");
                 return false;
             }
-            return true;
+            else return true;
         }
 
         public onExportJSON(): string {

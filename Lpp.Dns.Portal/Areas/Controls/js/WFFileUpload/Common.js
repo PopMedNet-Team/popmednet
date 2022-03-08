@@ -1,4 +1,3 @@
-/// <reference path="../../../../js/requests/details.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -8,7 +7,7 @@ var Controls;
             ItemTypes[ItemTypes["Folder"] = 0] = "Folder";
             ItemTypes[ItemTypes["File"] = 1] = "File";
         })(ItemTypes = WFFileUpload.ItemTypes || (WFFileUpload.ItemTypes = {}));
-        var sFtpFileResults = /** @class */ (function () {
+        var sFtpFileResults = (function () {
             function sFtpFileResults() {
                 this.Results = ko.observableArray();
             }
@@ -17,7 +16,7 @@ var Controls;
             return sFtpFileResults;
         }());
         WFFileUpload.sFtpFileResults = sFtpFileResults;
-        var sFtpResult = /** @class */ (function () {
+        var sFtpResult = (function () {
             function sFtpResult(path, status) {
                 this.Path = ko.observable(path);
                 this.Status = ko.observable(status);
@@ -25,7 +24,7 @@ var Controls;
             return sFtpResult;
         }());
         WFFileUpload.sFtpResult = sFtpResult;
-        var sFtpItem = /** @class */ (function () {
+        var sFtpItem = (function () {
             function sFtpItem(name, path, type, length) {
                 var _this = this;
                 this.Name = ko.observable(name);

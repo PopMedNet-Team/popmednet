@@ -17,7 +17,7 @@ var Requests;
 (function (Requests) {
     var BulkEdit;
     (function (BulkEdit) {
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(requestID, bindingControl, screenPermissions, gridSetting) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -119,7 +119,7 @@ var Requests;
             return ViewModel;
         }(Global.PageViewModel));
         BulkEdit.ViewModel = ViewModel;
-        var Request = /** @class */ (function () {
+        var Request = (function () {
             function Request(request) {
                 var self = this;
                 this._request = request;

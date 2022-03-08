@@ -205,7 +205,8 @@ namespace Lpp.Dns.Data
             }
 
             db.Database.ExecuteSqlCommand($"UPDATE Documents SET ContentModifiedOn = GETUTCDATE(), ContentCreatedOn = '{ contentCreated }' WHERE ID = '{ this.ID.ToString("D") }'");
-        }        
+        }    
+        
     }
 
     public class FileStreamRowData
@@ -277,17 +278,23 @@ namespace Lpp.Dns.Data
             }
 
             var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
-            var logItem = new Audit.DocumentChangeLog
-            {
-                Description = string.Format("{0} '{1}' has been {2} by {3}", document.ParentDocumentID.HasValue ? "Revision of document": "Document", document.Name, obj.State, (orgUser.Acronym + @"\" + orgUser.UserName)),
-                Reason = obj.State,
-                UserID = identity == null ? Guid.Empty : identity.ID,
-                DocumentID = document.ID,
-                Document = document
-            };
 
-            db.LogsDocumentChange.Add(logItem);
-            logs.Add(logItem);
+
+            if (obj.State != EntityState.Deleted)
+            {
+                string description = string.Format("{0} '{1}' has been {2} by {3}\\{4}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, obj.State, orgUser.Acronym, orgUser.UserName);
+                var logItem = new Audit.DocumentChangeLog
+                {
+                    Description = description,
+                    Reason = obj.State,
+                    UserID = identity == null ? Guid.Empty : identity.ID,
+                    DocumentID = document.ID,
+                    Document = document,
+                    ItemID = document.ItemID
+                };
+                db.LogsDocumentChange.Add(logItem);
+                logs.Add(logItem);
+            }
 
             //check if associated with a request, if so create a document added for request notification
             //Overall request document will have request.ID == document.ItemID, task document will have task.ID == document.ItemID
@@ -304,11 +311,12 @@ namespace Lpp.Dns.Data
                 }
             }
             if (request != null && obj.State == EntityState.Added)
-            {                
+            {
+                string description = string.Format("{0} '{1}' for Request: {2} has been added by {3}\\{4}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, request.Name, orgUser.Acronym, orgUser.UserName);
                 logs.Add(
                     db.LogsRequestDocumentChange.Add(
                         new Audit.RequestDocumentChangeLog {
-                           Description = string.Format("{0} '{1}' for Request: {2} been has added by {3}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, request.Name, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                           Description = description,
                            UserID = identity == null ? Guid.Empty : identity.ID,
                            Reason = obj.State,
                            DocumentID = document.ID,
@@ -317,8 +325,25 @@ namespace Lpp.Dns.Data
                         }
                     )     
                 );
-
             }
+            if(obj.State == EntityState.Deleted)
+            {
+                string description = string.Format("{0} '{1}' for Request: {2} has been deleted by {3}\\{4}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, request.Name, orgUser.Acronym, orgUser.UserName);
+                logs.Add(
+                    db.LogsDeletedDocumentArchive.Add(
+                        new Audit.DocumentDeleteLog
+                        {
+                            Description = description,
+                            UserID = identity == null ? Guid.Empty : identity.ID,
+                            //Reason = obj.State,
+                            DocumentID = document.ID,
+                            ItemID = document.ItemID
+                        }
+                    )
+                );
+            }
+
+            
 
             return logs;
         }

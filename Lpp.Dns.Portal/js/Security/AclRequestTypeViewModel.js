@@ -1,11 +1,10 @@
-/// <reference path="../../Scripts/page/Page.ts" />
 var Security;
 (function (Security) {
     var Acl;
     (function (Acl) {
         var RequestTypes;
         (function (RequestTypes) {
-            var AclRequestTypeEditViewModel = /** @class */ (function () {
+            var AclRequestTypeEditViewModel = (function () {
                 function AclRequestTypeEditViewModel(requestTypes, securityGroupTree, acls, targets, aclType) {
                     var _this = this;
                     this.ViewTable = ko.observable(false);
@@ -58,11 +57,9 @@ var Security;
                                 return type.ID() == rt.ID();
                             });
                             if (currentRt == null) {
-                                //Add it
                                 _this.RequestTypes.push(new RequestTypeAclViewModel(_this, rt.toData()));
                             }
                         });
-                        //Delete one if it's been removed
                         _this.RequestTypes().forEach(function (currentRt) {
                             var rt = ko.utils.arrayFirst(values, function (type) {
                                 return type.ID() == currentRt.ID();
@@ -110,17 +107,14 @@ var Security;
                     });
                     this.RemoveSecurityGroup = function (data) {
                         Global.Helpers.ShowConfirm("Confirmation", "<p>Are you sure that you want to remove the selected security group?</p>").done(function () {
-                            //Remove all of the acls by setting the allowed to null
                             self.Acls().forEach(function (a) {
                                 if (a.SecurityGroupID() == self.SelectedSecurityGroup()) {
                                     a.Permission(null);
                                 }
                             });
-                            //Remove the security group by id.
                             self.SecurityGroups.forEach(function (sg, index) {
                                 if (sg.ID == self.SelectedSecurityGroup()) {
                                     self.SecurityGroups.splice(index, 1);
-                                    //Now refresh the combo etc.
                                     var cboSecurityGroups = $('#cboRequestTypeSecurityGroups' + self.Identifier()).data("kendoDropDownList");
                                     _this.dsSecurityGroups.data(_this.SecurityGroups);
                                     _this.dsSecurityGroups.fetch();
@@ -141,7 +135,6 @@ var Security;
                         });
                     };
                     this.ClearAllGroups = function () {
-                        //Remove all of the acls by setting the allowed to null
                         self.Acls().forEach(function (a) { a.Permission(null); });
                         self.SelectedSecurityGroup(null);
                         self.SecurityGroups = [];
@@ -178,7 +171,7 @@ var Security;
                 return AclRequestTypeEditViewModel;
             }());
             RequestTypes.AclRequestTypeEditViewModel = AclRequestTypeEditViewModel;
-            var RequestTypeAclViewModel = /** @class */ (function () {
+            var RequestTypeAclViewModel = (function () {
                 function RequestTypeAclViewModel(vm, requestType) {
                     var _this = this;
                     var self = this;
@@ -250,7 +243,6 @@ var Security;
                         }
                     });
                     this.Permission.subscribe(function (value) {
-                        //This is hackery because of a bug in computeds in knockout where they're not firing updates unless the observable is inside this class.               
                         var acls = self.VM.Acls().filter(function (a) {
                             return a.RequestTypeID() == self.ID() && a.SecurityGroupID() == self.VM.SelectedSecurityGroup();
                         });
@@ -275,7 +267,6 @@ var Security;
                     acl.Overridden(true);
                     acl.SecurityGroup("");
                     acl.SecurityGroupID(securityGroupID || vm.SelectedSecurityGroup());
-                    //Add the other properties to it from the target so that filtering will continue to work.
                     vm.Targets.forEach(function (t) {
                         acl[t.Field] = ko.observable(t.Value);
                     });

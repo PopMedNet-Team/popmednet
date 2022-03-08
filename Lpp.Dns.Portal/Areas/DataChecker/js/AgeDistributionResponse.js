@@ -1,12 +1,10 @@
-/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var AgeDistribution;
     (function (AgeDistribution) {
         var vm;
         var _bindingControl;
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel(parameters) {
                 this.requestID = ko.observable(null);
                 this.responseID = ko.observable(null);
@@ -24,7 +22,6 @@ var DataChecker;
                 }
                 self.buildCharts = function (rxAgees) {
                     var plotArr = [];
-                    //overall metrics charts
                     var overallPercentBarSrc = new DataChecker.ChartSource($.Enumerable.From(self.OverallMetrics).Select(function (x) { return [x.Age_Display, x.Percent]; }).ToArray());
                     overallPercentBarSrc.yaxis_label = '%';
                     overallPercentBarSrc.xaxis_label = 'Age';
@@ -32,17 +29,12 @@ var DataChecker;
                     overallPercentBarSrc.pointLabelFormatString = '%.2f';
                     overallPercentBarSrc.isPercentage = true;
                     plotArr.push(DataChecker.Charting.plotBarChart($('#OverallMetricsChart'), overallPercentBarSrc));
-                    //var overallPercentPieSrc = new ChartSource($.Enumerable.From(self.OverallMetrics).Select((x: IAgeOverallMetricItem) => [x.Age_Display + ' ' + x.Percent + '%', x.Percent / 100]).ToArray());
-                    //overallPercentPieSrc.title = 'Age Distribution among Selected Data Partners*';
-                    //plotArr.push(DataChecker.Charting.plotPieChart($('#OverallMetricsPieChart'), overallPercentPieSrc));
                     var index = 1;
-                    //percent within data partners charts
                     var percentByDataPartnerContainer = $('#DataPartnerMetricsPercent');
                     var percentByDataPartnerContainerPie = $('#DataPartnersMetricsPie');
                     self.CodesByPartner.forEach(function (item) {
                         var id = 'procedures_' + index++;
                         var d2 = $('<div>').attr('id', id).addClass(self.CodesByPartner.length > 11 ? "fullwidth-barchart-dpc" : "halfwidth-barchart-dpc");
-                        //$(d2).width(Math.max($(d2).width(), codes.length * 55));
                         $(percentByDataPartnerContainer).append(d2);
                         var s2 = new DataChecker.ChartSource($.Enumerable.From(item.Codes)
                             .Where(function (x) { return $.inArray(x.Code_Display, rxAgees) > -1; })
@@ -54,7 +46,6 @@ var DataChecker;
                         s2.title = 'Age Distribution within ' + item.Partner;
                         plotArr.push(DataChecker.Charting.plotBarChart(d2, s2));
                     });
-                    //percent data partner contribution charts
                     var contributionContainerBar = $('#PercentDataPartnerContribution');
                     self.PartnersByCode.forEach(function (item) {
                         var id = 'contrib_percent_' + index++;
@@ -87,12 +78,10 @@ var DataChecker;
                         self.chartPlots.forEach(function (chart) {
                             chart.replot({ resetAxes: true });
                         });
-                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     });
                     if (self.HasResults) {
                         self.chartPlots = self.buildCharts(self.ToAgeValues(rxAgees));
-                        //resize the iframe to the contents plus padding for the export dropdown menu
                         $(window.frameElement).height($('html').height() + 70);
                     }
                 }).fail(function (error) {

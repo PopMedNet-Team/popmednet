@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var ModularProgram;
@@ -21,7 +20,7 @@ var Workflow;
         var DistributeRequest;
         (function (DistributeRequest) {
             var vm;
-            var Routings = /** @class */ (function () {
+            var Routings = (function () {
                 function Routings(dataMart) {
                     this.Priority = ko.observable(dataMart.Priority);
                     this.DueDate = ko.observable(dataMart.DueDate);
@@ -33,7 +32,7 @@ var Workflow;
                 return Routings;
             }());
             DistributeRequest.Routings = Routings;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, fieldOptions, datamarts, existingRequestDataMarts, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -61,7 +60,6 @@ var Workflow;
                                 if (!result.UpdateDueDate) {
                                     newDueDate = null;
                                 }
-                                // update selected datamarts here
                                 self.DataMarts().forEach(function (dm) {
                                     if (self.SelectedDataMartIDs().indexOf(dm.DataMartID) != -1) {
                                         if (result.UpdatePriority) {
@@ -159,7 +157,6 @@ var Workflow;
                                 Global.Helpers.RedirectTo(result.Uri);
                             }
                             else {
-                                //Update the request etc. here 
                                 Requests.Details.rovm.Request.ID(result.Entity.ID);
                                 Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                 Requests.Details.rovm.UpdateUrl();
@@ -176,7 +173,6 @@ var Workflow;
                 Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
                 var query = (Requests.Details.rovm.Request.Query() == null || Requests.Details.rovm.Request.Query() === '') ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                 var uploadViewModel = Controls.WFFileUpload.Index.init($('#mpupload'), query, modularProgramTermID);
-                //Bind the view model for the activity
                 var bindingControl = $("#MPDistributeRequest");
                 vm = new ViewModel(bindingControl, Requests.Details.rovm.ScreenPermissions, Requests.Details.rovm.FieldOptions, datamarts, selectedDataMarts || [], uploadViewModel);
                 $(function () {

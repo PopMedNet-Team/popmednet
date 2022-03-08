@@ -1,4 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var Organization;
     var Details;
     (function (Details) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(screenPermissions, organization, orgAcls, orgEvents, organizations, securityGroupTree, permissionList, eventList, registries, registryList, orgEHRS, users, datamarts, securityGroups, bindingControl) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -75,12 +74,10 @@ var Organization;
                 _this.SecurityGroups = ko.observableArray(securityGroups.map(function (sg) {
                     return new Dns.ViewModels.SecurityGroupViewModel(sg);
                 }));
-                //Permissions
                 _this.OrgAcls = ko.observableArray(orgAcls.map(function (a) {
                     return new Dns.ViewModels.AclOrganizationViewModel(a);
                 }));
                 _this.Security = new Security.Acl.AclEditViewModel(permissionList, securityGroupTree, _this.OrgAcls, [{ Field: "OrganizationID", Value: _this.Organization.ID() }], Dns.ViewModels.AclOrganizationViewModel);
-                //Events
                 _this.OrgEvents = ko.observableArray(orgEvents.map(function (e) {
                     return new Dns.ViewModels.OrganizationEventViewModel(e);
                 }));

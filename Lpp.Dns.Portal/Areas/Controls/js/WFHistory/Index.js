@@ -20,7 +20,7 @@ var Controls;
         var List;
         (function (List) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID, items) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -64,7 +64,6 @@ var Controls;
                 return ViewModel;
             }(Global.PageViewModel));
             List.ViewModel = ViewModel;
-            /*subscribable event that notifies if the history collection has any items. */
             List.HistoryItemsChanged = new ko.subscribable();
             function setRequestID(requestID) {
                 if (vm.RequestID) {

@@ -25,14 +25,12 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
         {
            using (var db = new DataContext())
             {
-                using (var ds = new DataSet())
+                var ds = new DataSet();            
+                using (var stream = new Lpp.Dns.Data.Documents.DocumentStream(db, documentId))
                 {
-                    using (var stream = new Lpp.Dns.Data.Documents.DocumentStream(db, documentId))
-                    {
-                        ds.ReadXml(stream);
-                    }
-                    return ds;
+                    ds.ReadXml(stream);
                 }
+                return ds;                
             }
         }
 

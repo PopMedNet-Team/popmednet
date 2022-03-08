@@ -13,13 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path='../../node_modules/@types/knockout.mapping/index.d.ts' />
-/// <reference path='Lpp.Dns.Interfaces.ts' />
 var Dns;
 (function (Dns) {
     var ViewModels;
     (function (ViewModels) {
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel() {
             }
             ViewModel.prototype.update = function (obj) {
@@ -30,7 +28,7 @@ var Dns;
             return ViewModel;
         }());
         ViewModels.ViewModel = ViewModel;
-        var EntityDtoViewModel = /** @class */ (function (_super) {
+        var EntityDtoViewModel = (function (_super) {
             __extends(EntityDtoViewModel, _super);
             function EntityDtoViewModel(BaseDTO) {
                 return _super.call(this) || this;
@@ -41,7 +39,7 @@ var Dns;
             return EntityDtoViewModel;
         }(ViewModel));
         ViewModels.EntityDtoViewModel = EntityDtoViewModel;
-        var EntityDtoWithIDViewModel = /** @class */ (function (_super) {
+        var EntityDtoWithIDViewModel = (function (_super) {
             __extends(EntityDtoWithIDViewModel, _super);
             function EntityDtoWithIDViewModel(BaseDTO) {
                 var _this = _super.call(this, BaseDTO) || this;
@@ -60,7 +58,7 @@ var Dns;
             return EntityDtoWithIDViewModel;
         }(EntityDtoViewModel));
         ViewModels.EntityDtoWithIDViewModel = EntityDtoWithIDViewModel;
-        var DataMartAvailabilityPeriodV2ViewModel = /** @class */ (function (_super) {
+        var DataMartAvailabilityPeriodV2ViewModel = (function (_super) {
             __extends(DataMartAvailabilityPeriodV2ViewModel, _super);
             function DataMartAvailabilityPeriodV2ViewModel(DataMartAvailabilityPeriodV2DTO) {
                 var _this = _super.call(this) || this;
@@ -98,7 +96,7 @@ var Dns;
             return DataMartAvailabilityPeriodV2ViewModel;
         }(ViewModel));
         ViewModels.DataMartAvailabilityPeriodV2ViewModel = DataMartAvailabilityPeriodV2ViewModel;
-        var DataModelProcessorViewModel = /** @class */ (function (_super) {
+        var DataModelProcessorViewModel = (function (_super) {
             __extends(DataModelProcessorViewModel, _super);
             function DataModelProcessorViewModel(DataModelProcessorDTO) {
                 var _this = _super.call(this) || this;
@@ -124,7 +122,7 @@ var Dns;
             return DataModelProcessorViewModel;
         }(ViewModel));
         ViewModels.DataModelProcessorViewModel = DataModelProcessorViewModel;
-        var PropertyChangeDetailViewModel = /** @class */ (function (_super) {
+        var PropertyChangeDetailViewModel = (function (_super) {
             __extends(PropertyChangeDetailViewModel, _super);
             function PropertyChangeDetailViewModel(PropertyChangeDetailDTO) {
                 var _this = _super.call(this) || this;
@@ -159,7 +157,7 @@ var Dns;
             return PropertyChangeDetailViewModel;
         }(ViewModel));
         ViewModels.PropertyChangeDetailViewModel = PropertyChangeDetailViewModel;
-        var HttpResponseErrors = /** @class */ (function (_super) {
+        var HttpResponseErrors = (function (_super) {
             __extends(HttpResponseErrors, _super);
             function HttpResponseErrors(HttpResponseErrors) {
                 var _this = _super.call(this) || this;
@@ -179,7 +177,7 @@ var Dns;
             return HttpResponseErrors;
         }(ViewModel));
         ViewModels.HttpResponseErrors = HttpResponseErrors;
-        var AddWFCommentViewModel = /** @class */ (function (_super) {
+        var AddWFCommentViewModel = (function (_super) {
             __extends(AddWFCommentViewModel, _super);
             function AddWFCommentViewModel(AddWFCommentDTO) {
                 var _this = _super.call(this) || this;
@@ -205,7 +203,7 @@ var Dns;
             return AddWFCommentViewModel;
         }(ViewModel));
         ViewModels.AddWFCommentViewModel = AddWFCommentViewModel;
-        var CommentDocumentReferenceViewModel = /** @class */ (function (_super) {
+        var CommentDocumentReferenceViewModel = (function (_super) {
             __extends(CommentDocumentReferenceViewModel, _super);
             function CommentDocumentReferenceViewModel(CommentDocumentReferenceDTO) {
                 var _this = _super.call(this) || this;
@@ -237,7 +235,7 @@ var Dns;
             return CommentDocumentReferenceViewModel;
         }(ViewModel));
         ViewModels.CommentDocumentReferenceViewModel = CommentDocumentReferenceViewModel;
-        var UpdateDataMartInstalledModelsViewModel = /** @class */ (function (_super) {
+        var UpdateDataMartInstalledModelsViewModel = (function (_super) {
             __extends(UpdateDataMartInstalledModelsViewModel, _super);
             function UpdateDataMartInstalledModelsViewModel(UpdateDataMartInstalledModelsDTO) {
                 var _this = _super.call(this) || this;
@@ -260,7 +258,7 @@ var Dns;
             return UpdateDataMartInstalledModelsViewModel;
         }(ViewModel));
         ViewModels.UpdateDataMartInstalledModelsViewModel = UpdateDataMartInstalledModelsViewModel;
-        var DataAvailabilityPeriodCategoryViewModel = /** @class */ (function (_super) {
+        var DataAvailabilityPeriodCategoryViewModel = (function (_super) {
             __extends(DataAvailabilityPeriodCategoryViewModel, _super);
             function DataAvailabilityPeriodCategoryViewModel(DataAvailabilityPeriodCategoryDTO) {
                 var _this = _super.call(this) || this;
@@ -289,7 +287,7 @@ var Dns;
             return DataAvailabilityPeriodCategoryViewModel;
         }(ViewModel));
         ViewModels.DataAvailabilityPeriodCategoryViewModel = DataAvailabilityPeriodCategoryViewModel;
-        var DataMartAvailabilityPeriodViewModel = /** @class */ (function (_super) {
+        var DataMartAvailabilityPeriodViewModel = (function (_super) {
             __extends(DataMartAvailabilityPeriodViewModel, _super);
             function DataMartAvailabilityPeriodViewModel(DataMartAvailabilityPeriodDTO) {
                 var _this = _super.call(this) || this;
@@ -321,7 +319,7 @@ var Dns;
             return DataMartAvailabilityPeriodViewModel;
         }(ViewModel));
         ViewModels.DataMartAvailabilityPeriodViewModel = DataMartAvailabilityPeriodViewModel;
-        var NotificationCrudViewModel = /** @class */ (function (_super) {
+        var NotificationCrudViewModel = (function (_super) {
             __extends(NotificationCrudViewModel, _super);
             function NotificationCrudViewModel(NotificationCrudDTO) {
                 var _this = _super.call(this) || this;
@@ -344,7 +342,7 @@ var Dns;
             return NotificationCrudViewModel;
         }(ViewModel));
         ViewModels.NotificationCrudViewModel = NotificationCrudViewModel;
-        var OrganizationUpdateEHRsesViewModel = /** @class */ (function (_super) {
+        var OrganizationUpdateEHRsesViewModel = (function (_super) {
             __extends(OrganizationUpdateEHRsesViewModel, _super);
             function OrganizationUpdateEHRsesViewModel(OrganizationUpdateEHRsesDTO) {
                 var _this = _super.call(this) || this;
@@ -367,7 +365,7 @@ var Dns;
             return OrganizationUpdateEHRsesViewModel;
         }(ViewModel));
         ViewModels.OrganizationUpdateEHRsesViewModel = OrganizationUpdateEHRsesViewModel;
-        var ProjectDataMartUpdateViewModel = /** @class */ (function (_super) {
+        var ProjectDataMartUpdateViewModel = (function (_super) {
             __extends(ProjectDataMartUpdateViewModel, _super);
             function ProjectDataMartUpdateViewModel(ProjectDataMartUpdateDTO) {
                 var _this = _super.call(this) || this;
@@ -390,7 +388,7 @@ var Dns;
             return ProjectDataMartUpdateViewModel;
         }(ViewModel));
         ViewModels.ProjectDataMartUpdateViewModel = ProjectDataMartUpdateViewModel;
-        var ProjectOrganizationUpdateViewModel = /** @class */ (function (_super) {
+        var ProjectOrganizationUpdateViewModel = (function (_super) {
             __extends(ProjectOrganizationUpdateViewModel, _super);
             function ProjectOrganizationUpdateViewModel(ProjectOrganizationUpdateDTO) {
                 var _this = _super.call(this) || this;
@@ -413,7 +411,7 @@ var Dns;
             return ProjectOrganizationUpdateViewModel;
         }(ViewModel));
         ViewModels.ProjectOrganizationUpdateViewModel = ProjectOrganizationUpdateViewModel;
-        var UpdateProjectRequestTypesViewModel = /** @class */ (function (_super) {
+        var UpdateProjectRequestTypesViewModel = (function (_super) {
             __extends(UpdateProjectRequestTypesViewModel, _super);
             function UpdateProjectRequestTypesViewModel(UpdateProjectRequestTypesDTO) {
                 var _this = _super.call(this) || this;
@@ -436,7 +434,7 @@ var Dns;
             return UpdateProjectRequestTypesViewModel;
         }(ViewModel));
         ViewModels.UpdateProjectRequestTypesViewModel = UpdateProjectRequestTypesViewModel;
-        var HasGlobalSecurityForTemplateViewModel = /** @class */ (function (_super) {
+        var HasGlobalSecurityForTemplateViewModel = (function (_super) {
             __extends(HasGlobalSecurityForTemplateViewModel, _super);
             function HasGlobalSecurityForTemplateViewModel(HasGlobalSecurityForTemplateDTO) {
                 var _this = _super.call(this) || this;
@@ -459,7 +457,7 @@ var Dns;
             return HasGlobalSecurityForTemplateViewModel;
         }(ViewModel));
         ViewModels.HasGlobalSecurityForTemplateViewModel = HasGlobalSecurityForTemplateViewModel;
-        var ApproveRejectResponseViewModel = /** @class */ (function (_super) {
+        var ApproveRejectResponseViewModel = (function (_super) {
             __extends(ApproveRejectResponseViewModel, _super);
             function ApproveRejectResponseViewModel(ApproveRejectResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -479,7 +477,7 @@ var Dns;
             return ApproveRejectResponseViewModel;
         }(ViewModel));
         ViewModels.ApproveRejectResponseViewModel = ApproveRejectResponseViewModel;
-        var CreateCriteriaGroupTemplateViewModel = /** @class */ (function (_super) {
+        var CreateCriteriaGroupTemplateViewModel = (function (_super) {
             __extends(CreateCriteriaGroupTemplateViewModel, _super);
             function CreateCriteriaGroupTemplateViewModel(CreateCriteriaGroupTemplateDTO) {
                 var _this = _super.call(this) || this;
@@ -508,7 +506,7 @@ var Dns;
             return CreateCriteriaGroupTemplateViewModel;
         }(ViewModel));
         ViewModels.CreateCriteriaGroupTemplateViewModel = CreateCriteriaGroupTemplateViewModel;
-        var EnhancedEventLogItemViewModel = /** @class */ (function (_super) {
+        var EnhancedEventLogItemViewModel = (function (_super) {
             __extends(EnhancedEventLogItemViewModel, _super);
             function EnhancedEventLogItemViewModel(EnhancedEventLogItemDTO) {
                 var _this = _super.call(this) || this;
@@ -540,7 +538,7 @@ var Dns;
             return EnhancedEventLogItemViewModel;
         }(ViewModel));
         ViewModels.EnhancedEventLogItemViewModel = EnhancedEventLogItemViewModel;
-        var HomepageRouteDetailViewModel = /** @class */ (function (_super) {
+        var HomepageRouteDetailViewModel = (function (_super) {
             __extends(HomepageRouteDetailViewModel, _super);
             function HomepageRouteDetailViewModel(HomepageRouteDetailDTO) {
                 var _this = _super.call(this) || this;
@@ -647,7 +645,7 @@ var Dns;
             return HomepageRouteDetailViewModel;
         }(ViewModel));
         ViewModels.HomepageRouteDetailViewModel = HomepageRouteDetailViewModel;
-        var RejectResponseViewModel = /** @class */ (function (_super) {
+        var RejectResponseViewModel = (function (_super) {
             __extends(RejectResponseViewModel, _super);
             function RejectResponseViewModel(RejectResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -670,7 +668,7 @@ var Dns;
             return RejectResponseViewModel;
         }(ViewModel));
         ViewModels.RejectResponseViewModel = RejectResponseViewModel;
-        var ApproveResponseViewModel = /** @class */ (function (_super) {
+        var ApproveResponseViewModel = (function (_super) {
             __extends(ApproveResponseViewModel, _super);
             function ApproveResponseViewModel(ApproveResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -693,7 +691,7 @@ var Dns;
             return ApproveResponseViewModel;
         }(ViewModel));
         ViewModels.ApproveResponseViewModel = ApproveResponseViewModel;
-        var RequestCompletionRequestViewModel = /** @class */ (function (_super) {
+        var RequestCompletionRequestViewModel = (function (_super) {
             __extends(RequestCompletionRequestViewModel, _super);
             function RequestCompletionRequestViewModel(RequestCompletionRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -725,7 +723,7 @@ var Dns;
             return RequestCompletionRequestViewModel;
         }(ViewModel));
         ViewModels.RequestCompletionRequestViewModel = RequestCompletionRequestViewModel;
-        var RequestCompletionResponseViewModel = /** @class */ (function (_super) {
+        var RequestCompletionResponseViewModel = (function (_super) {
             __extends(RequestCompletionResponseViewModel, _super);
             function RequestCompletionResponseViewModel(RequestCompletionResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -751,7 +749,7 @@ var Dns;
             return RequestCompletionResponseViewModel;
         }(ViewModel));
         ViewModels.RequestCompletionResponseViewModel = RequestCompletionResponseViewModel;
-        var RequestSearchTermViewModel = /** @class */ (function (_super) {
+        var RequestSearchTermViewModel = (function (_super) {
             __extends(RequestSearchTermViewModel, _super);
             function RequestSearchTermViewModel(RequestSearchTermDTO) {
                 var _this = _super.call(this) || this;
@@ -792,7 +790,7 @@ var Dns;
             return RequestSearchTermViewModel;
         }(ViewModel));
         ViewModels.RequestSearchTermViewModel = RequestSearchTermViewModel;
-        var RequestTypeModelViewModel = /** @class */ (function (_super) {
+        var RequestTypeModelViewModel = (function (_super) {
             __extends(RequestTypeModelViewModel, _super);
             function RequestTypeModelViewModel(RequestTypeModelDTO) {
                 var _this = _super.call(this) || this;
@@ -815,7 +813,7 @@ var Dns;
             return RequestTypeModelViewModel;
         }(ViewModel));
         ViewModels.RequestTypeModelViewModel = RequestTypeModelViewModel;
-        var RequestUserViewModel = /** @class */ (function (_super) {
+        var RequestUserViewModel = (function (_super) {
             __extends(RequestUserViewModel, _super);
             function RequestUserViewModel(RequestUserDTO) {
                 var _this = _super.call(this) || this;
@@ -856,7 +854,7 @@ var Dns;
             return RequestUserViewModel;
         }(ViewModel));
         ViewModels.RequestUserViewModel = RequestUserViewModel;
-        var ResponseHistoryViewModel = /** @class */ (function (_super) {
+        var ResponseHistoryViewModel = (function (_super) {
             __extends(ResponseHistoryViewModel, _super);
             function ResponseHistoryViewModel(ResponseHistoryDTO) {
                 var _this = _super.call(this) || this;
@@ -882,7 +880,7 @@ var Dns;
             return ResponseHistoryViewModel;
         }(ViewModel));
         ViewModels.ResponseHistoryViewModel = ResponseHistoryViewModel;
-        var ResponseHistoryItemViewModel = /** @class */ (function (_super) {
+        var ResponseHistoryItemViewModel = (function (_super) {
             __extends(ResponseHistoryItemViewModel, _super);
             function ResponseHistoryItemViewModel(ResponseHistoryItemDTO) {
                 var _this = _super.call(this) || this;
@@ -923,7 +921,7 @@ var Dns;
             return ResponseHistoryItemViewModel;
         }(ViewModel));
         ViewModels.ResponseHistoryItemViewModel = ResponseHistoryItemViewModel;
-        var SaveCriteriaGroupRequestViewModel = /** @class */ (function (_super) {
+        var SaveCriteriaGroupRequestViewModel = (function (_super) {
             __extends(SaveCriteriaGroupRequestViewModel, _super);
             function SaveCriteriaGroupRequestViewModel(SaveCriteriaGroupRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -961,7 +959,7 @@ var Dns;
             return SaveCriteriaGroupRequestViewModel;
         }(ViewModel));
         ViewModels.SaveCriteriaGroupRequestViewModel = SaveCriteriaGroupRequestViewModel;
-        var UpdateRequestDataMartStatusViewModel = /** @class */ (function (_super) {
+        var UpdateRequestDataMartStatusViewModel = (function (_super) {
             __extends(UpdateRequestDataMartStatusViewModel, _super);
             function UpdateRequestDataMartStatusViewModel(UpdateRequestDataMartStatusDTO) {
                 var _this = _super.call(this) || this;
@@ -990,7 +988,7 @@ var Dns;
             return UpdateRequestDataMartStatusViewModel;
         }(ViewModel));
         ViewModels.UpdateRequestDataMartStatusViewModel = UpdateRequestDataMartStatusViewModel;
-        var UpdateRequestTypeModelsViewModel = /** @class */ (function (_super) {
+        var UpdateRequestTypeModelsViewModel = (function (_super) {
             __extends(UpdateRequestTypeModelsViewModel, _super);
             function UpdateRequestTypeModelsViewModel(UpdateRequestTypeModelsDTO) {
                 var _this = _super.call(this) || this;
@@ -1013,7 +1011,7 @@ var Dns;
             return UpdateRequestTypeModelsViewModel;
         }(ViewModel));
         ViewModels.UpdateRequestTypeModelsViewModel = UpdateRequestTypeModelsViewModel;
-        var UpdateRequestTypeRequestViewModel = /** @class */ (function (_super) {
+        var UpdateRequestTypeRequestViewModel = (function (_super) {
             __extends(UpdateRequestTypeRequestViewModel, _super);
             function UpdateRequestTypeRequestViewModel(UpdateRequestTypeRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -1048,7 +1046,7 @@ var Dns;
             return UpdateRequestTypeRequestViewModel;
         }(ViewModel));
         ViewModels.UpdateRequestTypeRequestViewModel = UpdateRequestTypeRequestViewModel;
-        var UpdateRequestTypeResponseViewModel = /** @class */ (function (_super) {
+        var UpdateRequestTypeResponseViewModel = (function (_super) {
             __extends(UpdateRequestTypeResponseViewModel, _super);
             function UpdateRequestTypeResponseViewModel(UpdateRequestTypeResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -1071,7 +1069,7 @@ var Dns;
             return UpdateRequestTypeResponseViewModel;
         }(ViewModel));
         ViewModels.UpdateRequestTypeResponseViewModel = UpdateRequestTypeResponseViewModel;
-        var UpdateRequestTypeTermsViewModel = /** @class */ (function (_super) {
+        var UpdateRequestTypeTermsViewModel = (function (_super) {
             __extends(UpdateRequestTypeTermsViewModel, _super);
             function UpdateRequestTypeTermsViewModel(UpdateRequestTypeTermsDTO) {
                 var _this = _super.call(this) || this;
@@ -1094,7 +1092,7 @@ var Dns;
             return UpdateRequestTypeTermsViewModel;
         }(ViewModel));
         ViewModels.UpdateRequestTypeTermsViewModel = UpdateRequestTypeTermsViewModel;
-        var HomepageTaskRequestUserViewModel = /** @class */ (function (_super) {
+        var HomepageTaskRequestUserViewModel = (function (_super) {
             __extends(HomepageTaskRequestUserViewModel, _super);
             function HomepageTaskRequestUserViewModel(HomepageTaskRequestUserDTO) {
                 var _this = _super.call(this) || this;
@@ -1135,7 +1133,7 @@ var Dns;
             return HomepageTaskRequestUserViewModel;
         }(ViewModel));
         ViewModels.HomepageTaskRequestUserViewModel = HomepageTaskRequestUserViewModel;
-        var HomepageTaskSummaryViewModel = /** @class */ (function (_super) {
+        var HomepageTaskSummaryViewModel = (function (_super) {
             __extends(HomepageTaskSummaryViewModel, _super);
             function HomepageTaskSummaryViewModel(HomepageTaskSummaryDTO) {
                 var _this = _super.call(this) || this;
@@ -1203,7 +1201,7 @@ var Dns;
             return HomepageTaskSummaryViewModel;
         }(ViewModel));
         ViewModels.HomepageTaskSummaryViewModel = HomepageTaskSummaryViewModel;
-        var ActivityViewModel = /** @class */ (function (_super) {
+        var ActivityViewModel = (function (_super) {
             __extends(ActivityViewModel, _super);
             function ActivityViewModel(ActivityDTO) {
                 var _this = _super.call(this) || this;
@@ -1250,7 +1248,7 @@ var Dns;
             return ActivityViewModel;
         }(ViewModel));
         ViewModels.ActivityViewModel = ActivityViewModel;
-        var DataMartTypeViewModel = /** @class */ (function (_super) {
+        var DataMartTypeViewModel = (function (_super) {
             __extends(DataMartTypeViewModel, _super);
             function DataMartTypeViewModel(DataMartTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -1273,7 +1271,7 @@ var Dns;
             return DataMartTypeViewModel;
         }(ViewModel));
         ViewModels.DataMartTypeViewModel = DataMartTypeViewModel;
-        var DataMartInstalledModelViewModel = /** @class */ (function (_super) {
+        var DataMartInstalledModelViewModel = (function (_super) {
             __extends(DataMartInstalledModelViewModel, _super);
             function DataMartInstalledModelViewModel(DataMartInstalledModelDTO) {
                 var _this = _super.call(this) || this;
@@ -1302,7 +1300,7 @@ var Dns;
             return DataMartInstalledModelViewModel;
         }(ViewModel));
         ViewModels.DataMartInstalledModelViewModel = DataMartInstalledModelViewModel;
-        var DemographicViewModel = /** @class */ (function (_super) {
+        var DemographicViewModel = (function (_super) {
             __extends(DemographicViewModel, _super);
             function DemographicViewModel(DemographicDTO) {
                 var _this = _super.call(this) || this;
@@ -1343,7 +1341,7 @@ var Dns;
             return DemographicViewModel;
         }(ViewModel));
         ViewModels.DemographicViewModel = DemographicViewModel;
-        var LookupListCategoryViewModel = /** @class */ (function (_super) {
+        var LookupListCategoryViewModel = (function (_super) {
             __extends(LookupListCategoryViewModel, _super);
             function LookupListCategoryViewModel(LookupListCategoryDTO) {
                 var _this = _super.call(this) || this;
@@ -1369,7 +1367,7 @@ var Dns;
             return LookupListCategoryViewModel;
         }(ViewModel));
         ViewModels.LookupListCategoryViewModel = LookupListCategoryViewModel;
-        var LookupListDetailRequestViewModel = /** @class */ (function (_super) {
+        var LookupListDetailRequestViewModel = (function (_super) {
             __extends(LookupListDetailRequestViewModel, _super);
             function LookupListDetailRequestViewModel(LookupListDetailRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -1392,7 +1390,7 @@ var Dns;
             return LookupListDetailRequestViewModel;
         }(ViewModel));
         ViewModels.LookupListDetailRequestViewModel = LookupListDetailRequestViewModel;
-        var LookupListViewModel = /** @class */ (function (_super) {
+        var LookupListViewModel = (function (_super) {
             __extends(LookupListViewModel, _super);
             function LookupListViewModel(LookupListDTO) {
                 var _this = _super.call(this) || this;
@@ -1418,7 +1416,7 @@ var Dns;
             return LookupListViewModel;
         }(ViewModel));
         ViewModels.LookupListViewModel = LookupListViewModel;
-        var LookupListValueViewModel = /** @class */ (function (_super) {
+        var LookupListValueViewModel = (function (_super) {
             __extends(LookupListValueViewModel, _super);
             function LookupListValueViewModel(LookupListValueDTO) {
                 var _this = _super.call(this) || this;
@@ -1456,7 +1454,7 @@ var Dns;
             return LookupListValueViewModel;
         }(ViewModel));
         ViewModels.LookupListValueViewModel = LookupListValueViewModel;
-        var ProjectDataMartViewModel = /** @class */ (function (_super) {
+        var ProjectDataMartViewModel = (function (_super) {
             __extends(ProjectDataMartViewModel, _super);
             function ProjectDataMartViewModel(ProjectDataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -1491,7 +1489,7 @@ var Dns;
             return ProjectDataMartViewModel;
         }(ViewModel));
         ViewModels.ProjectDataMartViewModel = ProjectDataMartViewModel;
-        var RegistryItemDefinitionViewModel = /** @class */ (function (_super) {
+        var RegistryItemDefinitionViewModel = (function (_super) {
             __extends(RegistryItemDefinitionViewModel, _super);
             function RegistryItemDefinitionViewModel(RegistryItemDefinitionDTO) {
                 var _this = _super.call(this) || this;
@@ -1517,7 +1515,7 @@ var Dns;
             return RegistryItemDefinitionViewModel;
         }(ViewModel));
         ViewModels.RegistryItemDefinitionViewModel = RegistryItemDefinitionViewModel;
-        var UpdateRegistryItemsViewModel = /** @class */ (function (_super) {
+        var UpdateRegistryItemsViewModel = (function (_super) {
             __extends(UpdateRegistryItemsViewModel, _super);
             function UpdateRegistryItemsViewModel(UpdateRegistryItemsDTO) {
                 var _this = _super.call(this) || this;
@@ -1533,7 +1531,7 @@ var Dns;
             return UpdateRegistryItemsViewModel;
         }(ViewModel));
         ViewModels.UpdateRegistryItemsViewModel = UpdateRegistryItemsViewModel;
-        var WorkplanTypeViewModel = /** @class */ (function (_super) {
+        var WorkplanTypeViewModel = (function (_super) {
             __extends(WorkplanTypeViewModel, _super);
             function WorkplanTypeViewModel(WorkplanTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -1565,7 +1563,7 @@ var Dns;
             return WorkplanTypeViewModel;
         }(ViewModel));
         ViewModels.WorkplanTypeViewModel = WorkplanTypeViewModel;
-        var RequesterCenterViewModel = /** @class */ (function (_super) {
+        var RequesterCenterViewModel = (function (_super) {
             __extends(RequesterCenterViewModel, _super);
             function RequesterCenterViewModel(RequesterCenterDTO) {
                 var _this = _super.call(this) || this;
@@ -1594,7 +1592,7 @@ var Dns;
             return RequesterCenterViewModel;
         }(ViewModel));
         ViewModels.RequesterCenterViewModel = RequesterCenterViewModel;
-        var QueryTypeViewModel = /** @class */ (function (_super) {
+        var QueryTypeViewModel = (function (_super) {
             __extends(QueryTypeViewModel, _super);
             function QueryTypeViewModel(QueryTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -1620,7 +1618,7 @@ var Dns;
             return QueryTypeViewModel;
         }(ViewModel));
         ViewModels.QueryTypeViewModel = QueryTypeViewModel;
-        var SecurityTupleViewModel = /** @class */ (function (_super) {
+        var SecurityTupleViewModel = (function (_super) {
             __extends(SecurityTupleViewModel, _super);
             function SecurityTupleViewModel(SecurityTupleDTO) {
                 var _this = _super.call(this) || this;
@@ -1670,7 +1668,7 @@ var Dns;
             return SecurityTupleViewModel;
         }(ViewModel));
         ViewModels.SecurityTupleViewModel = SecurityTupleViewModel;
-        var UpdateUserSecurityGroupsViewModel = /** @class */ (function (_super) {
+        var UpdateUserSecurityGroupsViewModel = (function (_super) {
             __extends(UpdateUserSecurityGroupsViewModel, _super);
             function UpdateUserSecurityGroupsViewModel(UpdateUserSecurityGroupsDTO) {
                 var _this = _super.call(this) || this;
@@ -1693,7 +1691,7 @@ var Dns;
             return UpdateUserSecurityGroupsViewModel;
         }(ViewModel));
         ViewModels.UpdateUserSecurityGroupsViewModel = UpdateUserSecurityGroupsViewModel;
-        var DesignViewModel = /** @class */ (function (_super) {
+        var DesignViewModel = (function (_super) {
             __extends(DesignViewModel, _super);
             function DesignViewModel(DesignDTO) {
                 var _this = _super.call(this) || this;
@@ -1713,7 +1711,7 @@ var Dns;
             return DesignViewModel;
         }(ViewModel));
         ViewModels.DesignViewModel = DesignViewModel;
-        var CodeSelectorValueViewModel = /** @class */ (function (_super) {
+        var CodeSelectorValueViewModel = (function (_super) {
             __extends(CodeSelectorValueViewModel, _super);
             function CodeSelectorValueViewModel(CodeSelectorValueDTO) {
                 var _this = _super.call(this) || this;
@@ -1739,7 +1737,7 @@ var Dns;
             return CodeSelectorValueViewModel;
         }(ViewModel));
         ViewModels.CodeSelectorValueViewModel = CodeSelectorValueViewModel;
-        var ThemeViewModel = /** @class */ (function (_super) {
+        var ThemeViewModel = (function (_super) {
             __extends(ThemeViewModel, _super);
             function ThemeViewModel(ThemeDTO) {
                 var _this = _super.call(this) || this;
@@ -1783,7 +1781,7 @@ var Dns;
             return ThemeViewModel;
         }(ViewModel));
         ViewModels.ThemeViewModel = ThemeViewModel;
-        var AssignedUserNotificationViewModel = /** @class */ (function (_super) {
+        var AssignedUserNotificationViewModel = (function (_super) {
             __extends(AssignedUserNotificationViewModel, _super);
             function AssignedUserNotificationViewModel(AssignedUserNotificationDTO) {
                 var _this = _super.call(this) || this;
@@ -1812,7 +1810,7 @@ var Dns;
             return AssignedUserNotificationViewModel;
         }(ViewModel));
         ViewModels.AssignedUserNotificationViewModel = AssignedUserNotificationViewModel;
-        var MetadataEditPermissionsSummaryViewModel = /** @class */ (function (_super) {
+        var MetadataEditPermissionsSummaryViewModel = (function (_super) {
             __extends(MetadataEditPermissionsSummaryViewModel, _super);
             function MetadataEditPermissionsSummaryViewModel(MetadataEditPermissionsSummaryDTO) {
                 var _this = _super.call(this) || this;
@@ -1835,7 +1833,7 @@ var Dns;
             return MetadataEditPermissionsSummaryViewModel;
         }(ViewModel));
         ViewModels.MetadataEditPermissionsSummaryViewModel = MetadataEditPermissionsSummaryViewModel;
-        var NotificationViewModel = /** @class */ (function (_super) {
+        var NotificationViewModel = (function (_super) {
             __extends(NotificationViewModel, _super);
             function NotificationViewModel(NotificationDTO) {
                 var _this = _super.call(this) || this;
@@ -1861,7 +1859,7 @@ var Dns;
             return NotificationViewModel;
         }(ViewModel));
         ViewModels.NotificationViewModel = NotificationViewModel;
-        var ForgotPasswordViewModel = /** @class */ (function (_super) {
+        var ForgotPasswordViewModel = (function (_super) {
             __extends(ForgotPasswordViewModel, _super);
             function ForgotPasswordViewModel(ForgotPasswordDTO) {
                 var _this = _super.call(this) || this;
@@ -1884,7 +1882,7 @@ var Dns;
             return ForgotPasswordViewModel;
         }(ViewModel));
         ViewModels.ForgotPasswordViewModel = ForgotPasswordViewModel;
-        var LoginViewModel = /** @class */ (function (_super) {
+        var LoginViewModel = (function (_super) {
             __extends(LoginViewModel, _super);
             function LoginViewModel(LoginDTO) {
                 var _this = _super.call(this) || this;
@@ -1916,7 +1914,7 @@ var Dns;
             return LoginViewModel;
         }(ViewModel));
         ViewModels.LoginViewModel = LoginViewModel;
-        var MenuItemViewModel = /** @class */ (function (_super) {
+        var MenuItemViewModel = (function (_super) {
             __extends(MenuItemViewModel, _super);
             function MenuItemViewModel(MenuItemDTO) {
                 var _this = _super.call(this) || this;
@@ -1948,7 +1946,7 @@ var Dns;
             return MenuItemViewModel;
         }(ViewModel));
         ViewModels.MenuItemViewModel = MenuItemViewModel;
-        var ObserverViewModel = /** @class */ (function (_super) {
+        var ObserverViewModel = (function (_super) {
             __extends(ObserverViewModel, _super);
             function ObserverViewModel(ObserverDTO) {
                 var _this = _super.call(this) || this;
@@ -1977,7 +1975,7 @@ var Dns;
             return ObserverViewModel;
         }(ViewModel));
         ViewModels.ObserverViewModel = ObserverViewModel;
-        var ObserverEventViewModel = /** @class */ (function (_super) {
+        var ObserverEventViewModel = (function (_super) {
             __extends(ObserverEventViewModel, _super);
             function ObserverEventViewModel(ObserverEventDTO) {
                 var _this = _super.call(this) || this;
@@ -2000,7 +1998,7 @@ var Dns;
             return ObserverEventViewModel;
         }(ViewModel));
         ViewModels.ObserverEventViewModel = ObserverEventViewModel;
-        var RestorePasswordViewModel = /** @class */ (function (_super) {
+        var RestorePasswordViewModel = (function (_super) {
             __extends(RestorePasswordViewModel, _super);
             function RestorePasswordViewModel(RestorePasswordDTO) {
                 var _this = _super.call(this) || this;
@@ -2023,7 +2021,7 @@ var Dns;
             return RestorePasswordViewModel;
         }(ViewModel));
         ViewModels.RestorePasswordViewModel = RestorePasswordViewModel;
-        var TreeItemViewModel = /** @class */ (function (_super) {
+        var TreeItemViewModel = (function (_super) {
             __extends(TreeItemViewModel, _super);
             function TreeItemViewModel(TreeItemDTO) {
                 var _this = _super.call(this) || this;
@@ -2058,7 +2056,7 @@ var Dns;
             return TreeItemViewModel;
         }(ViewModel));
         ViewModels.TreeItemViewModel = TreeItemViewModel;
-        var UpdateUserPasswordViewModel = /** @class */ (function (_super) {
+        var UpdateUserPasswordViewModel = (function (_super) {
             __extends(UpdateUserPasswordViewModel, _super);
             function UpdateUserPasswordViewModel(UpdateUserPasswordDTO) {
                 var _this = _super.call(this) || this;
@@ -2081,7 +2079,7 @@ var Dns;
             return UpdateUserPasswordViewModel;
         }(ViewModel));
         ViewModels.UpdateUserPasswordViewModel = UpdateUserPasswordViewModel;
-        var UserAuthenticationViewModel = /** @class */ (function (_super) {
+        var UserAuthenticationViewModel = (function (_super) {
             __extends(UserAuthenticationViewModel, _super);
             function UserAuthenticationViewModel(UserAuthenticationDTO) {
                 var _this = _super.call(this) || this;
@@ -2128,7 +2126,7 @@ var Dns;
             return UserAuthenticationViewModel;
         }(ViewModel));
         ViewModels.UserAuthenticationViewModel = UserAuthenticationViewModel;
-        var UserRegistrationViewModel = /** @class */ (function (_super) {
+        var UserRegistrationViewModel = (function (_super) {
             __extends(UserRegistrationViewModel, _super);
             function UserRegistrationViewModel(UserRegistrationDTO) {
                 var _this = _super.call(this) || this;
@@ -2184,7 +2182,7 @@ var Dns;
             return UserRegistrationViewModel;
         }(ViewModel));
         ViewModels.UserRegistrationViewModel = UserRegistrationViewModel;
-        var DataMartRegistrationResultViewModel = /** @class */ (function (_super) {
+        var DataMartRegistrationResultViewModel = (function (_super) {
             __extends(DataMartRegistrationResultViewModel, _super);
             function DataMartRegistrationResultViewModel(DataMartRegistrationResultDTO) {
                 var _this = _super.call(this) || this;
@@ -2216,7 +2214,7 @@ var Dns;
             return DataMartRegistrationResultViewModel;
         }(ViewModel));
         ViewModels.DataMartRegistrationResultViewModel = DataMartRegistrationResultViewModel;
-        var GetChangeRequestViewModel = /** @class */ (function (_super) {
+        var GetChangeRequestViewModel = (function (_super) {
             __extends(GetChangeRequestViewModel, _super);
             function GetChangeRequestViewModel(GetChangeRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -2239,7 +2237,7 @@ var Dns;
             return GetChangeRequestViewModel;
         }(ViewModel));
         ViewModels.GetChangeRequestViewModel = GetChangeRequestViewModel;
-        var RegisterDataMartViewModel = /** @class */ (function (_super) {
+        var RegisterDataMartViewModel = (function (_super) {
             __extends(RegisterDataMartViewModel, _super);
             function RegisterDataMartViewModel(RegisterDataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -2262,7 +2260,7 @@ var Dns;
             return RegisterDataMartViewModel;
         }(ViewModel));
         ViewModels.RegisterDataMartViewModel = RegisterDataMartViewModel;
-        var RequestDocumentViewModel = /** @class */ (function (_super) {
+        var RequestDocumentViewModel = (function (_super) {
             __extends(RequestDocumentViewModel, _super);
             function RequestDocumentViewModel(RequestDocumentDTO) {
                 var _this = _super.call(this) || this;
@@ -2297,7 +2295,7 @@ var Dns;
             return RequestDocumentViewModel;
         }(ViewModel));
         ViewModels.RequestDocumentViewModel = RequestDocumentViewModel;
-        var UpdateResponseStatusRequestViewModel = /** @class */ (function (_super) {
+        var UpdateResponseStatusRequestViewModel = (function (_super) {
             __extends(UpdateResponseStatusRequestViewModel, _super);
             function UpdateResponseStatusRequestViewModel(UpdateResponseStatusRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -2350,7 +2348,7 @@ var Dns;
             return UpdateResponseStatusRequestViewModel;
         }(ViewModel));
         ViewModels.UpdateResponseStatusRequestViewModel = UpdateResponseStatusRequestViewModel;
-        var WbdChangeSetViewModel = /** @class */ (function (_super) {
+        var WbdChangeSetViewModel = (function (_super) {
             __extends(WbdChangeSetViewModel, _super);
             function WbdChangeSetViewModel(WbdChangeSetDTO) {
                 var _this = _super.call(this) || this;
@@ -2409,7 +2407,7 @@ var Dns;
             return WbdChangeSetViewModel;
         }(ViewModel));
         ViewModels.WbdChangeSetViewModel = WbdChangeSetViewModel;
-        var CommonResponseDetailViewModel = /** @class */ (function (_super) {
+        var CommonResponseDetailViewModel = (function (_super) {
             __extends(CommonResponseDetailViewModel, _super);
             function CommonResponseDetailViewModel(CommonResponseDetailDTO) {
                 var _this = _super.call(this) || this;
@@ -2441,7 +2439,7 @@ var Dns;
             return CommonResponseDetailViewModel;
         }(ViewModel));
         ViewModels.CommonResponseDetailViewModel = CommonResponseDetailViewModel;
-        var PrepareSpecificationViewModel = /** @class */ (function (_super) {
+        var PrepareSpecificationViewModel = (function (_super) {
             __extends(PrepareSpecificationViewModel, _super);
             function PrepareSpecificationViewModel(PrepareSpecificationDTO) {
                 var _this = _super.call(this) || this;
@@ -2457,7 +2455,7 @@ var Dns;
             return PrepareSpecificationViewModel;
         }(ViewModel));
         ViewModels.PrepareSpecificationViewModel = PrepareSpecificationViewModel;
-        var RequestFormViewModel = /** @class */ (function (_super) {
+        var RequestFormViewModel = (function (_super) {
             __extends(RequestFormViewModel, _super);
             function RequestFormViewModel(RequestFormDTO) {
                 var _this = _super.call(this) || this;
@@ -4850,7 +4848,7 @@ var Dns;
             return RequestFormViewModel;
         }(ViewModel));
         ViewModels.RequestFormViewModel = RequestFormViewModel;
-        var OutcomeItemViewModel = /** @class */ (function (_super) {
+        var OutcomeItemViewModel = (function (_super) {
             __extends(OutcomeItemViewModel, _super);
             function OutcomeItemViewModel(OutcomeItemDTO) {
                 var _this = _super.call(this) || this;
@@ -4879,7 +4877,7 @@ var Dns;
             return OutcomeItemViewModel;
         }(ViewModel));
         ViewModels.OutcomeItemViewModel = OutcomeItemViewModel;
-        var CovariateItemViewModel = /** @class */ (function (_super) {
+        var CovariateItemViewModel = (function (_super) {
             __extends(CovariateItemViewModel, _super);
             function CovariateItemViewModel(CovariateItemDTO) {
                 var _this = _super.call(this) || this;
@@ -4911,7 +4909,7 @@ var Dns;
             return CovariateItemViewModel;
         }(ViewModel));
         ViewModels.CovariateItemViewModel = CovariateItemViewModel;
-        var WorkflowHistoryItemViewModel = /** @class */ (function (_super) {
+        var WorkflowHistoryItemViewModel = (function (_super) {
             __extends(WorkflowHistoryItemViewModel, _super);
             function WorkflowHistoryItemViewModel(WorkflowHistoryItemDTO) {
                 var _this = _super.call(this) || this;
@@ -4958,7 +4956,7 @@ var Dns;
             return WorkflowHistoryItemViewModel;
         }(ViewModel));
         ViewModels.WorkflowHistoryItemViewModel = WorkflowHistoryItemViewModel;
-        var LegacySchedulerRequestViewModel = /** @class */ (function (_super) {
+        var LegacySchedulerRequestViewModel = (function (_super) {
             __extends(LegacySchedulerRequestViewModel, _super);
             function LegacySchedulerRequestViewModel(LegacySchedulerRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -4984,7 +4982,7 @@ var Dns;
             return LegacySchedulerRequestViewModel;
         }(ViewModel));
         ViewModels.LegacySchedulerRequestViewModel = LegacySchedulerRequestViewModel;
-        var AvailableTermsRequestViewModel = /** @class */ (function (_super) {
+        var AvailableTermsRequestViewModel = (function (_super) {
             __extends(AvailableTermsRequestViewModel, _super);
             function AvailableTermsRequestViewModel(AvailableTermsRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -5007,7 +5005,7 @@ var Dns;
             return AvailableTermsRequestViewModel;
         }(ViewModel));
         ViewModels.AvailableTermsRequestViewModel = AvailableTermsRequestViewModel;
-        var DistributedRegressionManifestFile = /** @class */ (function (_super) {
+        var DistributedRegressionManifestFile = (function (_super) {
             __extends(DistributedRegressionManifestFile, _super);
             function DistributedRegressionManifestFile(DistributedRegressionManifestFile) {
                 var _this = _super.call(this) || this;
@@ -5030,7 +5028,7 @@ var Dns;
             return DistributedRegressionManifestFile;
         }(ViewModel));
         ViewModels.DistributedRegressionManifestFile = DistributedRegressionManifestFile;
-        var DistributedRegressionAnalysisCenterManifestItem = /** @class */ (function (_super) {
+        var DistributedRegressionAnalysisCenterManifestItem = (function (_super) {
             __extends(DistributedRegressionAnalysisCenterManifestItem, _super);
             function DistributedRegressionAnalysisCenterManifestItem(DistributedRegressionAnalysisCenterManifestItem) {
                 var _this = _super.call(this) || this;
@@ -5068,7 +5066,7 @@ var Dns;
             return DistributedRegressionAnalysisCenterManifestItem;
         }(ViewModel));
         ViewModels.DistributedRegressionAnalysisCenterManifestItem = DistributedRegressionAnalysisCenterManifestItem;
-        var DistributedRegressionManifestDataPartner = /** @class */ (function (_super) {
+        var DistributedRegressionManifestDataPartner = (function (_super) {
             __extends(DistributedRegressionManifestDataPartner, _super);
             function DistributedRegressionManifestDataPartner(DistributedRegressionManifestDataPartner) {
                 var _this = _super.call(this) || this;
@@ -5097,7 +5095,7 @@ var Dns;
             return DistributedRegressionManifestDataPartner;
         }(ViewModel));
         ViewModels.DistributedRegressionManifestDataPartner = DistributedRegressionManifestDataPartner;
-        var QueryComposerQueryViewModel = /** @class */ (function (_super) {
+        var QueryComposerQueryViewModel = (function (_super) {
             __extends(QueryComposerQueryViewModel, _super);
             function QueryComposerQueryViewModel(QueryComposerQueryDTO) {
                 var _this = _super.call(this) || this;
@@ -5126,7 +5124,7 @@ var Dns;
             return QueryComposerQueryViewModel;
         }(ViewModel));
         ViewModels.QueryComposerQueryViewModel = QueryComposerQueryViewModel;
-        var QueryComposerResponseAggregationDefinitionViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponseAggregationDefinitionViewModel = (function (_super) {
             __extends(QueryComposerResponseAggregationDefinitionViewModel, _super);
             function QueryComposerResponseAggregationDefinitionViewModel(QueryComposerResponseAggregationDefinitionDTO) {
                 var _this = _super.call(this) || this;
@@ -5152,7 +5150,7 @@ var Dns;
             return QueryComposerResponseAggregationDefinitionViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseAggregationDefinitionViewModel = QueryComposerResponseAggregationDefinitionViewModel;
-        var QueryComposerResponseHeaderViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponseHeaderViewModel = (function (_super) {
             __extends(QueryComposerResponseHeaderViewModel, _super);
             function QueryComposerResponseHeaderViewModel(QueryComposerResponseHeaderDTO) {
                 var _this = _super.call(this) || this;
@@ -5187,7 +5185,7 @@ var Dns;
             return QueryComposerResponseHeaderViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseHeaderViewModel = QueryComposerResponseHeaderViewModel;
-        var QueryComposerResponsePropertyDefinitionViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponsePropertyDefinitionViewModel = (function (_super) {
             __extends(QueryComposerResponsePropertyDefinitionViewModel, _super);
             function QueryComposerResponsePropertyDefinitionViewModel(QueryComposerResponsePropertyDefinitionDTO) {
                 var _this = _super.call(this) || this;
@@ -5216,7 +5214,7 @@ var Dns;
             return QueryComposerResponsePropertyDefinitionViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponsePropertyDefinitionViewModel = QueryComposerResponsePropertyDefinitionViewModel;
-        var QueryComposerResponseQueryResultViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponseQueryResultViewModel = (function (_super) {
             __extends(QueryComposerResponseQueryResultViewModel, _super);
             function QueryComposerResponseQueryResultViewModel(QueryComposerResponseQueryResultDTO) {
                 var _this = _super.call(this) || this;
@@ -5266,7 +5264,7 @@ var Dns;
             return QueryComposerResponseQueryResultViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseQueryResultViewModel = QueryComposerResponseQueryResultViewModel;
-        var QueryComposerTemporalEventViewModel = /** @class */ (function (_super) {
+        var QueryComposerTemporalEventViewModel = (function (_super) {
             __extends(QueryComposerTemporalEventViewModel, _super);
             function QueryComposerTemporalEventViewModel(QueryComposerTemporalEventDTO) {
                 var _this = _super.call(this) || this;
@@ -5295,7 +5293,7 @@ var Dns;
             return QueryComposerTemporalEventViewModel;
         }(ViewModel));
         ViewModels.QueryComposerTemporalEventViewModel = QueryComposerTemporalEventViewModel;
-        var SectionSpecificTermViewModel = /** @class */ (function (_super) {
+        var SectionSpecificTermViewModel = (function (_super) {
             __extends(SectionSpecificTermViewModel, _super);
             function SectionSpecificTermViewModel(SectionSpecificTermDTO) {
                 var _this = _super.call(this) || this;
@@ -5321,7 +5319,7 @@ var Dns;
             return SectionSpecificTermViewModel;
         }(ViewModel));
         ViewModels.SectionSpecificTermViewModel = SectionSpecificTermViewModel;
-        var TemplateTermViewModel = /** @class */ (function (_super) {
+        var TemplateTermViewModel = (function (_super) {
             __extends(TemplateTermViewModel, _super);
             function TemplateTermViewModel(TemplateTermDTO) {
                 var _this = _super.call(this) || this;
@@ -5356,7 +5354,7 @@ var Dns;
             return TemplateTermViewModel;
         }(ViewModel));
         ViewModels.TemplateTermViewModel = TemplateTermViewModel;
-        var MatchingCriteriaViewModel = /** @class */ (function (_super) {
+        var MatchingCriteriaViewModel = (function (_super) {
             __extends(MatchingCriteriaViewModel, _super);
             function MatchingCriteriaViewModel(MatchingCriteriaDTO) {
                 var _this = _super.call(this) || this;
@@ -5385,7 +5383,7 @@ var Dns;
             return MatchingCriteriaViewModel;
         }(ViewModel));
         ViewModels.MatchingCriteriaViewModel = MatchingCriteriaViewModel;
-        var QueryComposerCriteriaViewModel = /** @class */ (function (_super) {
+        var QueryComposerCriteriaViewModel = (function (_super) {
             __extends(QueryComposerCriteriaViewModel, _super);
             function QueryComposerCriteriaViewModel(QueryComposerCriteriaDTO) {
                 var _this = _super.call(this) || this;
@@ -5429,7 +5427,7 @@ var Dns;
             return QueryComposerCriteriaViewModel;
         }(ViewModel));
         ViewModels.QueryComposerCriteriaViewModel = QueryComposerCriteriaViewModel;
-        var QueryComposerFieldViewModel = /** @class */ (function (_super) {
+        var QueryComposerFieldViewModel = (function (_super) {
             __extends(QueryComposerFieldViewModel, _super);
             function QueryComposerFieldViewModel(QueryComposerFieldDTO) {
                 var _this = _super.call(this) || this;
@@ -5467,7 +5465,7 @@ var Dns;
             return QueryComposerFieldViewModel;
         }(ViewModel));
         ViewModels.QueryComposerFieldViewModel = QueryComposerFieldViewModel;
-        var QueryComposerGroupByViewModel = /** @class */ (function (_super) {
+        var QueryComposerGroupByViewModel = (function (_super) {
             __extends(QueryComposerGroupByViewModel, _super);
             function QueryComposerGroupByViewModel(QueryComposerGroupByDTO) {
                 var _this = _super.call(this) || this;
@@ -5490,7 +5488,7 @@ var Dns;
             return QueryComposerGroupByViewModel;
         }(ViewModel));
         ViewModels.QueryComposerGroupByViewModel = QueryComposerGroupByViewModel;
-        var QueryComposerHeaderViewModel = /** @class */ (function (_super) {
+        var QueryComposerHeaderViewModel = (function (_super) {
             __extends(QueryComposerHeaderViewModel, _super);
             function QueryComposerHeaderViewModel(QueryComposerHeaderDTO) {
                 var _this = _super.call(this) || this;
@@ -5528,7 +5526,7 @@ var Dns;
             return QueryComposerHeaderViewModel;
         }(ViewModel));
         ViewModels.QueryComposerHeaderViewModel = QueryComposerHeaderViewModel;
-        var QueryComposerOrderByViewModel = /** @class */ (function (_super) {
+        var QueryComposerOrderByViewModel = (function (_super) {
             __extends(QueryComposerOrderByViewModel, _super);
             function QueryComposerOrderByViewModel(QueryComposerOrderByDTO) {
                 var _this = _super.call(this) || this;
@@ -5548,7 +5546,7 @@ var Dns;
             return QueryComposerOrderByViewModel;
         }(ViewModel));
         ViewModels.QueryComposerOrderByViewModel = QueryComposerOrderByViewModel;
-        var QueryComposerRequestViewModel = /** @class */ (function (_super) {
+        var QueryComposerRequestViewModel = (function (_super) {
             __extends(QueryComposerRequestViewModel, _super);
             function QueryComposerRequestViewModel(QueryComposerRequestDTO) {
                 var _this = _super.call(this) || this;
@@ -5574,7 +5572,7 @@ var Dns;
             return QueryComposerRequestViewModel;
         }(ViewModel));
         ViewModels.QueryComposerRequestViewModel = QueryComposerRequestViewModel;
-        var QueryComposerResponseErrorViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponseErrorViewModel = (function (_super) {
             __extends(QueryComposerResponseErrorViewModel, _super);
             function QueryComposerResponseErrorViewModel(QueryComposerResponseErrorDTO) {
                 var _this = _super.call(this) || this;
@@ -5600,7 +5598,7 @@ var Dns;
             return QueryComposerResponseErrorViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseErrorViewModel = QueryComposerResponseErrorViewModel;
-        var QueryComposerSelectViewModel = /** @class */ (function (_super) {
+        var QueryComposerSelectViewModel = (function (_super) {
             __extends(QueryComposerSelectViewModel, _super);
             function QueryComposerSelectViewModel(QueryComposerSelectDTO) {
                 var _this = _super.call(this) || this;
@@ -5620,7 +5618,7 @@ var Dns;
             return QueryComposerSelectViewModel;
         }(ViewModel));
         ViewModels.QueryComposerSelectViewModel = QueryComposerSelectViewModel;
-        var QueryComposerResponseViewModel = /** @class */ (function (_super) {
+        var QueryComposerResponseViewModel = (function (_super) {
             __extends(QueryComposerResponseViewModel, _super);
             function QueryComposerResponseViewModel(QueryComposerResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -5649,7 +5647,7 @@ var Dns;
             return QueryComposerResponseViewModel;
         }(ViewModel));
         ViewModels.QueryComposerResponseViewModel = QueryComposerResponseViewModel;
-        var QueryComposerTermViewModel = /** @class */ (function (_super) {
+        var QueryComposerTermViewModel = (function (_super) {
             __extends(QueryComposerTermViewModel, _super);
             function QueryComposerTermViewModel(QueryComposerTermDTO) {
                 var _this = _super.call(this) || this;
@@ -5681,7 +5679,7 @@ var Dns;
             return QueryComposerTermViewModel;
         }(ViewModel));
         ViewModels.QueryComposerTermViewModel = QueryComposerTermViewModel;
-        var QueryComposerWhereViewModel = /** @class */ (function (_super) {
+        var QueryComposerWhereViewModel = (function (_super) {
             __extends(QueryComposerWhereViewModel, _super);
             function QueryComposerWhereViewModel(QueryComposerWhereDTO) {
                 var _this = _super.call(this) || this;
@@ -5701,7 +5699,7 @@ var Dns;
             return QueryComposerWhereViewModel;
         }(ViewModel));
         ViewModels.QueryComposerWhereViewModel = QueryComposerWhereViewModel;
-        var ProjectRequestTypeViewModel = /** @class */ (function (_super) {
+        var ProjectRequestTypeViewModel = (function (_super) {
             __extends(ProjectRequestTypeViewModel, _super);
             function ProjectRequestTypeViewModel(ProjectRequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -5733,7 +5731,7 @@ var Dns;
             return ProjectRequestTypeViewModel;
         }(EntityDtoViewModel));
         ViewModels.ProjectRequestTypeViewModel = ProjectRequestTypeViewModel;
-        var RequestObserverEventSubscriptionViewModel = /** @class */ (function (_super) {
+        var RequestObserverEventSubscriptionViewModel = (function (_super) {
             __extends(RequestObserverEventSubscriptionViewModel, _super);
             function RequestObserverEventSubscriptionViewModel(RequestObserverEventSubscriptionDTO) {
                 var _this = _super.call(this) || this;
@@ -5765,7 +5763,7 @@ var Dns;
             return RequestObserverEventSubscriptionViewModel;
         }(EntityDtoViewModel));
         ViewModels.RequestObserverEventSubscriptionViewModel = RequestObserverEventSubscriptionViewModel;
-        var RequestTypeTermViewModel = /** @class */ (function (_super) {
+        var RequestTypeTermViewModel = (function (_super) {
             __extends(RequestTypeTermViewModel, _super);
             function RequestTypeTermViewModel(RequestTypeTermDTO) {
                 var _this = _super.call(this) || this;
@@ -5800,7 +5798,7 @@ var Dns;
             return RequestTypeTermViewModel;
         }(EntityDtoViewModel));
         ViewModels.RequestTypeTermViewModel = RequestTypeTermViewModel;
-        var BaseFieldOptionAclViewModel = /** @class */ (function (_super) {
+        var BaseFieldOptionAclViewModel = (function (_super) {
             __extends(BaseFieldOptionAclViewModel, _super);
             function BaseFieldOptionAclViewModel(BaseFieldOptionAclDTO) {
                 var _this = _super.call(this) || this;
@@ -5832,7 +5830,7 @@ var Dns;
             return BaseFieldOptionAclViewModel;
         }(EntityDtoViewModel));
         ViewModels.BaseFieldOptionAclViewModel = BaseFieldOptionAclViewModel;
-        var BaseEventPermissionViewModel = /** @class */ (function (_super) {
+        var BaseEventPermissionViewModel = (function (_super) {
             __extends(BaseEventPermissionViewModel, _super);
             function BaseEventPermissionViewModel(BaseEventPermissionDTO) {
                 var _this = _super.call(this) || this;
@@ -5867,7 +5865,7 @@ var Dns;
             return BaseEventPermissionViewModel;
         }(EntityDtoViewModel));
         ViewModels.BaseEventPermissionViewModel = BaseEventPermissionViewModel;
-        var OrganizationGroupViewModel = /** @class */ (function (_super) {
+        var OrganizationGroupViewModel = (function (_super) {
             __extends(OrganizationGroupViewModel, _super);
             function OrganizationGroupViewModel(OrganizationGroupDTO) {
                 var _this = _super.call(this) || this;
@@ -5896,7 +5894,7 @@ var Dns;
             return OrganizationGroupViewModel;
         }(EntityDtoViewModel));
         ViewModels.OrganizationGroupViewModel = OrganizationGroupViewModel;
-        var OrganizationRegistryViewModel = /** @class */ (function (_super) {
+        var OrganizationRegistryViewModel = (function (_super) {
             __extends(OrganizationRegistryViewModel, _super);
             function OrganizationRegistryViewModel(OrganizationRegistryDTO) {
                 var _this = _super.call(this) || this;
@@ -5937,7 +5935,7 @@ var Dns;
             return OrganizationRegistryViewModel;
         }(EntityDtoViewModel));
         ViewModels.OrganizationRegistryViewModel = OrganizationRegistryViewModel;
-        var ProjectDataMartWithRequestTypesViewModel = /** @class */ (function (_super) {
+        var ProjectDataMartWithRequestTypesViewModel = (function (_super) {
             __extends(ProjectDataMartWithRequestTypesViewModel, _super);
             function ProjectDataMartWithRequestTypesViewModel(ProjectDataMartWithRequestTypesDTO) {
                 var _this = _super.call(this) || this;
@@ -5975,7 +5973,7 @@ var Dns;
             return ProjectDataMartWithRequestTypesViewModel;
         }(ProjectDataMartViewModel));
         ViewModels.ProjectDataMartWithRequestTypesViewModel = ProjectDataMartWithRequestTypesViewModel;
-        var ProjectOrganizationViewModel = /** @class */ (function (_super) {
+        var ProjectOrganizationViewModel = (function (_super) {
             __extends(ProjectOrganizationViewModel, _super);
             function ProjectOrganizationViewModel(ProjectOrganizationDTO) {
                 var _this = _super.call(this) || this;
@@ -6004,7 +6002,7 @@ var Dns;
             return ProjectOrganizationViewModel;
         }(EntityDtoViewModel));
         ViewModels.ProjectOrganizationViewModel = ProjectOrganizationViewModel;
-        var BaseAclViewModel = /** @class */ (function (_super) {
+        var BaseAclViewModel = (function (_super) {
             __extends(BaseAclViewModel, _super);
             function BaseAclViewModel(BaseAclDTO) {
                 var _this = _super.call(this) || this;
@@ -6030,7 +6028,7 @@ var Dns;
             return BaseAclViewModel;
         }(EntityDtoViewModel));
         ViewModels.BaseAclViewModel = BaseAclViewModel;
-        var UserEventSubscriptionViewModel = /** @class */ (function (_super) {
+        var UserEventSubscriptionViewModel = (function (_super) {
             __extends(UserEventSubscriptionViewModel, _super);
             function UserEventSubscriptionViewModel(UserEventSubscriptionDTO) {
                 var _this = _super.call(this) || this;
@@ -6065,7 +6063,7 @@ var Dns;
             return UserEventSubscriptionViewModel;
         }(EntityDtoViewModel));
         ViewModels.UserEventSubscriptionViewModel = UserEventSubscriptionViewModel;
-        var UserSettingViewModel = /** @class */ (function (_super) {
+        var UserSettingViewModel = (function (_super) {
             __extends(UserSettingViewModel, _super);
             function UserSettingViewModel(UserSettingDTO) {
                 var _this = _super.call(this) || this;
@@ -6091,7 +6089,7 @@ var Dns;
             return UserSettingViewModel;
         }(EntityDtoViewModel));
         ViewModels.UserSettingViewModel = UserSettingViewModel;
-        var QueryComposerQueryHeaderViewModel = /** @class */ (function (_super) {
+        var QueryComposerQueryHeaderViewModel = (function (_super) {
             __extends(QueryComposerQueryHeaderViewModel, _super);
             function QueryComposerQueryHeaderViewModel(QueryComposerQueryHeaderDTO) {
                 var _this = _super.call(this) || this;
@@ -6135,7 +6133,7 @@ var Dns;
             return QueryComposerQueryHeaderViewModel;
         }(QueryComposerHeaderViewModel));
         ViewModels.QueryComposerQueryHeaderViewModel = QueryComposerQueryHeaderViewModel;
-        var QueryComposerRequestHeaderViewModel = /** @class */ (function (_super) {
+        var QueryComposerRequestHeaderViewModel = (function (_super) {
             __extends(QueryComposerRequestHeaderViewModel, _super);
             function QueryComposerRequestHeaderViewModel(QueryComposerRequestHeaderDTO) {
                 var _this = _super.call(this) || this;
@@ -6173,7 +6171,7 @@ var Dns;
             return QueryComposerRequestHeaderViewModel;
         }(QueryComposerHeaderViewModel));
         ViewModels.QueryComposerRequestHeaderViewModel = QueryComposerRequestHeaderViewModel;
-        var WFCommentViewModel = /** @class */ (function (_super) {
+        var WFCommentViewModel = (function (_super) {
             __extends(WFCommentViewModel, _super);
             function WFCommentViewModel(WFCommentDTO) {
                 var _this = _super.call(this) || this;
@@ -6220,7 +6218,7 @@ var Dns;
             return WFCommentViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.WFCommentViewModel = WFCommentViewModel;
-        var CommentViewModel = /** @class */ (function (_super) {
+        var CommentViewModel = (function (_super) {
             __extends(CommentViewModel, _super);
             function CommentViewModel(CommentDTO) {
                 var _this = _super.call(this) || this;
@@ -6261,7 +6259,7 @@ var Dns;
             return CommentViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.CommentViewModel = CommentViewModel;
-        var DocumentViewModel = /** @class */ (function (_super) {
+        var DocumentViewModel = (function (_super) {
             __extends(DocumentViewModel, _super);
             function DocumentViewModel(DocumentDTO) {
                 var _this = _super.call(this) || this;
@@ -6308,7 +6306,7 @@ var Dns;
             return DocumentViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.DocumentViewModel = DocumentViewModel;
-        var ExtendedDocumentViewModel = /** @class */ (function (_super) {
+        var ExtendedDocumentViewModel = (function (_super) {
             __extends(ExtendedDocumentViewModel, _super);
             function ExtendedDocumentViewModel(ExtendedDocumentDTO) {
                 var _this = _super.call(this) || this;
@@ -6400,7 +6398,7 @@ var Dns;
             return ExtendedDocumentViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ExtendedDocumentViewModel = ExtendedDocumentViewModel;
-        var OrganizationEHRSViewModel = /** @class */ (function (_super) {
+        var OrganizationEHRSViewModel = (function (_super) {
             __extends(OrganizationEHRSViewModel, _super);
             function OrganizationEHRSViewModel(OrganizationEHRSDTO) {
                 var _this = _super.call(this) || this;
@@ -6441,7 +6439,7 @@ var Dns;
             return OrganizationEHRSViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.OrganizationEHRSViewModel = OrganizationEHRSViewModel;
-        var TemplateViewModel = /** @class */ (function (_super) {
+        var TemplateViewModel = (function (_super) {
             __extends(TemplateViewModel, _super);
             function TemplateViewModel(TemplateDTO) {
                 var _this = _super.call(this) || this;
@@ -6503,7 +6501,7 @@ var Dns;
             return TemplateViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.TemplateViewModel = TemplateViewModel;
-        var TermViewModel = /** @class */ (function (_super) {
+        var TermViewModel = (function (_super) {
             __extends(TermViewModel, _super);
             function TermViewModel(TermDTO) {
                 var _this = _super.call(this) || this;
@@ -6541,7 +6539,7 @@ var Dns;
             return TermViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.TermViewModel = TermViewModel;
-        var HomepageRequestDetailViewModel = /** @class */ (function (_super) {
+        var HomepageRequestDetailViewModel = (function (_super) {
             __extends(HomepageRequestDetailViewModel, _super);
             function HomepageRequestDetailViewModel(HomepageRequestDetailDTO) {
                 var _this = _super.call(this) || this;
@@ -6609,7 +6607,7 @@ var Dns;
             return HomepageRequestDetailViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.HomepageRequestDetailViewModel = HomepageRequestDetailViewModel;
-        var ReportAggregationLevelViewModel = /** @class */ (function (_super) {
+        var ReportAggregationLevelViewModel = (function (_super) {
             __extends(ReportAggregationLevelViewModel, _super);
             function ReportAggregationLevelViewModel(ReportAggregationLevelDTO) {
                 var _this = _super.call(this) || this;
@@ -6641,7 +6639,7 @@ var Dns;
             return ReportAggregationLevelViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ReportAggregationLevelViewModel = ReportAggregationLevelViewModel;
-        var RequestBudgetInfoViewModel = /** @class */ (function (_super) {
+        var RequestBudgetInfoViewModel = (function (_super) {
             __extends(RequestBudgetInfoViewModel, _super);
             function RequestBudgetInfoViewModel(RequestBudgetInfoDTO) {
                 var _this = _super.call(this) || this;
@@ -6682,7 +6680,7 @@ var Dns;
             return RequestBudgetInfoViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestBudgetInfoViewModel = RequestBudgetInfoViewModel;
-        var RequestMetadataViewModel = /** @class */ (function (_super) {
+        var RequestMetadataViewModel = (function (_super) {
             __extends(RequestMetadataViewModel, _super);
             function RequestMetadataViewModel(RequestMetadataDTO) {
                 var _this = _super.call(this) || this;
@@ -6756,7 +6754,7 @@ var Dns;
             return RequestMetadataViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestMetadataViewModel = RequestMetadataViewModel;
-        var RequestObserverViewModel = /** @class */ (function (_super) {
+        var RequestObserverViewModel = (function (_super) {
             __extends(RequestObserverViewModel, _super);
             function RequestObserverViewModel(RequestObserverDTO) {
                 var _this = _super.call(this) || this;
@@ -6797,7 +6795,7 @@ var Dns;
             return RequestObserverViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestObserverViewModel = RequestObserverViewModel;
-        var ResponseGroupViewModel = /** @class */ (function (_super) {
+        var ResponseGroupViewModel = (function (_super) {
             __extends(ResponseGroupViewModel, _super);
             function ResponseGroupViewModel(ResponseGroupDTO) {
                 var _this = _super.call(this) || this;
@@ -6823,7 +6821,7 @@ var Dns;
             return ResponseGroupViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ResponseGroupViewModel = ResponseGroupViewModel;
-        var AclGlobalFieldOptionViewModel = /** @class */ (function (_super) {
+        var AclGlobalFieldOptionViewModel = (function (_super) {
             __extends(AclGlobalFieldOptionViewModel, _super);
             function AclGlobalFieldOptionViewModel(AclGlobalFieldOptionDTO) {
                 var _this = _super.call(this) || this;
@@ -6855,7 +6853,7 @@ var Dns;
             return AclGlobalFieldOptionViewModel;
         }(BaseFieldOptionAclViewModel));
         ViewModels.AclGlobalFieldOptionViewModel = AclGlobalFieldOptionViewModel;
-        var AclProjectFieldOptionViewModel = /** @class */ (function (_super) {
+        var AclProjectFieldOptionViewModel = (function (_super) {
             __extends(AclProjectFieldOptionViewModel, _super);
             function AclProjectFieldOptionViewModel(AclProjectFieldOptionDTO) {
                 var _this = _super.call(this) || this;
@@ -6890,7 +6888,7 @@ var Dns;
             return AclProjectFieldOptionViewModel;
         }(BaseFieldOptionAclViewModel));
         ViewModels.AclProjectFieldOptionViewModel = AclProjectFieldOptionViewModel;
-        var BaseAclRequestTypeViewModel = /** @class */ (function (_super) {
+        var BaseAclRequestTypeViewModel = (function (_super) {
             __extends(BaseAclRequestTypeViewModel, _super);
             function BaseAclRequestTypeViewModel(BaseAclRequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -6922,7 +6920,7 @@ var Dns;
             return BaseAclRequestTypeViewModel;
         }(BaseAclViewModel));
         ViewModels.BaseAclRequestTypeViewModel = BaseAclRequestTypeViewModel;
-        var SecurityEntityViewModel = /** @class */ (function (_super) {
+        var SecurityEntityViewModel = (function (_super) {
             __extends(SecurityEntityViewModel, _super);
             function SecurityEntityViewModel(SecurityEntityDTO) {
                 var _this = _super.call(this) || this;
@@ -6951,7 +6949,7 @@ var Dns;
             return SecurityEntityViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.SecurityEntityViewModel = SecurityEntityViewModel;
-        var TaskViewModel = /** @class */ (function (_super) {
+        var TaskViewModel = (function (_super) {
             __extends(TaskViewModel, _super);
             function TaskViewModel(TaskDTO) {
                 var _this = _super.call(this) || this;
@@ -7016,7 +7014,7 @@ var Dns;
             return TaskViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.TaskViewModel = TaskViewModel;
-        var DataModelViewModel = /** @class */ (function (_super) {
+        var DataModelViewModel = (function (_super) {
             __extends(DataModelViewModel, _super);
             function DataModelViewModel(DataModelDTO) {
                 var _this = _super.call(this) || this;
@@ -7051,7 +7049,7 @@ var Dns;
             return DataModelViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.DataModelViewModel = DataModelViewModel;
-        var DataMartListViewModel = /** @class */ (function (_super) {
+        var DataMartListViewModel = (function (_super) {
             __extends(DataMartListViewModel, _super);
             function DataMartListViewModel(DataMartListDTO) {
                 var _this = _super.call(this) || this;
@@ -7107,7 +7105,7 @@ var Dns;
             return DataMartListViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.DataMartListViewModel = DataMartListViewModel;
-        var EventViewModel = /** @class */ (function (_super) {
+        var EventViewModel = (function (_super) {
             __extends(EventViewModel, _super);
             function EventViewModel(EventDTO) {
                 var _this = _super.call(this) || this;
@@ -7142,7 +7140,7 @@ var Dns;
             return EventViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.EventViewModel = EventViewModel;
-        var GroupEventViewModel = /** @class */ (function (_super) {
+        var GroupEventViewModel = (function (_super) {
             __extends(GroupEventViewModel, _super);
             function GroupEventViewModel(GroupEventDTO) {
                 var _this = _super.call(this) || this;
@@ -7180,7 +7178,7 @@ var Dns;
             return GroupEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.GroupEventViewModel = GroupEventViewModel;
-        var OrganizationEventViewModel = /** @class */ (function (_super) {
+        var OrganizationEventViewModel = (function (_super) {
             __extends(OrganizationEventViewModel, _super);
             function OrganizationEventViewModel(OrganizationEventDTO) {
                 var _this = _super.call(this) || this;
@@ -7218,7 +7216,7 @@ var Dns;
             return OrganizationEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.OrganizationEventViewModel = OrganizationEventViewModel;
-        var RegistryEventViewModel = /** @class */ (function (_super) {
+        var RegistryEventViewModel = (function (_super) {
             __extends(RegistryEventViewModel, _super);
             function RegistryEventViewModel(RegistryEventDTO) {
                 var _this = _super.call(this) || this;
@@ -7256,7 +7254,7 @@ var Dns;
             return RegistryEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.RegistryEventViewModel = RegistryEventViewModel;
-        var UserEventViewModel = /** @class */ (function (_super) {
+        var UserEventViewModel = (function (_super) {
             __extends(UserEventViewModel, _super);
             function UserEventViewModel(UserEventDTO) {
                 var _this = _super.call(this) || this;
@@ -7294,7 +7292,7 @@ var Dns;
             return UserEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.UserEventViewModel = UserEventViewModel;
-        var GroupViewModel = /** @class */ (function (_super) {
+        var GroupViewModel = (function (_super) {
             __extends(GroupViewModel, _super);
             function GroupViewModel(GroupDTO) {
                 var _this = _super.call(this) || this;
@@ -7326,7 +7324,7 @@ var Dns;
             return GroupViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.GroupViewModel = GroupViewModel;
-        var NetworkMessageViewModel = /** @class */ (function (_super) {
+        var NetworkMessageViewModel = (function (_super) {
             __extends(NetworkMessageViewModel, _super);
             function NetworkMessageViewModel(NetworkMessageDTO) {
                 var _this = _super.call(this) || this;
@@ -7361,7 +7359,7 @@ var Dns;
             return NetworkMessageViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.NetworkMessageViewModel = NetworkMessageViewModel;
-        var OrganizationViewModel = /** @class */ (function (_super) {
+        var OrganizationViewModel = (function (_super) {
             __extends(OrganizationViewModel, _super);
             function OrganizationViewModel(OrganizationDTO) {
                 var _this = _super.call(this) || this;
@@ -7507,7 +7505,7 @@ var Dns;
             return OrganizationViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.OrganizationViewModel = OrganizationViewModel;
-        var ProjectViewModel = /** @class */ (function (_super) {
+        var ProjectViewModel = (function (_super) {
             __extends(ProjectViewModel, _super);
             function ProjectViewModel(ProjectDTO) {
                 var _this = _super.call(this) || this;
@@ -7557,7 +7555,7 @@ var Dns;
             return ProjectViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ProjectViewModel = ProjectViewModel;
-        var RegistryViewModel = /** @class */ (function (_super) {
+        var RegistryViewModel = (function (_super) {
             __extends(RegistryViewModel, _super);
             function RegistryViewModel(RegistryDTO) {
                 var _this = _super.call(this) || this;
@@ -7595,7 +7593,7 @@ var Dns;
             return RegistryViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RegistryViewModel = RegistryViewModel;
-        var RequestDataMartViewModel = /** @class */ (function (_super) {
+        var RequestDataMartViewModel = (function (_super) {
             __extends(RequestDataMartViewModel, _super);
             function RequestDataMartViewModel(RequestDataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -7678,7 +7676,7 @@ var Dns;
             return RequestDataMartViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestDataMartViewModel = RequestDataMartViewModel;
-        var RequestViewModel = /** @class */ (function (_super) {
+        var RequestViewModel = (function (_super) {
             __extends(RequestViewModel, _super);
             function RequestViewModel(RequestDTO) {
                 var _this = _super.call(this) || this;
@@ -7875,7 +7873,7 @@ var Dns;
             return RequestViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestViewModel = RequestViewModel;
-        var RequestTypeViewModel = /** @class */ (function (_super) {
+        var RequestTypeViewModel = (function (_super) {
             __extends(RequestTypeViewModel, _super);
             function RequestTypeViewModel(RequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -7928,7 +7926,7 @@ var Dns;
             return RequestTypeViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.RequestTypeViewModel = RequestTypeViewModel;
-        var ResponseViewModel = /** @class */ (function (_super) {
+        var ResponseViewModel = (function (_super) {
             __extends(ResponseViewModel, _super);
             function ResponseViewModel(ResponseDTO) {
                 var _this = _super.call(this) || this;
@@ -7978,7 +7976,7 @@ var Dns;
             return ResponseViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.ResponseViewModel = ResponseViewModel;
-        var DataMartEventViewModel = /** @class */ (function (_super) {
+        var DataMartEventViewModel = (function (_super) {
             __extends(DataMartEventViewModel, _super);
             function DataMartEventViewModel(DataMartEventDTO) {
                 var _this = _super.call(this) || this;
@@ -8016,7 +8014,7 @@ var Dns;
             return DataMartEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.DataMartEventViewModel = DataMartEventViewModel;
-        var AclViewModel = /** @class */ (function (_super) {
+        var AclViewModel = (function (_super) {
             __extends(AclViewModel, _super);
             function AclViewModel(AclDTO) {
                 var _this = _super.call(this) || this;
@@ -8051,7 +8049,7 @@ var Dns;
             return AclViewModel;
         }(BaseAclViewModel));
         ViewModels.AclViewModel = AclViewModel;
-        var ProjectDataMartEventViewModel = /** @class */ (function (_super) {
+        var ProjectDataMartEventViewModel = (function (_super) {
             __extends(ProjectDataMartEventViewModel, _super);
             function ProjectDataMartEventViewModel(ProjectDataMartEventDTO) {
                 var _this = _super.call(this) || this;
@@ -8092,7 +8090,7 @@ var Dns;
             return ProjectDataMartEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.ProjectDataMartEventViewModel = ProjectDataMartEventViewModel;
-        var ProjectEventViewModel = /** @class */ (function (_super) {
+        var ProjectEventViewModel = (function (_super) {
             __extends(ProjectEventViewModel, _super);
             function ProjectEventViewModel(ProjectEventDTO) {
                 var _this = _super.call(this) || this;
@@ -8130,7 +8128,7 @@ var Dns;
             return ProjectEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.ProjectEventViewModel = ProjectEventViewModel;
-        var ProjectOrganizationEventViewModel = /** @class */ (function (_super) {
+        var ProjectOrganizationEventViewModel = (function (_super) {
             __extends(ProjectOrganizationEventViewModel, _super);
             function ProjectOrganizationEventViewModel(ProjectOrganizationEventDTO) {
                 var _this = _super.call(this) || this;
@@ -8171,7 +8169,7 @@ var Dns;
             return ProjectOrganizationEventViewModel;
         }(BaseEventPermissionViewModel));
         ViewModels.ProjectOrganizationEventViewModel = ProjectOrganizationEventViewModel;
-        var PermissionViewModel = /** @class */ (function (_super) {
+        var PermissionViewModel = (function (_super) {
             __extends(PermissionViewModel, _super);
             function PermissionViewModel(PermissionDTO) {
                 var _this = _super.call(this) || this;
@@ -8203,7 +8201,7 @@ var Dns;
             return PermissionViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.PermissionViewModel = PermissionViewModel;
-        var SecurityGroupViewModel = /** @class */ (function (_super) {
+        var SecurityGroupViewModel = (function (_super) {
             __extends(SecurityGroupViewModel, _super);
             function SecurityGroupViewModel(SecurityGroupDTO) {
                 var _this = _super.call(this) || this;
@@ -8250,7 +8248,7 @@ var Dns;
             return SecurityGroupViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.SecurityGroupViewModel = SecurityGroupViewModel;
-        var SsoEndpointViewModel = /** @class */ (function (_super) {
+        var SsoEndpointViewModel = (function (_super) {
             __extends(SsoEndpointViewModel, _super);
             function SsoEndpointViewModel(SsoEndpointDTO) {
                 var _this = _super.call(this) || this;
@@ -8300,7 +8298,7 @@ var Dns;
             return SsoEndpointViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.SsoEndpointViewModel = SsoEndpointViewModel;
-        var UserViewModel = /** @class */ (function (_super) {
+        var UserViewModel = (function (_super) {
             __extends(UserViewModel, _super);
             function UserViewModel(UserDTO) {
                 var _this = _super.call(this) || this;
@@ -8398,7 +8396,7 @@ var Dns;
             return UserViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.UserViewModel = UserViewModel;
-        var WorkflowActivityViewModel = /** @class */ (function (_super) {
+        var WorkflowActivityViewModel = (function (_super) {
             __extends(WorkflowActivityViewModel, _super);
             function WorkflowActivityViewModel(WorkflowActivityDTO) {
                 var _this = _super.call(this) || this;
@@ -8433,7 +8431,7 @@ var Dns;
             return WorkflowActivityViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.WorkflowActivityViewModel = WorkflowActivityViewModel;
-        var WorkflowViewModel = /** @class */ (function (_super) {
+        var WorkflowViewModel = (function (_super) {
             __extends(WorkflowViewModel, _super);
             function WorkflowViewModel(WorkflowDTO) {
                 var _this = _super.call(this) || this;
@@ -8462,7 +8460,7 @@ var Dns;
             return WorkflowViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.WorkflowViewModel = WorkflowViewModel;
-        var WorkflowRoleViewModel = /** @class */ (function (_super) {
+        var WorkflowRoleViewModel = (function (_super) {
             __extends(WorkflowRoleViewModel, _super);
             function WorkflowRoleViewModel(WorkflowRoleDTO) {
                 var _this = _super.call(this) || this;
@@ -8497,7 +8495,7 @@ var Dns;
             return WorkflowRoleViewModel;
         }(EntityDtoWithIDViewModel));
         ViewModels.WorkflowRoleViewModel = WorkflowRoleViewModel;
-        var DataModelWithRequestTypesViewModel = /** @class */ (function (_super) {
+        var DataModelWithRequestTypesViewModel = (function (_super) {
             __extends(DataModelWithRequestTypesViewModel, _super);
             function DataModelWithRequestTypesViewModel(DataModelWithRequestTypesDTO) {
                 var _this = _super.call(this) || this;
@@ -8535,7 +8533,7 @@ var Dns;
             return DataModelWithRequestTypesViewModel;
         }(DataModelViewModel));
         ViewModels.DataModelWithRequestTypesViewModel = DataModelWithRequestTypesViewModel;
-        var AclTemplateViewModel = /** @class */ (function (_super) {
+        var AclTemplateViewModel = (function (_super) {
             __extends(AclTemplateViewModel, _super);
             function AclTemplateViewModel(AclTemplateDTO) {
                 var _this = _super.call(this) || this;
@@ -8573,7 +8571,7 @@ var Dns;
             return AclTemplateViewModel;
         }(AclViewModel));
         ViewModels.AclTemplateViewModel = AclTemplateViewModel;
-        var DataMartViewModel = /** @class */ (function (_super) {
+        var DataMartViewModel = (function (_super) {
             __extends(DataMartViewModel, _super);
             function DataMartViewModel(DataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -9073,7 +9071,7 @@ var Dns;
             return DataMartViewModel;
         }(DataMartListViewModel));
         ViewModels.DataMartViewModel = DataMartViewModel;
-        var ResponseDetailViewModel = /** @class */ (function (_super) {
+        var ResponseDetailViewModel = (function (_super) {
             __extends(ResponseDetailViewModel, _super);
             function ResponseDetailViewModel(ResponseDetailDTO) {
                 var _this = _super.call(this) || this;
@@ -9144,7 +9142,7 @@ var Dns;
             return ResponseDetailViewModel;
         }(ResponseViewModel));
         ViewModels.ResponseDetailViewModel = ResponseDetailViewModel;
-        var AclDataMartRequestTypeViewModel = /** @class */ (function (_super) {
+        var AclDataMartRequestTypeViewModel = (function (_super) {
             __extends(AclDataMartRequestTypeViewModel, _super);
             function AclDataMartRequestTypeViewModel(AclDataMartRequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -9179,7 +9177,7 @@ var Dns;
             return AclDataMartRequestTypeViewModel;
         }(BaseAclRequestTypeViewModel));
         ViewModels.AclDataMartRequestTypeViewModel = AclDataMartRequestTypeViewModel;
-        var AclDataMartViewModel = /** @class */ (function (_super) {
+        var AclDataMartViewModel = (function (_super) {
             __extends(AclDataMartViewModel, _super);
             function AclDataMartViewModel(AclDataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -9217,7 +9215,7 @@ var Dns;
             return AclDataMartViewModel;
         }(AclViewModel));
         ViewModels.AclDataMartViewModel = AclDataMartViewModel;
-        var AclGroupViewModel = /** @class */ (function (_super) {
+        var AclGroupViewModel = (function (_super) {
             __extends(AclGroupViewModel, _super);
             function AclGroupViewModel(AclGroupDTO) {
                 var _this = _super.call(this) || this;
@@ -9255,7 +9253,7 @@ var Dns;
             return AclGroupViewModel;
         }(AclViewModel));
         ViewModels.AclGroupViewModel = AclGroupViewModel;
-        var AclOrganizationViewModel = /** @class */ (function (_super) {
+        var AclOrganizationViewModel = (function (_super) {
             __extends(AclOrganizationViewModel, _super);
             function AclOrganizationViewModel(AclOrganizationDTO) {
                 var _this = _super.call(this) || this;
@@ -9293,7 +9291,7 @@ var Dns;
             return AclOrganizationViewModel;
         }(AclViewModel));
         ViewModels.AclOrganizationViewModel = AclOrganizationViewModel;
-        var AclProjectOrganizationViewModel = /** @class */ (function (_super) {
+        var AclProjectOrganizationViewModel = (function (_super) {
             __extends(AclProjectOrganizationViewModel, _super);
             function AclProjectOrganizationViewModel(AclProjectOrganizationDTO) {
                 var _this = _super.call(this) || this;
@@ -9334,7 +9332,7 @@ var Dns;
             return AclProjectOrganizationViewModel;
         }(AclViewModel));
         ViewModels.AclProjectOrganizationViewModel = AclProjectOrganizationViewModel;
-        var AclProjectDataMartViewModel = /** @class */ (function (_super) {
+        var AclProjectDataMartViewModel = (function (_super) {
             __extends(AclProjectDataMartViewModel, _super);
             function AclProjectDataMartViewModel(AclProjectDataMartDTO) {
                 var _this = _super.call(this) || this;
@@ -9375,7 +9373,7 @@ var Dns;
             return AclProjectDataMartViewModel;
         }(AclViewModel));
         ViewModels.AclProjectDataMartViewModel = AclProjectDataMartViewModel;
-        var AclProjectViewModel = /** @class */ (function (_super) {
+        var AclProjectViewModel = (function (_super) {
             __extends(AclProjectViewModel, _super);
             function AclProjectViewModel(AclProjectDTO) {
                 var _this = _super.call(this) || this;
@@ -9413,7 +9411,7 @@ var Dns;
             return AclProjectViewModel;
         }(AclViewModel));
         ViewModels.AclProjectViewModel = AclProjectViewModel;
-        var AclProjectRequestTypeViewModel = /** @class */ (function (_super) {
+        var AclProjectRequestTypeViewModel = (function (_super) {
             __extends(AclProjectRequestTypeViewModel, _super);
             function AclProjectRequestTypeViewModel(AclProjectRequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -9448,7 +9446,7 @@ var Dns;
             return AclProjectRequestTypeViewModel;
         }(BaseAclRequestTypeViewModel));
         ViewModels.AclProjectRequestTypeViewModel = AclProjectRequestTypeViewModel;
-        var AclRegistryViewModel = /** @class */ (function (_super) {
+        var AclRegistryViewModel = (function (_super) {
             __extends(AclRegistryViewModel, _super);
             function AclRegistryViewModel(AclRegistryDTO) {
                 var _this = _super.call(this) || this;
@@ -9486,7 +9484,7 @@ var Dns;
             return AclRegistryViewModel;
         }(AclViewModel));
         ViewModels.AclRegistryViewModel = AclRegistryViewModel;
-        var AclRequestTypeViewModel = /** @class */ (function (_super) {
+        var AclRequestTypeViewModel = (function (_super) {
             __extends(AclRequestTypeViewModel, _super);
             function AclRequestTypeViewModel(AclRequestTypeDTO) {
                 var _this = _super.call(this) || this;
@@ -9527,7 +9525,7 @@ var Dns;
             return AclRequestTypeViewModel;
         }(AclViewModel));
         ViewModels.AclRequestTypeViewModel = AclRequestTypeViewModel;
-        var AclUserViewModel = /** @class */ (function (_super) {
+        var AclUserViewModel = (function (_super) {
             __extends(AclUserViewModel, _super);
             function AclUserViewModel(AclUserDTO) {
                 var _this = _super.call(this) || this;
@@ -9565,7 +9563,7 @@ var Dns;
             return AclUserViewModel;
         }(AclViewModel));
         ViewModels.AclUserViewModel = AclUserViewModel;
-        var SecurityGroupWithUsersViewModel = /** @class */ (function (_super) {
+        var SecurityGroupWithUsersViewModel = (function (_super) {
             __extends(SecurityGroupWithUsersViewModel, _super);
             function SecurityGroupWithUsersViewModel(SecurityGroupWithUsersDTO) {
                 var _this = _super.call(this) || this;
@@ -9615,7 +9613,7 @@ var Dns;
             return SecurityGroupWithUsersViewModel;
         }(SecurityGroupViewModel));
         ViewModels.SecurityGroupWithUsersViewModel = SecurityGroupWithUsersViewModel;
-        var UserWithSecurityDetailsViewModel = /** @class */ (function (_super) {
+        var UserWithSecurityDetailsViewModel = (function (_super) {
             __extends(UserWithSecurityDetailsViewModel, _super);
             function UserWithSecurityDetailsViewModel(UserWithSecurityDetailsDTO) {
                 var _this = _super.call(this) || this;
@@ -9716,7 +9714,7 @@ var Dns;
             return UserWithSecurityDetailsViewModel;
         }(UserViewModel));
         ViewModels.UserWithSecurityDetailsViewModel = UserWithSecurityDetailsViewModel;
-        var AclProjectRequestTypeWorkflowActivityViewModel = /** @class */ (function (_super) {
+        var AclProjectRequestTypeWorkflowActivityViewModel = (function (_super) {
             __extends(AclProjectRequestTypeWorkflowActivityViewModel, _super);
             function AclProjectRequestTypeWorkflowActivityViewModel(AclProjectRequestTypeWorkflowActivityDTO) {
                 var _this = _super.call(this) || this;
@@ -9769,7 +9767,7 @@ var Dns;
             return AclProjectRequestTypeWorkflowActivityViewModel;
         }(AclViewModel));
         ViewModels.AclProjectRequestTypeWorkflowActivityViewModel = AclProjectRequestTypeWorkflowActivityViewModel;
-        var AclProjectDataMartRequestTypeViewModel = /** @class */ (function (_super) {
+        var AclProjectDataMartRequestTypeViewModel = (function (_super) {
             __extends(AclProjectDataMartRequestTypeViewModel, _super);
             function AclProjectDataMartRequestTypeViewModel(AclProjectDataMartRequestTypeDTO) {
                 var _this = _super.call(this) || this;

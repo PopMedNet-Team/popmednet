@@ -601,13 +601,24 @@ namespace Lpp.Dns.Api.Users
 
             foreach (var newSub in newSubs)
             {
+                DateTime? nextDue;
+                DateTime? nextDueForMy;
+                if (newSub.Frequency != null)
+                    nextDue = DateTime.UtcNow;
+                else
+                    nextDue = null;
+                if (newSub.FrequencyForMy != null)
+                    nextDueForMy = DateTime.UtcNow;
+                else
+                    nextDueForMy = null;
                 DataContext.UserEventSubscriptions.Add(new UserEventSubscription
                 {
                     EventID = newSub.EventID,
                     Frequency = newSub.Frequency != null ? newSub.Frequency.Value : newSub.Frequency,
                     FrequencyForMy = newSub.FrequencyForMy != null ? newSub.FrequencyForMy.Value : newSub.FrequencyForMy,
-                    LastRunTime = newSub.LastRunTime,
-                    NextDueTime = newSub.NextDueTime,
+                    LastRunTime = DateTime.UtcNow,
+                    NextDueTime = nextDue,
+                    NextDueTimeForMy = nextDueForMy,
                     UserID = newSub.UserID
                 });
             }
@@ -622,8 +633,35 @@ namespace Lpp.Dns.Api.Users
                            select new { existing = ss, newSub = se };
             foreach (var sameSub in sameSubs)
             {
-                sameSub.existing.Frequency = sameSub.newSub.Frequency != null ? sameSub.newSub.Frequency.Value : sameSub.newSub.Frequency;
-                sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy != null ? sameSub.newSub.FrequencyForMy.Value : sameSub.newSub.FrequencyForMy;
+                if(sameSub.existing.Frequency != sameSub.newSub.Frequency)// If there was a change...
+                {
+                    if (sameSub.newSub.Frequency != null)
+                    {
+                        sameSub.existing.Frequency = sameSub.newSub.Frequency.Value; // Update the frequency
+                        sameSub.existing.LastRunTime = DateTime.UtcNow; // Update LastRunTime
+
+                        sameSub.existing.NextDueTime = DateTime.UtcNow;
+                    }
+                    else
+                        sameSub.existing.NextDueTime = null;
+                }
+
+                if(sameSub.existing.FrequencyForMy != sameSub.newSub.FrequencyForMy)
+                {
+                    if (sameSub.newSub.FrequencyForMy != null)
+                    {
+                        sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy.Value;
+                        sameSub.existing.LastRunTime = DateTime.UtcNow;
+                        sameSub.existing.NextDueTimeForMy = DateTime.UtcNow;
+                    }
+                    else
+                        sameSub.existing.NextDueTimeForMy = null;
+                }
+                //sameSub.existing.Frequency = sameSub.newSub.Frequency != null ? sameSub.newSub.Frequency.Value : sameSub.newSub.Frequency;
+                //sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy != null ? sameSub.newSub.FrequencyForMy.Value : sameSub.newSub.FrequencyForMy;
+                //sameSub.existing.LastRunTime = DateTime.UtcNow;
+                //sameSub.existing.NextDueTime = DateTime.UtcNow;
+                
             }
 
 
@@ -1269,7 +1307,11 @@ namespace Lpp.Dns.Api.Users
 
             var users = await (from u in DataContext.Users where ID.Contains(u.ID) select u).ToArrayAsync();
             foreach (var user in users)
+            {
                 user.Deleted = true;
+            }
+
+            await CompleteRegistrationTask(ID);
 
             await DataContext.SaveChangesAsync();
         }
@@ -1324,7 +1366,18 @@ namespace Lpp.Dns.Api.Users
         {
             var userIDs = users.Where(u => u.ID.HasValue && (u.Active || u.RejectedOn != null)).Select(u => u.ID.Value).ToArray();
 
-            var tasks = await (from a in DataContext.Actions where a.References.Any(r => userIDs.Contains(r.ItemID)) && a.Status != TaskStatuses.Complete && (a.Type & TaskTypes.NewUserRegistration) == TaskTypes.NewUserRegistration select a).ToArrayAsync();
+            await CompleteRegistrationTask(userIDs);
+
+            await DataContext.SaveChangesAsync();
+        }
+
+        private async Task CompleteRegistrationTask(IEnumerable<Guid> userIDs)
+        {
+            var tasks = await (from a in DataContext.Actions
+                               where a.References.Any(r => userIDs.Contains(r.ItemID))
+                                   && a.Status != TaskStatuses.Complete
+                                   && (a.Type & TaskTypes.NewUserRegistration) == TaskTypes.NewUserRegistration
+                               select a).ToArrayAsync();
 
             foreach (var task in tasks)
             {

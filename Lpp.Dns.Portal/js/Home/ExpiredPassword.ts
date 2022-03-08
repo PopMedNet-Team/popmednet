@@ -22,7 +22,7 @@ module Home.ExpiredPassword {
                 return false;
                 
             if (this.ConfirmPassword() != this.ExpiredPassword.Password()) {
-                Global.Helpers.ShowAlert("Validation Error", "<p>Please ensure that the passwords enter match.</p>");
+                Global.Helpers.ShowAlert("Validation Error", "<p>Passwords do not match.</p>");
                 return false;
             }
             if (this.PasswordScore() < 5) {

@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../Scripts/page/Page.ts" />
 var Requests;
 (function (Requests) {
     var Utility;
@@ -21,7 +20,7 @@ var Requests;
         var SelectDataMarts;
         (function (SelectDataMarts) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(datamarts, bindingControl) {
                     var _this = _super.call(this, bindingControl) || this;

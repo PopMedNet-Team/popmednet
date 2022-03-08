@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var ModularProgram;
@@ -21,7 +20,7 @@ var Workflow;
         var PreDistributionTesting;
         (function (PreDistributionTesting) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, uploadViewModel) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -71,7 +70,6 @@ var Workflow;
                                     Global.Helpers.RedirectTo(result.Uri);
                                 }
                                 else {
-                                    //Update the request etc. here 
                                     Requests.Details.rovm.Request.ID(result.Entity.ID);
                                     Requests.Details.rovm.Request.Timestamp(result.Entity.Timestamp);
                                     Requests.Details.rovm.UpdateUrl();

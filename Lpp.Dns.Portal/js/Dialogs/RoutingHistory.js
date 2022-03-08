@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../Scripts/page/Page.ts" />
 var Dialog;
 (function (Dialog) {
     var RoutingHistory;
     (function (RoutingHistory) {
         var vm;
-        var RoutingHistoryViewModel = /** @class */ (function (_super) {
+        var RoutingHistoryViewModel = (function (_super) {
             __extends(RoutingHistoryViewModel, _super);
             function RoutingHistoryViewModel(bindingControl, responseHistory) {
                 var _this = _super.call(this, bindingControl) || this;

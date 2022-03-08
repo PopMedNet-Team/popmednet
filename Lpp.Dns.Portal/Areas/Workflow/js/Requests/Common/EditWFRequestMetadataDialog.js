@@ -13,8 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="../../../../../js/requests/details.ts" />
 var Workflow;
 (function (Workflow) {
     var Common;
@@ -22,7 +20,7 @@ var Workflow;
         var EditWFRequestMetadataDialog;
         (function (EditWFRequestMetadataDialog) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, detailsViewModel, fieldOptions, allowEditRequestID, isNewRequest, oldRequestDueDate, oldRequestPriority) {
                     var _this = _super.call(this, bindingControl) || this;
@@ -32,13 +30,11 @@ var Workflow;
                     _this.DetailsViewModel = detailsViewModel;
                     _this.Request = new Dns.ViewModels.RequestViewModel(detailsViewModel.Request.toData());
                     _this.EditRequestIDAllowed = allowEditRequestID;
-                    //Lists
                     _this.RequesterCenterList = ko.utils.arrayMap(detailsViewModel.RequesterCenterList, function (l) { return ({ ID: l.ID, Name: l.Name, RequesterCenterID: l.RequesterCenterID, NetworkID: l.NetworkID }); });
                     _this.PurposeOfUseOptions = new Array({ Name: 'Clinical Trial Research', Value: 'CLINTRCH' }, { Name: 'Healthcare Payment', Value: 'HPAYMT' }, { Name: 'Healthcare Operations', Value: 'HOPERAT' }, { Name: 'Healthcare Research', Value: 'HRESCH' }, { Name: 'Healthcare Marketing', Value: 'HMARKT' }, { Name: 'Observational Research', Value: 'OBSRCH' }, { Name: 'Patient Requested', Value: 'PATRQT' }, { Name: 'Public Health', Value: 'PUBHLTH' }, { Name: 'Prep-to-Research', Value: 'PTR' }, { Name: 'Quality Assurance', Value: 'QA' }, { Name: 'Treatment', Value: 'TREAT' });
                     _this.PhiDisclosureLevelOptions = new Array({ Name: 'Aggregated', Value: 'Aggregated' }, { Name: 'Limited', Value: 'Limited' }, { Name: 'De-identified', Value: 'De-identified' }, { Name: 'PHI', Value: 'PHI' });
                     _this.WorkplanTypesList = ko.utils.arrayMap(detailsViewModel.WorkPlanTypeList, function (l) { return ({ ID: l.ID, Acronym: l.Acronym, Name: l.Name, NetworkID: l.NetworkID, WorkplanTypeID: l.WorkplanTypeID }); });
                     var reportAggregationLevels = ko.utils.arrayMap(detailsViewModel.ReportAggregationLevelList, function (l) { return ({ ID: l.ID, Name: l.Name, NetworkID: l.NetworkID, DeletedOn: l.DeletedOn }); });
-                    //remove RALs that have been deleted
                     _this.ReportAggregationLevelsList = reportAggregationLevels.filter(function (ral) { return ((ral.DeletedOn == undefined) || (ral.DeletedOn == null)); });
                     _this.ProjectActivityTree = detailsViewModel.ProjectActivityTree;
                     _this.BudgetTaskOrderID = ko.observable(null);
@@ -68,21 +64,16 @@ var Workflow;
                         return null;
                     };
                     if (_this.Request.ActivityID()) {
-                        //determine what the current budget activity is
                         var currentBudgetActivity = _this.findActivity(self.Request.ActivityID());
                         if (currentBudgetActivity != null) {
                             if (currentBudgetActivity.TaskLevel == 1) {
-                                //task order
                                 self.BudgetTaskOrderID(currentBudgetActivity.ID);
                             }
                             else if (currentBudgetActivity.TaskLevel == 2) {
-                                //activity
                                 self.BudgetTaskOrderID(currentBudgetActivity.ParentActivityID);
                                 self.BudgetActivityID(currentBudgetActivity.ID);
                             }
                             else {
-                                //activity project
-                                //find the activity (parent) of the activity project to get the task order id
                                 var activity = _this.findActivity(currentBudgetActivity.ParentActivityID);
                                 self.BudgetTaskOrderID(activity.ParentActivityID);
                                 self.BudgetActivityID(currentBudgetActivity.ParentActivityID);
@@ -90,7 +81,6 @@ var Workflow;
                             }
                         }
                     }
-                    //Task/Activity/Activity Project
                     _this.dsTaskOrders = new kendo.data.DataSource({
                         data: []
                     });
@@ -106,7 +96,6 @@ var Workflow;
                     _this.dsSourceActivityProjects = new kendo.data.DataSource({
                         data: []
                     });
-                    //When the task order or activity changes need to reset child values
                     _this.Request.SourceTaskOrderID.subscribe(function (value) {
                         self.Request.SourceActivityID(null);
                         self.Request.SourceActivityProjectID(null);
@@ -172,16 +161,12 @@ var Workflow;
                             mirrorActivities();
                         }
                     });
-                    //Edit this one
-                    //Save and Cancel
                     self.onSave = function () {
                         if (!self.Validate()) {
                             Global.Helpers.ShowAlert('Validation Error', '<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>Please check for Required Fields and Save again.</p></div>', 500).done(function () { return; });
                             return;
                         }
-                        //disable the save and cancel buttons
                         self.Saving(true);
-                        //show progress over the dialog to prevent any more button pushes and indicate that it is trying to do something
                         kendo.ui.progress($('#Content'), true);
                         if (self.Request.SourceTaskOrderID() == null || self.Request.SourceTaskOrderID() == '') {
                             self.Request.SourceTaskOrderID(null);
@@ -224,7 +209,6 @@ var Workflow;
                         else {
                             self.DetailsViewModel.Request.ActivityID(null);
                         }
-                        //If the Request Priority or Due Date has changed update the RequestDataMarts Priority and Due Date on the Details View Model
                         var changedPriority = null;
                         if (self.Request.Priority() != oldRequestPriority) {
                             self.DetailsViewModel.RequestDataMarts().forEach(function (dm) {
@@ -239,16 +223,12 @@ var Workflow;
                             });
                             changedDueDate = self.Request.DueDate();
                         }
-                        //call notify metadata function here to fire subscription notification for request datamarts if the Request Priority or Due Date have changed
-                        //if the priority or due date have not changed, then the corresponding variables passed through will be null
                         if ((self.Request.DueDate() != oldRequestDueDate) || (self.Request.Priority() != oldRequestPriority)) {
                             self.DetailsViewModel.NotifyMetadataChanged({ newPriority: changedPriority, newDueDate: changedDueDate });
                         }
                         var refreshAssignees = self.DetailsViewModel.Request.ID() == null;
                         var errorHandler = function (err) {
-                            //disable the save and cancel buttons
                             self.Saving(false);
-                            //show progress over the dialog to prevent any more button pushes and indicate that it is trying to do something
                             kendo.ui.progress($('#Content'), false);
                         };
                         detailsViewModel.DefaultSave(false, isNewRequest, errorHandler).done(function () {

@@ -106,7 +106,7 @@
                                 <ul id="sftpFolders" class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: sFtpFolders }"></ul>
                             </div>
                             <div id="divFtpFileWrapper" class="col-sm-6">
-                                <table class="table table-striped">
+                                <table class="table table-striped" role="presentation">
                                     <tbody data-bind="foreach: sFtpCurrentPath().Files">
                                         <tr>
                                             <td>

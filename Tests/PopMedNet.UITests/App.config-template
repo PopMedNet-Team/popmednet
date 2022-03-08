@@ -4,5 +4,6 @@
 		<add key="baseUrl" value=""/>
 		<add key="adminUser" value=""/>
 		<add key="adminPassword" value=""/>
+		<add key="globalHeadless" value ="false"/>
 	</appSettings>
 </configuration>

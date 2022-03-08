@@ -183,7 +183,7 @@ namespace Lpp
 
         public static string ToQueryString(this System.Collections.Specialized.NameValueCollection values)
         {
-            if (values == null && values.Count == 0)
+            if (values == null || values.Count == 0)
             {
                 return string.Empty;
             }

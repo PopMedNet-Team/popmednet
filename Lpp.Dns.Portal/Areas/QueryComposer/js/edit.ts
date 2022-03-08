@@ -142,6 +142,14 @@ module Plugins.Requests.QueryBuilder.Edit {
             return true;
         }
 
+        public VerifyNoDuplicates(): boolean {
+            if (this.MDQ_Host != null) {
+                return this.MDQ_Host.VerifyNoDuplicates();
+            }
+            //file distribution only allows for a single cohort.
+            return true;
+        }
+
         public fileUploadDMLoad() {
             this.RoutingsEditor.LoadDataMarts(this.ProjectID, this.TermsObserver.DistinctTerms());
         }

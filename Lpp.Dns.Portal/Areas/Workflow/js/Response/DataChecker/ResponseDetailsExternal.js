@@ -1,7 +1,3 @@
-/// <reference path="../../../../DataChecker/js/Common.ts" />
-/// <reference path="../../../../DataChecker/js/RxAmtResponse.ts" />
-/// <reference path="../../../../DataChecker/js/RxSupResponse.ts" />
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20,22 +16,16 @@ var __extends = (this && this.__extends) || (function () {
 var templateFromUrlLoader = {
     loadTemplate: function (name, templateConfig, callback) {
         if (templateConfig.fromUrl) {
-            // Uses jQuery's ajax facility to load the markup from a file
             var fullUrl = '/DataChecker/' + templateConfig.fromUrl;
             $.get(fullUrl, function (markupString) {
-                // We need an array of DOM nodes, not a string.
-                // We can use the default loader to convert to the
-                // required format.
                 ko.components.defaultLoader.loadTemplate(name, markupString, callback);
             });
         }
         else {
-            // Unrecognized config format. Let another loader handle it.
             callback(null);
         }
     }
 };
-// Register the loaders
 ko.components.loaders.unshift(templateFromUrlLoader);
 ko.components.register('datachecker-default', {
     template: '<span>...</span>'
@@ -105,7 +95,7 @@ var Workflow;
             var ResponseDetails;
             (function (ResponseDetails) {
                 var vm;
-                var ViewModel2 = /** @class */ (function (_super) {
+                var ViewModel2 = (function (_super) {
                     __extends(ViewModel2, _super);
                     function ViewModel2(bindingControl, routings, responses, documents, req, canViewPendingApprovalResponses) {
                         var _this = _super.call(this, bindingControl) || this;
@@ -140,7 +130,6 @@ var Workflow;
                                     }
                                 });
                                 var reqQuery = JSON.parse(req.Query);
-                                //NOTE:when the json is parsed the QueryType is a string representation of the enum numeric value, need to parse to a number for the switch statement to work.
                                 switch (parseInt((reqQuery.Queries[0].Header.QueryType || '-1').toString())) {
                                     case Dns.Enums.QueryComposerQueryTypes.DataCharacterization_Demographic_AgeRange:
                                         self.DataCheckerResponseBinding('datachecker-agedistribution');

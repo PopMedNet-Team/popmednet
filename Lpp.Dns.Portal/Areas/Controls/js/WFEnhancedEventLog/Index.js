@@ -19,7 +19,7 @@ var Controls;
     (function (WFEnhancedEventLog) {
         var Display;
         (function (Display) {
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, requestID) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -28,7 +28,6 @@ var Controls;
                     self.ExportCSVUrl = '/controls/wfenhancedeventlog/export-csv?requestID=' + requestID + '&authToken=' + User.AuthToken;
                     self.ExportExcelUrl = '/controls/wfenhancedeventlog/export-excel?requestID=' + requestID + '&authToken=' + User.AuthToken;
                     if (requestID != null) {
-                        //get the events and display in grid
                         Dns.WebApi.Response.GetEnhancedEventLog(requestID, null, null).done(function (results) {
                             self.DisplayEventLog(true);
                             var datasource = new kendo.data.DataSource({ data: results });
@@ -56,7 +55,6 @@ var Controls;
                         });
                     }
                     else {
-                        //brand new request nothing to show
                         self.DisplayEventLog(false);
                     }
                     return _this;

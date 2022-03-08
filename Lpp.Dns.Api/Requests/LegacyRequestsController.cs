@@ -449,7 +449,7 @@ namespace Lpp.Dns.Api.Requests
                 .FirstOrDefault();
 
             if (newRequest.Name == null)
-                newRequest.Name = newRequest.Name;
+                newRequest.Name = request.RequestType.Name.Substring(0, Math.Min(request.RequestType.Name.Length, MaxRequestNameLength));
 
             newRequest.MSRequestID =
                 Enumerable.Range(2, int.MaxValue - 2)

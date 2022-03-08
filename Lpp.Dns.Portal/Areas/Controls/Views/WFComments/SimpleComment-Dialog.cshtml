@@ -6,7 +6,7 @@
 }
 
 <p class="alert alert-info">Add a comment for the next step (optional). </p>
-<textarea name="txtComments" rows="8" class="form-control" data-bind="textInput:Comment" required oninvalid="this.setCustomValidity('A comment is required.')"></textarea>
+<textarea name="txtComments" rows="8" class="form-control" data-bind="textInput:Comment"></textarea>
 
 <nav class="footer">
     <button class="btn btn-default pull-left" type="button" style="width:120px;margin-left:10px;" data-bind="click:onCancel,disable:(Comment() || '').trim().length > 0">No Comment</button>

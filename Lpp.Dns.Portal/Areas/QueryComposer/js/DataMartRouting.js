@@ -21,8 +21,7 @@ var Plugins;
         (function (QueryBuilder) {
             var DataMartRouting;
             (function (DataMartRouting) {
-                //export var vm: ViewModel;
-                var Routings = /** @class */ (function () {
+                var Routings = (function () {
                     function Routings(dataMart, existingRequestDataMart) {
                         this.Priority = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.Priority : dataMart.Priority);
                         this.DueDate = ko.observable(existingRequestDataMart != null ? existingRequestDataMart.DueDate : dataMart.DueDate);
@@ -35,7 +34,6 @@ var Plugins;
                         self.toRequestDataMartDTO = function () {
                             var route = null;
                             if (self._existingRequestDataMart != null) {
-                                //do a deep copy clone of the existing routing information;
                                 route = jQuery.extend(true, {}, self._existingRequestDataMart);
                             }
                             else {
@@ -52,7 +50,7 @@ var Plugins;
                     return Routings;
                 }());
                 DataMartRouting.Routings = Routings;
-                var ViewModel = /** @class */ (function (_super) {
+                var ViewModel = (function (_super) {
                     __extends(ViewModel, _super);
                     function ViewModel(bindingControl, fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
                         var _this = _super.call(this, bindingControl) || this;
@@ -64,7 +62,6 @@ var Plugins;
                         _this.DefaultDueDate = ko.observable(defaultDueDate);
                         _this.DataMartAdditionalInstructions = ko.observable(additionalInstructions || '');
                         _this.DataMarts = ko.observableArray();
-                        //load the datamarts available to service the request
                         _this.LoadDataMarts = function (projectID, termIDs) {
                             Dns.WebApi.Requests.GetCompatibleDataMarts({
                                 TermIDs: termIDs,
@@ -160,11 +157,8 @@ var Plugins;
                     return ViewModel;
                 }(Global.PageViewModel));
                 DataMartRouting.ViewModel = ViewModel;
-                function init(
-                //bindingControl: JQuery,
-                fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
+                function init(fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions) {
                     var vm = new Plugins.Requests.QueryBuilder.DataMartRouting.ViewModel($('#DataMartsControl'), fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
-                    //ko.applyBindings(vm, bindingControl[0]);
                     return vm;
                 }
                 DataMartRouting.init = init;

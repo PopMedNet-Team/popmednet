@@ -1,5 +1,3 @@
-/// <reference path="../_rootlayout.ts" />
-///// <reference path="../../areas/querycomposer/js/edit.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +17,7 @@ var Templates;
 (function (Templates) {
     var Details;
     (function (Details) {
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl, screenPermissions, templateData, permissionList, templatePermissions, securityGroupTree, globalPermission, visualTerms, criteriaGroupTemplates) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -122,6 +120,7 @@ var Templates;
                     Details.vm = new ViewModel(bindingControl, screenPermissions || [PMNPermissions.Templates.Delete, PMNPermissions.Templates.Edit, PMNPermissions.Templates.ManageSecurity], template, permissionList || [], templatePermissions || [], securityGroupTree || [], globalPermissions[0], visualTerms, criteriaGroupTemplates);
                     ko.applyBindings(Details.vm, bindingControl[0]);
                     Details.vm.QueryDesigner.onKnockoutBind();
+                    $('#PageLoadingMessage').remove();
                 });
             });
         }

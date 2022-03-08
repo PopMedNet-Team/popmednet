@@ -18,7 +18,7 @@ var Templates;
     var Index;
     (function (Index) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gTemplatesSetting, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -35,8 +35,6 @@ var Templates;
                             url: Global.Helpers.GetServiceUrl("/templates/criteriagroups"),
                         },
                         parameterMap: function (options, transportType) {
-                            //override the parameterMap implementation to update the odata filter value for the enum type TemplateTypes. 
-                            //By default the webapi paramter mapper does not know to include the enum typename in the filter value.
                             var opt = Global.Helpers.UpdateKendoGridFilterOptions(options, [{ field: 'Type', format: "Lpp.Dns.DTO.Enums.TemplateTypes'{0}'" }]);
                             var map = new kendo.data.transports.webapi.parameterMap(opt);
                             return map;
@@ -69,7 +67,6 @@ var Templates;
         }
         Index.typeFilterUI = typeFilterUI;
         function init() {
-            //TODO: get the screen permissions and then bind the screen
             $.when(Users.GetSettings(["Templates.Index.gTemplates.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Portal.CreateTemplate)).done(function (gTemplatesSetting, canAdd) {
                 $(function () {
                     var bindingControl = $('#Content');

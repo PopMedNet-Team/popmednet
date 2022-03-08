@@ -13,13 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../_rootlayout.ts" />
 var Registries;
 (function (Registries) {
     var Index;
     (function (Index) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(gRegistriesSettings, bindingControl, screenPermissions) {
                 var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -36,8 +35,6 @@ var Registries;
                             url: Global.Helpers.GetServiceUrl("/registries/list"),
                         },
                         parameterMap: function (options, transportType) {
-                            //override the parameterMap implementation to update the odata filter value for the enum type RegistryTypes. 
-                            //By default the webapi paramter mapper does not know to include the enum typename in the filter value.
                             var opt = Global.Helpers.UpdateKendoGridFilterOptions(options, [{ field: 'Type', format: "Lpp.Dns.DTO.Enums.RegistryTypes'{0}'" }]);
                             var map = new kendo.data.transports.webapi.parameterMap(opt);
                             return map;

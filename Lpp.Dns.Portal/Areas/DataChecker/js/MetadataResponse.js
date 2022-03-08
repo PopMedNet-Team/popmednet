@@ -1,12 +1,10 @@
-/// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="common.ts" />
 var DataChecker;
 (function (DataChecker) {
     var Metadata;
     (function (Metadata) {
         var vm;
         var _bindingControl;
-        var ViewModel = /** @class */ (function () {
+        var ViewModel = (function () {
             function ViewModel(parameters) {
                 var _this = this;
                 this.requestID = ko.observable(null);
@@ -36,7 +34,6 @@ var DataChecker;
                     _this.hasEnrollment = ko.observable($.Enumerable.From(metadataTables).Where(function (t) { return t == MetadataTableTypes.Enrollment; }).Count() > 0);
                     _this.hasProcedure = ko.observable($.Enumerable.From(metadataTables).Where(function (t) { return t == MetadataTableTypes.Procedure; }).Count() > 0);
                     self.isLoaded(true);
-                    //resize the iframe to the contents plus padding for the export dropdown menu
                     $(window.frameElement).height($('html').height() + 70);
                 }).fail(function (error) {
                     alert(error);

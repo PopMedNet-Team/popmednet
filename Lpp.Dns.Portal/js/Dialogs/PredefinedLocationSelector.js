@@ -1,4 +1,3 @@
-/// <reference path="../../Scripts/page/Page.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18,7 +17,7 @@ var Dialog;
 (function (Dialog) {
     var PredefinedLocationSelector;
     (function (PredefinedLocationSelector) {
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(bindingControl) {
                 var _this = _super.call(this, bindingControl) || this;
@@ -75,7 +74,6 @@ var Dialog;
                     self.SelectedState('');
                     if (self.queryTimer > -1)
                         clearTimeout(self.queryTimer);
-                    //Set a timer that gets cancelled so that we can time it out.
                     self.queryTimer = setTimeout(function () {
                         var grid = $("#gResults").data("kendoGrid");
                         var lookup = self.Query();

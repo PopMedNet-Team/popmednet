@@ -13,9 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../../../../js/requests/details.ts" />
-/// <reference path="../../../../js/_layout.ts" />
-/// <reference path="./common.ts" />
 var Controls;
 (function (Controls) {
     var WFFileUpload;
@@ -23,7 +20,7 @@ var Controls;
         var ForAttachments;
         (function (ForAttachments) {
             var vm;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, tasks, docs, isForAttachments) {
                     var _this = _super.call(this, bindingControl, screenPermissions) || this;
@@ -45,7 +42,6 @@ var Controls;
                                 var filtered = ko.utils.arrayFilter(docs, function (childItems) { return item.RevisionSetID === childItems.RevisionSetID; });
                                 if (filtered.length > 1) {
                                     filtered.sort(function (a, b) {
-                                        //sort by version number - highest to lowest, and then date created - newest to oldest
                                         if (a.MajorVersion === b.MajorVersion) {
                                             if (a.MinorVersion === b.MinorVersion) {
                                                 if (a.BuildVersion === b.BuildVersion) {
@@ -91,7 +87,6 @@ var Controls;
                     };
                     self.onDeleteFile = function (data) {
                         var message = '<div class="alert alert-warning"><p>Are you sure you want to <strong>delete</strong> the attachment</p>' + '<p><strong>' + data.Name + '</strong>?</p></div>';
-                        //if (confirm('Are you sure you want to delete ' + document.FileName + '?')) {
                         Global.Helpers.ShowConfirm("Delete attachment", message).done(function () {
                             Dns.WebApi.Documents.Delete([data.ID])
                                 .done(function () {
@@ -108,9 +103,7 @@ var Controls;
                             return false;
                         }
                         item.Selected(true);
-                        //See if we have any with this path. If not, load it
                         if (!item.Loaded()) {
-                            //Load data for the given path.                
                             self.sFtpLoadPath(item, self.Credentials);
                         }
                         else {
@@ -205,7 +198,7 @@ var Controls;
                     }
                     var xhr = evt.XMLHttpRequest;
                     xhr.addEventListener("readystatechange", function (e) {
-                        if (xhr.readyState == 1 /* OPENED */) {
+                        if (xhr.readyState == 1) {
                             xhr.setRequestHeader('Authorization', "PopMedNet " + User.AuthToken);
                         }
                     });
@@ -229,7 +222,6 @@ var Controls;
                         Password: data.sFtpPassword(),
                         Port: data.sFtpPort()
                     };
-                    //Do an ajax call to validate the server credentials
                     $.ajax({
                         url: "/controls/wffileupload/VerifyFTPCredentials",
                         type: "POST",

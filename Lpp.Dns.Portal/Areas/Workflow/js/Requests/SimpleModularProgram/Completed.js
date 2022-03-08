@@ -1,4 +1,3 @@
-/// <reference path="../../../../../js/requests/details.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +20,7 @@ var Workflow;
         var Completed;
         (function (Completed) {
             var vm;
-            var VirtualRoutingViewModel = /** @class */ (function () {
+            var VirtualRoutingViewModel = (function () {
                 function VirtualRoutingViewModel(routing, group, responses) {
                     var _this = this;
                     this.Name = '';
@@ -83,10 +82,10 @@ var Workflow;
                 return VirtualRoutingViewModel;
             }());
             Completed.VirtualRoutingViewModel = VirtualRoutingViewModel;
-            var ViewModel = /** @class */ (function (_super) {
+            var ViewModel = (function (_super) {
                 __extends(ViewModel, _super);
                 function ViewModel(bindingControl, screenPermissions, responses, responseGroups, responseSearchTerms, viewResponseDetailPermissions, requestPermissions) {
-                    var _this = _super.call(this, bindingControl) || this;
+                    var _this = _super.call(this, bindingControl, screenPermissions) || this;
                     _this.responseIndex = 0;
                     _this.RoutingHistory = ko.observableArray([]);
                     _this.ViewChildResponse = function (id) {
@@ -122,7 +121,6 @@ var Workflow;
                         tl.append(ta);
                         $('#tabs').append(tl);
                     };
-                    _this = _super.call(this, bindingControl, screenPermissions) || this;
                     _this.ViewResponseDetailPermissions = viewResponseDetailPermissions || [];
                     var self = _this;
                     self.Routings = ko.observableArray(responses.RequestDataMarts || []);
@@ -143,7 +141,6 @@ var Workflow;
                         return self.SelectedCompleteRoutings().length > 0;
                     });
                     self.VirtualRoutings = [];
-                    //create the virtual routings, do the groups first
                     if (responseGroups.length > 0) {
                         ko.utils.arrayForEach(responseGroups, function (group) {
                             var routing = ko.utils.arrayFirst(self.Routings(), function (r) { return r.ResponseGroupID == group.ID; });
@@ -263,7 +260,6 @@ var Workflow;
             Completed.ViewModel = ViewModel;
             function init() {
                 var id = Global.GetQueryParam("ID");
-                //get the permissions for the view response detail, use to control the dialog view showing the result files
                 var getResponseDetailPermissions = Dns.WebApi.Security.GetWorkflowActivityPermissionsForIdentity(Requests.Details.rovm.Request.ProjectID(), 'D0E659B8-1155-4F44-9728-B4B6EA4D4D55', Requests.Details.rovm.RequestType.ID, [PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask, PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask]);
                 $.when(Dns.WebApi.Response.GetForWorkflowRequest(id, false), Dns.WebApi.Response.GetResponseGroupsByRequestID(id), Dns.WebApi.Requests.GetRequestSearchTerms(id), getResponseDetailPermissions, Dns.WebApi.Requests.GetPermissions([id], [PMNPermissions.Request.ViewHistory])).done(function (responses, responseGroups, searchTerms, responseDetailPermissions, requestPermissions) {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
@@ -276,7 +272,7 @@ var Workflow;
             }
             Completed.init = init;
             init();
-            var DisplaySearchTermViewModel = /** @class */ (function () {
+            var DisplaySearchTermViewModel = (function () {
                 function DisplaySearchTermViewModel(term) {
                     var _this = this;
                     this.VariableNames = [

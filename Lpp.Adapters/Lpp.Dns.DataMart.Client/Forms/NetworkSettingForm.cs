@@ -697,8 +697,8 @@ namespace Lpp.Dns.DataMart.Client
         {
             if (!IsHttpsUrl() && Properties.Settings.Default.ForceHTTPS)
             {
-                txtServiceUrl.Text.Trim().StartsWith("http://", StringComparison.InvariantCultureIgnoreCase);
-                txtServiceUrl.Text = txtServiceUrl.Text.Trim().Replace("http://", "https://");
+                if(txtServiceUrl.Text.Trim().StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
+                    txtServiceUrl.Text = txtServiceUrl.Text.Trim().Replace("http://", "https://");
                 cbCertificates.Enabled = true;
             }
         }
