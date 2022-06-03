@@ -1,13 +1,13 @@
 ﻿<br />
 <!-- ko stopBinding: true -->
 <div id="DataCheckerRequestReview">
-
-    <!-- ko stopBinding: true -->
-    <div id="qcViewWrapper">
-        @Html.Partial("~/areas/QueryComposer/Views/view.cshtml")
-    </div>
-    <!-- /ko-->
-
+    
+        <!-- ko stopBinding: true -->
+        <div id="qcViewWrapper">
+            @Html.Partial("~/areas/QueryComposer/Views/view.cshtml", "taskViewQueryComposer")
+        </div>
+        <!-- /ko-->
+    
     @* datamart table here read only for selected DM*@
     <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
         @*<button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="48B20001-BD0B-425D-8D49-A3B5015A2258" data-bind="click: Complete">Copy</button>*@

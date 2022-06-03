@@ -10,57 +10,57 @@
             </div>
             <div style="border-bottom: solid; border-width: 1px; width: 350px; padding-left:0px; margin-left:-50px; border-bottom-color: lightgray; ">
             </div>
-            <div id="AgeDistributionGrid">
+            <div id="AgeDistributionGrid">                
                 <div style="float:left; margin-right: 50px;">
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="0" id="lt0years" />&#60;0 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="0" />&#60;0 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="1" id="0-1years" />0-1 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="1" />0-1 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="2" id="2-4years" />2-4 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="2" />2-4 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="3" id="5-9years" />5-9 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="3" />5-9 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="4" id="10-14years" />10-14 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="4" />10-14 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="5" id="15-18years" />15-18 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="5" />15-18 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="6" id="19-21years" />19-21 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="6" />19-21 years</label>
                     </div>
                 </div>
                 <div style="float:left; margin-right: -30px;">
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="7" id="22-44years" />22-44 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="7" />22-44 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="8" id="45-64years" />45-64 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="8" />45-64 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="9" id="65-74years" />65-74 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="9" />65-74 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="10" id="75-110years" />75-110 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="10" />75-110 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="11" id="gt110years" />&#62;110 years</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="11" />&#62;110 years</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="12" id="nullormissingyears" />NULL or missing</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="12" />NULL or missing</label>
                     </div>
                     <div styly="margin-right: 0px;" class="checkbox">
-                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="13" id="vocdmsyears" />Values outside of CDM specifications</label>
+                        <label><input type="checkbox" data-bind="checked: Values().AgeDistributionValue" value="13" />Values outside of CDM specifications</label>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteAgeDistributionTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
             <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>

@@ -43,9 +43,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             if (activityResultID == null)
                 errors.AppendHtmlLine(CommonMessages.ActivityResultIDRequired);
 
-            if (_entity.SubmittedOn == null)
-                errors.AppendHtmlLine("Cannot approve or reject a request that has not been submitted");
-
             var permissions = await db.GetGrantedWorkflowActivityPermissionsForRequestAsync(_workflow.Identity, _entity, PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask);
 
             var allowApproveRejectSubmission = await ApproveRejectSubmission();
@@ -73,8 +70,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
         public async override Task<CompletionResult> Complete(string data, Guid? activityResultID)
         {
-            await db.LoadCollection(_entity, (r) => r.DataMarts);
-
             if (activityResultID.Value == SaveResultID)
             {
                 return new CompletionResult
@@ -82,6 +77,16 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     ResultID = SaveResultID
                 };
             }
+
+            var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
+
+            var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                     && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                     && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                    )
+                                                    .Select(tr => tr.Task.ID).ToArrayAsync();
+
+            await db.LoadCollection(_entity, (r) => r.DataMarts);
 
             if (activityResultID.Value == ApproveResultID)
             {
@@ -95,7 +100,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 var previousTask = await (from a in db.Actions
                                           join ar in db.ActionReferences on a.ID equals ar.TaskID
                                           where ar.ItemID == _entity.ID && a.Status == DTO.Enums.TaskStatuses.Complete
-                                          select a).FirstOrDefaultAsync();
+                                          select a).OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync();
 
                 var document = await (from d in db.Documents.AsNoTracking()
                                       join x in (
@@ -105,13 +110,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                                       ) on d.ID equals x
                                       orderby d.ItemID descending, d.RevisionSetID descending, d.CreatedOn descending
                                       select d).FirstOrDefaultAsync();
-
-
-                var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
-                                         && tr.Type == DTO.Enums.TaskItemTypes.Request
-                                         && tr.Task.Type == DTO.Enums.TaskTypes.Task
-                                        )
-                                        .Select(tr => tr.Task.ID).ToArrayAsync();
 
                 var attachments = await (from doc in db.Documents.AsNoTracking()
                                          join x in (
@@ -127,17 +125,13 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 {
                     dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                    _entity.SubmittedByID = previousStatus.UserID;
-                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
-
-                    //var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                     var currentResponse = responses.Where(rsp => rsp.RequestDataMartID == dm.ID).FirstOrDefault();
                     if (currentResponse == null)
                     {
                         currentResponse = dm.AddResponse(_workflow.Identity.ID);
                     }
-                    currentResponse.SubmittedByID = _workflow.Identity.ID;
-                    currentResponse.SubmittedOn = DateTime.UtcNow;
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
 
                     var existingRequestDocuments = await db.RequestDocuments.Where(rd => rd.ResponseID == currentResponse.ID).ToArrayAsync();
 
@@ -146,23 +140,22 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                         db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
                     }
 
-                    foreach (var attachment in attachments)
+                    foreach (var attachment in attachments.Where(att => !existingRequestDocuments.Any(ed => ed.RevisionSetID == att.RevisionSetID.Value)))
                     {
-                        if (!existingRequestDocuments.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
-                        {
-                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
-                        }
+                        db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
                     }
                 }
 
-                var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-                if (task != null)
-                {
-                    task.Status = DTO.Enums.TaskStatuses.Complete;
-                    task.EndOn = DateTime.UtcNow;
-                }
+                _entity.Status = DTO.Enums.RequestStatuses.Submitted;
 
                 await db.SaveChangesAsync();
+                await db.Entry(_entity).ReloadAsync();
+
+                await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted);
+
+                await MarkTaskComplete(task);
+
+                await NotifyRequestStatusChanged(DTO.Enums.RequestStatuses.AwaitingRequestApproval, DTO.Enums.RequestStatuses.Submitted);
 
                 return new CompletionResult
                 {
@@ -171,28 +164,74 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             }
             else if (activityResultID.Value == RejectResultID)
             {
-                foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval))
-                    dm.Status = DTO.Enums.RoutingStatus.RequestRejected;
+                //foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval))
+                //    dm.Status = DTO.Enums.RoutingStatus.RequestRejected;
 
-                _entity.Status = DTO.Enums.RequestStatuses.RequestRejected;
+                //_entity.Status = DTO.Enums.RequestStatuses.RequestRejected;
+                //_entity.RejectedByID = _workflow.Identity.ID;
+                //_entity.RejectedOn = DateTime.UtcNow;
+
+                //var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
+
+                //var originalStatus = _entity.Status;
+                //await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);
+
+                //await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.RequestRejected);
+
+                //await MarkTaskComplete(task);
+
+                //await db.SaveChangesAsync();
+
+                //return new CompletionResult
+                //{
+                //    ResultID = RejectResultID
+                //};
+
+                foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval))
+                {
+                    dm.Status = DTO.Enums.RoutingStatus.RequestRejected;
+                }
+
+                await db.SaveChangesAsync();
+                await db.Entry(_entity).ReloadAsync();
+
                 _entity.RejectedByID = _workflow.Identity.ID;
                 _entity.RejectedOn = DateTime.UtcNow;
+                //Update the workflow activity to request composition
+                _entity.WorkFlowActivityID = DataCheckerWorkflowConfiguration.ReviewRequestActivityID;
 
-                var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
-
-                var originalStatus = _entity.Status;
                 await SetRequestStatus(DTO.Enums.RequestStatuses.RequestRejected);
 
-                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.RequestRejected);
+                //create a completed task to show the request was rejected.
+                PmnTask rejectedTask = db.Actions.Add(PmnTask.CreateForWorkflowActivity(_entity.ID, DataCheckerWorkflowConfiguration.ReviewRequestActivityID, _workflow.ID, db));
+                rejectedTask.Subject = "Request Rejected Prior to Submission";
+                rejectedTask.Status = DTO.Enums.TaskStatuses.InProgress;
+
+                if (!data.IsNullOrEmpty())
+                {
+                    rejectedTask.Body = data.ToStringEx();
+
+                    var cmt = db.Comments.Add(new Comment
+                    {
+                        CreatedByID = _workflow.Identity.ID,
+                        ItemID = _entity.ID,
+                        Text = data.ToStringEx()
+                    });
+
+                    db.CommentReferences.Add(new CommentReference
+                    {
+                        CommentID = cmt.ID,
+                        Type = DTO.Enums.CommentItemTypes.Task,
+                        ItemTitle = rejectedTask.Subject,
+                        ItemID = rejectedTask.ID
+                    });
+                }
 
                 await MarkTaskComplete(task);
 
-                await db.SaveChangesAsync();
+                await NotifyRequestStatusChanged(DTO.Enums.RequestStatuses.AwaitingRequestApproval, DTO.Enums.RequestStatuses.RequestRejected);
 
-                return new CompletionResult
-                {
-                    ResultID = RejectResultID
-                };
+                return null;
             }
             else
             {

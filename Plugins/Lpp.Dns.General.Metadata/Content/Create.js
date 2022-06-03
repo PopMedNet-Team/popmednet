@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,32 +13,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="Models/RequestCriteria.ts" />
-/// <reference path="ViewModels/Criteria.ts" />
-/// <reference path="ViewModels/RequestCriteria.ts" />
-/// <reference path="ViewModels/Terms.ts" />
-/// <reference path="ViewModels/Terms/AgeRange.ts" />
-/// <reference path="ViewModels/Terms/AgeStratifier.ts" />
-/// <reference path="ViewModels/Terms/ClinicalSetting.ts" />
-/// <reference path="ViewModels/Terms/CodesTerm.ts" />
-/// <reference path="ViewModels/Terms/DateRange.ts" />
-/// <reference path="ViewModels/Terms/Project.ts" />
-/// <reference path="ViewModels/Terms/RequestStatus.ts" />
-/// <reference path="ViewModels/Terms/Sex.ts" />
-/// <reference path="ViewModels/Terms/ReportAggregationLevel.ts" />
 var MetadataQuery;
 (function (MetadataQuery) {
     var Create;
     (function (Create) {
         var vm;
         Create.ProjectsList = [];
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
-            //public ActivityDisabled: boolean;
             function ViewModel(metadataRequestData, hiddenDataControl, activityData, workplanTypes, requesterCenters, reportAggregationLevels, taskOrderID, activityID, activityProjectID, sourceTaskOrderID, sourceActivityID, sourceActivityProjectID) {
                 var _this = _super.call(this, hiddenDataControl) || this;
                 var self = _this;
-                // preload the criteria and terms if not specified
                 if (!(metadataRequestData && metadataRequestData.Criterias && metadataRequestData.Criterias.length > 0)) {
                     metadataRequestData = {
                         Criterias: [
@@ -73,7 +57,6 @@ var MetadataQuery;
                     };
                 }
                 ;
-                // This call will eventually lead to separation of Terms into Header and Body Terms.
                 _this.RequestCriteria = new RequestCriteriaViewModels.RequestCriteria(metadataRequestData, requesterCenters, workplanTypes, reportAggregationLevels);
                 _this.TaskActivities = new RequestCriteriaViewModels.TaskActivities(activityData);
                 _this.SearchTaskOrderID = ko.observable(taskOrderID);
@@ -85,11 +68,9 @@ var MetadataQuery;
                 _this.SearchSourceTaskOrderID = ko.observable(sourceTaskOrderID);
                 _this.SourceTaskActivities = new RequestCriteriaViewModels.TaskActivities(activityData);
                 _this.SearchTaskOrderID.subscribe(function (value) {
-                    //self.SearchActivityID(null);
                     self.raiseChange();
                 });
                 _this.SearchActivityID.subscribe(function (value) {
-                    //self.SearchActivityProjectID(null);
                     self.raiseChange();
                 });
                 _this.SearchActivityProjectID.subscribe(function (value) {
@@ -106,15 +87,10 @@ var MetadataQuery;
                 });
                 return _this;
             }
-            //This is the event handler for the button click to add
             ViewModel.prototype.AddCriteriaGroup = function (data, event) {
                 return true;
             };
             ViewModel.prototype.save = function () {
-                // 
-                //ko validation here
-                ////if ( !this.isValid() )
-                ////    return false;
                 var superdata = vm.RequestCriteria.toData();
                 var metadataRequestData = {
                     Criterias: superdata.Criterias,
@@ -148,7 +124,6 @@ var MetadataQuery;
         }(Dns.PageViewModel));
         Create.ViewModel = ViewModel;
         function init(metadataRequestData, bindingControl, hiddenDataControl, activityData, workplanTypes, requesterCenters, reportAggregationLevels, taskOrderID, activityID, activityProjectID, sourceTaskOrderID, sourceActivityID, sourceActivityProjectID) {
-            // initialize dynamic lookup lists...???
             vm = new MetadataQuery.Create.ViewModel(metadataRequestData, hiddenDataControl, activityData, workplanTypes, requesterCenters, reportAggregationLevels, taskOrderID, activityID, activityProjectID, sourceTaskOrderID, sourceActivityID, sourceActivityProjectID);
             ko.applyBindings(vm, bindingControl[0]);
             bindingControl.fadeIn(100);

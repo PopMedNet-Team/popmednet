@@ -145,7 +145,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                                      from dx in diagCodes
                                      from dx_codetype in codeTypes
                                      select new { DX = (string)dx , DP = (string)dp , Dx_CodeType = (string)dx_codetype };
-            #region HIDE
+            
 
             var Diagnosises = from row in dataTable.AsEnumerable()
                               select new DiagnosisItemData { DP = row.Field<string>("DP"), DX = row.Field<string>("DX"), Dx_CodeType = row.Field<string>("Dx_CodeType"), n = row.Field<double?>("n") };
@@ -204,8 +204,14 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                                               }).OrderBy(x => x.Partner)
                                           }).OrderBy(x => ConverterForRangeSort(x.Diagnosis)).ToArray();
 
-            return Json(new { DataPartners = dataPartners, OverallMetrics = overallMetrics, CodesByPartner = codesByPartner, PartnersByCode = partnersByCode }, JsonRequestBehavior.AllowGet);
-            #endregion
+            var jsonResult = Json(new { DataPartners = dataPartners, OverallMetrics = overallMetrics, CodesByPartner = codesByPartner, PartnersByCode = partnersByCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            jsonResult.RecursionLimit = int.MaxValue;
+
+            return jsonResult;
+
+            //return Json(new { DataPartners = dataPartners, OverallMetrics = overallMetrics, CodesByPartner = codesByPartner, PartnersByCode = partnersByCode }, JsonRequestBehavior.AllowGet);
+
         }
     }
 

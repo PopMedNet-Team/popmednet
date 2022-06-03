@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,17 +18,15 @@ var MetadataQuery;
     var CreateOrgSearch;
     (function (CreateOrgSearch) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
                 _this.Name = ko.observable(data != null ? data.Name : "");
                 _this.HealthPlanSystemDescription = ko.observable(data != null ? data.HealthPlanSystemDescription : "");
-                //Willing to participate in
                 _this.ObservationalResearch = ko.observable(data != null ? data.ObservationalResearch : false);
                 _this.PragamaticClincialTrials = ko.observable(data != null ? data.PragamaticClincialTrials : false);
                 _this.ClinicalTrials = ko.observable(data != null ? data.ClinicalTrials : false);
-                //Types of Data Collected by Organization
                 _this.None = ko.observable(data != null ? data.None : false);
                 _this.Inpatient = ko.observable(data != null ? data.Inpatient : false);
                 _this.Outpatient = ko.observable(data != null ? data.Outpatient : false);
@@ -43,7 +40,6 @@ var MetadataQuery;
                 _this.PatientReportedBehaviors = ko.observable(data != null ? data.PatientReportedBehaviors : false);
                 _this.PrescriptionOrders = ko.observable(data != null ? data.PrescriptionOrders : false);
                 _this.DataCollectedOther = ko.observable(data != null ? data.DataCollectedOther : false);
-                //EHRS Inpatient
                 _this.InpatientActive = ko.observable(false);
                 _this.InpatientNone = ko.observable(data != null ? data.InpatientNone : false);
                 _this.InpatientEpic = ko.observable(data != null ? data.InpatientEpic : false);
@@ -59,7 +55,6 @@ var MetadataQuery;
                 _this.InpatientCPSI = ko.observable(data != null ? data.InpatientCPSI : false);
                 _this.InpatientVistA = ko.observable(data != null ? data.InpatientVistA : false);
                 _this.InpatientSiemens = ko.observable(data != null ? data.InpatientSiemens : false);
-                //EHRS Outpatient
                 _this.OutpatientActive = ko.observable(false);
                 _this.OutpatientNone = ko.observable(data != null ? data.OutpatientNone : false);
                 _this.OutpatientEpic = ko.observable(data != null ? data.OutpatientEpic : false);
@@ -75,7 +70,6 @@ var MetadataQuery;
                 _this.OutpatientCPSI = ko.observable(data != null ? data.OutpatientCPSI : false);
                 _this.OutpatientSiemens = ko.observable(data != null ? data.OutpatientSiemens : false);
                 _this.OutpatientVistA = ko.observable(data != null ? data.OutpatientVistA : false);
-                //Data Models
                 _this.DataModelESP = ko.observable(data != null ? data.DataModelESP : false);
                 _this.DataModelMSCDM = ko.observable(data != null ? data.DataModelMSCDM : false);
                 _this.DataModelHMRON = ko.observable(data != null ? data.DataModelHMRON : false);
@@ -83,7 +77,6 @@ var MetadataQuery;
                 _this.DataModeli2b2 = ko.observable(data != null ? data.DataModeli2b2 : false);
                 _this.DataModelPCORI = ko.observable(data != null ? data.DataModelPCORI : false);
                 _this.DataModelOther = ko.observable(data != null ? data.DataModelOther : false);
-                //Inpatient Active Change
                 _this.InpatientActive.subscribe(function (value) {
                     _this.InpatientNone(value);
                     _this.InpatientEpic(value);
@@ -116,7 +109,6 @@ var MetadataQuery;
                     _this.OutpatientSiemens(value);
                     _this.OutpatientVistA(value);
                 });
-                //This binds the observables to update the form changed automatically
                 _this.SubscribeObservables();
                 return _this;
             }
@@ -124,11 +116,9 @@ var MetadataQuery;
                 var data = {
                     Name: this.Name(),
                     HealthPlanSystemDescription: this.HealthPlanSystemDescription(),
-                    //Willing to participate in
                     ObservationalResearch: this.ObservationalResearch(),
                     PragamaticClincialTrials: this.PragamaticClincialTrials(),
                     ClinicalTrials: this.ClinicalTrials(),
-                    //Types of Data Collected By Organization
                     None: this.None(),
                     Inpatient: this.Inpatient(),
                     Outpatient: this.Outpatient(),
@@ -142,7 +132,6 @@ var MetadataQuery;
                     PatientReportedBehaviors: this.PatientReportedBehaviors(),
                     PrescriptionOrders: this.PrescriptionOrders(),
                     DataCollectedOther: this.DataCollectedOther(),
-                    //EHRS Inpatient
                     InpatientNone: this.InpatientNone(),
                     InpatientEpic: this.InpatientEpic(),
                     InpatientNextGenHealthCare: this.InpatientNextGenHealthCare(),
@@ -157,7 +146,6 @@ var MetadataQuery;
                     InpatientCPSI: this.InpatientCPSI(),
                     InpatientSiemens: this.InpatientSiemens(),
                     InpatientVistA: this.InpatientVistA(),
-                    //EHRS Outpatient
                     OutpatientNone: this.OutpatientNone(),
                     OutpatientEpic: this.OutpatientEpic(),
                     OutpatientNextGenHealthCare: this.OutpatientNextGenHealthCare(),
@@ -172,7 +160,6 @@ var MetadataQuery;
                     OutpatientCPSI: this.OutpatientCPSI(),
                     OutpatientSiemens: this.OutpatientSiemens(),
                     OutpatientVistA: this.OutpatientVistA(),
-                    //DataModels
                     DataModelMSCDM: this.DataModelMSCDM(),
                     DataModelESP: this.DataModelESP(),
                     DataModelOMOP: this.DataModelOMOP(),
@@ -187,7 +174,7 @@ var MetadataQuery;
         }(Dns.PageViewModel));
         CreateOrgSearch.ViewModel = ViewModel;
         function init(data, hiddenDataControl, bindingControl) {
-            hiddenDataControl.val(JSON.stringify(data)); //Store it on first call
+            hiddenDataControl.val(JSON.stringify(data));
             vm = new ViewModel(data, hiddenDataControl);
             ko.applyBindings(vm, bindingControl[0]);
         }

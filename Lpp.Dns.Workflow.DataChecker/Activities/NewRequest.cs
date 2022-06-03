@@ -117,8 +117,8 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
             var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
 
             if (activityResultID.Value == SubmitResultID) //Submit
-            {                
-                await db.LoadCollection(_entity, (r) => r.DataMarts);
+            {   
+
                 var filters = new ExtendedQuery
                 {
                     Projects = (a) => a.ProjectID == _entity.ProjectID,
@@ -131,9 +131,10 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 await db.Entry(_entity).ReloadAsync();
 
                 var requestJSON = ParseRequestJSON();
-                var fileUploadTerms = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON);
+                var fileUploadTerm = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON).FirstOrDefault();
+                var originalStatus = _entity.Status;
 
-                if (fileUploadTerms.Any())
+                if (fileUploadTerm != null)
                 {
                     if (!permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
@@ -147,7 +148,8 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                         throw new Exception("At least one routing needs to be specified when submitting a requests.");
 
                     //prepare the request documents, save created documents same as legacy
-                    IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
+                    var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
+                    IList<Guid> documentRevisionSets = termValues.Documents.Select(d => d.RevisionSetID).ToArray();
 
                     IEnumerable<Document> documents = await (from d in db.Documents.AsNoTracking()
                                                              join x in (
@@ -174,8 +176,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     //save the changes to the request now since the trigger for routings will change the status invalidating the object before save
                     await db.SaveChangesAsync();
                     await db.Entry(_entity).ReloadAsync();
-
-                    var originalStatus = _entity.Status;
+                    
                     await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
 
                     var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
@@ -198,7 +199,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     {
                         dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                        var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                        var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                         if (currentResponse == null)
                         {
                             currentResponse = dm.AddResponse(_workflow.Identity.ID);
@@ -206,30 +207,27 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                         currentResponse.SubmittedByID = _workflow.Identity.ID;
                         currentResponse.SubmittedOn = DateTime.UtcNow;
 
+                        //get existing request documents associated to the response, add only missing documents
+                        var existingRequestDocuments = await db.RequestDocuments.Where(rd => rd.ResponseID == currentResponse.ID).ToArrayAsync();
+
                         //add the request document associations
                         for (int i = 0; i < documentRevisionSets.Count; i++)
                         {
-                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == documentRevisionSets[i]))
+                            if (!existingRequestDocuments.Any(ed => ed.RevisionSetID == documentRevisionSets[i]))
                             {
                                 db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
                             }
                         }
 
-                        foreach (var attachment in attachments)
+                        foreach (var attachment in attachments.Where(att => !existingRequestDocuments.Any(ed => ed.RevisionSetID == att.RevisionSetID.Value)))
                         {
-                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
-                            {
-                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
-                            }
+                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
                         }
                     }
 
                     await db.SaveChangesAsync();
                     //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                     await db.Entry(_entity).ReloadAsync();
-
-                    var fileUploadTerm = fileUploadTerms.FirstOrDefault();
-                    var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
 
                     //update the request.json term value to include system generated documents revisionsetIDs
                     termValues.Documents.Clear();
@@ -251,9 +249,16 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 else
                 {
 
-                    await db.LoadCollection(_entity, (r) => r.DataMarts);
+                    //var parentDocument = db.Documents.FirstOrDefault(d => d.ItemID == _entity.ID && d.Kind == DocumentKind && d.ParentDocumentID == null);
 
-                    var parentDocument = db.Documents.FirstOrDefault(d => d.ItemID == _entity.ID && d.Kind == DocumentKind && d.ParentDocumentID == null);
+                    Document parentDocument = await (from d in db.Documents.AsNoTracking()
+                                                     join x in (
+                                                         db.Documents.Where(dd => dd.ItemID == task.ID && dd.FileName == "request.json")
+                                                         .GroupBy(k => k.RevisionSetID)
+                                                         .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                     ) on d.ID equals x
+                                                     orderby d.ItemID descending, d.RevisionSetID descending, d.CreatedOn descending
+                                                     select d).FirstOrDefaultAsync();
 
                     byte[] documentContent = System.Text.UTF8Encoding.UTF8.GetBytes(_entity.Query ?? string.Empty);
                     var document = new Document
@@ -275,7 +280,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     };
 
                     db.Documents.Add(document);
-                    document.RevisionSetID = document.ID;
+                    document.RevisionSetID = parentDocument == null ? document.ID : parentDocument.RevisionSetID;
                     await db.SaveChangesAsync();
 
                     document.SetData(db, documentContent);
@@ -291,72 +296,72 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
 
                     DTO.Enums.RequestStatuses newRequestStatus = DTO.Enums.RequestStatuses.AwaitingRequestApproval;
 
+                    await db.LoadCollection(_entity, (r) => r.DataMarts);
+
+                    //set the request status, but do not refresh the entity yet
+                    await SetRequestStatus(newRequestStatus, false);
+
                     if (permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
+                        await db.Entry(_entity).ReloadAsync();
+                        newRequestStatus = DTO.Enums.RequestStatuses.Submitted;
                         _entity.SubmittedByID = _workflow.Identity.ID;
                         _entity.SubmittedOn = DateTime.UtcNow;
 
-                        await db.SaveChangesAsync();
-
-                        var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
-                                                 && tr.Type == DTO.Enums.TaskItemTypes.Request
-                                                 && tr.Task.Type == DTO.Enums.TaskTypes.Task
-                                                )
-                                                .Select(tr => tr.Task.ID).ToArrayAsync();
-
                         var attachments = await (from doc in db.Documents.AsNoTracking()
                                                  join x in (
-                                                         db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                         db.Documents.Where(dd => dd.ItemID == task.ID)
                                                          .GroupBy(k => k.RevisionSetID)
                                                          .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
                                                      ) on doc.ID equals x
-                                                 where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                                 where doc.ItemID == task.ID && doc.Kind == "Attachment.Input"
                                                  orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
                                                  select doc).ToArrayAsync();
 
-                        _entity.Status = DTO.Enums.RequestStatuses.Submitted;
                         foreach (var dm in _entity.DataMarts)
                         {
                             dm.Status = DTO.Enums.RoutingStatus.Submitted;
 
-                            var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                            var currentResponse = db.Responses.FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
                             if (currentResponse == null)
                             {
                                 currentResponse = dm.AddResponse(_workflow.Identity.ID);
                             }
+
                             currentResponse.SubmittedByID = _workflow.Identity.ID;
                             currentResponse.SubmittedOn = DateTime.UtcNow;
 
-                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == document.RevisionSetID.Value))
+                            //get existing request documents associated to the response, add only missing documents
+                            var existingRequestDocuments = await db.RequestDocuments.Where(rd => rd.ResponseID == currentResponse.ID).ToArrayAsync();
+
+                            if (!existingRequestDocuments.Any(ed => ed.RevisionSetID == document.RevisionSetID.Value))
                             {
                                 db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
                             }
 
-                            foreach (var attachment in attachments)
+                            foreach (var attachment in attachments.Where(att => !existingRequestDocuments.Any(ed => ed.RevisionSetID == att.RevisionSetID.Value)))
                             {
-                                if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
-                                {
-                                    db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
-                                }
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
                             }
                         }
                     }
                     else
                     {
-                        _entity.Status = DTO.Enums.RequestStatuses.AwaitingRequestApproval;
                         foreach (var dm in _entity.DataMarts)
+                        {
                             dm.Status = DTO.Enums.RoutingStatus.AwaitingRequestApproval;
+                        }
                     }
 
                     await db.SaveChangesAsync();
 
                     await db.Entry(_entity).ReloadAsync();
-                    await SetRequestStatus(newRequestStatus);
 
-
-                    await MarkTaskComplete(task);
+                    await NotifyRequestStatusChanged(originalStatus, newRequestStatus);
 
                 }
+
+                await MarkTaskComplete(task);
 
                 return new CompletionResult
                 {
@@ -398,55 +403,55 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 throw new ArgumentOutOfRangeException(CommonMessages.ActivityResultNotSupported);
             }
         }
-        string SerializeFileUploadsToXML(IEnumerable<Document> documents, string submitterEmail)
-        {
-            StringBuilder sb = new StringBuilder();
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
-            settings.CloseOutput = true;
-            settings.Indent = true;
-            settings.IndentChars = "\t";
-            settings.OmitXmlDeclaration = true;
-            settings.WriteEndDocumentOnClose = true;
+        //string SerializeFileUploadsToXML(IEnumerable<Document> documents, string submitterEmail)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
+        //    settings.CloseOutput = true;
+        //    settings.Indent = true;
+        //    settings.IndentChars = "\t";
+        //    settings.OmitXmlDeclaration = true;
+        //    settings.WriteEndDocumentOnClose = true;
 
-            using (System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(sb, settings))
-            {
-                writer.WriteStartElement("request_builder");
-                writer.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xmlns", "xsd", null, "http://www.w3.org/2001/XMLSchema");
+        //    using (System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(sb, settings))
+        //    {
+        //        writer.WriteStartElement("request_builder");
+        //        writer.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
+        //        writer.WriteAttributeString("xmlns", "xsd", null, "http://www.w3.org/2001/XMLSchema");
 
-                writer.WriteStartElement("header");
-                writer.WriteElementString("request_type", _entity.RequestType != null ? _entity.RequestType.Name : string.Empty);
-                writer.WriteElementString("request_name", _entity.Name);
-                if (!string.IsNullOrWhiteSpace(_entity.Description))
-                    writer.WriteElementString("request_description", _entity.Description);
-                if (_entity.DueDate.HasValue)
-                    writer.WriteElementString("due_date", _entity.DueDate.Value.ToShortDateString());
-                if (_entity.Activity != null)
-                    writer.WriteElementString("activity", _entity.Activity.Name);
-                if (_entity.Activity != null && !string.IsNullOrWhiteSpace(_entity.Activity.Description))
-                    writer.WriteElementString("activity_description", _entity.ActivityDescription);
-                writer.WriteElementString("submitter_email", submitterEmail);
-                writer.WriteEndElement();//close header
+        //        writer.WriteStartElement("header");
+        //        writer.WriteElementString("request_type", _entity.RequestType != null ? _entity.RequestType.Name : string.Empty);
+        //        writer.WriteElementString("request_name", _entity.Name);
+        //        if (!string.IsNullOrWhiteSpace(_entity.Description))
+        //            writer.WriteElementString("request_description", _entity.Description);
+        //        if (_entity.DueDate.HasValue)
+        //            writer.WriteElementString("due_date", _entity.DueDate.Value.ToShortDateString());
+        //        if (_entity.Activity != null)
+        //            writer.WriteElementString("activity", _entity.Activity.Name);
+        //        if (_entity.Activity != null && !string.IsNullOrWhiteSpace(_entity.Activity.Description))
+        //            writer.WriteElementString("activity_description", _entity.ActivityDescription);
+        //        writer.WriteElementString("submitter_email", submitterEmail);
+        //        writer.WriteEndElement();//close header
 
-                writer.WriteStartElement("request");
-                writer.WriteElementString("PackageManifest", string.Empty);
-                writer.WriteStartElement("Files");
+        //        writer.WriteStartElement("request");
+        //        writer.WriteElementString("PackageManifest", string.Empty);
+        //        writer.WriteStartElement("Files");
 
-                foreach (var d in documents)
-                {
-                    writer.WriteStartElement("File");
-                    writer.WriteElementString("Name", d.FileName);
-                    writer.WriteElementString("MimeType", d.MimeType);
-                    writer.WriteElementString("Size", d.Length.ToString());
-                    writer.WriteEndElement();
-                }
+        //        foreach (var d in documents)
+        //        {
+        //            writer.WriteStartElement("File");
+        //            writer.WriteElementString("Name", d.FileName);
+        //            writer.WriteElementString("MimeType", d.MimeType);
+        //            writer.WriteElementString("Size", d.Length.ToString());
+        //            writer.WriteEndElement();
+        //        }
 
-                writer.WriteEndElement();//close Files
-                writer.WriteEndElement();//close request
-            }
+        //        writer.WriteEndElement();//close Files
+        //        writer.WriteEndElement();//close request
+        //    }
 
-            return sb.ToString();
-        }
+        //    return sb.ToString();
+        //}
         internal class FileUploadValues
         {
             public IList<Document> Documents { get; set; }

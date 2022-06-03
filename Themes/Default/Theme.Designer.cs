@@ -19,7 +19,7 @@ namespace Theme.Default {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Theme {
@@ -70,7 +70,7 @@ namespace Theme.Default {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2021 PopMedNet, All Rights Reserved.
+        ///   Looks up a localized string similar to © 2022 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {
             get {
@@ -79,7 +79,7 @@ namespace Theme.Default {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p&gt;The FDA Sentinel applications are funded under FDA&apos;s Sentinel contract (Contract No. HHSF223200910006I). The Distributed Query Tool system is based on the AHRQ-supported Distributed Research Network project, funded as part of the Developing Evidence to Inform Decisions about Effectiveness (DEcIDE) program (Contract No. 290-05-0033).&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p&gt;The FDA Sentinel applications are funded under FDA&apos;s Sentinel contract (Contract No. 75F40119D10037). The Distributed Query Tool system is based on the AHRQ-supported Distributed Research Network project, funded as part of the Developing Evidence to Inform Decisions about Effectiveness (DEcIDE) program (Contract No. 290-05-0033).&lt;/p&gt;.
         /// </summary>
         internal static string Info {
             get {

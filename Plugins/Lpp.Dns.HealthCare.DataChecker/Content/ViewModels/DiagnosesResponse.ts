@@ -1,5 +1,6 @@
 /// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
 /// <reference path="../responses.common.ts" />
+
 module DataChecker.Diagnoses {
     var vm: ViewModel;
     var _bindingControl: JQuery;
@@ -18,10 +19,10 @@ module DataChecker.Diagnoses {
 
         constructor(model: IDiagnosesResultsModelData) {
             this._model = model;
-
+            
             this.Metrics = ko.observableArray([new ResponseMetricsItem("Overall Metrics",0 ), new ResponseMetricsItem("Count by Data Partner", 1), new ResponseMetricsItem("Data Partner Contribution", 2) ]);
             this.SelectedMetric = ko.observable(this.Metrics()[0]);
-
+            
             var table: any = this._model.RawData.Table;
             var codes: Array<ICodeTypeKey> = $.Enumerable.From(table).GroupBy((x: IDiagnosesItemData) => <ICodeTypeKey>{ Code: x.DX, CodeType: x.Dx_Codetype }, (x: IDiagnosesItemData) => x, (key: ICodeTypeKey, group) => key, (key: ICodeTypeKey) => { return key.Code.toString() + key.CodeType.toString(); }).ToArray();
             var total_n = $.Enumerable.From(table).Sum((x: IDiagnosesItemData) => x.n);

@@ -76,7 +76,8 @@ module RequestType.Details {
                 CriteriaGroupTemplates: criteriaGroupTemplates,
                 HiddenTerms: hiddenTerms,
                 SupportsMultiQuery: ko.pureComputed<boolean>(() => self.RequestType.SupportMultiQuery()),
-                TermsObserver: termsObserver
+                TermsObserver: termsObserver,
+                ProjectID: null
             });
 
             self.AddableTerms = ko.computed<Dns.Interfaces.ITermDTO[]>(() => {

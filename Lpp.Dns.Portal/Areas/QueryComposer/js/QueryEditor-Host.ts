@@ -36,6 +36,7 @@ namespace Plugins.Requests.QueryBuilder {
         HiddenTerms: Dns.Interfaces.ITemplateTermDTO[]
         SupportsMultiQuery: KnockoutObservable<boolean>;
         TermsObserver: Plugins.Requests.QueryBuilder.TermsObserver
+        ProjectID: any;
     }
 
     export interface IQueryEditorHost {
@@ -75,6 +76,7 @@ namespace Plugins.Requests.QueryBuilder {
             
             this.Queries = ko.observableArray<Dns.ViewModels.QueryComposerQueryViewModel>(ko.utils.arrayMap(this.Options.Templates, (template: Dns.ViewModels.TemplateViewModel) => {
                 let q: Dns.ViewModels.QueryComposerQueryViewModel = null;
+                
                 if (template.Type() == Dns.Enums.TemplateTypes.Request) {
                     //full request template that represents a full cohort query
                     q = new Dns.ViewModels.QueryComposerQueryViewModel((template.Data() || '').length > 0 ? JSON.parse(template.Data()) : null);
@@ -86,6 +88,8 @@ namespace Plugins.Requests.QueryBuilder {
                         template.ComposerInterface(Dns.Enums.QueryComposerInterface.PresetQuery);
                     }
                 }
+                
+                //TODO: potentially fix any invalid/removed terms - ie. DataChecker query type term (moved to header)
                 
                 //set the query header information to the template properties by reference
                 q.Header.ID = template.ID;

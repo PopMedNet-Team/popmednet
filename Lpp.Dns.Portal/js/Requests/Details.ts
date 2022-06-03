@@ -1347,7 +1347,6 @@ module Requests.Details {
                 });
             }
 
-
             // ===== Scroll to Top ==== 
             $(window).scroll(() => {
                 if ($(this).scrollTop() >= 450) {

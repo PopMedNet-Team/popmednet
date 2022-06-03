@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var MetaData;
     var DisplayResponse;
     (function (DisplayResponse) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data) {
                 var _this = _super.call(this, null) || this;
@@ -45,7 +44,7 @@ var MetaData;
             });
         }
         DisplayResponse.init = init;
-        var ResultViewModel = /** @class */ (function () {
+        var ResultViewModel = (function () {
             function ResultViewModel(data) {
                 this.Expanded = ko.observable(false);
                 this.ID = ko.observable(data.ID);

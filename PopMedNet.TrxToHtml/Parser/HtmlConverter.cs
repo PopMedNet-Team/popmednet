@@ -389,7 +389,7 @@ namespace PopMedNet.TrxToHtml.Parser
 			HtmlNode htmlNode7 = doc.CreateElement("tbody");
 			foreach (TestClassRun testClass in run.TestClassList)
 			{
-				TestClassRun testClassRun = previousRun.TestClassList.Where((TestClassRun x) => x.FullName == testClass.Name).FirstOrDefault();
+				TestClassRun previousTestClassRun = previousRun.TestClassList.Where((TestClassRun x) => x.FullName == testClass.Name).FirstOrDefault();
 				HtmlNode htmlNode8 = doc.CreateElement("tr");
 				HtmlNode htmlNode9 = doc.CreateElement("td");
 				HtmlNode htmlNode10 = doc.CreateElement("a");
@@ -408,13 +408,13 @@ namespace PopMedNet.TrxToHtml.Parser
 				htmlNode11.SetAttributeValue("style", "text-align:center;");
 				htmlNode8.AppendChild(htmlNode11);
 				HtmlNode htmlNode13 = doc.CreateElement("td");
-				htmlNode13.InnerHtml = ((testClassRun != null) ? testClassRun.Success.ToString() : "0");
+				htmlNode13.InnerHtml = ((previousTestClassRun != null) ? previousTestClassRun.Success.ToString() : "0");
 				htmlNode8.AppendChild(htmlNode13);
 				HtmlNode htmlNode14 = doc.CreateElement("td");
-				htmlNode14.InnerHtml = ((testClassRun != null) ? testClassRun.Failed.ToString() : "0");
+				htmlNode14.InnerHtml = ((previousTestClassRun != null) ? previousTestClassRun.Failed.ToString() : "0");
 				htmlNode8.AppendChild(htmlNode14);
 				HtmlNode htmlNode15 = doc.CreateElement("td");
-				htmlNode15.InnerHtml = ((testClassRun != null) ? testClassRun.Ignored.ToString() : "0");
+				htmlNode15.InnerHtml = ((previousTestClassRun != null) ? previousTestClassRun.Ignored.ToString() : "0");
 				htmlNode8.AppendChild(htmlNode15);
 				HtmlNode htmlNode16 = doc.CreateElement("td");
 				htmlNode16.InnerHtml = testClass.Success.ToString();
@@ -426,13 +426,13 @@ namespace PopMedNet.TrxToHtml.Parser
 				htmlNode18.InnerHtml = testClass.Ignored.ToString();
 				htmlNode8.AppendChild(htmlNode18);
 				HtmlNode htmlNode19 = doc.CreateElement("td");
-				htmlNode19.InnerHtml = ((testClassRun != null) ? testClass.Regressions(testClassRun).ToString() : "0");
+				htmlNode19.InnerHtml = ((previousTestClassRun != null) ? testClass.Regressions(previousTestClassRun).ToString() : "0");
 				htmlNode8.AppendChild(htmlNode19);
 				HtmlNode htmlNode20 = doc.CreateElement("td");
 				htmlNode20.InnerHtml = testClass.Duration.TotalSeconds.ToString("0.00");
 				htmlNode20.SetAttributeValue("style", "text-align: right;");
 				htmlNode8.AppendChild(htmlNode20);
-				if (testClassRun != null && testClass.Regressions(testClassRun) > 0.0)
+				if (previousTestClassRun != null && testClass.Regressions(previousTestClassRun) > 0.0)
 				{
 					htmlNode8.SetAttributeValue("style", "background-color:yellow;");
 				}
@@ -587,7 +587,7 @@ namespace PopMedNet.TrxToHtml.Parser
 			htmlNode5.InnerHtml = m.Duration.TotalSeconds.ToString("0.00");
 			htmlNode5.SetAttributeValue("style", "text-align: right;");
 			htmlNode.AppendChild(htmlNode5);
-			if (testMethodRun.Status == "Passed" && m.Status == "Failed")
+			if (testMethodRun!= null && testMethodRun.Status == "Passed" && m.Status == "Failed")
 			{
 				htmlNode.SetAttributeValue("style", "background-color: yellow;");
 			}

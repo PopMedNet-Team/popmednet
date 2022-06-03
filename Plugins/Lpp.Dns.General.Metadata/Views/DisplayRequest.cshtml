@@ -1,7 +1,7 @@
 ﻿@using Lpp.Mvc
 @using Lpp.Dns.Portal
 @model Lpp.Dns.General.Metadata.Models.MetadataSearchModel
-@{ 
+@{
     this.Stylesheet("MetadataSearch.css");
     var id = Html.UniqueId();
 }
@@ -10,7 +10,7 @@
     var KOViewModel = true;     // indicates this page is built with KO templates
 </script>
 
-<div id="AgeRangeTerm"  style="display: none">
+<div id="AgeRangeTerm" style="display: none">
     <span>Age Range</span>
     <div class="ui-form">
         <div class="Field">
@@ -46,11 +46,11 @@
     <input type="hidden" id="CodesTerm_Codes" name="CodesTerm_Codes" data-bind="value: Codes" />
     <label>Code Set</label>
 
-    <select data-bind="options: MetadataQuery.Create.ViewModel.MDQCodeSetList, 
+    <select data-bind="options: MetadataQuery.Create.ViewModel.MDQCodeSetList,
         optionsText: 'Key',
         optionsValue: 'Value',
         value: CodesTermType" disabled="disabled">
-    </select >   
+    </select>
 
     <label>Codes</label> <span data-bind="text: Codes"> </span>
 </div>
@@ -58,7 +58,7 @@
 <div id="DateRangeTerm" style="display: none">
     <div style="width: 240px;">
         <label data-bind="text: Title"></label>
-        <input type="text" data-bind="value: StartDate() != null ? moment.utc(StartDate()).local().format('MM/DD/YYYY') : ''" style="width: 100px;" disabled="disabled" />&nbsp;-&nbsp; 
+        <input type="text" data-bind="value: StartDate() != null ? moment.utc(StartDate()).local().format('MM/DD/YYYY') : ''" style="width: 100px;" disabled="disabled" />&nbsp;-&nbsp;
         <input type="text" data-bind="value: EndDate() != null ? moment.utc(EndDate()).local().format('MM/DD/YYYY') : ''" style="width: 100px;" disabled="disabled" />
     </div>
 </div>
@@ -74,7 +74,7 @@
 
 <div id="RequestStatusTerm" style="display: none">
     <label>Request Status</label>
-    <select style="width:270px; "  data-bind="options: MetadataQuery.Create.ViewModel.RequestStatusList,
+    <select style="width:270px; " data-bind="options: MetadataQuery.Create.ViewModel.RequestStatusList,
         optionsText: 'text',
         optionsValue: 'value',
         value: RequestStatus" disabled="disabled">
@@ -170,7 +170,7 @@
                                 <label>Budget Activity Project</label>
                                 <input id="cboSearchActivityProject" data-bind="enable: false, kendoDropDownList: { enable: false, data:TaskActivities.dsActivityProjects, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchActivity', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}, value: SearchActivityProjectID" style="width:100%;" disabled="disabled" />
                             </li>
-                        </ul>                                  
+                        </ul>
                     </li>
                 </ol>
                 <br style="clear: both;" />
@@ -190,34 +190,11 @@
     </div>
 </div>
 
-@*bootstrap the RequestCriteria support*@
-<script src="@this.Resource("Models/RequestCriteria.js")"></script>
-<script src="@this.Resource("ViewModels/RequestCriteria.js")"></script>
-<script src="@this.Resource("Models/Criteria.js")"></script>
-<script src="@this.Resource("ViewModels/Criteria.js")"></script>
-<script src="@this.Resource("Models/Terms.js")"></script>
-<script src="@this.Resource("ViewModels/Terms.js")"></script>
-@*bootstrap the terms*@
-<script src="@this.Resource("Models/Terms/AgeRange.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/AgeRange.js")"></script>
-<script src="@this.Resource("Models/Terms/AgeStratifier.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/AgeStratifier.js")"></script>
-<script src="@this.Resource("Models/Terms/ClinicalSetting.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/ClinicalSetting.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/CodesTerm.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/DateRange.js")"></script>
-<script src="@this.Resource("Models/Terms/Project.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/Project.js")"></script>
-<script src="@this.Resource("Models/Terms/RequestStatus.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/RequestStatus.js")"></script>
-<script src="@this.Resource("Models/Terms/Sex.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/Sex.js")"></script>
-<script src="@this.Resource("Models/Terms/WorkplanType.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/WorkplanType.js")"></script>
-<script src="@this.Resource("Models/Terms/RequesterCenter.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/RequesterCenter.js")"></script>
-<script src="@this.Resource("Models/Terms/ReportAggregationLevel.js")"></script>
-<script src="@this.Resource("ViewModels/Terms.ReportAggregationLevel.js")"></script>
+<script src="@this.Resource("Models/DataCheckerModels.js")"></script>
+<script src="@this.Resource("ViewModels/DataCheckerViewModels.js")"></script>
+<script src="@this.Resource("Models/RequestCriteriaModels.js")"></script>
+<script src="@this.Resource("ViewModels/RequestCriteriaViewModels.js")"></script>
+
 @*bootstrap the page*@
 <script src="@this.Resource("Create.js")"></script>
 
@@ -236,7 +213,7 @@
         var sourceTaskOrder = '@Model.SourceTaskOrder';
         var sourceActivity = '@Model.SourceActivity';
         var sourceActivityProject = '@Model.SourceActivityProject';
-       
+
         MetadataQuery.Create.init($.parseJSON(json), $("#fsCriteria"), $("#CriteriaGroupsJSON"), $.parseJSON(activityjson), $.parseJSON(workplanTypeJson), $.parseJSON(requesterCenterJson), $.parseJSON(reportAggregationLevelJson),
             taskOrder, activity, activityProject, sourceTaskOrder, sourceActivity, sourceActivityProject);
 

@@ -506,7 +506,7 @@ namespace Lpp.Dns.Api.Events
         [HttpGet]
         public IQueryable<ProjectDataMartEventDTO> GetProjectDataMartEventPermissions(Guid projectID, Guid? dataMartID = null)
         {
-            var result = (from a in DataContext.Secure<ProjectDataMartEvent>(Identity) where a.ProjectID == projectID && (dataMartID == null || a.DataMartID == dataMartID.Value) select a).Map<ProjectDataMartEvent, ProjectDataMartEventDTO>();
+            var result = (from a in DataContext.Secure<ProjectDataMartEvent>(Identity) where a.ProjectID == projectID && (dataMartID == null || a.DataMartID == dataMartID.Value) && !a.DataMart.Deleted select a).Map<ProjectDataMartEvent, ProjectDataMartEventDTO>();
 
             return result;
         }

@@ -1,18 +1,6 @@
 /// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
-
-/// <reference path="Models/RequestCriteria.ts" />
-/// <reference path="ViewModels/Criteria.ts" />
-/// <reference path="ViewModels/RequestCriteria.ts" />
-/// <reference path="ViewModels/Terms.ts" />
-/// <reference path="ViewModels/Terms/AgeRange.ts" />
-/// <reference path="ViewModels/Terms/AgeStratifier.ts" />
-/// <reference path="ViewModels/Terms/ClinicalSetting.ts" />
-/// <reference path="ViewModels/Terms/CodesTerm.ts" />
-/// <reference path="ViewModels/Terms/DateRange.ts" />
-/// <reference path="ViewModels/Terms/Project.ts" />
-/// <reference path="ViewModels/Terms/RequestStatus.ts" />
-/// <reference path="ViewModels/Terms/Sex.ts" />
-/// <reference path="ViewModels/Terms/ReportAggregationLevel.ts" />
+/// <reference path="../../../Lpp.Dns.Api/Scripts/Lpp.Dns.Interfaces.ts" />
+/// <reference path="models/requestcriteriamodels.ts" />
 
 module MetadataQuery.Create {
     var vm: ViewModel;

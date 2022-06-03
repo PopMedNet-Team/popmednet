@@ -391,6 +391,7 @@ semver.ps1
 /Lpp.Dns.Api.Tests/ConnectionStrings.config
 Lpp.Dns.Portal/Scripts/PmnGrid/PmnGrid.js
 /DMCS/PopMedNet.DMCS/appsettings.Development.json
+/Lpp.Dns.Portal/js/_rootlayout.js.map
 /PopMedNet.Hangfire.ServerManagement/ConnectionStrings.config
 /Tests/PopMedNet.UITests/App.config
 /DMCS/PopMedNet.DMCS.Tests/appsettings.json

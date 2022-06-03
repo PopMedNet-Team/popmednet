@@ -12,7 +12,7 @@ namespace Lpp.Dns.DataMart.Model.QueryComposer.Adapters.DataChecker.Model
     public class Metadata : Lpp.Objects.Entity
     {
         [Key, Column("DP", TypeName = "nvarchar", Order = 0), StringLength(200)]
-        public string DataPartner { get; set; }
+        public string DP { get; set; }
         [ Column("ETL", TypeName = "smallint")]
         public Int16 ETL { get; set; }
         [ Column("DIA_MIN", TypeName = "datetime")]

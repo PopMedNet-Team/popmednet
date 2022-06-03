@@ -310,8 +310,8 @@ namespace Lpp.Dns.Workflow.Default.Activities
 
                     await db.LoadCollection(_entity, (r) => r.DataMarts);
 
-                    //set the request status, but do not refresh the entity yet
-                    await SetRequestStatus(newRequestStatus, false);
+                    ////set the request status, but do not refresh the entity yet
+                    //await SetRequestStatus(newRequestStatus, false);
 
                     if (permissions.Contains(PermissionIdentifiers.Request.SkipSubmissionApproval))
                     {
@@ -364,6 +364,9 @@ namespace Lpp.Dns.Workflow.Default.Activities
                             dm.Status = DTO.Enums.RoutingStatus.AwaitingRequestApproval;
                         }
                     }
+
+                    //set the request status, but do not refresh the entity yet
+                    await SetRequestStatus(newRequestStatus, false);
 
                     await db.SaveChangesAsync();
 

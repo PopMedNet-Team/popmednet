@@ -44,7 +44,8 @@ var Templates;
                     CriteriaGroupTemplates: criteriaGroupTemplates,
                     HiddenTerms: [],
                     SupportsMultiQuery: ko.observable(false),
-                    TermsObserver: termsObserver
+                    TermsObserver: termsObserver,
+                    ProjectID: null
                 });
                 _this.CanSave = ko.observable(_this.Template.CreatedByID() == User.ID || _this.HasPermission(PMNPermissions.Templates.Edit));
                 return _this;

@@ -1,6 +1,11 @@
 ﻿@using Lpp.Dns.Portal.Areas.QueryComposer
 @using Lpp.QueryComposer
 @using System.Linq;
+@{ 
+    string containerID = string.IsNullOrEmpty(Model) ? "QueryComposerOverview" : Model;
+    string instanceID = Guid.NewGuid().ToString("D");
+}
+
 <script src="/Areas/QueryComposer/js/View.js"></script>
 <style>
     .criteria-block {
@@ -23,16 +28,16 @@
         margin-top: 14px;
     }
 </style>
-<section id="QueryComposerOverview">
+<section id="@containerID">
 
     <div class="collapse-group" data-bind="foreach:{ data: Request.Queries, as:'query' }">
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" data-bind="attr:{ 'id':'view-' + query.Header.ID }">
+            <div class="panel-heading" role="tab" data-bind="attr:{ 'id':'view-@instanceID-' + query.Header.ID }">
                 <h4 class="panel-title">
-                    <button class="btn btn-link trigger" data-toggle="collapse" aria-expanded="true" data-bind="attr:{'id':'query-header-view-' + query.Header.ID, 'data-target':'#query-container-view-' + query.Header.ID, 'aria-controls':'query-container-view-' + query.Header.ID}"><span>Cohort: </span><span data-bind="text:query.Header.Name"></span></button>
+                    <button class="btn btn-link trigger" data-toggle="collapse" aria-expanded="true" data-bind="attr:{'id':'query-header-view-@instanceID-' + query.Header.ID, 'data-target':'#query-container-view-@instanceID-' + query.Header.ID, 'aria-controls':'query-container-view-@instanceID-' + query.Header.ID}"><span>Cohort: </span><span data-bind="text:query.Header.Name"></span></button>
                 </h4>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" data-bind="attr:{ 'id': 'query-container-view-' + query.Header.ID, 'aria-labelledby': 'view-' + query.Header.ID}">
+            <div class="panel-collapse collapse in" role="tabpanel" data-bind="attr:{ 'id': 'query-container-view-@instanceID-' + query.Header.ID, 'aria-labelledby': 'view-@instanceID-' + query.Header.ID}">
                 <div class="panel-body">
 
                     <h2>Criteria Groups</h2>

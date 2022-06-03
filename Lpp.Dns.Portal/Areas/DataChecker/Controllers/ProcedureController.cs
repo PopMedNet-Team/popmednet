@@ -143,8 +143,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                                         from dx in diagCodes
                                         from px_codetype in codeTypes
                                         select new { PX = (string)dx, DP = (string)dp, Px_CodeType = (string)px_codetype };
-            #region HIDE
-
+            
             var Procedurees = from row in dataTable.AsEnumerable()
                               select new ProcedureItemData { DP = row.Field<string>("DP"), PX = row.Field<string>("PX"), Px_CodeType = row.Field<string>("Px_CodeType"), n = row.Field<double?>("n") };
             IEnumerable<ProcedureItemData> rawResults = (from sdp in ProcedureDataPartners
@@ -199,12 +198,22 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                                                   Partner = dp,
                                                   Total = rawResults.Where(x => x.DP == dp).Sum(x => (double?)(x.n ?? 0d)) ?? 0d,
                                                   Count = k.Where(x => x.DP == dp).Sum(x => (double?)(x.n ?? 0d)) ?? 0d
-                                              }).OrderBy(x => x.Partner)
+                                              }).OrderBy(x => x.Partner).ToArray()
                                           }).OrderBy(x => ConverterForRangeSort(x.Procedure)).ToArray();
 
-            return Json(new { DataPartners = dataPartners, OverallMetrics = overallMetrics, CodesByPartner = codesByPartner, PartnersByCode = partnersByCode }, JsonRequestBehavior.AllowGet);
-            #endregion
+            var resultObj = new { DataPartners = dataPartners, OverallMetrics = overallMetrics, CodesByPartner = codesByPartner, PartnersByCode = partnersByCode };
+
+            //return Json(resultObj, JsonRequestBehavior.AllowGet);
+            return new JsonResult {
+                Data = resultObj,
+                ContentEncoding = System.Text.Encoding.UTF8,
+                ContentType = "application/json",
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = int.MaxValue
+            };
         }
+
+       
     }
 
     public class ProcedureValues

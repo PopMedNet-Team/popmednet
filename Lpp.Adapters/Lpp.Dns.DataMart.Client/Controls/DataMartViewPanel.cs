@@ -251,7 +251,7 @@ namespace Lpp.Dns.DataMart.Client.Controls
         public void InitializeResponseDocumentsFromCache(Lib.Caching.DocumentCacheManager cache)
         {
             _cache = cache;
-            this.documents = (cache.GetResponseDocuments() ?? Array.Empty<Document>()).ToArray();
+            this.documents = (cache.GetResponseDocuments().Cast<Document>() ?? Array.Empty<Document>()).ToArray();
 
             FileListDataSource = documents;
 

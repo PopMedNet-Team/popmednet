@@ -159,7 +159,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                 }
 
                 //log the save against the current task
-                await LogTaskModified();
+                await LogTaskModified("Grouped results.");
 
                 await db.SaveChangesAsync();
             }
@@ -204,7 +204,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     routing.ResultsGrouped = false;
                 }
 
-                await LogTaskModified();
+                await LogTaskModified("Ungrouped results.");
                 await db.SaveChangesAsync();
             }
             else if (activityResultID.Value == AddDataMartsResultID)
@@ -305,7 +305,9 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                             && dm.Responses.Any(r => resubmitModel.Responses.Contains(r.ID) || (r.ResponseGroupID.HasValue && resubmitModel.Responses.Contains(r.ResponseGroupID.Value)))
                             select dm
                     ).ToArrayAsync();
-                
+
+                DateTime reSubmittedOn = DateTime.UtcNow;
+
                 var revisions = await (from rdm in db.RequestDataMarts
                                        join rdmr in db.Responses on rdm.ID equals rdmr.RequestDataMartID
                                        join rdoc in db.RequestDocuments on rdmr.ID equals rdoc.ResponseID
@@ -335,7 +337,6 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                                          select doc).ToArrayAsync();
 
 
-                DateTime reSubmittedOn = DateTime.UtcNow;
                 foreach (var dm in datamarts)
                 {
                     var response = dm.AddResponse(_workflow.Identity.ID);
@@ -355,7 +356,7 @@ namespace Lpp.Dns.Workflow.DataChecker.Activities
                     
                 }
 
-                _entity.Status = DTO.Enums.RequestStatuses.Submitted;
+                _entity.Status = DTO.Enums.RequestStatuses.Resubmitted;
                 var task = await PmnTask.GetActiveTaskForRequestActivityAsync(_entity.ID, ID, db);
 
                 await LogTaskModified();

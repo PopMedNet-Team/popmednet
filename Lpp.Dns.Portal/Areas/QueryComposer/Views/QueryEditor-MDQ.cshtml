@@ -1,7 +1,7 @@
 ﻿@using Lpp.Dns.Portal.Areas.QueryComposer;
 @using Lpp.QueryComposer;
 <section data-bind="attr:{ id: 'mdq-' + Options.Query.Header.ID() }">
-    <div style="margin-bottom:1em;display:none;" data-bind="visible: IsPresetQuery() == false && !IsCriteriaGroupEdit">
+    <div style="margin-bottom:1em;display:none;" data-bind="visible: !IsPresetQuery && !IsCriteriaGroupEdit">
         <div class="row">
             <div class="col-sm-2">
                 <h2>Criteria Groups</h2>
@@ -25,8 +25,8 @@
                 <div class="panel-heading">
 
                     <button class="btn btn-danger btn-sm pull-right" style="margin-left:15px;" data-bind="visible: ($index() > 0) && !$parents[0].IsPresetQuery(), click: $parents[0].onRemoveCriteriaGroup.bind($parents[1], $data)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
-                    <button class="btn btn-primary btn-sm pull-right" style="margin-left:15px;" data-bind="click: $component.onSaveCriteriaGroup.bind($component, $data), visible:!$component.IsCriteriaGroupEdit"><span class="glyphicon glyphicon-share"></span> Save as Template</button>
-                    <div class="dropdown pull-right" data-bind="visible:$component.FilteredCriteriaGroupTemplates().length > 0 && $component.IsCriteriaGroupEdit == false">
+                    <button class="btn btn-primary btn-sm pull-right" style="margin-left:15px;" data-bind="click: $component.onSaveCriteriaGroup.bind($component, $data), visible:!$component.IsCriteriaGroupEdit && !$component.IsPresetQuery"><span class="glyphicon glyphicon-share"></span> Save as Template</button>
+                    <div class="dropdown pull-right" data-bind="visible:$component.FilteredCriteriaGroupTemplates().length > 0 && !$component.IsCriteriaGroupEdit && !$component.IsPresetQuery">
                         <button id="btnCriteriaGroupDropDown" type="button" data-toggle="dropdown" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-briefcase"></span> Criteria Templates <span class="caret"></span></button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="btnCriteriaGroupDropDown" data-bind="foreach: $component.FilteredCriteriaGroupTemplates">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="text: Name, click: $component.ApplyCriteriaGroupTemplate.bind($component, $parent, $data)"></a></li>

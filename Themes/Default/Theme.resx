@@ -122,11 +122,11 @@
     <comment>This is the URL that the Contact Us Link goes to</comment>
   </data>
   <data name="Footer" xml:space="preserve">
-    <value>© 2021 PopMedNet, All Rights Reserved</value>
+    <value>© 2022 PopMedNet, All Rights Reserved</value>
     <comment>This is the footer information in the Footer of Lpp.Dns.Portal/Views/_RootLayout.cshtml </comment>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>&lt;p&gt;The FDA Sentinel applications are funded under FDA's Sentinel contract (Contract No. HHSF223200910006I). The Distributed Query Tool system is based on the AHRQ-supported Distributed Research Network project, funded as part of the Developing Evidence to Inform Decisions about Effectiveness (DEcIDE) program (Contract No. 290-05-0033).&lt;/p&gt;</value>
+    <value>&lt;p&gt;The FDA Sentinel applications are funded under FDA's Sentinel contract (Contract No. 75F40119D10037). The Distributed Query Tool system is based on the AHRQ-supported Distributed Research Network project, funded as part of the Developing Evidence to Inform Decisions about Effectiveness (DEcIDE) program (Contract No. 290-05-0033).&lt;/p&gt;</value>
     <comment>This is the Funding Information in the Lpp.Dns.Portal/Views/Home/Info.cshtml</comment>
   </data>
   <data name="LogoImage" xml:space="preserve">

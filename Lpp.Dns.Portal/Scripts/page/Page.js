@@ -46,9 +46,9 @@ var Global;
     Global.WorkflowActivityViewModel = WorkflowActivityViewModel;
     var PageViewModel = (function () {
         function PageViewModel(bindingControl, screenPermissions, validationContainer) {
-            var _this = this;
             if (screenPermissions === void 0) { screenPermissions = null; }
             if (validationContainer === void 0) { validationContainer = null; }
+            var _this = this;
             this._BindingControl = bindingControl;
             var self = this;
             this.ScreenPermissions = screenPermissions == null ? null : screenPermissions.map(function (sp) {

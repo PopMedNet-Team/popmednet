@@ -303,6 +303,27 @@ var Plugins;
                         enumerable: false,
                         configurable: true
                     });
+                    Object.defineProperty(Terms, "DC_DiagnosisCodes", {
+                        get: function () {
+                            return 'E1DA9C98-3F95-4F6E-AEDF-B42E2881DB73';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "DC_ProcedureCodes", {
+                        get: function () {
+                            return '1CC38753-CD3F-4696-AF5F-9818EABF8AD0';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
+                    Object.defineProperty(Terms, "DC_NDCCodes", {
+                        get: function () {
+                            return '02A7FD90-AAD2-4986-9C5D-1D22E27AB960';
+                        },
+                        enumerable: false,
+                        configurable: true
+                    });
                     Terms.Compare = function (a, b) {
                         if ((a == null && b != null) || (a != null && b == null))
                             return false;
@@ -347,7 +368,10 @@ var Plugins;
                         Terms.PatientReportedOutcomeID,
                         Terms.LOINCCodesID,
                         Terms.PrescribingCodesID,
-                        Terms.ClinicalObservationsID
+                        Terms.ClinicalObservationsID,
+                        Terms.DC_DiagnosisCodes,
+                        Terms.DC_ProcedureCodes,
+                        Terms.DC_NDCCodes
                     ];
                     Terms.NonCodeGroupedTerms = [
                         Terms.VisitsID,
@@ -605,19 +629,6 @@ var Plugins;
                         for (var i = 0; i < rootCriteria.length; i++) {
                             var criteria = rootCriteria[i];
                             this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
-                            if (criteria.Terms() && criteria.Terms().length > 0) {
-                                var _loop_2 = function (j) {
-                                    var term = criteria.Terms()[j];
-                                    var termTemplate = ko.utils.arrayFirst(flattenedTerms, function (template) { return template.TermID == term.Type(); });
-                                    if (termTemplate) {
-                                        this_2.ConfirmTermValuesForViewModel(term, termTemplate);
-                                    }
-                                };
-                                var this_2 = this;
-                                for (var j = 0; j < criteria.Terms().length; j++) {
-                                    _loop_2(j);
-                                }
-                            }
                         }
                         var temporalEvents = query.TemporalEvents();
                         for (var i = 0; i < temporalEvents.length; i++) {
@@ -627,16 +638,16 @@ var Plugins;
                                 var criteria = rootCriteria_1[j];
                                 this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
                                 if (criteria.Terms() && criteria.Terms().length > 0) {
-                                    var _loop_3 = function (k) {
+                                    var _loop_2 = function (k) {
                                         var term = criteria.Terms()[k];
                                         var termTemplate = ko.utils.arrayFirst(flattenedTerms, function (template) { return template.TermID == term.Type(); });
                                         if (termTemplate) {
-                                            this_3.ConfirmTermValuesForViewModel(term, termTemplate);
+                                            this_2.ConfirmTermValuesForViewModel(term, termTemplate);
                                         }
                                     };
-                                    var this_3 = this;
+                                    var this_2 = this;
                                     for (var k = 0; k < criteria.Terms().length; k++) {
-                                        _loop_3(k);
+                                        _loop_2(k);
                                     }
                                 }
                             }
@@ -707,18 +718,13 @@ var Plugins;
                         var termProperties = Object.keys(unwrapped);
                         var tvalProperties = Object.keys(termTemplate.ValueTemplate);
                         var propertyName;
-                        var hasChanges = false;
                         for (var i = 0; i < tvalProperties.length; i++) {
                             propertyName = tvalProperties[i];
                             if (termProperties.indexOf(propertyName) < 0) {
                                 unwrapped[propertyName] = termTemplate.ValueTemplate[propertyName];
-                                hasChanges = true;
                             }
                         }
-                        if (hasChanges) {
-                            term.Values(unwrapped);
-                        }
-                        var values = Global.Helpers.ConvertTermObject(term.Values());
+                        var values = Global.Helpers.ConvertTermObject(unwrapped);
                         term.Values(values);
                     };
                     return TermValueFilter;

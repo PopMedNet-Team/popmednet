@@ -126,6 +126,15 @@
         public static get ClinicalObservationsID(): any {
             return '7A51AB7A-AEC5-4A4B-A073-FBFF754EA478';
         }
+        public static get DC_DiagnosisCodes(): any {
+            return 'E1DA9C98-3F95-4F6E-AEDF-B42E2881DB73';
+        }
+        public static get DC_ProcedureCodes(): any {
+            return '1CC38753-CD3F-4696-AF5F-9818EABF8AD0';
+        }
+        public static get DC_NDCCodes(): any {
+            return '02A7FD90-AAD2-4986-9C5D-1D22E27AB960';
+        }
 
 
         public static Compare(a: any, b: any): boolean {
@@ -213,7 +222,10 @@
             //Prescribing Terms
             Terms.PrescribingCodesID,
             //Clinical Observations
-            Terms.ClinicalObservationsID
+            Terms.ClinicalObservationsID,
+            Terms.DC_DiagnosisCodes,
+            Terms.DC_ProcedureCodes,
+            Terms.DC_NDCCodes
         ];
 
         /** Non-code terms that still need to use a sub-criteria to handle multiple term's OR'd together */
@@ -527,23 +539,15 @@
         }
 
         public ConfirmTemplatePropertiesForViewModel(query: Dns.ViewModels.QueryComposerQueryViewModel, termTemplates: IVisualTerm[]) {
+            
             let flattenedTerms = this.FlattenTermTemplates(termTemplates, []) as IVisualTerm[];
             //loop through all the terms on all the criteria and make sure each term is up to date
+            
             let rootCriteria = query.Where.Criteria();
+
             for (let i = 0; i < rootCriteria.length; i++) {
                 let criteria: Dns.ViewModels.QueryComposerCriteriaViewModel = rootCriteria[i];
                 this.ConfirmCriteriaForViewModel(criteria, flattenedTerms);
-                
-                if (criteria.Terms() && criteria.Terms().length > 0) {
-                    for (let j = 0; j < criteria.Terms().length; j++) {
-                        let term = criteria.Terms()[j];
-                        let termTemplate = ko.utils.arrayFirst(flattenedTerms, (template: IVisualTerm) => { return template.TermID == term.Type(); });
-                        if (termTemplate) {
-                            this.ConfirmTermValuesForViewModel(term, termTemplate);
-                        }
-                    }
-                }
-
             }
 
             //check the criteria for each temporal event
@@ -567,6 +571,7 @@
 
                 }
             }
+            
         }
 
         private FlattenTermTemplates(termTemplates: IVisualTerm[], flattened: IVisualTerm[]) {
@@ -606,10 +611,13 @@
         public ConfirmCriteriaForViewModel(criteria: Dns.ViewModels.QueryComposerCriteriaViewModel, termTemplates: IVisualTerm[]) {
             let terms = criteria.Terms();
             if (terms) {
+
                 let term: Dns.ViewModels.QueryComposerTermViewModel;
                 let termTemplate: IVisualTerm;
+
                 for (let i = 0; i < terms.length; i++) {
                     term = terms[i];
+
                     termTemplate = ko.utils.arrayFirst(termTemplates, (template: IVisualTerm) => { return template.TermID == term.Type(); });
                     if (termTemplate) {
                         this.ConfirmTermValuesForViewModel(term, termTemplate);
@@ -639,29 +647,22 @@
         }
 
         private ConfirmTermValuesForViewModel(term: Dns.ViewModels.QueryComposerTermViewModel, termTemplate: IVisualTerm) {
-
+            
             let unwrapped = ko.unwrap(term.Values);
             let termProperties: string[] = Object.keys(unwrapped);
             let tvalProperties: string[] = Object.keys(termTemplate.ValueTemplate);
             let propertyName: string;
-            let hasChanges = false;
+
             for (let i = 0; i < tvalProperties.length; i++) {
                 propertyName = tvalProperties[i];
                 if (termProperties.indexOf(propertyName) < 0) {
                     unwrapped[propertyName] = termTemplate.ValueTemplate[propertyName];
-                    hasChanges = true;
                 }
             }
 
-            if (hasChanges) {
-                //update the current instance of the term to include the added properties
-                term.Values(unwrapped);
-            }
-
             //update the instance term values to observables
-            let values = Global.Helpers.ConvertTermObject(term.Values());
+            let values = Global.Helpers.ConvertTermObject(unwrapped);
             term.Values(values);
-
         }
 
     }

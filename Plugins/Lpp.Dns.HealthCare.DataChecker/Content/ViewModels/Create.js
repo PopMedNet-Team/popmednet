@@ -1,5 +1,8 @@
 /// <reference path="../../../../Lpp.Mvc.Composition/Lpp.Mvc.Boilerplate/jsBootstrap.d.ts" />
-/// <reference path="../../../Lpp.Dns.General.Metadata/Content/ViewModels/RequestCriteria.ts" />
+/// <reference path="../../../lpp.dns.general.metadata/content/models/requestcriteriamodels.ts" />
+/// <reference path="../../../../lpp.dns.portal/scripts/page/page.ts" />
+/// <reference path="../../../../lpp.dns.portal/scripts/common.ts" />
+/// <reference path="../../../lpp.dns.general.metadata/content/viewmodels/requestcriteriaviewmodels.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||

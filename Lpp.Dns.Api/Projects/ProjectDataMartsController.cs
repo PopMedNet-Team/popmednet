@@ -26,7 +26,7 @@ namespace Lpp.Dns.Api.Projects
         [HttpGet]
         public IQueryable<ProjectDataMartDTO> List()
         {
-            var obj = (from o in DataContext.Secure<ProjectDataMart>(Identity) select o).Map<ProjectDataMart, ProjectDataMartDTO>();
+            var obj = (from o in DataContext.Secure<ProjectDataMart>(Identity) where !o.DataMart.Deleted select o).Map<ProjectDataMart, ProjectDataMartDTO>();
 
             return obj;
         }
@@ -42,6 +42,7 @@ namespace Lpp.Dns.Api.Projects
                           let legacyRequestTypes = dm.DataMart.Models.Distinct().Select(m => m.Model.RequestTypes).SelectMany(m => m.Where(s => s.RequestType.WorkflowID.HasValue == false).Select(s => s.RequestType)).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
                           let qeRequestTypes = dm.DataMart.Adapter.RequestTypes.Select(s => s.RequestType).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
                           let requestTypes = DataContext.RequestTypes.Where(rr => rr.Models.Any() == false && rr.WorkflowID.HasValue).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
+                          where !dm.DataMart.Deleted
                           select new ProjectDataMartWithRequestTypesDTO
                           {
                               DataMart = dm.DataMart.Name,
@@ -79,7 +80,7 @@ namespace Lpp.Dns.Api.Projects
                                  let legacyRequestTypes = dm.DataMart.Models.Distinct().Select(m => m.Model.RequestTypes).SelectMany(m => m.Where(s => s.RequestType.WorkflowID.HasValue == false).Select(s => s.RequestType)).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
                                  let qeRequestTypes = dm.DataMart.Adapter.RequestTypes.Select(s => s.RequestType).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
                                  let requestTypes = DataContext.RequestTypes.Where(rr => rr.Models.Any() == false && rr.WorkflowID.HasValue).Where(lrt => dm.Project.RequestTypes.Any(prt => prt.RequestTypeID == lrt.ID))
-                                 where dm.ProjectID == projectID && dm.DataMartID == dataMartID
+                                 where dm.ProjectID == projectID && dm.DataMartID == dataMartID && !dm.DataMart.Deleted
                           select
                           new ProjectDataMartWithRequestTypesDTO
                           {

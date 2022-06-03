@@ -58,7 +58,7 @@ WriteLiteral("\r\n");
 
             
             #line 5 "..\..\Views\Create.cshtml"
-   
+  
     this.Stylesheet("MetadataSearch.css");
     var id = Html.UniqueId();
     System.Reflection.Assembly mvcControlsAssembly = typeof(Lpp.Mvc.Controls.UtilityExtensions).Assembly;
@@ -76,7 +76,7 @@ WriteLiteral(">\r\n    var KOViewModel = true;     // indicates this page is bui
 
 WriteLiteral(" id=\"AgeRangeTerm\"");
 
-WriteLiteral("  style=\"display: none\"");
+WriteLiteral(" style=\"display: none\"");
 
 WriteLiteral(">\r\n    <span>Age Range</span>\r\n    <div");
 
@@ -92,7 +92,7 @@ WriteLiteral(" data-bind=\"kendoNumericTextBox: {value:MinAge,decimals:0,spinner
 
 WriteLiteral(" style=\"width: 50px; margin-right: 10px;\"");
 
-WriteLiteral("/>\r\n        </div>\r\n        <div");
+WriteLiteral(" />\r\n        </div>\r\n        <div");
 
 WriteLiteral(" class=\"Field\"");
 
@@ -102,7 +102,7 @@ WriteLiteral(" data-bind=\"kendoNumericTextBox: {value:MaxAge,decimals:0,spinner
 
 WriteLiteral(" style=\"width: 50px; margin-right: 10px;\"");
 
-WriteLiteral("/>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<div");
+WriteLiteral(" />\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"AgeStratifierTerm\"");
 
@@ -132,8 +132,8 @@ WriteLiteral(" id=\"CodesTerm\"");
 
 WriteLiteral(" type=\"text/html\"");
 
-WriteLiteral(@"> 
-     
+WriteLiteral(@">
+
     <input type=""hidden"" name=""CodesTerm_Codes"" data-bind=""value: Codes"" />
     <label>Code Set</label>
     <select data-bind=""kendoDropDownList: { value:CodesTermType, data:MetadataQuery.Create.ViewModel.MDQCodeSetList, dataTextField:'Key', dataValueField:'Value'}"" style=""width: 100%;""></select>
@@ -141,13 +141,13 @@ WriteLiteral(@">
     ");
 
 WriteLiteral(@"
-    
+
     <div class=""form-group"">
         <button type=""button"" class=""btn btn-default"" id=""btnSelectCode"" data-bind=""click: SelectCode"">Select...</button>
         <label>Selected Codes:&nbsp;</label>
         <span data-bind=""text: Codes""></span>
-    </div> 
-    
+    </div>
+
 </script>
 
 <div");
@@ -156,31 +156,31 @@ WriteLiteral(" id=\"CodeSelector_Diagnosis_ICD9Term\"");
 
 WriteLiteral(" style=\"display:none;\"");
 
-WriteLiteral(">\r\n    \r\n</div>\r\n<div");
+WriteLiteral(">\r\n\r\n</div>\r\n<div");
 
 WriteLiteral(" id=\"CodeSelector_GenericDrugTerm\"");
 
 WriteLiteral(" style=\"display:none;\"");
 
-WriteLiteral(">\r\n    </div>\r\n<div");
+WriteLiteral(">\r\n</div>\r\n<div");
 
 WriteLiteral(" id=\"CodeSelector_DrugClassTerm\"");
 
 WriteLiteral(" style=\"display:none;\"");
 
-WriteLiteral(">\r\n    \r\n</div>\r\n<div");
+WriteLiteral(">\r\n\r\n</div>\r\n<div");
 
 WriteLiteral(" id=\"CodeSelector_HCPCSTerm\"");
 
 WriteLiteral(" style=\"display:none;\"");
 
-WriteLiteral(">\r\n    \r\n</div>\r\n<div");
+WriteLiteral(">\r\n\r\n</div>\r\n<div");
 
 WriteLiteral(" id=\"CodeSelector_Procedure_ICD9Term\"");
 
 WriteLiteral(" style=\"display:none;\"");
 
-WriteLiteral(">\r\n    \r\n</div>\r\n\r\n\r\n<div");
+WriteLiteral(">\r\n\r\n</div>\r\n\r\n\r\n<div");
 
 WriteLiteral(" id=\"DateRangeTerm\"");
 
@@ -481,8 +481,8 @@ WriteLiteral(@" data-bind="" kendoDropDownList: {enable: false, data:TaskActivit
 
 WriteLiteral(" style=\"width:100%;\"");
 
-WriteLiteral("/>\r\n                            </li>\r\n                        </ul>\r\n           " +
-"         </li>\r\n                </ol>\r\n\r\n                <br");
+WriteLiteral(" />\r\n                            </li>\r\n                        </ul>\r\n          " +
+"          </li>\r\n                </ol>\r\n\r\n                <br");
 
 WriteLiteral(" style=\"clear: both;\"");
 
@@ -511,334 +511,66 @@ WriteLiteral("></div>\r\n                            </li>\r\n                  
 
 WriteLiteral(" style=\"clear: both;\"");
 
-WriteLiteral(" />\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n</div>\r\n\r\n");
+WriteLiteral(" />\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n</div>\r\n\r\n<script");
 
-WriteLiteral("\r\n<script");
+WriteAttribute("src", Tuple.Create(" src=\"", 12037), Tuple.Create("\"", 12088)
+            
+            #line 204 "..\..\Views\Create.cshtml"
+, Tuple.Create(Tuple.Create("", 12043), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/DataCheckerModels.js")
+            
+            #line default
+            #line hidden
+, 12043), false)
+);
 
-WriteAttribute("src", Tuple.Create(" src=\"", 12098), Tuple.Create("\"", 12147)
+WriteLiteral("></script>\r\n<script");
+
+WriteAttribute("src", Tuple.Create(" src=\"", 12108), Tuple.Create("\"", 12167)
             
             #line 205 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12104), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/RequestCriteria.js")
+, Tuple.Create(Tuple.Create("", 12114), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/DataCheckerViewModels.js")
             
             #line default
             #line hidden
-, 12104), false)
+, 12114), false)
 );
 
 WriteLiteral("></script>\r\n<script");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 12167), Tuple.Create("\"", 12220)
+WriteAttribute("src", Tuple.Create(" src=\"", 12187), Tuple.Create("\"", 12242)
             
             #line 206 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12173), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/RequestCriteria.js")
+, Tuple.Create(Tuple.Create("", 12193), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/RequestCriteriaModels.js")
             
             #line default
             #line hidden
-, 12173), false)
+, 12193), false)
 );
 
 WriteLiteral("></script>\r\n<script");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 12240), Tuple.Create("\"", 12282)
+WriteAttribute("src", Tuple.Create(" src=\"", 12262), Tuple.Create("\"", 12325)
             
             #line 207 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12246), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Criteria.js")
+, Tuple.Create(Tuple.Create("", 12268), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/RequestCriteriaViewModels.js")
             
             #line default
             #line hidden
-, 12246), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12302), Tuple.Create("\"", 12348)
-            
-            #line 208 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12308), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Criteria.js")
-            
-            #line default
-            #line hidden
-, 12308), false)
-);
-
-WriteLiteral("></script>\r\n\r\n\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12372), Tuple.Create("\"", 12411)
-            
-            #line 211 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12378), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms.js")
-            
-            #line default
-            #line hidden
-, 12378), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12431), Tuple.Create("\"", 12474)
-            
-            #line 212 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12437), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms.js")
-            
-            #line default
-            #line hidden
-, 12437), false)
-);
-
-WriteLiteral("></script>\r\n");
-
-WriteLiteral("\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12519), Tuple.Create("\"", 12567)
-            
-            #line 214 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12525), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/AgeRange.js")
-            
-            #line default
-            #line hidden
-, 12525), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12587), Tuple.Create("\"", 12639)
-            
-            #line 215 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12593), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/AgeRange.js")
-            
-            #line default
-            #line hidden
-, 12593), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12659), Tuple.Create("\"", 12712)
-            
-            #line 216 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12665), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/AgeStratifier.js")
-            
-            #line default
-            #line hidden
-, 12665), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12732), Tuple.Create("\"", 12789)
-            
-            #line 217 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12738), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/AgeStratifier.js")
-            
-            #line default
-            #line hidden
-, 12738), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12809), Tuple.Create("\"", 12864)
-            
-            #line 218 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12815), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/ClinicalSetting.js")
-            
-            #line default
-            #line hidden
-, 12815), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12884), Tuple.Create("\"", 12943)
-            
-            #line 219 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12890), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/ClinicalSetting.js")
-            
-            #line default
-            #line hidden
-, 12890), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 12963), Tuple.Create("\"", 13016)
-            
-            #line 220 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 12969), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/CodesTerm.js")
-            
-            #line default
-            #line hidden
-, 12969), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13036), Tuple.Create("\"", 13089)
-            
-            #line 221 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13042), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/DateRange.js")
-            
-            #line default
-            #line hidden
-, 13042), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13109), Tuple.Create("\"", 13156)
-            
-            #line 222 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13115), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/Project.js")
-            
-            #line default
-            #line hidden
-, 13115), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13176), Tuple.Create("\"", 13227)
-            
-            #line 223 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13182), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/Project.js")
-            
-            #line default
-            #line hidden
-, 13182), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13247), Tuple.Create("\"", 13300)
-            
-            #line 224 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13253), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/RequestStatus.js")
-            
-            #line default
-            #line hidden
-, 13253), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13320), Tuple.Create("\"", 13377)
-            
-            #line 225 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13326), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/RequestStatus.js")
-            
-            #line default
-            #line hidden
-, 13326), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13397), Tuple.Create("\"", 13440)
-            
-            #line 226 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13403), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/Sex.js")
-            
-            #line default
-            #line hidden
-, 13403), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13460), Tuple.Create("\"", 13507)
-            
-            #line 227 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13466), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/Sex.js")
-            
-            #line default
-            #line hidden
-, 13466), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13527), Tuple.Create("\"", 13579)
-            
-            #line 228 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13533), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/WorkplanType.js")
-            
-            #line default
-            #line hidden
-, 13533), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13599), Tuple.Create("\"", 13655)
-            
-            #line 229 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13605), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/WorkplanType.js")
-            
-            #line default
-            #line hidden
-, 13605), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13675), Tuple.Create("\"", 13730)
-            
-            #line 230 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13681), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/RequesterCenter.js")
-            
-            #line default
-            #line hidden
-, 13681), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13750), Tuple.Create("\"", 13809)
-            
-            #line 231 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13756), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/RequesterCenter.js")
-            
-            #line default
-            #line hidden
-, 13756), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13829), Tuple.Create("\"", 13891)
-            
-            #line 232 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13835), Tuple.Create<System.Object, System.Int32>(this.Resource("Models/Terms/ReportAggregationLevel.js")
-            
-            #line default
-            #line hidden
-, 13835), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 13911), Tuple.Create("\"", 13977)
-            
-            #line 233 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 13917), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Terms/ReportAggregationLevel.js")
-            
-            #line default
-            #line hidden
-, 13917), false)
+, 12268), false)
 );
 
 WriteLiteral("></script>\r\n\r\n");
 
 WriteLiteral("\r\n<script");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 14023), Tuple.Create("\"", 14056)
+WriteAttribute("src", Tuple.Create(" src=\"", 12371), Tuple.Create("\"", 12404)
             
-            #line 236 "..\..\Views\Create.cshtml"
-, Tuple.Create(Tuple.Create("", 14029), Tuple.Create<System.Object, System.Int32>(this.Resource("Create.js")
+            #line 210 "..\..\Views\Create.cshtml"
+, Tuple.Create(Tuple.Create("", 12377), Tuple.Create<System.Object, System.Int32>(this.Resource("Create.js")
             
             #line default
             #line hidden
-, 14029), false)
+, 12377), false)
 );
 
 WriteLiteral("></script>\r\n\r\n<script");
@@ -849,7 +581,7 @@ WriteLiteral(">\r\n    jQuery(document).ready(function () {\r\n        MetadataQ
 "sList = ");
 
             
-            #line 240 "..\..\Views\Create.cshtml"
+            #line 214 "..\..\Views\Create.cshtml"
                                        Write(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Projects)));
 
             
@@ -858,7 +590,7 @@ WriteLiteral(">\r\n    jQuery(document).ready(function () {\r\n        MetadataQ
 WriteLiteral(";\r\n        var json = ");
 
             
-            #line 241 "..\..\Views\Create.cshtml"
+            #line 215 "..\..\Views\Create.cshtml"
               Write(Html.Raw(Model.CriteriaGroupsJSON));
 
             
@@ -867,7 +599,7 @@ WriteLiteral(";\r\n        var json = ");
 WriteLiteral(";\r\n        var activityjson = ");
 
             
-            #line 242 "..\..\Views\Create.cshtml"
+            #line 216 "..\..\Views\Create.cshtml"
                       Write(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.AllActivities)));
 
             
@@ -876,7 +608,7 @@ WriteLiteral(";\r\n        var activityjson = ");
 WriteLiteral(";\r\n        var workplanTypeJson = ");
 
             
-            #line 243 "..\..\Views\Create.cshtml"
+            #line 217 "..\..\Views\Create.cshtml"
                           Write(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.WorkplanTypeList)));
 
             
@@ -885,7 +617,7 @@ WriteLiteral(";\r\n        var workplanTypeJson = ");
 WriteLiteral(";\r\n        var requesterCenterJson = ");
 
             
-            #line 244 "..\..\Views\Create.cshtml"
+            #line 218 "..\..\Views\Create.cshtml"
                              Write(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RequesterCenterList)));
 
             
@@ -894,7 +626,7 @@ WriteLiteral(";\r\n        var requesterCenterJson = ");
 WriteLiteral(";\r\n        var reportAggregationLevelJson = ");
 
             
-            #line 245 "..\..\Views\Create.cshtml"
+            #line 219 "..\..\Views\Create.cshtml"
                                     Write(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReportAggregationLevelList)));
 
             
@@ -903,7 +635,7 @@ WriteLiteral(";\r\n        var reportAggregationLevelJson = ");
 WriteLiteral(";\r\n        var taskOrder = \'");
 
             
-            #line 246 "..\..\Views\Create.cshtml"
+            #line 220 "..\..\Views\Create.cshtml"
                     Write(Model.TaskOrder);
 
             
@@ -912,7 +644,7 @@ WriteLiteral(";\r\n        var taskOrder = \'");
 WriteLiteral("\';\r\n        var activity = \'");
 
             
-            #line 247 "..\..\Views\Create.cshtml"
+            #line 221 "..\..\Views\Create.cshtml"
                    Write(Model.Activity);
 
             
@@ -921,7 +653,7 @@ WriteLiteral("\';\r\n        var activity = \'");
 WriteLiteral("\';\r\n        var activityProject = \'");
 
             
-            #line 248 "..\..\Views\Create.cshtml"
+            #line 222 "..\..\Views\Create.cshtml"
                           Write(Model.ActivityProject);
 
             
@@ -930,7 +662,7 @@ WriteLiteral("\';\r\n        var activityProject = \'");
 WriteLiteral("\';\r\n        var sourceTaskOrder = \'");
 
             
-            #line 249 "..\..\Views\Create.cshtml"
+            #line 223 "..\..\Views\Create.cshtml"
                           Write(Model.SourceTaskOrder);
 
             
@@ -939,7 +671,7 @@ WriteLiteral("\';\r\n        var sourceTaskOrder = \'");
 WriteLiteral("\';\r\n        var sourceActivity = \'");
 
             
-            #line 250 "..\..\Views\Create.cshtml"
+            #line 224 "..\..\Views\Create.cshtml"
                          Write(Model.SourceActivity);
 
             
@@ -948,7 +680,7 @@ WriteLiteral("\';\r\n        var sourceActivity = \'");
 WriteLiteral("\';\r\n        var sourceActivityProject = \'");
 
             
-            #line 251 "..\..\Views\Create.cshtml"
+            #line 225 "..\..\Views\Create.cshtml"
                                 Write(Model.SourceActivityProject);
 
             

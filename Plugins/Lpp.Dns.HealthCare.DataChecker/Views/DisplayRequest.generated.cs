@@ -242,7 +242,7 @@ WriteLiteral(" data-bind=\"value: RequestCriteriaModels.SearchMethodTypes.Starts
 WriteLiteral(" disabled=\"disabled\"");
 
 WriteLiteral(" /><span>Starts With</span><br />\r\n                    </td>\r\n                </t" +
-"r>\r\n             </tbody>\r\n        </table>\r\n    </div>\r\n</div>\r\n\r\n<div");
+"r>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"DataPartnerTerm\"");
 
@@ -252,19 +252,10 @@ WriteLiteral(">\r\n    <table>\r\n        <thead>\r\n            <tr>\r\n       
 
 WriteLiteral(" style=\"width: 24px;\"");
 
-WriteLiteral(@">
-                    
-                </th>
-                <th>Data Partner</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-        <tbody");
+WriteLiteral(">\r\n\r\n                </th>\r\n                <th>Data Partner</th>\r\n            </" +
+"tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <td></" +
+"td>\r\n                <td></td>\r\n            </tr>\r\n        </tbody>\r\n        <tb" +
+"ody");
 
 WriteLiteral(" id=\"DataPartnersTable\"");
 
@@ -291,12 +282,12 @@ WriteLiteral(" />\r\n                </td>\r\n                <td>\r\n          
 
 WriteLiteral(" data-bind=\"text: Key\"");
 
-WriteLiteral(" ></span>&nbsp;(<span");
+WriteLiteral("></span>&nbsp;(<span");
 
 WriteLiteral(" data-bind=\"text: Value\"");
 
-WriteLiteral(" > </span>)\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </ta" +
-"ble>\r\n</div>\r\n\r\n<div");
+WriteLiteral("> </span>)\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </tab" +
+"le>\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"EthnicityTerm\"");
 
@@ -306,8 +297,8 @@ WriteLiteral(">\r\n    <table>\r\n        <thead>\r\n            <tr>\r\n       
 
 WriteLiteral(" style=\"width: 24px;\"");
 
-WriteLiteral(">\r\n                    \r\n                </th>\r\n                <th>Ethnicity</th" +
-">\r\n            </tr>\r\n        </thead>\r\n        <tbody");
+WriteLiteral(">\r\n\r\n                </th>\r\n                <th>Ethnicity</th>\r\n            </tr>" +
+"\r\n        </thead>\r\n        <tbody");
 
 WriteLiteral(" id=\"EthnicityTable\"");
 
@@ -325,8 +316,8 @@ WriteLiteral(" />\r\n                </td>\r\n                <td>\r\n          
 
 WriteLiteral(" data-bind=\"text: Key\"");
 
-WriteLiteral(" ></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </tabl" +
-"e>\r\n</div>\r\n\r\n<div");
+WriteLiteral("></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table" +
+">\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"MetricTerm\"");
 
@@ -336,8 +327,8 @@ WriteLiteral(">\r\n    <table>\r\n        <thead>\r\n            <tr>\r\n       
 
 WriteLiteral(" style=\"width: 24px;\"");
 
-WriteLiteral(">\r\n                    \r\n                </th>\r\n                <th>Metric</th>\r\n" +
-"            </tr>\r\n        </thead>\r\n        <tbody");
+WriteLiteral(">\r\n\r\n                </th>\r\n                <th>Metric</th>\r\n            </tr>\r\n " +
+"       </thead>\r\n        <tbody");
 
 WriteLiteral(" id=\"MetricsTable\"");
 
@@ -355,8 +346,8 @@ WriteLiteral(" />\r\n                </td>\r\n                <td>\r\n          
 
 WriteLiteral(" data-bind=\"text: Key\"");
 
-WriteLiteral(" ></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </tabl" +
-"e>\r\n</div>\r\n\r\n<div");
+WriteLiteral("></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table" +
+">\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"RaceTerm\"");
 
@@ -366,8 +357,8 @@ WriteLiteral(">\r\n    <table>\r\n        <thead>\r\n            <tr>\r\n       
 
 WriteLiteral(" style=\"width: 24px;\"");
 
-WriteLiteral(">\r\n                    \r\n                </th>\r\n                <th>Race</th>\r\n  " +
-"          </tr>\r\n        </thead>\r\n        <tbody");
+WriteLiteral(">\r\n\r\n                </th>\r\n                <th>Race</th>\r\n            </tr>\r\n   " +
+"     </thead>\r\n        <tbody");
 
 WriteLiteral(" id=\"RaceTable\"");
 
@@ -385,8 +376,8 @@ WriteLiteral(" />\r\n                </td>\r\n                <td>\r\n          
 
 WriteLiteral(" data-bind=\"text: Key\"");
 
-WriteLiteral(" ></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </tabl" +
-"e>\r\n</div>\r\n\r\n<div");
+WriteLiteral("></span>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table" +
+">\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"RxSupTerm\"");
 
@@ -1035,500 +1026,76 @@ WriteLiteral("></div>\r\n                            </li>\r\n                  
 
 WriteLiteral(" style=\"clear: both;\"");
 
-WriteLiteral(" />\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n</div>\r\n\r\n");
-
-WriteLiteral("\r\n<script");
+WriteLiteral(" />\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n</div>\r\n\r\n<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 18406), Tuple.Create("\"", 18469)
+WriteAttribute("src", Tuple.Create(" src=\"", 18317), Tuple.Create("\"", 18382)
+            
+            #line 468 "..\..\Views\DisplayRequest.cshtml"
+, Tuple.Create(Tuple.Create("", 18323), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/DataCheckerModels.js")
+            
+            #line default
+            #line hidden
+, 18323), false)
+);
+
+WriteLiteral("></script>\r\n<script");
+
+WriteLiteral(" type=\"text/javascript\"");
+
+WriteAttribute("src", Tuple.Create(" src=\"", 18425), Tuple.Create("\"", 18494)
             
             #line 469 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18412), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/RequestCriteria.js")
+, Tuple.Create(Tuple.Create("", 18431), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/RequestCriteriaModels.js")
             
             #line default
             #line hidden
-, 18412), false)
+, 18431), false)
 );
 
 WriteLiteral("></script>\r\n<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 18512), Tuple.Create("\"", 18568)
+WriteAttribute("src", Tuple.Create(" src=\"", 18537), Tuple.Create("\"", 18610)
             
             #line 470 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18518), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Criteria.js")
+, Tuple.Create(Tuple.Create("", 18543), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/DataCheckerViewModels.js")
             
             #line default
             #line hidden
-, 18518), false)
+, 18543), false)
 );
 
 WriteLiteral("></script>\r\n<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 18611), Tuple.Create("\"", 18664)
+WriteAttribute("src", Tuple.Create(" src=\"", 18653), Tuple.Create("\"", 18730)
             
             #line 471 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18617), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms.js")
+, Tuple.Create(Tuple.Create("", 18659), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/RequestCriteriaViewModels.js")
             
             #line default
             #line hidden
-, 18617), false)
+, 18659), false)
 );
 
-WriteLiteral("></script>\r\n<script");
+WriteLiteral("></script>\r\n\r\n");
+
+WriteLiteral("\r\n<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 18707), Tuple.Create("\"", 18774)
-            
-            #line 472 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18713), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/RequestCriteria.js")
-            
-            #line default
-            #line hidden
-, 18713), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 18817), Tuple.Create("\"", 18877)
-            
-            #line 473 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18823), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Criteria.js")
-            
-            #line default
-            #line hidden
-, 18823), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 18920), Tuple.Create("\"", 18977)
+WriteAttribute("src", Tuple.Create(" src=\"", 18799), Tuple.Create("\"", 18843)
             
             #line 474 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 18926), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms.js")
+, Tuple.Create(Tuple.Create("", 18805), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Create.js")
             
             #line default
             #line hidden
-, 18926), false)
-);
-
-WriteLiteral("></script>\r\n");
-
-WriteLiteral("\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19045), Tuple.Create("\"", 19112)
-            
-            #line 476 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19051), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/CodesTerm.js")
-            
-            #line default
-            #line hidden
-, 19051), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19155), Tuple.Create("\"", 19220)
-            
-            #line 477 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19161), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/DataPartner.js")
-            
-            #line default
-            #line hidden
-, 19161), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19263), Tuple.Create("\"", 19332)
-            
-            #line 478 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19269), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/DataPartner.js")
-            
-            #line default
-            #line hidden
-, 19269), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19375), Tuple.Create("\"", 19438)
-            
-            #line 479 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19381), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/Ethnicity.js")
-            
-            #line default
-            #line hidden
-, 19381), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19481), Tuple.Create("\"", 19548)
-            
-            #line 480 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19487), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/Ethnicity.js")
-            
-            #line default
-            #line hidden
-, 19487), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19591), Tuple.Create("\"", 19651)
-            
-            #line 481 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19597), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/Metric.js")
-            
-            #line default
-            #line hidden
-, 19597), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19694), Tuple.Create("\"", 19758)
-            
-            #line 482 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19700), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/Metric.js")
-            
-            #line default
-            #line hidden
-, 19700), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19801), Tuple.Create("\"", 19859)
-            
-            #line 483 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19807), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/Race.js")
-            
-            #line default
-            #line hidden
-, 19807), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 19902), Tuple.Create("\"", 19964)
-            
-            #line 484 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 19908), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/Race.js")
-            
-            #line default
-            #line hidden
-, 19908), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20007), Tuple.Create("\"", 20068)
-            
-            #line 485 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20013), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/Project.js")
-            
-            #line default
-            #line hidden
-, 20013), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20111), Tuple.Create("\"", 20176)
-            
-            #line 486 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20117), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/Project.js")
-            
-            #line default
-            #line hidden
-, 20117), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20219), Tuple.Create("\"", 20286)
-            
-            #line 487 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20225), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/RequestStatus.js")
-            
-            #line default
-            #line hidden
-, 20225), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20329), Tuple.Create("\"", 20400)
-            
-            #line 488 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20335), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/RequestStatus.js")
-            
-            #line default
-            #line hidden
-, 20335), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20443), Tuple.Create("\"", 20510)
-            
-            #line 489 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20449), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/DateRange.js")
-            
-            #line default
-            #line hidden
-, 20449), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20553), Tuple.Create("\"", 20619)
-            
-            #line 490 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20559), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/WorkplanType.js")
-            
-            #line default
-            #line hidden
-, 20559), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20662), Tuple.Create("\"", 20732)
-            
-            #line 491 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20668), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/WorkplanType.js")
-            
-            #line default
-            #line hidden
-, 20668), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20775), Tuple.Create("\"", 20844)
-            
-            #line 492 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20781), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/RequesterCenter.js")
-            
-            #line default
-            #line hidden
-, 20781), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 20887), Tuple.Create("\"", 20960)
-            
-            #line 493 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 20893), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/RequesterCenter.js")
-            
-            #line default
-            #line hidden
-, 20893), false)
-);
-
-WriteLiteral("></script>\r\n\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21005), Tuple.Create("\"", 21062)
-            
-            #line 495 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21011), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/pdx.js")
-            
-            #line default
-            #line hidden
-, 21011), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21105), Tuple.Create("\"", 21166)
-            
-            #line 496 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21111), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/pdx.js")
-            
-            #line default
-            #line hidden
-, 21111), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21209), Tuple.Create("\"", 21268)
-            
-            #line 497 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21215), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/rxamt.js")
-            
-            #line default
-            #line hidden
-, 21215), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21311), Tuple.Create("\"", 21374)
-            
-            #line 498 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21317), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/rxamt.js")
-            
-            #line default
-            #line hidden
-, 21317), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21417), Tuple.Create("\"", 21476)
-            
-            #line 499 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21423), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/rxsup.js")
-            
-            #line default
-            #line hidden
-, 21423), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21519), Tuple.Create("\"", 21582)
-            
-            #line 500 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21525), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/rxsup.js")
-            
-            #line default
-            #line hidden
-, 21525), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21625), Tuple.Create("\"", 21692)
-            
-            #line 501 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21631), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/metadatatable.js")
-            
-            #line default
-            #line hidden
-, 21631), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21735), Tuple.Create("\"", 21806)
-            
-            #line 502 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21741), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/metadatatable.js")
-            
-            #line default
-            #line hidden
-, 21741), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21849), Tuple.Create("\"", 21916)
-            
-            #line 503 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21855), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "Models/Terms/encountertype.js")
-            
-            #line default
-            #line hidden
-, 21855), false)
-);
-
-WriteLiteral("></script>\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 21959), Tuple.Create("\"", 22030)
-            
-            #line 504 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 21965), Tuple.Create<System.Object, System.Int32>(this.Url.Resource(assembly, "ViewModels/Terms/encountertype.js")
-            
-            #line default
-            #line hidden
-, 21965), false)
-);
-
-WriteLiteral("></script>\r\n\r\n\r\n");
-
-WriteLiteral("\r\n<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 22101), Tuple.Create("\"", 22145)
-            
-            #line 508 "..\..\Views\DisplayRequest.cshtml"
-, Tuple.Create(Tuple.Create("", 22107), Tuple.Create<System.Object, System.Int32>(this.Resource("ViewModels/Create.js")
-            
-            #line default
-            #line hidden
-, 22107), false)
+, 18805), false)
 );
 
 WriteLiteral("></script>\r\n\r\n<script");
@@ -1539,7 +1106,7 @@ WriteLiteral(">\r\n    jQuery(document).ready(function () {\r\n        // initia
 "\n        //displayrequest.cshtml\r\n        var json = ");
 
             
-            #line 514 "..\..\Views\DisplayRequest.cshtml"
+            #line 480 "..\..\Views\DisplayRequest.cshtml"
                Write(Html.Raw(HttpUtility.HtmlDecode(Model.CriteriaGroupsJSON) + ";"));
 
             

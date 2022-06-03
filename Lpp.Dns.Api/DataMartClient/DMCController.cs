@@ -914,6 +914,13 @@ namespace Lpp.Dns.Api.DataMartClient
                 throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error processing document chunk."));
             }
 
+            if (await provider.DocumentExists())
+            {
+                //The document already exists in the database, return without changes or throwing an error.
+                //This is to handle the DMC potentially re-uploading the same document in a re-upload after complete scenario, see PMNDEV-8680.
+                return Request.CreateResponse(HttpStatusCode.Created, provider.DocumentMetadata.ID);
+            }
+
             bool canUpload = await CheckUploadPermission(provider.DocumentMetadata.RequestID, provider.DocumentMetadata.DataMartID);
 
             if (canUpload == false)

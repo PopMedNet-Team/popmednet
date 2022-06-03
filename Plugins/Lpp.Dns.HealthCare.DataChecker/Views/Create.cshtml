@@ -1,9 +1,7 @@
 ﻿@model Lpp.Dns.HealthCare.DataChecker.Models.DataCheckerModel
 @using System.Reflection;
-@using Newtonsoft.Json;
 @using Lpp.Mvc
-@using Lpp.Dns.Portal
-@{ 
+@{
     Assembly assembly = typeof(Lpp.Dns.General.Metadata.MetadataSearchRequestType).Assembly;
 }
 
@@ -174,7 +172,7 @@
     </table>
 </script>
 
-<script id="EncounterTypeTerm" type="text/html" >
+<script id="EncounterTypeTerm" type="text/html">
     <table id="EncounterTypeGrid">
         <thead>
             <tr>
@@ -333,7 +331,7 @@
                         <input type="radio" name="SearchTermMethod" data-bind="value: RequestCriteriaModels.SearchMethodTypes.StartsWith, checked: SearchMethodType" /><span>Starts With</span><br />
                     </td>
                 </tr>
-             </tbody>
+            </tbody>
         </table>
     </div>
 </div>
@@ -400,7 +398,7 @@
                     <input type="checkbox" data-bind="value: Value, checked: $parent.Metrics" />
                 </td>
                 <td>
-                    <span data-bind="text: Key" ></span>
+                    <span data-bind="text: Key"></span>
                 </td>
             </tr>
         </tbody>
@@ -423,7 +421,7 @@
                     <input type="checkbox" data-bind="value: Value, checked: $parent.Races" />
                 </td>
                 <td>
-                    <span data-bind="text: Key" ></span>
+                    <span data-bind="text: Key"></span>
                 </td>
             </tr>
         </tbody>
@@ -455,45 +453,10 @@
     </div>
 </div>
 
-@*bootstrap the RequestCriteria support*@
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/RequestCriteria.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Criteria.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/RequestCriteria.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Criteria.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms.js")"></script>
-@*bootstrap the terms*@
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/CodesTerm.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/DataPartner.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/DataPartner.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Ethnicity.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Ethnicity.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Metric.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Metric.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Race.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Race.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/Project.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/Project.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/RequestStatus.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/RequestStatus.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/DateRange.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/WorkplanType.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/WorkplanType.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/RequesterCenter.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/RequesterCenter.js")"></script>
-
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/pdx.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/pdx.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/rxamt.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/rxamt.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/rxsup.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/rxsup.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/metadatatable.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/metadatatable.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/encountertype.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/encountertype.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/Terms/ReportAggregationLevel.js")"></script>
-<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/Terms/ReportAggregationLevel.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/DataCheckerModels.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "Models/RequestCriteriaModels.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/DataCheckerViewModels.js")"></script>
+<script type="text/javascript" src="@this.Url.Resource(assembly, "ViewModels/RequestCriteriaViewModels.js")"></script>
 
 @*bootstrap the page*@
 <script type="text/javascript" src="@this.Resource("ViewModels/Create.js")"></script>
@@ -503,9 +466,9 @@
     function SelectAll(checker, table) {
         // Find the table's checkboxes, and if in the wrong state, "click it".
         // Since the checkbox is two-way bound to the list of values, and not a boolean, setting
-        // the checked attribute of the checkbox and raising the change event DOES NOT work, 
+        // the checked attribute of the checkbox and raising the change event DOES NOT work,
         // rather we just need to force a click action to cause the underlying list to update
-        $("#" + table + " tr input[type=checkbox]").each(function(){    
+        $("#" + table + " tr input[type=checkbox]").each(function(){
             if (this.checked != checker.checked)
                 $(this).click();
         });

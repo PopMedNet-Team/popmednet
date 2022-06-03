@@ -245,6 +245,7 @@
     <Compile Include="Forms\ViewSQL.Designer.cs">
       <DependentUpon>ViewSQL.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lib\Caching\CacheDocument.cs" />
     <Compile Include="Lib\Caching\CacheRetentionService.cs" />
     <Compile Include="Lib\Configuration\DataMartDescription.cs" />
     <Compile Include="Lib\Configuration\ModelDescription.cs" />
@@ -544,22 +545,22 @@
   <ItemGroup>
     <PublishFile Include="System.Net.Http">
       <Visible>False</Visible>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
     <PublishFile Include="System.Net.Http.Primitives">
       <Visible>False</Visible>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>

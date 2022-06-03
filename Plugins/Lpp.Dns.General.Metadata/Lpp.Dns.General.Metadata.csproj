@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.props')" />
   <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -295,30 +296,16 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Content\ViewModels\Terms\CodesTerm.js">
-      <DependentUpon>CodesTerm.ts</DependentUpon>
-    </EmbeddedResource>
+    <None Include="tsconfig.json" />
     <None Include="Views\razorgenerator.directives" />
     <None Include="Web.config" />
     <TypeScriptCompile Include="Content\CreateRegSearch.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\EncounterType.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\MetaDataTable.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\PDX.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\Race.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\Race.js">
-      <DependentUpon>Race.ts</DependentUpon>
+    <TypeScriptCompile Include="Content\Models\DataCheckerModels.ts" />
+    <EmbeddedResource Include="Content\Models\DataCheckerModels.js">
+      <DependentUpon>DataCheckerModels.ts</DependentUpon>
     </EmbeddedResource>
-    <TypeScriptCompile Include="Content\Models\Terms\Ethnicity.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\Ethnicity.js">
-      <DependentUpon>Ethnicity.ts</DependentUpon>
-    </EmbeddedResource>
-    <TypeScriptCompile Include="Content\Models\Terms\Metric.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\Metric.js">
-      <DependentUpon>Metric.ts</DependentUpon>
-    </EmbeddedResource>
-    <TypeScriptCompile Include="Content\Models\Terms\DataPartner.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\DataPartner.js">
-      <DependentUpon>DataPartner.ts</DependentUpon>
+    <EmbeddedResource Include="Content\Models\DataCheckerModels.js.map">
+      <DependentUpon>DataCheckerModels.ts</DependentUpon>
     </EmbeddedResource>
     <TypeScriptCompile Include="Content\CreateOrgSearch.ts" />
     <EmbeddedResource Include="Content\CreateOrgSearch.js">
@@ -339,74 +326,26 @@
     <EmbeddedResource Include="Content\DisplayRegistryResponse.js">
       <DependentUpon>DisplayRegistryResponse.ts</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\RequesterCenter.js">
-      <DependentUpon>RequesterCenter.ts</DependentUpon>
+    <TypeScriptCompile Include="Content\Models\RequestCriteriaModels.ts" />
+    <EmbeddedResource Include="Content\Models\RequestCriteriaModels.js">
+      <DependentUpon>RequestCriteriaModels.ts</DependentUpon>
     </EmbeddedResource>
-    <TypeScriptCompile Include="Content\Models\Terms\ReportAggregationLevel.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\RxAmt.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\rxSup.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\WorkplanType.ts" />
-    <TypeScriptCompile Include="Content\Models\Terms\RequesterCenter.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\EncounterType.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\MetaDataTable.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\PDX.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\Race.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\Race.js">
-      <DependentUpon>Race.ts</DependentUpon>
+    <EmbeddedResource Include="Content\Models\RequestCriteriaModels.js.map">
+      <DependentUpon>RequestCriteriaModels.ts</DependentUpon>
     </EmbeddedResource>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\Ethnicity.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\Ethnicity.js">
-      <DependentUpon>Ethnicity.ts</DependentUpon>
+    <TypeScriptCompile Include="Content\ViewModels\RequestCriteriaViewModels.ts" />
+    <EmbeddedResource Include="Content\ViewModels\RequestCriteriaViewModels.js">
+      <DependentUpon>RequestCriteriaViewModels.ts</DependentUpon>
     </EmbeddedResource>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\Metric.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\Metric.js">
-      <DependentUpon>Metric.ts</DependentUpon>
+    <EmbeddedResource Include="Content\ViewModels\RequestCriteriaViewModels.js.map">
+      <DependentUpon>RequestCriteriaViewModels.ts</DependentUpon>
     </EmbeddedResource>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\DataPartner.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\DataPartner.js">
-      <DependentUpon>DataPartner.ts</DependentUpon>
+    <TypeScriptCompile Include="Content\ViewModels\DataCheckerViewModels.ts" />
+    <EmbeddedResource Include="Content\ViewModels\DataCheckerViewModels.js">
+      <DependentUpon>DataCheckerViewModels.ts</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\WorkplanType.js">
-      <DependentUpon>WorkplanType.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\RequesterCenter.js">
-      <DependentUpon>RequesterCenter.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\WorkplanType.js">
-      <DependentUpon>WorkplanType.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\ReportAggregationLevel.js">
-      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\PDX.js">
-      <DependentUpon>PDX.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\PDX.js">
-      <DependentUpon>PDX.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\RxAmt.js">
-      <DependentUpon>RxAmt.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\EncounterType.js">
-      <DependentUpon>EncounterType.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\MetaDataTable.js">
-      <DependentUpon>MetaDataTable.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\Models\Terms\rxSup.js">
-      <DependentUpon>rxSup.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\MetaDataTable.js">
-      <DependentUpon>MetaDataTable.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\EncounterType.js">
-      <DependentUpon>EncounterType.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\RxAmt.js">
-      <DependentUpon>RxAmt.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\RxSup.js">
-      <DependentUpon>RxSup.ts</DependentUpon>
+    <EmbeddedResource Include="Content\ViewModels\DataCheckerViewModels.js.map">
+      <DependentUpon>DataCheckerViewModels.ts</DependentUpon>
     </EmbeddedResource>
     <Content Include="Views\Error.cshtml">
       <Generator>RazorGenerator</Generator>
@@ -420,10 +359,6 @@
     <None Include="Content\Create.js.map">
       <DependentUpon>Create.ts</DependentUpon>
     </None>
-    <TypeScriptCompile Include="Content\Models\RequestCriteria.ts" />
-    <EmbeddedResource Include="Content\Models\RequestCriteria.js">
-      <DependentUpon>RequestCriteria.ts</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Content\CreateOrgSearch.js.map">
       <DependentUpon>CreateOrgSearch.ts</DependentUpon>
     </EmbeddedResource>
@@ -439,216 +374,11 @@
     <EmbeddedResource Include="Content\CreateRegSearch.js.map">
       <DependentUpon>CreateRegSearch.ts</DependentUpon>
     </EmbeddedResource>
-    <None Include="Content\Models\RequestCriteria.js.map">
-      <DependentUpon>RequestCriteria.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\RequestCriteria.ts" />
-    <EmbeddedResource Include="Content\ViewModels\RequestCriteria.js" />
-    <None Include="Content\Models\Terms\DataPartner.js.map">
-      <DependentUpon>DataPartner.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\EncounterType.js.map">
-      <DependentUpon>EncounterType.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\Ethnicity.js.map">
-      <DependentUpon>Ethnicity.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\MetaDataTable.js.map">
-      <DependentUpon>MetaDataTable.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\Metric.js.map">
-      <DependentUpon>Metric.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\PDX.js.map">
-      <DependentUpon>PDX.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\Race.js.map">
-      <DependentUpon>Race.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\RequesterCenter.js.map">
-      <DependentUpon>RequesterCenter.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\RxAmt.js.map">
-      <DependentUpon>RxAmt.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\rxSup.js.map">
-      <DependentUpon>rxSup.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\WorkplanType.js.map">
-      <DependentUpon>WorkplanType.ts</DependentUpon>
-    </None>
-    <None Include="Content\Models\Terms\ReportAggregationLevel.js.map">
-      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\RequestCriteria.js.map" />
-    <TypeScriptCompile Include="Content\Models\Criteria.ts" />
-    <EmbeddedResource Include="Content\Models\Criteria.js">
-      <DependentUpon>Criteria.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Criteria.js.map">
-      <DependentUpon>Criteria.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Criteria.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Criteria.js" />
-    <None Include="Content\ViewModels\Criteria.js.map" />
-    <TypeScriptCompile Include="Content\Models\Terms.ts" />
-    <EmbeddedResource Include="Content\Models\Terms.js">
-      <DependentUpon>Terms.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms.js.map">
-      <DependentUpon>Terms.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms.js">
-      <DependentUpon>Terms.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms.js.map">
-      <DependentUpon>Terms.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\Models\Terms\AgeRange.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\AgeRange.js">
-      <DependentUpon>AgeRange.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\AgeRange.js.map">
-      <DependentUpon>AgeRange.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\AgeRange.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\AgeRange.js">
-      <DependentUpon>AgeRange.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\AgeRange.js.map">
-      <DependentUpon>AgeRange.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\Models\Terms\AgeStratifier.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\AgeStratifier.js">
-      <DependentUpon>AgeStratifier.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\AgeStratifier.js.map">
-      <DependentUpon>AgeStratifier.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\AgeStratifier.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\AgeStratifier.js">
-      <DependentUpon>AgeStratifier.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\AgeStratifier.js.map">
-      <DependentUpon>AgeStratifier.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\Models\Terms\ClinicalSetting.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\ClinicalSetting.js">
-      <DependentUpon>ClinicalSetting.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\ClinicalSetting.js.map">
-      <DependentUpon>ClinicalSetting.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\ClinicalSetting.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\ClinicalSetting.js">
-      <DependentUpon>ClinicalSetting.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\ClinicalSetting.js.map">
-      <DependentUpon>ClinicalSetting.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\CodesTerm.ts" />
-    <None Include="Content\ViewModels\Terms\CodesTerm.js.map">
-      <DependentUpon>CodesTerm.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\DateRange.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\DateRange.js">
-      <DependentUpon>DateRange.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\DataPartner.js.map">
-      <DependentUpon>DataPartner.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\DateRange.js.map">
-      <DependentUpon>DateRange.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\Models\Terms\Project.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\Project.js">
-      <DependentUpon>Project.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\Project.js.map">
-      <DependentUpon>Project.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\Project.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\Project.js">
-      <DependentUpon>Project.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\Project.js.map">
-      <DependentUpon>Project.ts</DependentUpon>
-    </EmbeddedResource>
-    <TypeScriptCompile Include="Content\Models\Terms\RequestStatus.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\RequestStatus.js">
-      <DependentUpon>RequestStatus.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\RequestStatus.js.map">
-      <DependentUpon>RequestStatus.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\ReportAggregationLevel.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\ReportAggregationLevel.js">
-      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\ReportAggregationLevel.js.map">
-      <DependentUpon>ReportAggregationLevel.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\RequestStatus.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\RequestStatus.js">
-      <DependentUpon>RequestStatus.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\EncounterType.js.map">
-      <DependentUpon>EncounterType.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\Ethnicity.js.map">
-      <DependentUpon>Ethnicity.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\MetaDataTable.js.map">
-      <DependentUpon>MetaDataTable.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\Metric.js.map">
-      <DependentUpon>Metric.ts</DependentUpon>
-    </None>
-    <EmbeddedResource Include="Content\ViewModels\Terms\PDX.js.map">
-      <DependentUpon>PDX.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\ViewModels\Terms\Race.js.map">
-      <DependentUpon>Race.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\RequesterCenter.js.map">
-      <DependentUpon>RequesterCenter.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\RequestStatus.js.map">
-      <DependentUpon>RequestStatus.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\Models\Terms\Sex.ts" />
-    <EmbeddedResource Include="Content\Models\Terms\Sex.js">
-      <DependentUpon>Sex.ts</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Content\Models\Terms\Sex.js.map">
-      <DependentUpon>Sex.ts</DependentUpon>
-    </None>
-    <TypeScriptCompile Include="Content\ViewModels\Terms\RequesterCenter.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\RxAmt.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\RxSup.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\WorkplanType.ts" />
-    <TypeScriptCompile Include="Content\ViewModels\Terms\Sex.ts" />
-    <EmbeddedResource Include="Content\ViewModels\Terms\Sex.js">
-      <DependentUpon>Sex.ts</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\ViewModels\Terms\Sex.js.map">
-      <DependentUpon>Sex.ts</DependentUpon>
-    </EmbeddedResource>
     <Content Include="Views\Create.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Create.generated.cs</LastGenOutput>
     </Content>
     <None Include="App.config" />
-    <None Include="Content\ViewModels\Terms\RxAmt.js.map">
-      <DependentUpon>RxAmt.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\RxSup.js.map">
-      <DependentUpon>RxSup.ts</DependentUpon>
-    </None>
-    <None Include="Content\ViewModels\Terms\WorkplanType.js.map">
-      <DependentUpon>WorkplanType.ts</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <Content Include="Views\DisplayRequest.cshtml">
       <Generator>RazorGenerator</Generator>
@@ -696,38 +426,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup />
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptSourceMap>False</TypeScriptSourceMap>
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
-    <TypeScriptModuleKind>None</TypeScriptModuleKind>
-    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
-    <TypeScriptOutFile />
-    <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
-    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-    <TypeScriptMapRoot />
-    <TypeScriptSourceRoot />
-  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
-    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
-    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
-    <TypeScriptOutFile />
-    <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
-    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-    <TypeScriptSourceMap>False</TypeScriptSourceMap>
-    <TypeScriptMapRoot />
-    <TypeScriptSourceRoot />
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -736,6 +435,8 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
     <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.targets'))" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>
@@ -743,4 +444,20 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.6.4\build\Microsoft.TypeScript.MSBuild.targets')" />
 </Project>

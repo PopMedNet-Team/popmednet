@@ -2,7 +2,7 @@
 @using Lpp.Mvc
 @using Lpp.Dns.Portal
 @model Lpp.Dns.General.Metadata.Models.MetadataSearchModel
-@{ 
+@{
     this.Stylesheet("MetadataSearch.css");
     var id = Html.UniqueId();
     System.Reflection.Assembly mvcControlsAssembly = typeof(Lpp.Mvc.Controls.UtilityExtensions).Assembly;
@@ -12,16 +12,16 @@
     var KOViewModel = true;     // indicates this page is built with KO templates
 </script>
 
-<div id="AgeRangeTerm"  style="display: none">
+<div id="AgeRangeTerm" style="display: none">
     <span>Age Range</span>
     <div class="ui-form">
         <div class="Field">
             <label>Minimum Age</label>
-            <input data-bind="kendoNumericTextBox: {value:MinAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;"/>
+            <input data-bind="kendoNumericTextBox: {value:MinAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;" />
         </div>
         <div class="Field">
             <label>Maximum Age</label>
-            <input data-bind="kendoNumericTextBox: {value:MaxAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;"/>
+            <input data-bind="kendoNumericTextBox: {value:MaxAge,decimals:0,spinners:false}" style="width: 50px; margin-right: 10px;" />
         </div>
     </div>
 </div>
@@ -36,39 +36,39 @@
     <select data-bind="kendoDropDownList: { value:ClinicalSetting, data:RequestCriteriaViewModels.ClinicalSettingTerm.ClinicalSettingsList, dataTextField:'Key', dataValueField:'Value'}"></select>
 </div>
 
-<script id="CodesTerm" type="text/html"> 
-     
+<script id="CodesTerm" type="text/html">
+
     <input type="hidden" name="CodesTerm_Codes" data-bind="value: Codes" />
     <label>Code Set</label>
     <select data-bind="kendoDropDownList: { value:CodesTermType, data:MetadataQuery.Create.ViewModel.MDQCodeSetList, dataTextField:'Key', dataValueField:'Value'}" style="width: 100%;"></select>
 
     @*<div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.Diagnosis_ICD9Term, codeSelector:{popup: true, selector:'CodeSelector_Diagnosis_ICD9Term'}" style="width: 100%;"></div>
-    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.DrugClassTerm, codeSelector:{popup: true, selector:'CodeSelector_DrugClassTerm'}" style="width: 100%;"></div>
-    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.GenericDrugTerm, codeSelector:{popup: true, selector:'CodeSelector_GenericDrugTerm'}" style="width: 100%;"></div>
-    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.HCPCSTerm, codeSelector:{popup: true, selector:'CodeSelector_HCPCSTerm'}" style="width: 100%;"></div>
-    <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term, codeSelector:{popup: true, selector:'CodeSelector_Procedure_ICD9Term'}" style="width: 100%;"></div>*@
-    
+        <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.DrugClassTerm, codeSelector:{popup: true, selector:'CodeSelector_DrugClassTerm'}" style="width: 100%;"></div>
+        <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.GenericDrugTerm, codeSelector:{popup: true, selector:'CodeSelector_GenericDrugTerm'}" style="width: 100%;"></div>
+        <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.HCPCSTerm, codeSelector:{popup: true, selector:'CodeSelector_HCPCSTerm'}" style="width: 100%;"></div>
+        <div data-bind="visible:CodesTermType() == RequestCriteriaModels.CodesTermTypes.Procedure_ICD9Term, codeSelector:{popup: true, selector:'CodeSelector_Procedure_ICD9Term'}" style="width: 100%;"></div>*@
+
     <div class="form-group">
         <button type="button" class="btn btn-default" id="btnSelectCode" data-bind="click: SelectCode">Select...</button>
         <label>Selected Codes:&nbsp;</label>
         <span data-bind="text: Codes"></span>
-    </div> 
-    
+    </div>
+
 </script>
 
 <div id="CodeSelector_Diagnosis_ICD9Term" style="display:none;">
-    
+
 </div>
 <div id="CodeSelector_GenericDrugTerm" style="display:none;">
-    </div>
+</div>
 <div id="CodeSelector_DrugClassTerm" style="display:none;">
-    
+
 </div>
 <div id="CodeSelector_HCPCSTerm" style="display:none;">
-    
+
 </div>
 <div id="CodeSelector_Procedure_ICD9Term" style="display:none;">
-    
+
 </div>
 
 
@@ -178,7 +178,7 @@
                             </li>
                             <li class="col-xs-4" id="ActivityProjectSearchTerm">
                                 <label>Budget Activity Project</label>
-                                <input id="cboSearchActivityProject" data-bind=" kendoDropDownList: {enable: false, data:TaskActivities.dsActivityProjects, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchActivity', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}, value: SearchActivityProjectID" style="width:100%;"/>
+                                <input id="cboSearchActivityProject" data-bind=" kendoDropDownList: {enable: false, data:TaskActivities.dsActivityProjects, dataTextField:'ActivityName', dataValueField:'ActivityID', cascadeFrom: 'cboSearchActivity', cascadeFromField: 'ParentID', optionLabel: { ActivityName: 'Not Selected', ActivityID: ''}, autoBind: false}, value: SearchActivityProjectID" style="width:100%;" />
                             </li>
                         </ul>
                     </li>
@@ -201,36 +201,10 @@
     </div>
 </div>
 
-@*bootstrap the RequestCriteria support*@
-<script src="@this.Resource("Models/RequestCriteria.js")"></script>
-<script src="@this.Resource("ViewModels/RequestCriteria.js")"></script>
-<script src="@this.Resource("Models/Criteria.js")"></script>
-<script src="@this.Resource("ViewModels/Criteria.js")"></script>
-
-
-<script src="@this.Resource("Models/Terms.js")"></script>
-<script src="@this.Resource("ViewModels/Terms.js")"></script>
-@*bootstrap the terms*@
-<script src="@this.Resource("Models/Terms/AgeRange.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/AgeRange.js")"></script>
-<script src="@this.Resource("Models/Terms/AgeStratifier.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/AgeStratifier.js")"></script>
-<script src="@this.Resource("Models/Terms/ClinicalSetting.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/ClinicalSetting.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/CodesTerm.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/DateRange.js")"></script>
-<script src="@this.Resource("Models/Terms/Project.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/Project.js")"></script>
-<script src="@this.Resource("Models/Terms/RequestStatus.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/RequestStatus.js")"></script>
-<script src="@this.Resource("Models/Terms/Sex.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/Sex.js")"></script>
-<script src="@this.Resource("Models/Terms/WorkplanType.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/WorkplanType.js")"></script>
-<script src="@this.Resource("Models/Terms/RequesterCenter.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/RequesterCenter.js")"></script>
-<script src="@this.Resource("Models/Terms/ReportAggregationLevel.js")"></script>
-<script src="@this.Resource("ViewModels/Terms/ReportAggregationLevel.js")"></script>
+<script src="@this.Resource("Models/DataCheckerModels.js")"></script>
+<script src="@this.Resource("ViewModels/DataCheckerViewModels.js")"></script>
+<script src="@this.Resource("Models/RequestCriteriaModels.js")"></script>
+<script src="@this.Resource("ViewModels/RequestCriteriaViewModels.js")"></script>
 
 @*bootstrap the page*@
 <script src="@this.Resource("Create.js")"></script>

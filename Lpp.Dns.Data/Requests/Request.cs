@@ -1005,7 +1005,7 @@ namespace Lpp.Dns.Data
                                                                   && a.SecurityGroup.Users.Any(u => u.UserID == s.UserID && !u.User.Deleted && u.User.Active) && dataMartIDs.Contains(a.DataMartID)).All(a => a.Allowed)
                                             )
                                         )
-                                        && ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || s.Frequency == Frequencies.Immediately)
+                                  && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                   select new Recipient
                                   {
                                       Email = s.User.Email,
@@ -1014,7 +1014,7 @@ namespace Lpp.Dns.Data
                                       UserID = s.UserID
                                   }).ToArray()
                 };
-                IList<Notification> notifies = new List<Notification>();
+                IList < Notification > notifies = new List<Notification>();
                 notifies.Add(notification);
 
                 return notifies.AsEnumerable();
@@ -1071,8 +1071,8 @@ namespace Lpp.Dns.Data
                                   let projectEventAcls = db.ProjectEvents.Where(e => e.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let organizationEventAcls = db.OrganizationEvents.Where(e => e.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID && e.Organization.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let projectDataMartEventAcls = db.ProjectDataMartEvents.Where(e => e.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.DataMart.Requests.Any(r => r.RequestID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                                  where ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (Frequencies)s.Frequency == Frequencies.Immediately)
-                                   && (
+                                  where ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
+                                     && (
                                         (projectEventAcls.Any() || organizationEventAcls.Any() || projectDataMartEventAcls.Any())
                                         &&
                                         (projectEventAcls.All(a => a.Allowed) && organizationEventAcls.All(a => a.Allowed) && projectDataMartEventAcls.All(a => a.Allowed))
@@ -1133,7 +1133,7 @@ namespace Lpp.Dns.Data
                                   let projectEventAcls = db.ProjectEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestDraftSubmitted.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let organizationEventAcls = db.OrganizationEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestDraftSubmitted.ID && e.Organization.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let projectDataMartEventAcls = db.ProjectDataMartEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestDraftSubmitted.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.DataMart.Requests.Any(r => r.RequestID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                                  where ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (Frequencies)s.Frequency == Frequencies.Immediately)
+                                  where ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                    && (
                                         (projectEventAcls.Any() || organizationEventAcls.Any() || projectDataMartEventAcls.Any())
                                         &&
@@ -1208,7 +1208,7 @@ namespace Lpp.Dns.Data
                                   let projectEventAcls = db.ProjectEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestSubmitted.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let organizationEventAcls = db.OrganizationEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestSubmitted.ID && e.Organization.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   let projectDataMartEventAcls = db.ProjectDataMartEvents.Where(e => e.EventID == EventIdentifiers.Request.NewRequestSubmitted.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.DataMart.Requests.Any(r => r.RequestID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                                  where ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (Frequencies)s.Frequency == Frequencies.Immediately)
+                                  where ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                    && (
                                         (projectEventAcls.Any() || organizationEventAcls.Any() || projectDataMartEventAcls.Any())
                                         &&
@@ -1301,9 +1301,7 @@ namespace Lpp.Dns.Data
                                                        ||
                                                        db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID && s.FrequencyForMy == null && s.Frequency != null)
                                                     )
-                                                    && ((!immediate && s.NextDueTime <= DateTime.UtcNow && (Frequencies)s.Frequency != Frequencies.Immediately)
-                                                           || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
-
+                                                    && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                                  )
                                              select new Recipient
                                              {
@@ -1333,9 +1331,7 @@ namespace Lpp.Dns.Data
                                                   || (log.Request.SubmittedByID == s.UserID && s.FrequencyForMy != null)
                                                )
                                             && db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID)
-                                            && ((!immediate && s.NextDueTimeForMy <= DateTime.UtcNow && (Frequencies)s.FrequencyForMy != Frequencies.Immediately) 
-                                                || (immediate && (Frequencies)s.FrequencyForMy == Frequencies.Immediately))
-
+                                            && ((!immediate && (Frequencies)s.FrequencyForMy != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.FrequencyForMy == Frequencies.Immediately))
                                          )
                                          select new Recipient
                                          {
@@ -1447,7 +1443,7 @@ namespace Lpp.Dns.Data
                                   let projectAcls = db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Request.ResultsReminder.ID && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                                   where s.EventID == EventIdentifiers.Request.ResultsReminder.ID && !s.User.Deleted && s.User.Active
                                   && !db.RequestDataMarts.Where(rdm => rdm.RequestID == log.RequestID).All(dm => db.LogsResponseViewed.Any(rv => rv.UserID == s.UserID && rv.Response.RequestDataMart.RequestID == log.RequestID && rv.Response.RequestDataMart.DataMartID == dm.ID))
-                                  && ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || s.Frequency == Frequencies.Immediately)
+                                  && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                   && (
                                       (orgAcls.Any() || projectAcls.Any())
                                       &&
@@ -1469,7 +1465,7 @@ namespace Lpp.Dns.Data
                             let projectAcls = db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
                             let projectOrgAcls = db.ProjectOrganizationEvents.Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID && a.Organization.Requests.Any(r => r.ID == log.RequestID) && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
                             where s.UserID == log.UserID && s.EventID == EventIdentifiers.Response.ResultsViewed.ID && !s.User.Deleted && s.User.Active
-                                        && ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || s.Frequency == Frequencies.Immediately)
+                                        && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                         && (
                                                 (orgAcls.Any() || projectAcls.Any() || projectOrgAcls.Any())
                                                 &&
@@ -1547,7 +1543,7 @@ namespace Lpp.Dns.Data
                             let projectEventAcls = db.ProjectEvents.Where(e => e.EventID == EventIdentifiers.Request.MetadataChange.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                             let organizationEventAcls = db.OrganizationEvents.Where(e => e.EventID == EventIdentifiers.Request.MetadataChange.ID && e.Organization.Requests.Any(r => r.ID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
                             let projectDataMartEventAcls = db.ProjectDataMartEvents.Where(e => e.EventID == EventIdentifiers.Request.MetadataChange.ID && e.Project.Requests.Any(r => r.ID == log.RequestID) && e.DataMart.Requests.Any(r => r.RequestID == log.RequestID) && e.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                            where ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (Frequencies)s.Frequency == Frequencies.Immediately)
+                            where ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                              && (
                                   (projectEventAcls.Any() || organizationEventAcls.Any() || projectDataMartEventAcls.Any())
                                   &&
@@ -1706,13 +1702,16 @@ namespace Lpp.Dns.Data
 
 
             //get only the new request submitted logs for ones generated at the request level (ie datamart not specified on the log item)
-            var logs = await FilterAuditLog(from l in db.LogsNewRequestSubmitted.Include(x => x.Request).Where(l => l.RequestDataMartID == null) select l, db.UserEventSubscriptions, EventIdentifiers.Request.NewRequestSubmitted.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
+            var logs = await FilterAuditLog(from l in db.LogsNewRequestSubmitted.Include(x => x.Request) select l, db.UserEventSubscriptions, EventIdentifiers.Request.NewRequestSubmitted.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
 
             foreach (var log in logs)
             {
-                var notification = CreateNotifications(log.First(), db, false);
-                if (notification != null && notification.Any())
-                    notifications.AddRange(notification);
+                if (log.First().RequestDataMartID == null)
+                {
+                    var notification = CreateNotifications(log.First(), db, false);
+                    if (notification != null && notification.Any())
+                        notifications.AddRange(notification);
+                }
             }
 
             var statusChangedlogs = (await FilterAuditLog((from l in db.LogsRequestStatusChanged.Include(x => x.Request) where (int)l.NewStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft && (int)l.OldStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft select l), db.UserEventSubscriptions, EventIdentifiers.Request.RequestStatusChanged.ID).ToArrayAsync()).GroupBy(g => new { g.RequestID, g.Request.Identifier, g.UserID });

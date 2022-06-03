@@ -14,8 +14,6 @@
     <WarningLevel>4</WarningLevel>
     <RuntimeCCCheck>False</RuntimeCCCheck>
     <RestorePackages>true</RestorePackages>
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>

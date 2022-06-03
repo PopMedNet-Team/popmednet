@@ -70,6 +70,16 @@ namespace Lpp.Dns.Api.DataMartClient
         public Document Doc;
 
         /// <summary>
+        /// Indicates if the document with the ID specified in the metadata exists in the database.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> DocumentExists()
+        {
+            return (await _dataContext.Documents.Where(d => d.ID == DocumentMetadata.ID).CountAsync()) > 0;
+        }
+
+
+        /// <summary>
         /// Gets the FileName to be Used on the FileSystem
         /// </summary>
         /// <param name="headers"></param>

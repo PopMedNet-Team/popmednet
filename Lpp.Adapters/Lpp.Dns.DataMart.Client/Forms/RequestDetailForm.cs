@@ -402,7 +402,12 @@ namespace Lpp.Dns.DataMart.Client
                         new ParallelOptions { MaxDegreeOfParallelism = 4 },
                         (doc) =>
                         {
-                            string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
+                            var cacheDocument = doc as Lib.Caching.CacheDocument;
+                            if(cacheDocument != null && !string.IsNullOrEmpty(cacheDocument.UploadedOn))
+                            {
+                                //document has already been uploaded, do not upload again
+                                return;
+                            }
 
                             Stream stream;
 
@@ -418,7 +423,7 @@ namespace Lpp.Dns.DataMart.Client
                             var beforeMath = 25 / responseDocuments.Length;
 
                             progressPercentage = Math.Ceiling(progressPercentage + beforeMath);
-
+                            //TODO: use the calculated percentage
                             uploadWorker.ReportProgress(0);
 
                             var dto = new DTO.DataMartClient.Criteria.DocumentMetadata
@@ -434,13 +439,20 @@ namespace Lpp.Dns.DataMart.Client
                                 CurrentChunkIndex = 0
                             };
 
+                            string uploadIdentifier = ("[" + Utilities.Crypto.Hash(Guid.NewGuid()) + "]").PadRight(16);
                             DnsServiceManager.PostDocumentChunk(uploadIdentifier, dto, stream, netWorkSetting);
 
                             double afterMath = 75 / responseDocuments.Length;
-
+                            
                             progressPercentage = Math.Ceiling(progressPercentage + afterMath);
-
+                            //TODO: use the calculated percentage
                             uploadWorker.ReportProgress(0);
+
+                            if(cacheDocument != null)
+                            {
+                                Cache.MarkUploaded(cacheDocument);
+                            }
+
                         });
 
 

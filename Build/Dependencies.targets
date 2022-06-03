@@ -22,7 +22,7 @@
     <BootstrapCSS Include="./node_modules/bootstrap/dist/css/*.*" />
     <BootstrapFonts Include="./node_modules/bootstrap/fonts/*.*" />
   </ItemGroup>
-	<Target Name="NodeBuild" DependsOnTargets="CompileTypeScript">
+	<Target Name="NodeBuild">
     <Message Text="Executing npm install"></Message>
 		<Exec Command="npm install" />
     <Copy SourceFiles="./node_modules/bootstrap/dist/js/bootstrap.js;./node_modules/bootstrap/dist/js/bootstrap.min.js;" DestinationFolder="./Scripts/bootstrap" />

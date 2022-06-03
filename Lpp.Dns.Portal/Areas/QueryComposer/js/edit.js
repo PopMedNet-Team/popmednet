@@ -78,7 +78,8 @@ var Plugins;
                                 VisualTerms: visualTerms,
                                 HiddenTerms: hiddenTerms,
                                 SupportsMultiQuery: ko.observable(_this.RequestTypeDTO.SupportMultiQuery),
-                                TermsObserver: _this.TermsObserver
+                                TermsObserver: _this.TermsObserver,
+                                ProjectID: _this.ProjectID
                             };
                             _this.MDQ_Host = new Plugins.Requests.QueryBuilder.QueryEditorHost(initParams);
                         }

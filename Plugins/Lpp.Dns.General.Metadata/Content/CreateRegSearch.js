@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,12 +18,11 @@ var MetadataQuery;
     var CreateRegistrySearch;
     (function (CreateRegistrySearch) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
                 _this.Name = ko.observable(data != null ? data.Name : "");
-                //Classification
                 _this.ClassificationDiseaseDisorderCondition = ko.observable(data != null ? data.ClassificationDiseaseDisorderCondition : false);
                 _this.ClassificationRareDiseaseDisorderCondition = ko.observable(data != null ? data.ClassificationRareDiseaseDisorderCondition : false);
                 _this.ClassificationPregnancy = ko.observable(data != null ? data.ClassificationPregnancy : false);
@@ -37,7 +35,6 @@ var MetadataQuery;
                 _this.ClassificationTransplant = ko.observable(data != null ? data.ClassificationTransplant : false);
                 _this.ClassificationTumor = ko.observable(data != null ? data.ClassificationTumor : false);
                 _this.ClassificationVaccine = ko.observable(data != null ? data.ClassificationVaccine : false);
-                //Purpose
                 _this.PurposeClinicalPracticeAssessment = ko.observable(data != null ? data.PurposeClinicalPracticeAssessment : false);
                 _this.PurposeEffectiveness = ko.observable(data != null ? data.PurposeEffectiveness : false);
                 _this.PurposeNaturalHistoryofDisease = ko.observable(data != null ? data.PurposeNaturalHistoryofDisease : false);
@@ -46,7 +43,6 @@ var MetadataQuery;
                 _this.PurposePublicHealthSurveillance = ko.observable(data != null ? data.PurposePublicHealthSurveillance : false);
                 _this.PurposeQualityImprovement = ko.observable(data != null ? data.PurposeQualityImprovement : false);
                 _this.PurposeSafetyOrHarm = ko.observable(data != null ? data.PurposeSafetyOrHarm : false);
-                //Condition of Interest
                 _this.ConditionOfInterestBacterialandFungalDiseases = ko.observable(data != null ? data.ConditionOfInterestBacterialandFungalDiseases : false);
                 _this.ConditionOfInterestBehaviorsandMentalDisorders = ko.observable(data != null ? data.ConditionOfInterestBehaviorsandMentalDisorders : false);
                 _this.ConditionOfInterestBloodandLymphConditions = ko.observable(data != null ? data.ConditionOfInterestBloodandLymphConditions : false);
@@ -71,14 +67,12 @@ var MetadataQuery;
                 _this.ConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions = ko.observable(data != null ? data.ConditionOfInterestUrinaryTractSexualOrgansAndPregnancyConditions : false);
                 _this.ConditionOfInterestViralDiseases = ko.observable(data != null ? data.ConditionOfInterestViralDiseases : false);
                 _this.ConditionOfInterestWoundsAndInjuries = ko.observable(data != null ? data.ConditionOfInterestWoundsAndInjuries : false);
-                //This binds the observables to update the form changed automatically
                 _this.SubscribeObservables();
                 return _this;
             }
             ViewModel.prototype.save = function () {
                 var data = {
                     Name: this.Name(),
-                    //Classification
                     ClassificationDiseaseDisorderCondition: this.ClassificationDiseaseDisorderCondition(),
                     ClassificationRareDiseaseDisorderCondition: this.ClassificationRareDiseaseDisorderCondition(),
                     ClassificationPregnancy: this.ClassificationPregnancy(),
@@ -91,7 +85,6 @@ var MetadataQuery;
                     ClassificationTransplant: this.ClassificationTransplant(),
                     ClassificationTumor: this.ClassificationTumor(),
                     ClassificationVaccine: this.ClassificationVaccine(),
-                    //Purpose
                     PurposeClinicalPracticeAssessment: this.PurposeClinicalPracticeAssessment(),
                     PurposeEffectiveness: this.PurposeEffectiveness(),
                     PurposeNaturalHistoryofDisease: this.PurposeNaturalHistoryofDisease(),
@@ -100,7 +93,6 @@ var MetadataQuery;
                     PurposePublicHealthSurveillance: this.PurposePublicHealthSurveillance(),
                     PurposeQualityImprovement: this.PurposeQualityImprovement(),
                     PurposeSafetyOrHarm: this.PurposeSafetyOrHarm(),
-                    //Condition of Interest
                     ConditionOfInterestBacterialandFungalDiseases: this.ConditionOfInterestBacterialandFungalDiseases(),
                     ConditionOfInterestBehaviorsandMentalDisorders: this.ConditionOfInterestBehaviorsandMentalDisorders(),
                     ConditionOfInterestBloodandLymphConditions: this.ConditionOfInterestBloodandLymphConditions(),
@@ -132,7 +124,7 @@ var MetadataQuery;
         }(Dns.PageViewModel));
         CreateRegistrySearch.ViewModel = ViewModel;
         function init(data, hiddenDataControl, bindingControl) {
-            hiddenDataControl.val(JSON.stringify(data)); //Store it on first call
+            hiddenDataControl.val(JSON.stringify(data));
             vm = new ViewModel(data, hiddenDataControl);
             ko.applyBindings(vm, bindingControl[0]);
         }

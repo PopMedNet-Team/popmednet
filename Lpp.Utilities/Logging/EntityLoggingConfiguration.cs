@@ -29,11 +29,13 @@ namespace Lpp.Utilities.Logging
         public virtual IQueryable<T> FilterAuditLog<T>(IQueryable<T> logs, IQueryable<ISubscription> subscriptions, Guid eventId)
             where T : AuditLog
         {
+            // NOTE LastRunTime and NextDueTime(ForMy) is impacted by changes in UsersController's UpdateSubscribedEvents.
+            // Except for users created before changes to UsersController for PMNDEV-8628, it's unlikely for LastRunTime and NextDueTime(ForMy) to be null.
             return from l in logs where subscriptions.Any(s => s.EventID == eventId 
                    && l.EventID == s.EventID 
                    && l.TimeStamp >= DbFunctions.AddMonths(DateTime.UtcNow, -1)
-                   && (s.LastRunTime == null || l.TimeStamp >= s.LastRunTime.Value)
-                   && 
+                   && (s.LastRunTime == null || l.TimeStamp >= s.LastRunTime.Value) // Select only logs for the given eventId that occurred after last notification. If never notified (null), then select all.
+                   && // Select only logs for eventId whose next daily/weekly/monthly notification time has passed. If never notified (null), select all logs as long as subscription frequency is not immediate.
                       (
                          (
                             (s.NextDueTime == null || s.NextDueTime.Value <= DateTime.UtcNow) &&

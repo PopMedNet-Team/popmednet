@@ -51,7 +51,8 @@ var RequestType;
                     CriteriaGroupTemplates: criteriaGroupTemplates,
                     HiddenTerms: hiddenTerms,
                     SupportsMultiQuery: ko.pureComputed(function () { return self.RequestType.SupportMultiQuery(); }),
-                    TermsObserver: termsObserver
+                    TermsObserver: termsObserver,
+                    ProjectID: null
                 });
                 self.AddableTerms = ko.computed(function () {
                     var results = self.TermList.filter(function (t) {

@@ -60,7 +60,14 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
                     }
                     else
                     {
-                        dr[col.Key] = col.Value;
+                        if (col.Key == "DataPartner")
+                        {
+                            dr["DP"] = col.Value;
+                        }
+                        else
+                        {
+                            dr[col.Key] = col.Value;
+                        }
                     }
                 }
 

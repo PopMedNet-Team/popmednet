@@ -219,7 +219,7 @@ namespace Lpp.Dns.Api.Security
         [HttpGet]
         public IQueryable<AclProjectDataMartDTO> GetProjectDataMartPermissions(Guid projectID, Guid? dataMartID = null)
         {
-            var result = (from a in DataContext.Secure<AclProjectDataMart>(Identity) where a.ProjectID == projectID && (dataMartID == null || a.DataMartID == dataMartID.Value) && a.Overridden select a).Map<AclProjectDataMart, AclProjectDataMartDTO>();
+            var result = (from a in DataContext.Secure<AclProjectDataMart>(Identity) where a.ProjectID == projectID && (dataMartID == null || a.DataMartID == dataMartID.Value) && !a.DataMart.Deleted && a.Overridden select a).Map<AclProjectDataMart, AclProjectDataMartDTO>();
             return result;
         }
 
@@ -235,6 +235,7 @@ namespace Lpp.Dns.Api.Security
             var result = (from a in DataContext.Secure<AclProjectDataMartRequestType>(Identity)
                           where a.ProjectID == projectID &&
                           (dataMartID == null || a.DataMartID == dataMartID.Value) &&
+                          a.DataMart.Deleted == false &&
                           a.Overridden
                           select a)
                           .Map<AclProjectDataMartRequestType, AclProjectDataMartRequestTypeDTO>();

@@ -81,7 +81,7 @@ namespace Plugins.Requests.QueryBuilder {
                     this.Options.TemplateID = templateID;
                 }
             }
-
+            
             if (this.Options.IsTemplateEdit) {
                 this.Options.RegisterForHiddenTermExport(ko.unwrap(this.Options.TemplateID), this);
             }
@@ -89,9 +89,12 @@ namespace Plugins.Requests.QueryBuilder {
             this.IsCriteriaGroupEdit = this.Options.TemplateType === Dns.Enums.TemplateTypes.CriteriaGroup;
             this.IsPresetQuery = ko.pureComputed(() => self.Options.Query.Header.ComposerInterface() != Dns.Enums.QueryComposerInterface.FlexibleMenuDrivenQuery);
 
+
             this.TermProvider = new Plugins.Requests.QueryBuilder.MDQ.TermProvider(self.Options.VisualTerms, self.Options.RequestTypeModelIDs(), self.Options.RequestTypeTerms().map(t => t.RequestTypeID()), self.Options.Query.Header.QueryType);
+
             //make sure any new template properties exist on the request query json terms
             this.TermProvider.TermValueFilter.ConfirmTemplatePropertiesForViewModel(self.Options.Query, self.Options.VisualTerms);
+
             this.FilteredTermList = this.TermProvider.FilteredTerms;
             this.TermProvider.Refresh();
             
@@ -107,12 +110,12 @@ namespace Plugins.Requests.QueryBuilder {
                 self.TermProvider.setRestrictedTermIDs(newValue.map(rtt => rtt.TermID()));
                 self.TermProvider.Refresh();
             });
-
+            
             
             let currentTerms = Plugins.Requests.QueryBuilder.MDQ.TermProvider.FlattenToAllTermIDs(this.Options.Query.toData());
             this._activeTerms = ko.observableArray(currentTerms);
             this.Options.TermsObserver.RegisterTermCollection(this.Options.Query.Header.ID(), this._activeTerms);
-
+            
             this.Options.Query.Where.Criteria.subscribe((value) => {
                 this._activeTerms(Plugins.Requests.QueryBuilder.MDQ.TermProvider.GetTermIDsFromCriteria(value.map(c => c.toData())));
             }, this);

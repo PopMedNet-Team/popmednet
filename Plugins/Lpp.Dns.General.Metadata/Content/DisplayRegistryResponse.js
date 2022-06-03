@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,7 +18,7 @@ var MetaData;
     var DisplayRegistryResponse;
     (function (DisplayRegistryResponse) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data) {
                 var _this = _super.call(this, null) || this;
@@ -33,14 +32,13 @@ var MetaData;
         }(Dns.PageViewModel));
         DisplayRegistryResponse.ViewModel = ViewModel;
         function init(data, bindingControl) {
-            //alert(data.length);
             vm = new ViewModel(data);
             $(function () {
                 ko.applyBindings(vm, bindingControl[0]);
             });
         }
         DisplayRegistryResponse.init = init;
-        var RegistryResultViewModel = /** @class */ (function () {
+        var RegistryResultViewModel = (function () {
             function RegistryResultViewModel(data) {
                 this.Expanded = ko.observable(false);
                 this.ID = ko.observable(data.ID);

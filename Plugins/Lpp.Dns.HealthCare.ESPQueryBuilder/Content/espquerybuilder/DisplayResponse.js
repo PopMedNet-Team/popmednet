@@ -63,9 +63,9 @@ var ESPQueryBuilder;
     ESPQueryBuilder.ViewModel = ViewModel;
     var SimpleResultViewModel = (function () {
         function SimpleResultViewModel(model, StratificationFlags, AgeGroupTitle) {
-            var _this = this;
             if (StratificationFlags === void 0) { StratificationFlags = Stratifications.None; }
             if (AgeGroupTitle === void 0) { AgeGroupTitle = ''; }
+            var _this = this;
             this.model = model;
             this.StratificationFlags = StratificationFlags;
             this.AgeGroupTitle = AgeGroupTitle;

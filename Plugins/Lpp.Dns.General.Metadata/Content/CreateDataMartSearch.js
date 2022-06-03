@@ -1,4 +1,3 @@
-/// <reference path="../../../lpp.dns.portal/scripts/common.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19,12 +18,11 @@ var MetadataQuery;
     var CreateDataMartSearch;
     (function (CreateDataMartSearch) {
         var vm;
-        var ViewModel = /** @class */ (function (_super) {
+        var ViewModel = (function (_super) {
             __extends(ViewModel, _super);
             function ViewModel(data, hiddenDataControl) {
                 var _this = _super.call(this, hiddenDataControl) || this;
                 _this.Name = ko.observable(data != null ? data.Name : "");
-                //Data Models
                 _this.DataModelESP = ko.observable(data != null ? data.DataModelESP : false);
                 _this.DataModelMSCDM = ko.observable(data != null ? data.DataModelMSCDM : false);
                 _this.DataModelHMRON = ko.observable(data != null ? data.DataModelHMRON : false);
@@ -33,7 +31,6 @@ var MetadataQuery;
                 _this.DataModelPCORI = ko.observable(data != null ? data.DataModelPCORI : false);
                 _this.DataModelOther = ko.observable(data != null ? data.DataModelOther : false);
                 _this.DataModelOtherValue = ko.observable(data != null ? data.DataModelOtherValue : '');
-                //Data Domains Inpatient
                 _this.InpatientEncountersAll = ko.observable(data != null ? data.InpatientEncountersAll : false);
                 _this.InpatientEncountersEncounterID = ko.observable(data != null ? data.InpatientEncountersEncounterID : false);
                 _this.InpatientEncountersDatesofService = ko.observable(data != null ? data.InpatientEncountersDatesofService : false);
@@ -48,7 +45,6 @@ var MetadataQuery;
                 _this.InpatientEncountersDischargeStatus = ko.observable(data != null ? data.InpatientEncountersDischargeStatus : false);
                 _this.InpatientEncountersOther = ko.observable(data != null ? data.InpatientEncountersOther : false);
                 _this.InpatientEncountersOtherValue = ko.observable(data != null ? data.InpatientEncountersOtherValue : '');
-                //Data Domains Outpatient
                 _this.OutpatientEncountersAll = ko.observable(data != null ? data.OutpatientEncountersAll : false);
                 _this.OutpatientEncountersEncounterID = ko.observable(data != null ? data.OutpatientEncountersEncounterID : false);
                 _this.OutpatientEncountersDatesofService = ko.observable(data != null ? data.OutpatientEncountersDatesofService : false);
@@ -61,7 +57,6 @@ var MetadataQuery;
                 _this.OutpatientEncountersHPHCS = ko.observable(data != null ? data.OutpatientEncountersHPHCS : false);
                 _this.OutpatientEncountersOther = ko.observable(data != null ? data.OutpatientEncountersOther : false);
                 _this.OutpatientEncountersOtherValue = ko.observable(data != null ? data.OutpatientEncountersOtherValue : '');
-                //Data Domains Laboratory Tests
                 _this.LaboratoryTestResultsAll = ko.observable(data != null ? data.LaboratoryTestResultsAll : false);
                 _this.LaboratoryTestsOrderDates = ko.observable(data != null ? data.LaboratoryTestsOrderDates : false);
                 _this.LaboratoryTestsResultDates = ko.observable(data != null ? data.LaboratoryTestsResultDates : false);
@@ -72,24 +67,21 @@ var MetadataQuery;
                 _this.LaboratoryTestsSNOMED = ko.observable(data != null ? data.LaboratoryTestsSNOMED : false);
                 _this.LaboratoryTestsOther = ko.observable(data != null ? data.LaboratoryTestsOther : false);
                 _this.LaboratoryTestsOtherValue = ko.observable(data != null ? data.LaboratoryTestsOtherValue : '');
-                //Data Domain Demographics
                 _this.DemographicsAll = ko.observable(data != null ? data.DemographicsAll : false);
                 _this.DemographicsSex = ko.observable(data != null ? data.DemographicsSex : false);
                 _this.DemographicsDOB = ko.observable(data != null ? data.DemographicsDOB : false);
                 _this.DemographicsDateofDeath = ko.observable(data != null ? data.DemographicsDateofDeath : false);
-                _this.DemographicsAddress = ko.observable(data != null ? data.DemographicsAddress : false); //displayed as Zip Code
+                _this.DemographicsAddress = ko.observable(data != null ? data.DemographicsAddress : false);
                 _this.DemographicsRace = ko.observable(data != null ? data.DemographicsRace : false);
                 _this.DemographicsEthnicity = ko.observable(data != null ? data.DemographicsEthnicity : false);
                 _this.DemographicsOther = ko.observable(data != null ? data.DemographicsOther : false);
                 _this.DemographicsOtherValue = ko.observable(data != null ? data.DemographicsOtherValue : '');
-                //Data Domain Patient Reported Outcomes
                 _this.PatientReportedOutcomesAll = ko.observable(data != null ? data.PatientReportedOutcomesAll : false);
                 _this.PatientReportedOutcomesHealthBehavior = ko.observable(data != null ? data.PatientReportedOutcomesHealthBehavior : false);
                 _this.PatientReportedOutcomesHRQOL = ko.observable(data != null ? data.PatientReportedOutcomesHRQOL : false);
                 _this.PatientReportedOutcomesPRO = ko.observable(data != null ? data.PatientReportedOutcomesPRO : false);
                 _this.PatientReportedOutcomesOther = ko.observable(data != null ? data.PatientReportedOutcomesOther : false);
                 _this.PatientReportedOutcomesOtherValue = ko.observable(data != null ? data.PatientReportedOutcomesOtherValue : '');
-                //Data Domain Vital Signs
                 _this.VitalSignsAll = ko.observable(data != null ? data.VitalSignsAll : false);
                 _this.VitalSignsTemp = ko.observable(data != null ? data.VitalSignsTemp : false);
                 _this.VitalSignsHeight = ko.observable(data != null ? data.VitalSignsHeight : false);
@@ -99,14 +91,12 @@ var MetadataQuery;
                 _this.VitalSignsBloodPressure = ko.observable(data != null ? data.VitalSignsBloodPressure : false);
                 _this.VitalSignsOther = ko.observable(data != null ? data.VitalSignsOther : false);
                 _this.VitalSignsOtherValue = ko.observable(data != null ? data.VitalSignsOtherValue : '');
-                //Data Domain Prescription Orders
                 _this.PrescriptionOrdersAll = ko.observable(data != null ? data.PrescriptionOrdersAll : false);
                 _this.PrescriptionOrdersDates = ko.observable(data != null ? data.PrescriptionOrdersDates : false);
                 _this.PrescriptionOrdersRxNorm = ko.observable(data != null ? data.PrescriptionOrdersRxNorm : false);
                 _this.PrescriptionOrdersNDC = ko.observable(data != null ? data.PrescriptionOrdersNDC : false);
                 _this.PrescriptionOrdersOther = ko.observable(data != null ? data.PrescriptionOrdersOther : false);
                 _this.PrescriptionOrdersOtherValue = ko.observable(data != null ? data.PrescriptionOrdersOtherValue : '');
-                //Data Domain PharmacyDispensing
                 _this.PharmacyDispensingAll = ko.observable(data != null ? data.PharmacyDispensingAll : false);
                 _this.PharmacyDispensingDates = ko.observable(data != null ? data.PharmacyDispensingDates : false);
                 _this.PharmacyDispensingRxNorm = ko.observable(data != null ? data.PharmacyDispensingRxNorm : false);
@@ -115,9 +105,7 @@ var MetadataQuery;
                 _this.PharmacyDispensingNDC = ko.observable(data != null ? data.PharmacyDispensingNDC : false);
                 _this.PharmacyDispensingOther = ko.observable(data != null ? data.PharmacyDispensingOther : false);
                 _this.PharmacyDispensingOtherValue = ko.observable(data != null ? data.PharmacyDispensingOtherValue : '');
-                //Data Domain Biorepositories
                 _this.BiorepositoriesAny = ko.observable(data != null ? data.BiorepositoriesAny : false);
-                //Installed Models
                 _this.InstallModelSql = ko.observable(data != null ? data.InstallModelSql : false);
                 _this.InstallModelDataChecker = ko.observable(data != null ? data.InstallModelDataChecker : false);
                 _this.InstallModelESP = ko.observable(data != null ? data.InstallModelESP : false);
@@ -131,7 +119,6 @@ var MetadataQuery;
                 _this.InstallModelMetaData = ko.observable(data != null ? data.InstallModelMetaData : false);
                 _this.InstallModelQueryComposer = ko.observable(data != null ? data.InstallModelQueryComposer : false);
                 _this.InstallModelSqlSample = ko.observable(data != null ? data.InstallModelSqlSample : false);
-                //Date Period Range
                 _this.StartDate = ko.observable(data != null ? data.StartDate : " ");
                 _this.EndDate = ko.observable(data != null ? data.EndDate : " ");
                 _this.UpdateNone = ko.observable(data != null ? data.UpdateNone : false);
@@ -143,21 +130,18 @@ var MetadataQuery;
                 _this.UpdateAnnually = ko.observable(data != null ? data.UpdateAnnually : false);
                 _this.UpdateOther = ko.observable(data != null ? data.UpdateOther : false);
                 _this.UpdateOtherValue = ko.observable(data != null ? data.UpdateOtherValue : '');
-                //Longitudinal Capture
                 _this.LongitudinalCaptureAll = ko.observable(data != null ? data.LongitudinalCaptureAll : false);
                 _this.LongitudinalCapturePatientID = ko.observable(data != null ? data.LongitudinalCapturePatientID : false);
                 _this.LongitudinalCaptureStart = ko.observable(data != null ? data.LongitudinalCaptureStart : false);
                 _this.LongitudinalCaptureStop = ko.observable(data != null ? data.LongitudinalCaptureStop : false);
                 _this.LongitudinalCaptureOther = ko.observable(data != null ? data.LongitudinalCaptureOther : false);
                 _this.LongitudinalCaptureOtherValue = ko.observable(data != null ? data.LongitudinalCaptureOtherValue : '');
-                //This binds the observables to update the form changed automatically
                 _this.SubscribeObservables();
                 return _this;
             }
             ViewModel.prototype.save = function () {
                 var data = {
                     Name: this.Name(),
-                    //DataModels
                     DataModelMSCDM: this.DataModelMSCDM(),
                     DataModelESP: this.DataModelESP(),
                     DataModelOMOP: this.DataModelOMOP(),
@@ -166,7 +150,6 @@ var MetadataQuery;
                     DataModelOther: this.DataModelOther(),
                     DataModelPCORI: this.DataModelPCORI(),
                     DataModelOtherValue: this.DataModelOtherValue(),
-                    //Data Domains Inpatiet
                     InpatientEncountersAll: this.InpatientEncountersAll(),
                     InpatientEncountersEncounterID: this.InpatientEncountersEncounterID(),
                     InpatientEncountersDatesofService: this.InpatientEncountersDatesofService(),
@@ -181,7 +164,6 @@ var MetadataQuery;
                     InpatientEncountersDischargeStatus: this.InpatientEncountersDischargeStatus(),
                     InpatientEncountersOther: this.InpatientEncountersOther(),
                     InpatientEncountersOtherValue: this.InpatientEncountersOtherValue(),
-                    //Data Domains Outpatient
                     OutpatientEncountersAll: this.OutpatientEncountersAll(),
                     OutpatientEncountersEncounterID: this.OutpatientEncountersEncounterID(),
                     OutpatientEncountersDatesofService: this.OutpatientEncountersDatesofService(),
@@ -194,7 +176,6 @@ var MetadataQuery;
                     OutpatientEncountersHPHCS: this.OutpatientEncountersHPHCS(),
                     OutpatientEncountersOther: this.OutpatientEncountersOther(),
                     OutpatientEncountersOtherValue: this.OutpatientEncountersOtherValue(),
-                    //Data Domains Laboratory Tests
                     LaboratoryTestResultsAll: this.LaboratoryTestResultsAll(),
                     LaboratoryTestsOrderDates: this.LaboratoryTestsOrderDates(),
                     LaboratoryTestsResultDates: this.LaboratoryTestsResultDates(),
@@ -205,7 +186,6 @@ var MetadataQuery;
                     LaboratoryTestsRESULT: this.LaboratoryTestsRESULT(),
                     LaboratoryTestsOther: this.LaboratoryTestsOther(),
                     LaboratoryTestsOtherValue: this.LaboratoryTestsOtherValue(),
-                    //Data Domain Demographics
                     DemographicsAll: this.DemographicsAll(),
                     DemographicsSex: this.DemographicsSex(),
                     DemographicsDOB: this.DemographicsDOB(),
@@ -215,14 +195,12 @@ var MetadataQuery;
                     DemographicsEthnicity: this.DemographicsEthnicity(),
                     DemographicsOther: this.DemographicsOther(),
                     DemographicsOtherValue: this.DemographicsOtherValue(),
-                    //Data Domain Patient Reported Outcomes
                     PatientReportedOutcomesAll: this.PatientReportedOutcomesAll(),
                     PatientReportedOutcomesHealthBehavior: this.PatientReportedOutcomesHealthBehavior(),
                     PatientReportedOutcomesHRQOL: this.PatientReportedOutcomesHRQOL(),
                     PatientReportedOutcomesPRO: this.PatientReportedOutcomesPRO(),
                     PatientReportedOutcomesOther: this.PatientReportedOutcomesOther(),
                     PatientReportedOutcomesOtherValue: this.PatientReportedOutcomesOtherValue(),
-                    //Vital Signs
                     VitalSignsAll: this.VitalSignsAll(),
                     VitalSignsTemp: this.VitalSignsTemp(),
                     VitalSignsHeight: this.VitalSignsHeight(),
@@ -232,14 +210,12 @@ var MetadataQuery;
                     VitalSignsBloodPressure: this.VitalSignsBloodPressure(),
                     VitalSignsOther: this.VitalSignsOther(),
                     VitalSignsOtherValue: this.VitalSignsOtherValue(),
-                    //Data Domain Prescription Orders
                     PrescriptionOrdersAll: this.PrescriptionOrdersAll(),
                     PrescriptionOrdersDates: this.PrescriptionOrdersDates(),
                     PrescriptionOrdersRxNorm: this.PrescriptionOrdersRxNorm(),
                     PrescriptionOrdersNDC: this.PrescriptionOrdersNDC(),
                     PrescriptionOrdersOther: this.PrescriptionOrdersOther(),
                     PrescriptionOrdersOtherValue: this.PrescriptionOrdersOtherValue(),
-                    //Data Domain PharmacyDispensing
                     PharmacyDispensingAll: this.PharmacyDispensingAll(),
                     PharmacyDispensingDates: this.PharmacyDispensingDates(),
                     PharmacyDispensingRxNorm: this.PharmacyDispensingRxNorm(),
@@ -248,9 +224,7 @@ var MetadataQuery;
                     PharmacyDispensingNDC: this.PharmacyDispensingNDC(),
                     PharmacyDispensingOther: this.PharmacyDispensingOther(),
                     PharmacyDispensingOtherValue: this.PharmacyDispensingOtherValue(),
-                    //Data Domain Biorepositories
                     BiorepositoriesAny: this.BiorepositoriesAny(),
-                    //Installed Models
                     InstallModelSql: this.InstallModelSql(),
                     InstallModelDataChecker: this.InstallModelDataChecker(),
                     InstallModelESP: this.InstallModelESP(),
@@ -264,7 +238,6 @@ var MetadataQuery;
                     InstallModelMetaData: this.InstallModelMetaData(),
                     InstallModelQueryComposer: this.InstallModelQueryComposer(),
                     InstallModelSqlSample: this.InstallModelSqlSample(),
-                    //Date Period Range
                     StartDate: this.StartDate(),
                     EndDate: this.EndDate(),
                     UpdateNone: this.UpdateNone(),
@@ -276,7 +249,6 @@ var MetadataQuery;
                     UpdateAnnually: this.UpdateAnnually(),
                     UpdateOther: this.UpdateOther(),
                     UpdateOtherValue: this.UpdateOtherValue(),
-                    //Longitudinal Capture
                     LongitudinalCaptureAll: this.LongitudinalCaptureAll(),
                     LongitudinalCapturePatientID: this.LongitudinalCapturePatientID(),
                     LongitudinalCaptureStart: this.LongitudinalCaptureStart(),
@@ -327,7 +299,7 @@ var MetadataQuery;
                 this.DemographicsSex(selected);
                 this.DemographicsDOB(selected);
                 this.DemographicsDateofDeath(selected);
-                this.DemographicsAddress(selected); //displayed as Zip Code
+                this.DemographicsAddress(selected);
                 this.DemographicsRace(selected);
                 this.DemographicsEthnicity(selected);
                 this.DemographicsOther(selected);
@@ -371,7 +343,7 @@ var MetadataQuery;
         }(Dns.PageViewModel));
         CreateDataMartSearch.ViewModel = ViewModel;
         function init(data, hiddenDataControl, bindingControl) {
-            hiddenDataControl.val(JSON.stringify(data)); //Store it on first call
+            hiddenDataControl.val(JSON.stringify(data));
             vm = new ViewModel(data, hiddenDataControl);
             ko.applyBindings(vm, bindingControl[0]);
         }

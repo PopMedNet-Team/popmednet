@@ -437,7 +437,7 @@ namespace Lpp.Dns.Data
                                     ||
                                     db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID && s.FrequencyForMy == null && s.Frequency != null)
                                  )
-                                 && ((!immediate && s.NextDueTime <= DateTime.UtcNow) || s.Frequency == Frequencies.Immediately)
+                                 && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
                                  select s;
 
                 //user is a request user and has subscribed to the "My" notification
@@ -477,7 +477,7 @@ namespace Lpp.Dns.Data
                                      db.Requests.Any(r => r.ID == log.RequestID && (r.CreatedByID == s.UserID || r.SubmittedByID == s.UserID))
                                    )
                                    && db.RequestUsers.Any(ru => ru.RequestID == log.RequestID && ru.UserID == s.UserID)
-                                   && ((!immediate && s.NextDueTimeForMy <= DateTime.UtcNow) || s.FrequencyForMy == Frequencies.Immediately)
+                                   && ((!immediate && (Frequencies)s.FrequencyForMy != Frequencies.Immediately && (s.NextDueTimeForMy == null || s.NextDueTimeForMy <= DateTime.UtcNow)) || (immediate && (Frequencies)s.FrequencyForMy == Frequencies.Immediately))
                                    select s;
                 
                 if (log.TaskID.HasValue)

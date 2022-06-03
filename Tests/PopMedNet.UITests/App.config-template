@@ -1,9 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
 	<appSettings>
-		<add key="baseUrl" value=""/>
+		<add key="baseUrl" value="http://localhost:60338/"/>
+		<add key="apiUrl" value ="http://localhost:14586/"/>
+
 		<add key="adminUser" value=""/>
 		<add key="adminPassword" value=""/>
-		<add key="globalHeadless" value ="false"/>
+
+		<!--User with permissions to create and submit requests without approval-->
+		<add key="enhancedUser" value=""/>
+		<add key="enhancedUserPwd" value ="!"/>
+
+		<add key="genericOrganization" value ="Operations Center"/>
+		<add key="genericPassword" value=""/>
+
+		<add key="testZipFile" value="to09y05_mpd_wp03_b01_LPP.zip"/>
+		<add key="projectName" value="QA Project"/>
+		<add key="requestType" value="[All Models] File Distribution"/>
+		<add key="dataMart" value ="Data Checker QE - 1"/>
+		<add key="dataMartId" value="6C726D33-7416-4392-BC2F-A4F900A3D55E"/>
+
+		<add key="globalHeadless" value ="true"/>
+		<add key="globalSloMo" value="1000"/>
+		<add key="currentVersion" value="7.6.0.0"/>
+
+		<!--Values for testing packages delivered by API match the request sent. 
+			The length of both arrays MUST be equal. Values must correspond by index
+			(e.g, oldVersionRequestId[0] has an AdapterPackageVersion of oldVersionNumber[0], etc.)-->
+		<add key="oldVersionRequestId" value ="06AF0363-FA94-4152-B871-ADA5007C3865,
+			 BF88268E-FD38-410C-9DB7-ADA500A9AC90"/>
+		<add key="oldVersionNumber" value="7.2.0.0,
+			 7.2.0.0"/>
 	</appSettings>
 </configuration>

@@ -60,7 +60,7 @@ module Plugins.Requests.QueryBuilder.Edit {
             if (this.RequestDTO.SchemaVersion !== "2.0") {
                 this.RequestDTO.SchemaVersion = "2.0";
             }
-
+            
             this.TermsObserver = new Plugins.Requests.QueryBuilder.TermsObserver();
 
             if (this.RequestDTO.Queries != null && this.RequestDTO.Queries.length > 0 &&
@@ -76,7 +76,7 @@ module Plugins.Requests.QueryBuilder.Edit {
                 let currentTerms = Plugins.Requests.QueryBuilder.MDQ.TermProvider.FlattenToAllTermIDs(this.RequestDTO.Queries[0]);
                 this.TermsObserver.RegisterTermCollection(this.RequestDTO.Queries[0].Header.ID, ko.observableArray<any>(currentTerms));
             } else {
-
+                
                 let index = 0;
                 let templateViewModels = ko.utils.arrayMap(this.RequestDTO.Queries, (query) => {
                     let template = new Dns.ViewModels.TemplateViewModel();
@@ -104,7 +104,8 @@ module Plugins.Requests.QueryBuilder.Edit {
                     VisualTerms: visualTerms,
                     HiddenTerms: hiddenTerms,
                     SupportsMultiQuery: ko.observable<boolean>(this.RequestTypeDTO.SupportMultiQuery),
-                    TermsObserver: this.TermsObserver
+                    TermsObserver: this.TermsObserver,
+                    ProjectID: this.ProjectID
                 };
 
                 this.MDQ_Host = new Plugins.Requests.QueryBuilder.QueryEditorHost(initParams);
@@ -170,7 +171,7 @@ module Plugins.Requests.QueryBuilder.Edit {
             //clone the requestDTO object, and update the query dto's
             let requestDTO = JSON.parse(JSON.stringify(this.RequestDTO)) as Dns.Interfaces.IQueryComposerRequestDTO;
             requestDTO.Queries = this.MDQ_Host == null ? this.FileUpload_Host.ExportQueries() : this.MDQ_Host.ExportQueries();
-
+            
             return requestDTO;
         }
 
@@ -214,7 +215,7 @@ module Plugins.Requests.QueryBuilder.Edit {
         ) => {
 
             $(() => {
-
+                
                 let routingsVM = Plugins.Requests.QueryBuilder.DataMartRouting.init(fieldOptions, existingRequestDataMarts, defaultDueDate, defaultPriority, additionalInstructions);
                 
                 let bindingControl = $('#ComposerControl');

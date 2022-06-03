@@ -47,6 +47,7 @@ namespace Lpp.Dns.Portal.Root.Areas.DataChecker.Controllers
 
             return decimal.MinValue;
         }
+
         
     }
 }

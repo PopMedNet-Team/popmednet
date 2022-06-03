@@ -12,21 +12,21 @@
                 <thead>
                     <tr>
                         <td>
-                            <input type="checkbox" data-bind="CheckAllCheckboxExtender:{valuesCollection:$data.Values().DataPartnersValue, allValues:$component.TermProvider.AvailableOrganizations()}" />
+                            <input type="checkbox" data-bind="CheckAllCheckboxExtender:{valuesCollection:$data.Values().DataPartnersValue, allValues:$component.TermProvider.AvailableOrganizations, valueKey:'Acronym' }" />
                         </td>
                         <td>Data Partner</td>
                     </tr>
                 </thead>
                 <tbody data-bind="DataPartnerTypeExtender: '1',foreach: $component.TermProvider.AvailableOrganizations">
                     <tr>
-                        <td><input type="checkbox" id="chk" name="chk[]" class="Checkbox" data-bind="value:$data.Acronym, checked: $parent.Values().DataPartnersValue" /></td>
+                        <td><input type="checkbox" id="chk" name="chk" class="Checkbox" data-bind="value:$data.Acronym, checked: $parent.Values().DataPartnersValue" /></td>
                         <td data-bind="text: $data.Name + ' ('+ $data.Acronym + ')'"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="col-sm-2 form-group">
-            <button id="btnDeleteDataPartnersTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <button class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
             <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
         </div>
     </div>

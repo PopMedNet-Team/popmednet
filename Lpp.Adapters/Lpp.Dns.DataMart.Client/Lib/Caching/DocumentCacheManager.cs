@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
 using Lpp.Dns.DataMart.Model;
@@ -89,15 +87,15 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
             }
         }
 
-        public IEnumerable<Document> GetResponseDocuments()
+        public IEnumerable<CacheDocument> GetResponseDocuments()
         {
             if (Enabled == false)
             {
-                return Array.Empty<Document>();
+                return Array.Empty<CacheDocument>();
             }
             
             var files = Directory.GetFiles(BaseCachePath, "*.meta");
-            List<Document> documents = new List<Document>(files.Length * 2);
+            List<CacheDocument> documents = new List<CacheDocument>(files.Length * 2);
 
             foreach (var path in files)
             {
@@ -109,9 +107,9 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
                 using (var json = new Newtonsoft.Json.JsonTextReader(reader))
                 {
                     var serializer = new Newtonsoft.Json.JsonSerializer();
-                    serializer.Converters.Add(new DocumentCreationConverter());
+                    serializer.Converters.Add(new CacheDocumentCreationConverter());
 
-                    var doc = serializer.Deserialize<Document>(json);
+                    var doc = serializer.Deserialize<CacheDocument>(json);
                     documents.Add(doc);
                 }
             }
@@ -155,7 +153,7 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
                 using (var json = new Newtonsoft.Json.JsonTextWriter(writer))
                 {
                     var serializer = new Newtonsoft.Json.JsonSerializer();
-                    serializer.Serialize(json, document.Document);
+                    serializer.Serialize(json, CacheDocument.FromDocument(document.Document));
                     json.Flush();
                 }
 
@@ -166,6 +164,27 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
                     stream.Flush();
                     document.Stream.Flush();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the serialized document metadata to include an uploaded on timestamp.
+        /// The timestamp is set as Utc now.
+        /// </summary>
+        /// <param name="document"></param>
+        public void MarkUploaded(CacheDocument document)
+        {
+            document.UploadedOn = DateTime.UtcNow.ToString("s");
+
+            string metaDataPath = Path.Combine(BaseCachePath, document.ID.ToString("D") + (Configuration.EncryptCacheItems ? ".e" : "") + ".meta");
+
+            using (var fileStream = File.OpenWrite(metaDataPath))
+            using (StreamWriter writer = Configuration.EncryptCacheItems ? new StreamWriter(CreateEncryptionStream(fileStream)) : new StreamWriter(fileStream))
+            using (var json = new Newtonsoft.Json.JsonTextWriter(writer))
+            {
+                var serializer = new Newtonsoft.Json.JsonSerializer();
+                serializer.Serialize(json, document);
+                json.Flush();
             }
         }
 
@@ -243,16 +262,16 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
 
     }
 
-    public class DocumentCreationConverter : Newtonsoft.Json.Converters.CustomCreationConverter<Document>
+    internal class CacheDocumentCreationConverter : Newtonsoft.Json.Converters.CustomCreationConverter<CacheDocument>
     {
-        public override Document Create(Type objectType)
+        public override CacheDocument Create(Type objectType)
         {
-            return new Document("", "", "");
+            return new CacheDocument();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var document = new Document("", "", "");
+            var document = new CacheDocument();
             while (reader.Read())
             {
                 if(reader.TokenType == JsonToken.PropertyName && (reader.Value.ToStringEx() == "DocumentID"))
@@ -284,6 +303,11 @@ namespace Lpp.Dns.DataMart.Client.Lib.Caching
                 {
                     reader.Read();
                     document.Kind = reader.Value.ToStringEx();
+                }
+                else if (reader.TokenType == JsonToken.PropertyName && (reader.Value.ToStringEx() == "UploadedOn"))
+                {
+                    reader.Read();
+                    document.UploadedOn = reader.Value.ToStringEx();
                 }
             }
 

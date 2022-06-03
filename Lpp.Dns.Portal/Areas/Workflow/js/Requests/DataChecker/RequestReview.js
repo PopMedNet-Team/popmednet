@@ -62,12 +62,10 @@ var Workflow;
             Dns.WebApi.Users.AllowApproveRejectRequest(Requests.Details.rovm.Request.ID()).done(function (approvePermisssion) {
                 $(function () {
                     Requests.Details.rovm.SaveRequestID("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+                    var OverviewQCviewViewModel = Plugins.Requests.QueryBuilder.View.initialize(JSON.parse(Requests.Details.rovm.Request.Query()), Requests.Details.rovm.Request, $('#taskViewQueryComposer'));
                     var bindingControl = $("#DataCheckerRequestReview");
                     vm = new ViewModel(bindingControl, approvePermisssion[0]);
                     ko.applyBindings(vm, bindingControl[0]);
-                    var view = $("#qcViewWrapper").find("#viewQueryComposer");
-                    view.attr("id", "taskViewQueryComposer");
-                    var query = Requests.Details.rovm.Request.Query() == null ? null : JSON.parse(Requests.Details.rovm.Request.Query());
                     Requests.Details.rovm.ReadOnly(true);
                 });
             });

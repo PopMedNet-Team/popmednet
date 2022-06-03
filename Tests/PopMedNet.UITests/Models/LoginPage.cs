@@ -22,18 +22,34 @@ namespace PopMedNet.UITests.Models
             var loginUrl = ConfigurationManager.AppSettings["baseUrl"] + "login/";
             await _page.GotoAsync(loginUrl);
         }
-        public async Task LoginAs(string userName, string password)
+        public async Task<HomePage> LoginAs(string userName, string password)
         {
-            await _page.TypeAsync("#txtUserName", userName);
-            await _page.TypeAsync("#txtPassword", password);
+            await _page.FillAsync("#txtUserName", userName);
+            await _page.FillAsync("#txtPassword", password);
             await _page.ClickAsync("#btnLogin");
+            return new HomePage(_page);
         }
 
         public async Task<NewUserRegistrationDialog> RegisterNewAccount()
         {
             await _page.ClickAsync("text = Register for a New Account");
-            //await _page.WaitForSelectorAsync("[title='User Registration']");
             return new NewUserRegistrationDialog(_page);
+        }
+
+        public async Task VerifyInvalidLogin()
+        {
+            Console.WriteLine("Checking for invalid credentials message...");
+            try
+            {
+                var msg = _page.Locator("span:has-text('Invalid user name or password.')");
+                await msg.IsVisibleAsync(new LocatorIsVisibleOptions() { Timeout = 5000 });
+                Console.WriteLine("Success!");
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("Message not found. Stopping test.");
+                throw;
+            }
         }
     }
 

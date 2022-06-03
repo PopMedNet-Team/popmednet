@@ -595,34 +595,27 @@ namespace Lpp.Dns.Api.Users
 
             var existing = await (from s in DataContext.UserEventSubscriptions where s.UserID == userID select s).ToArrayAsync();
 
+            // NOTE See the impact of the changes in LastRunTime and NextDueTime(forMy) below on EntityLoggingConfiguration.CreateNotification and EntityLoggingConfiguration.FilterAuditLog
+
             //New Subscriptions:
             //Event subscription should have a value for either frequency or myFrequency and cannot already be in the list of existing subscriptions
             var newSubs = from se in subscribedEvents where (se.Frequency.HasValue || se.FrequencyForMy.HasValue) && !existing.Any(e => e.EventID == se.EventID && e.UserID == se.UserID) select se;
 
             foreach (var newSub in newSubs)
             {
-                DateTime? nextDue;
-                DateTime? nextDueForMy;
-                if (newSub.Frequency != null)
-                    nextDue = DateTime.UtcNow;
-                else
-                    nextDue = null;
-                if (newSub.FrequencyForMy != null)
-                    nextDueForMy = DateTime.UtcNow;
-                else
-                    nextDueForMy = null;
                 DataContext.UserEventSubscriptions.Add(new UserEventSubscription
                 {
                     EventID = newSub.EventID,
                     Frequency = newSub.Frequency != null ? newSub.Frequency.Value : newSub.Frequency,
                     FrequencyForMy = newSub.FrequencyForMy != null ? newSub.FrequencyForMy.Value : newSub.FrequencyForMy,
-                    LastRunTime = DateTime.UtcNow,
-                    NextDueTime = nextDue,
-                    NextDueTimeForMy = nextDueForMy,
+                    LastRunTime = DateTime.UtcNow, // Regardless of frequency, any log older than before the switch should no longer be reported to avoid clogging the notification queue.
+                    NextDueTime = DateTime.UtcNow, // Regardless of frequency, scheduled notification should run on the next scheduled task run. If immediate, this will be ignored.
+                    NextDueTimeForMy = DateTime.UtcNow,  // Regardless of frequency, scheduled notification should run on the next scheduled task run. If immediate, this will be ignored.
                     UserID = newSub.UserID
                 });
             }
 
+            //Existing Subscription Changes
             //Get current matches and update frequencies as necessary
             var sameSubs = from ss in existing
                            join se in subscribedEvents on new { ss.EventID, ss.UserID } equals new { se.EventID, se.UserID }
@@ -633,35 +626,10 @@ namespace Lpp.Dns.Api.Users
                            select new { existing = ss, newSub = se };
             foreach (var sameSub in sameSubs)
             {
-                if(sameSub.existing.Frequency != sameSub.newSub.Frequency)// If there was a change...
-                {
-                    if (sameSub.newSub.Frequency != null)
-                    {
-                        sameSub.existing.Frequency = sameSub.newSub.Frequency.Value; // Update the frequency
-                        sameSub.existing.LastRunTime = DateTime.UtcNow; // Update LastRunTime
-
-                        sameSub.existing.NextDueTime = DateTime.UtcNow;
-                    }
-                    else
-                        sameSub.existing.NextDueTime = null;
-                }
-
-                if(sameSub.existing.FrequencyForMy != sameSub.newSub.FrequencyForMy)
-                {
-                    if (sameSub.newSub.FrequencyForMy != null)
-                    {
-                        sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy.Value;
-                        sameSub.existing.LastRunTime = DateTime.UtcNow;
-                        sameSub.existing.NextDueTimeForMy = DateTime.UtcNow;
-                    }
-                    else
-                        sameSub.existing.NextDueTimeForMy = null;
-                }
-                //sameSub.existing.Frequency = sameSub.newSub.Frequency != null ? sameSub.newSub.Frequency.Value : sameSub.newSub.Frequency;
-                //sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy != null ? sameSub.newSub.FrequencyForMy.Value : sameSub.newSub.FrequencyForMy;
-                //sameSub.existing.LastRunTime = DateTime.UtcNow;
-                //sameSub.existing.NextDueTime = DateTime.UtcNow;
-                
+ 				sameSub.existing.Frequency = sameSub.newSub.Frequency != null ? sameSub.newSub.Frequency.Value : sameSub.newSub.Frequency;
+				sameSub.existing.FrequencyForMy = sameSub.newSub.FrequencyForMy != null ? sameSub.newSub.FrequencyForMy.Value : sameSub.newSub.FrequencyForMy;
+				sameSub.existing.LastRunTime = DateTime.UtcNow; // Regardless of changes of frequency, any log older than before the switch should no longer be reported to avoid clogging the notification queue.
+                sameSub.existing.NextDueTime = DateTime.UtcNow; // Regardless of changes of frequency, scheduled notification should run on the next scheduled task run. If immediate, this will be ignored.
             }
 
 

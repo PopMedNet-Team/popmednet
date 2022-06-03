@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "moment": [ "node_modules/moment/moment" ] // This mapping is relative to "baseUrl"
-    }
+    },
+    "skipLibCheck": true,
+    "allowUnreachableCode": true,
+    "checkJs": false
   }
 }

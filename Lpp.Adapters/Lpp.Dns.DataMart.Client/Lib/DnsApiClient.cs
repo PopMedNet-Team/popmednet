@@ -193,7 +193,7 @@ namespace Lpp.Dns.DataMart.Client.Lib
         public async Task PostDocumentChunk(Lpp.Dns.DTO.DataMartClient.Criteria.DocumentMetadata doc, byte[] data)
         {
             string identifier;
-            _log.Debug(ExecutingMessage("PostResponseDocumentChunk?documentID=" + doc.ID.ToString("D"), out identifier));
+            _log.Debug(ExecutingMessage("PostDocumentChunk", out identifier));
             using (var content = new MultipartFormDataContent())
             {
                 var docContent = JsonConvert.SerializeObject(doc, HttpClientHelpers.SerializerSettings());
@@ -210,7 +210,7 @@ namespace Lpp.Dns.DataMart.Client.Lib
                 if (!result.IsSuccessStatusCode)
                 {
                     var errorMsg = await result.GetMessage();
-                    _log.Error(CompletionMessage(identifier, "PostResponseDocumentChunk?documentID=" + doc.ID.ToString("D"), false) + ".\r\n" + errorMsg);
+                    _log.Error(CompletionMessage(identifier, "PostDocumentChunk", false) + ".\r\n" + errorMsg);
 
                     throw new Exception("An error occured during upload of document data: " + errorMsg);
                 }

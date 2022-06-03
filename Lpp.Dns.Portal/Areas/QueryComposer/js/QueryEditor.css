@@ -1,40 +1,48 @@
-﻿#QueryComposerOverview .panel-title .trigger, 
-#QueryComposerHost .panel-title .trigger {
+﻿#QueryComposerOverview .panel-title .trigger,
+#QueryComposerHost .panel-title .trigger,
+#taskViewQueryComposer .panel-title .trigger,
+{
     text-decoration: none;
 }
 
 #QueryComposerOverview .panel-title span,
-#QueryComposerHost .panel-title span {
+#QueryComposerHost .panel-title span,
+#taskViewQueryComposer .panel-title span {
     padding-left: 8px;
     font-size: 18px;
 }
 
 #QueryComposerOverview .panel-title .trigger:before,
-#QueryComposerHost .panel-title .trigger:before {
+#QueryComposerHost .panel-title .trigger:before,
+#taskViewQueryComposer .panel-title .trigger:before {
     content: '\e252';
     font-family: 'Glyphicons Halflings';
     vertical-align: text-bottom;
 }
 
 #QueryComposerOverview .panel-title .trigger.collapsed:before,
-#QueryComposerHost .panel-title .trigger.collapsed:before {
+#QueryComposerHost .panel-title .trigger.collapsed:before,
+#taskViewQueryComposer .panel-title .trigger.collapsed:before {
     content: '\e250';
 }
 
 #QueryComposerOverview .panel-body-header,
-#QueryComposerHost .panel-body-header {
+#QueryComposerHost .panel-body-header,
+#taskViewQueryComposer .panel-body-header {
     padding: 15px;
     background-color: #f5f5f5;
 }
-#QueryComposerOverview .panel-body-header .form-control,
-#QueryComposerHost .panel-body-header .form-control {
-    height: auto;
-}
+    #QueryComposerOverview .panel-body-header .form-control,
+    #QueryComposerHost .panel-body-header .form-control,
+    #taskViewQueryComposer .panel-body-header .form-control {
+        height: auto;
+    }
 
 /* Beginning of local styles for MDQ editors */
 
 #QueryComposerOverview h4.TermHeader,
-#QueryComposerHost h4.TermHeader {
+#QueryComposerHost h4.TermHeader,
+#taskViewQueryComposer h4.TermHeader {
     padding: 0;
     margin: 0;
     font-size: 1.1em;
@@ -42,35 +50,41 @@
 }
 
 #QueryComposerOverview h2,
-#QueryComposerHost h2 {
+#QueryComposerHost h2,
+#taskViewQueryComposer h2 {
     font-size: 1.4em;
 }
 
 #QueryComposerOverview h1,
-#QueryComposerHost h1 {
+#QueryComposerHost h1,
+#taskViewQueryComposer h1 {
     font-size: 1.8em;
 }
 
 #QueryComposerOverview h3,
-#QueryComposerHost h3 {
+#QueryComposerHost h3,
+#taskViewQueryComposer h3 {
     font-size: 1.5em;
     margin: 0px;
     padding: 0px;
 }
 
 #QueryComposerOverview .k-item:hover,
-#QueryComposerHost .k-item:hover {
+#QueryComposerHost .k-item:hover,
+#taskViewQueryComposer .k-item:hover {
     transition: background .2s ease-in;
     background-color: #d9d9d9;
 }
 
 #QueryComposerOverview .k-content,
-#QueryComposerHost .k-content {
+#QueryComposerHost .k-content,
+#taskViewQueryComposer .k-content {
     background-color: inherit;
 }
 
 #QueryComposerOverview div.row
-#QueryComposerHost div.row {
+#QueryComposerHost div.row,
+#taskViewQueryComposer div.row {
     margin-top: 15px;
     padding-top: 5px;
 }

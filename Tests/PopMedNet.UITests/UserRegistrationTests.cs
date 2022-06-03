@@ -26,8 +26,9 @@ namespace PopMedNet.UITests
             playwright = await Playwright.CreateAsync();
             browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
-                SlowMo = 250,
+                //Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
+                Headless = false,
+                SlowMo = 500,
             });
             context = await browser.NewContextAsync();
             return await context.NewPageAsync();
@@ -78,8 +79,7 @@ namespace PopMedNet.UITests
             await registrationPage.Submit();
 
             // Then
-            var success = await registrationPage.SubmissionSuccessful();
-            Assert.That(success, "Submission success dialog not found.");
+            await registrationPage.SubmissionSuccessful();
         }
 
         [Test]
@@ -142,13 +142,16 @@ namespace PopMedNet.UITests
             };
 
             // Register accountto be duplicated
-            var registrationPage = loginPage.RegisterNewAccount().Result;
+            Console.WriteLine($"Entering user account to be duplicated: {userName}...");
+            var registrationPage = await loginPage.RegisterNewAccount();
             await registrationPage.FillInForm(userInfo);
             await registrationPage.Submit();
-            await registrationPage.SubmissionSuccessful();
+            var newLoginPage = await registrationPage.SubmissionSuccessful();
+
 
             // When - duplicate registrattion is entered
-            var dupReg = await loginPage.RegisterNewAccount();
+            Console.WriteLine("Entering duplicate account...");
+            var dupReg = await newLoginPage.RegisterNewAccount();
             await dupReg.FillInForm(userInfo);
             await dupReg.Submit();
 
