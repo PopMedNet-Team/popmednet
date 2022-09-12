@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace PopMedNet.UITests.Models
 {
@@ -48,16 +49,26 @@ namespace PopMedNet.UITests.Models
                     throw new ArgumentOutOfRangeException($"Clickable item '{item}' has not been implemented in Requests Page test object.");
 
             }
-            try
+
+            var retries = 5;
+            for (int i = retries; i > 0; i--)
             {
-                await _page.Locator(locator).ClickAsync();
-                Console.WriteLine("\tSuccess!");
+                try
+                {
+                    await _page.Locator(locator).ClickAsync();
+                    Console.WriteLine("\tSuccess!");
+                    return;
+                }
+                catch (TimeoutException)
+                {
+                    retries--;
+                    Console.WriteLine($"\tCould not click item {item}. Will retry {i} more times.");
+                }
             }
-            catch (TimeoutException)
-            {
-                Console.WriteLine($"\tCould not click item {item}. Stopping test.");
-                throw;
-            }
+            Console.WriteLine($"\tCould not click item {item}. Stopping test.");
+            await _page.ScreenshotAsync(new PageScreenshotOptions() { Path = $"FailedToLocate{item}.png" });
+            throw new TimeoutException();
+            
         }
         public async Task<ChooseRequestTypeDialog> CreateNewRequestForProject(string projectName)
         {
@@ -82,19 +93,26 @@ namespace PopMedNet.UITests.Models
                 throw ex;
             }
         }
+
         /// <summary>
         /// Creates a generic FD request, via the UI. Uses default settings from App.config for
         /// the project name, request type, a test zip file, and dataMart name.
         /// </summary>
         /// <param name="requestName"></param>
+        /// <param name="requestType">If null or whitespace is passed, selects File Distribution</param>
         /// <returns></returns>
-        public async Task<string> GenerateGenericRequest(string requestName)
+        public async Task<string> GenerateGenericRequest(string requestName, string requestType = "", string attachFile = "")
         {
+            Console.WriteLine($"***Creating generic request");
             // Request Data
             var projectName = ConfigurationManager.AppSettings["projectName"];
-            var requestType = ConfigurationManager.AppSettings["requestType"];
-            var testZip = $"{ConfigurationManager.AppSettings["testZipFile"]}";
+            if (string.IsNullOrWhiteSpace(requestType))
+                requestType = ConfigurationManager.AppSettings["requestType"];
+            //var testZip = $"{ConfigurationManager.AppSettings["testZipFile"]}";
+            if (string.IsNullOrWhiteSpace(attachFile))
+                attachFile = $"{ConfigurationManager.AppSettings["testTextFile"]}";
             var dataMartName = ConfigurationManager.AppSettings["dataMart"];
+            var dataMart2Name = ConfigurationManager.AppSettings["dataMart2"];
 
             var metaData = new RequestMetadataDTO()
             {
@@ -108,11 +126,13 @@ namespace PopMedNet.UITests.Models
             var details = await dialog.Save();
 
             // Request Details page
-            await details.UploadFilesForRequest(testZip);
+            await details.UploadFilesForRequest(attachFile);
 
             await details.SelectDatamarts(dataMartName);
+            await details.SelectDatamarts(dataMart2Name);
             await details.SubmitRequest();
-            await details.EnterComment();
+            if(requestType != "Modular Program")
+                await details.EnterComment();
             var requestUrl = _page.Url;
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             // Request details page closes and returns to Requests Page (grid)

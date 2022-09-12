@@ -23,6 +23,12 @@ namespace Lpp.Dns.Portal.App_Code.WorkflowRequestActivities
         {
             get { return "SimpleModularProgramDistributeRequest"; }
         }
-
+        public override Guid? WorkflowID
+        {
+            get
+            {
+                return new Guid("931c0001-787c-464d-a90f-a64f00fb23e7");
+            }
+        }
     }
 }

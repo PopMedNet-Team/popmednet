@@ -45,6 +45,7 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
+        [Category("PipelineTest")]
         public async Task SubmitAndApproveUserRegistration()
         {
             var loginPage = new LoginPage(singlePage);
@@ -67,56 +68,51 @@ namespace PopMedNet.UITests.EndToEndTests
                 Password = ConfigurationManager.AppSettings["genericPassword"]
             };
 
-            // Submit new user registration
+            Console.WriteLine($"*** Submit new registration for {userInfo}");
             var registrationPage = loginPage.RegisterNewAccount().Result;
             await registrationPage.FillInForm(userInfo);
             await registrationPage.Submit(true);
 
-
-            // Log in as Admin
             var adminUser = ConfigurationManager.AppSettings["adminUser"];
             var adminPwd = ConfigurationManager.AppSettings["adminPassword"];
+
+            Console.WriteLine($"*** Log in as administrator {adminUser}");
             var homePage = await loginPage.LoginAs(adminUser, adminPwd);
             await homePage.VerifyLogin();
 
-            // Open Network/Users
+            Console.WriteLine($"*** Show details for user {userName}");
             var usersPage = await homePage.GoToPage(PageModels.Users) as UsersPage;
             await usersPage.ClearUserFilters();
 
             // Select new registration from Users list, verifying it's set to inactive initially
             var userDetails = await usersPage.SelectUser(userName);
 
-            // Assign organization
+            Console.WriteLine($"*** Assign organization");
             await userDetails.SetUserOrganization(userInfo.OrganizationRequested);
 
-            // Assign user to security group
+            Console.WriteLine($"*** Assign user to security group");
             await userDetails.AddUserToSecurtyGroup(userInfo.OrganizationRequested, "Investigators");
 
-            // Assign security group to control user
-            await userDetails.AddPermissionsGroupForUser(userInfo.OrganizationRequested, "Administrators");
-
-            // Activate account
+            Console.WriteLine($"*** Activate user and save changes");
             await userDetails.ActivateUser();
             await userDetails.SaveChanges();
 
-            // Verify user status
+            Console.WriteLine($"*** Verify user status displays as 'Active' in their details page");
             await userDetails.VerifyUserStatus(UserStatuses.Active);
             usersPage = await userDetails.GoToPage(PageModels.Users) as UsersPage;
+            Console.WriteLine($"*** Verify user status displays as 'Active' in user grid");
             await usersPage.VerifyUserStatus(userName, UserStatuses.Active);
 
-            // Log in as user, ensure they can log in
+            Console.WriteLine($"*** Log in as {userName}");
             loginPage = await usersPage.LogOff();
             homePage = await loginPage.LoginAs(userName, userInfo.Password);
+
             
             await homePage.VerifyLogin();
-            
-            // TODO: Check contents of following pannels for accuracy/count/whatever
-            await homePage.VerifyControl(HomePagePanels.Notifications);
-            await homePage.VerifyControl(HomePagePanels.Requests);
-
         }
 
         [Test]
+        [Category("PipelineTest")]
         public async Task SubmitAndRejectNewUserRegistration()
         {
             var loginPage = new LoginPage(singlePage);
@@ -179,6 +175,7 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
+        [Category("PipelineTest")]
         public async Task SubmitAndDeleteNewUserRegitration()
         {
             var loginPage = new LoginPage(singlePage);
@@ -201,40 +198,38 @@ namespace PopMedNet.UITests.EndToEndTests
                 Password = ConfigurationManager.AppSettings["genericPassword"]
             };
 
-            // Submit new user registration
+            
+            Console.WriteLine("*** Submit new user registration");
             var registrationPage = loginPage.RegisterNewAccount().Result;
             await registrationPage.FillInForm(userInfo);
             await registrationPage.Submit(handleAlert:true);
 
-            // Log in as Admin
+            Console.WriteLine("*** Log in as Admin");
             var adminUser = ConfigurationManager.AppSettings["adminUser"];
             var adminPwd = ConfigurationManager.AppSettings["adminPassword"];
             var homePage = await loginPage.LoginAs(adminUser, adminPwd);
             await homePage.VerifyLogin();
 
-            // Open Network/Users
+            Console.WriteLine("*** Verify user is inactive");
             var usersPage = await homePage.GoToPage(PageModels.Users) as UsersPage;
             await usersPage.ClearUserFilters();
-
-            // Select new registration from Users list, verifying it's set to inactive initially
             var userDetails = await usersPage.SelectUser(userName);
 
             var userDetailsUrl = singlePage.Url;
             Console.WriteLine($"userDetailsUrl = {userDetailsUrl}");
-
-            // Delete account request, verify it does not display in Users list (?)
+            
+            Console.WriteLine("*** Delete account request and verify it does not display in Users list");
             usersPage = await userDetails.DeleteUser();
             await usersPage.ClearUserFilters();
             await usersPage.VerifyUserNotInGrid(userName);
 
-
-            // Navigate directly to the account request via URL, verify it exists but is marked as deleted
+            Console.WriteLine("*** Verify account is marked as deleted");
             await userDetails.Navigate(userDetailsUrl);
             await userDetails.VerifyUserStatus(UserStatuses.Deleted);
 
-            // Log in as user, ensure they CANNOT log in
+            Console.WriteLine("*** Verify deleted user cannot log in");
             loginPage = await userDetails.LogOff();
-            await loginPage.LoginAs(userName, userInfo.Password);
+            await loginPage.LoginAs(userName, userInfo.Password, validLogin:false);
             await loginPage.VerifyInvalidLogin();
             
         }

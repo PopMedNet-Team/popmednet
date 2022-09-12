@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PopMedNet.UITests.Models
@@ -15,13 +16,17 @@ namespace PopMedNet.UITests.Models
         private readonly IPage _page;
         private readonly IFrame _frame;
         private readonly string frameUrl = ConfigurationManager.AppSettings["baseUrl"] + "home/userregistration";
+        private readonly Regex ssoFrameUrl = new Regex(@".*/account/register");
 
 
 
         public NewUserRegistrationDialog(IPage page)
         {
             _page = page;
-            _frame = _page.FrameByUrl(frameUrl);
+            if (ConfigurationManager.AppSettings["useSso"] == "true")
+                _frame = _page.FrameByUrl(ssoFrameUrl);
+            else
+                _frame = _page.FrameByUrl(frameUrl);
         }
 
         #region FillControls

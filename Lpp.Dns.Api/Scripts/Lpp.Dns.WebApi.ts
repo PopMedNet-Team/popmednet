@@ -584,6 +584,14 @@ module Dns.WebApi {
 	 	 	 return Helpers.GetAPIResult<any[]>('Users/ExpireAllUserPasswords' + params, doNotHandleFail);
 	 	 }
 
+	 	 public static TriggerUserDeactivation( doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('Users/TriggerUserDeactivation', doNotHandleFail);
+	 	 }
+
+	 	 public static SendEmail(details: Dns.Interfaces.ISendEmailRequest, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
+	 	 	 return Helpers.PostAPIValue<any[]>('Users/SendEmail', details, doNotHandleFail);
+	 	 }
+
 	 	 public static GetPermissions(IDs: any[], permissions: any[],$filter?: string, $select?: string, $orderby?: string, $skip?: number, $top?: number, doNotHandleFail?: boolean):JQueryDeferred<any[]>{
 	 	 	 var params = '';
 	 	 	 if (IDs != null)

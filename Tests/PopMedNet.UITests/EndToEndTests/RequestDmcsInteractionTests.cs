@@ -38,7 +38,7 @@ namespace PopMedNet.UITests.EndToEndTests
             return await context.NewPageAsync();
         }
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
 
@@ -48,7 +48,7 @@ namespace PopMedNet.UITests.EndToEndTests
 
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             browser.CloseAsync();
@@ -61,7 +61,7 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public async Task PutRequestOnHold()
         {
             // Set up request for test, get RequestId (from href text)
@@ -70,12 +70,13 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Hold Test Request {DateTime.Now.ToString("s")}";
 
+            Console.WriteLine($"*** Creating new request {requestName}");
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             
             var requestUrl = await requestPage.GenerateGenericRequest(requestName);
@@ -93,10 +94,12 @@ namespace PopMedNet.UITests.EndToEndTests
 
             // Verify most recent entry includes "Submitted to Hold"
             await requestDetails.VerifyEventLogUpdate("Submitted to Hold");
+            await requestDetails.LogOff();
         }
 
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
+        [Retry(3)]
         public async Task RemoveHoldFromRequest()
         {
 
@@ -105,8 +108,8 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Remove Hold Test Request {DateTime.Now.ToString("s")}";
@@ -128,15 +131,17 @@ namespace PopMedNet.UITests.EndToEndTests
             // Verify most recent entry includes "Submitted to Hold"
             await requestDetails.GoToRequest(id);
             await requestDetails.VerifyEventLogUpdate("Hold to Submitted");
+            await requestDetails.LogOff();
         }
 
         private async Task<RestResponse> PostDocumentChunk(DocumentMetadata metaData, byte[] data)
         {
             var request = new RestRequest(resource: $"/DMC/PostDocumentChunk", method: Method.Post);
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
-            //var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
-            var client = new RestClient("http://localhost:14586/")
+            //var userName = ConfigurationManager.AppSettings["adminUser"];
+            //var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            var userName = ConfigurationManager.AppSettings["apiUser"];
+            var pwd = ConfigurationManager.AppSettings["apiPwd"];
+            var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
             {
                 Authenticator = new HttpBasicAuthenticator(userName, pwd)
             };
@@ -174,9 +179,11 @@ namespace PopMedNet.UITests.EndToEndTests
             if (string.IsNullOrEmpty(message))
                 message = "Test message.";
 
-            
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+
+            //var userName = ConfigurationManager.AppSettings["adminUser"];
+            //var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            var userName = ConfigurationManager.AppSettings["apiUser"];
+            var pwd = ConfigurationManager.AppSettings["apiPwd"];
             var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
             {
                 Authenticator = new HttpBasicAuthenticator(userName, pwd)

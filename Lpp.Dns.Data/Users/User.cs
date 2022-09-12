@@ -544,8 +544,8 @@ namespace Lpp.Dns.Data
                                          && db.GlobalEvents.Where(a => a.EventID == EventIdentifiers.User.Change.ID && a.SecurityGroup.Users.Any(u => u.UserID == s.UserID && !u.User.Deleted && u.User.Active)).All(a => a.Allowed)
                                            )
                                        )
-                                       && ((!immediate && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || s.Frequency == Frequencies.Immediately)
-                                       select new Recipient
+                                  && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
+                                  select new Recipient
                                        {
                                            Email = s.User.Email,
                                            Phone = s.User.Phone,

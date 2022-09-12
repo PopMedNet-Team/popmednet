@@ -1,27 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
 	<appSettings>
-		<add key="baseUrl" value="http://localhost:60338/"/>
-		<add key="apiUrl" value ="http://localhost:14586/"/>
 
+    <!-- vvv If running tests in an environment that does not use Single-sign-on, set to false vvv -->
+    <add key="useSso" value="true"/>
+
+    <!-- vvv URLs: QA vvv -->
+    <add key="baseUrl" value="https://pmnqatrunkdnsquerytool.popmednet.org/"/>
+    <add key="apiUrl" value ="https://pmnqatrunkapi.popmednet.org/"/>
+    <add key="ssoUrl" value="https://ssopmnqatrunk.popmednet.org/"/>
+
+    <!-- vvv User with permission to approve/reject new user requests -->
 		<add key="adminUser" value=""/>
 		<add key="adminPassword" value=""/>
 
 		<!--User with permissions to create and submit requests without approval-->
 		<add key="enhancedUser" value=""/>
-		<add key="enhancedUserPwd" value ="!"/>
+		<add key="enhancedUserPwd" value =""/>
 
+    <!-- vvv User with permissions to access API directly vvv -->
+    <add key="apiUser" value="bswan"/>
+    <add key="apiPwd" value="Password1!"/>
+    
+    <!-- vvv Organization used to create requests and to add new users. Ensure Admin and Enhanced users have rights in this org vvv-->
 		<add key="genericOrganization" value ="Operations Center"/>
 		<add key="genericPassword" value=""/>
 
+		<!-- vvv File for attaching/responding to requests. vvv -->
 		<add key="testZipFile" value="to09y05_mpd_wp03_b01_LPP.zip"/>
+
+    <!-- vvv Ensure the following are 1) In the database, 2) That they are assigned to GenericOrganization vvv-->
 		<add key="projectName" value="QA Project"/>
 		<add key="requestType" value="[All Models] File Distribution"/>
 		<add key="dataMart" value ="Data Checker QE - 1"/>
 		<add key="dataMartId" value="6C726D33-7416-4392-BC2F-A4F900A3D55E"/>
+    <add key="dataMart2" value ="MP/FD DataMart2"/>
+    <add key="dataMart2Id" value="667C8620-6BC5-483A-B00B-AA5D00C661B90"/>
 
-		<add key="globalHeadless" value ="true"/>
-		<add key="globalSloMo" value="1000"/>
+    <!-- vvv Update to match the current version vvv -->
 		<add key="currentVersion" value="7.6.0.0"/>
 
 		<!--Values for testing packages delivered by API match the request sent. 
@@ -31,5 +47,9 @@
 			 BF88268E-FD38-410C-9DB7-ADA500A9AC90"/>
 		<add key="oldVersionNumber" value="7.2.0.0,
 			 7.2.0.0"/>
+		
+    <!-- vvv Variables for test run. If running on build server, ensure globalHeadless is 'true' vvv-->
+    <add key="globalHeadless" value ="true"/>
+		<add key="globalSloMo" value="500"/>
 	</appSettings>
 </configuration>

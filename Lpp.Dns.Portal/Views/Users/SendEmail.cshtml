@@ -1,0 +1,63 @@
+﻿@model List<Tuple<int, string, string>>
+@{
+    ViewBag.Title = "Email Templates";
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+
+@section Head {
+    <style>
+        #template-container {
+            height:495px;
+            overflow:auto;
+            padding:15px;
+        }
+        div.head {
+            border-bottom: 1px solid #cecece;
+            background-color: #f5f5f57b;
+        }
+
+        dl.dl-horizontal {
+            margin-bottom:10px;
+            padding-top:10px;
+        }
+
+        dl.dl-horizontal dt {
+            width: 70px;
+        }
+
+        dl.dl-horizontal dd {
+            margin-left: 120px;
+        }
+    </style>
+    <script>
+        var emailTemplates = [
+@Html.Raw(string.Join("," + Environment.NewLine, Model.Select(m => "{ " + string.Format("Name:'{0}', TemplateID:{1}, Subject:'{2}'", m.Item2, m.Item1, m.Item3) + " }").ToArray()))
+        ];
+    </script>
+    <script src="~/js/Users/SendEmail.js"></script>
+}
+
+<div class="panel panel-default" style="margin-bottom:5px;">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-6">
+                <input type="text" id="cboTemplates" title="Please select a template" data-bind="kendoDropDownList: {value: TemplateID, data: emailTemplates, dataTextField: 'Name', dataValueField: 'TemplateID', optionLabel:'<Template Not Selected>' }" style="width: 100%;" />
+            </div>
+        </div>        
+    </div>
+    <div class="panel-body" style="padding:0px;margin-bottom:0px;">
+        <div class="head" data-bind="visible: TemplateID() !== ''">
+            <dl class="dl-horizontal">
+                <dt>Subject:</dt>
+                <dd data-bind="text:TemplateSubject"></dd>
+            </dl>
+        </div>
+        <div id="template-container">
+            @Html.Partial("~/Views/Users/Notifications/_SelectTemplate.cshtml")
+        </div>
+    </div>
+</div>
+<nav class="footer">
+    <button id="btnSave" class="btn btn-success btn-sm" style="width:12rem;" data-bind="click: Save, disable: TemplateID() === ''">OK</button>
+    <button id="btnCancel" class="btn btn-warning btn-sm" style="width:12rem;" data-bind="click: Cancel">Cancel</button>
+</nav>

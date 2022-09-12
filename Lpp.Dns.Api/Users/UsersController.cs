@@ -1516,5 +1516,48 @@ namespace Lpp.Dns.Api.Users
             return Ok();
         }
 
+        /// <summary>
+        /// Sends an email using the specified details.
+        /// </summary>
+        /// <param name="details"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SendEmail(DTO.Users.SendEmailRequest details)
+        {
+            try
+            {
+                using (var smtp = new SmtpClient())
+                {
+                    var message = new MailMessage
+                    {
+                        To = { new MailAddress(details.Properties.EmailAddress, details.Properties.FullName) },
+                        Subject = details.Properties.Subject
+                    };
+
+                    message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(details.HtmlContent, new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Text.Html)));
+
+                    message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(details.TextContent, new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Text.Plain)));
+
+                    message.AlternateViews[0].TransferEncoding = System.Net.Mime.TransferEncoding.QuotedPrintable;
+                    message.AlternateViews[1].TransferEncoding = System.Net.Mime.TransferEncoding.QuotedPrintable;
+
+                    await smtp.SendMailAsync(message);
+                }
+
+                await DataContext.SaveChangesAsync();
+
+                return Request.CreateResponse(HttpStatusCode.Accepted);
+
+            }
+            catch (SmtpException)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Smtp Error");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

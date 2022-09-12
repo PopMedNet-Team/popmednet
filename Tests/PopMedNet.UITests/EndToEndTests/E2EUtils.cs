@@ -18,17 +18,23 @@ namespace PopMedNet.UITests.EndToEndTests
     {
         public static readonly HttpClient client = new HttpClient();
         static string baseUri;
-        public static bool isInitialized = false;
+        public static string userName;
+        public static string pwd;
+        //public static bool isInitialized = false;
 
         public static void Initialize()
         {
+            
+            //isInitialized = true;
+        }
+        static E2EUtils()
+        {
             baseUri = ConfigurationManager.AppSettings["apiUrl"];
             client.BaseAddress = new Uri(baseUri);
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
-            
+            userName = ConfigurationManager.AppSettings["apiUser"];
+            pwd = ConfigurationManager.AppSettings["apiPwd"];
+
             client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(userName, pwd);
-            isInitialized = true;
         }
 
         public static async Task<HttpResponseMessage> SetRequestStatus(Guid requestId, 
@@ -37,10 +43,6 @@ namespace PopMedNet.UITests.EndToEndTests
             string message, 
             List<RoutingProperty> properties)
         {
-
-            if (!isInitialized)
-                Initialize();
-
             var resource = $"DMC/SetRequestStatus";
             var request = new HttpRequestMessage(requestUri: resource, method: HttpMethod.Put);
            
@@ -85,8 +87,8 @@ namespace PopMedNet.UITests.EndToEndTests
             uriStr += $"Requests/Get/{requestId}";
             var uri = new Uri(uriStr);
             var request = new HttpRequestMessage(requestUri: uri, method: HttpMethod.Get);
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            //var userName = ConfigurationManager.AppSettings["apiUser"];
+            //var pwd = ConfigurationManager.AppSettings["apiPwd"];
             request.Headers.Authorization = new BasicAuthenticationHeaderValue(userName, pwd);
 
             request.Headers.Add("RequestID", $"{requestId}");
@@ -110,8 +112,8 @@ namespace PopMedNet.UITests.EndToEndTests
             uriStr += $"Requests/Get/{requestId}";
             var uri = new Uri(uriStr);
             var request = new HttpRequestMessage(requestUri: uri, method: HttpMethod.Get);
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            //var userName = ConfigurationManager.AppSettings["apiUser"];
+            //var pwd = ConfigurationManager.AppSettings["apiPwd"];
             request.Headers.Authorization = new BasicAuthenticationHeaderValue(userName, pwd);
 
             Console.WriteLine($"Verifying request {requestId} is ready...");

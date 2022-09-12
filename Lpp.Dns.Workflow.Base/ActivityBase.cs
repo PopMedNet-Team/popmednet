@@ -263,6 +263,7 @@ namespace Lpp.Dns.Workflow
             await db.SaveChangesAsync();
         }
 
+
         /// <summary>
         /// Manually set the status of the request using a direct sql command, the status on the entity is also set and a save on the datacontext called. By default the entity is refreshed after the actions have been completed.
         /// </summary>
@@ -280,6 +281,36 @@ namespace Lpp.Dns.Workflow
 
             if (refreshEntity)
                 await db.Entry(_entity).ReloadAsync();
+        }
+
+        /// <summary>
+        /// Sets status of non-routed requests based on current Request.Private
+        /// Private requests are set to Draft (200) and non-private requests to DraftReview (250) if they are not already.
+        /// Saves changes and sends notification of status change. Requests with other statuses are ignored.
+        /// </summary>
+        /// <returns></returns>
+        protected async Task SetRequestVisibility(PmnTask task)
+        {
+            var visibility = (_entity.Private) ? "hidden." : "visible.";
+            var msg = $"Request is currently {visibility}";
+            var originalStatus = _entity.Status;
+
+            if (_entity.Private && (originalStatus != DTO.Enums.RequestStatuses.Draft))
+            {
+                await db.Entry(_entity).ReloadAsync();
+                await SetRequestStatus(DTO.Enums.RequestStatuses.Draft, false);
+                await task.LogAsModifiedAsync(_workflow.Identity, db, msg, appendDescription: true);
+                await db.SaveChangesAsync();
+                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Draft);
+            }
+            else if (!_entity.Private && (originalStatus != DTO.Enums.RequestStatuses.DraftReview))
+            {
+                await db.Entry(_entity).ReloadAsync();
+                await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview, false);
+                await task.LogAsModifiedAsync(_workflow.Identity, db, msg, appendDescription: true);
+                await db.SaveChangesAsync();
+                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
+            }
         }
 
         /// <summary>

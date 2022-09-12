@@ -23,6 +23,7 @@ namespace PopMedNet.UITests.Models
             try
             {
                 Console.WriteLine("Verifying logon, searching for welcome text...");
+                await GoToPage(PageModels.Home);
                 var welcomeText = _page.Locator("span:has-text('Welcome,')");
                 await _page.WaitForLoadStateAsync(LoadState.Load);
                 await welcomeText.WaitForAsync();

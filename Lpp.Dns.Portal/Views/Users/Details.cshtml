@@ -248,11 +248,16 @@
                 </div>*@
         </div>
     </div>
-    <nav class="panel-footer right">
-        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" type="button" data-bind="click: Delete, visible: HasPermission(PMNPermissions.User.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
-        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" type="button" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.User.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
-        <button class="btn btn-success btn-sm pull-right" id="btnSave" type="button" data-bind="click: Save, visible: HasPermission(PMNPermissions.User.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
-        <br class="clear" />
+    <nav class="panel-footer">
+        <div class="left">
+            <button class="btn btn-default btn-sm pull-left" id="btnSendEmail" type="button" data-bind="click: onSendEmail, visible: HasPermission(PMNPermissions.User.ManageNotifications)"><span class="k-icon k-i-envelop"></span> Send email to this user</button>
+        </div>
+        <div class="right">
+            <button class="btn btn-danger btn-sm pull-right" id="btnDelete" type="button" data-bind="click: Delete, visible: HasPermission(PMNPermissions.User.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+            <button class="btn btn-warning btn-sm pull-right" id="btnCancel" type="button" data-bind="click: Cancel, visible: HasPermission(PMNPermissions.User.Edit)" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" id="btnSave" type="button" data-bind="click: Save, visible: HasPermission(PMNPermissions.User.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+            <br class="clear" />
+        </div>
     </nav>
 
 </article>

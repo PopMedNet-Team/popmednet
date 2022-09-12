@@ -41,15 +41,22 @@ namespace Lpp.Dns.Portal.Controllers
                 Guid workflowID = Guid.Empty;
                 Guid organizationID = Guid.Empty;
 
+                bool isPrivate = false;
+                Guid createdBy = Guid.Empty;
+                DTO.Enums.RequestStatuses currentStatus = DTO.Enums.RequestStatuses.Draft;
+
                 Guid requestID;
                 if (Guid.TryParse(Request.QueryString.Get("ID"), out requestID))
                 {
-                    var details = db.Requests.Where(r => r.ID == requestID).Select(r => new { r.ProjectID, r.WorkFlowActivityID, r.RequestTypeID, r.WorkflowID, r.OrganizationID }).Single();
+                    var details = db.Requests.Where(r => r.ID == requestID).Select(r => new { r.ProjectID, r.WorkFlowActivityID, r.RequestTypeID, r.WorkflowID, r.OrganizationID, r.Private, r.CreatedByID, r.Status }).Single();
                     projectID = details.ProjectID;
                     workflowActivityID = details.WorkFlowActivityID ?? Guid.Empty;
                     requestTypeID = details.RequestTypeID;
                     workflowID = details.WorkflowID ?? Guid.Empty;
                     organizationID = details.OrganizationID;
+                    isPrivate = details.Private;
+                    createdBy = details.CreatedByID;
+                    currentStatus = details.Status;
                 }
                 else
                 {
@@ -88,16 +95,32 @@ namespace Lpp.Dns.Portal.Controllers
                 ViewBag.ScreenPermissions = grantedPermissions.Select(p => p.ID).ToList();
 
                 ViewBag.TaskOverviewPartial = "~/Areas/QueryComposer/Views/View.cshtml";
+                ViewBag.IsPrivate = isPrivate;
+                ViewBag.CanSetToPrivate = false;
+
                 if (workflowActivityID != Guid.Empty)
                 {
-                    var activity = Lpp.Dns.Portal.Areas.Workflow.WorkflowAreaRegistration.Activities.FirstOrDefault(x => (x.WorkflowActivityID == workflowActivityID) && ((x.WorkflowID.HasValue && x.WorkflowID == workflowID) || (x.WorkflowID.HasValue == false && Areas.Workflow.WorkflowAreaRegistration.Activities.Count(a => a.WorkflowActivityID == x.WorkflowActivityID) == 1)));
+                    var activity = Lpp.Dns.Portal.Areas.Workflow.WorkflowAreaRegistration.Activities
+                        .FirstOrDefault(x => (x.WorkflowActivityID == workflowActivityID) 
+                            && ((x.WorkflowID.HasValue && x.WorkflowID == workflowID) 
+                                || (x.WorkflowID.HasValue == false && Areas.Workflow.WorkflowAreaRegistration.Activities.Count(a => a.WorkflowActivityID == x.WorkflowActivityID) == 1)));
 
-
-
-                    if (activity != null && !string.IsNullOrEmpty(activity.OverviewPath))
+                    if (activity != null)
                     {
-                        // use new activity.OverviewPath to set the ViewBag.TaskOverviewPartial
-                        ViewBag.TaskOverviewPartial = "~/Areas/" + activity.OverviewPath;
+                        if (!string.IsNullOrEmpty(activity.OverviewPath))
+                        {
+                            // use new activity.OverviewPath to set the ViewBag.TaskOverviewPartial
+                            ViewBag.TaskOverviewPartial = "~/Areas/" + activity.OverviewPath;
+                        }
+
+                        bool isStartActivity = db.WorkflowActivities.Where(wa => wa.ID == activity.WorkflowActivityID).Select(wa => wa.Start).FirstOrDefault();
+                        
+                        var isNew = (createdBy == Guid.Empty && requestID == Guid.Empty);
+                        if (isNew || (createdBy == ApiIdentity.ID && isStartActivity
+                            && (currentStatus == DTO.Enums.RequestStatuses.Draft || currentStatus == DTO.Enums.RequestStatuses.DraftReview)))
+                        {
+                            ViewBag.CanSetToPrivate = true;
+                        }
                     }
                 }
 

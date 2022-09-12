@@ -80,7 +80,7 @@ namespace PopMedNet.UITests.Models
                 var org = loc.Locator($"li:has-text('{orgName}')");
                 await loc.TypeAsync(sub, new LocatorTypeOptions() { Delay = 0 });
                 await org.ClickAsync();
-                Console.WriteLine("Success!");
+                Console.WriteLine("\tSuccess!");
             }
             catch (TimeoutException)
             {
@@ -93,12 +93,21 @@ namespace PopMedNet.UITests.Models
 
         #region Public Methods (tasks)
 
-        public async Task AddPermissionsGroupForUser(string organization, string securityGroup)
+        /// <summary>
+        /// Adds custom permissions to a user throuh the permissions tab, using the group passed in the 
+        /// securityGroup parameter as a starting point.
+        /// </summary>
+        /// <param name="organization"></param>
+        /// <param name="securityGroup">Starting point for custom permissions</param>
+        /// <returns></returns>
+        public async Task AddCustomPermissionsForUser(string organization, string securityGroup)
         {
             await ClickControl(UserDetailPageClickables.PermissionsTab);
             await ClickControl(UserDetailPageClickables.AddSecurityGroupButton);
             var dialog = new AddSecurityGroupDialog(_page);
             await dialog.SetUserSecurityGroup(organization, securityGroup);
+            
+            // TODO: Set indiviual permissions for the user and save.
         }
         public async Task AddUserToSecurtyGroup(string organization, string securityGroup)
         {
@@ -158,7 +167,7 @@ namespace PopMedNet.UITests.Models
             {
                 var statusLabel = _page.Locator($"span:has-text('{status}')");
                 await statusLabel.WaitForAsync();
-                Console.WriteLine("Success!");
+                Console.WriteLine("\tSuccess!");
             }
             catch (TimeoutException)
             {

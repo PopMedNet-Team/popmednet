@@ -40,23 +40,22 @@ namespace PopMedNet.UITests.EndToEndTests
             return await context.NewPageAsync();
         }
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
-            if(!E2EUtils.isInitialized)
-                E2EUtils.Initialize();
+            
             testUrl = ConfigurationManager.AppSettings["baseUrl"];
             singlePage = GetPage().Result;
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             browser.CloseAsync();
         }
 
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public async Task RespondToRequest_WithOneDocument_HttpClient()
         {
             // Create request for test
@@ -65,8 +64,8 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Respond: Single Response -- {DateTime.Now.ToString("s")}";
@@ -96,11 +95,9 @@ namespace PopMedNet.UITests.EndToEndTests
             };
             fileList.Add(doc1.Name);
 
-            var docIds = await PostResponseDocuments(requestId, dataMartId, docs);// should only be one
 
             var metaData = new DocumentMetadata()
             {
-                ID = docIds.Results[0],
                 RequestID = requestId,
                 DataMartID = dataMartId,
                 Name = doc1.Name,
@@ -114,6 +111,11 @@ namespace PopMedNet.UITests.EndToEndTests
             var fileName = "TestDoc01.txt";
             var filePath = System.AppDomain.CurrentDomain.BaseDirectory
                 + $"ResourceFiles\\{fileName}";
+
+            var docList = new List<string>()
+            {
+                fileName
+            };
 
             var uploadResult = await UploadDocument(metaData, filePath);
             Console.WriteLine($"Upload result: {uploadResult}");
@@ -132,17 +134,17 @@ namespace PopMedNet.UITests.EndToEndTests
 
             #endregion
 
-            // Check that responses are set to Completed
-            // Reload the page
             var requestDetails = await requestPage.GoToRequest(requestId);
             await requestDetails.VerifyEventLogUpdate("Submitted to Complete");
             await requestDetails.VerifyResultsStatusInOverviewResultsTable();
             await requestDetails.VerifyTaskStatusInRoutingsTable();
 
+            await requestDetails.VerifyResponseDocuments(docList);
+
         }
 
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public async Task RespondToRequest_ReUploadResponse_HttpClient()
         {
             // Create request for test
@@ -151,8 +153,8 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Re-Upload Response -- {DateTime.Now.ToString("s")}";
@@ -184,11 +186,10 @@ namespace PopMedNet.UITests.EndToEndTests
             };
 
             Console.WriteLine($"Responding to request with document {doc1.Name}");
-            var docIds = await PostResponseDocuments(requestId, dataMartId, docs);// should only be one
 
             var metaData = new DocumentMetadata()
             {
-                ID = docIds.Results[0],
+                //ID = docIds.Results[0],
                 RequestID = requestId,
                 DataMartID = dataMartId,
                 Name = doc1.Name,
@@ -243,11 +244,11 @@ namespace PopMedNet.UITests.EndToEndTests
                 doc2
             };
             Console.WriteLine($"Responding to request with document {doc2.Name}");
-            docIds = await PostResponseDocuments(requestId, dataMartId, docs);// should only be one
+            //docIds = await PostResponseDocuments(requestId, dataMartId, docs);// should only be one
 
             metaData = new DocumentMetadata()
             {
-                ID = docIds.Results[0],
+                //ID = docIds.Results[0],
                 RequestID = requestId,
                 DataMartID = dataMartId,
                 Name = doc2.Name,
@@ -284,11 +285,11 @@ namespace PopMedNet.UITests.EndToEndTests
             requestDetails = await requestDetails.GoToRequest(requestId);
             
             // TODO: Wrap all these responses up into a method for easier verification...
-            await requestDetails.VerifyEventLogUpdate("Complete to Complete");
+            await requestDetails.VerifyEventLogUpdate("Completed to Results Modified");
             await requestDetails.VerifyResultsStatusInOverviewResultsTable("Results Modified");
             await requestDetails.VerifyTaskStatusInRoutingsTable("Results Modified");
-            await requestDetails.ExpandCompletedRouting();
-            await requestDetails.ViewResponse(); 
+            //await requestDetails.ExpandCompletedRouting();
+            //await requestDetails.ViewResponse(); 
             
             await requestDetails.VerifyResponseDocuments(docNames);
 
@@ -296,26 +297,97 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
-        public async Task XX_CheckReuploadStatusesAndStuff()
+        [Category("PipelineTest")]
+        public async Task ModularProgramRequest_RespondWithOneDocument_HttpClient()
         {
+            // Create request for test
+
             await singlePage.SetViewportSizeAsync(1920, 1080);
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            RequestDetailsPage request = await homePage.GoToRequest("6d277504-f6b5-4701-9199-aea200aa8c69");
+            var requestName = $"Respond: Modular Program -- {DateTime.Now.ToString("s")}";
+            var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
+            var attachFile = $"{ConfigurationManager.AppSettings["testTextFile"]}";
+            var requestType = $"{ConfigurationManager.AppSettings["modularProgramRequestType"]}";
+            var requestUrl = await requestPage.GenerateGenericRequest(requestName, requestType, attachFile);
+            var id = requestUrl.Split('=')[1];
 
-            await request.ClickItem(RequestDetailClickables.TaskTab);
-            await request.ExpandCompletedRouting();
-            await request.ViewResponse();
-            await request.VerifyResponseDocuments("TestDoc1");
+            var fileList = new List<string>();
+            fileList.Add(attachFile);
+
+            #region API Calls
+            await E2EUtils.WaitForRequestToProcess_HttpRequest(id);
+
+            var requestId = new Guid(id);
+            var dataMartId = new Guid(ConfigurationManager.AppSettings["dataMartId"]);
+            var fileName = $"{ConfigurationManager.AppSettings["testZipFile"]}";
+            var filePath = System.AppDomain.CurrentDomain.BaseDirectory
+                + $"ResourceFiles\\{fileName}";
+
+            var doc1 = new Document()
+            {
+                Name = fileName,
+                MimeType = "application/octet-stream",
+                Kind = "Zip",
+                Size = 2260992,
+                IsViewable = true,
+            };
+            var docNames = new List<string>()
+            {
+                doc1.Name
+            };
+            fileList.Add(doc1.Name);
+
+            var metaData = new DocumentMetadata()
+            {
+                //ID = docIds.Results[0],
+                RequestID = requestId,
+                DataMartID = dataMartId,
+                Name = doc1.Name,
+                IsViewable = doc1.IsViewable,
+                Size = doc1.Size,
+                MimeType = doc1.MimeType,
+                Kind = doc1.Kind,
+                CurrentChunkIndex = 0,
+            };
 
 
+            var uploadResult = await UploadDocument(metaData, filePath);
+            Console.WriteLine($"Upload result: {uploadResult}");
+
+            var props = new List<RoutingProperty>();
+            var setRequestResult = await E2EUtils.SetRequestStatus(
+                requestId,
+                dataMartId,
+                DMCRoutingStatus.AwaitingResponseApproval,
+                "Test",
+                props);
+
+            Console.WriteLine($"Set Request result: {setRequestResult}");
+
+            Assert.That(setRequestResult.IsSuccessStatusCode, Is.True);
+
+            #endregion
+
+            // Check that responses are set to Completed
+            // Reload the page
+            var requestDetails = await requestPage.GoToRequest(requestId);
+            await requestDetails.VerifyEventLogUpdate("Submitted to Complete");
+            await requestDetails.VerifyResultsStatusInOverviewResultsTable();
+            await requestDetails.VerifyTaskStatusInRoutingsTable();
+
+            // TODO: Verify signature file information
+            await requestDetails.VerifySignatureFileInformation();
+            
+            fileList.Add("ModularProgramRequest.xml");
+            fileList.Add("ModularProgramRequest.html");
+            await requestDetails.VerifyResponseDocuments(docNames);
         }
-
 
         /// <summary>
         /// Essentially creates a placeholder for a single document. The document is NOT actually uploaded
@@ -323,15 +395,15 @@ namespace PopMedNet.UITests.EndToEndTests
         /// </summary>
         /// <returns></returns>
         [Test]
-        [Category("PostDocumentsOnly")]
+        [Category("PipelineTest")]
         public async Task PostSingleResponseDocument_ReturnsIdForDocument()
         {
             await singlePage.SetViewportSizeAsync(1920, 1080);
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";
@@ -369,15 +441,15 @@ namespace PopMedNet.UITests.EndToEndTests
         /// </summary>
         /// <returns></returns>
         [Test]
-        [Category("PostDocumentsOnly")]
+        [Category("PipelineTest")]
         public async Task PostMultipleResponseDocuments_ReturnsIdForEachDocument()
         {
             await singlePage.SetViewportSizeAsync(1920, 1080);
             var loginPage = new LoginPage(singlePage);
             // n.b. - This essentially creates placeholders in the Db for the documents.
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";
@@ -429,6 +501,7 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
+        [Category("PipelineTest")]
         public async Task UploadOneDocument_WithChunks()
         {
             var fileName = "TestDoc01.txt";
@@ -438,8 +511,8 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
 
             await loginPage.Goto();
-            var portalUserName = ConfigurationManager.AppSettings["adminUser"];
-            var portalPassword = ConfigurationManager.AppSettings["adminPassword"];
+            var portalUserName = ConfigurationManager.AppSettings["enhancedUser"];
+            var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
             var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";

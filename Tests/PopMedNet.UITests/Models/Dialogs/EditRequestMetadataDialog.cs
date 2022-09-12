@@ -47,6 +47,7 @@ namespace PopMedNet.UITests.Models
         /// <returns></returns>
         public async Task FillRequestMetadata(RequestMetadataDTO data, bool budgetSource=false)
         {
+            Console.WriteLine($"Filling metdata for request {data.Name}");
             await _frame.WaitForLoadStateAsync(LoadState.NetworkIdle);
             await _frame.FillAsync("#Edit_Name", data.Name);
             

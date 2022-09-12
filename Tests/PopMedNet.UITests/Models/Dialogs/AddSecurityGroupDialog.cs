@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PopMedNet.UITests.Models.Dialogs
@@ -50,17 +51,22 @@ namespace PopMedNet.UITests.Models.Dialogs
             }
             // Log and attempt click
             Console.WriteLine($"Attempting to click '{controlName}'...");
-            try
+            var retries = 5;
+            for (int i = retries; i>0; i--)
             {
-                var control = _frame.Locator(locator);
-                await control.ClickAsync();
-                Console.WriteLine("\tSuccess!");
+                try
+                {
+                    var control = _frame.Locator(locator);
+                    await control.ClickAsync();
+                    Console.WriteLine("\tSuccess!");
+                    return;
+                }
+                catch (TimeoutException)
+                {
+                    Console.WriteLine($"Could not click control '{controlName}'. Attempting {i-1} more times...");
+                }
             }
-            catch (TimeoutException)
-            {
-                Console.WriteLine($"Could not click control '{controlName}'. Stopping test.");
-                throw;
-            }
+            throw new TimeoutException($"Could not click control '{locator}'. Stopping test.");           
 
         }
        
@@ -102,16 +108,35 @@ namespace PopMedNet.UITests.Models.Dialogs
 
         public async Task FilterOrganizationsByName(string orgName)
         {
-            await ClearOrganizationFilters();// Clear filters so we're starting with all orgs
-            await ClickControl(AddSecurityGroupClickables.OrgColumnOptionsExpand);
-            await ClickControl(AddSecurityGroupClickables.FilterMenuExpand);
-            await EnterFilterText(orgName);
-            await ClickControl(AddSecurityGroupClickables.FilterButton);
+            var retries = 3;
+            var errormsg = "";
+            Console.WriteLine($"Attempting to filter organization list for {orgName}");
+            while (retries > 0)
+            {
+                try
+                {
+                    await ClearOrganizationFilters();// Clear filters so we're starting with all orgs
+                    await ClickControl(AddSecurityGroupClickables.OrgColumnOptionsExpand);
+                    Thread.Sleep(250);
+                    await ClickControl(AddSecurityGroupClickables.FilterMenuExpand);
+                    await EnterFilterText(orgName);
+                    await ClickControl(AddSecurityGroupClickables.FilterButton);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    retries--;
+                    errormsg = ex.Message;
+                    Console.WriteLine($"Will attempt operation {retries} more times");
+                }
+            }
+            throw new PlaywrightException($"Unable to continue with step. Stopping test. {errormsg}");
         }
         public async Task FilterSecurityGroupsByName(string groupName)
         {
             await ClearSecurityGroupsFilters();// Clear filters so we're starting with all orgs
             await ClickControl(AddSecurityGroupClickables.OrgSecurityGroupsOptionsExpand);
+            Thread.Sleep(250);
             await ClickControl(AddSecurityGroupClickables.FilterMenuExpand);
             await EnterFilterText(groupName);
             await ClickControl(AddSecurityGroupClickables.FilterButton);

@@ -69,10 +69,7 @@ namespace Lpp.Dns.Workflow.SummaryQuery.Activities
             
             if (activityResultID.Value == SaveResultID)
             {
-                await task.LogAsModifiedAsync(_workflow.Identity, db);
-                await db.Entry(_entity).ReloadAsync();
-                _entity.Private = false;
-                await db.SaveChangesAsync();
+                await SetRequestVisibility(task);
 
                 //Do nothing, it was already saved.
                 return new CompletionResult

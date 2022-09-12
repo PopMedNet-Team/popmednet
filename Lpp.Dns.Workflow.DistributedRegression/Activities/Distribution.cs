@@ -142,10 +142,8 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
 
             if (activityResultID == SaveResultID)
             {
-                await task.LogAsModifiedAsync(_workflow.Identity, db);
-                await db.Entry(_entity).ReloadAsync();
-                _entity.Private = false;
-                await db.SaveChangesAsync();
+                await SetRequestVisibility(task);
+
                 //Do nothing, it was already saved.
                 return new CompletionResult
                 {

@@ -329,7 +329,13 @@ namespace Lpp.Dns.Workflow.ModularProgram.Activities
                 await db.SaveChangesAsync();
 
                 await MarkTaskComplete(task);
-            }            
+            }    
+            
+            if (activityResultID.Value == SaveResultID)
+            {
+                await SetRequestVisibility(task);
+
+            }
 
             return new CompletionResult
             {

@@ -1,0 +1,29 @@
+﻿@model Lpp.Dns.DTO.Users.EmailTemplateSubstitutionPropertiesDTO
+@{
+    Layout = null;
+}
+Hello @Model.FirstName @Model.LastName,
+
+Welcome to the @Model.Network team! You have been provided access to the @Model.QueryToolName, please follow the instructions below to access the system.
+
+URL: @Model.NetworkUrl
+
+User Name: @Model.Username
+
+Password: Please use the "Forgot Password" link and follow the instructions to reset your password.
+
+Other important tools to be aware of:
+
+* PopMedNet Public Wiki: This is a public facing wiki accessible by anyone with the URL. It contains information on the PopMedNet system and instructions on how to execute and respond to queries. Release notes for new versions of PopMedNet are also posted here.
+This is the home page from which all links in the above instructions can be accessed.
+https://popmednet.atlassian.net/wiki/display/DOC/Home
+
+*PopMedNet Service Desk: This is a JIRA service desk in which you can create a ticket if you ever have any questions or issues regarding the PopMedNet system. We will respond to a ticket within 48 hours.
+https://popmednet.atlassian.net/servicedesk/customer/portal/1
+
+Please reach out to the PopMedNet Service Desk (https://popmednet.atlassian.net/servicedesk/customer/portal/1) with any questions and please note,
+REPLIES TO THIS EMAIL ADDRESS ARE NOT MONITORED.
+
+Thanks,
+
+The PopMedNet Team

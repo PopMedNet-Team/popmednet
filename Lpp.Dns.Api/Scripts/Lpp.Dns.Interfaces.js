@@ -1467,6 +1467,7 @@ var Dns;
                 'DataMarts': { type: 'any[]', nullable: false },
                 'Data': { type: 'string', nullable: false },
                 'Comment': { type: 'string', nullable: false },
+                'Private': { type: 'boolean', nullable: true },
             }
         };
         Interfaces.KendoModelRequestCompletionResponseDTO = {
@@ -2780,6 +2781,30 @@ var Dns;
                 'RoutingID': { type: 'any', nullable: true },
                 'DataMart': { type: 'string', nullable: false },
                 'WorkflowActivityID': { type: 'any', nullable: true },
+            }
+        };
+        Interfaces.KendoModelEmailTemplateSubstitutionPropertiesDTO = {
+            fields: {
+                'UserID': { type: 'any', nullable: true },
+                'FirstName': { type: 'string', nullable: false },
+                'MiddleName': { type: 'string', nullable: false },
+                'LastName': { type: 'string', nullable: false },
+                'FullName': { type: 'string', nullable: false },
+                'EmailAddress': { type: 'string', nullable: false },
+                'Username': { type: 'string', nullable: false },
+                'TemplateTypeID': { type: 'number', nullable: false },
+                'Subject': { type: 'string', nullable: false },
+                'Network': { type: 'string', nullable: false },
+                'NetworkUrl': { type: 'string', nullable: false },
+                'QueryToolName': { type: 'string', nullable: false },
+                'ApiUrl': { type: 'string', nullable: false },
+            }
+        };
+        Interfaces.KendoModelSendEmailRequest = {
+            fields: {
+                'Properties': { type: 'any', nullable: false },
+                'HtmlContent': { type: 'string', nullable: false },
+                'TextContent': { type: 'string', nullable: false },
             }
         };
         Interfaces.KendoModelLegacySchedulerRequestDTO = {

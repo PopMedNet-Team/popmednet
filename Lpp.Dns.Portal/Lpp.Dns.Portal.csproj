@@ -2151,6 +2151,8 @@
     <Content Include="Scripts\Common.js.map">
       <DependentUpon>Common.ts</DependentUpon>
     </Content>
+    <Content Include="Views\Users\SendEmail.cshtml" />
+    <Content Include="Views\Users\Notifications\NewDataPartner-html.cshtml" />
     <None Include="Scripts\jquery\1.11.2\jquery-1.11.2.intellisense.js" />
     <Content Include="Scripts\jqplot\plugins\jqplot.barRenderer.js" />
     <Content Include="Scripts\jqplot\plugins\jqplot.barRenderer.min.js" />
@@ -6620,6 +6622,10 @@
     <Content Include="Views\Requests\BulkEditRoutes.cshtml" />
     <Content Include="Views\Dialogs\RoutingHistory.cshtml" />
     <None Include="Views\QlikTest\Requests.cshtml" />
+    <Content Include="Views\Users\Notifications\NewEmployeeUser-html.cshtml" />
+    <Content Include="Views\Users\Notifications\_SelectTemplate.cshtml" />
+    <Content Include="Views\Users\Notifications\NewDataPartner-text.cshtml" />
+    <Content Include="Views\Users\Notifications\NewEmployeeUser-text.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -6788,6 +6794,7 @@
     <TypeScriptCompile Include="js\Users\Deactivate.ts" />
     <TypeScriptCompile Include="js\Users\Details.ts" />
     <TypeScriptCompile Include="js\Users\Index.ts" />
+    <TypeScriptCompile Include="js\Users\SendEmail.ts" />
     <TypeScriptCompile Include="js\Users\RejectRegistration.ts" />
     <TypeScriptCompile Include="js\_Layout.ts" />
     <TypeScriptCompile Include="js\_NetworkBrowser.ts" />

@@ -1538,6 +1538,7 @@ module Dns.Interfaces
 	 	 DataMarts: IRequestDataMartDTO[];
 	 	 Data: string;
 	 	 Comment: string;
+	 	 Private?: boolean;
 	 }
 	 export var KendoModelRequestCompletionRequestDTO: any = {
 	 	 fields: {
@@ -1546,6 +1547,7 @@ module Dns.Interfaces
 	 	 	'DataMarts': { type:'any[]', nullable: false},
 	 	 	'Data': { type:'string', nullable: false},
 	 	 	'Comment': { type:'string', nullable: false},
+	 	 	'Private': { type:'boolean', nullable: true},
 	 	 }
 	 }
 	 export interface IRequestCompletionResponseDTO{
@@ -4060,6 +4062,50 @@ module Dns.Interfaces
 	 	 	'RoutingID': { type:'any', nullable: true},
 	 	 	'DataMart': { type:'string', nullable: false},
 	 	 	'WorkflowActivityID': { type:'any', nullable: true},
+	 	 }
+	 }
+	 export interface IEmailTemplateSubstitutionPropertiesDTO{
+	 	 UserID?: any;
+	 	 FirstName: string;
+	 	 MiddleName: string;
+	 	 LastName: string;
+	 	 FullName: string;
+	 	 EmailAddress: string;
+	 	 Username: string;
+	 	 TemplateTypeID: number;
+	 	 Subject: string;
+	 	 Network: string;
+	 	 NetworkUrl: string;
+	 	 QueryToolName: string;
+	 	 ApiUrl: string;
+	 }
+	 export var KendoModelEmailTemplateSubstitutionPropertiesDTO: any = {
+	 	 fields: {
+	 	 	'UserID': { type:'any', nullable: true},
+	 	 	'FirstName': { type:'string', nullable: false},
+	 	 	'MiddleName': { type:'string', nullable: false},
+	 	 	'LastName': { type:'string', nullable: false},
+	 	 	'FullName': { type:'string', nullable: false},
+	 	 	'EmailAddress': { type:'string', nullable: false},
+	 	 	'Username': { type:'string', nullable: false},
+	 	 	'TemplateTypeID': { type:'number', nullable: false},
+	 	 	'Subject': { type:'string', nullable: false},
+	 	 	'Network': { type:'string', nullable: false},
+	 	 	'NetworkUrl': { type:'string', nullable: false},
+	 	 	'QueryToolName': { type:'string', nullable: false},
+	 	 	'ApiUrl': { type:'string', nullable: false},
+	 	 }
+	 }
+	 export interface ISendEmailRequest{
+	 	 Properties: IEmailTemplateSubstitutionPropertiesDTO;
+	 	 HtmlContent: string;
+	 	 TextContent: string;
+	 }
+	 export var KendoModelSendEmailRequest: any = {
+	 	 fields: {
+	 	 	'Properties': { type:'any', nullable: false},
+	 	 	'HtmlContent': { type:'string', nullable: false},
+	 	 	'TextContent': { type:'string', nullable: false},
 	 	 }
 	 }
 	 export interface ILegacySchedulerRequestDTO{

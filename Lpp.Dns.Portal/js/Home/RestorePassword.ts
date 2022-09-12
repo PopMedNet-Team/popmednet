@@ -32,15 +32,55 @@ module Home.RestorePassword {
             if (this.PasswordScore() < 5) {
                 Global.Helpers.ShowAlert("Validation Error", "<p>Your password is not strong enough. Please ensure that your password contains at least one capital letter, one number and one symbol.</p>");
                 return;
-            }    
+            } 
+
+            let actions = [];
+            let dmcsUrl = event.target.dataset.dmcs;
+            if (dmcsUrl) {
+                actions.push({
+                    text: "DataMart Client Server",
+                    action: function (e) {
+                        let dmcsUrl = $("#btnSubmit").attr("data-DMCS");
+                        window.location.href = dmcsUrl;
+                        return true;
+                    }
+                });
+                actions.push({
+                    text: "PopMedNet",
+                    primary: true,
+                    action: function (e) {
+                        window.location.href = "/";
+                        return true;
+                    }
+                });
+            } else {
+                actions.push({
+                    text: "OK",
+                    primary: true,
+                    action: function (e) {
+                        window.location.href = "/";
+                        return true;
+                    }
+                });
+            } 
 
             Dns.WebApi.Users.RestorePassword({
                 Password: this.Password(),
                 PasswordRestoreToken: $.url().param("token")
             }).done(() => {
-                Global.Helpers.ShowAlert("Successful!", "<p>You have successfully updated your password. Please login with this new password.</p>").done(() => {
-                    window.location.href = "/";
+
+                var kendoDialog = <any>$("<div />").kendoDialog(<kendo.ui.DialogOptions>{
+                    title: "Successful!",
+                    resizable: false,
+                    modal: true,
+                    buttonLayout: "normal",
+                    closable: false,
+                    content: "<p class='text-center' style='margin-top:1em;margin-bottom:1em;' >You have successfully updated your password. Please login using this new password.",
+                    actions: actions,
+                    width: 600,
                 });
+                kendoDialog.data("kendoDialog").open();
+                
             });                
         }
 

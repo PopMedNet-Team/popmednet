@@ -26,8 +26,7 @@ namespace PopMedNet.UITests
             playwright = await Playwright.CreateAsync();
             browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                //Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
-                Headless = false,
+                Headless = bool.Parse(ConfigurationManager.AppSettings["globalHeadless"]),
                 SlowMo = 500,
             });
             context = await browser.NewContextAsync();
@@ -83,6 +82,7 @@ namespace PopMedNet.UITests
         }
 
         [Test]
+        [Category("PipelineTest")]
         public async Task SubmitRegistration_PasswordsDoNotMatch_DisplaysPasswordMatchMessage()
         {
             // Given
@@ -116,6 +116,16 @@ namespace PopMedNet.UITests
             // Then
             Assert.That(await registrationPage.PasswordMatchErrorDisplays());
         }
+
+        [Test]
+        [Category("PipelineTest")]
+        public async Task VerifyTheTestRunnerWorksAtAll()
+        {
+            var loginPage = new LoginPage(singlePage);
+            await loginPage.Goto();
+            Assert.Pass("Hey, look! This test actually passed!");
+        }
+
 
         [Test]
         public async Task SubmitRegistration_UserNameNotUnique_DisplaysDuplicateUserNameMessage()
@@ -161,6 +171,7 @@ namespace PopMedNet.UITests
         }
         
         [TestCaseSource(nameof(GetRequiredFieldTestData))]
+        [Category("PipelineTest")]
         public async Task CheckRequiredFieldValidators(
             string field,
             string firstName,

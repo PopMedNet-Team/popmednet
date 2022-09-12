@@ -41,7 +41,7 @@ namespace Lpp.Dns.Api.Requests
             var result = await base.Get(ID);
 
             //Record the log of the view of the result
-            await DataContext.LogRead(await DataContext.Requests.FindAsync(ID));
+            await DataContext.LogRead(await DataContext.Responses.FindAsync(ID));
 
             await DataContext.SaveChangesAsync();
 
@@ -923,6 +923,11 @@ namespace Lpp.Dns.Api.Requests
                                                   })).GroupBy(doc => doc.ID).Select(grp => grp.FirstOrDefault()).OrderBy(doc => doc.ItemTitle).ToArray();
             
             response.CanViewPendingApprovalResponses = await CanViewPendingApprovalResponses(new ApproveResponseDTO { Message = "", ResponseIDs = response.Responses.Where(rsp => rsp.ID.HasValue).Select(rsp => rsp.ID.Value).ToArray() });
+
+            //Record the log of the view of the result
+            foreach(var dm in response.RequestDataMarts)
+                await DataContext.LogRead(await DataContext.Responses.FindAsync(dm.ResponseID));
+            await DataContext.SaveChangesAsync();
 
             return response;
         }

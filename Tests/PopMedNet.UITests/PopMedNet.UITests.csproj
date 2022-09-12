@@ -22,19 +22,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.8" />
-    <PackageReference Include="Microsoft.Playwright" Version="1.21.0" />
-    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.21.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.25.0" />
+    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.25.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="RestSharp" Version="107.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
   </ItemGroup>
 
   <ItemGroup>

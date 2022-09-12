@@ -438,11 +438,23 @@ var Requests;
                 self.onViewIndividualResults = function () {
                     setupResponseTabView(Dns.Enums.TaskItemTypes.Response);
                 };
+                self.onTogglePrivate = function () {
+                    var isChecked = ($("#ckbRequestIsPrivate").is(":checked"));
+                    var visibility = (isChecked !== null && isChecked !== void 0 ? isChecked : false) ? "hidden" : "visible";
+                    var message = "<p>You are about to change the request visibility to <strong>".concat(visibility, "</strong>.") +
+                        "This will save the request and ".concat(isChecked ? '<strong>NOT</strong>' : '', " allow other users in your group to see it before it has been submitted.</p> ") +
+                        "<p>Do you wish to continue?</p>";
+                    var messageMarkup = "<div class=\"alert alert-warning\">".concat(message, "</div>");
+                    var confirm = Global.Helpers.ShowConfirm("Save request?", messageMarkup).done(function () {
+                        _this.DefaultSave(true, false, function () { return null; }, isChecked);
+                    });
+                };
                 return _this;
             }
-            RequestOverviewViewModel.prototype.DefaultSave = function (reload, isNewRequest, errorHandler) {
+            RequestOverviewViewModel.prototype.DefaultSave = function (reload, isNewRequest, errorHandler, pChecked) {
                 if (isNewRequest === void 0) { isNewRequest = null; }
                 if (errorHandler === void 0) { errorHandler = null; }
+                if (pChecked === void 0) { pChecked = null; }
                 var self = this;
                 var deferred = $.Deferred();
                 if (isNewRequest == null) {
@@ -460,6 +472,7 @@ var Requests;
                 }
                 if (!this.SaveRequest(false))
                     return deferred.reject();
+                var setPrivate = pChecked !== null && pChecked !== void 0 ? pChecked : $("#ckbRequestIsPrivate").is(":checked");
                 var dto = self.Request.toData();
                 Dns.WebApi.Requests.CompleteActivity({
                     DemandActivityResultID: this.SaveRequestID(),
@@ -468,7 +481,8 @@ var Requests;
                         return item.toData();
                     }),
                     Data: JSON.stringify(self.SaveFormDTO == null ? null : self.SaveFormDTO.toData()),
-                    Comment: null
+                    Comment: null,
+                    Private: setPrivate
                 }).done(function (results) {
                     var result = results[0];
                     if (result.Uri) {

@@ -85,6 +85,9 @@ namespace PopMedNet.UITests.Models
                     gotoUrl += "users/";
                     await Navigate(gotoUrl);
                     return new UsersPage(_page);
+                case PageModels.Home:
+                    await Navigate(gotoUrl);
+                    return new HomePage(_page);
                 default:
                     Console.WriteLine("Page not specified for navigation. Navigating to Home Page.");
                     await Navigate(gotoUrl);

@@ -21,6 +21,7 @@ using Lpp.Dns.DTO.Events;
 using Lpp.Workflow.Engine.Interfaces;
 using System.Data.Entity.Infrastructure;
 using System.Net.Mail;
+using System.Diagnostics;
 
 namespace Lpp.Dns.Data
 {
@@ -31,7 +32,7 @@ namespace Lpp.Dns.Data
         public Request() {
             this.CreatedOn = DateTime.UtcNow;
             this.UpdatedOn = DateTime.UtcNow;
-            this.Private = true;
+            this.Private = false;
             this.Description = string.Empty;
             this.MirrorBudgetFields = false;
             //this.Statistics = new RequestStatistics() { RequestID = this }; <- This crashes queries if it's enabled.
@@ -441,7 +442,7 @@ namespace Lpp.Dns.Data
         }
     }
 
-    public  class RequestLogConfiguration : EntityLoggingConfiguration<DataContext, Request>
+    public class RequestLogConfiguration : EntityLoggingConfiguration<DataContext, Request>
     {
 
         public override IEnumerable<AuditLog> ProcessEvents(System.Data.Entity.Infrastructure.DbEntityEntry obj, DataContext db, ApiIdentity identity, bool read)
@@ -461,7 +462,7 @@ namespace Lpp.Dns.Data
             //var test = (RequestStatuses)obj.CurrentValues["Status"];
             //var testb = obj.CurrentValues["Status"];
 
-            if (request.WorkFlowActivityID.HasValue && 
+            if (request.WorkFlowActivityID.HasValue &&
                 obj.State == System.Data.Entity.EntityState.Added &&
                 (RequestStatuses)obj.CurrentValues["Status"] == 0)
             {
@@ -483,7 +484,7 @@ namespace Lpp.Dns.Data
                 logs.Add(logItem);
             }
 
-            if ((RequestStatuses) obj.CurrentValues["Status"] == RequestStatuses.AwaitingRequestApproval && (obj.State == System.Data.Entity.EntityState.Added || !obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"])))
+            if ((RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.AwaitingRequestApproval && (obj.State == System.Data.Entity.EntityState.Added || !obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"])))
             {
                 //Submitted Request Needs Approval
                 var logItem = new Audit.SubmittedRequestNeedsApprovalLog
@@ -498,9 +499,9 @@ namespace Lpp.Dns.Data
                 db.LogsSubmittedrequestNeedsApproval.Add(logItem);
                 logs.Add(logItem);
             }
-            
+
             //only send the new request submitted notification at this level when it is the initial submit and it doesn't have to be to specific datamarts.
-            if (((RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.Submitted) && 
+            if (((RequestStatuses)obj.CurrentValues["Status"] == RequestStatuses.Submitted) &&
                 (obj.State == System.Data.Entity.EntityState.Added || !obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"]))
                )
             {
@@ -518,7 +519,7 @@ namespace Lpp.Dns.Data
                         {
                             Description = string.Format("{0} has not responded to {1}. ", dataMart.DataMart.Name, request.Name),
                             UserID = userID,
-                            RequestID = request.ID,                            
+                            RequestID = request.ID,
                             Request = request,
                             TaskID = currentTaskID
                         };
@@ -529,7 +530,7 @@ namespace Lpp.Dns.Data
                 }
 
                 var orgUser = identity == null ? new { UserName = "", Acronym = "" } : db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
-                
+
                 if (db.Entry(request).Reference(r => r.RequestType).IsLoaded == false)
                     db.Entry(request).Reference(r => r.RequestType).Load();
 
@@ -551,17 +552,17 @@ namespace Lpp.Dns.Data
 
             }
 
-            if (obj.State != EntityState.Added 
-                && (!obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"])) 
-                && (((RequestStatuses) obj.OriginalValues["Status"]) != RequestStatuses.Draft) 
-                && (((RequestStatuses) obj.OriginalValues["Status"]) != RequestStatuses.DraftReview)
-                && (((RequestStatuses) obj.OriginalValues["Status"]) != RequestStatuses.AwaitingRequestApproval)
+            if (obj.State != EntityState.Added
+                && (!obj.OriginalValues["Status"].Equals(obj.CurrentValues["Status"]))
+                && (((RequestStatuses)obj.OriginalValues["Status"]) != RequestStatuses.Draft)
+                && (((RequestStatuses)obj.OriginalValues["Status"]) != RequestStatuses.DraftReview)
+                && (((RequestStatuses)obj.OriginalValues["Status"]) != RequestStatuses.AwaitingRequestApproval)
                 && !request.WorkflowID.HasValue
                )
             {
                 //Only allow logs for request status changed if the request is legacy. WF request status changed logs and notifications are fired on the activity 
                 //See PMNDEV-5523, PMNDEV-5772, and PMNDEV-5790 for notification sending rules.
-                               
+
                 Audit.RequestStatusChangedLog logItem;
                 var userID = identity == null ? Guid.Empty : identity.ID;
 
@@ -594,7 +595,7 @@ namespace Lpp.Dns.Data
 
                 if (!logs.Contains(logItem))
                     logs.Add(logItem);
-                
+
             }
 
             if (obj.State == EntityState.Modified)
@@ -606,10 +607,10 @@ namespace Lpp.Dns.Data
             return logs.AsEnumerable();
         }
 
-        void LogMetadataChanges(DbEntityEntry obj, DataContext db, ApiIdentity identity, List<AuditLog> logs, Request request, Guid? taskID){
+        void LogMetadataChanges(DbEntityEntry obj, DataContext db, ApiIdentity identity, List<AuditLog> logs, Request request, Guid? taskID) {
 
-            if(!request.Private)
-            { 
+            if (!request.Private)
+            {
                 var changedProperties = GetMetadataFieldsWithChanges(obj).ToList();
                 if (changedProperties.Count == 0)
                     return;
@@ -678,10 +679,10 @@ namespace Lpp.Dns.Data
                 if (changeDetail != null)
                 {
                     var activities = db.Activities.Where(a => a.ProjectID == request.ProjectID && a.Deleted == false).Select(a => new { a.ID, a.ParentActivityID, a.Name, a.TaskLevel }).ToArray();
-                
+
                     changedProperties.Remove(changeDetail);
 
-                    PropertyChangeDetailDTO taskOrderChangeDetail = new PropertyChangeDetailDTO { Property = "TaskOrder", PropertyDisplayName= "Budget Task Order"};
+                    PropertyChangeDetailDTO taskOrderChangeDetail = new PropertyChangeDetailDTO { Property = "TaskOrder", PropertyDisplayName = "Budget Task Order" };
                     PropertyChangeDetailDTO activityChangeDetail = new PropertyChangeDetailDTO { Property = "Activity", PropertyDisplayName = "Budget Activity" };
                     PropertyChangeDetailDTO activityProjectChangeDetail = new PropertyChangeDetailDTO { Property = "ActivityProject", PropertyDisplayName = "Budget Activity Project" };
 
@@ -694,7 +695,7 @@ namespace Lpp.Dns.Data
                             {
                                 taskOrderChangeDetail.OriginalValue = activity.ID;
                                 taskOrderChangeDetail.OriginalValueDisplay = activity.Name;
-                            } 
+                            }
                             else if (activity.TaskLevel == 2)
                             {
                                 activityChangeDetail.OriginalValue = activity.ID;
@@ -770,7 +771,7 @@ namespace Lpp.Dns.Data
                     var activities = db.Activities.Where(a => a.ProjectID == request.ProjectID && a.Deleted == false).ToArray();
 
                     changedProperties.Remove(changeDetail);
-                    
+
                     PropertyChangeDetailDTO sourceActivityChangeDetail = new PropertyChangeDetailDTO { Property = "SourceActivity", PropertyDisplayName = "Source Activity" };
                     if (changeDetail.OriginalValue != null)
                     {
@@ -797,7 +798,7 @@ namespace Lpp.Dns.Data
                     var activities = db.Activities.Where(a => a.ProjectID == request.ProjectID && a.Deleted == false).ToArray();
 
                     changedProperties.Remove(changeDetail);
-                    
+
                     PropertyChangeDetailDTO sourceActivityProjectChangeDetail = new PropertyChangeDetailDTO { Property = "SourceActivityProject", PropertyDisplayName = "Source Activity Project" };
                     if (changeDetail.OriginalValue != null)
                     {
@@ -824,7 +825,7 @@ namespace Lpp.Dns.Data
                     var activities = db.Activities.Where(a => a.ProjectID == request.ProjectID && a.Deleted == false).ToArray();
 
                     changedProperties.Remove(changeDetail);
-                    
+
                     PropertyChangeDetailDTO sourceTaskOrderChangeDetail = new PropertyChangeDetailDTO { Property = "SourceTaskOrder", PropertyDisplayName = "Source Task Order" };
                     if (changeDetail.OriginalValue != null)
                     {
@@ -869,11 +870,11 @@ namespace Lpp.Dns.Data
                     Description = description.ToString()
                 };
 
-                var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings{
+                var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings {
                     Formatting = Newtonsoft.Json.Formatting.None,
                     ConstructorHandling = Newtonsoft.Json.ConstructorHandling.AllowNonPublicDefaultConstructor
                 };
-                serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter{ DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ" });
+                serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ" });
 
                 log.ChangeDetail = Newtonsoft.Json.JsonConvert.SerializeObject(changedProperties, serializerSettings);
 
@@ -903,7 +904,7 @@ namespace Lpp.Dns.Data
             {"SourceTaskOrderID", "Source Task Order"},
             {"ReportAggregationLevelID", "Level of Report Aggregation"}
         };
-        
+
         /// <summary>
         /// Gets a collection of metadata property names that have changed.
         /// </summary>
@@ -956,6 +957,170 @@ namespace Lpp.Dns.Data
             }
             return value;
         }
+
+        
+        public List<Recipient> GetRecipients(DataContext db, AuditLog logItem, bool immediate)
+        {
+            var log = logItem as Audit.ResultsReminderLog;
+
+            var identifier = db.Requests.Where(r => r.ID == log.RequestID).Select(r => r.Identifier).FirstOrDefault();
+            Debug.WriteLine($"Notifications for request {identifier}:");
+
+            var responseViews = (
+                    from response in db.Responses
+                    join view in db.LogsResponseViewed on response.ID equals view.ResponseID into groupJoin
+                    from noView in groupJoin.DefaultIfEmpty()
+                    where response.RequestDataMart.RequestID == log.RequestID
+                        && response.RespondedByID != null
+                    select new
+                    {
+                        ResponseID = response.ID,
+                        ResponseTime = response.ResponseTime,
+                        RespondedBy = response.RespondedBy,
+                        RequestIdentifier = response.RequestDataMart.Request.Identifier,
+                        ViewedBy = noView == null ? Guid.Empty : noView.UserID
+                    }
+                );
+            var subscribers = from s in db.UserEventSubscriptions
+                              join user in db.Users on s.UserID equals user.ID
+                              where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                 && !s.User.Deleted
+                                 && s.User.Active
+
+                              select new { s, user };
+
+            // Debug block
+            //foreach (var response in responseViews)
+            //{
+
+            //    Debug.WriteLine($"\tRequest {response.RequestIdentifier} response by {response.RespondedBy.UserName} at {response.ResponseTime}");
+                
+
+            //    var viewedBy = "\t\tNot viewed";
+            //    if (response.ViewedBy != Guid.Empty)
+            //    {
+            //        viewedBy = "\t\tViewed By: ";
+            //        viewedBy += (from user in db.Users
+            //                     where user.ID == response.ViewedBy
+            //                     select user.UserName).FirstOrDefault();
+            //    }
+
+            //    Debug.WriteLine($"{viewedBy}");
+            //    var filter1 = subscribers.Where(s => responseViews.All(r => r.ViewedBy != s.user.ID));
+            //    //&& response.ResponseID == r.ResponseID));
+            //    Debug.WriteLine($"\t\t{filter1.Count()} Users found by filter 1");
+            //    foreach (var sub in filter1)
+            //    {
+            //        Debug.WriteLine($"\t\tUser '{sub.user.UserName}' has not viewed the response and should be sent a notification.");
+            //    }
+
+
+            //}
+
+            // END DEBUG
+
+            var recipients = (from s in subscribers
+
+                                  /**** Store ACLs for later use ****/
+                              let orgAcls = db.OrganizationEvents // Save access control list for this this org...event, request, and security groups
+                                    .Where(a => a.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                        && a.Organization.Requests.Any(r => r.ID == log.RequestID)
+                                        && a.SecurityGroup.Users.Any(sgu => sgu.UserID == s.user.ID))
+                              let projectAcls = db.ProjectEvents // Save access control list for this project...
+                                    .Where(a => a.EventID == EventIdentifiers.Request.ResultsReminder.ID  // ... event, ...
+                                        && a.Project.Requests.Any(r => r.ID == log.RequestID) // ...request, 
+                                        && a.SecurityGroup.Users.Any(sgu => sgu.UserID == s.user.ID)) // ... and security group
+
+                              where responseViews.All(r => r.ViewedBy != s.user.ID)
+
+                                      /***Handle frequency ***/
+                                      && (
+                                            (!immediate
+                                                && (Frequencies)s.s.Frequency != Frequencies.Immediately
+                                                    && (s.s.NextDueTime == null || s.s.NextDueTime <= DateTime.UtcNow)
+                                            )
+                                            || (immediate && (Frequencies)s.s.Frequency == Frequencies.Immediately)
+                                         )
+
+                                      /***  Filter users from orgAcls and projectAcls ***/
+                                      && (
+                                            (orgAcls.Any() || projectAcls.Any())
+                                            &&
+                                            (orgAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed))
+                                         )
+                                      /***/
+                              from r in db.FilteredRequestListForEvent(s.user.ID, null)
+                              where r.ID == log.RequestID
+                              select new 
+                              { 
+                                    s, 
+                                    r 
+                              })
+                       .Where(sub => sub.r != null).Select(sub =>
+                                    new Recipient
+                                    {
+                                        Email = "-ResultsReminder sub: " + sub.s.user.Email,
+                                        Phone = sub.s.user.Phone,
+                                        Name = ((sub.s.user.FirstName + " " + sub.s.user.MiddleName).Trim() + " " + sub.s.user.LastName).Trim(),
+                                        UserID = sub.s.user.ID
+                                    })
+                       /**** Get users subscribed to ResultsViewed Event ****/
+                       .Union(
+                           from s in db.UserEventSubscriptions
+                           join u in db.Users on s.UserID equals u.ID
+                           let orgAcls = db.OrganizationEvents
+                                    .Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID
+                                        && a.Organization.Requests.Any(r => r.ID == log.RequestID)
+                                        && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
+                           let projectAcls = db.ProjectEvents
+                                    .Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID
+                                        && a.Project.Requests.Any(r => r.ID == log.RequestID)
+                                        && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
+                           let projectOrgAcls = db.ProjectOrganizationEvents
+                                    .Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID
+                                        && a.Organization.Requests.Any(r => r.ID == log.RequestID)
+                                        && a.Project.Requests.Any(r => r.ID == log.RequestID)
+                                        && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
+                           where s.UserID == log.UserID
+                                        && s.EventID == EventIdentifiers.Response.ResultsViewed.ID
+                                        && !s.User.Deleted
+                                        && s.User.Active
+                                        && (
+                                                (
+                                                    !immediate
+                                                        && (Frequencies)s.Frequency != Frequencies.Immediately
+                                                        && (s.NextDueTime == null
+                                                               || s.NextDueTime <= DateTime.UtcNow
+                                                           )
+                                                )
+                                                ||
+                                                (immediate && (Frequencies)s.Frequency == Frequencies.Immediately)
+                                           )
+                                        && (
+                                                (orgAcls.Any() || projectAcls.Any() || projectOrgAcls.Any())
+                                                &&
+                                                (orgAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && projectOrgAcls.All(a => a.Allowed))
+                                           )
+                           select new Recipient
+                           {
+                               Email = "-ResultsViewed sub: " + u.Email,
+                               Phone = u.Phone,
+                               Name = ((u.FirstName + " " + u.MiddleName).Trim() + " " + u.LastName).Trim(),
+                               UserID = u.ID
+                           })
+                       .ToArray();
+            var recList = recipients.ToList();
+
+            Debug.WriteLine($"\t\t\t{recList.Count()} recipients in recList...");
+            foreach (var recipient in recList)
+            {
+                Debug.WriteLine($"\t\t\t\t{recipient.Email}");
+            }
+
+            return recList;
+        }
+
+        
 
         public override IEnumerable<Notification> CreateNotifications<T>(T logItem, DataContext db, bool immediate)
         {
@@ -1395,8 +1560,8 @@ namespace Lpp.Dns.Data
             }
             else if (typeof(T) == typeof(Audit.ResultsReminderLog))
             {
+                
                 var log = logItem as Audit.ResultsReminderLog;
-
                 var q = (from r in db.Requests
                          join rdm in db.RequestDataMarts on r.ID equals rdm.RequestID
                          join p in db.Projects on rdm.Request.ProjectID equals p.ID into projects
@@ -1411,22 +1576,41 @@ namespace Lpp.Dns.Data
                              NetworkName = network,
                              RequestTypeName = rt.Name,
                              ProjectName = p.Name,
-                             DataMartName = rdm.DataMart.Name
-                         }).GroupBy(k => new { k.RequestName, k.NetworkName, k.RequestTypeName, k.ProjectName })
+                             DataMartName = rdm.DataMart.Name,
+                             Identifier = r.Identifier
+                         }).GroupBy(k => new { k.RequestName, k.NetworkName, k.RequestTypeName, k.ProjectName, k.Identifier })
                         .Select(k => new
                         {
                             k.Key.RequestName,
                             k.Key.NetworkName,
                             k.Key.RequestTypeName,
                             k.Key.ProjectName,
-                            DataMarts = k.OrderBy(v => v.DataMartName).Select(v => v.DataMartName)
+                            RequestIdentifier = k.Key.Identifier,
+                            DataMarts = k.OrderBy(v => v.DataMartName).Select(v => v.DataMartName),
                         });
 
+                
                 var details = q.FirstOrDefault();
-                if(details == null)
+                Debug.WriteLine($"Preparing Results Reminder notification for request {details.RequestIdentifier}:");
+
+                if (details == null)
                 {
+                    Debug.WriteLine("\tNo details found.");
                     return Enumerable.Empty<Notification>();
                 }
+                var detObject = new DetailsObject
+                {
+                    RequestName = details.RequestName,
+                    NetworkName = details.NetworkName,
+                    RequestTypeName = details.RequestTypeName,
+                    ProjectName = details.ProjectName,
+                    DataMarts = details.DataMarts as List<string>,
+                    
+                };
+
+                var recipients = GetRecipients(db, log, immediate);
+
+                
 
                 var body = GenerateTimestampText(log) + 
                            "<p>Here are your most recent <b>Results Reminder</b> notifications from <b>" + details.NetworkName + "</b>.</p>" +
@@ -1438,48 +1622,9 @@ namespace Lpp.Dns.Data
                 {
                     Subject = "The request '" + log.Request.Name + "' (" + log.Request.Identifier + ") has unviewed results",
                     Body = body,
-                    Recipients = (from s in db.UserEventSubscriptions
-                                  let orgAcls = db.OrganizationEvents.Where(a => a.EventID == EventIdentifiers.Request.ResultsReminder.ID && a.Organization.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                                  let projectAcls = db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Request.ResultsReminder.ID && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == s.UserID))
-                                  where s.EventID == EventIdentifiers.Request.ResultsReminder.ID && !s.User.Deleted && s.User.Active
-                                  && !db.RequestDataMarts.Where(rdm => rdm.RequestID == log.RequestID).All(dm => db.LogsResponseViewed.Any(rv => rv.UserID == s.UserID && rv.Response.RequestDataMart.RequestID == log.RequestID && rv.Response.RequestDataMart.DataMartID == dm.ID))
-                                  && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
-                                  && (
-                                      (orgAcls.Any() || projectAcls.Any())
-                                      &&
-                                      (orgAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed))
-                                 )
-                                  from r in db.FilteredRequestListForEvent(s.UserID, null)
-                                  where r.ID == log.RequestID
-                                  select new { s, r }).Where(sub => sub.r != null).Select(sub =>
-                                        new Recipient
-                                        {
-                                            Email = sub.s.User.Email,
-                                            Phone = sub.s.User.Phone,
-                                            Name = ((sub.s.User.FirstName + " " + sub.s.User.MiddleName).Trim() + " " + sub.s.User.LastName).Trim(),
-                                            UserID = sub.s.UserID
-                                        }).Union(
-                            from s in db.UserEventSubscriptions
-                            join u in db.Users on s.UserID equals u.ID
-                            let orgAcls = db.OrganizationEvents.Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID && a.Organization.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
-                            let projectAcls = db.ProjectEvents.Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
-                            let projectOrgAcls = db.ProjectOrganizationEvents.Where(a => a.EventID == EventIdentifiers.Response.ResultsViewed.ID && a.Organization.Requests.Any(r => r.ID == log.RequestID) && a.Project.Requests.Any(r => r.ID == log.RequestID) && a.SecurityGroup.Users.Any(sgu => sgu.UserID == log.UserID))
-                            where s.UserID == log.UserID && s.EventID == EventIdentifiers.Response.ResultsViewed.ID && !s.User.Deleted && s.User.Active
-                                        && ((!immediate && (Frequencies)s.Frequency != Frequencies.Immediately && (s.NextDueTime == null || s.NextDueTime <= DateTime.UtcNow)) || (immediate && (Frequencies)s.Frequency == Frequencies.Immediately))
-                                        && (
-                                                (orgAcls.Any() || projectAcls.Any() || projectOrgAcls.Any())
-                                                &&
-                                                (orgAcls.All(a => a.Allowed) && projectAcls.All(a => a.Allowed) && projectOrgAcls.All(a => a.Allowed))
-                                           )
-                            select new Recipient
-                            {
-                                Email = u.Email,
-                                Phone = u.Phone,
-                                Name = ((u.FirstName + " " + u.MiddleName).Trim() + " " + u.LastName).Trim(),
-                                UserID = u.ID
-                            }
-                        ).ToArray()
+                    Recipients = recipients,
                 };
+                
                 IList<Notification> notifies = new List<Notification>();
                 notifies.Add(notification);
 
@@ -1574,21 +1719,158 @@ namespace Lpp.Dns.Data
 
         }
 
+        public async Task<IEnumerable<Notification>> GenerateResultsAwaitingViewingNag(DataContext db, List<Notification> notifications = null)
+        {
+            if (notifications == null)
+                notifications = new List<Notification>();
+
+            /*** DEBUG ***
+            var subscribers = from s in db.UserEventSubscriptions
+                              join user in db.Users on s.UserID equals user.ID
+
+                              where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                    && !s.User.Deleted
+                                    && s.User.Active
+                              select new { s, user };
+            Debug.WriteLine($"{subscribers.Count()} active users subscribed to ResultsReminder...");
+            foreach (var sub in subscribers)
+            {
+                Debug.WriteLine($"\t{sub.user.UserName}");
+            }
+            /*** END ***/
+
+            var results = await (from r in db.Requests
+                                 where (r.Status == RequestStatuses.Complete
+                                            || r.Status == RequestStatuses.ExaminedByInvestigator
+                                            || r.Status == RequestStatuses.PartiallyComplete
+                                            || r.Status == RequestStatuses.Submitted
+                                       )
+                                       && r.DataMarts.Any(dm => dm.Responses
+                                                            .Any(resp => resp.RespondedByID != null // Ensure someone actually responded
+                                                                    && resp.ResponseTime >= DbFunctions.AddMonths(DateTime.UtcNow, -1) // Ensure the response is recent
+                                                            )
+                                       )
+                                       &&
+                                         (
+                                             (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults
+                                                    && a.ProjectID == r.ProjectID
+                                                    && (from sgu in a.SecurityGroup.Users
+                                                        join s
+                                                            in db.UserEventSubscriptions
+                                                            on sgu.UserID equals s.UserID
+                                                        where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                        select s).Any()
+                                                    ).Any()
+
+                                                     && db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults
+                                                            && a.ProjectID == r.ProjectID
+                                                            && (from sgu in a.SecurityGroup.Users
+                                                                join s
+                                                                    in db.UserEventSubscriptions
+                                                                    on sgu.UserID equals s.UserID
+                                                                where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                                select s).Any()
+                                                        ).All(a => a.Allowed)
+                                             )
+                                             ||
+                                             (
+                                                  db.ProjectDataMartAcls
+                                                      .Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.ApproveResponses
+                                                          && a.ProjectID == r.ProjectID
+                                                          && a.DataMart.Requests
+                                                              .Any(req => req.RequestID == r.ID)
+                                                                  &&
+                                                                  (
+                                                                      from sgu in a.SecurityGroup.Users
+                                                                      join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID
+                                                                      where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                                      select s
+                                                                  ).Any()
+                                                   ).Any()
+                                                   &&
+                                                   db.ProjectDataMartAcls
+                                                        .Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.ApproveResponses
+                                                                    && a.ProjectID == r.ProjectID
+                                                                    && a.DataMart.Requests
+                                                                        .Any(requests => requests.RequestID == r.ID)
+                                                                            && (from sgu in a.SecurityGroup.Users
+                                                                                join s in db.UserEventSubscriptions
+                                                                                    on sgu.UserID equals s.UserID
+                                                                                where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                                                select s).Any()
+                                                         ).All(a => a.Allowed)
+                                             )
+                                             ||
+                                             (
+                                                    db.GlobalAcls
+                                                        .Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults
+                                                                    && (from sgu in a.SecurityGroup.Users
+                                                                        join s in db.UserEventSubscriptions
+                                                                            on sgu.UserID equals s.UserID
+                                                                        where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                                        select s).Any()
+                                                         ).Any()
+                                                         &&
+                                                    db.GlobalAcls
+                                                        .Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults
+                                                            && (from sgu in a.SecurityGroup.Users
+                                                                join s in db.UserEventSubscriptions
+                                                                    on sgu.UserID equals s.UserID
+                                                                where s.EventID == EventIdentifiers.Request.ResultsReminder.ID
+                                                                select s).Any()
+                                                        ).All(a => a.Allowed)
+                                             )
+                                             ||
+                                             (db.OrganizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.OrganizationID == r.OrganizationID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).Any() &&
+                                             db.OrganizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.OrganizationID == r.OrganizationID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).All(a => a.Allowed))
+                                         )
+                                 select r
+                             ).Include("DataMarts").ToArrayAsync();
+            //Debug.WriteLine($"Results awaiting viewing notifications generated. Total: {results.Count()}");
+            foreach (var request in results)
+            {
+                
+                foreach (var dataMart in request.DataMarts)
+                {
+                    var dmName = db.DataMarts.Find(dataMart.DataMartID).Name;
+                    var resultsReminderLog = new Audit.ResultsReminderLog
+                    {
+                        Description = string.Format("Results from {0} for request {1} have not been viewed. ", dmName, request.Name),
+                        Request = request,
+                        RequestID = request.ID,
+                        TimeStamp = DateTime.UtcNow,
+                        UserID = Guid.Empty
+                    };
+
+                    db.LogsResultsReminder.Add(resultsReminderLog);
+
+                    var notification = CreateNotifications(resultsReminderLog, db, false);
+                    if (notification != null && notification.Any())
+                    {
+                        notifications.AddRange(notification);
+                    }
+                }
+            }
+            return notifications;
+        }
+        
         public override async Task<IEnumerable<Notification>> GenerateNotificationsFromLogs(DataContext db)
         {
 
             //Submitted Request Needs approval nag
             var results = await (from r in db.Requests
-                                 where r.Status == RequestStatuses.AwaitingResponseApproval &&
+                                 where r.Status == RequestStatuses.AwaitingResponseApproval 
+                                 && r.SubmittedOn >= DbFunctions.AddMonths(DateTime.UtcNow, -1) 
+                                 &&
                                      (
-                                     (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
-                                     db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
-                                     ||
-                                     (db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(req => req.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
-                                     db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(requests => requests.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
-                                     ||
-                                     (db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
-                                     db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
+                                         (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
+                                         db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
+                                         ||
+                                         (db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(req => req.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
+                                         db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(requests => requests.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
+                                         ||
+                                         (db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).Any() &&
+                                         db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ApproveRejectSubmission && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestNeedsApproval.ID select s).Any()).All(a => a.Allowed))
                                      )
                                  select r).ToArrayAsync();
 
@@ -1616,18 +1898,20 @@ namespace Lpp.Dns.Data
 
             //Awaiting response nag
             results = await (from r in db.Requests
-                             where (r.Status == RequestStatuses.Submitted || r.Status == RequestStatuses.Resubmitted) &&
+                             where (r.Status == RequestStatuses.Submitted || r.Status == RequestStatuses.Resubmitted) 
+                             && r.SubmittedOn >= DbFunctions.AddMonths(DateTime.UtcNow, -1)
+                             &&
                                  (
-                                 (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
-                                 db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed))
-                                 ||
-                                 (db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(req => req.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
-                                 db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(requests => requests.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed)
-                                 )
-                                 ||
-                                 (db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
-                                 db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed)
-                                 )
+                                     (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
+                                     db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed))
+                                     ||
+                                     (db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(req => req.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
+                                     db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(requests => requests.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed)
+                                     )
+                                     ||
+                                     (db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).Any() &&
+                                     db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.UploadResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.SubmittedRequestAwaitsResponse.ID select s).Any()).All(a => a.Allowed)
+                                     )
                                  )
                              select r).Include("DataMarts").ToArrayAsync();
 
@@ -1656,51 +1940,10 @@ namespace Lpp.Dns.Data
             }
 
             //Results awaiting viewing nag
-            results = await (from r in db.Requests
-                             where (r.Status == RequestStatuses.Complete || r.Status == RequestStatuses.ExaminedByInvestigator || r.Status == RequestStatuses.PartiallyComplete || r.Status == RequestStatuses.Submitted) && r.DataMarts.Any(dm => dm.Responses.Any()) &&
-                                 (
-                                 (db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).Any() &&
-                                 db.ProjectAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.ProjectID == r.ProjectID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).All(a => a.Allowed))
-                                 ||
-                                 (db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.ApproveResponses && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(req => req.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).Any() &&
-                                 db.ProjectDataMartAcls.Where(a => a.PermissionID == PermissionIdentifiers.DataMartInProject.ApproveResponses && a.ProjectID == r.ProjectID && a.DataMart.Requests.Any(requests => requests.RequestID == r.ID) && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).All(a => a.Allowed)
-                                 )
-                                 ||
-                                 (db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).Any() &&
-                                 db.GlobalAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).All(a => a.Allowed)
-                                 )
-                                 ||
-                                 (db.OrganizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.OrganizationID == r.OrganizationID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).Any() &&
-                                 db.OrganizationAcls.Where(a => a.PermissionID == PermissionIdentifiers.Request.ViewResults && a.OrganizationID == r.OrganizationID && (from sgu in a.SecurityGroup.Users join s in db.UserEventSubscriptions on sgu.UserID equals s.UserID where s.EventID == EventIdentifiers.Request.ResultsReminder.ID select s).Any()).All(a => a.Allowed))
-                                 )
-                             select r).Include("DataMarts").ToArrayAsync();
 
+            notifications.AddRange(await GenerateResultsAwaitingViewingNag(db));
 
-            foreach (var request in results)
-            {
-                foreach (var dataMart in request.DataMarts)
-                {
-                    var dmName = db.DataMarts.Find(dataMart.DataMartID).Name;
-                    var resultsReminderLog = new Audit.ResultsReminderLog
-                    {
-                        Description = string.Format("Results from {0} for request {1} have not been viewed. ", dmName, request.Name),
-                        Request = request,
-                        RequestID = request.ID,
-                        TimeStamp = DateTime.UtcNow,
-                        UserID = Guid.Empty
-                    };
-
-                    db.LogsResultsReminder.Add(resultsReminderLog);
-
-                    var notification = CreateNotifications(resultsReminderLog, db, false);
-                    if (notification != null && notification.Any())
-                    {
-                        notifications.AddRange(notification);
-                    }
-                }
-            }
-
-
+            // New Request
             //get only the new request submitted logs for ones generated at the request level (ie datamart not specified on the log item)
             var logs = await FilterAuditLog(from l in db.LogsNewRequestSubmitted.Include(x => x.Request) select l, db.UserEventSubscriptions, EventIdentifiers.Request.NewRequestSubmitted.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
 
@@ -1714,6 +1957,7 @@ namespace Lpp.Dns.Data
                 }
             }
 
+            // Status Changed
             var statusChangedlogs = (await FilterAuditLog((from l in db.LogsRequestStatusChanged.Include(x => x.Request) where (int)l.NewStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft && (int)l.OldStatus >= (int)RequestStatuses.ThirdPartySubmittedDraft select l), db.UserEventSubscriptions, EventIdentifiers.Request.RequestStatusChanged.ID).ToArrayAsync()).GroupBy(g => new { g.RequestID, g.Request.Identifier, g.UserID });
 
             foreach (var log in statusChangedlogs)
@@ -1723,6 +1967,7 @@ namespace Lpp.Dns.Data
                     notifications.AddRange(notification);
             }
 
+            // Metadata Changed
             var metadataChangedLogs = await FilterAuditLog(from l in db.LogsRequestMetadataChange.Include(x => x.Request) select l, db.UserEventSubscriptions, EventIdentifiers.Request.MetadataChange.ID).GroupBy(g => new { g.RequestID, g.UserID }).ToArrayAsync();
             foreach (var log in metadataChangedLogs)
             {
@@ -1731,7 +1976,16 @@ namespace Lpp.Dns.Data
                     notifications.AddRange(notification);
             }
 
+            /***
+            foreach (var notification in notifications)
+            {
+                Debug.WriteLine($"Notification generated: {notification.Body}");
+
+            }
+            /* ***/
+
             return notifications.AsEnumerable();
+            
 
         }
 
@@ -1915,5 +2169,22 @@ namespace Lpp.Dns.Data
 
 
 
+    }
+    //public class RecipientList: System.Collections.IEnumerable
+    //{
+    //    public Audit.ResponseViewedLog logItem;
+    //    public Recipient recipient;
+    //}
+    public class DetailsObject
+    {
+        public string RequestName;
+        public string NetworkName;
+        public string RequestTypeName;
+        public string ProjectName;
+        public long RequestIdentifier;
+        public List<string> DataMarts;
+        public List<Guid?> Responders;
+        public List<Guid> ResponseIds;
+        public List<Audit.ResponseViewedLog> Views;
     }
 }

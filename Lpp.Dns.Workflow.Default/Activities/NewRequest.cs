@@ -186,7 +186,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     await db.SaveChangesAsync();
                     await db.Entry(_entity).ReloadAsync();
                     
-                    await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
+                    //await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false); // PMNDEV-8803
 
                     var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
                                                      && tr.Type == DTO.Enums.TaskItemTypes.Request
@@ -234,6 +234,8 @@ namespace Lpp.Dns.Workflow.Default.Activities
                         }
                     }
 
+                    await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false); // PMNDEV-8803
+
                     await db.SaveChangesAsync();
                     //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
                     await db.Entry(_entity).ReloadAsync();
@@ -254,7 +256,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
                     await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Submitted);
 
 
-                }
+                } 
                 else
                 {
 
@@ -385,16 +387,7 @@ namespace Lpp.Dns.Workflow.Default.Activities
             }
             else if (activityResultID.Value == SaveResultID) //Save
             {
-
-                if (_entity.Private)
-                {
-                    await db.Entry(_entity).ReloadAsync();
-
-                    _entity.Private = false;
-
-                    await task.LogAsModifiedAsync(_workflow.Identity, db);
-                    await db.SaveChangesAsync();
-                }
+                await SetRequestVisibility(task);
 
                 return new CompletionResult
                 {

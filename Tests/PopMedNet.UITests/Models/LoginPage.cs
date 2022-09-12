@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PopMedNet.UITests.Models
@@ -19,14 +20,25 @@ namespace PopMedNet.UITests.Models
 
         public async Task Goto()
         {
-            var loginUrl = ConfigurationManager.AppSettings["baseUrl"] + "login/";
+            var loginUrl = ConfigurationManager.AppSettings["baseUrl"];
+            if (bool.Parse(ConfigurationManager.AppSettings["useSso"]) != true)
+                loginUrl += "login/"; // May not be strictly necessary if running on local (i.e., not SSO)
             await _page.GotoAsync(loginUrl);
         }
-        public async Task<HomePage> LoginAs(string userName, string password)
+        public async Task<HomePage> LoginAs(string userName, string password, bool validLogin=true)
         {
+            var loginButonSelector = "#btnLogin";
+            if (ConfigurationManager.AppSettings["useSso"] == "true")
+                loginButonSelector = "button:has-text('Sign On')";
             await _page.FillAsync("#txtUserName", userName);
             await _page.FillAsync("#txtPassword", password);
-            await _page.ClickAsync("#btnLogin");
+            await _page.Locator(loginButonSelector).ClickAsync();
+            var currentUrl = _page.Url;
+            if (validLogin)
+            {
+                if (Regex.IsMatch(currentUrl, @".*ssopmnqatrunk.popmednet.org*"))
+                    await _page.Locator("h4:has-text('PopMedNet')").ClickAsync();
+            }
             return new HomePage(_page);
         }
 
@@ -42,8 +54,10 @@ namespace PopMedNet.UITests.Models
             try
             {
                 var msg = _page.Locator("span:has-text('Invalid user name or password.')");
+                if (ConfigurationManager.AppSettings["useSso"] == "true")
+                    msg = _page.Locator("label:has-text('Please check your username and password and try again')");
                 await msg.IsVisibleAsync(new LocatorIsVisibleOptions() { Timeout = 5000 });
-                Console.WriteLine("Success!");
+                Console.WriteLine("\tSuccess!");
             }
             catch (TimeoutException)
             {

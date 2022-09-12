@@ -1,0 +1,49 @@
+﻿@model Lpp.Dns.DTO.Users.EmailTemplateSubstitutionPropertiesDTO
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style>
+        p.spaced { margin-top:1em; margin-bottom:1em; }        
+    </style>
+</head>
+<body>
+    <p class="spaced">Hello @Model.FirstName @Model.LastName,</p>
+    <p class="spaced">Welcome to the @Model.Network team! You have been provided access to the @Model.QueryToolName, please follow the instructions below to access the system.</p>
+    <p class="spaced">URL: <a href="@Model.NetworkUrl" title="Click to navigate to @Model.Network">@Model.NetworkUrl</a></p>
+    <p class="spaced">User Name: @Model.Username</p>
+    <p class="spaced">Password: Please use the "Forgot Password" link and follow the instructions to reset your password.</p>
+    <p class="spaced">Other important tools to be aware of:</p>
+    <ul>
+        <li><a href="https://popmednet.atlassian.net/wiki/display/DOC/Home">PopMedNet Public Wiki</a>: This is a public facing wiki accessible by anyone with the URL. 
+        It contains information on the PopMedNet system and instructions on how to execute and respond to queries. Release notes for new versions of PopMedNet<sup>&trade;</sup> are also posted here. 
+        This is the home page from which all links in the above instructions can be accessed.</li>
+        <li><a href="https://popmednet.atlassian.net/servicedesk/customer/portal/1">PopMedNet Service Desk</a>: This is a JIRA service desk in which you can create a ticket if you 
+        ever have any questions or issues regarding the PopMedNet<sup>&trade;</sup> system. We will respond to a ticket within 48 hours.</li>
+    </ul>
+
+    <h3>DataMart Client Instructions</h3>
+    <p class="spaced">Please follow the instructions from the User's Guide below to install and set up the Datamart Client.</p>
+    <ol>
+        <li>Install the DataMart Client: <a href="https://popmednet.atlassian.net/wiki/spaces/DOC/pages/34635856/Offline+DataMart+Client+Installer">Found Here</a></li>
+        <li>Configure your DataMart Client Network Connection: <a href="https://popmednet.atlassian.net/wiki/spaces/DOC/pages/8880373">Instructions here</a></li>
+        <li>When entering the service URL, please enter: @Model.ApiUrl</li>
+        <li>Configure your DataMart Settings: <a href="https://popmednet.atlassian.net/wiki/spaces/DOC/pages/8880376">Instructions Here</a></li>
+    </ol>
+    <p class="spaced"><u>Additional Information</u></p>
+    <ul>
+        <li>If you are a DataMart Administrator and will be responding to queries as part of your roll, see our User Guide here for documentation on responding to requests: <a href="https://popmednet.atlassian.net/wiki/spaces/DOC/pages/8880381">Processing Requests</a></li>
+        <li>To set up automated email notifications within the PopMedNet Query Tool web portal for when a query is sent to you, as well as other events, follow the instructions here: <a href="https://popmednet.atlassian.net/wiki/spaces/DOC/pages/9666589">Subscribing to Notifications</a></li>
+    </ul>
+    <p class="spaced">Please reach out to the <a href="https://popmednet.atlassian.net/servicedesk/customer/portal/1">PopMedNet Service Desk</a> with any questions and please note,
+    <strong>replies to this email address are not monitored.</strong></p>
+    <p class="spaced">Thanks,</p>
+    <p class="spaced">The PopMedNet<sup>&trade;</sup> Team</p>
+</body>
+</html>

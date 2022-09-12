@@ -490,6 +490,10 @@ var Users;
                 e.stopPropagation();
                 return false;
             };
+            ViewModel.prototype.onSendEmail = function () {
+                Global.Helpers.ShowDialog("Email Templates", "/users/sendemail", ["close"], 800, 710, { userID: this.User.ID(), email: this.User.Email() }).done(function () {
+                });
+            };
             return ViewModel;
         }(Global.PageViewModel));
         Details.ViewModel = ViewModel;

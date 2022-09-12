@@ -701,6 +701,7 @@ var Dns;
                     _this.DataMarts = ko.observableArray();
                     _this.Data = ko.observable();
                     _this.Comment = ko.observable();
+                    _this.Private = ko.observable();
                 }
                 else {
                     _this.DemandActivityResultID = ko.observable(RequestCompletionRequestDTO.DemandActivityResultID);
@@ -708,6 +709,7 @@ var Dns;
                     _this.DataMarts = ko.observableArray(RequestCompletionRequestDTO.DataMarts == null ? null : RequestCompletionRequestDTO.DataMarts.map(function (item) { return new RequestDataMartViewModel(item); }));
                     _this.Data = ko.observable(RequestCompletionRequestDTO.Data);
                     _this.Comment = ko.observable(RequestCompletionRequestDTO.Comment);
+                    _this.Private = ko.observable(RequestCompletionRequestDTO.Private);
                 }
                 return _this;
             }
@@ -718,6 +720,7 @@ var Dns;
                     DataMarts: this.DataMarts == null ? null : this.DataMarts().map(function (item) { return item.toData(); }),
                     Data: this.Data(),
                     Comment: this.Comment(),
+                    Private: this.Private(),
                 };
             };
             return RequestCompletionRequestViewModel;
@@ -4956,6 +4959,88 @@ var Dns;
             return WorkflowHistoryItemViewModel;
         }(ViewModel));
         ViewModels.WorkflowHistoryItemViewModel = WorkflowHistoryItemViewModel;
+        var EmailTemplateSubstitutionPropertiesViewModel = (function (_super) {
+            __extends(EmailTemplateSubstitutionPropertiesViewModel, _super);
+            function EmailTemplateSubstitutionPropertiesViewModel(EmailTemplateSubstitutionPropertiesDTO) {
+                var _this = _super.call(this) || this;
+                if (EmailTemplateSubstitutionPropertiesDTO == null) {
+                    _this.UserID = ko.observable();
+                    _this.FirstName = ko.observable();
+                    _this.MiddleName = ko.observable();
+                    _this.LastName = ko.observable();
+                    _this.FullName = ko.observable();
+                    _this.EmailAddress = ko.observable();
+                    _this.Username = ko.observable();
+                    _this.TemplateTypeID = ko.observable();
+                    _this.Subject = ko.observable();
+                    _this.Network = ko.observable();
+                    _this.NetworkUrl = ko.observable();
+                    _this.QueryToolName = ko.observable();
+                    _this.ApiUrl = ko.observable();
+                }
+                else {
+                    _this.UserID = ko.observable(EmailTemplateSubstitutionPropertiesDTO.UserID);
+                    _this.FirstName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.FirstName);
+                    _this.MiddleName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.MiddleName);
+                    _this.LastName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.LastName);
+                    _this.FullName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.FullName);
+                    _this.EmailAddress = ko.observable(EmailTemplateSubstitutionPropertiesDTO.EmailAddress);
+                    _this.Username = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Username);
+                    _this.TemplateTypeID = ko.observable(EmailTemplateSubstitutionPropertiesDTO.TemplateTypeID);
+                    _this.Subject = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Subject);
+                    _this.Network = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Network);
+                    _this.NetworkUrl = ko.observable(EmailTemplateSubstitutionPropertiesDTO.NetworkUrl);
+                    _this.QueryToolName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.QueryToolName);
+                    _this.ApiUrl = ko.observable(EmailTemplateSubstitutionPropertiesDTO.ApiUrl);
+                }
+                return _this;
+            }
+            EmailTemplateSubstitutionPropertiesViewModel.prototype.toData = function () {
+                return {
+                    UserID: this.UserID(),
+                    FirstName: this.FirstName(),
+                    MiddleName: this.MiddleName(),
+                    LastName: this.LastName(),
+                    FullName: this.FullName(),
+                    EmailAddress: this.EmailAddress(),
+                    Username: this.Username(),
+                    TemplateTypeID: this.TemplateTypeID(),
+                    Subject: this.Subject(),
+                    Network: this.Network(),
+                    NetworkUrl: this.NetworkUrl(),
+                    QueryToolName: this.QueryToolName(),
+                    ApiUrl: this.ApiUrl(),
+                };
+            };
+            return EmailTemplateSubstitutionPropertiesViewModel;
+        }(ViewModel));
+        ViewModels.EmailTemplateSubstitutionPropertiesViewModel = EmailTemplateSubstitutionPropertiesViewModel;
+        var SendEmailRequest = (function (_super) {
+            __extends(SendEmailRequest, _super);
+            function SendEmailRequest(SendEmailRequest) {
+                var _this = _super.call(this) || this;
+                if (SendEmailRequest == null) {
+                    _this.Properties = new EmailTemplateSubstitutionPropertiesViewModel();
+                    _this.HtmlContent = ko.observable();
+                    _this.TextContent = ko.observable();
+                }
+                else {
+                    _this.Properties = new EmailTemplateSubstitutionPropertiesViewModel(SendEmailRequest.Properties);
+                    _this.HtmlContent = ko.observable(SendEmailRequest.HtmlContent);
+                    _this.TextContent = ko.observable(SendEmailRequest.TextContent);
+                }
+                return _this;
+            }
+            SendEmailRequest.prototype.toData = function () {
+                return {
+                    Properties: this.Properties.toData(),
+                    HtmlContent: this.HtmlContent(),
+                    TextContent: this.TextContent(),
+                };
+            };
+            return SendEmailRequest;
+        }(ViewModel));
+        ViewModels.SendEmailRequest = SendEmailRequest;
         var LegacySchedulerRequestViewModel = (function (_super) {
             __extends(LegacySchedulerRequestViewModel, _super);
             function LegacySchedulerRequestViewModel(LegacySchedulerRequestDTO) {

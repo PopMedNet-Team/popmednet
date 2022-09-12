@@ -641,6 +641,12 @@ var Dns;
                     params = '?' + params.substr(1);
                 return Helpers.GetAPIResult('Users/ExpireAllUserPasswords' + params, doNotHandleFail);
             };
+            Users.TriggerUserDeactivation = function (doNotHandleFail) {
+                return Helpers.PostAPIValue('Users/TriggerUserDeactivation', doNotHandleFail);
+            };
+            Users.SendEmail = function (details, doNotHandleFail) {
+                return Helpers.PostAPIValue('Users/SendEmail', details, doNotHandleFail);
+            };
             Users.GetPermissions = function (IDs, permissions, $filter, $select, $orderby, $skip, $top, doNotHandleFail) {
                 var params = '';
                 if (IDs != null)

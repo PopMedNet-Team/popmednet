@@ -14,7 +14,7 @@ namespace PopMedNet.UITests.ApiTests
     public class AdapterPackageTests
     {
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public void GetCurrentVersionNumber_ReturnsLatest()
         {
             // Given
@@ -22,8 +22,8 @@ namespace PopMedNet.UITests.ApiTests
 
             // When
 
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            var userName = ConfigurationManager.AppSettings["apiUser"];
+            var pwd = ConfigurationManager.AppSettings["apiPwd"];
             var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
             {
                 Authenticator = new HttpBasicAuthenticator(userName, pwd)
@@ -42,13 +42,13 @@ namespace PopMedNet.UITests.ApiTests
         }
 
         [Test]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public void GetAdapterPackage_ReturnsPackage()
         {
             var currentVersion = ConfigurationManager.AppSettings["currentVersion"];
             var expected = currentVersion + ".zip";
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            var userName = ConfigurationManager.AppSettings["apiUser"];
+            var pwd = ConfigurationManager.AppSettings["apiPwd"];
             var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
             {
                 Authenticator = new HttpBasicAuthenticator(userName, pwd)
@@ -60,10 +60,10 @@ namespace PopMedNet.UITests.ApiTests
             var headers = response.Headers.ToString();
 
             Console.WriteLine("\n*****ContentHeaders:");
-            var cheaders = response.ContentHeaders.ToList();
-            foreach (var cheader in cheaders)
-                { Console.WriteLine(cheader.ToString()); }
-            var contentDisposition = cheaders.Find(c => c.Name == "Content-Disposition");
+            var contentHeaders = response.ContentHeaders.ToList();
+            foreach (var header in contentHeaders)
+                { Console.WriteLine(header.ToString()); }
+            var contentDisposition = contentHeaders.Find(c => c.Name == "Content-Disposition");
             var actual = contentDisposition.Value.ToString();
 
             Assert.That(actual, Does.Contain(expected).IgnoreCase);
@@ -71,7 +71,7 @@ namespace PopMedNet.UITests.ApiTests
 
         [Test]
         [TestCaseSource(nameof(GetOldVersionsAndRequests))]
-        [Category("Smoke Test")]
+        [Category("PipelineTest")]
         public void GetAdapterPackageForRequest_ReturnsCorrectVersion(RequestVersion data)
         {
             // n.b. - targetVersion MUST be an adapter version that is on the API server.
@@ -89,8 +89,8 @@ namespace PopMedNet.UITests.ApiTests
             var requestId = data.Request;
             var targetVersion = data.Version;
             var expectedFile = targetVersion + ".zip";
-            var userName = ConfigurationManager.AppSettings["adminUser"];
-            var pwd = ConfigurationManager.AppSettings["adminPassword"];
+            var userName = ConfigurationManager.AppSettings["apiUser"];
+            var pwd = ConfigurationManager.AppSettings["apiPwd"];
             var client = new RestClient(ConfigurationManager.AppSettings["apiUrl"])
             {
                 Authenticator = new HttpBasicAuthenticator(userName, pwd)

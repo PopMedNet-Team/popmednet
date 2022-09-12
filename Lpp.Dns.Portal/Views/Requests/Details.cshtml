@@ -11,6 +11,8 @@
     bool viewTrackingTable = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewTrackingTable.ID);
     bool viewEnhancedEventLog = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewEnhancedLogTable.ID);
     bool viewAttachments = ViewBag.ScreenPermissions.Contains(Lpp.Dns.DTO.Security.PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.ViewAttachments.ID);
+    string isPrivateChecked = (ViewBag.IsPrivate ?? false) ?  "checked='checked'" : "";
+    bool canSetToPrivate = ViewBag.CanSetToPrivate ?? false;
 }
 
 @section Head{
@@ -119,11 +121,23 @@
                         <label for="Summary_Priority">Priority<em data-bind="visible: $root.IsFieldRequired('Request-Priority')" style="color:red;">* </em>:     </label>
                         <span id="Summary_Priority" data-bind="text: Priority_Display"></span>
                     </div>
-                    <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="Row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="Row" style="margin-bottom:12px;">
                         <label for="Header_DueDate">Due Date<em data-bind="visible: $root.IsFieldRequired('Request-Due-Date')" style="color:red;">* </em>:     </label>
                         <span data-bind="text: Request.DueDate() ? moment(Request.DueDate()).format('MM/D/YYYY') : ''"></span>
+                    </div>     
+                    <div class="Row">
+                        <label for="RequestStatus">Status:  </label>
+                        <span data-bind="text: Request.StatusText"></span>
                     </div>
-                    <div data-bind="visible: $root.IsNotTerminatedRequest()" class="Row">
+                    <div data-bind="visible: $root.IsNotTerminatedRequest()" class="Row" >
+                        @if (canSetToPrivate)
+                        {
+
+                            <div class="col-6" style="display:inline-block; margin-top:12px">
+                                <label for="ckbRequestIsPrivate">Hide Request:</label>
+                                <input type="checkbox" id="ckbRequestIsPrivate" value="true" data-bind="click:onTogglePrivate" @Html.Raw(isPrivateChecked)  />
+                            </div>
+                        }
                         <button class="btn btn-default pull-right" name="EditWFRequestMetadata" data-bind="click:onEditWFRequestMetadata, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata) || WorkflowActivity.Name() == 'New Request'" style="width:115px; margin-bottom: 5px; margin-top: 8px;">Edit Metadata</button>
                     </div>
                 </div>

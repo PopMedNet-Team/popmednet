@@ -55,7 +55,8 @@ namespace PopMedNet.UITests.EndToEndTests
         }
         
         [Test]
-        [Category("Smoke Test")]
+        [Retry(3)]
+        [Category("PipelineTest")]
         public async Task CreateFileDistributionRequest_EndToEnd()
         {
             // Given
@@ -63,56 +64,62 @@ namespace PopMedNet.UITests.EndToEndTests
             var loginPage = new LoginPage(singlePage);
             
             await loginPage.Goto();
-            var userName = ConfigurationManager.AppSettings["adminUser"];
+            var userName = ConfigurationManager.AppSettings["enhancedUser"];
             var password = ConfigurationManager.AppSettings["adminPassword"];
 
             var projectname = ConfigurationManager.AppSettings["projectName"];
             var requestType = ConfigurationManager.AppSettings["requestType"];
             var testZip = $"{ConfigurationManager.AppSettings["testZipFile"]}";
-            var requestName = $"FD Test Request {DateTime.Now.ToString("s")}";
-            var dataMartName = ConfigurationManager.AppSettings["dataMart"];
+            var requestName = $"FD End-to-End {DateTime.Now.ToString("s")}";
+            var dmName = ConfigurationManager.AppSettings["dataMart"];
+            var dmName2 = ConfigurationManager.AppSettings["dataMart2"];
+
+            var dataMarts = new System.Collections.Generic.List<string>
+            {
+                dmName,
+                dmName2
+            };
 
             var metaData = new RequestMetadataDTO()
             {
                 Name = requestName
             };
 
-            // Log in
+            Console.WriteLine($"*** Logging in as {userName}");
             var homePage = await loginPage.LoginAs(userName, password);
 
-            // Requests page...
+            
+            Console.WriteLine($"*** Creating new {requestType} request");
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             await requestPage.CreateNewRequestForProject(projectname);
-                
-            // New Request dialog
             var dialog = await requestPage.ChooseRequestType(requestType);
             await dialog.FillRequestMetadata(metaData);
             var details = await dialog.Save();
 
             // Request Details page
             await details.UploadFilesForRequest(testZip);
-            await details.VerifyDocumentUpload(testZip);
 
-            await details.SelectDatamarts(dataMartName);
+            await details.SelectDatamarts(dataMarts);
             await details.SubmitRequest();
             await details.EnterComment();
             var requestId = await details.GetRequestId();
 
+            Console.WriteLine($"*** Verify request status displays correctly in requests grid");
+            await homePage.GoToPage(PageModels.Requests);
+            await requestPage.SelectProjectTab(projectname);
+            await requestPage.VerifyRequestStatus(requestName, RequestStatuses.Submitted);
+
+            Console.WriteLine($"*** Open request details and verify details were saved correctly");
             await details.GoToRequest(requestId);
             await details.VerifyFileUploadInOverviewTab(testZip);
             await details.VerifyEventLogUpdate();
-            await details.VerifyDataMartInRoutingsTable(dataMartName);
-            await details.VerifyTaskUpdateInRoutingsTable();
+            await details.VerifyDataMartInRoutingsTable(dmName);
+            await details.VerifyDataMartInRoutingsTable(dmName2);
+            await details.VerifyTaskUpdateInRoutingsTable(dmName);
+            await details.VerifyTaskUpdateInRoutingsTable(dmName2);
             await details.VerifyFileUploadInDocumentsTab(testZip);
 
-            // Verify request was saved
-            await homePage.GoToPage(PageModels.Requests);
-            await requestPage.SelectProjectTab(projectname);
-
-            // Verify request status is 'Submitted'
-            await requestPage.VerifyRequestStatus(requestName, RequestStatuses.Submitted);
             Assert.Pass();
-            // Cancel request
         }
     }
 }

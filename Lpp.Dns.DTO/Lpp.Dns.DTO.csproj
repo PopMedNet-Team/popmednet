@@ -302,6 +302,7 @@
     <Compile Include="Terms\CodeSelectorValueDTO.cs" />
     <Compile Include="Themes\ThemeDTO.cs" />
     <Compile Include="Users\AssignedUserNotificationDTO.cs" />
+    <Compile Include="Users\EmailTemplateSubstitutionPropertiesDTO.cs" />
     <Compile Include="Users\MetadataEditPermissionsSummaryDTO.cs" />
     <Compile Include="Users\NotificationDTO.cs" />
     <Compile Include="Users\ForgotPasswordDTO.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="Users\ObserverDTO.cs" />
     <Compile Include="Users\ObserverEventDTO.cs" />
     <Compile Include="Users\RestorePasswordDTO.cs" />
+    <Compile Include="Users\SendEmailRequest.cs" />
     <Compile Include="Users\SsoEndpointDTO.cs" />
     <Compile Include="Users\TreeItemDTO.cs" />
     <Compile Include="Users\UpdateUserPasswordDTO.cs" />

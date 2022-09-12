@@ -769,6 +769,7 @@ module Dns.ViewModels {
 	 	 public DataMarts: KnockoutObservableArray<RequestDataMartViewModel>;
 	 	 public Data: KnockoutObservable<string>;
 	 	 public Comment: KnockoutObservable<string>;
+	 	 public Private: KnockoutObservable<boolean>;
 	 	 constructor(RequestCompletionRequestDTO?: Dns.Interfaces.IRequestCompletionRequestDTO)
 	 	  {
 	 	 	  super();
@@ -778,12 +779,14 @@ module Dns.ViewModels {
 	 	 	 	 this.DataMarts = ko.observableArray<RequestDataMartViewModel>();
 	 	 	 	 this.Data = ko.observable<any>();
 	 	 	 	 this.Comment = ko.observable<any>();
+	 	 	 	 this.Private = ko.observable<any>();
 	 	 	  }else{
 	 	 	 	 this.DemandActivityResultID = ko.observable(RequestCompletionRequestDTO.DemandActivityResultID);
 	 	 	 	 this.Dto = new RequestViewModel(RequestCompletionRequestDTO.Dto);
 	 	 	 	 this.DataMarts = ko.observableArray<RequestDataMartViewModel>(RequestCompletionRequestDTO.DataMarts == null ? null : RequestCompletionRequestDTO.DataMarts.map((item) => {return new RequestDataMartViewModel(item);}));
 	 	 	 	 this.Data = ko.observable(RequestCompletionRequestDTO.Data);
 	 	 	 	 this.Comment = ko.observable(RequestCompletionRequestDTO.Comment);
+	 	 	 	 this.Private = ko.observable(RequestCompletionRequestDTO.Private);
 	 	 	 }
 	 	 }
 
@@ -794,6 +797,7 @@ module Dns.ViewModels {
 	 	 	 	DataMarts: this.DataMarts == null ? null : this.DataMarts().map((item) => {return item.toData();}),
 	 	 	 	Data: this.Data(),
 	 	 	 	Comment: this.Comment(),
+	 	 	 	Private: this.Private(),
 	 	 	  };
 	 	  }
 
@@ -6112,6 +6116,104 @@ module Dns.ViewModels {
 	 	 	 	RoutingID: this.RoutingID(),
 	 	 	 	DataMart: this.DataMart(),
 	 	 	 	WorkflowActivityID: this.WorkflowActivityID(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class EmailTemplateSubstitutionPropertiesViewModel extends ViewModel<Dns.Interfaces.IEmailTemplateSubstitutionPropertiesDTO>{
+	 	 public UserID: KnockoutObservable<any>;
+	 	 public FirstName: KnockoutObservable<string>;
+	 	 public MiddleName: KnockoutObservable<string>;
+	 	 public LastName: KnockoutObservable<string>;
+	 	 public FullName: KnockoutObservable<string>;
+	 	 public EmailAddress: KnockoutObservable<string>;
+	 	 public Username: KnockoutObservable<string>;
+	 	 public TemplateTypeID: KnockoutObservable<number>;
+	 	 public Subject: KnockoutObservable<string>;
+	 	 public Network: KnockoutObservable<string>;
+	 	 public NetworkUrl: KnockoutObservable<string>;
+	 	 public QueryToolName: KnockoutObservable<string>;
+	 	 public ApiUrl: KnockoutObservable<string>;
+	 	 constructor(EmailTemplateSubstitutionPropertiesDTO?: Dns.Interfaces.IEmailTemplateSubstitutionPropertiesDTO)
+	 	  {
+	 	 	  super();
+	 	 	 if (EmailTemplateSubstitutionPropertiesDTO== null) {
+	 	 	 	 this.UserID = ko.observable<any>();
+	 	 	 	 this.FirstName = ko.observable<any>();
+	 	 	 	 this.MiddleName = ko.observable<any>();
+	 	 	 	 this.LastName = ko.observable<any>();
+	 	 	 	 this.FullName = ko.observable<any>();
+	 	 	 	 this.EmailAddress = ko.observable<any>();
+	 	 	 	 this.Username = ko.observable<any>();
+	 	 	 	 this.TemplateTypeID = ko.observable<any>();
+	 	 	 	 this.Subject = ko.observable<any>();
+	 	 	 	 this.Network = ko.observable<any>();
+	 	 	 	 this.NetworkUrl = ko.observable<any>();
+	 	 	 	 this.QueryToolName = ko.observable<any>();
+	 	 	 	 this.ApiUrl = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.UserID = ko.observable(EmailTemplateSubstitutionPropertiesDTO.UserID);
+	 	 	 	 this.FirstName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.FirstName);
+	 	 	 	 this.MiddleName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.MiddleName);
+	 	 	 	 this.LastName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.LastName);
+	 	 	 	 this.FullName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.FullName);
+	 	 	 	 this.EmailAddress = ko.observable(EmailTemplateSubstitutionPropertiesDTO.EmailAddress);
+	 	 	 	 this.Username = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Username);
+	 	 	 	 this.TemplateTypeID = ko.observable(EmailTemplateSubstitutionPropertiesDTO.TemplateTypeID);
+	 	 	 	 this.Subject = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Subject);
+	 	 	 	 this.Network = ko.observable(EmailTemplateSubstitutionPropertiesDTO.Network);
+	 	 	 	 this.NetworkUrl = ko.observable(EmailTemplateSubstitutionPropertiesDTO.NetworkUrl);
+	 	 	 	 this.QueryToolName = ko.observable(EmailTemplateSubstitutionPropertiesDTO.QueryToolName);
+	 	 	 	 this.ApiUrl = ko.observable(EmailTemplateSubstitutionPropertiesDTO.ApiUrl);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.IEmailTemplateSubstitutionPropertiesDTO{
+	 	 	  return {
+	 	 	 	UserID: this.UserID(),
+	 	 	 	FirstName: this.FirstName(),
+	 	 	 	MiddleName: this.MiddleName(),
+	 	 	 	LastName: this.LastName(),
+	 	 	 	FullName: this.FullName(),
+	 	 	 	EmailAddress: this.EmailAddress(),
+	 	 	 	Username: this.Username(),
+	 	 	 	TemplateTypeID: this.TemplateTypeID(),
+	 	 	 	Subject: this.Subject(),
+	 	 	 	Network: this.Network(),
+	 	 	 	NetworkUrl: this.NetworkUrl(),
+	 	 	 	QueryToolName: this.QueryToolName(),
+	 	 	 	ApiUrl: this.ApiUrl(),
+	 	 	  };
+	 	  }
+
+
+
+	 }
+	 export class SendEmailRequest extends ViewModel<Dns.Interfaces.ISendEmailRequest>{
+	 	 public Properties: EmailTemplateSubstitutionPropertiesViewModel;
+	 	 public HtmlContent: KnockoutObservable<string>;
+	 	 public TextContent: KnockoutObservable<string>;
+	 	 constructor(SendEmailRequest?: Dns.Interfaces.ISendEmailRequest)
+	 	  {
+	 	 	  super();
+	 	 	 if (SendEmailRequest== null) {
+	 	 	 	 this.Properties = new EmailTemplateSubstitutionPropertiesViewModel();
+	 	 	 	 this.HtmlContent = ko.observable<any>();
+	 	 	 	 this.TextContent = ko.observable<any>();
+	 	 	  }else{
+	 	 	 	 this.Properties = new EmailTemplateSubstitutionPropertiesViewModel(SendEmailRequest.Properties);
+	 	 	 	 this.HtmlContent = ko.observable(SendEmailRequest.HtmlContent);
+	 	 	 	 this.TextContent = ko.observable(SendEmailRequest.TextContent);
+	 	 	 }
+	 	 }
+
+	 	 public toData(): Dns.Interfaces.ISendEmailRequest{
+	 	 	  return {
+	 	 	 	Properties: this.Properties.toData(),
+	 	 	 	HtmlContent: this.HtmlContent(),
+	 	 	 	TextContent: this.TextContent(),
 	 	 	  };
 	 	  }
 

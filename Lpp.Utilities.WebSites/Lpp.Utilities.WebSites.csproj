@@ -145,8 +145,10 @@
     </Compile>
     <Compile Include="Attributes\BasicAuthentication.cs" />
     <Compile Include="Attributes\BasicAuthenticationFilter.cs" />
+    <Compile Include="Attributes\CachingFilter.cs" />
     <Compile Include="Attributes\RawBodyParameterBinding.cs" />
     <Compile Include="Attributes\SkipJsonResultAttribute.cs" />
+    <Compile Include="Configuration\UserEmailTemplateConfiguration.cs" />
     <Compile Include="Controllers\LppApiController.cs" />
     <Compile Include="Controllers\LppApiDataController.cs" />
     <Compile Include="Controllers\LppApiWorkflowController.cs" />

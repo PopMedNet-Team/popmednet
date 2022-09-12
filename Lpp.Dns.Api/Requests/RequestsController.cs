@@ -48,7 +48,7 @@ namespace Lpp.Dns.Api.Requests
             bool isNew = request.Dto.ID == null;
 
             var result = await base.CompleteWorkflowActivity(request, 
-                (entity) =>
+                (entity) => // GetWorkflowActivity
                 {
                    
 
@@ -73,10 +73,8 @@ namespace Lpp.Dns.Api.Requests
                         }).First();
                     }
                 }, 
-                async (entity) =>
+                async (entity) => //CompleteEntityPreSave
                 {
-                    /** Pre-Save **/
-
                     //Update basic settings on the request that cannot be trusted to the client
 
                     await Task.Run(() => {
@@ -94,7 +92,11 @@ namespace Lpp.Dns.Api.Requests
                             entity.OrganizationID = Identity.EmployerID.Value;
                             entity.CreatedOn = DateTime.UtcNow;
                             entity.CreatedByID = Identity.ID;
+                            entity.Private = false;
                         }
+
+                        if(request.Private != null)
+                            entity.Private = (bool)request.Private;
 
                         //Save the data marts
                         var inserts = request.DataMarts.Where(dm => dm.ID == null);                    
@@ -123,7 +125,9 @@ namespace Lpp.Dns.Api.Requests
 
                     //Check for MSRequestID field
                     var securityGroups = DataContext.SecurityGroupUsers.Where(u => u.UserID == Identity.ID).Select(u => u.SecurityGroupID).ToArray();
-                    var projectFieldOptions = DataContext.ProjectFieldOptionAcls.Where(fo => fo.FieldIdentifier == "Request-RequestID" && fo.ProjectID == entity.ProjectID && securityGroups.Contains(fo.SecurityGroupID)).ToArray();
+                    var projectFieldOptions = DataContext.ProjectFieldOptionAcls.Where(fo => fo.FieldIdentifier == "Request-RequestID" && 
+                        fo.ProjectID == entity.ProjectID && 
+                        securityGroups.Contains(fo.SecurityGroupID)).ToArray();
                     var globalFieldOption = DataContext.GlobalFieldOptionAcls.Where(g => g.FieldIdentifier == "Request-RequestID").First();
 
                     //If MSRequestID is empty and required, throw an error
@@ -131,7 +135,8 @@ namespace Lpp.Dns.Api.Requests
                           ( 
                             projectFieldOptions.Any(o => o.Permission == FieldOptionPermissions.Required)
                             || 
-                            (globalFieldOption.Permission == FieldOptionPermissions.Required && projectFieldOptions.All(o => o.Permission != FieldOptionPermissions.Hidden)) 
+                            (globalFieldOption.Permission == FieldOptionPermissions.Required && 
+                                projectFieldOptions.All(o => o.Permission != FieldOptionPermissions.Hidden)) 
                           ) 
                        )
                     {
@@ -142,7 +147,8 @@ namespace Lpp.Dns.Api.Requests
                             (
                             projectFieldOptions.All(o => o.Permission != FieldOptionPermissions.Hidden)
                             ||
-                            (globalFieldOption.Permission != FieldOptionPermissions.Hidden && projectFieldOptions.All(o => o.Permission != FieldOptionPermissions.Hidden))
+                            (globalFieldOption.Permission != FieldOptionPermissions.Hidden && 
+                                projectFieldOptions.All(o => o.Permission != FieldOptionPermissions.Hidden))
                             )
                         )
                     {
@@ -165,7 +171,9 @@ namespace Lpp.Dns.Api.Requests
                         //remove the routes
                         DataContext.RequestDataMarts.RemoveRange(deletes);
 
-                        var updates = request.DataMarts.Where(dm => dm.ID.HasValue && (!entity.DataMarts.Any(ad => (ad.ID == dm.ID.Value)) || entity.DataMarts.Any(adm => (adm.ID == dm.ID.Value) && ((adm.Priority != dm.Priority) || (adm.DueDate != dm.DueDate) || (adm.RoutingType != dm.RoutingType)))));
+                        var updates = request.DataMarts.Where(dm => dm.ID.HasValue && 
+                            (!entity.DataMarts.Any(ad => (ad.ID == dm.ID.Value)) || entity.DataMarts.Any(adm => (adm.ID == dm.ID.Value) && 
+                                    ((adm.Priority != dm.Priority) || (adm.DueDate != dm.DueDate) || (adm.RoutingType != dm.RoutingType)))));
                         foreach (var update in updates)
                         {
                             if(DataMartMap.Any(p => p.Key.ID == update.ID))
@@ -199,10 +207,8 @@ namespace Lpp.Dns.Api.Requests
                         }
                     }
                 },
-                async (entity) =>
+                async (entity) => // CompleteEntityPostSave
                 {
-                    /** Post Save **/
-
                     //IF MSRequestID is blank, populate it with a default value "Request [System Number]". Need to do it post save so that entity.Identifier is populated with the correct System Number
                     if (entity.MSRequestID == null || entity.MSRequestID == "")
                     {
@@ -236,7 +242,7 @@ namespace Lpp.Dns.Api.Requests
                                         }
                                     );
                                 }
-
+                                
                                 await DataContext.SaveChangesAsync();
                             }
                         }
@@ -1276,7 +1282,7 @@ namespace Lpp.Dns.Api.Requests
                 });
             }
 
-            r.Private = r.DataMarts.Count == 0;
+            //r.Private = r.DataMarts.Count == 0;
 
             var ta = new PmnTask
             {

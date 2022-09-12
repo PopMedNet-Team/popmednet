@@ -1,4 +1,5 @@
 /// <reference path="../_rootlayout.ts" />
+/// <reference path="../../Scripts/page/Page.ts" />
 declare var WorkflowActivityList: Requests.Details.IVisualWorkflowActivity[];
 
 module Requests.Details {
@@ -100,6 +101,8 @@ module Requests.Details {
         public CanViewAggregateResponses: boolean;
         public AllowAggregateView: boolean;
         public RequestIsComplete: KnockoutComputed<boolean>;
+
+        public onTogglePrivate: () => void;
 
         constructor(
             request: Dns.ViewModels.RequestViewModel,
@@ -332,7 +335,7 @@ module Requests.Details {
                     virtualRoutes.push(new VirtualRoutingViewModel(routing, null));
                 }
             });
-            self.VirtualRoutings = ko.observableArray(virtualRoutes);
+            self.VirtualRoutings = ko.observableArray(virtualRoutes);            
 
             self.CompletedRoutings = ko.computed(() => {
                 return ko.utils.arrayFilter(self.VirtualRoutings(), (routing) => {
@@ -663,9 +666,25 @@ module Requests.Details {
                 setupResponseTabView(Dns.Enums.TaskItemTypes.Response);
             };
 
+            self.onTogglePrivate = () => {
+               
+                let isChecked = ($("#ckbRequestIsPrivate").is(":checked"));
+
+                let visibility = (isChecked ?? false) ? "hidden" : "visible";
+                let message = `<p>You are about to change the request visibility to <strong>${visibility}</strong>.` +
+                    `This will save the request and ${isChecked ? '<strong>NOT</strong>' : ''} allow other users in your group to see it before it has been submitted.</p> ` +
+                    `<p>Do you wish to continue?</p>`
+                let messageMarkup = `<div class="alert alert-warning">${message}</div>`;
+                
+                let confirm = Global.Helpers.ShowConfirm("Save request?", messageMarkup).done(() => {
+                    this.DefaultSave(true, false, () => null, isChecked);
+
+                });
+            };
+
         }
 
-        public DefaultSave(reload: boolean, isNewRequest: boolean = null, errorHandler: (err: any) => void = null): JQueryDeferred<boolean> {
+        public DefaultSave(reload: boolean, isNewRequest: boolean = null, errorHandler: (err: any) => void = null, pChecked: boolean = null): JQueryDeferred<boolean> {
             let self = this;
             let deferred = $.Deferred<boolean>();
             if (isNewRequest == null) {
@@ -686,8 +705,10 @@ module Requests.Details {
             if (!this.SaveRequest(false))
                 return deferred.reject();
 
-            let dto: Dns.Interfaces.IRequestDTO = self.Request.toData();
 
+            let setPrivate = pChecked ?? $("#ckbRequestIsPrivate").is(":checked");
+
+            let dto: Dns.Interfaces.IRequestDTO = self.Request.toData();
             Dns.WebApi.Requests.CompleteActivity({
                 DemandActivityResultID: this.SaveRequestID(),
                 Dto: dto,
@@ -695,7 +716,8 @@ module Requests.Details {
                     return item.toData();
                 }),
                 Data: JSON.stringify(self.SaveFormDTO == null ? null : self.SaveFormDTO.toData()),
-                Comment: null
+                Comment: null,
+                Private: setPrivate
             }).done((results) => {
 
                 let result = results[0];
@@ -867,6 +889,8 @@ module Requests.Details {
                 window.history.replaceState(null, this.Request.Name(), window.location.href);
             }
         }
+
+
     }
 
     export function init() {
@@ -1346,6 +1370,8 @@ module Requests.Details {
                         Controls.WFHistory.List.setRequestID(rovm.Request.ID());
                 });
             }
+
+
 
             // ===== Scroll to Top ==== 
             $(window).scroll(() => {

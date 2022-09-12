@@ -39,5 +39,10 @@ namespace Lpp.Dns.DTO
         /// </summary>
         [DataMember]
         public string Comment { get; set; }
+        /// <summary>
+        /// Gets or sets if the request is private/hidden
+        /// </summary>
+        [DataMember]
+        public bool? Private { get; set; }
     }
 }

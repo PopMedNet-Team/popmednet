@@ -615,6 +615,12 @@ module Users.Details {
             e.stopPropagation();
             return false;
         }
+
+        public onSendEmail() {
+            Global.Helpers.ShowDialog("Email Templates", "/users/sendemail", ["close"], 800, 710, { userID: this.User.ID(), email: this.User.Email() }).done(() => {
+                
+            });
+        }
     }
 
     function init() {

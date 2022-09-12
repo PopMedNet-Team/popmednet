@@ -671,6 +671,16 @@ namespace Lpp.Dns.ApiClient
 
 	 	 	 return await Client._Client.GetAsync(Client._Host + Path + "/ExpireAllUserPasswords");
 	 	 }
+	 	 public async Task TriggerUserDeactivation()
+	 	 {
+	 	 	 var result = await Client.Post(Path + "/TriggerUserDeactivation");
+	 	 	 return;
+	 	 }
+	 	 public async Task<System.Net.Http.HttpResponseMessage> SendEmail(Lpp.Dns.DTO.Users.SendEmailRequest details)
+	 	 {
+	 	 	 var result = await Client.Post<Lpp.Dns.DTO.Users.SendEmailRequest>(Path + "/SendEmail", details);
+	 	 	 return result;
+	 	 }
 	 }
 	 public class Theme
 	 {

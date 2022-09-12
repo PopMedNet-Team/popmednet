@@ -16,6 +16,7 @@ using System.Reflection;
 using Lpp.Utilities.WebSites;
 using System.Collections.Concurrent;
 using System.Web.Configuration;
+using System.Diagnostics;
 
 namespace Lpp.Dns.Api.Controllers
 {
@@ -25,6 +26,9 @@ namespace Lpp.Dns.Api.Controllers
     public class NotificationsController : LppApiController<DataContext>
     {
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(NotificationsController));
+
+        
+
 
         /// <summary>
         /// Runs the scheduled notifications based on the permissions of the user used to login.
@@ -93,7 +97,7 @@ namespace Lpp.Dns.Api.Controllers
                     Logger.Error("Error Occured while executing notifications", ex);
                 }
             }
-            
+
             //Flip the results so that we get a list of users, and a sub list of their notifications.
             var users = (from n in notifications from r in n.Recipients select r).DistinctBy(n => n.Email);
 
@@ -137,6 +141,7 @@ namespace Lpp.Dns.Api.Controllers
             var notifier = new Notifier();
 
             //Asynchronously send all of the notifications
+           
             await Task.Run(() => notifier.Notify(sendNotifications.AsEnumerable()));
 
             //Upon completion update all of the notifications that should have run with the new time that they should be run again.
@@ -192,5 +197,6 @@ namespace Lpp.Dns.Api.Controllers
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
         }
+
     }
 }
