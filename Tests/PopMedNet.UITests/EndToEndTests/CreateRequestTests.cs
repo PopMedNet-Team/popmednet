@@ -57,7 +57,7 @@ namespace PopMedNet.UITests.EndToEndTests
         [Test]
         [Retry(3)]
         [Category("PipelineTest")]
-        public async Task CreateFileDistributionRequest_EndToEnd()
+        public async Task CreateFileDistributionRequest_Submitted_StatusAndDataAreCorrect()
         {
             // Given
             await singlePage.SetViewportSizeAsync(1920, 1080);
@@ -70,7 +70,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var projectname = ConfigurationManager.AppSettings["projectName"];
             var requestType = ConfigurationManager.AppSettings["requestType"];
             var testZip = $"{ConfigurationManager.AppSettings["testZipFile"]}";
-            var requestName = $"FD End-to-End {DateTime.Now.ToString("s")}";
+            var requestName = $"File Distribution - Submitted Only {DateTime.Now.ToString("s")}";
             var dmName = ConfigurationManager.AppSettings["dataMart"];
             var dmName2 = ConfigurationManager.AppSettings["dataMart2"];
 

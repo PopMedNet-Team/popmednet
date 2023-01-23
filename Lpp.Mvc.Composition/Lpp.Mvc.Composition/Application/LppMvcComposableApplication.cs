@@ -95,7 +95,7 @@ namespace Lpp.Mvc
             {
                 Response.Clear();
                 Response.StatusCode = 200;
-                Response.Write(@"<html><head></head><body>We're sorry but HTML and Javascript may not be submitted in this site. Please use your browser's back button and remove any html and or javascript for text fields.</body></html>");
+                Response.Write(@"<html lang=""en""><head></head><body>We're sorry but HTML and Javascript may not be submitted in this site. Please use your browser's back button and remove any html and or javascript for text fields.</body></html>");
                 Response.End();
             }
             else 

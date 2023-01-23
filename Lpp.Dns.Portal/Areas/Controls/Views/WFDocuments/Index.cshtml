@@ -7,8 +7,9 @@
             color:#fff;
         }
     </style>
-    <div class="panel-body" style="padding:1px;">
+    <div class="panel-body" style="padding:1px;" >
         <div id="gDocuments" data-bind="pmnGrid: {
+            dataBound: onResizeGrids,
             dataSource: DataSource,
             filterable: false,
             reorderable: false,
@@ -27,14 +28,14 @@
                 {field: 'ID', title: 'Revision Set', hidden:true },
                 {field: 'FormattedTaskTitle()', title:'Task', hidden:true, encoded:false },
                 {field: 'TaskID', title: 'TaskID', hidden: true, groupHeaderTemplate: $root.formatGroupHeader }
-            ]
+            ],
         }">
         </div>
     </div>
     <nav class="panel-footer" style="display:none;" data-bind="visible:CurrentTask() == null || (CurrentTask() != null && CurrentTask().ID != null)">
         <p>Files added by clicking "New Document" <strong><u>are not</u></strong> distributed to Data Partners. They are only visible on the query tool.</p>
         <button class="btn btn-default pull-left" type="button" data-bind="click: onDeleteDocument, visible: SelectedRevisionSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-trash"></span> Delete Current Revision</button>
-        <button class="btn btn-default pull-right" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"><span class="glyphicon glyphicon-refresh"></span></button>
+        <button class="btn btn-default pull-right glyphicon glyphicon-refresh" type="button" style="margin-left:10px" data-bind="click: onRefreshDocuments, visible:RequestID != null"></button>
         <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewDocument, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.AddDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Document</button>
         <button class="btn btn-default pull-right" type="button" style="margin-left:10px;" data-bind="click: onNewRevision, visible:SelectedRevisionSet() != null && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ReviseDocuments)"><span class="glyphicon glyphicon-plus" style="font-size:smaller;"></span> New Revision</button>
         <button class="btn btn-default pull-right" type="button" data-bind="click: onDownload, visible: SelectedRevisionSet() != null"><span class="glyphicon glyphicon-download-alt"></span> Download Current Revision</button>

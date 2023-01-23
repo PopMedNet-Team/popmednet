@@ -143,9 +143,7 @@ namespace PopMedNet.UITests.Models
         public async Task SaveChanges()
         {
             Console.WriteLine("Attempting to save changes to user...");
-            //await ClickSaveButton();
             await ClickControl(UserDetailPageClickables.SaveButton);
-            //await ClickOkButton();
             await ClickControl(UserDetailPageClickables.OkButton);
         }
 

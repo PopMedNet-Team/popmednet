@@ -55,8 +55,8 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
-        [Category("PipelineTest")]
-        public async Task RespondToRequest_WithOneDocument_HttpClient()
+        [Category("PartialTestsDocumentUpload")]
+        public async Task RespondToRequest_WithOneTextFileUsingHttpClient_VerifyStatusAndDocument()
         {
             // Create request for test
             
@@ -68,7 +68,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Respond: Single Response -- {DateTime.Now.ToString("s")}";
+            var requestName = $"Single Response: Respond with Text File - {DateTime.Now.ToString("s")}";
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             var requestUrl = await requestPage.GenerateGenericRequest(requestName);
             var id = requestUrl.Split('=')[1];
@@ -145,7 +145,7 @@ namespace PopMedNet.UITests.EndToEndTests
 
         [Test]
         [Category("PipelineTest")]
-        public async Task RespondToRequest_ReUploadResponse_HttpClient()
+        public async Task RespondToRequest_ReUploadResponse_HttpClient_ShowsResultsModified()
         {
             // Create request for test
 
@@ -298,7 +298,7 @@ namespace PopMedNet.UITests.EndToEndTests
 
         [Test]
         [Category("PipelineTest")]
-        public async Task ModularProgramRequest_RespondWithOneDocument_HttpClient()
+        public async Task ModularProgramRequest_RespondWithOneZipFileUsingMockApi_VerifyResults()
         {
             // Create request for test
 
@@ -310,7 +310,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Respond: Modular Program -- {DateTime.Now.ToString("s")}";
+            var requestName = $"Request Roundtrip - Respond with Zip file - {DateTime.Now.ToString("s")}";
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             var attachFile = $"{ConfigurationManager.AppSettings["testTextFile"]}";
             var requestType = $"{ConfigurationManager.AppSettings["modularProgramRequestType"]}";
@@ -395,8 +395,8 @@ namespace PopMedNet.UITests.EndToEndTests
         /// </summary>
         /// <returns></returns>
         [Test]
-        [Category("PipelineTest")]
-        public async Task PostSingleResponseDocument_ReturnsIdForDocument()
+        [Category("PartialTestsDocumentUpload")]
+        public async Task PostSingleResponseDocument_ReturnsIdForDocument_UsingMockApi()
         {
             await singlePage.SetViewportSizeAsync(1920, 1080);
             var loginPage = new LoginPage(singlePage);
@@ -406,7 +406,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";
+            var requestName = $"Partial Test: Single document posted, not uploaded {DateTime.Now.ToString("s")}";
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             var requestUrl = await requestPage.GenerateGenericRequest(requestName);
             var id = requestUrl.Split('=')[1];
@@ -441,7 +441,7 @@ namespace PopMedNet.UITests.EndToEndTests
         /// </summary>
         /// <returns></returns>
         [Test]
-        [Category("PipelineTest")]
+        [Category("PartialTestsDocumentUpload")]
         public async Task PostMultipleResponseDocuments_ReturnsIdForEachDocument()
         {
             await singlePage.SetViewportSizeAsync(1920, 1080);
@@ -452,7 +452,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";
+            var requestName = $"Partial Test: Multiple Docs posted, not uploaded {DateTime.Now.ToString("s")}";
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             var requestUrl = await requestPage.GenerateGenericRequest(requestName);
             var id = requestUrl.Split('=')[1];
@@ -501,8 +501,8 @@ namespace PopMedNet.UITests.EndToEndTests
         }
 
         [Test]
-        [Category("PipelineTest")]
-        public async Task UploadOneDocument_WithChunks()
+        [Category("PartialTestsDocumentUpload")]
+        public async Task UploadOneDocument_WithChunks_VerifyDocNoStatusChange()
         {
             var fileName = "TestDoc01.txt";
             var filePath = System.AppDomain.CurrentDomain.BaseDirectory
@@ -515,7 +515,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Post Single Document - Doc posted, not uploaded {DateTime.Now.ToString("s")}";
+            var requestName = $"Partial Test: Single Document Uploaded, No Status Change - {DateTime.Now.ToString("s")}";
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
             var requestUrl = await requestPage.GenerateGenericRequest(requestName);
             var id = requestUrl.Split('=')[1];

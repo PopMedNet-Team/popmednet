@@ -45,6 +45,10 @@ module DataMarts.Index {
         return "<a href=\"/datamarts/details?ID=" + dataItem.ID + "\">" + dataItem.Name + "</a>";
     }
 
+    export function OrgAnchor(dataItem: Dns.Interfaces.IRequestDTO): string {
+        return "<a href=\"/organizations/details?ID=" + dataItem.OrganizationID + "\">" + dataItem.Organization + "</a>";
+    }
+
     function init() {
         $.when<any>(Users.GetSettings(["DataMarts.Index.gDataMarts.User:" + User.ID]),
         Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done((gDataMartsSetting, canAdd) => {

@@ -46,7 +46,7 @@ namespace Lpp.Dns.Portal.Views.Documents
         }
         public override void Execute()
         {
-WriteLiteral("<html>\r\n    <head>\r\n        <title>");
+WriteLiteral("<html lang=\"en\">\r\n    <head>\r\n        <title>");
 
             
             #line 5 "..\..\Views\Documents\Visualized.cshtml"

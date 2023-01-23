@@ -49,6 +49,9 @@ var Controls;
                     if (currentTask != null) {
                         _this.DataSource.group({ field: 'TaskID' });
                     }
+                    self.onResizeGrids = function () {
+                        $('#Overview .k-grid-content').css('height', 'auto');
+                    };
                     self.RefreshDataSource = function (documents) {
                         ko.utils.arrayForEach(documents, function (d) {
                             self.Documents.push(d);
@@ -110,7 +113,7 @@ var Controls;
                         var revisionSet = self.SelectedRevisionSet();
                         var options = {
                             RequestID: self.RequestID,
-                            TaskID: self.CurrentTask ? self.CurrentTask().ID : null,
+                            TaskID: self.CurrentTask() ? self.CurrentTask().ID : null,
                             ParentDocument: revisionSet.Current()
                         };
                         Global.Helpers.ShowDialog('Upload New Revision', '/controls/wfdocuments/upload-dialog', ['Close'], 800, 500, options).done(function (result) {
@@ -241,7 +244,7 @@ var Controls;
                     };
                     self.onRefreshDocuments = function () {
                         var query = Dns.WebApi.Documents.ByTask(TaskIDs, null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc');
-                        if (self.CurrentTask == null)
+                        if (self.CurrentTask() == null)
                             query = Dns.WebApi.Documents.GeneralRequestDocuments(self.RequestID, null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc');
                         $.when(query)
                             .done(function (documents) {
@@ -267,8 +270,6 @@ var Controls;
                                 }
                                 revisionSet.add(d);
                             });
-                            self.AttachmentsDataSource.read();
-                            self.SelectedAttachmentSet(null);
                         });
                     };
                     self.formatGroupHeader = function (e) {

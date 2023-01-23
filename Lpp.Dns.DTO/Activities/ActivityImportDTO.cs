@@ -17,7 +17,7 @@ namespace Lpp.Dns.DTO
     {
         [JsonProperty("activity_id")]
         public int? Key { get; set; }
-        [JsonProperty("activity_name")]
+        [JsonProperty("activity_name", Required = Required.Always)]
         public string Name { get; set; }
         [JsonProperty("activity_acronym")]
         public string Acronym { get; set; }
@@ -29,7 +29,7 @@ namespace Lpp.Dns.DTO
     {
         [JsonProperty("subactivity_id")]
         public int? Key { get; set; }
-        [JsonProperty("subactivity_name")]
+        [JsonProperty("subactivity_name", Required = Required.Always)]
         public string Name { get; set; }
         [JsonProperty("subactivity_acronym")]
         public string Acronym { get; set; }

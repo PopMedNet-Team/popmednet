@@ -592,14 +592,17 @@ namespace Lpp.Dns.Api.Projects
 
             if (string.IsNullOrEmpty(serviceUrl) || string.IsNullOrEmpty(serviceUser) || string.IsNullOrEmpty(servicePassword))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "External service configuration is incomplete, make sure the service url and credentials have been configured correctly.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, 
+                    "External service configuration is incomplete, make sure the service url and credentials have been configured correctly.");
             }
 
             var updater = new ProjectActivitiesUpdater(DataContext, serviceUrl, serviceUser, servicePassword);
             
             if (!await updater.CanUpdate(userID.Value, ID))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unable to determine project, confirm that the specified project ID is correct for an Active project and that the user has permission to Update Activities for the project.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, 
+                    $"Unable to determine project. " +
+                    $"confirm that the specified project ID is correct for an Active project and that the user {username} has permission to Update Activities for the project.");
             }
 
             await updater.DoUpdate(ID);

@@ -456,7 +456,7 @@ namespace Lpp.Dns.HealthCare.DataChecker
 
         {
             var terms = RequestCriteriaHelper.ToServerModel(model.CriteriaGroupsJSON).Criterias.First().Terms;
-            var sb = new StringBuilder("<html><body style='font-family: Sans-serif; font-size:9pt;'>");
+            var sb = new StringBuilder("<html lan=\"en\"><body style='font-family: Sans-serif; font-size:9pt;'>");
 
             foreach (var term in terms) {
                 switch (term.TermType)

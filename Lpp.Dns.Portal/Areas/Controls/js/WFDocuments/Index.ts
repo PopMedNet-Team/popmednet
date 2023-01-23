@@ -29,6 +29,7 @@ module Controls.WFDocuments.List {
         public onRefreshDocuments: () => void;
         public formatGroupHeader: (e: any) => any;
         public formatAttachmentsGroupHeader: (e: any) => any;
+        public onResizeGrids: () => void;
 
         public RefreshDataSource: (documents: Dns.Interfaces.IExtendedDocumentDTO[]) => void;
         public RefreshAttachmentsDataSource: (attachments: Dns.Interfaces.IExtendedDocumentDTO[]) => void;
@@ -63,9 +64,12 @@ module Controls.WFDocuments.List {
                 this.DataSource.group({ field: 'TaskID' });
             }
 
+            self.onResizeGrids = () => {
+                $('#Overview .k-grid-content').css('height', 'auto');
+            };
+
             self.RefreshDataSource = (documents) => {
                 ko.utils.arrayForEach(documents, (d) => {
-
                     self.Documents.push(d);
 
                     let revisionSet = ko.utils.arrayFirst(self.Sets(), (s) => { return s.ID === d.RevisionSetID; });
@@ -145,7 +149,7 @@ module Controls.WFDocuments.List {
                 let revisionSet = self.SelectedRevisionSet();
                 let options = {
                     RequestID: self.RequestID,
-                    TaskID: self.CurrentTask ? self.CurrentTask().ID : null,
+                    TaskID: self.CurrentTask() ? self.CurrentTask().ID : null,
                     ParentDocument: revisionSet.Current()
                 };
                 Global.Helpers.ShowDialog('Upload New Revision', '/controls/wfdocuments/upload-dialog', ['Close'], 800, 500, options).done((result: Dns.Interfaces.IExtendedDocumentDTO) => {
@@ -184,7 +188,6 @@ module Controls.WFDocuments.List {
             };
 
             self.onNewDocument = () => {
-
                 if (self.CurrentTask() != null && self.CurrentTask().ID == null) {
                     //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
                     return;
@@ -193,7 +196,7 @@ module Controls.WFDocuments.List {
                 //if request ID is null, show prompt that explains the request needs to be saved first
                 //if user approves trigger a save, this will cause the page to get reloaded
                 if (self.RequestID == null && self.CurrentTask == null) {
-                    
+
                     Requests.Details.rovm.DefaultResultSave('<div class="alert alert-warning" style="text-align:center;line-height:2em;"><p>The request needs to be saved before being able to upload a document.</p> <p style="font-size:larger;">Would you like to save the Request now?</p><p><small>(This will cause the page to be reloaded, and you will need to initiate the upload again.)</small></p></div>');
 
                 } else {
@@ -223,7 +226,6 @@ module Controls.WFDocuments.List {
             };
 
             self.onNewAttachment = () => {
-
                 if (self.CurrentTask() != null && self.CurrentTask().ID == null) {
                     //the current task is set, but it is a dummy. So this is in the task activities tab, but the workflow is complete.
                     return;
@@ -328,11 +330,10 @@ module Controls.WFDocuments.List {
                 });
             };
 
-            self.onRefreshDocuments = () => {     
+            self.onRefreshDocuments = () => {
                 let query = Dns.WebApi.Documents.ByTask(TaskIDs, null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc');
-                if (self.CurrentTask == null)
+                if (self.CurrentTask() == null)
                     query = Dns.WebApi.Documents.GeneralRequestDocuments(self.RequestID, null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc');
-
                 $.when<any>(query)
                     .done((documents: Dns.Interfaces.IExtendedDocumentDTO[]) => {
                         self.Documents = ko.utils.arrayFilter(documents, (item) => { return item.Kind !== "Attachment.Input" && item.Kind !== "Attachment.Output" });
@@ -345,11 +346,9 @@ module Controls.WFDocuments.List {
                                 revisionSet = new RevisionSet(d.RevisionSetID);
                                 self.Sets.push(revisionSet);
                             }
-
                             revisionSet.add(d);
-                            
-                        });
 
+                        });
                         self.DataSource.read();
                         self.SelectedRevisionSet(null);
 
@@ -364,10 +363,8 @@ module Controls.WFDocuments.List {
                             revisionSet.add(d);
 
                         });
-
-                        self.AttachmentsDataSource.read();
-                        self.SelectedAttachmentSet(null);
                     });
+
             };
 
             self.formatGroupHeader = (e) => {
@@ -379,7 +376,7 @@ module Controls.WFDocuments.List {
                     }
                 }
                 return e.value;
-            }; 
+            };
 
             self.formatAttachmentsGroupHeader = (e) => {
                 if (e.field === 'TaskID') {
@@ -390,39 +387,10 @@ module Controls.WFDocuments.List {
                     }
                 }
                 return e.value;
-            }; 
+            };
         }
 
         public onDetailInit(e: any) {
-
-            let grid = $('<div style="min-height:75px;"/>').kendoGrid({
-                resizable: true,
-                scrollable: true,
-                pageable: false,
-                groupable: false,
-                columnMenu: { columns: true },
-                columns: [
-                    { field: 'Name', title: 'Name', template: (item) => { return Utils.buildDownloadLink(item.ID, item.FileName, item.Name); }, encoded: false, hidden: true },
-                    { field: 'FileName', title: 'FileName', template: (item) => { return Utils.buildDownloadLink(item.ID, item.FileName, item.FileName) }, encoded: false },
-                    { field: 'Length', title: 'Size', template: (item) => { return Global.Helpers.formatFileSize(item.Length); }, attributes: { style: 'text-align:right;' }, width: 95, headerAttributes: { style: 'text-align:center;' } },
-                    { field: 'CreatedOn', title: 'Created On', template: (item) => { return Utils.formatDate(item.CreatedOn); }, width: 155 },
-                    { field: 'Description', title: 'Description', hidden: true },
-                    { field: 'RevisionDescription', title: 'Comments' },
-                    { field: 'UploadedBy', title: 'UploadedBy' },
-                    { title: 'Version', template: (item) => { return Utils.formatVersion(item); }, width: 80 }
-                ]
-            });
-
-            let revisionSet = <RevisionSet> e.data;
-            let gd = grid.data('kendoGrid');
-            gd.setDataSource(new kendo.data.DataSource({ data: revisionSet.Revisions() }));
-            revisionSet.setGridData(gd);
-
-            $(grid).appendTo(e.detailCell);
-        }
-
-        public onAttachmentDetailInit(e: any) {
-
             let grid = $('<div style="min-height:75px;"/>').kendoGrid({
                 resizable: true,
                 scrollable: true,
@@ -449,10 +417,37 @@ module Controls.WFDocuments.List {
             $(grid).appendTo(e.detailCell);
         }
 
-        
+        public onAttachmentDetailInit(e: any) {
+            let grid = $('<div style="min-height:75px;"/>').kendoGrid({
+                resizable: true,
+                scrollable: true,
+                pageable: false,
+                groupable: false,
+                columnMenu: { columns: true },
+                columns: [
+                    { field: 'Name', title: 'Name', template: (item) => { return Utils.buildDownloadLink(item.ID, item.FileName, item.Name); }, encoded: false, hidden: true },
+                    { field: 'FileName', title: 'FileName', template: (item) => { return Utils.buildDownloadLink(item.ID, item.FileName, item.FileName) }, encoded: false },
+                    { field: 'Length', title: 'Size', template: (item) => { return Global.Helpers.formatFileSize(item.Length); }, attributes: { style: 'text-align:right;' }, width: 95, headerAttributes: { style: 'text-align:center;' } },
+                    { field: 'CreatedOn', title: 'Created On', template: (item) => { return Utils.formatDate(item.CreatedOn); }, width: 155 },
+                    { field: 'Description', title: 'Description', hidden: true },
+                    { field: 'RevisionDescription', title: 'Comments' },
+                    { field: 'UploadedBy', title: 'UploadedBy' },
+                    { title: 'Version', template: (item) => { return Utils.formatVersion(item); }, width: 80 }
+                ]
+            });
+
+            let revisionSet = <RevisionSet>e.data;
+            let gd = grid.data('kendoGrid');
+            gd.setDataSource(new kendo.data.DataSource({ data: revisionSet.Revisions() }));
+            revisionSet.setGridData(gd);
+
+            $(grid).appendTo(e.detailCell);
+        }
+
+
     }
 
-    export function init(currentTask: Dns.Interfaces.ITaskDTO, taskIDs: any, bindingControl: JQuery, screenPermissions: any[]) {        
+    export function init(currentTask: Dns.Interfaces.ITaskDTO, taskIDs: any, bindingControl: JQuery, screenPermissions: any[]) {
         TaskIDs = taskIDs;
         let vm = new ViewModel(bindingControl, screenPermissions, null, currentTask);
         $.when<any>(Dns.WebApi.Documents.ByTask(taskIDs, null, null, 'ItemID desc,RevisionSetID desc,CreatedOn desc'))
@@ -464,7 +459,7 @@ module Controls.WFDocuments.List {
                 vm.RefreshDataSource(regDocs);
                 vm.RefreshAttachmentsDataSource(attachments);
 
-                $(() => {                    
+                $(() => {
                     ko.applyBindings(vm, bindingControl[0]);
                 });
             });
@@ -483,7 +478,7 @@ module Controls.WFDocuments.List {
 
                     vm.RefreshDataSource(regDocs);
                     vm.RefreshAttachmentsDataSource(attachments);
-                    
+
                     $(() => {
                         ko.applyBindings(vm, bindingControl[0]);
                     });
@@ -619,7 +614,7 @@ module Controls.WFDocuments.List {
             this.insertDocument = (document) => {
                 self.Revisions.unshift(document);
                 self.Current(document);
-                if(self.gridData)
+                if (self.gridData)
                     self.gridData.dataSource.insert(0, document);
             };
             this.refreshGridDataSource = () => {
@@ -647,7 +642,7 @@ module Controls.WFDocuments.List {
     }
 
     export module Utils {
-        
+
         export function buildDownloadUrl(id: any, filename: string) {
             return '/controls/wfdocuments/download?id=' + id + '&filename=' + filename + '&authToken=' + User.AuthToken;
         }

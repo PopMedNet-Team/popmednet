@@ -55,6 +55,10 @@ var DataMarts;
             return "<a href=\"/datamarts/details?ID=" + dataItem.ID + "\">" + dataItem.Name + "</a>";
         }
         Index.NameAchor = NameAchor;
+        function OrgAnchor(dataItem) {
+            return "<a href=\"/organizations/details?ID=" + dataItem.OrganizationID + "\">" + dataItem.Organization + "</a>";
+        }
+        Index.OrgAnchor = OrgAnchor;
         function init() {
             $.when(Users.GetSettings(["DataMarts.Index.gDataMarts.User:" + User.ID]), Dns.WebApi.Users.GetGlobalPermission(PMNPermissions.Organization.CreateDataMarts)).done(function (gDataMartsSetting, canAdd) {
                 $(function () {

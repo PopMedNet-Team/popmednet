@@ -1,9 +1,12 @@
 ﻿using Lpp.Dns.Data;
 using Lpp.Dns.DTO;
 using Lpp.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -93,9 +96,13 @@ namespace Lpp.Dns.Api.Projects
         {
             List<DTO.TaskOrderImportDTO> importList = await LoadImport();            
 
-            if (importList.Count == 0)
+            if (importList==null || importList.Count==0)
             {
-                return;
+                var msg = $"Empty or null import list returned during sync with {serviceUrl}";
+                Logger.Error(msg);
+                Debug.WriteLine(msg);
+                // TODO: Notify PMN admins that no items were imported.
+                throw new NullReferenceException(msg);
             }
 
             Logger.Debug("Loading existing activities and determining if each activity is associated with one or more requests.");
@@ -143,7 +150,9 @@ namespace Lpp.Dns.Api.Projects
                 //determine the ones that need to be deleted
                 IEnumerable<Activity> activitiesToDelete = (from a in existingActivities
                                                             where a.ParentActivityID == taskOrder.ID && a.TaskLevel == 2
-                                                            && !taskOrderToImport.Activities.Any(aa => string.Equals((string.IsNullOrWhiteSpace(aa.Name) ? aa.Acronym : aa.Name), a.Name, StringComparison.OrdinalIgnoreCase))
+                                                            && !taskOrderToImport.Activities
+                                                                .Any(aa => string.Equals((string.IsNullOrWhiteSpace(aa.Name) ? aa.Acronym : aa.Name)
+                                                                        , a.Name, StringComparison.OrdinalIgnoreCase))
                                                             select a).ToArray();
 
                 DeleteActivities(activitiesToDelete, existingActivities, hasRequests, toDelete.Add, null);
@@ -183,7 +192,9 @@ namespace Lpp.Dns.Api.Projects
                     //remove the sub-activities that do not exist in the update.
                     IEnumerable<Activity> activityProjectsToDelete = (from a in existingActivities
                                                                       where a.ParentActivityID == childActivity.ID && a.TaskLevel == 3
-                                                                      && !activityToImport.Activities.Any(aa => string.Equals((string.IsNullOrWhiteSpace(aa.Name) ? aa.Acronym : aa.Name), a.Name, StringComparison.OrdinalIgnoreCase))
+                                                                      && !activityToImport.Activities
+                                                                        .Any(aa => string.Equals((string.IsNullOrWhiteSpace(aa.Name) ? aa.Acronym : aa.Name)
+                                                                            , a.Name, StringComparison.OrdinalIgnoreCase))
                                                                       select a).ToArray();
 
                     DeleteActivityProjects(activityProjectsToDelete, existingActivities, hasRequests, toDelete.Add, null);
@@ -238,32 +249,62 @@ namespace Lpp.Dns.Api.Projects
 
         async Task<List<DTO.TaskOrderImportDTO>> LoadImport()
         {
+            var errors = new List<string>();
             try
             {
                 using (var web = new HttpClient())
                 {
-                    web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(serviceUsername + ":" + servicePassword)));
+                    web.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", 
+                        Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(serviceUsername + ":" + servicePassword)));
 
                     Logger.Debug("Beginning request of import list from: " + serviceUrl);
 
                     using (var stream = await web.GetStreamAsync(serviceUrl))
-                    using (var jReader = new Newtonsoft.Json.JsonTextReader(new System.IO.StreamReader(stream)))
+                    using (var streamReader = new StreamReader(stream))
                     {
-                        var serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
+                        var serializer = new JsonSerializer();
+                        var errorHandler = new JsonSerializerSettings()
+                        {
+                            Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                            {
+                                if (args.CurrentObject == args.ErrorContext.OriginalObject)
+                                {
+                                    errors.Add(args.ErrorContext.Error.Message);
+                                    Debug.WriteLine($"Error thrown deserializing object.");
+                                }
+                            }
+                        };
 
-                        Logger.Debug("Deserializing import list from: " + serviceUrl);
-                        return serializer.Deserialize<List<DTO.TaskOrderImportDTO>>(jReader);
+                        Logger.Debug($"Deserializing import list from: {serviceUrl}");
+                        Debug.WriteLine($"Deserializing import list from: {serviceUrl}");
+                        var stringResult = await streamReader.ReadToEndAsync();
+                        Debug.Write(stringResult);
+
+                        return JsonConvert.DeserializeObject<List<DTO.TaskOrderImportDTO>>(stringResult, errorHandler);
+                        //return serializer.Deserialize<List<DTO.TaskOrderImportDTO>>(jReader);
                     }
                 }
             }
-            catch (HttpRequestException httpex)
+            catch (JsonSerializationException ex)
             {
-                Logger.Error("Error getting activities from external service: " + serviceUrl, httpex);
+                var msg = $"There was an issue deserializing the JSON received from {serviceUrl}: {ex.Message}";
+                Logger.Error(ex.UnwindException());
+                Debug.WriteLine(msg);
+                throw;
+            }
+            catch (HttpRequestException ex) // Should handle NotFound and Unauthorized
+            {
+                var msg = $"There was an issue getting information from {serviceUrl}.";
+                Debug.Write($"{msg}... \n{ex.UnwindException()}");
+                Logger.Error($"{msg}... \n{ex.UnwindException()}");
+                throw;
+            }
 
-                StatusCode = HttpStatusCode.ServiceUnavailable;
-                StatusMessage = "There was an error communicating with the external service.";
-
-                return new List<DTO.TaskOrderImportDTO>();
+            catch (Exception ex)
+            {
+                Logger.Error($"Error... {ex.UnwindException()}");
+                Debug.WriteLine(ex.UnwindException());
+                throw;
             }
         }
 

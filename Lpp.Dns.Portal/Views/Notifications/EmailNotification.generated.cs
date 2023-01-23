@@ -52,7 +52,7 @@ namespace Lpp.Dns.Portal.Views.Notifications
             
             #line default
             #line hidden
-WriteLiteral("\r\n\r\n<html>\r\n<body>\r\n");
+WriteLiteral("\r\n\r\n<html lang=\"en\">\r\n<body>\r\n");
 
 WriteLiteral("    ");
 

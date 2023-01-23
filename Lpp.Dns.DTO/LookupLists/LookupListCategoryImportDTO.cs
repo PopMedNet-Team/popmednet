@@ -7,11 +7,21 @@ using System.Threading.Tasks;
 
 namespace Lpp.Dns.DTO
 {
-    public class LookupListCategoryImportDTO
+    /// <summary>
+    /// Base class for LookupListImport objects
+    /// </summary>
+    public abstract class LookupListImportBase
     {
-        [JsonProperty("results")]
+    }
+
+    /// <summary>
+    /// Top-level object holding MCM Categories list response. 
+    /// </summary>
+    public class LookupListCategoryImportDTO : LookupListImportBase
+    {
+        [JsonProperty("results", Required = Required.Always)]
         public ICollection<string[]> Categories { get; set; }
-        [JsonProperty("meta")]
+        [JsonProperty("meta", Required = Required.Always)]
         public MetadataImportDTO Metadata {get; set;}
     }
 

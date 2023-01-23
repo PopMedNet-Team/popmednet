@@ -62,7 +62,7 @@ namespace PopMedNet.UITests.EndToEndTests
 
         [Test]
         [Category("PipelineTest")]
-        public async Task PutRequestOnHold()
+        public async Task PutRequestOnHold_UsingMockDmc()
         {
             // Set up request for test, get RequestId (from href text)
             // Log in
@@ -74,7 +74,7 @@ namespace PopMedNet.UITests.EndToEndTests
             var portalPassword = ConfigurationManager.AppSettings["enhancedUserPwd"];
             var homePage = await loginPage.LoginAs(portalUserName, portalPassword);
 
-            var requestName = $"Hold Test Request {DateTime.Now.ToString("s")}";
+            var requestName = $"Request - Hold via Mock DMC - {DateTime.Now.ToString("s")}";
 
             Console.WriteLine($"*** Creating new request {requestName}");
             var requestPage = await homePage.GoToPage(PageModels.Requests) as RequestsPage;
@@ -100,7 +100,7 @@ namespace PopMedNet.UITests.EndToEndTests
         [Test]
         [Category("PipelineTest")]
         [Retry(3)]
-        public async Task RemoveHoldFromRequest()
+        public async Task RemoveHoldFromRequest_UsingMockDmc()
         {
 
             // set up request

@@ -7,41 +7,50 @@ using Newtonsoft.Json;
 
 namespace Lpp.Dns.DTO
 {
-    public class LookupListsImportDTO
+    /// <summary>
+    /// Data Transfer Object used in getting the versions list from MCM.
+    /// </summary>
+    public class LookupListsImportDTO : LookupListImportBase
     {
-        [JsonProperty("meta")]
+        [JsonProperty("meta", Required = Required.Always)]
         public LookupListsMetadataImportDTO Metadata { get; set; }
-        [JsonProperty("results")]
+        [JsonProperty("results", Required = Required.Always)]
         public LookupListsResultsImport Results { get; set; }
     }
-
+    /// <summary>
+    /// Holds metadata for MCM versions list, comprising Last Updated Date.
+    /// </summary>
     public class LookupListsMetadataImportDTO
     {
         [JsonProperty("last_updated")]
         public string lastUpdatedDate { get; set; }
     }
-
+    /// <summary>
+    /// Holds results data for MCM versions list.
+    /// </summary>
     public class LookupListsResultsImport
     {
-        [JsonProperty("category")]
+        [JsonProperty("category", Required = Required.Always)]
         public string Category { get; set; }
-        [JsonProperty("class")]
+        [JsonProperty("class", Required = Required.Always)]
         public string Class { get; set; }
-        [JsonProperty("id")]
+        [JsonProperty("id", Required = Required.Always)]
         public string id { get; set; }
-        [JsonProperty("latest")]
+        [JsonProperty("latest", Required = Required.Always)]
         public LookupListsVersionImport LatestVersion { get; set; }
-        [JsonProperty("source")]
+        [JsonProperty("source", Required = Required.Always)]
         public string Source { get; set; }
-        [JsonProperty("versions")]
+        [JsonProperty("versions", Required = Required.Always)]
         public ICollection<LookupListsVersionImport> Versions { get; set; }
     }
-
+    /// <summary>
+    /// Holds all versions of a given list, as transmitted by MCM.
+    /// </summary>
     public class LookupListsVersionImport
     {
-        [JsonProperty("href")]
+        [JsonProperty("href", Required = Required.Always)]
         public string url { get; set; }
-        [JsonProperty("id")]
+        [JsonProperty("id", Required = Required.Always)]
         public string VersionID { get; set; }
     }
 }
