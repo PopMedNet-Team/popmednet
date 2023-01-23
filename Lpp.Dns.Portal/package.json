@@ -24,7 +24,7 @@
     "knockout-mapping": "^2.6.0",
     "knockout.validation": "^2.0.4",
     "ko-reactor": "^1.4.1",
-    "moment": "2.25.3",
+    "moment": "2.29.4",
     "signalr": "^2.2.1"
   }
 }
