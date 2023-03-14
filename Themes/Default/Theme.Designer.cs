@@ -70,7 +70,7 @@ namespace Theme.Default {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2022 PopMedNet, All Rights Reserved.
+        ///   Looks up a localized string similar to © 2023 PopMedNet, All Rights Reserved.
         /// </summary>
         internal static string Footer {
             get {

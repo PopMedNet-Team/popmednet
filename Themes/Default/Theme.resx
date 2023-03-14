@@ -122,7 +122,7 @@
     <comment>This is the URL that the Contact Us Link goes to</comment>
   </data>
   <data name="Footer" xml:space="preserve">
-    <value>© 2022 PopMedNet, All Rights Reserved</value>
+    <value>© 2023 PopMedNet, All Rights Reserved</value>
     <comment>This is the footer information in the Footer of Lpp.Dns.Portal/Views/_RootLayout.cshtml </comment>
   </data>
   <data name="Info" xml:space="preserve">
