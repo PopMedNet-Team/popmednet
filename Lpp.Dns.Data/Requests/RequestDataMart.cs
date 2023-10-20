@@ -68,7 +68,7 @@ namespace Lpp.Dns.Data
 
         public Response AddResponse(Guid submittedByID)
         {
-            Response response = new Response { RequestDataMart = this, SubmittedByID = submittedByID, SubmittedOn = DateTime.UtcNow };
+            Response response = new Response { RequestDataMart = this, SubmittedByID = submittedByID, SubmittedOn = DateTime.UtcNow, RequestDocument = new List<RequestDocument>() };
 
             if (this.Responses == null)
                 this.Responses = new HashSet<Response>();
@@ -89,7 +89,7 @@ namespace Lpp.Dns.Data
 
         public Response AddResponse(Guid submittedByID, int count)
         {
-            Response response = new Response { RequestDataMart = this, SubmittedByID = submittedByID, SubmittedOn = DateTime.UtcNow, Count = count };
+            Response response = new Response { RequestDataMart = this, SubmittedByID = submittedByID, SubmittedOn = DateTime.UtcNow, Count = count, RequestDocument = new List<RequestDocument>() };
 
             if (this.Responses == null)
                 this.Responses = new HashSet<Response>();
@@ -320,7 +320,7 @@ namespace Lpp.Dns.Data
 
                 var logRoutingStatusChanged = new Audit.RoutingStatusChangeLog
                 {
-                    Description = "Routing status of " + details.DataMartName + " for request " + details.RequestName + " has been changed from " + originalStatus.ToString(true) + " to " + currentStatus.ToString(true) + " by " + orgUser.Acronym + @"\" + orgUser.UserName + ".",
+                    Description = "Routing status of " + details.DataMartName + " for request " + details.RequestName + " has been changed from " + originalStatus.ToString(true) + " to " + currentStatus.ToString(true) + " by " + (orgUser ==  null ? "<unknown>" : (orgUser.Acronym + @"\" + orgUser.UserName)) + ".",
                     UserID = identity == null ? Guid.Empty : identity.ID,
                     RequestDataMartID = rdm.ID,
                     RequestDataMart = rdm,
@@ -349,7 +349,7 @@ namespace Lpp.Dns.Data
 
                 //this is where the new request submitted log item should get created on a resubmit, not in the request
                 var newRequestResubmittedLogItem = new Audit.NewRequestSubmittedLog {
-                    Description = string.Format("New request of type '{0}' has been submitted by {1}", details.RequestTypeName, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                    Description = string.Format("New request of type '{0}' has been submitted by {1}", details.RequestTypeName, orgUser == null ? "<unknown>" : (orgUser.Acronym + @"\" + orgUser.UserName)),
                     UserID = identity == null ? Guid.Empty : identity.ID,
                     RequestID = request.ID,
                     RequestDataMartID = rdm.ID,
@@ -475,7 +475,7 @@ namespace Lpp.Dns.Data
             {
 
                 db.Entry(rdm).Reference(r => r.Request).Load();
-                var details = db.DataMarts.Where(dm => dm.ID == rdm.DataMartID).FirstOrDefault();
+                var details = db.DataMarts.Where(dm => dm.ID == rdm.DataMartID).Select(dm => new { dm.Name }).First();
 
                 var logItem = new Audit.RequestDataMartAddedRemovedLog
                 {
@@ -496,7 +496,7 @@ namespace Lpp.Dns.Data
                 //if the request status is at least submitted, and is either not part of this transaction or had already had a status of submitted 
                 //or greater log a submitted event for the request datamart
 
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>" };
 
                 if (request.RequestType == null)
                     db.Entry(request).Reference(r => r.RequestType).Load();
@@ -638,7 +638,7 @@ namespace Lpp.Dns.Data
                 if (string.IsNullOrEmpty(oldStatus) || string.IsNullOrEmpty(newStatus))
                 {
                     string pattern = @"from ([\w| ]+) to ([\w| ]+) by";
-                    Regex regex = new Regex(pattern);
+                    Regex regex = new Regex(pattern, RegexOptions.None, TimeSpan.FromSeconds(3));
                     Match match = regex.Match(log.Description);
 
                     if (string.IsNullOrEmpty(oldStatus))
@@ -667,6 +667,11 @@ namespace Lpp.Dns.Data
                                   LastResponseMessage = lastResponse.ResponseMessage,
                                   SubmitMessage = lastResponse.SubmitMessage
                               }).FirstOrDefault();
+
+                if(details == null)
+                {
+                    throw new NullReferenceException("Unable to determine the details for a route for the routing status changed notification. RequestDataMartID: " + log.RequestDataMartID.ToString("D"));
+                }
 
                 var actingUser = db.Users.Find(log.UserID);
 

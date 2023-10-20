@@ -24,14 +24,14 @@ namespace Lpp.Utilities
             this._Client = new HttpClient() {
                 Timeout = new TimeSpan(0, 10, 0)                
             };
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
         }
 
         public HttpClientEx(string host, string userName, string password) : this(host)
         {
             this._Credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + password));
             this._Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _Credentials);
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
         }
 
         public void Dispose()

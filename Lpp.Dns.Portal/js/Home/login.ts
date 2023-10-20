@@ -19,7 +19,7 @@ module Home.Login {
         }
 
         public ForgotPassword() {
-            Global.Helpers.ShowDialog("Forgot Password", "/home/forgotpassword", ["close"], 800, 350, { Username: $('#txtUserName').val() });
+            Global.Helpers.ShowDialog("Forgot Password?", "/home/forgotpassword", ["close"], 800, 350, { Username: $('#txtUserName').val() });
         }
 
         public Registration() {

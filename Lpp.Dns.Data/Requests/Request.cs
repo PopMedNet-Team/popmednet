@@ -474,7 +474,7 @@ namespace Lpp.Dns.Data
                 //New Request Draft Submitted
                 var logItem = new Audit.NewRequestDraftSubmittedLog
                 {
-                    Description = string.Format("New request draft of type '{0}' has been submitted by {1}", requestType, (orgUser.Acronym + @"\" + orgUser.UserName)),
+                    Description = string.Format("New request draft of type '{0}' has been submitted by {1}", requestType, orgUser == null ? "<not found>" : (orgUser.Acronym + @"\" + orgUser.UserName)),
                     UserID = identity == null ? Guid.Empty : identity.ID,
                     RequestID = request.ID,
                     Request = request
@@ -785,8 +785,11 @@ namespace Lpp.Dns.Data
                     if (changeDetail.NewValue != null)
                     {
                         var activity = activities.FirstOrDefault(a => a.ID == (Guid)changeDetail.NewValue);
-                        sourceActivityChangeDetail.NewValue = activity.ID;
-                        sourceActivityChangeDetail.NewValueDisplay = activity.Name;
+                        if (activity != null)
+                        {
+                            sourceActivityChangeDetail.NewValue = activity.ID;
+                            sourceActivityChangeDetail.NewValueDisplay = activity.Name;
+                        }
                     }
                     if (sourceActivityChangeDetail.OriginalValue != null || sourceActivityChangeDetail.NewValue != null)
                         changedProperties.Add(sourceActivityChangeDetail);
@@ -812,8 +815,11 @@ namespace Lpp.Dns.Data
                     if (changeDetail.NewValue != null)
                     {
                         var activity = activities.FirstOrDefault(a => a.ID == (Guid)changeDetail.NewValue);
-                        sourceActivityProjectChangeDetail.NewValue = activity.ID;
-                        sourceActivityProjectChangeDetail.NewValueDisplay = activity.Name;
+                        if (activity != null)
+                        {
+                            sourceActivityProjectChangeDetail.NewValue = activity.ID;
+                            sourceActivityProjectChangeDetail.NewValueDisplay = activity.Name;
+                        }
                     }
                     if (sourceActivityProjectChangeDetail.OriginalValue != null || sourceActivityProjectChangeDetail.NewValue != null)
                         changedProperties.Add(sourceActivityProjectChangeDetail);
@@ -839,8 +845,11 @@ namespace Lpp.Dns.Data
                     if (changeDetail.NewValue != null)
                     {
                         var activity = activities.FirstOrDefault(a => a.ID == (Guid)changeDetail.NewValue);
-                        sourceTaskOrderChangeDetail.NewValue = activity.ID;
-                        sourceTaskOrderChangeDetail.NewValueDisplay = activity.Name;
+                        if (activity != null)
+                        {
+                            sourceTaskOrderChangeDetail.NewValue = activity.ID;
+                            sourceTaskOrderChangeDetail.NewValueDisplay = activity.Name;
+                        }
                     }
                     if (sourceTaskOrderChangeDetail.OriginalValue != null || sourceTaskOrderChangeDetail.NewValue != null)
                         changedProperties.Add(sourceTaskOrderChangeDetail);
@@ -1590,14 +1599,15 @@ namespace Lpp.Dns.Data
                         });
 
                 
-                var details = q.FirstOrDefault();
-                Debug.WriteLine($"Preparing Results Reminder notification for request {details.RequestIdentifier}:");
+                var details = q.FirstOrDefault();                
 
                 if (details == null)
                 {
                     Debug.WriteLine("\tNo details found.");
                     return Enumerable.Empty<Notification>();
                 }
+					
+                Debug.WriteLine($"Preparing Results Reminder notification for request {details.RequestIdentifier}:");				
                 var detObject = new DetailsObject
                 {
                     RequestName = details.RequestName,
@@ -1608,9 +1618,7 @@ namespace Lpp.Dns.Data
                     
                 };
 
-                var recipients = GetRecipients(db, log, immediate);
-
-                
+                var recipients = GetRecipients(db, log, immediate);                
 
                 var body = GenerateTimestampText(log) + 
                            "<p>Here are your most recent <b>Results Reminder</b> notifications from <b>" + details.NetworkName + "</b>.</p>" +
@@ -2002,22 +2010,25 @@ namespace Lpp.Dns.Data
                            }).FirstOrDefault();
 
             var logs = new List<AuditLog>();
-            logs.Add(
-                db.LogsRequestStatusChanged.Add(
-                    new Audit.RequestStatusChangedLog
-                    {
-                        RequestID = requestID,
-                        Description = string.Format("Status of request {0} (ID {1}) was changed from {2} to {3}", details.RequestName, details.RequestIdentifier, details.OldStatus, details.NewStatus),
-                        Reason = EntityState.Modified,
-                        OldStatus = oldStatus,
-                        NewStatus = newStatus,
-                        UserID = identity == null ? Guid.Empty : identity.ID,
-                        MyEmailBody = myEmailBody,
-                        EmailBody = emailBody,
-                        Subject = subject
-                    }
-                )
-            );
+            if (details != null)
+            {
+                logs.Add(
+                    db.LogsRequestStatusChanged.Add(
+                        new Audit.RequestStatusChangedLog
+                        {
+                            RequestID = requestID,
+                            Description = string.Format("Status of request {0} (ID {1}) was changed from {2} to {3}", details.RequestName, details.RequestIdentifier, details.OldStatus, details.NewStatus),
+                            Reason = EntityState.Modified,
+                            OldStatus = oldStatus,
+                            NewStatus = newStatus,
+                            UserID = identity == null ? Guid.Empty : identity.ID,
+                            MyEmailBody = myEmailBody,
+                            EmailBody = emailBody,
+                            Subject = subject
+                        }
+                    )
+                );
+            }
             return logs;
         }
 

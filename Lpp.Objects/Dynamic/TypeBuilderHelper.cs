@@ -316,7 +316,7 @@ namespace Lpp.Objects.Dynamic
             return list;
         }
 
-        static readonly System.Text.RegularExpressions.Regex replaceRegex = new System.Text.RegularExpressions.Regex("[^a-zA-Z0-9_@]", System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline);
+        static readonly System.Text.RegularExpressions.Regex replaceRegex = new System.Text.RegularExpressions.Regex("[^a-zA-Z0-9_@]", System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline, TimeSpan.FromSeconds(3));
 
         public static string CleanString(this string value)
         {

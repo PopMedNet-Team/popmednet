@@ -15,7 +15,7 @@ namespace Lpp.Utilities
         {
             this.Client = client;
             this.Path = path;
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
         }
 
         protected string Path { get; private set; }

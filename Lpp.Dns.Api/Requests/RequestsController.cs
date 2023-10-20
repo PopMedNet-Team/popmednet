@@ -1339,7 +1339,8 @@ namespace Lpp.Dns.Api.Requests
 
                 if (request.ActivityID.HasValue)
                 {
-                    var firstActivity = activities.Where(x => x.ID == request.ActivityID).FirstOrDefault();
+                    //find the first activity, if not found default to a new activity with TaskLevel of -1. This will allow for the following conditions to not be triggered.
+                    var firstActivity = activities.Where(x => x.ID == request.ActivityID).FirstOrDefault() ?? new Activity { TaskLevel = -1 };
 
                     if (firstActivity.TaskLevel == 3)
                     {
@@ -1347,14 +1348,18 @@ namespace Lpp.Dns.Api.Requests
                         addDTO.BudgetActivityProjectDescription = firstActivity.Name;
 
                         var budgetActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
-
-                        addDTO.BudgetActivityID = budgetActivity.ID;
-                        addDTO.BudgetActivityDescription = budgetActivity.Name;
+                        if (budgetActivity != null)
+                        {
+                            addDTO.BudgetActivityID = budgetActivity.ID;
+                            addDTO.BudgetActivityDescription = budgetActivity.Name;
+                        }
 
                         var budgetTaskOrderActivity = activities.Where(x => x.ID == budgetActivity.ParentActivityID.Value).FirstOrDefault();
-
-                        addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
-                        addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                        if (budgetTaskOrderActivity != null)
+                        {
+                            addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                            addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                        }
                     }
                     else if (firstActivity.TaskLevel == 2)
                     {
@@ -1362,9 +1367,11 @@ namespace Lpp.Dns.Api.Requests
                         addDTO.BudgetActivityDescription = firstActivity.Name;
 
                         var budgetTaskOrderActivity = activities.Where(x => x.ID == firstActivity.ParentActivityID.Value).FirstOrDefault();
-
-                        addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
-                        addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                        if (budgetTaskOrderActivity != null)
+                        {
+                            addDTO.BudgetTaskOrderID = budgetTaskOrderActivity.ID;
+                            addDTO.BudgetTaskOrderDescription = budgetTaskOrderActivity.Name;
+                        }
                     }
                     else if (firstActivity.TaskLevel == 1)
                     {

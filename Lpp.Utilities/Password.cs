@@ -41,7 +41,7 @@ namespace Lpp.Utilities
             return Math.Min(1, entropy / _maxEntropy);
         }
 
-        const string _specialCharsString = "!,@,#,$,%,^,&,*,?,_,~,-,£,(,)";
+        const string _specialCharsString = "`,!,@,#,$,%,^,&,*,?,_,~,-,£,(,)";
         static readonly HashSet<char> _specialChars = new HashSet<char>(_specialCharsString);
         static double _maxEntropy = 10 * Math.Log(10 + 26 * 2 + _specialCharsString.Length);
 

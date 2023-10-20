@@ -311,7 +311,11 @@ namespace Lpp.Dns.Data
             if (organization == null)
                 throw new InvalidCastException("The entity passed is not an organization");
 
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new
+			{
+				UserName = "<unknown>",
+				Acronym = "<unknown>"
+			};
 
             var logItem = new Audit.OrganizationChangedLog
             {
@@ -336,7 +340,7 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.OrganizationChangedLog;
 
                 var networkName = db.Networks.Select(n => n.Name).FirstOrDefault();
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 if (log.Organization == null)
                     log.Organization = db.Organizations.Find(log.OrganizationID);

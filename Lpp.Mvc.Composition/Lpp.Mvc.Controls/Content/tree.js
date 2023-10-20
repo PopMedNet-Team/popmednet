@@ -62,7 +62,7 @@
             },
 
             node: function(jQueryObjectOrSelector) {
-                var $node = (typeof jQueryObjectOrSelector == "String") ? $(jQueryObjectOrSelector, $tree) : jQueryObjectOrSelector;
+                var $node = (typeof jQueryObjectOrSelector == "string") ? $(jQueryObjectOrSelector, $tree) : jQueryObjectOrSelector;
                 if (!$node.size()) return { exists: false };
 
                 if ( $node.data("Expanded") == undefined ) $node.data("Expanded", $node.hasClass("Expanded") );

@@ -14,7 +14,13 @@ namespace Lpp.Objects.ValidationAttributes
 
         public string Pattern { get; set; }
 
-        public RegularExpressionAttribute(string pattern)
+        /// <summary>
+        /// Instantiates a RegularExpression validation for the attribute.
+        /// </summary>
+        /// <param name="pattern">The pattern used for validation.</param>
+        /// <param name="timeoutSeconds">The timeout duration for executing the regular expression. Default is 5 seconds.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public RegularExpressionAttribute(string pattern, int timeoutSeconds = 5)
             : base()
         {
             this.Pattern = pattern;
@@ -22,7 +28,7 @@ namespace Lpp.Objects.ValidationAttributes
             if (string.IsNullOrEmpty(this.Pattern))
                 throw new InvalidOperationException("The regular expression pattern cannot be null or empty.");
 
-            this._regex = new Regex(this.Pattern);
+            this._regex = new Regex(this.Pattern, RegexOptions.None, TimeSpan.FromSeconds(timeoutSeconds));
         }
 
         public override bool IsValid(object value)

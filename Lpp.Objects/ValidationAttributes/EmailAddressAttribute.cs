@@ -15,7 +15,7 @@ namespace Lpp.Objects.ValidationAttributes
             var strValue = value as string;
             if (!string.IsNullOrEmpty(strValue))
             {
-                return System.Text.RegularExpressions.Regex.IsMatch(strValue, @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                return System.Text.RegularExpressions.Regex.IsMatch(strValue, @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase, TimeSpan.FromSeconds(3));
             }
 
             return true;

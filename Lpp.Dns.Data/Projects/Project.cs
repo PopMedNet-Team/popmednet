@@ -197,7 +197,11 @@ namespace Lpp.Dns.Data
 
             if (obj.State != EntityState.Unchanged)
             {
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new
+				{
+					UserName = "<unknown>",
+					Acronym = "<unknown>"
+				};
 
                 var userID = identity == null ? Guid.Empty : identity.ID;
                 var logItem = db.LogsProjectChange.Find(userID, DateTimeOffset.UtcNow, project.ID);
@@ -228,7 +232,7 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.ProjectChangeLog;
 
                 var networkName = db.Networks.Select(n => n.Name).FirstOrDefault();
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 var body = GenerateTimestampText(log) + 
                     "<p>Here are your most recent <b>Project Change</b> notifications from <b>" + networkName + "</b>.</p>" +

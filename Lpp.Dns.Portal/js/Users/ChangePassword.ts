@@ -37,7 +37,7 @@ module Users.ChangePassword {
             }
 
             if (this.PasswordScore() < 5) {
-                Global.Helpers.ShowAlert("Validation Error", "<p>Your password is not strong enough. Please ensure that your password is at least 8 characters long, contains at least one capital letter, one number and one symbol.</p>", 300);
+                Global.Helpers.ShowAlert("Validation Error", "<p>Your password is not strong enough. The password must be 15 characters minimum. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':&semi;&lt;'.</p>", 300);
                 return;
             }    
 

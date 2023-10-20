@@ -548,6 +548,12 @@ namespace Lpp.Dns.Data
             foreach (var logDetails in logs)
             {
                 var conf = Logging.FirstOrDefault(l => l.GetType().BaseType.GetGenericArguments()[1] == logDetails.Key.Entity.GetType());
+
+                if (conf == null)
+                {                    
+                    continue;
+                }
+
                 foreach (var log in logDetails.Value)
                 {
                     var notification = conf.GetType().GetMethod("CreateNotifications").MakeGenericMethod(log.GetType()).Invoke(conf, new object[] { log, this, true }) as IEnumerable<Notification>;
@@ -632,6 +638,11 @@ namespace Lpp.Dns.Data
             foreach (var logDetails in logs)
             {
                 var conf = Logging.FirstOrDefault(l => l.GetType().BaseType.GetGenericArguments()[1] == logDetails.Key.Entity.GetType());
+
+                if(conf == null)
+                {
+                    continue;
+                }
 
                 foreach (var log in logDetails.Value)
                 {
@@ -731,6 +742,11 @@ namespace Lpp.Dns.Data
                 {
                     var conf = Logging.FirstOrDefault(l => l.GetType().BaseType.GetGenericArguments()[1] == entry.Entity.GetType());
 
+                    if(conf == null)
+                    {
+                        continue;
+                    }
+
                     var notification = conf.GetType().GetMethod("CreateNotifications").MakeGenericMethod(log.GetType()).Invoke(conf, new object[] { log, this, true }) as IEnumerable<Notification>;
 
                     if (notification != null && notification.Any())
@@ -761,6 +777,11 @@ namespace Lpp.Dns.Data
                 foreach (var log in logs)
                 {
                     var conf = Logging.FirstOrDefault(l => l.GetType().BaseType.GetGenericArguments()[1] == entry.Entity.GetType());
+
+                    if(conf == null)
+                    {
+                        continue;
+                    }
 
                     var notification = conf.GetType().GetMethod("CreateNotifications").MakeGenericMethod(log.GetType()).Invoke(conf, new object[] { log, this, false }) as IEnumerable<Notification>;
 

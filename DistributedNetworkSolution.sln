@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Portal", "Lpp.Dns.Portal\Lpp.Dns.Portal.csproj", "{E59FAF38-4394-4D29-837F-BAE706488021}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{206D225A-1300-4D2F-89DA-BD45C5CEE912}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{BC2F0AA5-7058-473B-88C2-C42AFEF79BA1}"
@@ -44,8 +46,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9A357B
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "General", "General", "{1BFBC81B-E4A2-4F93-BA7F-0CE4AD1F5F9A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Portal", "Lpp.Dns.Portal\Lpp.Dns.Portal.csproj", "{E59FAF38-4394-4D29-837F-BAE706488021}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.Model.Test", "Tests\Lpp.Dns.Model.Test\Lpp.Dns.Model.Test.csproj", "{C33B004C-E787-43E0-AF9D-9B3998AEE1A7}"
 EndProject

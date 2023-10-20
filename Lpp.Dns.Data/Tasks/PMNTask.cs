@@ -458,22 +458,27 @@ namespace Lpp.Dns.Data
                 if (recipients == null || recipients.Length == 0)
                     return null;
 
-                var detail = (from r in db.Requests
+				IList<Notification> notifies = new List<Notification>();
+
+				var detail = (from r in db.Requests
                               where r.ID == requestReference.ItemID
                               select new { RequestIdentifier = r.Identifier, RequestName = r.Name, ProjectName = r.Project.Name }).FirstOrDefault();
 
-                var description = GenerateTimestampText(reminderLog) + "<p>Here are your most recent <b>Task Reminder</b> notifications from <b>" + detail.ProjectName + "</b>.</p>" +
-                  "<p>The following task assigned to you is active:</p>" +
-                  "<p>Task '" + reminderLog.Task.Subject + "' for request '" + detail.RequestName + "' with ID '" + detail.RequestIdentifier + "' is '" + ObjectEx.ToString(reminderLog.Task.Status, true) + "'.</p>";
-
-                var notification = new Notification
+                if (detail != null)
                 {
-                    Subject = "Task Reminder Notification",
-                    Body = description,
-                    Recipients = recipients
-                };
-                IList<Notification> notifies = new List<Notification>();
-                notifies.Add(notification);
+                    var description = GenerateTimestampText(reminderLog) + "<p>Here are your most recent <b>Task Reminder</b> notifications from <b>" + detail.ProjectName + "</b>.</p>" +
+                      "<p>The following task assigned to you is active:</p>" +
+                      "<p>Task '" + reminderLog.Task.Subject + "' for request '" + detail.RequestName + "' with ID '" + detail.RequestIdentifier + "' is '" + ObjectEx.ToString(reminderLog.Task.Status, true) + "'.</p>";
+
+                    var notification = new Notification
+                    {
+                        Subject = "Task Reminder Notification",
+                        Body = description,
+                        Recipients = recipients
+                    };
+
+                    notifies.Add(notification);
+                }
 
                 return notifies.AsEnumerable();
             }

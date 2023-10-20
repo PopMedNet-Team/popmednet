@@ -100,7 +100,9 @@ namespace PopMedNet.UITests.Models
             if (Uri.IsWellFormedUriString(gotoUrl, UriKind.RelativeOrAbsolute))
             {
                 Console.WriteLine($"Attempting to navigate to {gotoUrl}...");
-                await _page.GotoAsync(gotoUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
+                await _page.GotoAsync(gotoUrl);
+                await _page.WaitForTimeoutAsync(60000);
+                //await _page.GotoAsync(gotoUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
                 Console.WriteLine("Success!");
             }
         }

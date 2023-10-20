@@ -13,7 +13,7 @@ namespace Lpp.Audit.UI
     [PartMetadata( ExportScope.Key, TransactionScope.Id )]
     public class AuditUIService<TDomain> : IAuditUIService<TDomain>
     {
-        static readonly Regex _partRegex = new Regex( @"(([^\,])|(\,\,))+", RegexOptions.Compiled );
+        static readonly Regex _partRegex = new Regex( @"(([^\,])|(\,\,))+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         static readonly char[] _colon = new[] { ':' };
         static readonly char[] _slash = new[] { '/' };
 

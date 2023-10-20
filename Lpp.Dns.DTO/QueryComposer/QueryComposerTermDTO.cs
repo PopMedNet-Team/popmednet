@@ -39,5 +39,10 @@ namespace Lpp.Dns.DTO.QueryComposer
         /// </summary>
         [DataMember]
         public DesignDTO Design { get; set; }
+
+        public static QueryComposerTermDTO Empty(Guid typeID)
+        {
+            return new QueryComposerTermDTO { Operator = QueryComposerOperators.And, Type = typeID, Criteria = Array.Empty<QueryComposerCriteriaDTO>(), Values = new Dictionary<string, object>(), Design = null };
+        }
     }
 }

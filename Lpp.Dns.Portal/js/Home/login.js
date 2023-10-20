@@ -30,7 +30,7 @@ var Home;
                 Global.ShowInfo(Layout.vmFooter.Theme.Info());
             };
             ViewModel.prototype.ForgotPassword = function () {
-                Global.Helpers.ShowDialog("Forgot Password", "/home/forgotpassword", ["close"], 800, 350, { Username: $('#txtUserName').val() });
+                Global.Helpers.ShowDialog("Forgot Password?", "/home/forgotpassword", ["close"], 800, 350, { Username: $('#txtUserName').val() });
             };
             ViewModel.prototype.Registration = function () {
                 Global.Helpers.ShowDialog("User Registration", "/home/userregistration", ["close"], 900, 550);

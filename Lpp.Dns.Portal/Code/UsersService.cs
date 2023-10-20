@@ -142,7 +142,7 @@ namespace Lpp.Dns.Portal
                 requirementScore = (double)passedRules / countRules;
             }
 
-            strengthScore = Password.Strength(password);
+            strengthScore = Lpp.Utilities.Password.Strength(password);
             var score = Math.Min(requirementScore, strengthScore);
 
             PasswordScore[] passwordStrengthVerdicts = new[] { PasswordScore.VeryWeak, PasswordScore.Weak, PasswordScore.Average, PasswordScore.Strong, PasswordScore.VeryStrong };

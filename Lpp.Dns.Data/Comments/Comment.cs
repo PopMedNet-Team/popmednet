@@ -117,7 +117,7 @@ namespace Lpp.Dns.Data
             if (request != null && obj.State == System.Data.Entity.EntityState.Added)
             {
 
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym ="<unknown>" };
 
                 logs.Add(
                     db.LogsRequestCommentChange.Add(
@@ -148,7 +148,7 @@ namespace Lpp.Dns.Data
                                     where cr.CommentID == log.CommentID && cr.Type == CommentItemTypes.Task
                                     select t).FirstOrDefault();
 
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 //comment.ItemID is always going to be the Request, task is associated using a comment reference of type Task.
                 var details = (from r in db.Requests

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Data.Entity;
 using Lpp.Objects;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Lpp.Dns.Api.DataMartClient
 {
@@ -66,8 +67,16 @@ namespace Lpp.Dns.Api.DataMartClient
                 if(string.IsNullOrWhiteSpace(version))
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "The version of the package is required.");
             }
+            else
+            {
+                Version versionObj;
+                if(!Version.TryParse(version, out versionObj))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "The version is not in a valid format: " + version);
+                }
+            }
 
-            string filename = System.IO.Path.Combine(PackagesFolder, string.Format("{0}.{1}.zip", identifier, version));
+			string filename = System.IO.Path.GetFullPath(System.IO.Path.Combine(PackagesFolder, string.Format("{0}.{1}.zip", identifier, version)));
 
             if (!System.IO.File.Exists(filename))
             {
@@ -148,7 +157,7 @@ namespace Lpp.Dns.Api.DataMartClient
                                        .ThenByDescending(v => v.Revision)
                                        .FirstOrDefault();
 
-                return version.ToString();
+                return version == null ? string.Empty : version.ToString();
             }); 
         }
 
@@ -177,7 +186,7 @@ namespace Lpp.Dns.Api.DataMartClient
             {
 
                 var packages = System.IO.Directory.EnumerateFiles(PackagesFolder, identifier + ".*.zip")
-                                    .Where(f => System.Text.RegularExpressions.Regex.IsMatch(f, identifier + @"\.[\d]+\.[\d]+\.[\d]+\.[\d]+\.zip", System.Text.RegularExpressions.RegexOptions.IgnoreCase|System.Text.RegularExpressions.RegexOptions.Singleline)).ToArray();
+                                    .Where(f => System.Text.RegularExpressions.Regex.IsMatch(f, identifier + @"\.[\d]+\.[\d]+\.[\d]+\.[\d]+\.zip", System.Text.RegularExpressions.RegexOptions.IgnoreCase|System.Text.RegularExpressions.RegexOptions.Singleline, TimeSpan.FromSeconds(3))).ToArray();
                 if (packages == null || packages.Length == 0)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No packages found for the specified identifier: " + identifier));
@@ -191,7 +200,7 @@ namespace Lpp.Dns.Api.DataMartClient
                                        .ThenByDescending(v => v.Revision)
                                        .FirstOrDefault();
 
-                return new DTO.DataMartClient.RequestTypeIdentifier{ Identifier = identifier, Version = version.ToString() };
+                return new DTO.DataMartClient.RequestTypeIdentifier{ Identifier = identifier, Version = version == null ? string.Empty : version.ToString() };
             }); 
         }
 

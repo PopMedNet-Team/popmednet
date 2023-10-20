@@ -67,10 +67,10 @@ namespace Lpp.Dns.Data
 
         public AuditLog CreateLogItem(RequestUser requestUser, EntityState entityState, Utilities.Security.ApiIdentity identity, DataContext db, bool addToDbContext = true)
         {
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
-            var assignee = db.Users.Where(u => u.ID == requestUser.UserID).Select(u => new { u.UserName, Organization = u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>" };
+            var assignee = db.Users.Where(u => u.ID == requestUser.UserID).Select(u => new { u.UserName, Organization = u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Organization = "<unknown>" };
             
-            var role = db.WorkflowRoles.Where(r => r.ID == requestUser.WorkflowRoleID).Select(r => r.Name).FirstOrDefault();
+            var role = db.WorkflowRoles.Where(r => r.ID == requestUser.WorkflowRoleID).Select(r => r.Name).FirstOrDefault() ?? "<unknown>";
 
             string description = string.Format(@"{0} assigned as {1}\{2} by {3}\{4}", role, assignee.Organization, assignee.UserName, orgUser.Acronym, orgUser.UserName);
             if (entityState == EntityState.Deleted)

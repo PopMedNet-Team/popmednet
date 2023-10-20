@@ -53,7 +53,7 @@ namespace Lpp.Dns.Api.DMCS
 
         static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(DMCSController));
         static readonly IEnumerable<Type> PostProcessorTypes;
-        static object _lock = new object();
+        static readonly object _lock = new object();
         /// <summary>
         /// Gets the current Utilities.Security.ApiIdentity.
         /// </summary>
@@ -529,13 +529,26 @@ namespace Lpp.Dns.Api.DMCS
         /// <returns></returns>
         public async Task PostProcessDocument(Guid identityID, Lpp.Dns.DTO.DMCS.DMCSResponseDocument documentMetadata, string cachedDocumentFileName)
         {
-            using (var db = new DataContext())
+			string canonicalCachedDocumentFileName = Path.GetFullPath(cachedDocumentFileName);
+
+			using (var db = new DataContext())
             {
                 Data.Document postProcessDocument = await db.Documents.FindAsync(documentMetadata.DocumentID);
 
-                if (!File.Exists(cachedDocumentFileName))
+				string uploadPath = System.Web.Configuration.WebConfigurationManager.AppSettings["DocumentsUploadFolder"] ?? string.Empty;
+				if (string.IsNullOrEmpty(uploadPath))
+					uploadPath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Uploads/");
+
+                if(!canonicalCachedDocumentFileName.StartsWith(uploadPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    using (var writer = File.OpenWrite(cachedDocumentFileName))
+                    //throw error is the start of the cached document path does not match the system cach folder path.
+					Logger.Error($"[RequestID: {documentMetadata.RequestID}, DataMartID: {documentMetadata.DataMartID}, UserID: {identityID}] Error post-processing document: The canonicalCachedDocumentFileName does not start with a path that matches the system cache root: " + canonicalCachedDocumentFileName);
+                    throw new ArgumentException("The supplied cached document filename is not valid.", nameof(cachedDocumentFileName));
+				}
+
+				if (!File.Exists(canonicalCachedDocumentFileName))
+                {
+                    using (var writer = File.OpenWrite(canonicalCachedDocumentFileName))
                     using (var documentStream = postProcessDocument.GetStream(db))
                     {
                         documentStream.CopyTo(writer);
@@ -550,8 +563,8 @@ namespace Lpp.Dns.Api.DMCS
                         Logger.Debug($"[RequestID: { documentMetadata.RequestID }, DataMartID: { documentMetadata.DataMartID }, UserID: { identityID }] Starting post-processing document: { Newtonsoft.Json.JsonConvert.SerializeObject(documentMetadata) } ");
 
                         IPostProcessDocumentContent postProcess = Activator.CreateInstance(item) as IPostProcessDocumentContent;
-                        postProcess.Initialize(db, Path.GetDirectoryName(cachedDocumentFileName));
-                        await postProcess.ExecuteAsync(postProcessDocument, Path.GetFileName(cachedDocumentFileName));
+                        postProcess.Initialize(db, Path.GetDirectoryName(canonicalCachedDocumentFileName));
+                        await postProcess.ExecuteAsync(postProcessDocument, Path.GetFileName(canonicalCachedDocumentFileName));
                     }
                     catch (Exception ex)
                     {
@@ -562,7 +575,7 @@ namespace Lpp.Dns.Api.DMCS
 
             try
             {
-                File.Delete(cachedDocumentFileName);
+                File.Delete(canonicalCachedDocumentFileName);
             }
             catch { }
         }

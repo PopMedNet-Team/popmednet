@@ -106,7 +106,7 @@ namespace Lpp.QueryComposer.TermRegistration
             foreach (string identifier in identifiers)
             {
 
-                var pgks = packages.Where(f => System.Text.RegularExpressions.Regex.IsMatch(System.IO.Path.GetFileName(f), identifier + @".\d*.\d*.\d*.\d*.zip", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline)).ToArray();
+                var pgks = packages.Where(f => System.Text.RegularExpressions.Regex.IsMatch(System.IO.Path.GetFileName(f), identifier + @".\d*.\d*.\d*.\d*.zip", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline, TimeSpan.FromSeconds(3))).ToArray();
                 if (pgks == null || pgks.Length == 0)
                     continue;
 

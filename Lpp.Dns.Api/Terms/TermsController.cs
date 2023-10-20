@@ -130,7 +130,7 @@ namespace Lpp.Dns.Api.Terms
                             if (cell.CellReference.HasValue == false)
                                 continue;
 
-                            string columnReference = System.Text.RegularExpressions.Regex.Replace(cell.CellReference.Value.ToUpper(), @"[\d]", string.Empty);
+                            string columnReference = System.Text.RegularExpressions.Regex.Replace(cell.CellReference.Value.ToUpper(), @"[\d]", string.Empty, System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(3));
                             if (string.IsNullOrEmpty(columnReference))
                                 continue;
 
@@ -156,7 +156,7 @@ namespace Lpp.Dns.Api.Terms
                                 if (cell.CellReference.HasValue == false)
                                     continue;
 
-                                string columnReference = System.Text.RegularExpressions.Regex.Replace(cell.CellReference.Value.ToUpper(), @"[\d]", string.Empty);
+                                string columnReference = System.Text.RegularExpressions.Regex.Replace(cell.CellReference.Value.ToUpper(), @"[\d]", string.Empty, System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(3));
                                 if (string.IsNullOrEmpty(columnReference))
                                     continue;
 

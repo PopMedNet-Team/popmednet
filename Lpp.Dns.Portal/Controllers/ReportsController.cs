@@ -244,7 +244,7 @@ namespace Lpp.Dns.Portal.Controllers
                         Request = x.Request,
                         SubmittedByUsername = x.SubmittedByUsername,
                         Type = x.IsWorkflowRequest ? null : Plugins.GetPluginRequestType(x.RequestTypeID),
-                        WorkflowAdapter = !x.IsWorkflowRequest ? null : dm.AdapterID.HasValue ? DataContext.DataModels.Where(dms => dms.ID == dm.AdapterID).FirstOrDefault().Name : "None",
+                        WorkflowAdapter = !x.IsWorkflowRequest ? null : dm.AdapterID.HasValue ? (DataContext.DataModels.Where(dms => dms.ID == dm.AdapterID).Select(m => m.Name).FirstOrDefault() ?? "None") : "None",
                         RequestTypeName = x.RequestTypeName,
                         IsWorkflowRequest = x.IsWorkflowRequest,
                         DaysOpen = Convert.ToInt32(x.Status == RoutingStatus.Submitted || x.Status == RoutingStatus.Hold || x.Status == RoutingStatus.Failed ? DateTime.UtcNow.Subtract(x.Request.SubmittedOn.Value).TotalDays :

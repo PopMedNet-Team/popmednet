@@ -177,7 +177,11 @@ namespace Lpp.Dns.Data
 
             if (read && response.RespondedByID.HasValue && !db.LogsResponseViewed.Any(rv => rv.ResponseID == response.ID && rv.UserID == identity.ID))
             {
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new
+				{
+					UserName = "<unknown>",
+					Acronym = "<unknown>"
+				};
 
                 var log = new Lpp.Dns.Data.Audit.ResponseViewedLog
                 {

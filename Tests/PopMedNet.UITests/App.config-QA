@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+
+    <!-- vvv If running tests in an environment that does not use Single-sign-on, set to false vvv -->
+    <add key="useSso" value="true"/>
+
+    <!-- vvv URLs: QA vvv -->
+    <add key="baseUrl" value="https://pmnqatrunkdnsquerytool.popmednet.org/"/>
+    <add key="apiUrl" value ="https://pmnqatrunkapi.popmednet.org/"/>
+    <add key="ssoUrl" value="https://ssopmnqatrunk.popmednet.org/"/>
+
+    <!-- vvv User with permission to approve/reject new user requests -->
+		<add key="adminUser" value="QaAutomation_admin"/>
+		<add key="adminPassword" value="Password2@"/>
+
+		<!--User with permissions to create and submit requests without approval-->
+		<add key="enhancedUser" value="Qaautomation_enhancedinvestigator"/>
+		<add key="enhancedUserPwd" value ="Password2@"/>
+
+    <!-- vvv User with permissions to access API directly vvv -->
+    <add key="apiUser" value="QAAutomation_DMAdmin"/>
+    <add key="apiPwd" value="Password2@"/>
+    
+    <!-- vvv Organization used to create requests and to add new users. Ensure Admin and Enhanced users have rights in this org vvv-->
+		<add key="genericOrganization" value ="Operations Center"/>
+		<add key="genericPassword" value="Password1!"/>
+
+		<!-- vvv File for attaching/responding to requests. vvv -->
+		<add key="testZipFile" value="to09y05_mpd_wp03_b01_LPP.zip"/>
+    <add key="testTextFile" value="TestDoc01.txt"/>
+
+    <!-- vvv Ensure the following are 1) In the database, 2) That they are assigned to GenericOrganization vvv-->
+		<add key="projectName" value="QA Automation"/>
+		<add key="requestType" value="QE File Distribution"/>
+		<add key="dataMart" value ="MP/FD DataMart1"/>
+		<add key="dataMartId" value="D5C5AB53-5ADC-4DB3-8475-A4F000E52110"/>
+    <add key="dataMart2" value ="MP/FD DataMart2"/>
+    <add key="dataMart2Id" value="667C8620-6BC5-483A-B00B-AA5D00C661B90"/>
+
+    <!-- vvv Update to match the current version vvv -->
+		<add key="currentVersion" value="7.10.0.0"/>
+
+		<!--Values for testing packages delivered by API match the request sent. 
+			The length of both arrays MUST be equal. Values must correspond by index
+			(e.g, oldVersionRequestId[0] has an AdapterPackageVersion of oldVersionNumber[0], etc.)-->
+		<add key="oldVersionRequestId" value ="B3990361-B1CD-4E35-87CB-AD35016ADC05,
+                    5258645E-5D9D-49D4-A50E-AADB00E1A89F,
+                    D8B8123B-133A-4FEE-9677-AE63009E1B9C"/>
+    <add key="oldVersionNumber" value="7.2.0.0,
+        6.13.0.0, 
+                7.6.0.0"/>
+		
+    <!-- vvv Variables for test run. If running on build server, ensure globalHeadless is 'true' vvv-->
+    <add key="globalHeadless" value ="false"/>
+		<add key="globalSloMo" value="1500"/>
+	</appSettings>
+</configuration>

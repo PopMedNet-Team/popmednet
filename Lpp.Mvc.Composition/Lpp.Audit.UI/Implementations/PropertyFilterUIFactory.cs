@@ -55,7 +55,7 @@ namespace Lpp.Audit.UI
             };
         }
 
-        static readonly Regex _partRegex = new Regex( @"(([^\,])|(\,\,))+", RegexOptions.Compiled );
+        static readonly Regex _partRegex = new Regex( @"(([^\,])|(\,\,))+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         static readonly char[] _colon = new[] { ':' };
         public IAuditEventFilter ParsePostedValue( string value )
         {

@@ -18,16 +18,22 @@ namespace Lpp.Dns.Api.Requests
 {
     public class ReportAggregationLevelController : LppApiDataController<ReportAggregationLevel, ReportAggregationLevelDTO, DataContext, PermissionDefinition>
     {
+        /// <summary>
+        /// Marks the Report Aggregation Level as deleted by setting it's DeletedOn value to UTC now.
+        /// </summary>
+        /// <param name="ID">The ID's of the items to mark as deleted.</param>
+        /// <returns></returns>
         [HttpDelete]
         public override async Task Delete([FromUri] IEnumerable<Guid> ID)
         {
             //Override hard delete. Instead just update the "DeletedOn" term
-            var test = ID.ToArray();
-
             var deletedRAL = DataContext.ReportAggregationLevels.Where(r => ID.Contains(r.ID)).FirstOrDefault();
-            deletedRAL.DeletedOn = DateTime.UtcNow;
-            
-            await DataContext.SaveChangesAsync();
+            if (deletedRAL != null)
+            {
+                deletedRAL.DeletedOn = DateTime.UtcNow;
+
+                await DataContext.SaveChangesAsync();
+            }
 
         }
     

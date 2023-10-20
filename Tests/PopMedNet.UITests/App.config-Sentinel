@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+
+    <!-- vvv If running tests in an environment that does not use Single-sign-on, set to false vvv -->
+    <add key="useSso" value="true"/>
+
+    <!-- vvv URLs: QA vvv -->
+    <add key="baseUrl" value="https://test-querytool.sentinelsystem.org/"/>
+    <add key="apiUrl" value ="https://test-api.sentinelsystem.org/"/>
+    <add key="ssoUrl" value="https://test-sso.sentinelsystem.org/"/>
+
+    <!-- vvv User with permission to approve/reject new user requests -->
+		<add key="adminUser" value="AutoSmokeTestInvestAdmin"/>
+		<add key="adminPassword" value="Password1!"/>
+
+		<!--User with permissions to create and submit requests without approval-->
+		<add key="enhancedUser" value="AutoSmokeTestInvestAdmin"/>
+		<add key="enhancedUserPwd" value ="Password1!"/>
+
+    <!-- vvv User with permissions to access API directly vvv -->
+    <!-- add key="apiUser" value="AutoSmokeTestDMA"/-->
+    <add key="apiUser" value="AutoSmokeTestDMA"/>
+    <add key="apiPwd" value="Password2@"/>
+    
+    <!-- vvv Organization used to create requests and to add new users. Ensure Admin and Enhanced users have rights in this org vvv-->
+		<add key="genericOrganization" value ="Testing Organization 1"/>
+		<add key="genericPassword" value="Password1!"/>
+
+		<!-- vvv File for attaching/responding to requests. vvv -->
+		<add key="testZipFile" value="to09y05_mpd_wp03_b01_LPP.zip"/>
+
+    <!-- vvv Ensure the following are 1) In the database, 2) That they are assigned to GenericOrganization vvv-->
+		<add key="projectName" value="Automated Smoke Test Project"/>
+		<add key="requestType" value="Modular Program (QE)"/>
+		<add key="dataMart" value ="Auto Smoke Test DataMart 1"/>
+		<add key="dataMartId" value="039817b8-08c6-41ed-9ea8-afe700a89a9d"/>
+    <add key="dataMart2" value ="Auto Smoke Test DataMart 2"/>
+    <add key="dataMart2Id" value="e45ee18c-72a1-4edb-9d5a-aff0008e2eb1"/>
+
+    <!-- vvv Update to match the current version vvv -->
+		<add key="currentVersion" value="7.10.0.0"/>
+
+		<!--Values for testing packages delivered by API match the request sent. 
+			The length of both arrays MUST be equal. Values must correspond by index
+			(e.g, oldVersionRequestId[0] has an AdapterPackageVersion of oldVersionNumber[0], etc.)-->
+		<add key="oldVersionRequestId" value ="2f4292f4-d87b-49a7-ab5f-aef500fc58ca"/>
+		<add key="oldVersionNumber" value="7.7.0.0"/>
+		
+    <!-- vvv Variables for test run. If running on build server, ensure globalHeadless is 'true' vvv-->
+    <add key="globalHeadless" value ="false"/>
+		<add key="globalSloMo" value="500"/>
+	</appSettings>
+</configuration>

@@ -9,7 +9,7 @@
                     <h4 class="modal-title" id="responseHistoryDialogTitle">History</h4>
                 </div>
                 <div class="modal-body" data-bind="foreach: RoutingHistory">
-                    <table class="table table-hover">
+                    <table class="table table-hover" role="presentation">
                         <caption data-bind="text:DataMartName"></caption>
                         <tbody data-bind="foreach:HistoryItems">
                             <tr>
@@ -40,13 +40,13 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td>
+                    <th scope="col">
                         <input type="checkbox" title="Select All/None" data-bind="checked:completeRoutesSelectAll, indeterminateValue:SelectedCompleteResponses().length > 0 && SelectedCompleteResponses().length < VirtualRoutings().length" />
-                    </td>
-                    <td>DataMart</td>
-                    <td>Status</td>
-                    <td>Message</td>
-                    <td>History</td>
+                    </th>
+                    <th scope="col">DataMart</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">History</th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: VirtualRoutings">
@@ -112,15 +112,15 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td>
+                    <th scope="col">
                         <input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedIncompleteRoutings().length > 0 && SelectedIncompleteRoutings().length < IncompleteRoutings().length" />
-                    </td>
-                    <td>DataMart</td>
-                    <td>Status</td>
-                    <td>Priority</td>
-                    <td>Due Date</td>
-                    <td>Message</td>
-                    <td>History</td>
+                    </th>
+                    <th scope="col">DataMart</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">History</th>
                 </tr>
             </thead>
             <tbody data-bind="visible:IncompleteRoutings().length == 0">

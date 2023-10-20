@@ -214,9 +214,12 @@ namespace Lpp.Dns.Api.Requests
                 return;
             }
 
-            var user = (from u in DataContext.Users where u.ID == userID select u).AsNoTracking().FirstOrDefault();
+			ApiIdentity identity = (from u in DataContext.Users where u.ID == userID select u).Select(user => new ApiIdentity(user.ID, user.UserName, user.FullName, user.OrganizationID)).FirstOrDefault();
 
-            Lpp.Utilities.Security.ApiIdentity identity = new Utilities.Security.ApiIdentity(user.ID, user.UserName, user.FullName, user.OrganizationID);
+            if(identity == null)
+            {
+                throw new NullReferenceException("Unable to find the identity for the user ID specified.");
+            }
 
             try
             {

@@ -22,7 +22,7 @@
     <security>
       <domain>i2b2demo</domain>
       <username>demo</username>
-      <password token_ms_timeout="1800000" is_token="true">SessionKey:bB7hv8nLGeeO7E9gguCe</password>
+      <password token_ms_timeout="1800000" is_token="true"></password>
     </security>
     <message_type>
       <message_code>Q04</message_code>

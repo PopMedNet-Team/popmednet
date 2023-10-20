@@ -163,7 +163,11 @@ namespace Lpp.Dns.Api.Users
         public async Task<HttpResponseMessage> UserRegistration(UserRegistrationDTO data)
         {
             if (Data.User.CheckPasswordStrength(data.Password) != PasswordScores.VeryStrong)
-                return Request.CreateResponse(HttpStatusCode.Forbidden, "The password specified is not strong enough. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.");
+            {
+                var passwordMinLength = ConfigurationManager.AppSettings["PasswordMinLength"];
+                var message = string.Format("The password specified is not strong enough. The password must be {0} characters minimum. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.", passwordMinLength);
+                return Request.CreateResponse(HttpStatusCode.Forbidden, message);
+            }
 
             var contact = await (from c in DataContext.Users where (data.UserName == c.UserName) select c).FirstOrDefaultAsync();
 
@@ -321,7 +325,11 @@ namespace Lpp.Dns.Api.Users
         {
 
             if (Data.User.CheckPasswordStrength(updateInfo.Password) != PasswordScores.VeryStrong)
-                return Request.CreateResponse(HttpStatusCode.Forbidden, "The password specified is not strong enough. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.");
+            {
+                var passwordMinLength = ConfigurationManager.AppSettings["PasswordMinLength"];
+                var message = string.Format("The password specified is not strong enough. The password must be {0} characters minimum. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.", passwordMinLength);
+                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, message);
+            }
 
             //Check if the user has permissions
             if (updateInfo.UserID != Identity.ID && !(await DataContext.HasGrantedPermissions<User>(Identity, updateInfo.UserID, PermissionIdentifiers.User.ChangePassword)).Contains(PermissionIdentifiers.User.ChangePassword))
@@ -373,7 +381,11 @@ namespace Lpp.Dns.Api.Users
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "We're sorry but the request to reset your password has expired. Please create a new request.");
 
             if (Data.User.CheckPasswordStrength(updateInfo.Password) != PasswordScores.VeryStrong)
-                return Request.CreateResponse(HttpStatusCode.Forbidden, "The password specified is not strong enough. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.");
+            {
+                var passwordMinLength = ConfigurationManager.AppSettings["PasswordMinLength"];
+                var message = string.Format("The password specified is not strong enough. The password must be {0} characters minimum. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.", passwordMinLength);
+                return Request.CreateResponse(HttpStatusCode.Forbidden, message);
+            }
 
             string newHash = updateInfo.Password.ComputeHash();
             DateTimeOffset dateBack = DateTimeOffset.UtcNow.AddDays(ConfigurationManager.AppSettings["PreviousDaysPasswordRestriction"].ToInt32() * -1);
@@ -1381,7 +1393,7 @@ namespace Lpp.Dns.Api.Users
                     if (!currentUser.Active && user.Active && currentUser.PasswordHash.IsNullOrEmpty())
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, user.FirstName + " " + user.LastName + " must be assigned a password before the can be marked active."));
 
-                    if (currentUser.OrganizationID == null & user.OrganizationID != null &&
+                    if (currentUser.OrganizationID == null && user.OrganizationID != null &&
                         user.OrganizationID.Value != Identity.EmployerID.Value &&
                         !await DataContext.GlobalAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.SecurityGroup.Users.Any(u => u.UserID == Identity.ID)) &&
                         !await DataContext.OrganizationAcls.AnyAsync(a => a.PermissionID == PermissionIdentifiers.Organization.CreateUsers && a.OrganizationID == currentUser.OrganizationID.Value &&

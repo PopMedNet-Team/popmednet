@@ -75,7 +75,7 @@ namespace Lpp.Dns.RedirectBridge.Controllers
 
             if (model.RSA_Modulus == null || model.RSA_Exponent == null) return token;
 
-            using (var rsa = new RSACryptoServiceProvider())
+            using (var rsa = new RSACryptoServiceProvider(2048))
             {
                 rsa.ImportParameters(new RSAParameters { Modulus = model.RSA_Modulus, Exponent = model.RSA_Exponent });
                 return Convert.ToBase64String(rsa.Encrypt(Encoding.ASCII.GetBytes(token), true));

@@ -35,11 +35,11 @@ namespace Lpp.Dns.HealthCare.Controllers
                 string delimiter = content.Substring(0, content.IndexOf("\r\n"));
 
                 // Look for Content-Type
-                Regex re = new Regex(@"(?<=Content\-Type:)(.*?)(?=\r\n\r\n)");
+                Regex re = new Regex(@"(?<=Content\-Type:)(.*?)(?=\r\n\r\n)", RegexOptions.None, TimeSpan.FromSeconds(3));
                 Match contentTypeMatch = re.Match(content);
 
                 // Look for filename
-                re = new Regex(@"(?<=filename\=\"")(.*?)(?=\"")");
+                re = new Regex(@"(?<=filename\=\"")(.*?)(?=\"")", RegexOptions.None, TimeSpan.FromSeconds(3));
                 Match filenameMatch = re.Match(content);
 
                 // Did we find the required values?

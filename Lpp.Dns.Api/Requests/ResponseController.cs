@@ -1410,7 +1410,7 @@ namespace Lpp.Dns.Api.Requests
 
             var requestID = lDocs[0].RequestID;
 
-            var request = DataContext.Requests.Include("RequestType").Where(x => x.ID == requestID).Select(x => new { RequestType = x.RequestType.Name }).FirstOrDefault();
+            var request = DataContext.Requests.Include("RequestType").Where(x => x.ID == requestID).Select(x => new { RequestType = x.RequestType.Name }).First();
 
             var stream = DownloadZipToBrowser(docs);
 

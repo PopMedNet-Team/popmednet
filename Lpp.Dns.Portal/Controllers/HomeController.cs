@@ -179,6 +179,11 @@ namespace Lpp.Dns.Portal.Controllers
                         Enviorment = "Portal"
                     });
 
+                    if(contact == null)
+                    {
+                        throw new Exception("User not found.");
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -249,7 +254,9 @@ namespace Lpp.Dns.Portal.Controllers
         {
             if (Lpp.Dns.Data.User.CheckPasswordStrength(newPassword) != DTO.Enums.PasswordScores.VeryStrong)
             {
-                ModelState.AddModelError("Error", "The password specified is not strong enough. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.");
+                var passwordMinLength = ConfigurationManager.AppSettings["PasswordMinLength"];
+                var message = string.Format("The password specified is not strong enough. The password must be {0} characters minimum. Please ensure that the password has at least one upper-case letter, a number and at least one symbol and does not include: ':;<'.", passwordMinLength);
+                ModelState.AddModelError("Error", message);
                 return View("~/Views/Home/ExpiredPassword.cshtml");
             }
 

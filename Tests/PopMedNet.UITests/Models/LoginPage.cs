@@ -27,6 +27,7 @@ namespace PopMedNet.UITests.Models
         }
         public async Task<HomePage> LoginAs(string userName, string password, bool validLogin=true)
         {
+            var ssoUrl = ConfigurationManager.AppSettings["ssoUrl"];
             var loginButonSelector = "#btnLogin";
             if (ConfigurationManager.AppSettings["useSso"] == "true")
                 loginButonSelector = "button:has-text('Sign On')";
@@ -36,8 +37,20 @@ namespace PopMedNet.UITests.Models
             var currentUrl = _page.Url;
             if (validLogin)
             {
-                if (Regex.IsMatch(currentUrl, @".*ssopmnqatrunk.popmednet.org*"))
-                    await _page.Locator("h4:has-text('PopMedNet')").ClickAsync();
+                if (Regex.IsMatch(currentUrl, @".*" + ssoUrl + "*"))
+                {
+                    ILocator loc = null;
+                    try
+                    {
+                        loc = _page.Locator("h4:has-text('PopMedNet Edge')");
+                        await loc.ClickAsync();
+                    }
+                    catch (TimeoutException e)
+                    {
+                        loc = _page.Locator("h4:has-text('PopMedNet')");
+                        await loc.ClickAsync();
+                    }
+                }
             }
             return new HomePage(_page);
         }

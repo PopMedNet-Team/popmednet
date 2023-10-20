@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+
+    <!-- vvv If running tests in an environment that does not use Single-sign-on, set to false vvv -->
+    <add key="useSso" value="true"/>
+
+    <!-- vvv URLs: QA vvv -->
+    <add key="baseUrl" value="https://pmnuat.popmednet.org/"/>
+    <add key="apiUrl" value ="https://api-pmnuat.popmednet.org/"/>
+    <add key="ssoUrl" value="https://sso-pmnuat.popmednet.org/"/>
+
+    <!-- vvv User with permission to approve/reject new user requests -->
+		<add key="adminUser" value="autoadmin"/>
+		<add key="adminPassword" value="Welcome123!"/>
+
+		<!--User with permissions to create and submit requests without approval-->
+		<add key="enhancedUser" value="autodp"/>
+		<add key="enhancedUserPwd" value ="Welcome123!"/>
+
+    <!-- vvv User with permissions to access API directly vvv -->
+    <add key="apiUser" value="bswan"/>
+    <add key="apiPwd" value="Password1!"/>
+    
+    <!-- vvv Organization used to create requests and to add new users. Ensure Admin and Enhanced users have rights in this org vvv-->
+		<add key="genericOrganization" value ="Demo Organization"/>
+		<add key="genericPassword" value="Password1!"/>
+
+		<!-- vvv File for attaching/responding to requests. vvv -->
+		<add key="testZipFile" value="to09y05_mpd_wp03_b01_LPP.zip"/>
+
+    <!-- vvv Ensure the following are 1) In the database, 2) That they are assigned to GenericOrganization vvv-->
+		<add key="projectName" value="Automation Project"/>
+		<add key="requestType" value="QE File Distribution"/>
+		<add key="dataMart" value ="Test Auto DataMart 1"/>
+		<add key="dataMartId" value="1021da73-85ef-4649-8f39-a6b400922a40"/>
+    <add key="dataMart2" value ="Test Auto DataMart 2"/>
+    <add key="dataMart2Id" value="84c9440a-0b1f-4ec0-af75-a85500cc8f16"/>
+
+    <!-- vvv Update to match the current version vvv -->
+		<add key="currentVersion" value="7.6.0.0"/>
+
+		<!--Values for testing packages delivered by API match the request sent. 
+			The length of both arrays MUST be equal. Values must correspond by index
+			(e.g, oldVersionRequestId[0] has an AdapterPackageVersion of oldVersionNumber[0], etc.)-->
+		<add key="oldVersionRequestId" value ="8c389dc1-3e3c-4bde-883e-af790103c9a4"/>
+		<add key="oldVersionNumber" value="7.9.0.0,
+			 7.2.0.0"/>
+		
+    <!-- vvv Variables for test run. If running on build server, ensure globalHeadless is 'true' vvv-->
+    <add key="globalHeadless" value ="false"/>
+		<add key="globalSloMo" value="500"/>
+	</appSettings>
+</configuration>

@@ -637,7 +637,7 @@ namespace Lpp.Dns.Data
             if (dm == null)
                 throw new InvalidCastException("The entity passed is not a DataMart");
 
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>"};
 
             var logItem = new Audit.DataMartChangeLog
             {
@@ -662,7 +662,7 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.DataMartChangeLog;
 
                 var networkName = db.Networks.Select(n => n.Name).FirstOrDefault();
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 var body = GenerateTimestampText(log) + 
                            "<p>Here are your most recent <b>DataMart Change</b> notifications from <b>" + networkName + "</b>.</p>" + 

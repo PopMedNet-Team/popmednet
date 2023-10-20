@@ -278,7 +278,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
             }
             else if (activityResultID == AddDatamartsResultID)
             {
-                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, ParseRequestJSON()).FirstOrDefault();
+                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, ParseRequestJSON()).FirstOrDefault() ?? DTO.QueryComposer.QueryComposerTermDTO.Empty(HorizontalDistributedRegressionConfiguration.ModularProgramTermID);
 
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 

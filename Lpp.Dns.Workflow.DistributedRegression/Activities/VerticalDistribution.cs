@@ -286,7 +286,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                 await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, true);
 
                 var qcRequestDTO = ParseRequestJSON();
-                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault();
+                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault() ?? DTO.QueryComposer.QueryComposerTermDTO.Empty(HorizontalDistributedRegressionConfiguration.ModularProgramTermID);
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 //update the request.json term value to include system generated documents revisionsetIDs

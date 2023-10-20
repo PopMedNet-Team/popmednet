@@ -209,16 +209,17 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                     else
                         dm.Status = DTO.Enums.RoutingStatus.Draft;
 
-                    var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
-                    if (currentResponse == null && dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
-                    {
-                        currentResponse = dm.AddResponse(_workflow.Identity.ID);
-                    }
+                    var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));                    
                     
                     if (dm.RoutingType != DTO.Enums.RoutingType.AnalysisCenter)
                     {
-                        //add the request document associations
-                        for (int i = 0; i < documentRevisionSets.Count; i++)
+						if (currentResponse == null)
+						{
+							currentResponse = dm.AddResponse(_workflow.Identity.ID);
+						}
+
+						//add the request document associations
+						for (int i = 0; i < documentRevisionSets.Count; i++)
                         {
                             if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == documentRevisionSets[i]))
                             {
@@ -242,7 +243,7 @@ namespace Lpp.Dns.Workflow.DistributedRegression.Activities
                 await db.Entry(_entity).ReloadAsync();
 
                 var qcRequestDTO = ParseRequestJSON();
-                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault();
+                var modularTerm = GetAllTerms(HorizontalDistributedRegressionConfiguration.ModularProgramTermID, qcRequestDTO).FirstOrDefault() ?? DTO.QueryComposer.QueryComposerTermDTO.Empty(HorizontalDistributedRegressionConfiguration.ModularProgramTermID);
                 var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<ModularProgramTermValues>(modularTerm.Values["Values"].ToString());
 
                 //update the request.json term value to include system generated documents revisionsetIDs

@@ -74,7 +74,7 @@ namespace Lpp.Dns.Api.DataMartClient
             }
 
             Logger.Debug($"Looping over the Document {document.ID} with DataMart {dataMartID}");
-            foreach (var row in deserialzedDoc.Queries.First().Results.FirstOrDefault())
+            foreach (var row in deserialzedDoc.Queries.First().Results.FirstOrDefault() ?? Array.Empty<Dictionary<string,object>>())
             {
                 var dt = row["DataTable"].ToString();
                 var period = row["Period"].ToString();

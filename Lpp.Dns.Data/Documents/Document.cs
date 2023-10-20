@@ -277,7 +277,7 @@ namespace Lpp.Dns.Data
                 return logs;
             }
 
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>" };
 
 
             if (obj.State != EntityState.Deleted)
@@ -328,7 +328,7 @@ namespace Lpp.Dns.Data
             }
             if(obj.State == EntityState.Deleted)
             {
-                string description = string.Format("{0} '{1}' for Request: {2} has been deleted by {3}\\{4}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, request.Name, orgUser.Acronym, orgUser.UserName);
+                string description = string.Format("{0} '{1}' for Request: {2} has been deleted by {3}\\{4}", (document.ParentDocumentID.HasValue ? "Revision of document" : "Document"), document.Name, request == null ? "<not found>" : request.Name, orgUser.Acronym, orgUser.UserName);
                 logs.Add(
                     db.LogsDeletedDocumentArchive.Add(
                         new Audit.DocumentDeleteLog
@@ -366,7 +366,7 @@ namespace Lpp.Dns.Data
                     }
                 }
 
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 var details = (from r in db.Requests
                                where r.ID == log.RequestID

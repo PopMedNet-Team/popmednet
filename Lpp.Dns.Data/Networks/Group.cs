@@ -143,7 +143,7 @@ namespace Lpp.Dns.Data
             if (group == null)
                 throw new InvalidCastException("The entity passed is not a group");
                         
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>" };
 
             var logItem = new Audit.GroupChangeLog
             {
@@ -167,7 +167,8 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.GroupChangeLog;
 
                 var networkName = db.Networks.Select(n => n.Name).FirstOrDefault();
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
+
                 if (log.Group == null)
                     log.Group = db.Groups.Find(log.GroupID);
                 var body = GenerateTimestampText(log) + 

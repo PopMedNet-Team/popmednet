@@ -219,35 +219,43 @@ namespace Lpp.Dns.Data
         /// <returns></returns>
         public static PasswordScores CheckPasswordStrength(string password)
         {
+            var ps = Password.Strength(password);
+            PasswordScores[] passwordStrengthVerdicts = new[] { PasswordScores.VeryWeak, PasswordScores.Weak, PasswordScores.Average, PasswordScores.Strong, PasswordScores.VeryStrong };
+            var s = ps * passwordStrengthVerdicts.Length;
+            int passwordVerdictIndex = Math.Min((int)s, passwordStrengthVerdicts.Length - 1);
+            PasswordScores resultScore = passwordStrengthVerdicts[passwordVerdictIndex];
+
             if (password == null || password.Contains(":") || password.Contains(";") || password.Contains("<"))
                 return PasswordScores.Invalid;
 
-            int score = 1;
-            if (password.Length < 1)
-                return PasswordScores.Blank;
-            if (password.Length < 4)
-                return PasswordScores.VeryWeak;
+			return resultScore;
 
-            if (password.Length >= 8)
-                score++;
-            if (password.Length >= 12)
-                score++;
-            if (System.Text.RegularExpressions.Regex.IsMatch(password, @"\d", System.Text.RegularExpressions.RegexOptions.ECMAScript))   //number only
-                score++;
-            if (System.Text.RegularExpressions.Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z]).+$", System.Text.RegularExpressions.RegexOptions.ECMAScript)) //both, lower and upper case
-                score++;
-            if (System.Text.RegularExpressions.Regex.IsMatch(password, @"[`,!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]", System.Text.RegularExpressions.RegexOptions.ECMAScript)) //^[A-Z]+$
-                score++;
+			//int score = 1;
+			//if (password.Length < 1)
+			//	return PasswordScores.Blank;
+			//if (password.Length < 4)
+			//	return PasswordScores.VeryWeak;
 
-            if (score >= 5)
-            {
-                return PasswordScores.VeryStrong;
-            }
-            else
-            {
-                return (PasswordScores)score;
-            }
-        }
+			//if (password.Length >= 8)
+			//	score++;
+			//if (password.Length >= 12)
+			//	score++;
+			//if (System.Text.RegularExpressions.Regex.IsMatch(password, @"\d", System.Text.RegularExpressions.RegexOptions.ECMAScript, TimeSpan.FromSeconds(3)))   //number only
+			//	score++;
+			//if (System.Text.RegularExpressions.Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z]).+$", System.Text.RegularExpressions.RegexOptions.ECMAScript, TimeSpan.FromSeconds(3))) //both, lower and upper case
+			//	score++;
+			//if (System.Text.RegularExpressions.Regex.IsMatch(password, @"[`,!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]", System.Text.RegularExpressions.RegexOptions.ECMAScript, TimeSpan.FromSeconds(3))) //^[A-Z]+$
+			//	score++; //  "!,@,#,$,%,^,&,*,?,_,~,-,£,(,)"
+
+			//if (score >= 5)
+			//{
+			//	return PasswordScores.VeryStrong;
+			//}
+			//else
+			//{
+			//	return (PasswordScores)score;
+			//}
+		}
     }
 
     internal class UserConfiguration : EntityTypeConfiguration<User>
@@ -457,7 +465,7 @@ namespace Lpp.Dns.Data
             string message = string.Format("User '{0}' has been {1}", (user.Organization.Acronym + @"\" + user.UserName), obj.State);
             if (identity != null)
             {
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new { UserName = "<unknown>", Acronym = "<unknown>" };
                 message = string.Format("User '{0}' has been {1} by {2}", (user.Organization.Acronym + @"\" + user.UserName), obj.State, (orgUser.Acronym + @"\" + orgUser.UserName));
             }
 
@@ -478,7 +486,11 @@ namespace Lpp.Dns.Data
 
             if (identity != null && user.Active)
             {
-                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+                var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new
+				{
+					UserName = "<unknown>",
+					Acronym = "<unknown>"
+				};
 
                 //Handle all of the profile specific notifications
                 var profileLogItem = new Audit.ProfileUpdatedLog
@@ -688,7 +700,7 @@ namespace Lpp.Dns.Data
                 var log = logItem as Audit.UserRegistrationChangedLog;
                 var forRegistrant = log.Description.StartsWith("Your registration");
                 var status = log.RegisteredUser.RejectedOn.HasValue ? "Rejected" : "Approved";
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 db.Entry(log).Reference(l => l.RegisteredUser).Load();
                 if (log.RegisteredUser.OrganizationID.HasValue && log.RegisteredUser.Organization == null)

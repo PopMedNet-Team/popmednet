@@ -134,7 +134,11 @@ namespace Lpp.Dns.Data
             if (registry == null)
                 throw new InvalidCastException("The entity passed is not a registry");
 
-            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault();
+            var orgUser = db.Users.Where(u => u.ID == identity.ID).Select(u => new { u.UserName, u.Organization.Acronym }).FirstOrDefault() ?? new
+			{
+				UserName = "<unknown>",
+				Acronym = "<unknown>"
+			};
 
             var logItem = new Audit.RegistryChangeLog
             {
@@ -161,7 +165,7 @@ namespace Lpp.Dns.Data
 
                 var registry = db.Registries.Find(log.RegistryID);
 
-                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault();
+                var actingUser = db.Users.Where(u => u.ID == log.UserID).FirstOrDefault() ?? new User { FirstName = string.Empty, LastName = "<unknown>" };
 
                 var body = GenerateTimestampText(log) +
                     "<p>Here are your most recent <b>Registry Change</b> notifications.</p>" +

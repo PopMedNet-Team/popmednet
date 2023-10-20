@@ -528,7 +528,7 @@ namespace PopMedNet.UITests.Models
                 {
                     await ClickItem(RequestDetailClickables.OverviewTab);
                     await _page.Locator("#Overview:visible").WaitForAsync();
-                    var table = _page.Locator("tbody[data-bind='DocumentsByRevision:Values.Documents']");
+                    var table = _page.Locator("tbody[data-bind='DocumentsByRevision:Values.Documents']").Last;
                     await table.ScrollIntoViewIfNeededAsync(new LocatorScrollIntoViewIfNeededOptions { Timeout=1000});
                     await table.Locator($"td:text-is('{fileName}')").WaitForAsync();
                     Console.WriteLine("\tSuccess!");
