@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2456D187-A88B-4DEF-ABC8-B30CFF1A0387}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.DataMart.Model.QueryComposer.Tests</RootNamespace>
+    <AssemblyName>Lpp.Dns.DataMart.Model.QueryComposer.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=6.4.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework6.Npgsql.6.4.3\lib\net461\EntityFramework6.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.19.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Google.Protobuf.3.19.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.26.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\LinqKit.1.1.26\lib\net45\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=5.0.10.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Npgsql.5.0.10\lib\netstandard2.0\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.21.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.21.4.0\lib\net462\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess.EntityFramework, Version=6.122.21.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.EntityFramework.21.4.0\lib\net462\Oracle.ManagedDataAccess.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Text.Encodings.Web.5.0.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Text.Json.5.0.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Channels, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Channels.5.0.0\lib\net461\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="DataCheckerDataContextTests.cs" />
+    <Compile Include="DataCheckerTests.cs" />
+    <Compile Include="DistributedRegressionModelAdapterTests.cs" />
+    <Compile Include="ESPTests.cs" />
+    <Compile Include="ExpressionTreeTests.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="PCORIDataContextTests.cs" />
+    <Compile Include="PCORIStratificationTests.cs" />
+    <Compile Include="PCORISuccesfulTests.cs" />
+    <Compile Include="PCORITests.cs" />
+    <Compile Include="PCORNET_Adaptable_ExpressionTree.cs" />
+    <Compile Include="PCORNET_Adaptable_Queries.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryCompositionTests.cs" />
+    <Compile Include="SummaryQueryAdapterHelperTests.cs" />
+    <Compile Include="SummaryQueryTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data.csproj">
+      <Project>{1b945fa5-035d-49ac-a901-4570a2a64c08}</Project>
+      <Name>Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj">
+      <Project>{325d9b27-88f8-49d3-a347-40a22881624c}</Project>
+      <Name>Lpp.Dns.DataMart.Model.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data.csproj">
+      <Project>{1bce7532-35ef-4875-a26d-fe690516983e}</Project>
+      <Name>Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.QueryComposer\Lpp.Dns.DataMart.Model.QueryComposer.csproj">
+      <Project>{b22805c6-4152-400a-9567-c8f5e39fa400}</Project>
+      <Name>Lpp.Dns.DataMart.Model.QueryComposer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.QueryComposer\Lpp.QueryComposer.csproj">
+      <Project>{b3374f4b-88a0-412d-90e5-79f2014d7721}</Project>
+      <Name>Lpp.QueryComposer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Oracle.ManagedDataAccess.Client.Configuration.Section.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\DataChecker\DataChecker_SqlDistribution.json" />
+    <None Include="Resources\DataChecker\DataChecker_Weight.json" />
+    <None Include="Resources\DataChecker\DataChecker_Sex.json" />
+    <None Include="Resources\DataChecker\DataChecker_Height.json" />
+    <None Include="Resources\DataChecker\DataChecker_DiagCodes.json" />
+    <None Include="Resources\DataChecker\DataChecker_Age.json" />
+    <None Include="Resources\DataChecker\DataChecker_Ethnicity.json" />
+    <None Include="Resources\DataChecker\DataChecker_MetaData.json" />
+    <None Include="Resources\DataChecker\DataChecker_NDC.json" />
+    <None Include="Resources\DataChecker\DataChecker_PDX.json" />
+    <None Include="Resources\DataChecker\DataChecker_Race.json" />
+    <None Include="Resources\DataChecker\DataChecker_RxAmt.json" />
+    <None Include="Resources\DataChecker\DataChecker_RxSup.json" />
+    <None Include="Resources\DataChecker\DiagnosisPDX.json" />
+    <None Include="Resources\DistributedRegression\DR_initial_setup.zip" />
+    <None Include="Resources\MaxAgeOf28_NoSelect.json" />
+    <None Include="Resources\GroupBySex_NoCriteria.json" />
+    <None Include="Resources\MaxAgeOf28_StratifyBySex - Copy.json" />
+    <None Include="Resources\MaxAgeOf28_StratifyBySex.json" />
+    <None Include="Resources\QueryComposition\180191_request.json" />
+    <None Include="Resources\QueryComposition\180192_request.json" />
+    <None Include="Resources\QueryComposition\180193_request.json" />
+    <None Include="Resources\QueryComposition\180194_request.json" />
+    <None Include="Resources\QueryComposition\20210325-PCORNet issue request.json" />
+    <None Include="Resources\QueryComposition\ClinObs_AllValuesSpecified.json" />
+    <None Include="Resources\QueryComposition\ClinObs_MultipleTerms.json" />
+    <None Include="Resources\QueryComposition\ClinObs_PMNDEV-8465_request.json" />
+    <None Include="Resources\QueryComposition\ClinObs_SingleTerm.json" />
+    <None Include="Resources\QueryComposition\ClinObs_WithOtherTermsSameCriteria.json" />
+    <None Include="Resources\QueryComposition\json1.json" />
+    <None Include="Resources\QueryComposition\LabRecord-request-27396.json" />
+    <None Include="Resources\QueryComposition\LabRecord-request-27424.json" />
+    <None Include="Resources\QueryComposition\LabRecordNullCodes.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodes.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithAge.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithAgeAndDiagnosis.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithDiagnosis.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithExclusion.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithmodifier.json" />
+    <None Include="Resources\QueryComposition\LabRecordWithCodesWithQualifier.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_json47760_PMNDEV_7296.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_json47766.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_MultiTrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID_PRO.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_TimeWindow_TrialID_WithCriteria.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_UC2_PMNDEV-7294.json" />
+    <None Include="Resources\QueryComposition\PCORNET_Adaptable_UC2_PMNDEV-7297-1.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PatientCount_ByTrial_TrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PatientCount_TrialID.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_PatientCount.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyByPRO.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySex.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrial.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrialAndPRO - Copy.json" />
+    <None Include="Resources\QueryComposition\PCORNET_PRO_StratifyBySexAndTrialAndPRO_WithExclusion.json" />
+    <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex - Copy.json" />
+    <None Include="Resources\QueryComposition\PCORNET_TrialID_TrialIDAndSex_WithExclusion.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-7691_PerscribingTest.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-8463-D9_request.json" />
+    <None Include="Resources\QueryComposition\PrescribingTermNullCodesNoObservation.json" />
+    <None Include="Resources\QueryComposition\PrescribingTermWithOtherCodeTypes.json" />
+    <None Include="Resources\QueryComposition\Prescribing_NullTerm.json" />
+    <None Include="Resources\QueryComposition\Prescribing_NullTermWithAge.json" />
+    <None Include="Resources\QueryComposition\Prescribing_TermWithCodes.json" />
+    <None Include="Resources\QueryComposition\Prescribing_TermWithCodesAndExclusion.json" />
+    <None Include="Resources\QueryComposition\Prescribing_TermWithCodesWithAge.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-6412.json" />
+    <None Include="Resources\QueryComposition\PMNDEV_6287_5_3_2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV_6287_6_6.json" />
+    <None Include="Resources\QueryComposition\PMNDEV_6347.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-1172.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-1172b.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-6163.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-579_001.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-579_002.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-579_003.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-579_004.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-579_005.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_PatCount_WithAgeAndExclusion.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_AndHypertension_PatCount_WithAge.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_PatCount_WithAge.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_PatCount2.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_PatCount_WithStrats.json" />
+    <None Include="Resources\QueryComposition\ProcedureCodes_Cardiac_CT_Scan_PatCount.json" />
+    <None Include="Resources\QueryComposition\Patients_Count_By_Observation_Period.json" />
+    <None Include="Resources\QueryComposition\PcoriSqlDistribution.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5248- age at last encounter system wide no stratifications.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5207-2-EmptyAgeRage.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5207-3-EmptyAgeRage.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5207-EmptyAgeRange.json" />
+    <None Include="Resources\QueryComposition\Age Range - age as of submission no other terms.json" />
+    <None Include="Resources\QueryComposition\Age Range - age as of observation start date.json" />
+    <None Include="Resources\QueryComposition\Age Range - age at first encounter within criteria.json" />
+    <None Include="Resources\QueryComposition\Age Range - age at last encounter system wide.json" />
+    <None Include="Resources\QueryComposition\AgeRangeEnhanced_with_Sex.json" />
+    <None Include="Resources\QueryComposition\Age_between_10_and_36_no_stratification.json" />
+    <None Include="Resources\QueryComposition\AqueductUseCase11.json" />
+    <None Include="Resources\QueryComposition\CombinedDiagnosisCodes.json" />
+    <None Include="Resources\QueryComposition\CombinedDiagnosisCodes_and_Sex.json" />
+    <None Include="Resources\QueryComposition\DiagnosisCodes_As_Subcriteria.json" />
+    <None Include="Resources\QueryComposition\DiagnosisCodes_Selecting.json" />
+    <None Include="Resources\QueryComposition\ESP_All_Terms.json" />
+    <None Include="Resources\QueryComposition\Height_with_Measure_Date.json" />
+    <None Include="Resources\QueryComposition\Males_with_observationperiod.json" />
+    <None Include="Resources\QueryComposition\Men_36_66_Inches.json" />
+    <None Include="Resources\QueryComposition\Patients_between_36_and_66_tall_with_Observation_Period.json" />
+    <None Include="Resources\QueryComposition\Patients_with_Observation_Period.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-4551.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-4557.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-4769.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5055.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5068.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5128-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5128.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5130-2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5130-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5133-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5133-2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5136-4.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5136-3.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5136-2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5136-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5144.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5158.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5250 - Race.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5283-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5283-2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5283-4.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5319-1.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5319-2.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5322.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5326.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5329 - 10yrAgeGrouping.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5330-5yr Age Groupings.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5395-WeightStratificationNoCriteria.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5395-WeightStratificationByMeasureDate.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-5396-HeightStratificationByMeasuredDate.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-6000.json" />
+    <None Include="Resources\QueryComposition\PMNDEV-6041.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT-1205.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT_1138_HPHCI-Acceptance1.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT_1138_HPHCI-Acceptance2.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT_1138_HPHCI-Acceptance3.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT_1138_HPHCI-Acceptance4.json" />
+    <None Include="Resources\QueryComposition\PMNMAINT_1138_HPHCI-long running Oracle.json" />
+    <None Include="Resources\QueryComposition\RaceOnly_MultiSelect.json" />
+    <None Include="Resources\QueryComposition\Setting and Sex.json" />
+    <None Include="Resources\QueryComposition\SimpleAggregation_SameCritieria_NoStratification_NoAggregation.json" />
+    <None Include="Resources\QueryComposition\SimpleAggregation_NoCritieria_NoStratification_NoAggregation.json" />
+    <None Include="Resources\QueryComposition\SimpleSelect_NoCritieria_NoStratification_NoAggregation.json" />
+    <None Include="Resources\QueryComposition\SingleStratification_NoCritiera_NoAggregation.json" />
+    <None Include="Resources\QueryComposition\SingleStratification_MalesOnly_AgeAggregation.json" />
+    <None Include="Resources\QueryComposition\SingleStratification_NoCritieria_WithSelfAggregation.json" />
+    <None Include="Resources\QueryComposition\Weight_10_to_150_lb.json" />
+    <None Include="Resources\SummaryQuery\MetdataRefrshDates.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-5164.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-5170.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-5186.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-5194.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-7082.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-7083.json" />
+    <None Include="Resources\SummaryQuery\PMNDEV-7081.json" />
+    <None Include="Resources\SummaryQuery\Prev_Pharmacy_Dispensings_By_Drug_Class.json" />
+    <None Include="Resources\SummaryQuery\Prev_ICD9_Procedure_4Digit.json" />
+    <None Include="Resources\SummaryQuery\Prev_ICD9_Procedure_3Digit.json" />
+    <None Include="Resources\SummaryQuery\Prev_ICD9_Diagnosis_5Digit.json" />
+    <None Include="Resources\SummaryQuery\Prev_ICD9_Diagnosis_4Digit.json" />
+    <None Include="Resources\SummaryQuery\Prev_ICD9_Diagnosis_3Digit.json" />
+    <None Include="Resources\SummaryQuery\Prev_HCPCS_Procedures.json" />
+    <None Include="Resources\SummaryQuery\Prev_Enrollment.json" />
+    <None Include="Resources\SummaryQuery\MFU_Pharmacy_Dispensings_By_Drug_Name.json" />
+    <None Include="Resources\SummaryQuery\MFU_Pharmacy_Dispensings_By_Drug_Class.json" />
+    <None Include="Resources\SummaryQuery\MFU_ICD9_Procedure_4Digit.json" />
+    <None Include="Resources\SummaryQuery\MFU_ICD9_Procedure_3Digit.json" />
+    <None Include="Resources\SummaryQuery\MFU_ICD9_Diagnosis_5Digit.json" />
+    <None Include="Resources\SummaryQuery\MFU_ICD9_Diagnosis_4Digit.json" />
+    <None Include="Resources\SummaryQuery\MFU_ICD9_Diagnosis_3Digit.json" />
+    <None Include="Resources\SummaryQuery\MFU_HCPCS Procedures.json" />
+    <None Include="Resources\SummaryQuery\INC_Pharmacy_Dispensings_By_Drug_Name.json" />
+    <None Include="Resources\SummaryQuery\INC_Pharmacy_Dispensings_By_Drug_Class.json" />
+    <None Include="Resources\SummaryQuery\INC_ICD9_Diagnosis_3Digit.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

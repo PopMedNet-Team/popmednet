@@ -1,0 +1,350 @@
+﻿<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Table">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Period" type="xs:string" minOccurs="0" />
+                <xs:element name="Sex" type="xs:string" minOccurs="0" />
+                <xs:element name="AgeGroup" type="xs:string" minOccurs="0" />
+                <xs:element name="Setting" type="xs:string" minOccurs="0" />
+                <xs:element name="DXCode" type="xs:string" minOccurs="0" />
+                <xs:element name="DXName" type="xs:string" minOccurs="0" />
+                <xs:element name="Members90" type="xs:double" minOccurs="0" />
+                <xs:element name="Events90" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180" type="xs:double" minOccurs="0" />
+                <xs:element name="Events180" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270" type="xs:double" minOccurs="0" />
+                <xs:element name="Events270" type="xs:double" minOccurs="0" />
+                <xs:element name="Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Days_x0020_Covered" type="xs:double" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 0-1</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>8710</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>1973193</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 2-4</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>14684</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>4162513</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 5-9</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>27123</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>7845036</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>10-14</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>29059</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>8515090</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>15-18</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>25479</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>7474148</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>19-21</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>16171</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>4411857</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>22-44</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>132893</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>36610793</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>45-64</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>133395</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>39991702</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>65-74</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>18573</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>5433603</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>75+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>17101</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>5167260</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 0-1</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>7742</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>1669316</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 2-4</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>13207</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>3588771</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup> 5-9</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>24191</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>6752074</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>10-14</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>25990</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>7280757</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>15-18</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>22804</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>6412025</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>19-21</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>15921</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>4028012</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>22-44</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>119238</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>31605148</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>45-64</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>121252</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>34258846</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>65-74</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>1</Members90>
+    <Events90>0</Events90>
+    <Members180>1</Members180>
+    <Events180>0</Events180>
+    <Members270>1</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>20121</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>4225911</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>75+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>1</Members90>
+    <Events90>0</Events90>
+    <Members180>1</Members180>
+    <Events180>0</Events180>
+    <Members270>1</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>17229</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>3919804</Days_x0020_Covered>
+  </Table>
+</NewDataSet>

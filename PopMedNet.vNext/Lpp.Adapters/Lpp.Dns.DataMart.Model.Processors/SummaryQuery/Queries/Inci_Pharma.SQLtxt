@@ -1,0 +1,127 @@
+﻿-- Inci_Pharma
+-- NAME_FIELD = DrugClass, GenericName
+-- DRUG_TABLE = Incident_Drug_Class, Incident_Generic_Name
+
+SELECT EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroup, 
+
+EnrollmentData.%NAME_FIELD%,
+
+CAST(SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) AS FLOAT) AS [Total Enrollment in Strata(Members)], 
+CAST(SUM(ISNULL(EnrollmentData.DaysCovered, 0)) AS FLOAT) AS [Days Covered],
+
+CAST(SUM(ISNULL(SummaryData.m90, 0)) AS FLOAT) AS Members90, 
+CAST(SUM(ISNULL(SummaryData.e90, 0)) AS FLOAT) AS Episodespans90, 
+CAST(SUM(ISNULL(SummaryData.d90, 0)) AS FLOAT) AS Dispensings90, 
+CAST(SUM(ISNULL(SummaryData.ds90, 0)) AS FLOAT) AS DaySupply90, 
+CAST(SUM(ISNULL(SummaryData.m90Q1, 0)) AS FLOAT) AS Members90Q1, 
+CAST(SUM(ISNULL(SummaryData.m90Q2, 0)) AS FLOAT) AS Members90Q2, 
+CAST(SUM(ISNULL(SummaryData.m90Q3, 0)) AS FLOAT) AS Members90Q3, 
+CAST(SUM(ISNULL(SummaryData.m90Q4, 0)) AS FLOAT) AS Members90Q4, 
+CAST(SUM(ISNULL(SummaryData.m180, 0)) AS FLOAT) AS Members180, 
+CAST(SUM(ISNULL(SummaryData.e180, 0)) AS FLOAT) AS Episodespans180, 
+CAST(SUM(ISNULL(SummaryData.d180, 0)) AS FLOAT) AS Dispensings180, 
+CAST(SUM(ISNULL(SummaryData.ds180, 0)) AS FLOAT) AS DaySupply180, 
+CAST(SUM(ISNULL(SummaryData.m180Q1, 0)) AS FLOAT) AS Members180Q1, 
+CAST(SUM(ISNULL(SummaryData.m180Q2, 0)) AS FLOAT) AS Members180Q2, 
+CAST(SUM(ISNULL(SummaryData.m180Q3, 0)) AS FLOAT) AS Members180Q3, 
+CAST(SUM(ISNULL(SummaryData.m180Q4, 0)) AS FLOAT) AS Members180Q4, 
+CAST(SUM(ISNULL(SummaryData.m270, 0)) AS FLOAT) AS Members270,
+CAST(SUM(ISNULL(SummaryData.e270, 0)) AS FLOAT) AS Episodespans270, 
+CAST(SUM(ISNULL(SummaryData.d270, 0)) AS FLOAT) AS Dispensings270, 
+CAST(SUM(ISNULL(SummaryData.ds270, 0)) AS FLOAT) AS DaySupply270, 
+CAST(SUM(ISNULL(SummaryData.m270Q1, 0)) AS FLOAT) AS Members270Q1, 
+CAST(SUM(ISNULL(SummaryData.m270Q2, 0)) AS FLOAT) AS Members270Q2, 
+CAST(SUM(ISNULL(SummaryData.m270Q3, 0)) AS FLOAT) AS Members270Q3, 
+CAST(SUM(ISNULL(SummaryData.m270Q4, 0)) AS FLOAT) AS Members270Q4
+
+FROM
+
+	--
+	-- Age Group and Enrollment Data Section
+	--
+	-- This part makes sure that all age groups for all desired enrollment years, genders and codes/names are represented in the result table
+	-- even if there is no summary data.
+	--
+
+	(
+		SELECT AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, 
+		AgeGroups.%NAME_FIELD%, 
+		Sum(ed.Members) AS SumOfMembers, 
+		Sum(ed.DaysCovered) AS DaysCovered 
+
+		FROM
+
+		(
+			-- Cross join ensures all age groups for all desired enrollment years, genders and codes/names are represented in the result table.
+
+			(
+				SELECT distinct ag.id AS AgeGroupId, ag.%STRATIFICATION%_name AS AgeGroup, ag.%STRATIFICATION%_sort_order AS AgeGroupSort,  %SEX_AGGREGATED% AS Sex, en.Year AS Period, 
+				sd.%NAME_FIELD% AS %NAME_FIELD%
+				FROM age_groups AS ag, 
+
+				%CJC%
+
+			) AS AgeGroups
+
+		LEFT JOIN
+
+			-- Add the enrollment data to the rows (where drug coverage is Y).
+
+			(SELECT * FROM enrollment WHERE drugcov='Y' AND medcov='Y') AS ed
+			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
+			
+		)
+		
+		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%NAME_FIELD%
+
+	) AS EnrollmentData
+
+LEFT JOIN
+
+	--
+	-- Summary Data Section
+	--
+	-- Now add the corresponding summary data to the table (for those with drug coverage enrollment).
+	--
+
+	(
+		SELECT %NAME_FIELD%, 
+
+		age_group_id, age_group, %MATCH_SEX3% period, 
+
+		Sum(Members90) as m90, 
+		Sum(Episodespan90) as e90, 
+		Sum(Dispensings90) as d90, 
+		Sum(DaysSupply90) as ds90,  
+		Sum(Members90Q1) as m90Q1, 
+		Sum(Members90Q2) as m90Q2, 
+		Sum(Members90Q3) as m90Q3, 
+		Sum(Members90Q4) as m90Q4,  
+		Sum(Members180) as m180, 
+		Sum(Episodespan180) as e180, 
+		Sum(Dispensings180) as d180, 
+		Sum(DaysSupply180) as ds180,  
+		Sum(Members180Q1) as m180Q1, 
+		Sum(Members180Q2) as m180Q2, 
+		Sum(Members180Q3) as m180Q3, 
+		Sum(Members180Q4) as m180Q4,  
+		Sum(Members270) as m270, 
+		Sum(Episodespan270) as e270, 
+		Sum(Dispensings270) as d270, 
+		Sum(DaysSupply270) as ds270,  
+		Sum(Members270Q1) as m270Q1, 
+		Sum(Members270Q2) as m270Q2, 
+		Sum(Members270Q3) as m270Q3, 
+		Sum(Members270Q4) as m270Q4  
+
+		FROM %SD_TABLE% AS sd
+		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0) 
+		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
+
+	) AS SummaryData
+
+ON (SummaryData.age_group_id = EnrollmentData.agegroupid %MATCH_SEX2% and SummaryData.Period = EnrollmentData.Period and SummaryData.%NAME_FIELD% = EnrollmentData.%NAME_FIELD%)
+
+GROUP BY EnrollmentData.AgeGroup, EnrollmentData.Sex, EnrollmentData.Period, EnrollmentData.%NAME_FIELD%, EnrollmentData.AgeGroupSort
+ORDER BY EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroupSort

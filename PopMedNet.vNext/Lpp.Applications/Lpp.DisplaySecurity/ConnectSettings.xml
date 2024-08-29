@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <DefaultConnection>
+    <UID>teamvtpc2/handerson</UID>
+    <Password></Password>
+    <Server>TEAMVTPC2</Server>
+    <TrustedConnection>yes</TrustedConnection>
+    <Database>DNS3_51</Database>
+    <ConnectionTO>30</ConnectionTO>
+  </DefaultConnection>
+  <Connection>
+    <UID>dns5_edge</UID>
+    <Password>Lpp080414#</Password>
+    <Server>10.28.119.205</Server>
+    <TrustedConnection>no</TrustedConnection>
+    <Database>QA5_2DNSDB</Database>
+    <ConnectionTO>30</ConnectionTO>
+  </Connection>
+  <Connection>
+    <UID>teamvtpc2/handerson</UID>
+    <Password></Password>
+    <Server>TEAMVTPC2</Server>
+    <TrustedConnection>yes</TrustedConnection>
+    <Database>DNS3_51</Database>
+    <ConnectionTO>30</ConnectionTO>
+  </Connection>
+</Settings>

@@ -1,0 +1,209 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:22.8600901+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<6>. Actual:<29>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Ivelina",
+        "Race": "02",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Edouard",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Julian",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Zlati",
+        "Race": "04",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Danny",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Alex",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Anka",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Bich",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Colin",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Danielle",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Earl",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Ewa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Gaston",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Grzegorz ",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Hania",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Janina",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Jarek",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Karolina",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Kyle",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Marlena",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Miroslaw",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Radek",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "UN",
+        "Race": "Teresa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Tomasz ",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "Wilfred",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Wojtek",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Zbigniew",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Zdzislawa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Zofia",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

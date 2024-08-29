@@ -1,0 +1,97 @@
+{
+	"Header" : {
+		"Name" : "TBT_MDQ3",
+		"ViewUrl" : "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=464c3194-d7d6-4872-b05a-a5b800a99f25"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "98fa1cbd-cfbd-41a6-b7b1-57c80c57665f",
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "799d02c1-4531-4fd2-9d62-7ab99c37b3a8",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 3,
+									"CodeValues" : "V7; 4",
+									"SearchMethodType" : 1
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}, {
+						"ID" : "ee8731d2-b4d7-4acc-9daa-486bc96996c4",
+						"Name" : "i_Age_Ranges",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+								"Values" : {
+									"MinAge" : null,
+									"MaxAge" : null,
+									"CalculationType" : "6",
+									"CalculateAsOf" : null,
+									"CalculateAsOfRequired" : false
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : "2001-01-30T05:00:00.000Z",
+							"End" : "2010-02-02T05:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Age Ranges_Count",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Age Ranges",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : "7",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race_Count",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

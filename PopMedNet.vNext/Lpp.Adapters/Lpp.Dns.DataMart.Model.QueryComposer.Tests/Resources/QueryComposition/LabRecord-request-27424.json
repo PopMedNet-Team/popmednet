@@ -1,0 +1,89 @@
+{
+  "Header": {
+    "Name": "Lab_Obsperiod_Test_1",
+    "ViewUrl": "https://pmnuat.popmednet.org/querycomposer/summaryview?ID=c31c1b4d-9568-4db7-8738-abcd011b914b",
+    "SubmittedOn": "2020-06-01T21:14:43.383Z"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "5e4f4fa8-f767-40b9-8ffc-a9512671cd50",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "6013f7e7-040d-4929-9992-f2594ade4333",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [
+            ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "16128-1",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": null,
+                  "ResultRangeMax": null,
+                  "QualitativeResult": null,
+                  "ResultModifier": null
+                },
+                "Criteria": [
+                ],
+                "Design": {
+                }
+              },
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "22329-7",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": null,
+                  "ResultRangeMax": null,
+                  "QualitativeResult": null,
+                  "ResultModifier": null
+                },
+                "Criteria": [
+                ],
+                "Design": {
+                }
+              }
+            ],
+            "Type": 0
+          }
+          ,
+          {
+            "ID": "30ba67a8-47d2-4849-93ee-63ce5da61fb2",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [
+            ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2015-01-01T05:00:00.000Z",
+                  "End": "2015-12-31T05:00:00.000Z"
+                },
+                "Criteria": [
+                ],
+                "Design": {
+                }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [
+        ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": []
+  },
+  "TemporalEvents": [
+  ]
+}

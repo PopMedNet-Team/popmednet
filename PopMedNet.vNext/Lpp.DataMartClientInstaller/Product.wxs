@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <!--Change ID Every Release-->
+	<Product Id="B44B4AE2-3144-4D27-BAAA-0ED44673C924" 
+           Name="PMN DataMart Client" 
+           Language="1033" 
+           Version="$(var.BuildVersion)"
+           Manufacturer="PopMedNet" 
+           UpgradeCode="0af491a6-df04-4123-b3e6-b1856376c879">
+    
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    
+    <Binary Id='netCheckBinary' SourceFile='..\Lpp.DataMartClientChecker\bin\Lpp.DataMartClientChecker.CA.dll'/>
+    <CustomAction Id='netCheckCustomAction' BinaryKey='netCheckBinary' DllEntry='CheckDotNetVersion' Execute='immediate' Return='check'/>
+
+    <InstallExecuteSequence>
+      <Custom Action="netCheckCustomAction" Before="AppSearch"/>
+    </InstallExecuteSequence>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+    <Icon Id="DMC.ico" SourceFile="images\DMC.ico" />
+    <Property Id="ARPPRODUCTICON" Value="DMC.ico" />
+    
+      
+		<Feature Id="ProductFeature" Title="Lpp.DataMartClientInstaller" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationProgramsMenuShortcut"/>
+      <ComponentRef Id="ApplicationDesktopShortcut"/>
+		</Feature>
+    
+    
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="LPPUI_InstallDir"/>
+	</Product>
+  
+    
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="PopMedNet" />
+			</Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="PopMedNet"/>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+		</Directory>  
+	</Fragment>
+  <Fragment>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationProgramsMenuShortcut" Guid="CED0CFDC-87F2-45EA-AF3B-629931B087C9">
+        <Shortcut Id="DataMartClient_ProgramsMenuShortcut"
+            Name="PMN DataMart Client"
+            Description="PMN DataMart Client"
+            Target="[INSTALLFOLDER]Lpp.Dns.DataMart.Client.exe"
+            WorkingDirectory="INSTALLFOLDER"/>
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU"
+                       Key="Software\PopMedNet\PMN DataMart Client\ProgramsMenuShortcut"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="ApplicationDesktopShortcut" Guid="396C6CF0-7A4C-44CD-A6C3-86327D66E742">
+        <Shortcut Id="DataMartClient_DesktopShortcut"
+            Name="PMN DataMart Client"
+            Description="PMN DataMart Client"
+            Target="[INSTALLFOLDER]Lpp.Dns.DataMart.Client.exe"
+            WorkingDirectory="INSTALLFOLDER"/>
+        <RegistryValue Root="HKCU"
+                       Key="Software\PopMedNet\PMN DataMart Client\DesktopShortcut"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+
+      </Component>
+
+    </DirectoryRef>
+  </Fragment>
+</Wix>

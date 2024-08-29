@@ -1,0 +1,19 @@
+﻿{
+	"Header" : {
+		"Name" : "28 and Younger Stratified by Sex"
+	},
+	"Where" : {
+		"Criteria" : []
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"Aggregate" : 1,//aggregate by Count
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

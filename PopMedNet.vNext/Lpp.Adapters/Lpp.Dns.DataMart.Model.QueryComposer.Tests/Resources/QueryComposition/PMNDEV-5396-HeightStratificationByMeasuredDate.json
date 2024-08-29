@@ -1,0 +1,44 @@
+{
+	"Header" : {
+		"Name" : "HT stratification check",
+		"ViewUrl" : "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=822fabfb-bc59-49c6-b6e1-a57d00c8446d"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "680d10ab-1837-4cca-bc9e-32ccf82d0624",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : "1990-02-01T05:00:00.000Z",
+							"End" : "2010-02-01T05:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Height",
+				"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : "2",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Height_Count",
+				"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

@@ -1,0 +1,84 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:27:29.9286106+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<21>. Actual:<4>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Olga",
+        "Race": "03",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Rebekah",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tanya",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Van",
+        "Race": "OT",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

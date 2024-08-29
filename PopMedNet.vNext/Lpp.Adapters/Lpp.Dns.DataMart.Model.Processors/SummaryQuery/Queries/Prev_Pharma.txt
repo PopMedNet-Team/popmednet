@@ -1,0 +1,72 @@
+﻿-- Prev_Pharma
+SELECT EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroup, EnrollmentData.%NAME_FIELD%,
+SUM(IIF(ISNULL(SummaryData.dp), 0, SummaryData.dp)) AS Dispensings, 
+SUM(IIF(ISNULL(SummaryData.ds), 0, SummaryData.ds)) AS DaysSupply, 
+SUM(IIF(ISNULL(SummaryData.mb), 0, SummaryData.mb)) AS Members, 
+SUM(IIF(ISNULL(EnrollmentData.SumOfMembers), 0, EnrollmentData.SumOfMembers)) AS [Total Enrollment in Strata(Members)], 
+SUM(IIF(ISNULL(EnrollmentData.DaysCovered), 0, EnrollmentData.DaysCovered)) AS [Days Covered],
+ROUND(IIF([Total Enrollment in Strata(Members)] = 0, 0, Members / [Total Enrollment in Strata(Members)] * 1000), 1) as [Prevalence Rate (Users per 1000 enrollees)],
+ROUND(IIF([Total Enrollment in Strata(Members)] = 0, 0, Dispensings / [Total Enrollment in Strata(Members)] * 1000), 1) AS [Dispensing Rate (Dispensings per 1000 enrollees)],
+ROUND(IIF(Dispensings = 0, 0, DaysSupply / Dispensings), 1) AS [Days Per Dispensing],
+ROUND(IIF(Members = 0, 0, DaysSupply / Members), 1) AS [Days per user]
+FROM
+
+	--
+	-- Age Group and Enrollment Data Section
+	--
+	-- This part makes sure that all age groups for all desired enrollment years, genders and codes/names are represented in the result table
+	-- even if there is no summary data.
+	--
+
+	(
+		SELECT AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, 
+		AgeGroups.%NAME_FIELD%, 
+		Sum(ed.Members) AS SumOfMembers, 
+		Sum(ed.DaysCovered) AS DaysCovered 
+		FROM
+
+		(
+			-- Cross join ensures all age groups for all desired enrollment years, genders and codes/names are represented in the result table.
+
+			(
+				SELECT distinct ag.id AS AgeGroupId, ag.%STRATIFICATION%_name AS AgeGroup, ag.%STRATIFICATION%_sort_order AS AgeGroupSort,  %SEX_AGGREGATED% AS Sex, en.Year AS Period, sd.%NAME_FIELD%
+				FROM age_groups AS ag, 
+
+				%CJC%
+
+			) AS AgeGroups
+
+		LEFT JOIN
+
+			-- Add the enrollment data to the rows (where drug coverage is Y).
+
+			(SELECT * FROM enrollment WHERE drugcov='Y' AND medcov='Y') AS ed
+			ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
+		)
+
+		--WHERE ed.drugcov='Y'
+		GROUP BY AgeGroups.AgeGroupId, AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, AgeGroups.%NAME_FIELD%
+	
+	) AS EnrollmentData
+
+LEFT JOIN
+
+	--
+	-- Summary Data Section
+	--
+	-- Now add the corresponding summary data to the table (for those with drug coverage enrollment).
+	--
+
+	(
+		SELECT %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period, 
+		SUM(Members) AS mb, SUM(Dispensings) AS dp, SUM(DaysSupply) AS ds
+		FROM %SD_TABLE% AS sd
+		WHERE %NAME_FIELD% IN (%CODES%)  AND period in (%PERIODS%) AND 
+		      ((SELECT COUNT(age_group_id) FROM enrollment WHERE age_group_id=sd.age_group_id and sex=sd.sex and year IN (%YEARS%) and drugcov = 'Y' and medcov = 'Y') > 0)
+		GROUP BY %NAME_FIELD%, age_group_id, age_group, %MATCH_SEX3% period
+	) AS SummaryData
+
+ON (SummaryData.age_group_id = EnrollmentData.agegroupid %MATCH_SEX2% and SummaryData.Period = EnrollmentData.Period and SummaryData.%NAME_FIELD% = EnrollmentData.%NAME_FIELD%)
+
+GROUP BY EnrollmentData.AgeGroup, EnrollmentData.Sex, EnrollmentData.Period, EnrollmentData.%NAME_FIELD%, EnrollmentData.AgeGroupSort
+ORDER BY EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroupSort

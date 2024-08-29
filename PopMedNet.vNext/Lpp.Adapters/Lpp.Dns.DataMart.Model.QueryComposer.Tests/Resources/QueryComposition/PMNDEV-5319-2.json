@@ -1,0 +1,78 @@
+{
+	"Header" : {
+		"Name" : "DX Term_Case 12",
+		"ViewUrl" : "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=b5d13bd2-9ade-43b0-93a5-a56a00c09dbe"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "a67e770d-6a7a-47a2-bf4f-6e69793df69a",
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "9f8843c7-af38-4ddb-9942-c5fa4459106e",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 3,
+									"CodeValues" : "V7",
+									"SearchMethodType" : 1
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}
+				]
+			}, {
+				"ID" : "96204ba6-be68-4eff-92a1-7e4086d9bfe5",
+				"Name" : "2",
+				"Exclusion" : true,
+				"Criteria" : [{
+						"ID" : "3bfe91d7-75ae-40d6-bcde-33dcdc5fcf3b",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 1,
+									"CodeValues" : "346.90",
+									"SearchMethodType" : 0
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

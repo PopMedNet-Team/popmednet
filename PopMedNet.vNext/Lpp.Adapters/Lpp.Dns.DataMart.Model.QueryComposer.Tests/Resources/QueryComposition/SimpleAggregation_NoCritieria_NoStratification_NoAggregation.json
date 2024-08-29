@@ -1,0 +1,26 @@
+﻿{
+    "Header": {
+        "Description": "Select count of Demographic table."
+        /*
+            Sql:
+                SELECT COUNT(SEX) FROM Demographic
+            Linq:
+                
+        */
+    },
+    "Where": { },
+    "Select":
+    {
+        "Fields":
+        [
+            {
+                "FieldName": "Sex",
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "StratifyBy": null,
+                "Aggregate": 1,//count
+                "Select": [ ],
+                "OrderBy": 0
+            }
+        ]
+    }
+}

@@ -1,0 +1,302 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-06-19T15:28:58.990761+00:00",
+  "RequestID": "fe7331d8-fd99-4b99-8321-aa7100ba4d5f",
+  "Errors": null,
+  "Results": [
+    [
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "18.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "21.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "22.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "28.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "30.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CABG",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "8.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "11.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "17.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "20.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "22.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "24.01",
+        "Encounters": 2
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "CHEST PAIN",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "9.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MAJOR BLEEDING",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "2.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MAJOR BLEEDING",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "23.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MAJOR BLEEDING",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "5.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "1.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "10.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "13.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "mi",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "25.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "26.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "MI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "7.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "None of the Above",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "12.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "NONSURGICAL PCI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "13.02",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "NONSURGICAL PCI",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "29.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "22.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "26.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "27.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "STROKE",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "29.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "TIA",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "15.01",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "TIA",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "19.03",
+        "Encounters": 1
+      },
+      {
+        "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+        "PRO_RESPONSE_TEXT": "TIA",
+        "PRO_RESPONSE_NUM": null,
+        "PRO_MEASURE_SEQ": "23.02",
+        "Encounters": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "PRO_ITEM_NAME",
+      "Type": "System.String",
+      "As": "PRO_ITEM_NAME",
+      "Aggregate": null
+    },
+    {
+      "Name": "PRO_RESPONSE_TEXT",
+      "Type": "System.String",
+      "As": "PRO_RESPONSE_TEXT",
+      "Aggregate": null
+    },
+    {
+      "Name": "PRO_RESPONSE_NUM",
+      "Type": "System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+      "As": "PRO_RESPONSE_NUM",
+      "Aggregate": null
+    },
+    {
+      "Name": "PRO_MEASURE_SEQ",
+      "Type": "System.String",
+      "As": "PRO_MEASURE_SEQ",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Encounters",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "PRO_ITEM_NAME",
+      "PRO_RESPONSE_TEXT",
+      "PRO_RESPONSE_NUM",
+      "PRO_MEASURE_SEQ"
+    ],
+    "Select": [
+      {
+        "Name": "PRO_ITEM_NAME",
+        "Type": "System.String",
+        "As": "PRO_ITEM_NAME",
+        "Aggregate": null
+      },
+      {
+        "Name": "PRO_RESPONSE_TEXT",
+        "Type": "System.String",
+        "As": "PRO_RESPONSE_TEXT",
+        "Aggregate": null
+      },
+      {
+        "Name": "PRO_RESPONSE_NUM",
+        "Type": "System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "As": "PRO_RESPONSE_NUM",
+        "Aggregate": null
+      },
+      {
+        "Name": "PRO_MEASURE_SEQ",
+        "Type": "System.String",
+        "As": "PRO_MEASURE_SEQ",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Encounters",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

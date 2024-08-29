@@ -1,0 +1,125 @@
+{
+  "Header": {
+    "Name": "Time Windows",
+    "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=abca87cf-1a54-4a53-bba2-aa6300e54924",
+    "SubmittedOn": "2019-06-05T20:11:14.655Z"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "391456e2-a807-4acb-b2b9-db4b231f27a3",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7144573f-5552-4371-ba98-09e52f530716",
+            "Name": "i_Trial",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+                "Values": { "Trial": "FAKE_TRIAL-15" },
+                "Criteria": [],
+                "Design": { "Locked": true }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Trial",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Trial_Count",
+        "Type": "56a38f6d-993a-4953-bcb9-11bdd809c0b4",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Patient_Reported Outcome Encounters_Count",
+        "Type": "a11dcc97-4c8d-4b80-ae61-58ecb2f66c3d",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  },
+  "TemporalEvents": [
+    {
+      "IndexEventDateIdentifier": "HOSPITALIZATION_DATE",
+      "DaysBefore": 0,
+      "DaysAfter": 300,
+      "Criteria": [
+        {
+          "ID": "660de6d6-bc49-407d-a1b7-e2dd8101c018",
+          "Name": "Group 1",
+          "Operator": 0,
+          "IndexEvent": true,
+          "Exclusion": false,
+          "Criteria": [
+            {
+              "ID": "b4c58dab-908e-41bc-ab34-3c9b75edb289",
+              "Name": "i_codeterms",
+              "Operator": 0,
+              "Criteria": [],
+              "Terms": [
+                {
+                  "Operator": 1,
+                  "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                  "Values": {
+                    "CodeType": 4,
+                    "CodeValues": "V155XXA;S43316D;S5400XA;M89729",
+                    "SearchMethodType": 0
+                  },
+                  "Criteria": [],
+                  "Design": {}
+                },
+                {
+                  "Operator": 1,
+                  "Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+                  "Values": {
+                    "CodeType": 3,
+                    "CodeValues": "02U60JZ",
+                    "SearchMethodType": 0
+                  },
+                  "Criteria": [],
+                  "Design": {}
+                }
+              ],
+              "Type": 0
+            }
+          ],
+          "Terms": [],
+          "Type": 2
+        }
+      ]
+    }
+  ]
+}

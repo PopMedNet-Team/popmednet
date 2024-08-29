@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Lpp.DisplaySecurity.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SettingsUID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dns5_edge</Value>
+    </Setting>
+    <Setting Name="SettingsPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Lpp080414#</Value>
+    </Setting>
+    <Setting Name="SettingsServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10.28.119.205</Value>
+    </Setting>
+    <Setting Name="SettingsTC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">no</Value>
+    </Setting>
+    <Setting Name="SettingsDB" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QA5_2DNSDB</Value>
+    </Setting>
+    <Setting Name="SettingsCTO" Type="System.String" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

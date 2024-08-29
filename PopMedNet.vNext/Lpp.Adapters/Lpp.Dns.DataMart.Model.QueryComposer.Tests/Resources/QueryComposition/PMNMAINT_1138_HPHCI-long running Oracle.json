@@ -1,0 +1,143 @@
+{
+	"Header" : {
+		"Name" : "TBT_MDQ_4 r2",
+		"ViewUrl" : "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=3b489483-7169-4b99-8edb-a5b600fcead6"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "4e53d755-bd73-41fd-a6f4-94aba48d35e6",
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "84062949-d2ef-4be5-b8cc-2585be3e1d61",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 3,
+									"CodeValues" : "V",
+									"SearchMethodType" : 1
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+						"Values" : {
+							"WeightMin" : 20,
+							"WeightMax" : 300
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}
+				]
+			}, {
+				"ID" : "e14a003f-4ff2-4246-9749-a1dd5712e67d",
+				"Name" : "exclusion",
+				"Exclusion" : true,
+				"Criteria" : [{
+						"ID" : "6032e4df-479d-41df-ad77-d09e122efa5c",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+								"Values" : {
+									"CodeType" : 3,
+									"CodeValues" : "250",
+									"SearchMethodType" : 1
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Observation Period_Count",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Observation Period",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : "2",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Hispanic",
+				"Type" : "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Hispanic_Count",
+				"Type" : "d26fe166-49a2-47f8-87e2-4f42a945d4d5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race_Count",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

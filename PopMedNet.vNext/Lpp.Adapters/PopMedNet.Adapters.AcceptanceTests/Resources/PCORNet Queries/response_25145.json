@@ -1,0 +1,101 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-12-31T15:45:48.8141955+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<6>. Actual:<5>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Y",
+        "Race": "Chris",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Florence",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Helene",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Joyce",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Michael",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "LowThreshold",
+        "Type": "System.Boolean",
+        "As": "LowThreshold",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

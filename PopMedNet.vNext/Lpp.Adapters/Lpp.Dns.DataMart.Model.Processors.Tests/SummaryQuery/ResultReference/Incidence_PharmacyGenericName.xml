@@ -1,0 +1,174 @@
+﻿<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Table">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Period" type="xs:string" minOccurs="0" />
+                <xs:element name="Sex" type="xs:string" minOccurs="0" />
+                <xs:element name="AgeGroup" type="xs:string" minOccurs="0" />
+                <xs:element name="genericname" type="xs:string" minOccurs="0" />
+                <xs:element name="Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Days_x0020_Covered" type="xs:double" minOccurs="0" />
+                <xs:element name="Members90" type="xs:double" minOccurs="0" />
+                <xs:element name="Episodespans90" type="xs:double" minOccurs="0" />
+                <xs:element name="Dispensings90" type="xs:double" minOccurs="0" />
+                <xs:element name="DaySupply90" type="xs:double" minOccurs="0" />
+                <xs:element name="Members90Q1" type="xs:double" minOccurs="0" />
+                <xs:element name="Members90Q2" type="xs:double" minOccurs="0" />
+                <xs:element name="Members90Q3" type="xs:double" minOccurs="0" />
+                <xs:element name="Members90Q4" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180" type="xs:double" minOccurs="0" />
+                <xs:element name="Episodespans180" type="xs:double" minOccurs="0" />
+                <xs:element name="Dispensings180" type="xs:double" minOccurs="0" />
+                <xs:element name="DaySupply180" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180Q1" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180Q2" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180Q3" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180Q4" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270" type="xs:double" minOccurs="0" />
+                <xs:element name="Episodespans270" type="xs:double" minOccurs="0" />
+                <xs:element name="Dispensings270" type="xs:double" minOccurs="0" />
+                <xs:element name="DaySupply270" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270Q1" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270Q2" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270Q3" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270Q4" type="xs:double" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Table>
+    <Period>2008</Period>
+    <Sex>F</Sex>
+    <AgeGroup>Under 65</AgeGroup>
+    <genericname>ANTI-INHIBITOR COAGULANT COMP.</genericname>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>196561</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>56542803</Days_x0020_Covered>
+    <Members90>0</Members90>
+    <Episodespans90>0</Episodespans90>
+    <Dispensings90>0</Dispensings90>
+    <DaySupply90>0</DaySupply90>
+    <Members90Q1>0</Members90Q1>
+    <Members90Q2>0</Members90Q2>
+    <Members90Q3>0</Members90Q3>
+    <Members90Q4>0</Members90Q4>
+    <Members180>0</Members180>
+    <Episodespans180>0</Episodespans180>
+    <Dispensings180>0</Dispensings180>
+    <DaySupply180>0</DaySupply180>
+    <Members180Q1>0</Members180Q1>
+    <Members180Q2>0</Members180Q2>
+    <Members180Q3>0</Members180Q3>
+    <Members180Q4>0</Members180Q4>
+    <Members270>0</Members270>
+    <Episodespans270>0</Episodespans270>
+    <Dispensings270>0</Dispensings270>
+    <DaySupply270>0</DaySupply270>
+    <Members270Q1>0</Members270Q1>
+    <Members270Q2>0</Members270Q2>
+    <Members270Q3>0</Members270Q3>
+    <Members270Q4>0</Members270Q4>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>F</Sex>
+    <AgeGroup>65+</AgeGroup>
+    <genericname>ANTI-INHIBITOR COAGULANT COMP.</genericname>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>19547</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>5812338</Days_x0020_Covered>
+    <Members90>0</Members90>
+    <Episodespans90>0</Episodespans90>
+    <Dispensings90>0</Dispensings90>
+    <DaySupply90>0</DaySupply90>
+    <Members90Q1>0</Members90Q1>
+    <Members90Q2>0</Members90Q2>
+    <Members90Q3>0</Members90Q3>
+    <Members90Q4>0</Members90Q4>
+    <Members180>0</Members180>
+    <Episodespans180>0</Episodespans180>
+    <Dispensings180>0</Dispensings180>
+    <DaySupply180>0</DaySupply180>
+    <Members180Q1>0</Members180Q1>
+    <Members180Q2>0</Members180Q2>
+    <Members180Q3>0</Members180Q3>
+    <Members180Q4>0</Members180Q4>
+    <Members270>0</Members270>
+    <Episodespans270>0</Episodespans270>
+    <Dispensings270>0</Dispensings270>
+    <DaySupply270>0</DaySupply270>
+    <Members270Q1>0</Members270Q1>
+    <Members270Q2>0</Members270Q2>
+    <Members270Q3>0</Members270Q3>
+    <Members270Q4>0</Members270Q4>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>F</Sex>
+    <AgeGroup>Under 65</AgeGroup>
+    <genericname>ANTI-INHIBITOR COAGULANT COMP.</genericname>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>179762</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>49309804</Days_x0020_Covered>
+    <Members90>0</Members90>
+    <Episodespans90>0</Episodespans90>
+    <Dispensings90>0</Dispensings90>
+    <DaySupply90>0</DaySupply90>
+    <Members90Q1>0</Members90Q1>
+    <Members90Q2>0</Members90Q2>
+    <Members90Q3>0</Members90Q3>
+    <Members90Q4>0</Members90Q4>
+    <Members180>0</Members180>
+    <Episodespans180>0</Episodespans180>
+    <Dispensings180>0</Dispensings180>
+    <DaySupply180>0</DaySupply180>
+    <Members180Q1>0</Members180Q1>
+    <Members180Q2>0</Members180Q2>
+    <Members180Q3>0</Members180Q3>
+    <Members180Q4>0</Members180Q4>
+    <Members270>0</Members270>
+    <Episodespans270>0</Episodespans270>
+    <Dispensings270>0</Dispensings270>
+    <DaySupply270>0</DaySupply270>
+    <Members270Q1>0</Members270Q1>
+    <Members270Q2>0</Members270Q2>
+    <Members270Q3>0</Members270Q3>
+    <Members270Q4>0</Members270Q4>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>F</Sex>
+    <AgeGroup>65+</AgeGroup>
+    <genericname>ANTI-INHIBITOR COAGULANT COMP.</genericname>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>20370</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>4475784</Days_x0020_Covered>
+    <Members90>0</Members90>
+    <Episodespans90>0</Episodespans90>
+    <Dispensings90>0</Dispensings90>
+    <DaySupply90>0</DaySupply90>
+    <Members90Q1>0</Members90Q1>
+    <Members90Q2>0</Members90Q2>
+    <Members90Q3>0</Members90Q3>
+    <Members90Q4>0</Members90Q4>
+    <Members180>0</Members180>
+    <Episodespans180>0</Episodespans180>
+    <Dispensings180>0</Dispensings180>
+    <DaySupply180>0</DaySupply180>
+    <Members180Q1>0</Members180Q1>
+    <Members180Q2>0</Members180Q2>
+    <Members180Q3>0</Members180Q3>
+    <Members180Q4>0</Members180Q4>
+    <Members270>0</Members270>
+    <Episodespans270>0</Episodespans270>
+    <Dispensings270>0</Dispensings270>
+    <DaySupply270>0</DaySupply270>
+    <Members270Q1>0</Members270Q1>
+    <Members270Q2>0</Members270Q2>
+    <Members270Q3>0</Members270Q3>
+    <Members270Q4>0</Members270Q4>
+  </Table>
+</NewDataSet>

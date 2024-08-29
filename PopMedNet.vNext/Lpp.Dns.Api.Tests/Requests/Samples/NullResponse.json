@@ -1,0 +1,79 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-03-29T11:36:59.5138113+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": null,
+  "Results": [
+    [
+      {
+        "Age": null,
+        "Patients": 1,
+        "AdmittedOn": 2011
+      },
+      {
+        "Age": 75,
+        "Patients": 1,
+        "AdmittedOn": 2011
+      },
+      {
+        "Age": 9,
+        "Patients": 1,
+        "AdmittedOn": 2012
+      },
+      {
+        "Age": 10,
+        "Patients": 1,
+        "AdmittedOn": 2012
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Age",
+      "Type": "System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+      "As": "Age",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "AdmittedOn",
+      "Type": "System.String",
+      "As": "AdmittedOn",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Age",
+      "AdmittedOn"
+    ],
+    "Select": [
+      {
+        "Name": "Age",
+        "Type": "System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "As": "Age",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "AdmittedOn",
+        "Type": "System.String",
+        "As": "AdmittedOn",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

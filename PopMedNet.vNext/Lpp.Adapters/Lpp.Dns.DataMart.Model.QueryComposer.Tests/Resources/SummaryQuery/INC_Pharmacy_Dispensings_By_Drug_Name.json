@@ -1,0 +1,143 @@
+﻿{
+  "Header": { "QueryType": "41" },
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "5743cca5-cfea-4143-afa9-ebf0ce0b5ed5",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "0e1f0001-ca0c-42d2-a9cc-a3ca01550e84",
+                "Values": {
+                  "Codes": [ ],
+                  "CodeValues": [
+                    {
+                      "Code": "DRESSING,ODOR ABSORBENT,H-POLY",
+                      "Name": "DRESSING,ODOR ABSORBENT,H-POLY",
+                      "ExpireDate": null
+                    }
+                  ]
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "c9b69262-9227-456e-be58-5d32d76befd4",
+            "Name": "i_Year/Quarter_Observation Period",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "d62f0001-3fe1-4910-99a9-a3cb014c2bc7",
+                "Values": {
+                  "StartYear": 2000,
+                  "EndYear": 2010
+                },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "91cff8fd-2bdd-43f2-bc33-ab00c02b9b67",
+            "Name": "i_Sex",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                "Values": { "Sex": "3" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "21088a0c-561b-4406-a344-8665df83077e",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [ ],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": { "Setting": "4" },
+                "Criteria": [ ]
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": [ ]
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Drug Name_Count",
+        "Type": "0e1f0001-ca0c-42d2-a9cc-a3ca01550e84",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Drug Name",
+        "Type": "0e1f0001-ca0c-42d2-a9cc-a3ca01550e84",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex_Count",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Sex",
+        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": "1",
+        "Aggregate": null,
+        "Select": [ ],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Age_Range_Count",
+        "Type": "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [ ],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

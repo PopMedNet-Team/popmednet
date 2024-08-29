@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="Lpp.Dns.DataMart.Client.Controls.CheckBoxDropDownWpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Button Click="Button_Click_1" HorizontalContentAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="text" x:FieldModifier="public" />
+                <Image Source="/Resources/dropdownarrow.gif" Grid.Column="1" Stretch="None" VerticalAlignment="Center" />
+            </Grid>
+        </Button>
+        <Popup Name="p" PlacementTarget="{Binding ElementName=btn}" Placement="Bottom" StaysOpen="False">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1">
+                <ListBox Name="list" Margin="0,5" BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Checked}" Margin="7,3,12,3" Content="{Binding Display}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

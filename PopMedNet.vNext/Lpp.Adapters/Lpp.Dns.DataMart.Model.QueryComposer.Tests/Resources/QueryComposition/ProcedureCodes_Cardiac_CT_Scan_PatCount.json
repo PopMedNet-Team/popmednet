@@ -1,0 +1,53 @@
+﻿{
+	"Header": {},
+	"Where": {
+		"Criteria": [
+			{
+				"Name": "Group 1",
+				"Criteria": [
+					{
+						"ID": "484f4a06-fb5b-42af-861e-80c8c3bcf9fb",
+						"Name": "i_codeterms",
+						"Operator": 0,
+						"Criteria": [],
+						"Terms": [
+							{
+								"Operator": 1,
+								"Type": "f81ae5de-7b35-4d7a-b398-a72200ce7419",
+								"Values": {
+									"CodeType": 5,
+									"CodeValues": "75571; 75572; 75573; 75574",
+									"SearchMethodType": 0
+								},
+								"Criteria": [],
+								"Design": {}
+							}
+						],
+						"Type": 0
+					},
+					{
+						"ID": "a0b738e3-dd45-47f3-9a4b-f5993e5560b6",
+						"Name": "i_Observation_Period",
+						"Operator": 0,
+						"Criteria": [],
+						"Terms": [
+							{
+								"Operator": 1,
+								"Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+								"Values": {
+									"Start": "2015-01-01T05:00:00.000Z",
+									"End": "2015-12-31T05:00:00.000Z"
+								},
+								"Criteria": [],
+								"Design": {}
+							}
+						],
+						"Type": 0
+					}
+				],
+				"Terms": []
+			}
+		]
+	},
+	"Select": { "Fields": [] }
+}

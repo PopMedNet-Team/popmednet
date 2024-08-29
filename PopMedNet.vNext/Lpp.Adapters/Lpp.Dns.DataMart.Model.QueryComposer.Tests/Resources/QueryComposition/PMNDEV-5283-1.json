@@ -1,0 +1,27 @@
+{
+	"Header" : {
+		"Name" : "Vital Measure Observation Period Term_Case 1",
+		"ViewUrl" : "https://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=cde57efc-81d8-465f-b4a8-a55601034f4e"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "0eefd631-d28d-460b-b514-84271086bdf8",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : null,
+							"End" : null
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

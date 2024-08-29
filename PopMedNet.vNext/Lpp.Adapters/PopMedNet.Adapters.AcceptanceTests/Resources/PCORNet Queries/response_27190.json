@@ -1,0 +1,160 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:36:27.6150536+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<13>. Actual:<18>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Race": "Bertha",
+        "Height": ">=-50.0 and <-48.0",
+        "Patients": 1
+      },
+      {
+        "Race": "05",
+        "Height": ">=-30.0 and <-28.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Isaias",
+        "Height": ">=-10.0 and <-8.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Teresa",
+        "Height": ">=32.0 and <34.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Sam",
+        "Height": ">=34.0 and <36.0",
+        "Patients": 1
+      },
+      {
+        "Race": "07",
+        "Height": ">=40.0 and <42.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Ana",
+        "Height": ">=44.0 and <46.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Karl",
+        "Height": ">=44.0 and <46.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Ian",
+        "Height": ">=48.0 and <50.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Hermine",
+        "Height": ">=50.0 and <52.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Marco",
+        "Height": ">=50.0 and <52.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Walter",
+        "Height": ">=50.0 and <52.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Teddy",
+        "Height": ">=52.0 and <54.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Henryk",
+        "Height": ">=56.0 and <58.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Kyle",
+        "Height": ">=58.0 and <60.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Laura",
+        "Height": ">=58.0 and <60.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Josephine",
+        "Height": ">=60.0 and <62.0",
+        "Patients": 1
+      },
+      {
+        "Race": "Wilfred",
+        "Height": ">=60.0 and <62.0",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "Height",
+      "Type": "System.String",
+      "As": "Height",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Race",
+      "Height"
+    ],
+    "Select": [
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "Height",
+        "Type": "System.String",
+        "As": "Height",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

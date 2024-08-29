@@ -1,0 +1,21 @@
+﻿.DocumentVisual.PlainText
+{
+    font-family: 'Courier New', 'Times New Roman', Times, serif;
+    font-size: 12px;
+    font-weight: bold;
+    max-height: 300px;
+    overflow: scroll;
+    text-align: left;
+}
+
+.DocumentVisual.Html > iframe
+{
+    border: none;
+    max-height: 300px;
+    text-align: left;
+}
+
+.ui-maximized .DocumentVisual.Html > iframe,
+.ui-maximized .DocumentVisual.PlainText {
+    max-height: none;
+}

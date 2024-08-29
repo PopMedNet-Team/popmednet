@@ -1,0 +1,39 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker Ethnicity",
+
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=40140ade-078e-4d0c-add6-a4f4010a33b8"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "86b246eb-3fc0-4ebb-a447-04a2e6563d67",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "7b18dac8-08c7-4e83-9100-a4bb49708dae",
+                        "Values": { "EthnicityValue": [ "0" ] },
+                        "Criteria": [ ]
+                    
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "4EE29758-DCFF-4D2A-A7A8-626C81FBA367" },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    }, "Select": { "Fields": [ ] } 
+
+}

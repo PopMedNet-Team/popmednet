@@ -1,0 +1,31 @@
+﻿{
+    "Header": { "Name": "Height 39 - 48", "ViewUrl": "https://qa52dnsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=bc6c64d8-5a24-401c-bfb2-a53d00f527f1" },
+    "Where":
+    {
+        "Criteria":
+        [
+            {
+                "ID": "b40d6213-f3b8-4a22-94a3-eb1fc870f109",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms":
+                [
+                    {
+                        "Operator": 0,
+                        "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018",
+                        "Values": { "HeightMin": 39, "HeightMax": 66 },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select":
+    {
+        "Fields":
+        [
+            { "FieldName": "Height_Count", "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018", "GroupBy": null, "StratifyBy": null, "Aggregate": 1, "Select": [ ], "OrderBy": 0 },
+            { "FieldName": "Height", "Type": "8bc627ca-5729-4e7a-9702-0000a45a0018", "GroupBy": null, "StratifyBy": "4", "Aggregate": null, "Select": [ ], "OrderBy": 0 }
+        ]
+    }
+}

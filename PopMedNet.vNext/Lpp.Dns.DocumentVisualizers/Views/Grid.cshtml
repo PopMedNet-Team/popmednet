@@ -1,0 +1,32 @@
+﻿@model DataSet
+@using System.Data;
+
+<div class="DocumentVisual Grid">
+    @foreach (DataTable table in Model.Tables)
+    {
+        string gridID = "grid" + Html.UniqueId();
+        <div style="max-height: 600px; overflow-y: auto;">
+            <table id="@gridID" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        @foreach (DataColumn col in table.Columns)
+                        {
+                            <th scope="col">@col.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow dr in table.Rows)
+                    {
+                        <tr>
+                            @for (int i = 0; i < table.Columns.Count; i++)
+                            {
+                                <td>@dr.ItemArray[i]</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

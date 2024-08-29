@@ -1,0 +1,104 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:36:23.0082052+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"Hispanic\":\"\",\"Race\":\"Fiona\",\"Patients\":\"1\"}]\r\nActual result: [{\"Hispanic\":\"patient_2\",\"Race\":null,\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"02\",\"Patients\":1},{\"Hispanic\":\"Mindy\",\"Race\":\"07\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Fiona\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Grzegorz \",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Julio\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Lee\",\"Patients\":1},{\"Hispanic\":\"R\",\"Race\":\"Martin\",\"Patients\":1}]"
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "patient_2",
+        "Race": null,
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "02",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Mindy",
+        "Race": "07",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Fiona",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Grzegorz ",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Julio",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Lee",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Martin",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

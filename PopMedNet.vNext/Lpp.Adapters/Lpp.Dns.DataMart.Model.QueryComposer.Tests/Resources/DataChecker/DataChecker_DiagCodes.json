@@ -1,0 +1,44 @@
+﻿{
+    "Header": {
+
+        "Name": "DataChecker Diag Codes",
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=1b17e54b-5b9a-4cac-8457-a4f4010c526e"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "3349ea6c-f357-4c1d-bea8-e533ea9fed84",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "e1da9c98-3f95-4f6e-aedf-b42e2881db73",
+                        "Values": {
+                            "CodeType": "09",
+                            "CodeValues": "493",
+                            "SearchMethodType": 0
+                        },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "D5DA7ACA-7179-4EA5-BD9C-534D47B6C6C4" },
+                        "Criteria": [ ]
+
+                    }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+
+}

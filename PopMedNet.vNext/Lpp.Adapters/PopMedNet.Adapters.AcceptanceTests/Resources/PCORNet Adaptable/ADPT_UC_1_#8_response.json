@@ -1,0 +1,219 @@
+{
+  "SchemaVersion": "2.0",
+  "Header": {
+    "ID": "d0445818-ee57-438e-9578-ab0c2dbec8f0",
+    "RequestID": "00000000-0000-0000-0000-000000000000",
+    "DocumentID": "37cc9cad-278f-41cf-ba75-d3eb90b4f091",
+    "QueryingStart": "2021-10-04T16:08:28.5540979+00:00",
+    "QueryingEnd": "2021-10-04T16:08:28.8710991+00:00",
+    "DataMart": null
+  },
+  "Errors": [],
+  "Queries": [
+    {
+      "ID": "00000000-0000-0000-0000-000000000000",
+      "Name": "Use Case 1: Test 8",
+      "QueryStart": "2021-10-04T16:08:28.5540979+00:00",
+      "QueryEnd": "2021-10-04T16:08:28.8710991+00:00",
+      "PostProcessStart": null,
+      "PostProcessEnd": null,
+      "Errors": null,
+      "Results": [
+        [
+          {
+            "ENCOUNTERID": "PK_4387",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2013-08-15T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "8/15/2013",
+            "PRO_RESPONSE_NUM": 19585.0,
+            "PRO_MEASURE_SEQ": "9.02"
+          },
+          {
+            "ENCOUNTERID": "PK_4392",
+            "ENC_TYPE": "OS",
+            "ADMIT_DATE": "2018-12-31T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "43463",
+            "PRO_RESPONSE_NUM": 21547.0,
+            "PRO_MEASURE_SEQ": "11.01"
+          },
+          {
+            "ENCOUNTERID": "PK_4395",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2100-04-11T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "4/8/2100",
+            "PRO_RESPONSE_NUM": 51232.0,
+            "PRO_MEASURE_SEQ": "12.03"
+          }
+        ]
+      ],
+      "LowCellThrehold": null,
+      "Properties": [
+        {
+          "Name": "ENCOUNTERID",
+          "Type": "System.String",
+          "As": "ENCOUNTERID",
+          "Aggregate": null
+        },
+        {
+          "Name": "ENC_TYPE",
+          "Type": "System.String",
+          "As": "ENC_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "ADMIT_DATE",
+          "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "ADMIT_DATE",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX",
+          "Type": "System.String",
+          "As": "DX",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX_TYPE",
+          "Type": "System.String",
+          "As": "DX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX",
+          "Type": "System.String",
+          "As": "PX",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX_TYPE",
+          "Type": "System.String",
+          "As": "PX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_ITEM_NAME",
+          "Type": "System.String",
+          "As": "PRO_ITEM_NAME",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_TEXT",
+          "Type": "System.String",
+          "As": "PRO_RESPONSE_TEXT",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_NUM",
+          "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "PRO_RESPONSE_NUM",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_MEASURE_SEQ",
+          "Type": "System.String",
+          "As": "PRO_MEASURE_SEQ",
+          "Aggregate": null
+        }
+      ],
+      "Aggregation": {
+        "GroupBy": [
+          "ENCOUNTERID",
+          "ENC_TYPE",
+          "ADMIT_DATE",
+          "DX",
+          "DX_TYPE",
+          "PX",
+          "PX_TYPE",
+          "PRO_ITEM_NAME",
+          "PRO_RESPONSE_TEXT",
+          "PRO_RESPONSE_NUM",
+          "PRO_MEASURE_SEQ"
+        ],
+        "Select": [
+          {
+            "Name": "ENCOUNTERID",
+            "Type": "System.String",
+            "As": "ENCOUNTERID",
+            "Aggregate": null
+          },
+          {
+            "Name": "ENC_TYPE",
+            "Type": "System.String",
+            "As": "ENC_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "ADMIT_DATE",
+            "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "ADMIT_DATE",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX",
+            "Type": "System.String",
+            "As": "DX",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX_TYPE",
+            "Type": "System.String",
+            "As": "DX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX",
+            "Type": "System.String",
+            "As": "PX",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX_TYPE",
+            "Type": "System.String",
+            "As": "PX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_ITEM_NAME",
+            "Type": "System.String",
+            "As": "PRO_ITEM_NAME",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_TEXT",
+            "Type": "System.String",
+            "As": "PRO_RESPONSE_TEXT",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_NUM",
+            "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "PRO_RESPONSE_NUM",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_MEASURE_SEQ",
+            "Type": "System.String",
+            "As": "PRO_MEASURE_SEQ",
+            "Aggregate": null
+          }
+        ],
+        "Name": null
+      }
+    }
+  ]
+}

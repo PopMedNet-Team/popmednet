@@ -1,0 +1,159 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-15T00:10:09.7906858+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<18>. Actual:<19>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "TRIALID": "test",
+        "PARTICIPANTID": "2",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Amanda",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Cosme",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Dalila",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_5",
+        "PARTICIPANTID": "Douglas",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_5",
+        "PARTICIPANTID": "Elida",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Flossie_A",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Flossie_B",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Gil_A",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Gil_B",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_1",
+        "PARTICIPANTID": "Henriette_A",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_3",
+        "PARTICIPANTID": "Henriette_B",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Lorena",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_3",
+        "PARTICIPANTID": "Priscilla",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_3",
+        "PARTICIPANTID": "Raymond",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Sonia",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Tico",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_2",
+        "PARTICIPANTID": "Velma",
+        "Patients": 1
+      },
+      {
+        "TRIALID": "ADAPTABLE_5",
+        "PARTICIPANTID": "Zelda",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "TRIALID",
+      "Type": "System.String",
+      "As": "TRIALID",
+      "Aggregate": null
+    },
+    {
+      "Name": "PARTICIPANTID",
+      "Type": "System.String",
+      "As": "PARTICIPANTID",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "TRIALID",
+      "PARTICIPANTID"
+    ],
+    "Select": [
+      {
+        "Name": "TRIALID",
+        "Type": "System.String",
+        "As": "TRIALID",
+        "Aggregate": null
+      },
+      {
+        "Name": "PARTICIPANTID",
+        "Type": "System.String",
+        "As": "PARTICIPANTID",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

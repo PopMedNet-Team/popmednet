@@ -1,0 +1,310 @@
+{
+	"Header" : {
+		"Name" : "WF-ESP: template test",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=undefined"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [{
+						"ID" : "fc068f88-a14c-40ae-b135-e501bd7026e7",
+						"Name" : "i_codeterms",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "ec593176-d0bf-4e5a-bcff-4bbd13e88dbf",
+								"Values" : {
+									"Condition" : "20"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}, {
+						"ID" : "32ea6118-60d2-44ac-b028-34770158aef4",
+						"Name" : "i_Age_Range",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+								"Values" : {
+									"MinAge" : 0,
+									"MaxAge" : 100,
+									"CalculationType" : "6",
+									"CalculateAsOf" : null,
+									"CalculateAsOfRequired" : false
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}, {
+						"ID" : "dae085ef-e822-403c-8e89-10be2ce7ca31",
+						"Name" : "i_Visits",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "f01be0a4-7d8e-4288-ae33-c65166af8335",
+								"Values" : {
+									"Visits" : 2
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}, {
+						"ID" : "bc0948d0-bb0a-4e24-b5e7-1c5f3e5b6265",
+						"Name" : "i_Sex",
+						"Operator" : 0,
+						"Criteria" : [],
+						"Terms" : [{
+								"Operator" : 1,
+								"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+								"Values" : {
+									"Sex" : "3"
+								},
+								"Criteria" : []
+							}
+						],
+						"Type" : 0
+					}
+				],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "342c354b-9ecc-479b-be61-1770e4b44675",
+						"Values" : {
+							"TobaccoUses" : [3]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : "2008-01-01T05:00:00.000Z",
+							"End" : "2015-06-17T04:00:00.000Z"
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+						"Values" : {
+							"Race" : [1, 5, 3, 2]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "702ce918-9a59-4082-a8c7-a9234536fe79",
+						"Values" : {
+							"Ethnicities" : [1, 2, 4, 6]
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "8b5faa77-4a4b-4ac7-b817-69f1297e24c5",
+						"Values" : {
+							"Codes" : [],
+							"CodeValues" : [{
+									"Code" : "02108",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02109",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02110",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02111",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02112",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02113",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02114",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02115",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02116",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02117",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02118",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02119",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02120",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02121",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02122",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02123",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02124",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02125",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02126",
+									"Name" : "BOSTON, MA"
+								}, {
+									"Code" : "02127",
+									"Name" : "BOSTON, MA"
+								}
+							]
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Conditions_Count",
+				"Type" : "ec593176-d0bf-4e5a-bcff-4bbd13e88dbf",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Conditions",
+				"Type" : "ec593176-d0bf-4e5a-bcff-4bbd13e88dbf",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Tobacco Use_Count",
+				"Type" : "342c354b-9ecc-479b-be61-1770e4b44675",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Tobacco Use",
+				"Type" : "342c354b-9ecc-479b-be61-1770e4b44675",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Age Range_Count",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Age Range",
+				"Type" : "d9dd6e82-bbca-466a-8022-b54ff3d99a3c",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Observation Period_Count",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Observation Period",
+				"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race_Count",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race",
+				"Type" : "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race-Ethnicity_Count",
+				"Type" : "702ce918-9a59-4082-a8c7-a9234536fe79",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Race-Ethnicity",
+				"Type" : "702ce918-9a59-4082-a8c7-a9234536fe79",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex_Count",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Sex",
+				"Type" : "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Zip Codes_Count",
+				"Type" : "8b5faa77-4a4b-4ac7-b817-69f1297e24c5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Zip Codes",
+				"Type" : "8b5faa77-4a4b-4ac7-b817-69f1297e24c5",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

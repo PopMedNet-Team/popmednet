@@ -1,0 +1,126 @@
+﻿<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Table">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Period" type="xs:string" minOccurs="0" />
+                <xs:element name="Sex" type="xs:string" minOccurs="0" />
+                <xs:element name="AgeGroup" type="xs:string" minOccurs="0" />
+                <xs:element name="Setting" type="xs:string" minOccurs="0" />
+                <xs:element name="DXCode" type="xs:string" minOccurs="0" />
+                <xs:element name="DXName" type="xs:string" minOccurs="0" />
+                <xs:element name="Members90" type="xs:double" minOccurs="0" />
+                <xs:element name="Events90" type="xs:double" minOccurs="0" />
+                <xs:element name="Members180" type="xs:double" minOccurs="0" />
+                <xs:element name="Events180" type="xs:double" minOccurs="0" />
+                <xs:element name="Members270" type="xs:double" minOccurs="0" />
+                <xs:element name="Events270" type="xs:double" minOccurs="0" />
+                <xs:element name="Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_" type="xs:double" minOccurs="0" />
+                <xs:element name="Days_x0020_Covered" type="xs:double" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>423188</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>121585195</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>141   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF TONGUE</DXName>
+    <Members90>3</Members90>
+    <Events90>0</Events90>
+    <Members180>3</Members180>
+    <Events180>0</Events180>
+    <Members270>3</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>423188</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>121585195</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2008</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>E951  </DXCode>
+    <DXName>SUI&amp;SLF-INFLCT POISN-GAS DOMSTC USE</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>423188</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>121585195</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>140   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF LIP</DXName>
+    <Members90>2</Members90>
+    <Events90>0</Events90>
+    <Members180>2</Members180>
+    <Events180>0</Events180>
+    <Members270>2</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>141   </DXCode>
+    <DXName>MALIGNANT NEOPLASM OF TONGUE</DXName>
+    <Members90>1</Members90>
+    <Events90>0</Events90>
+    <Members180>1</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+  </Table>
+  <Table>
+    <Period>2009</Period>
+    <Sex>All</Sex>
+    <AgeGroup>0+</AgeGroup>
+    <Setting>IP</Setting>
+    <DXCode>E951  </DXCode>
+    <DXName>SUI&amp;SLF-INFLCT POISN-GAS DOMSTC USE</DXName>
+    <Members90>0</Members90>
+    <Events90>0</Events90>
+    <Members180>0</Members180>
+    <Events180>0</Events180>
+    <Members270>0</Members270>
+    <Events270>0</Events270>
+    <Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>387695</Total_x0020_Enrollment_x0020_in_x0020_Strata_x0028_Members_x0029_>
+    <Days_x0020_Covered>103740664</Days_x0020_Covered>
+  </Table>
+</NewDataSet>

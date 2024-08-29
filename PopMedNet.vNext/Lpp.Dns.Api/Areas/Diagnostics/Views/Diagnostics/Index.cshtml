@@ -1,0 +1,205 @@
+﻿@using Lpp.Dns.Api.Areas.Diagnostics.Controllers;
+@model DiagnosticsDTO
+@{
+	ViewBag.Title = "Diagnostics";
+	Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Diagnostics</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<style>
+		.table-fixed {
+			width: 100%;
+			background-color: #f3f3f3;
+		}
+
+			.table-fixed tbody {
+				height: 200px;
+				overflow-y: auto;
+				width: 100%;
+			}
+
+			.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+				display: block;
+			}
+	</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<h2>Dianostics</h2>
+		<section data-bind="css: {visible: true}">
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default" id="panel1">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-target="#collapseOne"
+							   href="#collapseOne">
+								Basic Configuration Settings
+							</a>
+						</h4>
+
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse in">
+						<div class="form-group">
+							<label>Database Name:</label>
+							@Html.DisplayFor(model => model.ServerName, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Reset Password Url:</label>
+							@Html.DisplayFor(model => model.ResetPasswordUrl, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Activities Url:</label>
+							@Html.DisplayFor(model => model.ActivitiesUrl, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Lookup Lists Url:</label>
+							@Html.DisplayFor(model => model.LookupListsUrl, new { @class = "form-control" })
+						</div>
+						<fieldset>
+							<legend>Mail Settings</legend>
+							<div class="form-group">
+								<label>Delivery Method:</label>
+								@Html.DisplayFor(model => model.MailSettings.DeliveryMethod, new { @class = "form-control" })
+							</div>
+							<div class="form-group">
+								<label>From Address:</label>
+								@Html.DisplayFor(model => model.MailSettings.FromAddress, new { @class = "form-control" })
+							</div>
+							<div class="form-group">
+								<label>Server:</label>
+								@Html.DisplayFor(model => model.MailSettings.Server, new { @class = "form-control" })
+							</div>
+						</fieldset>
+					</div>
+				</div>
+				<div class="panel panel-default" id="panel2">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-target="#collapseTwo"
+							   href="#collapseTwo" class="collapsed">
+								Assemblies running in App Domain
+							</a>
+						</h4>
+
+					</div>
+					<div id="collapseTwo" class="panel-collapse collapse">
+
+						<style scoped>
+							#assemblyTable table {
+								width: 100%;
+								background-color: #f5f5f5;
+							}
+
+							/*The next 3 sections make the magic happen*/
+							#assemblyTable > tbody tr {
+								display: table;
+								width: 100%;
+								table-layout: fixed;
+							}
+
+							#assemblyTable > thead {
+								display: table;
+								width: 99%;
+								table-layout: fixed;
+							}
+
+							#assemblyTable > tbody {
+								display: block;
+								max-height: 500px;
+								overflow-x: hidden;
+								overflow-y: scroll;
+							}
+
+								#assemblyTable > tbody tr:nth-child(even) {
+									background-color: white;
+								}
+
+							td {
+								overflow: hidden;
+								text-overflow: ellipsis;
+							}
+
+							/*Use the following to make sure cols align correctly*/
+							#dmSelectGrid > table, #assemblyTable tr, #assemblyTable th, #assemblyTable td {
+								border-collapse: collapse;
+								font-weight: normal;
+							}
+
+
+								/*Set your columns to where you want them to be, skip the one that you can have resize to any width*/
+								#assemblyTable th:nth-child(1), #assemblyTable td:nth-child(1) {
+									width: 70%;
+								}
+
+								#assemblyTable th:nth-child(2), #assemblyTable td:nth-child(2) {
+									width: 30%;
+								}
+						</style>
+						<table id="assemblyTable" class="table table-striped table-bordered">
+							<thead>
+								<tr style="background-color:#f5f5f5">
+									<th scope="col">Assembly Name</th>
+									<th scope="col">Assembly Version</th>
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: DataMarts">
+								@foreach (var item in Model.Assemblies)
+							{
+								<tr>
+									<td>
+										@Html.DisplayFor(modelItem => item.AssemblyName)
+									</td>
+									<td>
+										@Html.DisplayFor(modelItem => item.AssemblyVersion)
+									</td>
+								</tr>
+						}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="panel panel-default" id="panel3">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-target="#collapseThree"
+							   href="#collapseThree" class="collapsed">
+								Log 4 Net Settings
+							</a>
+						</h4>
+
+					</div>
+					<div id="collapseThree" class="panel-collapse collapse">
+						<div class="form-group">
+							<label>Current Log File Location:</label>
+							@Html.DisplayFor(model => model.Log4Net.FileLocation, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Date Pattern:</label>
+							@Html.DisplayFor(model => model.Log4Net.LogPattern, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Max File Size:</label>
+							@Html.DisplayFor(model => model.Log4Net.FileMaxSize, new { @class = "form-control" })
+						</div>
+						<div class="form-group">
+							<label>Max Files to Keep:</label>
+							@Html.DisplayFor(model => model.Log4Net.MaxFilesToKeep, new { @class = "form-control" })
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

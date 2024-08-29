@@ -1,0 +1,34 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "6ad7ab66-5937-4be9-bf23-fbf8989f4548",
+            "Name": "i_Patient_Reported Outcome (PRO)",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "ae87c785-bb74-4708-b0cd-fa91d584615c",
+                "Values": {
+                  "ItemName": null,
+                  "ItemResponse": null
+                },
+                "Criteria": [],
+                "Design": { "Locked": true }
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}

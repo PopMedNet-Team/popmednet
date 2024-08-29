@@ -1,0 +1,303 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:15.5097945+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<52>. Actual:<63>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": null,
+        "Patients": 39
+      },
+      {
+        "Hispanic": "Andrea",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Barry",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Bill",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Claudette",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Cristobal",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Danny",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Dolly",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Edouard",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Elsa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Erick",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fay",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fernand",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fred",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Gabrielle",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Gonzalo",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Grace",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Henri",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Humberto",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Ida",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Imelda",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Ivelina",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Jerry",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Julian",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Karen",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Kate",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Larry",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Lorenzo",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Melissa",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Mindy",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Patients": 36
+      },
+      {
+        "Hispanic": "Nestor",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "NI",
+        "Patients": 2
+      },
+      {
+        "Hispanic": "Nicholas",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Odette",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Olga",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Patients": 6
+      },
+      {
+        "Hispanic": "Pablo",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_1",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_2",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_3",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_4",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "patient_5",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Peter",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Patients": 9
+      },
+      {
+        "Hispanic": "Rebekah",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Richard",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Rose",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Sara",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Sebastian",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Shary",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tanya",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tobias",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Tony",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "UN",
+        "Patients": 2
+      },
+      {
+        "Hispanic": "Valerie",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Van",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Victor",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Virginie",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Wanda",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "William",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Patients": 41
+      },
+      {
+        "Hispanic": "Zlati",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

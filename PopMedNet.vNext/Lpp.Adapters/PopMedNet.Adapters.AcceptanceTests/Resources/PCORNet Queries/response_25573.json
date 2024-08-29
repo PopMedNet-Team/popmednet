@@ -1,0 +1,99 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:36:22.6468925+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: [{\"Hispanic\":\"\",\"Race\":\"Ian\",\"Patients\":\"1\"}]\r\nActual result: [{\"Hispanic\":\"Humberto\",\"Race\":\"01\",\"Patients\":1},{\"Hispanic\":\"Lorenzo\",\"Race\":\"05\",\"Patients\":1},{\"Hispanic\":\"Grace\",\"Race\":\"06\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Debby\",\"Patients\":1},{\"Hispanic\":\"Y\",\"Race\":\"Hermine\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Ian\",\"Patients\":1},{\"Hispanic\":null,\"Race\":\"Lisa\",\"Patients\":1}]"
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": "Humberto",
+        "Race": "01",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Lorenzo",
+        "Race": "05",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Grace",
+        "Race": "06",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Debby",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Hermine",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Ian",
+        "Patients": 1
+      },
+      {
+        "Hispanic": null,
+        "Race": "Lisa",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

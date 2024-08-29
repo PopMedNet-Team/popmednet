@@ -1,0 +1,68 @@
+﻿-- MFU_ICD9_HCPCS
+-- METRIC_TYPE = Events, Members
+-- SD_METRIC_TYPE = ev, mb
+SELECT EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroup, SummaryData.Setting, SummaryData.%CODE_FIELD%, SummaryData.%NAME_FIELD%,
+CAST(SUM(ISNULL(SummaryData.mb, 0)) AS FLOAT) AS Members, 
+CAST(SUM(ISNULL(SummaryData.ev, 0)) AS FLOAT) AS [Events],
+CAST(SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) AS FLOAT) AS [Total Enrollment in Strata(Members)],
+CAST(SUM(ISNULL(EnrollmentData.DaysCovered, 0)) AS FLOAT) AS [Days Covered],
+CAST(ROUND(CASE WHEN SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) = 0 THEN 0 ELSE CAST(SUM(ISNULL(SummaryData.mb, 0)) AS float) / SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) * 1000 END, 1) AS FLOAT) AS [User Rate (Users per 1000 enrollees)],
+CAST(ROUND(CASE WHEN SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) = 0 THEN 0 ELSE CAST(SUM(ISNULL(SummaryData.ev, 0)) AS float) / SUM(ISNULL(EnrollmentData.SumOfMembers, 0)) * 1000 END, 1) AS FLOAT) AS [Event Rate (Events per 1000 enrollees)],
+CAST(ROUND(CASE WHEN SUM(ISNULL(SummaryData.mb, 0)) = 0 THEN 0 ELSE CAST(SUM(ISNULL(SummaryData.ev, 0)) AS float) / CAST(SUM(ISNULL(SummaryData.mb, 0)) AS float) END, 1) AS FLOAT) AS [Events per member]
+FROM
+
+	--
+	-- Age Group and Enrollment Data Section
+	--
+	-- This part makes sure that all age groups for all desired enrollment years, genders and codes/names are represented in the result table
+	-- even if there is no summary data.
+	--
+
+	(
+		SELECT AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period, 
+		CAST(Sum(ed.Members) AS float) AS SumOfMembers, 
+		CAST(Sum(ed.DaysCovered) AS float) AS DaysCovered 
+		FROM
+
+		(
+			-- Cross join ensures all age groups for all desired enrollment years, genders and codes/names are represented in the result table.
+
+			(
+				SELECT distinct ag.id AS AgeGroupId, ag.%STRATIFICATION%_name AS AgeGroup, ag.%STRATIFICATION%_sort_order AS AgeGroupSort,  %SEX_AGGREGATED% AS Sex, en.Year AS Period
+				FROM age_groups AS ag, 
+
+				%CJC%
+
+				--WHERE en.year in (%YEARS%) AND en.sex IN (%SEX%) AND en.medcov='Y' AND en.drugcov='Y'
+			) AS AgeGroups
+
+			LEFT JOIN
+
+				-- Add the enrollment data to the rows (where medical coverage is Y).
+
+				(SELECT * FROM enrollment WHERE medcov='Y' AND drugcov='Y') AS ed
+				ON ed.age_group_id = AgeGroups.AgeGroupId %MATCH_SEX%  AND ed.Year = AgeGroups.Period
+		)
+
+		GROUP BY AgeGroups.AgeGroup, AgeGroups.AgeGroupSort, AgeGroups.Sex, AgeGroups.Period
+	
+	) AS EnrollmentData
+
+LEFT JOIN
+
+	--
+	-- Summary Data Section
+	--
+	-- Add the top N rows (by events or members) for each age group stratum.
+	--
+
+	(
+
+	%STRATIFICATION_CLAUSE%
+
+	) AS SummaryData
+
+ON (SummaryData.age_group = EnrollmentData.agegroup %MATCH_SEX2% and SummaryData.Period = EnrollmentData.Period)
+
+GROUP BY EnrollmentData.AgeGroup, EnrollmentData.Sex, EnrollmentData.Period, SummaryData.%CODE_FIELD%, SummaryData.%NAME_FIELD%, SummaryData.Setting, EnrollmentData.AgeGroupSort
+ORDER BY EnrollmentData.Period, EnrollmentData.Sex, EnrollmentData.AgeGroupSort, SUM(ISNULL(SummaryData.%SD_METRIC_TYPE%, 0)) DESC

@@ -1,0 +1,197 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:18.6535443+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<17>. Actual:<20>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": null,
+        "Race": "Ian",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Bill",
+        "Race": "07",
+        "Weight": ">=160.0 and <180.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Claudette",
+        "Race": "06",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Danny",
+        "Race": "05",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Fernand",
+        "Race": "07",
+        "Weight": ">=100.0 and <120.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Karl",
+        "Weight": ">=100.0 and <120.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Kyle",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Rene",
+        "Weight": ">=160.0 and <180.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "N",
+        "Race": "Walter",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "NI",
+        "Race": "Sam",
+        "Weight": ">=80.0 and <100.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "Nana",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "OT",
+        "Race": "Wilfred",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Ana",
+        "Weight": ">=160.0 and <180.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Laura",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "R",
+        "Race": "Marco",
+        "Weight": ">=120.0 and <140.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "UN",
+        "Race": "Teresa",
+        "Weight": ">=80.0 and <100.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Wanda",
+        "Race": "07",
+        "Weight": ">=160.0 and <180.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Josephine",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Paulette",
+        "Weight": ">=160.0 and <180.0",
+        "Patients": 1
+      },
+      {
+        "Hispanic": "Y",
+        "Race": "Sally",
+        "Weight": ">=140.0 and <160.0",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "Weight",
+      "Type": "System.String",
+      "As": "Weight",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "Race",
+      "Weight"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "Weight",
+        "Type": "System.String",
+        "As": "Weight",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

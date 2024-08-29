@@ -1,0 +1,57 @@
+{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "e8eb17b0-f841-4b94-8f67-f1ab27328d1f",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "f5903376-d2a5-486f-92d3-1f97d598a221",
+                "Values": {
+                  "CodeValues": "",
+                  "SearchMethodType": 0,
+                  "ResultRangeMin": null,
+                  "ResultRangeMax": null,
+                  "QualitativeResult": null,
+                  "ResultModifier": null
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          },
+          {
+            "ID": "8a5680d3-2f94-4949-829a-8b168ad0877a",
+            "Name": "i_Observation_Period",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+                "Values": {
+                  "Start": "2015-01-01T05:00:00.000Z",
+                  "End": "2020-01-01T05:00:00.000Z"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": { "Fields": [] },
+  "TemporalEvents": []
+}

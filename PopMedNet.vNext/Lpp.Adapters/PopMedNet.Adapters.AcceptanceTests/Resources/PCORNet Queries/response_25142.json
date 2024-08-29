@@ -1,0 +1,200 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:36:19.8917336+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<7>. Actual:<26>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 1990
+      },
+      {
+        "Hispanic": "N",
+        "Patients": 1,
+        "AdmittedOn": 1995
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 1998
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 1999
+      },
+      {
+        "Hispanic": "Y",
+        "Patients": 1,
+        "AdmittedOn": 1999
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2000
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2001
+      },
+      {
+        "Hispanic": "N",
+        "Patients": 1,
+        "AdmittedOn": 2001
+      },
+      {
+        "Hispanic": null,
+        "Patients": 2,
+        "AdmittedOn": 2002
+      },
+      {
+        "Hispanic": "Y",
+        "Patients": 2,
+        "AdmittedOn": 2003
+      },
+      {
+        "Hispanic": null,
+        "Patients": 5,
+        "AdmittedOn": 2010
+      },
+      {
+        "Hispanic": "Tobias",
+        "Patients": 1,
+        "AdmittedOn": 2010
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2011
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Elsa",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Henri",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Larry",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Nicholas",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "Odette",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": "R",
+        "Patients": 1,
+        "AdmittedOn": 2013
+      },
+      {
+        "Hispanic": null,
+        "Patients": 3,
+        "AdmittedOn": 2014
+      },
+      {
+        "Hispanic": "Ida",
+        "Patients": 1,
+        "AdmittedOn": 2014
+      },
+      {
+        "Hispanic": "R",
+        "Patients": 1,
+        "AdmittedOn": 2014
+      },
+      {
+        "Hispanic": null,
+        "Patients": 2,
+        "AdmittedOn": 2015
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2016
+      },
+      {
+        "Hispanic": null,
+        "Patients": 1,
+        "AdmittedOn": 2017
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Hispanic",
+      "Type": "System.String",
+      "As": "Hispanic",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "AdmittedOn",
+      "Type": "System.String",
+      "As": "AdmittedOn",
+      "Aggregate": null
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Hispanic",
+      "AdmittedOn"
+    ],
+    "Select": [
+      {
+        "Name": "Hispanic",
+        "Type": "System.String",
+        "As": "Hispanic",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "AdmittedOn",
+        "Type": "System.String",
+        "As": "AdmittedOn",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

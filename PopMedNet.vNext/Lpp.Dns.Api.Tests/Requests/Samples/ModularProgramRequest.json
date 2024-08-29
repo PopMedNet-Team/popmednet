@@ -1,0 +1,26 @@
+﻿{
+  "Header": {},
+  "Where": {
+    "Criteria": [
+      {
+        "Name": "Group 1",
+        "Criteria": [],
+        "Terms": [
+          {
+            "Operator": 0,
+            "Type": "a1ae0001-e5b4-46d2-9fad-a3d8014fffd8",
+            "Values": {
+              "Documents": [
+                { "RevisionSetID": "c57b8b22-e348-4f48-ade5-a65100dfe6ec" },
+                { "RevisionSetID": "ea038bfe-3d3e-4a19-a2bc-a65100df552b" }
+              ]
+            },
+            "Criteria": [],
+            "Design": {}
+          }
+        ]
+      }
+    ]
+  },
+  "Select": { "Fields": [] }
+}

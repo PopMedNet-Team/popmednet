@@ -1,0 +1,39 @@
+﻿{
+    "Header": {
+        "Name": "DataChecker MetaData",
+        "ViewUrl": "http://192.168.0.11:60338/querycomposer/summaryview?ID=8a7e5f3f-bf54-475c-b1b1-a4f4010e62ee"
+
+    },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "cc2cbf09-9895-4b1e-b54d-6b92e3e1df8a",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "4db7fef6-efec-4741-92e8-4c7fc2e6691b",
+                        "Values": { "DataPartnersValue": [ "OPOS" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "8edc3af2-dbb6-462f-91a3-e91f52dab3fb",
+                        "Values": { "MetadataCompletenesses": [ "0" ] },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "1f065b02-5bf3-4340-a412-84465c9b164c",
+                        "Values": { "QueryType": "0F1EA015-B588-4775-9E16-CB6DBE12F8BE" },
+                        "Criteria": [ ]
+                    
+                    }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ ] }
+
+}

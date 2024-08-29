@@ -1,0 +1,44 @@
+{
+	"Header" : {
+		"Name" : "WT stratification check",
+		"ViewUrl" : "http://edgednsquerytool.lincolnpeak.com/querycomposer/summaryview?ID=715c3305-6a35-4a58-958c-a57d00a3e808"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"ID" : "2f3d7722-f40c-4f14-8e05-068c9b32e398",
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : "1990-02-01T05:00:00.000Z",
+							"End" : "2010-02-02T05:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Weight",
+				"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : "10",
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Weight_Count",
+				"Type" : "3b0ed310-dde9-4836-9857-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

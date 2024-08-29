@@ -1,0 +1,63 @@
+﻿{
+
+    "Header": { "Name": "WF - PCORI", "ViewUrl": "http://localhost:60338/querycomposer/summaryview?ID=4332d740-e809-4f35-8a1f-a4e600edb354" },
+    "Where": {
+        "Criteria": [
+            {
+                "ID": "c0b9be9f-9759-480e-8033-4310a480d048",
+                "Name": "Group 1",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a",
+                        "Values": { "Sex": "3" },
+                        "Criteria": [ ]
+                    },
+                    {
+                        "Operator": 0,
+                        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
+                        "Values": {
+                            "Codes": [ ],
+                            "CodeValues": [
+                                { "Code": "430", "Name": "SUBARACHNOID HEMORRHAGE" },
+                                { "Code": "431", "Name": "INTRACEREBRAL HEMORRHAGE" },
+                                { "Code": "432", "Name": "OTH&UNSPEC INTRACRANIAL HEMORRHAGE" },
+                                { "Code": "433", "Name": "OCCLUSION&STENOSIS PRECEREBRAL ART" },
+                                { "Code": "434", "Name": "OCCLUSION OF CEREBRAL ARTERIES" },
+                                { "Code": "435", "Name": "TRANSIENT CEREBRAL ISCHEMIA" },
+                                { "Code": "436", "Name": "ACUT BUT ILL-DEFINED CEREBRVASC DZ" },
+                                { "Code": "437", "Name": "OTH&ILL-DEFINED CEREBROVASC DZ" },
+                                { "Code": "438", "Name": "LATE EFF CEREBROVASCULAR DZ" }
+                            ]
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            },
+            {
+                "ID": "d5de585f-0a07-4ce4-9b03-a789367bf86c",
+                "Name": "Group 2",
+                "Criteria": [ ],
+                "Terms": [
+                    {
+                        "Operator": 0,
+                        "Type": "5e5020dc-c0e4-487f-adf2-45431c2b7695",
+                        "Values": {
+                            "Codes": [ ],
+                            "CodeValues": [
+                                {
+                                    "Code": "250",
+                                    "Name": "DIABETES MELLITUS"
+                                } 
+                            ]
+                        },
+                        "Criteria": [ ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Select": { "Fields": [ { "FieldName": "Sex_Count", "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a", "GroupBy": null, "StratifyBy": null, "Aggregate": 1, "Select": [ ], "OrderBy": 0 }, { "FieldName": "Sex", "Type": "71b4545c-345b-48b2-af5e-f84dc18e4e1a", "GroupBy": null, "StratifyBy": "3", "Aggregate": null, "Select": [ ], "OrderBy": 0 } ] }
+
+}

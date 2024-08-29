@@ -1,0 +1,10 @@
+﻿{
+  "DtoNamespace": "Lpp.CNDS.DTO",
+  "EnumNamespace": "Lpp.CNDS.DTO.Enums",
+  "TSNamespace": "CNDS",
+  "ApiNamespace": "",
+  "NetclientNamespace": "",
+  "NetclientVariable": "",
+  "OutputPath": "\\Lpp.CNDS.Api\\Scripts\\Lpp.CNDS.Interfaces.ts",
+  "ResourcesPath": "Lpp.Pmn.Resources"
+}

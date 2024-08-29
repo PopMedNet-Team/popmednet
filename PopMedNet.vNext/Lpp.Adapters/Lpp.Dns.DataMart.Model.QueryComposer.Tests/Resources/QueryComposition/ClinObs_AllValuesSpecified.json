@@ -1,0 +1,56 @@
+[
+  {
+    "Header": {
+      "QueryType": null,
+      "ComposerInterface": 0,
+      "ID": "d4810001-660e-445e-9bd5-a62800f9d8d7",
+      "Name": "Default",
+      "Description": null
+    },
+    "Where": {
+      "Criteria": [
+        {
+          "Name": "Group 1",
+          "Criteria": [
+            {
+              "ID": "ec751663-0596-43f6-b67e-319eb3259f76",
+              "Name": "i_codeterms",
+              "Operator": 0,
+              "Criteria": [
+              ],
+              "Terms": [
+                {
+                  "Operator": 1,
+                  "Type": "7a51ab7a-aec5-4a4b-a073-fbff754ea478",
+                  "Values": {
+                    "CodeSet": 3,
+                    "CodeValues": "3137-7;",
+                    "SearchMethodType": 0,
+                    "ResultRangeMin": 0,
+                    "ResultRangeMax": 48,
+                    "QualitativeResult": "testing",
+                    "ResultModifier": "4",
+                    "ResultUnit": "testing"
+                  },
+                  "Criteria": [
+                  ],
+                  "Design": {
+                  }
+                }
+              ],
+              "Type": 0
+            }
+          ],
+          "Terms": [
+          ]
+        }
+      ]
+    },
+    "Select": {
+      "Fields": [
+      ]
+    },
+    "TemporalEvents": [
+    ]
+  }
+]

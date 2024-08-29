@@ -1,0 +1,135 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:28:13.0200946+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<20>. Actual:<21>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Age": "-990 - -981",
+        "Patients": 1
+      },
+      {
+        "Age": "-500 - -491",
+        "Patients": 1
+      },
+      {
+        "Age": "-200 - -191",
+        "Patients": 1
+      },
+      {
+        "Age": "-190 - -181",
+        "Patients": 1
+      },
+      {
+        "Age": "-180 - -171",
+        "Patients": 1
+      },
+      {
+        "Age": "-90 - -81",
+        "Patients": 1
+      },
+      {
+        "Age": "0 - 9",
+        "Patients": 4
+      },
+      {
+        "Age": "10 - 19",
+        "Patients": 11
+      },
+      {
+        "Age": "20 - 29",
+        "Patients": 35
+      },
+      {
+        "Age": "30 - 39",
+        "Patients": 29
+      },
+      {
+        "Age": "40 - 49",
+        "Patients": 28
+      },
+      {
+        "Age": "50 - 59",
+        "Patients": 30
+      },
+      {
+        "Age": "60 - 69",
+        "Patients": 18
+      },
+      {
+        "Age": "70 - 79",
+        "Patients": 11
+      },
+      {
+        "Age": "80 - 89",
+        "Patients": 3
+      },
+      {
+        "Age": "90 - 99",
+        "Patients": 5
+      },
+      {
+        "Age": "100 - 109",
+        "Patients": 6
+      },
+      {
+        "Age": "210 - 219",
+        "Patients": 1
+      },
+      {
+        "Age": "240 - 249",
+        "Patients": 1
+      },
+      {
+        "Age": "250 - 259",
+        "Patients": 2
+      },
+      {
+        "Age": "310 - 319",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Age",
+      "Type": "System.String",
+      "As": "Age",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Age"
+    ],
+    "Select": [
+      {
+        "Name": "Age",
+        "Type": "System.String",
+        "As": "Age",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

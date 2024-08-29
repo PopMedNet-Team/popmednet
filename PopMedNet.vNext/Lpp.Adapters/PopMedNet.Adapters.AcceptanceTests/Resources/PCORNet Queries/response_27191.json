@@ -1,0 +1,133 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2020-09-14T23:36:27.6998868+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<18>. Actual:<19>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Height": ">=60.0 and <62.0",
+        "Patients": 2
+      },
+      {
+        "Height": ">=62.0 and <64.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=64.0 and <66.0",
+        "Patients": 4
+      },
+      {
+        "Height": ">=66.0 and <68.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=68.0 and <70.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=70.0 and <72.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=74.0 and <76.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=90.0 and <92.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=100.0 and <102.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=104.0 and <106.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=106.0 and <108.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=134.0 and <136.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=138.0 and <140.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=140.0 and <142.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=144.0 and <146.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=146.0 and <148.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=150.0 and <152.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=200.0 and <202.0",
+        "Patients": 1
+      },
+      {
+        "Height": ">=300.0 and <302.0",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Height",
+      "Type": "System.String",
+      "As": "Height",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Height"
+    ],
+    "Select": [
+      {
+        "Name": "Height",
+        "Type": "System.String",
+        "As": "Height",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

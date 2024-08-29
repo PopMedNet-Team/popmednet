@@ -1,0 +1,2 @@
+﻿-- Prev_NDC
+SELECT * FROM NDC WHERE GenericName IN (%CODES%) 

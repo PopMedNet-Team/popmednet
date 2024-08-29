@@ -1,0 +1,59 @@
+{
+  "Header": {
+    "Name": "PMNDEV-7691 - PCORnet Menu-Driven: All Terms & Stratifications 4",
+    "ViewUrl": "https://pmnuat.popmednet.org/querycomposer/summaryview?ID=dac0c2b2-1115-4bc4-822c-abb800f551cb",
+    "SubmittedOn": "2020-05-11T18:54:20.390Z"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "da2e9d06-f8aa-42d4-b5e7-22d7183aa2e9",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "9d7fa3eb-dd3d-4c53-be31-6399359419ed",
+            "Name": "i_Settings",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+                "Values": {
+                  "Setting": "11"
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Observation_Period",
+        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+        "GroupBy": null,
+        "StratifyBy": "1",
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Observation_Period_Count",
+        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  },
+  "TemporalEvents": []
+}

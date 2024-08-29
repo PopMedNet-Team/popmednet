@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\MSBuild.ExtensionPack.tasks" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\MSBuild.ExtensionPack.tasks')" />
+  <PropertyGroup>
+    <ExtensionTasksPath>.\</ExtensionTasksPath>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0B77934B-B8B5-4D33-ABA0-3B799C20BAF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Dns.DataMart.Model.Processors</RootNamespace>
+    <AssemblyName>Lpp.Dns.DataMart.Model.Processors</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Adapters|AnyCPU'">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>none</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\Build\Lpp.Dns.Base.targets" />
+  <ItemGroup>
+    <Reference Include="log4net, Version=2.0.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\DataMartClientCommonAssemlbyInfo.cs">
+      <Link>Properties\DataMartClientCommonAssemlbyInfo.cs</Link>
+    </Compile>
+    <Compile Include="FileDistribution\FileDistributionModelProcessor.cs" />
+    <Compile Include="SAS\SASModelProcessor.cs" />
+    <Compile Include="SummaryQuery\SummaryQueryBuilder.cs" />
+    <Compile Include="SummaryQuery\SummaryQueryModelProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SummaryQuery\SummaryQueryUtil.cs" />
+    <Compile Include="RestWebService\WSModelProcessor.cs" />
+    <Compile Include="SummaryQuery\SummaryRequestModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj">
+      <Project>{325D9B27-88F8-49D3-A347-40A22881624C}</Project>
+      <Name>Lpp.Dns.DataMart.Model.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SummaryQuery\DataSetToHTML.xsl" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_Pharma.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_ICD9_HCPCS.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_Enroll.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Inci_Pharma.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Inci_ICD9Diag.SQLtxt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat0_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat0.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat0_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat0.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat7_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat4_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat2_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat10_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat7_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat4_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat2_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat10_MF.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat7.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat4.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat2.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS_strat10.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat10.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat7.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat2.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma_strat4.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_NDC.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_RefreshDates.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_RefreshDates.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Inci_RefreshDates.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Inci_ICD9Diag.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Inci_Pharma.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_ICD9_HCPCS.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\MFU_Pharma.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_Enroll.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_ICD9_HCPCS.txt" />
+    <EmbeddedResource Include="SummaryQuery\Queries\Prev_Pharma.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <!-- do not include .config files in the copy to the adapter service. -->
+      <PluginFiles Include="$(OutputPath)*.dll;$(OutputPath)*.pdb;$(OutputPath)*.xml">
+        <InProject>false</InProject>
+      </PluginFiles>
+    </ItemGroup>
+    <!--<CallTarget Targets="CreateVersionedZip" />-->
+  </Target>
+  <Target Name="CreateVersionedZip" AfterTargets="AfterBuild">
+    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(OutputPath)$(AssemblyName).dll">
+      <Output TaskParameter="OutputItems" ItemName="Info" />
+    </MSBuild.ExtensionPack.Framework.Assembly>
+    <ItemGroup>
+      <!-- do not include .config files in the copy to the adapter service. -->
+      <dlls Include="$(OutputPath)Lpp.*.dll;">
+        <InProject>false</InProject>
+      </dlls>
+    </ItemGroup>
+    <PropertyGroup>
+      <PackageIdentifier>Lpp.Dns.DataMart.Model.Processors</PackageIdentifier>
+      <PackageFileName>$(PackageIdentifier).%(Info.FileVersion).zip</PackageFileName>
+      <PackageDeployPath Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">$(SolutionDir)Lpp.Dns.Api\App_Data\</PackageDeployPath>
+      <!--Adapters-->
+      <PackageDeployPath Condition=" '$(Configuration)' == 'Adapters'">C:\Checkouts\Plugins\</PackageDeployPath>
+    </PropertyGroup>
+    <MSBuild.ExtensionPack.Compression.Zip TaskAction="Create" CompressFiles="@(PluginFiles)" CompressionLevel="BestCompression" RemoveRoot="$(OutputPath)" ZipFileName="$(PackageDeployPath)$(PackageFileName)" />
+  </Target>
+  <Import Project="..\..\packages\MSBuild.Extension.Pack.1.9.1\build\net40\MSBuild.Extension.Pack.targets" Condition="Exists('..\..\packages\MSBuild.Extension.Pack.1.9.1\build\net40\MSBuild.Extension.Pack.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\MSBuild.Extension.Pack.1.9.1\build\net40\MSBuild.Extension.Pack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuild.Extension.Pack.1.9.1\build\net40\MSBuild.Extension.Pack.targets'))" />
+  </Target>
+</Project>

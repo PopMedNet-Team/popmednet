@@ -1,0 +1,26 @@
+{
+	"Header" : {
+		"Name" : "Patient count observed for a specific date range",
+		"ViewUrl" : ""
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "98a78326-35d2-461a-b858-5b69e0fed28a",
+						"Values" : {
+							"Start" : "2004-01-01T05:00:00.000Z",
+							"End" : "2006-1-1T05:00:00.000Z"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : []
+	}
+}

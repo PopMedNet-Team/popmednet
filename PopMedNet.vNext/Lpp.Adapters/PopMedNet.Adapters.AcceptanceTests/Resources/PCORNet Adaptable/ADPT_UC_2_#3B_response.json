@@ -1,0 +1,341 @@
+{
+  "SchemaVersion": "2.0",
+  "Header": {
+    "ID": "89607452-f0d7-4850-addb-947344181883",
+    "RequestID": "00000000-0000-0000-0000-000000000000",
+    "DocumentID": "1cae9249-454a-4e58-8025-86cc9b97b3df",
+    "QueryingStart": "2021-10-04T16:08:29.6141653+00:00",
+    "QueryingEnd": "2021-10-04T16:08:29.749227+00:00",
+    "DataMart": null
+  },
+  "Errors": [],
+  "Queries": [
+    {
+      "ID": "00000000-0000-0000-0000-000000000000",
+      "Name": "Use Case 2: Test 3 Bug",
+      "QueryStart": "2021-10-04T16:08:29.6141653+00:00",
+      "QueryEnd": "2021-10-04T16:08:29.749227+00:00",
+      "PostProcessStart": null,
+      "PostProcessEnd": null,
+      "Errors": null,
+      "Results": [
+        [
+          {
+            "ENCOUNTERID": null,
+            "ENC_TYPE": null,
+            "ADMIT_DATE": null,
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+            "PRO_RESPONSE_TEXT": "mi",
+            "PRO_RESPONSE_NUM": null,
+            "PRO_MEASURE_SEQ": "25.03",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Amanda"
+          },
+          {
+            "ENCOUNTERID": null,
+            "ENC_TYPE": null,
+            "ADMIT_DATE": null,
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+            "PRO_RESPONSE_TEXT": "MI",
+            "PRO_RESPONSE_NUM": null,
+            "PRO_MEASURE_SEQ": "1.01",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Alvin"
+          },
+          {
+            "ENCOUNTERID": null,
+            "ENC_TYPE": null,
+            "ADMIT_DATE": null,
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+            "PRO_RESPONSE_TEXT": "MAJOR BLEEDING",
+            "PRO_RESPONSE_NUM": null,
+            "PRO_MEASURE_SEQ": "2.01",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Barbara"
+          },
+          {
+            "ENCOUNTERID": null,
+            "ENC_TYPE": null,
+            "ADMIT_DATE": null,
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_EVENT",
+            "PRO_RESPONSE_TEXT": "CHEST PAIN",
+            "PRO_RESPONSE_NUM": null,
+            "PRO_MEASURE_SEQ": "9.02",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Ivo_A"
+          },
+          {
+            "ENCOUNTERID": "PK_4371",
+            "ENC_TYPE": "EI",
+            "ADMIT_DATE": "2000-04-17T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "4/17/2000",
+            "PRO_RESPONSE_NUM": 14717.0,
+            "PRO_MEASURE_SEQ": "2.01",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Barbara"
+          },
+          {
+            "ENCOUNTERID": "PK_4368",
+            "ENC_TYPE": "EI",
+            "ADMIT_DATE": "2010-02-03T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "2/1/2010",
+            "PRO_RESPONSE_NUM": 18294.0,
+            "PRO_MEASURE_SEQ": "1.01",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Alvin"
+          },
+          {
+            "ENCOUNTERID": "PK_4387",
+            "ENC_TYPE": "IC",
+            "ADMIT_DATE": "2013-08-15T00:00:00",
+            "DX": null,
+            "DX_TYPE": null,
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "8/15/2013",
+            "PRO_RESPONSE_NUM": 19585.0,
+            "PRO_MEASURE_SEQ": "9.02",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Ivo_A"
+          },
+          {
+            "ENCOUNTERID": "PK_4415",
+            "ENC_TYPE": "OS",
+            "ADMIT_DATE": "2015-07-13T00:00:00",
+            "DX": "290",
+            "DX_TYPE": "09",
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "7/13/2015",
+            "PRO_RESPONSE_NUM": 20282.0,
+            "PRO_MEASURE_SEQ": "25.03",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Amanda"
+          },
+          {
+            "ENCOUNTERID": "PK_4415",
+            "ENC_TYPE": "OS",
+            "ADMIT_DATE": "2015-07-13T00:00:00",
+            "DX": "410.9",
+            "DX_TYPE": "09",
+            "PX": null,
+            "PX_TYPE": null,
+            "PRO_ITEM_NAME": "HOSPITALIZATION_DATE",
+            "PRO_RESPONSE_TEXT": "7/13/2015",
+            "PRO_RESPONSE_NUM": 20282.0,
+            "PRO_MEASURE_SEQ": "25.03",
+            "TRIALID": "ADAPTABLE_1",
+            "PARTICIPANTID": "Amanda"
+          }
+        ]
+      ],
+      "LowCellThrehold": null,
+      "Properties": [
+        {
+          "Name": "ENCOUNTERID",
+          "Type": "System.String",
+          "As": "ENCOUNTERID",
+          "Aggregate": null
+        },
+        {
+          "Name": "ENC_TYPE",
+          "Type": "System.String",
+          "As": "ENC_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "ADMIT_DATE",
+          "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "ADMIT_DATE",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX",
+          "Type": "System.String",
+          "As": "DX",
+          "Aggregate": null
+        },
+        {
+          "Name": "DX_TYPE",
+          "Type": "System.String",
+          "As": "DX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX",
+          "Type": "System.String",
+          "As": "PX",
+          "Aggregate": null
+        },
+        {
+          "Name": "PX_TYPE",
+          "Type": "System.String",
+          "As": "PX_TYPE",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_ITEM_NAME",
+          "Type": "System.String",
+          "As": "PRO_ITEM_NAME",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_TEXT",
+          "Type": "System.String",
+          "As": "PRO_RESPONSE_TEXT",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_RESPONSE_NUM",
+          "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+          "As": "PRO_RESPONSE_NUM",
+          "Aggregate": null
+        },
+        {
+          "Name": "PRO_MEASURE_SEQ",
+          "Type": "System.String",
+          "As": "PRO_MEASURE_SEQ",
+          "Aggregate": null
+        },
+        {
+          "Name": "TRIALID",
+          "Type": "System.String",
+          "As": "TRIALID",
+          "Aggregate": null
+        },
+        {
+          "Name": "PARTICIPANTID",
+          "Type": "System.String",
+          "As": "PARTICIPANTID",
+          "Aggregate": null
+        }
+      ],
+      "Aggregation": {
+        "GroupBy": [
+          "ENCOUNTERID",
+          "ENC_TYPE",
+          "ADMIT_DATE",
+          "DX",
+          "DX_TYPE",
+          "PX",
+          "PX_TYPE",
+          "PRO_ITEM_NAME",
+          "PRO_RESPONSE_TEXT",
+          "PRO_RESPONSE_NUM",
+          "PRO_MEASURE_SEQ",
+          "TRIALID",
+          "PARTICIPANTID"
+        ],
+        "Select": [
+          {
+            "Name": "ENCOUNTERID",
+            "Type": "System.String",
+            "As": "ENCOUNTERID",
+            "Aggregate": null
+          },
+          {
+            "Name": "ENC_TYPE",
+            "Type": "System.String",
+            "As": "ENC_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "ADMIT_DATE",
+            "Type": "System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "ADMIT_DATE",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX",
+            "Type": "System.String",
+            "As": "DX",
+            "Aggregate": null
+          },
+          {
+            "Name": "DX_TYPE",
+            "Type": "System.String",
+            "As": "DX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX",
+            "Type": "System.String",
+            "As": "PX",
+            "Aggregate": null
+          },
+          {
+            "Name": "PX_TYPE",
+            "Type": "System.String",
+            "As": "PX_TYPE",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_ITEM_NAME",
+            "Type": "System.String",
+            "As": "PRO_ITEM_NAME",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_TEXT",
+            "Type": "System.String",
+            "As": "PRO_RESPONSE_TEXT",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_RESPONSE_NUM",
+            "Type": "System.Nullable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+            "As": "PRO_RESPONSE_NUM",
+            "Aggregate": null
+          },
+          {
+            "Name": "PRO_MEASURE_SEQ",
+            "Type": "System.String",
+            "As": "PRO_MEASURE_SEQ",
+            "Aggregate": null
+          },
+          {
+            "Name": "TRIALID",
+            "Type": "System.String",
+            "As": "TRIALID",
+            "Aggregate": null
+          },
+          {
+            "Name": "PARTICIPANTID",
+            "Type": "System.String",
+            "As": "PARTICIPANTID",
+            "Aggregate": null
+          }
+        ],
+        "Name": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+﻿{
+  "Header": {
+    "Name": "PMNDEV-5808 approval real",
+    "ViewUrl": "https://pmnuat.lincolnpeak.com/querycomposer/summaryview?ID=472ad506-676e-435f-a8fc-a6a6010a148d"
+  },
+  "Where": {
+    "Criteria": [
+      {
+        "ID": "3d12765c-9c55-42aa-884f-0b45b001084a",
+        "Name": "Group 1",
+        "Criteria": [
+          {
+            "ID": "7e01d8cb-a387-4f19-b5b1-b11159c06af0",
+            "Name": "i_codeterms",
+            "Operator": 0,
+            "Criteria": [],
+            "Terms": [
+              {
+                "Operator": 1,
+                "Type": "86110001-4bab-4183-b0ea-a4bc0125a6a7",
+                "Values": {
+                  "CodeType": 3,
+                  "CodeValues": "250",
+                  "SearchMethodType": 1
+                },
+                "Criteria": [],
+                "Design": {}
+              }
+            ],
+            "Type": 0
+          }
+        ],
+        "Terms": []
+      }
+    ]
+  },
+  "Select": {
+    "Fields": [
+      {
+        "FieldName": "Observation_Period",
+        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+        "GroupBy": null,
+        "StratifyBy": "1",
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Observation_Period_Count",
+        "Type": "98a78326-35d2-461a-b858-5b69e0fed28a",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Race",
+        "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": null,
+        "Select": [],
+        "OrderBy": 0
+      },
+      {
+        "FieldName": "Race_Count",
+        "Type": "834f0001-fa03-4ecd-be28-a3cd00ec02e2",
+        "GroupBy": null,
+        "StratifyBy": null,
+        "Aggregate": 1,
+        "Select": [],
+        "OrderBy": 0
+      }
+    ]
+  }
+}

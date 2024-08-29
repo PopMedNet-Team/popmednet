@@ -1,0 +1,79 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-11-14T16:27:36.7045092+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.Fail failed. Could not find a matching expected result from the expected: Sex: A, Patients: 24\r\nActual result: [{\"Sex\":null,\"Patients\":18},{\"Sex\":\"A\",\"Patients\":27},{\"Sex\":\"F\",\"Patients\":43},{\"Sex\":\"M\",\"Patients\":40},{\"Sex\":\"NI\",\"Patients\":2},{\"Sex\":\"OT\",\"Patients\":2},{\"Sex\":\"UN\",\"Patients\":3}]"
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Sex": null,
+        "Patients": 18
+      },
+      {
+        "Sex": "A",
+        "Patients": 27
+      },
+      {
+        "Sex": "F",
+        "Patients": 43
+      },
+      {
+        "Sex": "M",
+        "Patients": 40
+      },
+      {
+        "Sex": "NI",
+        "Patients": 2
+      },
+      {
+        "Sex": "OT",
+        "Patients": 2
+      },
+      {
+        "Sex": "UN",
+        "Patients": 3
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Sex",
+      "Type": "System.String",
+      "As": "Sex",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Sex"
+    ],
+    "Select": [
+      {
+        "Name": "Sex",
+        "Type": "System.String",
+        "As": "Sex",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      }
+    ],
+    "Name": null
+  }
+}

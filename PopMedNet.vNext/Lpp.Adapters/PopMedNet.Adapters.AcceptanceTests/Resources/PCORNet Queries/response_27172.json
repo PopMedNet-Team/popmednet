@@ -1,0 +1,91 @@
+{
+  "ID": null,
+  "DocumentID": null,
+  "ResponseDateTime": "2019-12-31T15:46:05.3012918+00:00",
+  "RequestID": "00000000-0000-0000-0000-000000000000",
+  "Errors": [
+    {
+      "Code": null,
+      "Description": "Assert.AreEqual failed. Expected:<8>. Actual:<7>. The number of rows in the result is different."
+    }
+  ],
+  "Results": [
+    [
+      {
+        "Race": "Chris",
+        "Patients": 1
+      },
+      {
+        "Race": "Florence",
+        "Patients": 1
+      },
+      {
+        "Race": "Helene",
+        "Patients": 1
+      },
+      {
+        "Race": "Isaac",
+        "Patients": 1
+      },
+      {
+        "Race": "Joyce",
+        "Patients": 1
+      },
+      {
+        "Race": "Kirk",
+        "Patients": 1
+      },
+      {
+        "Race": "Michael",
+        "Patients": 1
+      }
+    ]
+  ],
+  "LowCellThrehold": null,
+  "Properties": [
+    {
+      "Name": "Race",
+      "Type": "System.String",
+      "As": "Race",
+      "Aggregate": null
+    },
+    {
+      "Name": "PatientID",
+      "Type": "System.Int32",
+      "As": "Patients",
+      "Aggregate": "Sum"
+    },
+    {
+      "Name": "LowThreshold",
+      "Type": "System.Boolean",
+      "As": "LowThreshold",
+      "Aggregate": null
+    }
+  ],
+  "Aggregation": {
+    "GroupBy": [
+      "Race"
+    ],
+    "Select": [
+      {
+        "Name": "Race",
+        "Type": "System.String",
+        "As": "Race",
+        "Aggregate": null
+      },
+      {
+        "Name": "PatientID",
+        "Type": "System.Int32",
+        "As": "Patients",
+        "Aggregate": "Sum"
+      },
+      {
+        "Name": "LowThreshold",
+        "Type": "System.Boolean",
+        "As": "LowThreshold",
+        "Aggregate": null
+      }
+    ],
+    "Name": null
+  }
+}

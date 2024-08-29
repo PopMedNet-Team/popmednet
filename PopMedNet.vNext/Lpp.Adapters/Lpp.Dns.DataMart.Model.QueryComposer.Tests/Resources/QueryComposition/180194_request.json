@@ -1,0 +1,42 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Setting",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=undefined"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+						"Values" : {
+							"Setting" : "2"
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Settings_Count",
+				"Type" : "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Settings",
+				"Type" : "2de50001-7882-4ede-ac4f-a3cb00d9051a",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}

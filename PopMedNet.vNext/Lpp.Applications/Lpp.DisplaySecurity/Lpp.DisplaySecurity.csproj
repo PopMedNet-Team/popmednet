@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E99953CC-5B57-4075-BF4D-85D6B66962C5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.DisplaySecurity</RootNamespace>
+    <AssemblyName>Lpp.DisplaySecurity</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Classes\DataMart.cs" />
+    <Compile Include="Classes\GlobalPermissions.cs" />
+    <Compile Include="Classes\Organization.cs" />
+    <Compile Include="Classes\Project.cs" />
+    <Compile Include="Classes\SecurityGroup.cs" />
+    <Compile Include="Classes\User.cs" />
+    <Compile Include="Classes\ConnectionSetting.cs" />
+    <Compile Include="Forms\frmConnectionSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmConnectionSettings.Designer.cs">
+      <DependentUpon>frmConnectionSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConnectionFailure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConnectionFailure.Designer.cs">
+      <DependentUpon>ConnectionFailure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConnectionSuccess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConnectionSuccess.Designer.cs">
+      <DependentUpon>ConnectionSuccess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainProgram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainProgram.Designer.cs">
+      <DependentUpon>MainProgram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NoUsersSelectedError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NoUsersSelectedError.Designer.cs" />
+    <Compile Include="Forms\OrgNotFound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OrgNotFound.Designer.cs">
+      <DependentUpon>OrgNotFound.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ReflectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReflectionForm.Designer.cs">
+      <DependentUpon>ReflectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserNotFound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserNotFound.Designer.cs">
+      <DependentUpon>UserNotFound.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UsersOverloadError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UsersOverloadError.Designer.cs" />
+    <Compile Include="Classes\MemberList.cs" />
+    <Compile Include="Classes\Member.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Classes\Registry.cs" />
+    <EmbeddedResource Include="Forms\frmConnectionSettings.resx">
+      <DependentUpon>frmConnectionSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectionFailure.resx">
+      <DependentUpon>ConnectionFailure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectionSuccess.resx">
+      <DependentUpon>ConnectionSuccess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainProgram.resx">
+      <DependentUpon>MainProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NoUsersSelectedError.resx" />
+    <EmbeddedResource Include="Forms\OrgNotFound.resx">
+      <DependentUpon>OrgNotFound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ReflectionForm.resx">
+      <DependentUpon>ReflectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserNotFound.resx">
+      <DependentUpon>UserNotFound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UsersOverloadError.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Dns.DTO\Lpp.Dns.DTO.csproj">
+      <Project>{dd487aa9-8099-4aa7-8cb2-bae3a2b5104d}</Project>
+      <Name>Lpp.Dns.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Objects\Lpp.Objects.csproj">
+      <Project>{ae364c16-d7a4-4ce5-b035-b741c8ddab0c}</Project>
+      <Name>Lpp.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\Lpp.Utilities.csproj">
+      <Project>{f042377f-933e-4178-a871-aab43006e351}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ConnectSettings.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

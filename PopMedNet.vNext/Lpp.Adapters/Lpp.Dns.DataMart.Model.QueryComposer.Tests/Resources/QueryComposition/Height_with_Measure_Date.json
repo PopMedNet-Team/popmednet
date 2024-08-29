@@ -1,0 +1,51 @@
+{
+	"Header" : {
+		"Name" : "WF - PCORI: Height with Measure Date",
+		"ViewUrl" : "http://localhost:60338/querycomposer/summaryview?ID=cb2fe861-69c1-4722-ad64-a4bb00fbc9fa"
+	},
+	"Where" : {
+		"Criteria" : [{
+				"Name" : "Group 1",
+				"Criteria" : [],
+				"Terms" : [{
+						"Operator" : 0,
+						"Type" : "f9920001-aeb1-425c-a929-a4bb01515850",
+						"Values" : {
+							"Start" : "2004-06-15T04:00:00.000Z",
+							"End" : "2015-06-24T04:00:00.000Z"
+						},
+						"Criteria" : []
+					}, {
+						"Operator" : 0,
+						"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+						"Values" : {
+							"HeightMin" : 42,
+							"HeightMax" : 68
+						},
+						"Criteria" : []
+					}
+				]
+			}
+		]
+	},
+	"Select" : {
+		"Fields" : [{
+				"FieldName" : "Height_Count",
+				"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : 1,
+				"Select" : [],
+				"OrderBy" : 0
+			}, {
+				"FieldName" : "Height",
+				"Type" : "8bc627ca-5729-4e7a-9702-0000a45a0018",
+				"GroupBy" : null,
+				"StratifyBy" : null,
+				"Aggregate" : null,
+				"Select" : [],
+				"OrderBy" : 0
+			}
+		]
+	}
+}
