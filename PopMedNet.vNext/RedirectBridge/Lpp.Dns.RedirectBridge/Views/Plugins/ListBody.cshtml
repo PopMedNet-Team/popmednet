@@ -1,0 +1,38 @@
+@model IListModel<Model>
+@{ Layout = null; }
+
+@(Html.Render<IGrid>()
+    .From( Model )
+    .Attributes( new { style = "width: 100%" } )
+    .ReloadUrl( Url.Action<PluginsController>( c => c.ListBody( Model.ModelForReload() ) ) )
+    .Id( m => m.Id )
+    .Column( @<a href="@(Url.Action<PluginsController>( c => c.View( item.Id ) ))">@item.Id</a> , o => o.Title( "Id" ).NotSortable() )
+    .Column( m => m.Name )
+    .Column( m => m.Created )
+    .Column( m => m.Version )
+    .Column( @<a href="#" onclick="removeModel('@item.Id', '@item.Name')">[uninstall]</a>, o => o.Title("").NotSortable() )
+    .FooterSuffix( @<div class="ActionButtons">
+        <button id="UploadConfiguration" class="ui-standard-button">Upload Model</button>
+        <div class="UploadModelConfigurationForm">
+            <form method="post" enctype="multipart/form-data" action="@Html.Raw( Url.Action<PluginsController>( c => c.Upload() ) )">
+                <input type="file" name="file" />
+                <input type="submit" class="ui-standard-button" value="Upload" id="SubmitUploadButton" />
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            $("#UploadConfiguration").click(function () {
+                $(this).hide();
+                $(".UploadModelConfigurationForm").show();
+                return false;
+            });
+
+            function removeModel(id, name) {
+                if (!window.confirm("Are you sure you want to uninstall model '" + name + "'?")) return;
+                window.nav.navigate(  "@(Url.Action<PluginsController>( c => c.Remove( "__id__", HttpUtility.UrlEncode( Request.Url.ToString() ) ) ))"
+                    .replace( "__id__", id ) );
+                return false;
+            }
+        </script>
+    </div> )
+)

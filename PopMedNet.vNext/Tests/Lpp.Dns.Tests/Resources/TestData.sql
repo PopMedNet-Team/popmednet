@@ -1,0 +1,5 @@
+﻿insert into QueryStatusTypes( QueryStatusTypeId, QueryStatusType ) values( 1, 'Pending' )
+insert into QueryStatusTypes( QueryStatusTypeId, QueryStatusType ) values( 2, 'Submitted' )
+insert into QueryStatusTypes( QueryStatusTypeId, QueryStatusType ) values( 3, 'Completed' )
+insert into QueryCategory( QueryCategoryId, QueryCategory ) values( 1, 'Dummy' )
+insert into DataMartTypes( DataMartTypeId, DataMartType ) values( 1, 'Dummy' )

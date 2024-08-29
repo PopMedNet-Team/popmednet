@@ -1,0 +1,15 @@
+@model UploadConfirmModel
+@using System.Web.Configuration
+
+<div class="ui-section ui-has-header" title-text="Confirm Upload">
+    @using ( Html.BeginForm<PluginsController>( c => c.ConfirmUpload( null ) ) )
+    {
+    <div class="ConfirmUpload">
+        Below is the information extracted from the uploaded XML file.<br />
+        Please review the information and click <input type="submit" value="Confirm" class="ui-standard-button" />
+        <input type="hidden" name="xml" value="@Model.Serialized" />
+
+        @(Html.Partial<ModelConfigurationView>().WithModel( Model.Configuration ))
+    </div>
+    }
+</div>

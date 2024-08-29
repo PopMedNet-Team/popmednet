@@ -1,0 +1,16 @@
+@model ResponseDetailModel
+
+<div class="ResponseView">
+    <div class="RedirectPrompt">
+        <label>
+            This request type uses an external web site for visualizing response data.<br />
+            Please click the button below to be redirected to the external web site.
+        </label>
+        @using ( Html.BeginForm<RequestController>( c => c.CreateSessionAndRedirectForResponse( 
+            Model.Context.Request.RequestID, Model.Context.Token, Request.Url.ToString() ) ) )
+        {
+            <input type="submit" value="Redirect" />
+        }
+        <div class="RedirectTargetUrl">@(new Uri( Model.RequestType.RetrieveResponseUrl ).Host )</div>
+    </div>
+</div>

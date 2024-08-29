@@ -1,0 +1,28 @@
+@model ModelConfiguration
+<div class="ModelConfiguration">
+    <div class="Common">
+        <h1>Common information</h1>
+        <div class="Field"><h3>Id:</h3>            <div>@Model.Id</div></div>
+        <div class="Field"><h3>ModelProcessor Id:</h3><div>@Model.ModelProcessorId</div></div>
+        <div class="Field"><h3>Name:</h3>          <div>@Model.Name</div></div>
+        <div class="Field"><h3>Description:</h3>   <div>@Model.Description</div></div>
+        <div class="Field"><h3>Version:</h3>       <div>@Model.Version</div></div>
+        <div class="Field"><h3>Token mode:</h3>    <div>@( Model.PublicKey == null ? "Clear text" : "RSA Encrypted" )</div></div>
+    </div>
+
+    <div class="Requests">
+        <h1>Requests</h1>
+        @foreach ( var r in Model.RequestTypes.EmptyIfNull() )
+        {
+            <div class="Request">
+                <h2>@r.Name</h2>
+                <div class="Field"><h3>Id:</h3>                         <div>@r.Id</div></div>
+                <div class="Field"><h3>Metadata Request:</h3>           <div>@( r.IsMetadataRequest ? "yes" : "no" )</div></div>
+                <div class="Field"><h3>Description:</h3>                <div>@r.Description</div></div>
+                <div class="Field"><h3 class="NewLine">URL for "Create Request":</h3>   <div class="Multiline">@r.CreateRequestUrl</div></div>
+                <div class="Field"><h3 class="NewLine">URL for "View Response":</h3>    <div class="Multiline">@r.RetrieveResponseUrl</div></div>
+            </div>
+        }
+    </div>
+</div>
+<div style="clear: both"></div>
