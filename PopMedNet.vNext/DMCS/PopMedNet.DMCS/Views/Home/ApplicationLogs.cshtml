@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Application Logs";
+}
+
+<partial name="~/Views/Shared/_logging-grid.cshtml" />
+<partial name="_loading-panel" />
+<div id="logs-container">
+    <transition name="bounce" appear>
+        <div v-cloak class="p-2">
+            <log-viewer></log-viewer>
+        </div>
+    </transition>
+</div>
+
+
+@section Scripts {
+    <script src="@Url.Content("~/scripts/application-logs.js")"></script>
+}
+
+@section Breadcrumbs{
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Content("~/")"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-history"></i> Application Logs</li>
+        </ol>
+    </div>
+}

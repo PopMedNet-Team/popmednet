@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+	<PropertyGroup>
+		<CompileDependsOn>
+      $(CompileDependsOn);
+      NodeBuild;
+    </CompileDependsOn>
+    <BuildDependsOn>
+      NodeBuild;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+    <CopyAllFilesToSingleFolderForPackageDependsOn>
+      NodePublish;
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);
+    </CopyAllFilesToSingleFolderForPackageDependsOn>
+    <CopyAllFilesToSingleFolderForMsdeployDependsOn>
+      NodePublish;
+      $(CopyAllFilesToSingleFolderForMsdeployDependsOn);
+    </CopyAllFilesToSingleFolderForMsdeployDependsOn>
+	</PropertyGroup>
+  <ItemGroup>
+    <BootstrapCSS Include="./node_modules/bootstrap/dist/css/*.*" />
+    <BootstrapFonts Include="./node_modules/bootstrap/fonts/*.*" />
+  </ItemGroup>
+	<Target Name="NodeBuild">
+    <Message Text="Executing npm install"></Message>
+		<Exec Command="npm install" />
+    <Copy SourceFiles="./node_modules/bootstrap/dist/js/bootstrap.js;./node_modules/bootstrap/dist/js/bootstrap.min.js;" DestinationFolder="./Scripts/bootstrap" />
+    <!--<Message Text="@(BootstrapCSS)"></Message>
+    <Copy SourceFiles="@(BootstrapCSS)" DestinationFolder="./Content/bootstrap/css" />
+    <Copy SourceFiles="@(BootstrapFonts)" DestinationFolder="./Content/bootstrap/fonts" />-->
+    <Copy SourceFiles="./node_modules/bootstrap/dist/css/bootstrap.css;./node_modules/bootstrap/dist/css/bootstrap.css.map;./node_modules/bootstrap/dist/css/bootstrap.min.css;./node_modules/bootstrap/dist/css/bootstrap.min.css.map; ./node_modules/bootstrap/dist/css/bootstrap-theme.css;./node_modules/bootstrap/dist/css/bootstrap-theme.css.map;./node_modules/bootstrap/dist/css/bootstrap-theme.min.css;./node_modules/bootstrap/dist/css/bootstrap-theme.min.css;" DestinationFolder="./Content/bootstrap/css" />
+    <Copy SourceFiles="./node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot;./node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.svg;./node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf;./node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff;./node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2" DestinationFolder="./Content/bootstrap/fonts" />
+    <Copy SourceFiles="./node_modules/bootstrapvalidator/dist/js/bootstrapvalidator.js; ./node_modules/bootstrapvalidator/dist/js/bootstrapvalidator.min.js" DestinationFolder="./Scripts/bootstrapvalidator" />
+    <Copy SourceFiles="./node_modules/es6-shim/es6-shim.js;./node_modules/es6-shim/es6-shim.min.js;" DestinationFolder="./Scripts/es6-shim" />
+    <Copy SourceFiles="./node_modules/history.js/history.js" DestinationFolder="./Scripts/history.js" />
+    <Copy SourceFiles="./node_modules/jqplot/jquery.jqplot.min.css;" DestinationFolder="./Content/jqplot" />
+    <Copy SourceFiles="./node_modules/jqplot/jqplot.cursor.js;./node_modules/jqplot/jqplot.donutRenderer.js;./node_modules/jqplot/jqplot.highlighter.js;./node_modules/jqplot/jquery.jqplot.min.js;" DestinationFolder="./Scripts/jqplot" />
+		<Copy SourceFiles="./node_modules/jquery/dist/jquery.js" DestinationFolder="./Scripts/jquery/2.2.3" />
+    <Copy SourceFiles="./node_modules/jquery/dist/jquery.min.js" DestinationFolder="./Scripts/jquery/2.2.3" />
+		<Copy SourceFiles="./node_modules/jquery-form/jquery.form.js" DestinationFolder="./Scripts/jquery-form" />
+    <Copy SourceFiles="./node_modules/jquery-migrate/dist/jquery-migrate.js;./node_modules/jquery-migrate/dist/jquery-migrate.min.js" DestinationFolder="./Scripts/jquery-migrate" />
+    <Copy SourceFiles="./node_modules/jquery.cookie/jquery.cookie.js" DestinationFolder="./Scripts/jquery.cookie" />
+		<Copy SourceFiles="./node_modules/knockout/build/output/knockout-latest.js" DestinationFolder="./Scripts/knockout" />
+    <Copy SourceFiles="./node_modules/knockout-kendo/build/knockout-kendo.js;./node_modules/knockout-kendo/build/knockout-kendo.min.js;" DestinationFolder="./Scripts/knockout-kendo" />
+    <Copy SourceFiles="./node_modules/knockout-mapping/dist/knockout.mapping.js;./node_modules/knockout-mapping/dist/knockout.mapping.min.js;" DestinationFolder="./Scripts/knockout-mapping" />
+    <Copy SourceFiles="./node_modules/knockout.validation/dist/knockout.validation.js;./node_modules/knockout.validation/dist/knockout.validation.min.js;" DestinationFolder="./Scripts/knockout.validation" />
+    <Copy SourceFiles="./node_modules/moment/moment.js;./node_modules/moment/min/moment.min.js;" DestinationFolder="./Scripts/moment" />
+    <Copy SourceFiles="./node_modules/signalr/jquery.signalR.js;./node_modules/signalr/jquery.signalR.min.js;" DestinationFolder="./Scripts/signalr"/>
+    <Copy SourceFiles="./node_modules/formvalidation/dist/js/formValidation.js;./node_modules/formvalidation/dist/js/formValidation.min.js;./node_modules/formvalidation/dist/js/framework/bootstrap.min.js" DestinationFolder="./Scripts/FormValidation" />
+    <Copy SourceFiles="./node_modules/formvalidation/dist/css/formValidation.css;./node_modules/formvalidation/dist/css/formValidation.min.css" DestinationFolder="./Content/FormValidation" />
+    <Copy SourceFiles="./node_modules/ko-reactor/dist/ko-reactor.min.js" DestinationFolder="./Scripts/Knockout-Reactor" />
+  </Target>
+  <Target Name="NodePublish">
+    <ItemGroup>
+      <_bootstrapScriptssFiles Include="./Scripts/bootstrap/*" />
+      <FilesForPackagingFromProject  Include="%(_bootstrapScriptssFiles.Identity)">
+        <DestinationRelativePath>Scripts\bootstrap\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+    <ItemGroup>
+      <_bootstrapCSSFiles Include="./Content/bootstrap/**/*" />
+      <FilesForPackagingFromProject  Include="%(_bootstrapCSSFiles.Identity)">
+        <DestinationRelativePath>Content\bootstrap\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+    <ItemGroup>
+      <_BVFiles Include="./Scripts/bootstrapvalidator/*" />
+      <FilesForPackagingFromProject  Include="%(_BVFiles.Identity)">
+        <DestinationRelativePath>Scripts\bootstrapvalidator\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+    <ItemGroup>
+      <_shimFiles Include="./Scripts/es6-shim/*" />
+      <FilesForPackagingFromProject  Include="%(_shimFiles.Identity)">
+        <DestinationRelativePath>Scripts\es6-shim\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+    <ItemGroup>
+      <_historyFiles Include="./Scripts/history.js/*" />
+      <FilesForPackagingFromProject  Include="%(_historyFiles.Identity)">
+        <DestinationRelativePath>Scripts\history.js\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>    
+    <ItemGroup>
+      <_jqplotFiles Include="./Content/jqplot/*" />
+      <FilesForPackagingFromProject  Include="%(_jqplotFiles.Identity)">
+        <DestinationRelativePath>Content\jqplot\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_jqueryFiles Include="./Scripts/jquery/2.2.3/*" />
+      <FilesForPackagingFromProject  Include="%(_jqueryFiles.Identity)">
+        <DestinationRelativePath>Scripts/jquery/2.2.3/%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_jFormFiles Include="./Scripts/jquery-form/*" />
+      <FilesForPackagingFromProject  Include="%(_jFormFiles.Identity)">
+        <DestinationRelativePath>Scripts\jquery-form\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_jmigrateFiles Include="./Scripts/jquery-migrate/*" />
+      <FilesForPackagingFromProject  Include="%(_jmigrateFiles.Identity)">
+        <DestinationRelativePath>Scripts\jquery-migrate\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_jcookieFiles Include="./Scripts/jquery.cookie/*" />
+      <FilesForPackagingFromProject  Include="%(_jcookieFiles.Identity)">
+        <DestinationRelativePath>Scripts\jquery.cookie\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_knockoutFiles Include="./Scripts/knockout/*" />
+      <FilesForPackagingFromProject  Include="%(_knockoutFiles.Identity)">
+        <DestinationRelativePath>Scripts\knockout\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_kokendoFiles Include="./Scripts/knockout-kendo/*" />
+      <FilesForPackagingFromProject  Include="%(_kokendoFiles.Identity)">
+        <DestinationRelativePath>Scripts\knockout-kendo\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_komappingFIles Include="./Scripts/knockout-mapping/*" />
+      <FilesForPackagingFromProject  Include="%(_komappingFIles.Identity)">
+        <DestinationRelativePath>Scripts\knockout-mapping\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_kovalidationFIles Include="./Scripts/knockout.validation/*" />
+      <FilesForPackagingFromProject  Include="%(_kovalidationFIles.Identity)">
+        <DestinationRelativePath>Scripts\knockout.validation\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_momentFiles Include="./Scripts/moment/*" />
+      <FilesForPackagingFromProject  Include="%(_momentFiles.Identity)">
+        <DestinationRelativePath>Scripts\moment\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_signalRFiles Include="./Scripts/signalr/*" />
+      <FilesForPackagingFromProject  Include="%(_signalRFiles.Identity)">
+        <DestinationRelativePath>Scripts\signalr\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+      <_formValidationCSSFiles Include="./Content/FormValidation/*" />
+      <FilesForPackagingFromProject  Include="%(_formValidationCSSFiles.Identity)">
+        <DestinationRelativePath>Content\FormValidation\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+    <ItemGroup>
+        <_formValidationScriptFiles Include="./Scripts/FormValidation/*" />
+        <FilesForPackagingFromProject  Include="%(_formValidationScriptFiles.Identity)">
+          <DestinationRelativePath>Scripts\FormValidation\%(Filename)%(Extension)</DestinationRelativePath>
+        </FilesForPackagingFromProject>
+      </ItemGroup> 
+    <ItemGroup>
+      <_koreactorFiles Include="./Scripts/Knockout-Reactor/*" />
+      <FilesForPackagingFromProject  Include="%(_koreactorFiles.Identity)">
+        <DestinationRelativePath>Scripts\Knockout-Reactor\%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup> 
+  </Target>
+</Project>

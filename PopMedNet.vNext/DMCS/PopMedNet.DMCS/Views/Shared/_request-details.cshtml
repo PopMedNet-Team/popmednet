@@ -1,0 +1,34 @@
+﻿<script type="text/x-template" id="request-details">
+    <div class="card">
+        <div class="card-header">
+            <span class="text-uppercase">Request Details</span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-sm caption-top">
+                <caption>Request Files</caption>
+                <colgroup>
+                    <col style="width:90%" />
+                    <col style="width:10%" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="doc in RequestDocuments">
+                        <td>
+                            <a :href="'@Url.Content("~/download-document")?id=' + doc.id + '&requestDMID=' + RequestMetadata.id + '&filename=' + doc.name">{{doc.name}}</a>
+                        </td>
+                        <td>{{doc.length | formatLength }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <kbutton :theme-color="'warning'" v-bind:disabled="enableHold" v-on:click="onHold">{{HoldButtonTitle}}</kbutton>
+            <kbutton :theme-color="'error'" class="ms-1" v-bind:disabled="enableReject" v-on:click="onReject">Reject</kbutton>
+        </div>
+    </div>
+</script>

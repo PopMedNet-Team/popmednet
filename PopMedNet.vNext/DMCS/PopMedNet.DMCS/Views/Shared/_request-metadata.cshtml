@@ -1,0 +1,131 @@
+﻿<script type="text/x-template" id="request-metadata">
+    <div class="card">
+        <div class="card-header">
+            <span class="text-uppercase">Overview</span>
+            <div class="float-end text-primary text-uppercase small">{{StatusText}}</div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtRequestDate" class="form-label">Request Date:</label>
+                    <input id="txtRequestDate" type="text" class="form-control" disabled v-model="SubmittedOnText" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtDueDate" class="form-label">Due Date:</label>
+                    <input id="txtDueDate" type="text" class="form-control" disabled v-model="DueDateText" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtProject" class="form-label">Project:</label>
+                    <input id="txtProject" type="text" class="form-control" disabled v-model="RequestMetadata.project" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtRequestType" class="form-label">Request Type:</label>
+                    <input id="txtRequestType" type="text" class="form-control" disabled v-model="RequestMetadata.requestType" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtMsRequestID" class="form-label">Request Identifier:</label>
+                    <input id="txtMsRequestID" type="text" class="form-control" disabled v-model="RequestMetadata.msRequestID" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtSystemNumber" class="form-label">System Number:</label>
+                    <input id="txtSystemNumber" type="text" class="form-control" disabled v-model="RequestMetadata.requestIdentifier" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtPriority" class="form-label">Priority:</label>
+                    <input id="txtPriority" type="text" class="form-control" disabled v-model="PriorityText" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtStatus" class="form-label">Status:</label>
+                    <input id="txtStatus" type="text" class="form-control" disabled v-model="StatusText" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtSubmittedBy" class="form-label">Submitted By:</label>
+                    <input id="txtSubmittedBy" type="text" class="form-control" disabled v-model="RequestMetadata.submittedBy" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtPurposeOfUse" class="form-label">Purpose of Use:</label>
+                    <input id="txtPurposeOfUse" type="text" class="form-control" disabled v-model="RequestMetadata.purposeOfUse" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtLevelOfReportAggregation" class="form-label">Level of Report Aggregation:</label>
+                    <input id="txtLevelOfReportAggregation" type="text" class="form-control" disabled v-model="RequestMetadata.levelOfReportAggregation" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtRequestorCenter" class="form-label">Requestor Center:</label>
+                    <input id="txtRequestorCenter" type="text" class="form-control" disabled v-model="RequestMetadata.requestorCenter" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtSourceTaskOrder" class="form-label">Source Task Order:</label>
+                    <input id="txtSourceTaskOrder" type="text" class="form-control" disabled v-model="RequestMetadata.sourceTaskOrder" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtSourceActivity" class="form-label">Source Activity:</label>
+                    <input id="txtSourceActivity" type="text" class="form-control" disabled v-model="RequestMetadata.sourceActivity" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtSourceActivityProject" class="form-label">Source Activity Project:</label>
+                    <input id="txtSourceActivityProject" type="text" class="form-control" disabled v-model="RequestMetadata.sourceActivityProject" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label for="txtBudgetTaskOrder" class="form-label">Budget Task Order:</label>
+                    <input id="txtBudgetTaskOrder" type="text" class="form-control" disabled v-model="RequestMetadata.taskOrder" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtBudgetActivity" class="form-label">Budget Activity:</label>
+                    <input id="txtBudgetActivity" type="text" class="form-control" disabled v-model="RequestMetadata.activity" />
+                </div>
+                <div class="col-4 mb-3">
+                    <label for="txtBudgetActivityProject" class="form-label">Budget Activity Project:</label>
+                    <input id="txtBudgetActivityProject" type="text" class="form-control" disabled v-model="RequestMetadata.activityProject" />
+                </div>
+            </div>
+            <div>
+                <label for="txtAdditionalInstructions" class="form-label">Additional Instructions:</label>
+                <textarea id="txtAdditionalInstructions" type="text" class="form-control" rows="4" disabled v-model="RequestMetadata.additionalInstructions"></textarea>
+            </div>
+            <div>
+                <label for="txtDescription" class="form-label">Description:</label>
+                <textarea id="txtDescription" type="text" class="form-control" rows="4" disabled v-model="RequestMetadata.description"></textarea>
+            </div>
+            <div class="row mx-1" v-if="RequestMetadata.permissions.viewAttachments">                
+                <table class="table table-striped table-sm caption-top">
+                    <caption>Attachments</caption>
+                    <colgroup>
+                        <col style="width:90%" />
+                        <col style="width:10%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="attachments.length === 0">
+                            <td colspan="2">There are no Attachments for the Request.</td>
+                        </tr>
+                        <tr v-for="attach in attachments">
+                            <td>
+                                <a :href="'@Url.Content("~/download-document")?id=' + attach.id + '&requestDMID=' + RequestMetadata.id + '&filename=' + attach.name">{{attach.name}}</a>
+                            </td>
+                            <td>{{attach.length | formatLength }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</script>

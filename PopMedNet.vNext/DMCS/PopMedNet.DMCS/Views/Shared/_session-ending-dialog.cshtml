@@ -1,0 +1,14 @@
+﻿<script type="text/x-template" id="session-ending-dialog-tmpl">
+    <div>
+        <k-dialog v-if="ShowDialog" :title="'Session Ending Soon!'" :modal="true" :width="450" @@close="$emit('close')" :className="'session-dialog-class'" :closable="false">
+            <div class="alert alert-warning">
+                <p><strong class="text-uppercase">Warning:</strong></p>
+                <p>Your session will end at {{ this.SessionEnd }}!</p>
+                <p>Click 'Refresh' to refresh your session or refresh the page in your browser.</p>
+            </div>
+            <dialog-actions-bar>
+                <kbutton :theme-color="'primary'" v-on:click="$emit('refresh-session')">Refresh</kbutton>
+            </dialog-actions-bar>
+        </k-dialog>
+    </div>
+</script>

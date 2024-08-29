@@ -1,0 +1,80 @@
+﻿@model PopMedNet.DMCS.Controllers.Configuration
+@{
+    ViewData["Title"] = "Configuration";
+}
+
+<div class="container">
+    <div id="crdDataMarts">
+        <div id="crdNetworkSettings" class="card">
+            <div class="card-header">
+                <span class="text-uppercase">Network Settings</span>
+            </div>
+            <div class="card-body">
+                <div>
+                    <label for="txtServiceURL" class="form-label">Service URL:</label>
+                    <input asp-for="ServiceURL" class="form-control" id="txtInstanceIdentifier" disabled>
+                </div>
+                <div>
+                    <label for="txtNetworkName" class="form-label">Network Name:</label>
+                    <input asp-for="NetworkName" type="text" class="form-control" id="txtServiceURL" disabled />
+                </div>
+                <div>
+                    <label for="txtDMCInstance" class="form-label">DMCS Instance Identifier</label>
+                    <input asp-for="DMCSInstanceIdentifier" type="text" class="form-control" id="txtDMCInstance" disabled />
+                </div>
+                <div>
+                    <label for="txtCacheFolder" class="form-label">Cache Folder:</label>
+                    <input asp-for="CacheFolder" class="form-control" id="txtCacheFolder" disabled>
+                </div>
+                <div>
+                    <label for="txtCacheTimer" class="form-label">Cache Timer (in Minutes):</label>
+                    <input asp-for="CacheTimer" class="form-control" id="txtCacheTimer" disabled>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="card">
+            <div class="card-header">
+                <span class="text-uppercase">DataMarts</span> <i style="cursor:pointer; float:right;" v-on:click="Refresh" class="fas fa-sync-alt"></i>
+            </div>
+            <div class="card-body">
+                <partial name="_loading-panel" />
+                <errors :errors="Errors"></errors>
+                <transition name="slide-fade" appear>
+                    <div class="noscroll-grid">
+                        <kendo-grid :data-items="result"
+                                    :columns="columns"
+                                    :sort="sort"
+                                    :sortable="sortable"
+                                    @@sortchange="onSortChange">
+                            <template v-slot:nameTemplate="{props, listeners}">
+                                <td :class="props.className"><a class="datamart-link" :href="'@Url.Content("~/datamart/")' + props.dataItem.id">{{ props.dataItem.name }}</a></td>
+                            </template>
+                        </kendo-grid>
+                    </div>
+                </transition>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Head{
+    <style>
+        .datamart-link-cell > a.datamart-link {
+            color: #0366d6;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="@Url.Content("~/scripts/datamartslist.js")"></script>
+}
+
+@section Breadcrumbs{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Content("~/")"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-tools"></i> Configuration</li>
+        </ol>
+    </nav>
+}

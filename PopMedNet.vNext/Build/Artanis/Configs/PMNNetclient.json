@@ -1,0 +1,10 @@
+﻿{
+  "DtoNamespace": "Lpp.Dns.DTO",
+  "EnumNamespace": "Lpp.Dns.DTO.Enums",
+  "TSNamespace": "Dns",
+  "ApiNamespace": "Lpp.Dns.Api",
+  "NetclientNamespace": "Lpp.Dns.ApiClient",
+  "NetclientVariable": "DnsClient",
+  "OutputPath": "\\Lpp.Dns.Api\\Scripts\\Lpp.Dns.NetClient.cs",
+  "ResourcesPath": "Lpp.Pmn.Resources"
+}

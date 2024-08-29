@@ -1,0 +1,45 @@
+{
+  "BuildConfiguration": "Release",
+  "DeployType": "Development",
+  "BuildPlatform": "any cpu",
+  "APIPublishDir": "C:\\publish\\pmnprodparallel\\API",
+  "PortalPublishDir": "C:\\publish\\pmnprodparallel\\DNS",
+  "SSOPublishDir": "C:\\publish\\pmnprodparallel\\SSO",
+  "CertThumbprint": "64D13EBEB9A55963A2661AF731937EAF9225FE51",
+  "APIServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "api-pmnprodparallel.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-pmnprodparallel.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "api-pmnprodparallel.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-pmnprodparallel.popmednet.org"
+    }
+  ],
+  "PortalServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnprodparallel.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnprodparallel.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnprodparallel.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnprodparallel.popmednet.org"
+    }
+  ],
+  "SSOServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "sso-pmnprodparallel.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "sso-pmnprodparallel.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "sso-pmnprodparallel.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "sso-pmnprodparallel.popmednet.org"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "Config": "Release",
+  "DeployType": "Development",
+  "BuildPlatform": "any cpu",
+  "APIPublishDir": "C:\\publish\\PMNPlayground2\\API",
+  "PortalPublishDir": "C:\\publish\\PMNPlayground2\\DNS",
+  "SSOPublishDir": "",
+  "APIServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "api-PMNPlayground-2.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-PMNPlayground-2.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "api-PMNPlayground-2.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-PMNPlayground-2.popmednet.org"
+    }
+  ],
+  "PortalServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "PMNPlayground-2.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "PMNPlayground-2.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "PMNPlayground-2.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "PMNPlayground-2.popmednet.org"
+    }
+  ],
+  "CertThumbprint": "64D13EBEB9A55963A2661AF731937EAF9225FE51"
+}

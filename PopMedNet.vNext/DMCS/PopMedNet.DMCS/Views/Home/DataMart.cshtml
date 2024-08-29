@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewData["Title"] = "Configure DataMart";
+}
+
+<partial name="_datamart-detail" />
+<partial name="_datamart-adapter" />
+<partial name="_datamart-cache-settings" />
+<partial name="_datamart-autoprocessor-settings" />
+
+<div class="container" id="vue_DataMart" data-itemid="@ViewBag.ID">
+    
+    <div class="card">
+        <div class="card-header"><span class="text-uppercase">Datamart Details</span></div>
+        <transition name="slide-fade" appear>
+            <div class="card-body">
+                <partial name="_loading-panel" />
+
+                <errors :errors="Errors"></errors>
+                <datamart-details :data-mart="DataMart"></datamart-details>
+                @if (ViewBag.CanConfigure)
+                {
+                    <datamart-adapter :adapterid="DataMart.adapterID"></datamart-adapter>
+                    <datamart-cachesetting :data-mart="DataMart"
+                                           @@update-cachedays="UpdateCacheDays"
+                                           @@update-encrypt="UpdateEncrypt"
+                                           @@update-explicit="UpdateExplicit">
+                    </datamart-cachesetting>
+                    <datamart-autoprocessorsetting :auto-process="DataMart.autoProcess"
+                                                   @@autoprocess-changed="UpdateAutoProcess">
+                    </datamart-autoprocessorsetting>
+                }
+
+            </div>
+        </transition>
+            <div class="card-footer">
+                @if (ViewBag.CanConfigure)
+                {
+                <div v-cloak>
+                    <kbutton :theme-color="'primary'" v-on:click="Save">Save</kbutton>
+                    <kbutton v-on:click="Cancel">Cancel</kbutton>
+                </div>
+                }
+                else
+                {
+                    <text>&nbsp;</text>
+                }
+            </div>
+        </div>
+    
+</div>
+
+@section Scripts {
+<script src="@Url.Content("~/scripts/datamart.js")"></script>
+}
+
+@section Breadcrumbs{
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Content("~/")"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Content("~/configuration")"><i class="fas fa-tools"></i> Configuration</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Configure DataMart</li>
+        </ol>
+    </div>
+}

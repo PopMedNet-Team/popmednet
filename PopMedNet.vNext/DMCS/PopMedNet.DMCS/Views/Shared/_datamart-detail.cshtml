@@ -1,0 +1,22 @@
+﻿<script type="text/x-template" id="datamart-detail">
+    <div id="crdDataMarts" class="card mb-3">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="txtName" class="form-label">Name:</label>
+                <input v-model="DataMart.name" type="text" disabled class="form-control" id="txtName" />
+            </div>
+            <div class="mb-3">
+                <label for="txtAcronym" class="form-label">Acronym:</label>
+                <input v-model="DataMart.acronym" type="text" disabled class="form-control" id="txtAcronym">
+            </div>
+            <div class="mb-3">
+                <label for="txtAdapter" class="form-label">Adapter:</label>
+                <input v-model="DataMart.adapter" type="text" disabled class="form-control" id="txtAdapter">
+            </div>
+            <div class="mb-3">
+                <label for="txtDescription" class="form-label">Description:</label>
+                <textarea v-model="DataMart.description" type="text" disabled class="form-control" id="txtDescription"></textarea>
+            </div>
+        </div>        
+    </div>
+</script>

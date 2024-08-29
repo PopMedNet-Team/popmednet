@@ -1,0 +1,98 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <Import Project="../PopMedNet.DMCS.targets" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+    <Content Remove="appsettings.template.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Scripts\application-logs.ts" />
+    <None Remove="Scripts\components\ColumnMenu.ts" />
+    <None Remove="Scripts\components\DataMartAdapter.ts" />
+    <None Remove="Scripts\components\DataMartAutoProcessorSetting.ts" />
+    <None Remove="Scripts\components\DataMartCacheSetting.ts" />
+    <None Remove="Scripts\components\DataMartDetail.ts" />
+    <None Remove="Scripts\components\DataMartsList.ts" />
+    <None Remove="Scripts\components\DMCSError.ts" />
+    <None Remove="Scripts\components\FileChunkUploader.js" />
+    <None Remove="Scripts\components\FileChunkUploader.js.map" />
+    <None Remove="Scripts\components\FileChunkUploader.ts" />
+    <None Remove="Scripts\components\ForgotPasswordDialog.ts" />
+    <None Remove="Scripts\components\Loader.ts" />
+    <None Remove="Scripts\components\LogViewer.ts" />
+    <None Remove="Scripts\components\Request.ts" />
+    <None Remove="Scripts\components\RequestDetailPanel.ts" />
+    <None Remove="Scripts\components\RequestMetadata.ts" />
+    <None Remove="Scripts\components\ResponseDetails.ts" />
+    <None Remove="Scripts\components\SessionEndingDialog.ts" />
+    <None Remove="Scripts\DataMart.ts" />
+    <None Remove="Scripts\Home.ts" />
+    <None Remove="Scripts\interfaces.ts" />
+    <None Remove="Scripts\Login.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.AzureBlobStorage" Version="3.0.3" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.Development.json" />
+    <None Include="appsettings.template.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PopMedNet.DMCS.Data\PopMedNet.DMCS.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\application-logs.ts" />
+    <TypeScriptCompile Include="Scripts\components\ColumnMenu.ts" />
+    <TypeScriptCompile Include="Scripts\components\DataMartAdapter.ts" />
+    <TypeScriptCompile Include="Scripts\components\DataMartAutoProcessorSetting.ts" />
+    <TypeScriptCompile Include="Scripts\components\DataMartCacheSetting.ts" />
+    <TypeScriptCompile Include="Scripts\components\DataMartDetail.ts" />
+    <TypeScriptCompile Include="Scripts\components\DataMartsList.ts" />
+    <TypeScriptCompile Include="Scripts\components\DMCSError.ts" />
+    <TypeScriptCompile Include="Scripts\components\SessionEndingDialog.ts" />
+    <TypeScriptCompile Include="Scripts\components\ForgotPasswordDialog.ts" />
+    <TypeScriptCompile Include="Scripts\components\Loader.ts" />
+    <TypeScriptCompile Include="Scripts\components\LogViewer.ts" />
+    <TypeScriptCompile Include="Scripts\components\RequestDetailPanel.ts" />
+    <TypeScriptCompile Include="Scripts\RouteDetail.ts" />
+    <TypeScriptCompile Include="Scripts\components\RequestMetadata.ts" />
+    <TypeScriptCompile Include="Scripts\components\ResponseDetails.ts" />
+    <TypeScriptCompile Include="Scripts\DataMart.ts" />
+    <TypeScriptCompile Include="Scripts\Home.ts" />
+    <TypeScriptCompile Include="Scripts\interfaces.ts" />
+    <TypeScriptCompile Include="Scripts\Login.ts" />
+  </ItemGroup>
+
+</Project>

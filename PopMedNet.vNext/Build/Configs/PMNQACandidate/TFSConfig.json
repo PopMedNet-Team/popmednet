@@ -1,0 +1,45 @@
+{
+  "BuildConfiguration": "debug",
+  "DeployType": "Development",
+  "BuildPlatform": "any cpu",
+  "APIPublishDir": "C:\\publish\\pmnqacandidate\\API",
+  "PortalPublishDir": "C:\\publish\\pmnqacandidate\\DNS",
+  "SSOPublishDir": "C:\\publish\\pmnqacandidate\\SSO",
+  "APIServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnqacandidateapi.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqacandidateapi.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnqacandidateapi.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqacandidateapi.popmednet.org"
+    }
+  ],
+  "PortalServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnqacandidatednsquerytool.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqacandidatednsquerytool.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnqacandidatednsquerytool.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqacandidatednsquerytool.popmednet.org"
+    }
+  ],
+  "SSOServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "ssopmnqacandidateA.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "ssopmnqacandidateA.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "ssopmnqacandidateA.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "ssopmnqacandidateA.popmednet.org"
+    }
+  ],
+  "CertThumbprint": "64D13EBEB9A55963A2661AF731937EAF9225FE51"
+}

@@ -1,0 +1,53 @@
+﻿<script type="text/x-template" id="logging-grid">
+    <div class="card">
+        <div class="card-header d-flex justify-content-start">
+            <kbutton :theme-color="'primary'" :fill-mode="'flat'" :icon-class="'fas fa-download'" v-on:click="onOpenExportDialog" vcloak>Export</kbutton>
+        </div>
+        <div class="card-body noscroll-grid">
+
+            <kendo-grid :data-items="result"
+                        :columns="columns"
+                        :column-menu="columnMenu"
+                        :sortable="sortable"
+                        :sort="sort"
+                        @@sortchange="sortChangeHandler"                        
+                        :groupable="groupable"
+                        :group="group"
+                        :reorderable="reorderable"
+                        :resizable="resizable" 
+                        :filterable="filterable"
+                        @@filterchange="filterChangeHandler">
+            </kendo-grid>
+
+        </div>
+
+        <kendo-dialog v-if="OpenExportDialog" :title="'Log Export'" :width="500" @@close="onCloseExportDialog">
+            <div class="alert alert-primary" role="alert">
+                Exports the logs table to an excel file for you to download.
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="chkLogs" id="chkAllLogs" :value="0" v-model="LogType">
+                <label class="form-check-label" for="chkAllLogs">Export All Logs</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="chkLogs" id="chkDateLogs" :value="1" v-model="LogType">
+                <label class="form-check-label" for="chkDateLogs">Export Date Range</label>
+            </div>
+            <div class="form-row" style="margin-top: .5rem;">
+                <div class="col-6">
+                    <label for="txtStartDate" class="form-label">Start Date:</label>
+                    <kendo-date :value="ExportStartDate" :max="ExportEndDate" :disabled="LogType === 0" @@change="onStartDatePickerChange"></kendo-date>
+                </div>
+                <div class="col-6">
+                    <label for="txtEndDate" class="form-label">End Date:</label>
+                    <kendo-date :value="ExportEndDate" :min="ExportStartDate" :disabled="LogType === 0" @@change="onEndDatePickerChange"></kendo-date>
+                </div>
+            </div>
+            <kendo-action>
+                <kbutton :theme-color="'primary'" @@click="onSendExport">Export</kbutton>
+                <kbutton @@click="onCloseExportDialog">Cancel</kbutton>
+            </kendo-action>
+        </kendo-dialog>
+
+    </div>
+</script>

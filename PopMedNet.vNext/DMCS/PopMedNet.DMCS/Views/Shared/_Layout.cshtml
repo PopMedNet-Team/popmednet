@@ -1,0 +1,112 @@
+﻿@{ 
+    string pageTitle = (string.IsNullOrEmpty(ViewData["Title"] as string) ? "" : ViewBag.Title +  " - ") + "PopMedNet DataMart Client Server";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="fragment" content="!">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="EXPIRES" content="0">
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
+    <title>@pageTitle</title>
+    <link rel="shortcut icon" href="@Url.Content("~/images/favicon-scaled.png")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/bootstrap/css/bootstrap.min.css")" />
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/site.css")" />
+
+    @RenderSection("Head", false)
+</head>
+<body data-session-duration="@ViewBag.SessionDurationMinutes" data-session-warning="@ViewBag.SessionWarningMinutes">
+    <header id="header">
+        <nav class="navbar align-items-stretch">
+            <div style="background-color:#ffffff;">
+                <a class="navbar-brand" href="@Url.Content("~/")" title="PopMedNet DataMart Client Server">
+                    <img src="@Url.Content("~/images/pmn-logo.png")" alt="" title="PopMedNet DataMart Client Server" />
+                </a>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <div class="nav-top-row d-flex justify-content-between">
+                    <span>
+                        DataMart Client Server - @ViewBag.NetworkName
+                    </span>
+                    <span class="pr-2 text-muted">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <i class="fas fa-user-circle" id="authenticated-user-avatar"></i> @User.Identity.Name
+                        }
+                    </span>
+                </div>
+                <div class="nav-second-row d-flex justify-content-between">
+                    <div class="pt-2">
+                        @RenderSection("Breadcrumbs", false)
+                    </div>
+                    <div id="site-menu" class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="menu-container-button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="fas fa-bars"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menu-container-button">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><a class="dropdown-item" href="@Url.Content("~/")"><i class="fas fa-home"></i> Home</a></li>
+                                <li><a href="@Url.Content("~/configuration")" class="dropdown-item"><i class="fas fa-tools"></i> Configuration</a></li>
+                                <li><a href="@Url.Content("~/application-logs")" class="dropdown-item"><i class="fas fa-history"></i> Application Logs</a></li>
+                                <li><div class="dropdown-divider"></div></li>
+                            }
+                            <li><button class="dropdown-item" v-on:click="toggleAboutDialog"><i class="fas fa-question-circle"></i> About</button></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><div class="dropdown-divider"></div></li>
+                                <li><a class="dropdown-item" href="@Url.Content("~/logout")"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </nav>
+        <k-dialog v-if="aboutDialogVisible" :title="'About'" :modal="true" @@close="toggleAboutDialog" :width="650" :className="'about-dialog-wrapper'" v-cloak>
+            @Html.Raw(ViewBag.Info)
+            <p>Version: @PopMedNet.DMCS.Code.Version.ApplicationVersion</p>
+            <p>You can contact PopMedNet&trade; support by clicking on <a href="@Html.Raw(ViewBag.ContactUsHref)" target="_blank">this link</a>.</p>
+            <dialog-actions-bar>
+                <kbutton :theme-color="'primary'" @@click="toggleAboutDialog">Close</kbutton>
+            </dialog-actions-bar>
+        </k-dialog>
+
+    </header>
+
+    @RenderBody()
+
+    <template id="loading-dialog">
+        <kendo-dialog v-if="isActive" :title="textHeader" :width="450" :height="350" :close-icon="closable">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <img src="/images/loading.gif" width="300" />
+                <div>{{textBody}}</div>
+            </div>
+        </kendo-dialog>
+    </template>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="~/views/shared/_session-ending-dialog.cshtml" />
+        <div id="session-container">
+            <session-ending-dialog 
+                                   v-bind:show-dialog="sessionEndingDialogVisible"
+                                   v-bind:session-end-time="computeSessionEndTime()"
+                                   v-on:close="sessionEndingDialogVisible = false"
+                                   v-on:refresh-session="onRefreshSession">
+            </session-ending-dialog>
+        </div>
+    }
+
+
+    <script src="@Url.Content("~/assets/jquery/jquery.min.js")"></script>
+    <script src="@Url.Content("~/assets/bootstrap/js/bootstrap.bundle.min.js")"></script>
+    <script src="@Url.Content("~/scripts/page.js")" defer></script>
+    <script src="@Url.Content("~/scripts/commons.js")" defer></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

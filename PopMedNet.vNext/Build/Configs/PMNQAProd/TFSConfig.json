@@ -1,0 +1,32 @@
+{
+  "Config": "debug",
+  "DeployType": "Development",
+  "BuildPlatform": "any cpu",
+  "APIPublishDir": "C:\\publish\\pmnqaprod\\API",
+  "PortalPublishDir": "C:\\publish\\pmnqaprod\\DNS",
+  "APIServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnqaprodapi.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqaprodapi.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnqaprodapi.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqaprodapi.popmednet.org"
+    }
+  ],
+  "PortalServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnqaproddnsquerytool.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqaproddnsquerytool.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnqaproddnsquerytool.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnqaproddnsquerytool.popmednet.org"
+    }
+  ],
+  "CertThumbprint": "64D13EBEB9A55963A2661AF731937EAF9225FE51"
+}

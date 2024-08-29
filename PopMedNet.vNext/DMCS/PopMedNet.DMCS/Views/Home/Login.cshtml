@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+<partial name="~/views/shared/_forgot-password-dialog.cshtml" />
+<div class="login-container">
+    <div id="vue_login" class="card" v-cloak>
+        <div class="card-body">
+            <errors :errors="errors"></errors>
+            <form v-on:submit="Login">
+                <div class="mb-3">
+                    <label for="txtUsername" class="form-label">Username<em title="Required">*</em></label>
+                    <input v-model.trim="username" type="text" class="form-control" id="txtUsername" v-bind:disabled="LoadSpinner" required/>
+                </div>
+                <div class="m-0">
+                    <label for="txtPassword" class="form-label">Password<em title="Required">*</em></label>
+                    <input v-model.trim="password" type="password" class="form-control" id="txtPassword" v-on:keyup="onPasswordKeyup" v-bind:disabled="LoadSpinner" autocomplete="off" required />
+                </div>
+                <div class="m-0">
+                    <forgot-password-dialog v-on:load-spinner="onShowLoaderForForgotPassword"></forgot-password-dialog>
+                </div>
+                <div>
+                    <p class="form-control-plaintext text-muted">
+                        By clicking Login you are agreeing to the Terms and Conditions of use.
+                    </p>
+                </div>
+                <div class="row mb-2">
+                    <kbutton :theme-color="'primary'" class="login-button" v-bind:disabled="LoadSpinner">Login</kbutton>
+                </div>
+                <div>
+                    <div class="form-control-plaintext text-muted">
+                        @Html.Raw(ViewBag.Terms)
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <pmn-loader :is-active="LoadSpinner" :text-body="loaderBody" :text-header="loaderTitle"></pmn-loader>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/scripts/login.js")"></script>
+}

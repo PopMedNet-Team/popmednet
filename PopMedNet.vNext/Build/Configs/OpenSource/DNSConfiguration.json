@@ -1,0 +1,236 @@
+{
+  "SolutionFile": "\\DistributedNetworkSolution.sln",
+  "DeleteBuildConfigs": [
+  ],
+  "DependenciesToMove": [ ],
+  "ProjectsToDrop": [
+     "CCHMC"
+  ],
+  "DependiciesToAdd": [
+    {
+      "Project": "\\Lpp.Mvc.Composition\\Lpp.Audit\\Lpp.Audit.csproj",
+      "Dependency": [
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Mvc.Composition\\Lpp.Audit.UI\\Lpp.Audit.UI.csproj",
+      "Dependency": [
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Mvc.Composition\\Lpp.FileSystem\\Lpp.FileSystem.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Mvc.Composition\\Lpp.Security\\Lpp.Security.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Mvc.Composition\\Lpp.Security.UI\\Lpp.Security.UI.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.HealthCare.Helpers\\Lpp.Dns.General.Helpers.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.General.CriteriaGroupCommon\\Lpp.Dns.General.CriteriaGroupCommon.csproj",
+      "Dependency": [ ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.General.Metadata\\Lpp.Dns.General.Metadata.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.General.QueryComposer\\Lpp.Dns.General.QueryComposer.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.General.Sample\\Lpp.Dns.General.Sample.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.General.Sql\\Lpp.Dns.General.SqDistribution.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.Conditions\\Lpp.Dns.HealthCare.Conditions.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.Controls\\Lpp.Dns.HealthCare.Controls.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.DataChecker\\Lpp.Dns.HealthCare.DataChecker.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.ESPQueryBuilder\\Lpp.Dns.HealthCare.ESPQueryBuilder.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.FileDistribution\\Lpp.Dns.HealthCare.FileDistribution.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.I2B2\\Lpp.Dns.HealthCare.I2B2.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.ModularProgram\\Lpp.Dns.HealthCare.ModularProgram.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.SASDistribution\\Lpp.Dns.HealthCare.SASDistribution.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.SPANQueryBuilder\\Lpp.Dns.HealthCare.SPANQueryBuilder.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Plugins\\Lpp.Dns.HealthCare.Summary\\Lpp.Dns.HealthCare.Summary.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\RemotePlugin\\Lpp.Dns.RemotePlugin\\Lpp.Dns.RemotePlugin.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\RemotePlugin\\Lpp.Dns.RemotePlugin.Interfaces\\Lpp.Dns.RemotePlugin.Interfaces.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\RedirectBridge\\Lpp.Dns.RedirectBridge\\Lpp.Dns.RedirectBridge.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Tests\\Lpp.Dns.Tests\\Lpp.Dns.Tests.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.RemotePlugin.Tests\\Lpp.Dns.RemotePlugin.Tests.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.DocumentVisualizers\\Lpp.Dns.DocumentVisualizers.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.LocalDataMart\\Lpp.Dns.LocalDataMart.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.Mvc.Interfaces\\Lpp.Dns.Mvc.Interfaces.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.Portal.Interfaces\\Lpp.Dns.Portal.Interfaces.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.ApiClient\\Lpp.Dns.ApiClient.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": [ ]
+    },
+    {
+      "Project": "\\Lpp.Dns.Portal\\Lpp.Dns.Portal.csproj",
+      "Dependency": [
+         
+      ], 
+      "ProjectItems": [
+        ]
+    }
+  ],
+  "FilesToEdit": [ ],
+  "FilesToDelete": [
+  ],
+  "DirectoryToDelete": ["\\Plugins\\CCHMC" ]
+}

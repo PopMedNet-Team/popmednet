@@ -1,0 +1,48 @@
+﻿<script type="text/x-template" id="response-details">
+    <div class="card">
+        <div class="card-header">
+            <span class="text-uppercase">Response Details</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="custom-file" v-if="canAddResponseFiles">
+                    <label class="form-label" for="customFile">Choose file(s) to upload</label>
+                    <input type="file" class="form-control" id="customFile" v-on:change="onFilesAdded" ref="fileInput" multiple>
+                </div>
+            </div>
+            <div class="row mx-1" v-if="ResponseDocuments.length !== 0">
+                <table class="table table-striped table-sm caption-top">
+                    <caption>Response Files</caption>
+                    <colgroup>
+                        <col style="width:85%" />
+                        <col style="width:10%" />
+                        <col style="width:5%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="ResponseDocuments.legth == 0">
+                            <td colspan="3">Response Files is not hooked up yet.</td>
+                        </tr>
+                        <tr v-for="doc in ResponseDocuments">
+                            <td><a :href="'@Url.Content("~/download-document")?id=' + doc.id + '&requestDMID=' + RequestMetadata.id + '&filename=' + doc.name">{{doc.name}}</a></td>
+                            <td>{{doc.length | formatLength }}</td>
+                            <td>
+                                <kbutton :theme-color="'error'" v-if="canRemoveAddedFile(doc)" v-on:click="onCacheFileRemove(doc.id)">Remove</kbutton>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <kbutton id="btnClearCache" v-bind:disabled="clearCacheEnabled == false" v-on:click="onClearCache">Clear Cache</kbutton>
+            <kbutton id="btnUploadRes" :theme-color="'primary'" class="ms-1" :disabled="showUpdateResults == false" v-on:click="onUploadResults">{{uploadButtonText}}</kbutton>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@section Head{
+
+    <style>
+      .card {
+          margin: 1rem 0.5rem;
+      }
+      .card-body {
+          margin:0px;
+          padding:0px;
+          overflow: auto;
+      }
+    </style>
+
+}
+
+<partial name="_loading-panel" />
+<partial name="_column-menu" />
+<div id="vue_requests">
+    <transition name="bounce" appear>
+        <div class="card" v-cloak>
+            <div class="card-header">
+                Requests
+            </div>
+            <div class="card-body noscroll-grid">
+                <kendo-grid :data-items="result"
+                            :columns="columns"
+                            :column-menu="true"
+                            :sortable="sortable"
+                            :filterable="filterable"
+                            :reorderable="reorderable"
+                            :sort="sort"
+                            :filter="filter"
+                            :resizable="resizable"
+                            @@rowclick="onRowClick">
+                    <template v-slot:customMenuTemplate="{ props, listeners }">
+                        <custom-menu :column="props.column"
+                                :filterable="props.filterable"
+                                :filter="props.filter"
+                                :sortable="props.sortable"
+                                :sort="props.sort"
+                                :columns="columns"
+                                @@closemenu="()=> { props.onClosemenu(); } "
+                                @@columnssubmit="onColumnsSubmit"
+                                @@sortchange="onSortChange"
+                                @@contentfocus="(e)=> listeners.onContentfocus(e)"
+                                @@filterchange="onFilterChange"/>
+                    </template>
+                </kendo-grid>
+            </div>
+        </div>
+    </transition>
+</div>
+
+    @section Scripts{
+        <script src="@Url.Content("~/scripts/home.js")"></script>
+    }

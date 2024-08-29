@@ -1,0 +1,233 @@
+﻿html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+table.caption-top caption{
+    caption-side:top;
+    text-transform:uppercase;
+    padding-bottom:.15rem;
+}
+table.caption-top th{
+    border-top:none;
+    font-weight:normal;
+}
+
+.table>:not(:first-child) {
+    border:inherit;
+}
+
+.btn-primary,
+.k-button-solid-primary {
+    color: #fff;
+    /*background-color: #1b6ec2;*/
+    background-color: #2d6ca2 !important;
+    border-color: #285e8e !important;
+    background-image: linear-gradient(to bottom, #428bca 0, #2d6ca2 100%) !important;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+
+.k-dialog-titlebar {
+    background-color: #e1ebfa !important;
+    color: black !important;
+}
+
+.k-calendar-container {
+    z-index: 10003 !important;
+}
+
+#vue_requests .k-master-row{
+    cursor:pointer;
+}
+
+#header {
+    border-bottom: 1px solid #688fc0;
+    background-color:#e3e6eb;
+    margin-bottom:1rem;
+}
+
+#header .navbar,
+#header a.navbar-brand {
+    margin:0px;
+    padding:0px;
+}
+
+#header .navbar{
+    justify-content:start;
+}
+
+    .nav-top-row{
+        background-color:#e1ebfa;
+        border-bottom:solid 1px #688fc0;
+        padding-left:0.25rem;
+        padding-right:0.25rem;
+    }
+    .nav-second-row {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        border-left: solid 1px #13509c;
+        margin-left: -1px;
+    }
+
+.navbar-toggler span {
+    color:#688fc0;
+}
+    .navbar-toggler span:hover {
+        color: #13509c;
+    }
+
+    [v-cloak]{
+        display:none;
+    }
+
+#header .breadcrumb{
+    margin-bottom:0px;
+}
+
+#site-menu i {
+    color: #688fc0;
+}
+
+.login-container {
+    width:60%;
+    max-width:900px;
+    min-width:400px;
+    margin:auto;
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.login-container em{
+    color:red;
+}
+.login-container label{
+    font-weight:500;
+}
+.login-container button.login-button{
+    width:300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+    .login-container .forgotPasswordBtn {
+        width:fit-content;
+    }
+
+
+.bounce-enter-active {
+    animation: bounce-in .5s;
+}
+
+.bounce-leave-active {
+    animation: bounce-in .5s reverse;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+}
+
+#logs-container .k-grid-header col:nth-of-type(1),
+#logs-container .k-grid-table col:nth-of-type(1) {
+    width: 18em;
+}
+#logs-container .k-grid-header col:nth-of-type(2),
+#logs-container .k-grid-table col:nth-of-type(2) {
+    width: 10em;
+}
+#logs-container .k-grid-header col:nth-of-type(3),
+#logs-container .k-grid-table col:nth-of-type(3) {
+    min-width:20em;
+}
+
+.noscroll-grid > .k-grid > .k-grid-header {
+    padding: 0px !important;
+}
+.noscroll-grid .k-grid .k-grid-container .k-grid-content {
+    overflow-y: visible !important;
+}
+
+th.k-header.active > div > div {
+    color: #3d8df1;
+}
+
+th.k-header.active > div > div > span.k-i-more-vertical::before {
+    /* Change the icon from  vertical ... to the filter icon. */
+    content: "\e129";
+}

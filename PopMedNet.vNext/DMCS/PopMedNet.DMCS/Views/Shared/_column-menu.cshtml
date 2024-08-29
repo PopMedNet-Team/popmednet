@@ -1,0 +1,48 @@
+﻿<script type="text/x-template" id="column-menu-template">
+<div>
+    <GridColumnMenuSort :column="column"
+                        :sortable="sortable"
+                        :sort="sort"
+                        @@closemenu="closeMenu"
+                        @@sortchange="sortChange" />
+    <GridColumnMenuFilter :column="column"
+                          :filterable="filterable"
+                          :filter="filter"
+                          @@filterfocus="handleFocus"
+                          @@closemenu="closeMenu"
+                          @@expandchange="expandChange"
+                          @@filterchange="filterChange" />
+    <GridColumnMenuItemGroup>
+        <GridColumnMenuItem :title="'Columns'"
+                            :icon-class="'k-i-columns'"
+                            @@menuitemclick="onMenuItemClick" />
+        <GridColumnMenuItemContent :show="columnsExpanded">
+            <div class='k-column-list-wrapper'>
+                <form @@submit="onSubmit" @@reset="onReset">
+                    <div class='k-column-list'>
+                        <div :key="idx" class='k-column-list-item' v-for="(column, idx) in currentColumns">
+                            <span class="form-check">
+                                <input :id="'column-visiblity-show-' + idx"
+                                       class="form-check-input"
+                                       type="checkbox"
+                                       :disabled="!column.hidden && oneVisibleColumn"
+                                       :checked="!column.hidden"
+                                       @@click="onToggleColumn(idx)" />
+                                <label :for="'column-visiblity-show-' + idx"
+                                       class="form-check-label"
+                                       :style="{ userSelect: 'none' }">
+                                    {{column.title}}
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class='k-columnmenu-actions bg-light'>
+                        <kbutton :theme-color="'primary'">Apply</kbutton>
+                        <kbutton type='reset'>Reset</kbutton>
+                    </div>
+                </form>
+            </div>
+        </GridColumnMenuItemContent>
+    </GridColumnMenuItemGroup>
+</div>
+</script>

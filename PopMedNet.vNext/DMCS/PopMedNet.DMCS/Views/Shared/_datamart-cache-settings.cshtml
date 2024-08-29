@@ -1,0 +1,22 @@
+﻿<script type="text/x-template" id="datamart-cache-settings">
+    <div id="crdCacheSetting" class="card mb-3">
+        <div class="card-header">Cache Settings</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="txtName" class="form-label">Days to retain responses (-1 for no removal and 0 for Disabled):</label>
+                <input v-model.number="cacheDays" type="number" min="-1" max="99999" class="form-control" style="width:5rem;" id="txtDays" />
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" v-model="encryptCache" type="checkbox" id="chkEncrypt">
+                <label class="form-check-label" for="chkEncrypt">Encrypt Cache</label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" v-model="DataMart.enableExplictCacheRemoval" type="checkbox" id="chkExplict">
+                <label class="form-check-label" for="chkExplict">Enable Explict Cache Removal</label>
+            </div>
+        </div>
+        <div class="card-footer">
+            <kbutton :theme-color="'primary'" v-on:click="ClearCache">Clear Cache</kbutton>
+        </div>
+    </div>
+</script>

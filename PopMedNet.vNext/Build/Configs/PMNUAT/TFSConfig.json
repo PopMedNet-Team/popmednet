@@ -1,0 +1,45 @@
+{
+  "Config": "Release",
+  "DeployType": "Development",
+  "BuildPlatform": "any cpu",
+  "APIPublishDir": "C:\\publish\\PMNUAT\\API",
+  "PortalPublishDir": "C:\\publish\\PMNUAT\\DNS",
+  "SSOPublishDir": "C:\\publish\\PMNUAT\\SSO",
+  "APIServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "api-pmnuat.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-pmnuat.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "api-pmnuat.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "api-pmnuat.popmednet.org"
+    }
+  ],
+  "PortalServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "pmnuat.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnuat.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "pmnuat.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "pmnuat.popmednet.org"
+    }
+  ],
+  "SSOServers": [
+    {
+      "Server": "DEVPMNWEB01",
+      "MSDeployURL": "sso-pmnuat.popmednet.org,wmsvc=10.1.2.9,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "sso-pmnuat.popmednet.org"
+    },
+    {
+      "Server": "DEVPMNWEB02",
+      "MSDeployURL": "sso-pmnuat.popmednet.org,wmsvc=10.1.2.8,username=TFS.User@pmn.net,password=Pmn10082018#^",
+      "IISWebSiteName": "sso-pmnuat.popmednet.org"
+    }
+  ],
+  "CertThumbprint": "64D13EBEB9A55963A2661AF731937EAF9225FE51"
+}

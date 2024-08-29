@@ -1,0 +1,123 @@
+﻿{
+  "SolutionFile": "\\Lpp.Dns.Api.sln",
+  "DeleteBuildConfigs": [
+  ],
+  "DependenciesToMove": [
+  ],
+  "ProjectsToDrop": [
+    "Theme.FDAMiniSentinel",
+    "Theme.GlobalNetwork",
+    "Theme.Pcori"
+  ],
+  "DependiciesToAdd": [
+    {
+      "Project": "\\Lpp.Dns.Api.Tests\\Lpp.Dns.Api.Tests.csproj",
+      "Dependency": [
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Api\\Lpp.Dns.Api.csproj",
+      "Dependency": [
+
+      ]
+    },
+    {
+      "Project": "\\Lpp.Dns.Data\\Lpp.Dns.Data.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.DTO.DataMartClient\\Lpp.Dns.DTO.DataMartClient.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.DTO\\Lpp.Dns.DTO.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.WebServices\\Lpp.Dns.WebServices.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.Base\\Lpp.Dns.Workflow.Base.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.Default\\Lpp.Dns.Workflow.Default.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.ModularProgram\\Lpp.Dns.Workflow.ModularProgram.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.SummaryQuery\\Lpp.Dns.Workflow.SummaryQuery.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.DataChecker\\Lpp.Dns.Workflow.DataChecker.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    },
+    {
+      "Project": "\\Lpp.Dns.Workflow.DistributedRegression\\Lpp.Dns.Workflow.DistributedRegression.csproj",
+      "Dependency": [
+
+      ],
+      "ProjectItems": []
+    }
+  ],
+  "FilesToEdit": [
+    {
+      "FileName": "\\Lpp.Dns.Api\\Global.asax.cs",
+      "BeginingString": "#region Register Hubs for notifications",
+      "EndingString": "#endregion Hubs"
+    }
+  ],
+  "FilesToDelete": [
+    "\\Lpp.Applications.sln",
+    "\\Lpp.Dns.Sso.sln",
+    "\\Lpp.Wbd.Api.sln",
+    "\\Lpp.Wbd.Portal.sln",
+  ],
+  "DirectoryToDelete": [
+    "\\Java",
+    "\\Lpp.Applications",
+    "\\Lpp.Dns.Sso",
+    "\\packages",
+    "\\Themes\\Aqeduct",
+    "\\Themes\\CHORDS",
+    "\\Themes\\FDAPilot",
+    "\\Themes\\NYCPilot",
+    "\\Themes\\FDAMiniSentinel",
+    "\\Themes\\MDPHNet",
+    "\\Themes\\NIH",
+    "\\Themes\\PCORI",
+  ]
+}

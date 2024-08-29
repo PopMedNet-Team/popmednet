@@ -1,0 +1,27 @@
+<project name="Crypto" default="all">
+	<target name="all">
+		<delete dir="build" />
+		<mkdir dir="build/classes" />
+		<mkdir dir="build/release" />
+		<mkdir dir="build/release/doc" />
+		
+		<!-- Builds the binary -->
+		<javac srcdir="src" destdir="build/classes" includeantruntime="false" />
+		<jar basedir="build/classes" destfile="build/release/crypto.jar" />
+		
+		<!-- Builds the docs -->
+		<javadoc sourcepath="src" destdir="build/release/doc" />
+		<copy file="README.txt" todir="build/release" />
+		
+		<!-- Copy the source -->
+		<copy todir="build/release/src">
+			<fileset dir="src" />
+		</copy>
+		<copy todir="build/release/tests">
+			<fileset dir="tests" />
+		</copy>
+		
+		<!-- Zip it up -->
+		<zip destfile="build/crypto-rel.zip" basedir="build/release" />
+	</target>
+</project>

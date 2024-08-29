@@ -1,0 +1,97 @@
+﻿@model RoutingDTO
+@{
+    ViewData["Title"] = "";
+    string breadcrumbTitle = Model.RequestName + " for " + Model.DataMartName;
+}
+@section Head {
+    <style>
+        #vue_request.card {
+            margin: 1rem 0.5rem;
+        }
+    </style>
+}
+
+<partial name="~/Views/Shared/_request-metadata.cshtml" />
+<partial name="~/Views/Shared/_request-details.cshtml" />
+<partial name="~/Views/Shared/_response-details.cshtml" />
+<partial name="~/Views/Shared/_logging-grid.cshtml" />
+<partial name="_loading-panel" />
+
+<div id="vue_request" data-itemid="@Model.ID">
+    <transition name="slide-fade" appear>
+        <div class="card" v-cloak>
+            <div class="card-header">
+                <b>{{RequestMetadata.requestName}}</b> for <b>{{RequestMetadata.dataMartName}}</b>
+            </div>
+            <div class="card-body">
+                <pmn-requestmetadata :attachments="Attachments" :request-metadata="RequestMetadata"></pmn-requestmetadata>
+                <pmn-request style="margin-top:1rem;" :request-documents="RequestDocuments" :request-metadata="RequestMetadata"></pmn-request>
+                <pmn-response v-if="ShowAdapterResponsePanel" style="margin-top:1rem;" :request-metadata="RequestMetadata" :response-documents="ResponseDocuments" :is-file-based-request="'true'"></pmn-response>
+                <div class="card" v-if="!ShowAdapterResponsePanel" style="margin-top:1rem;">
+                    <div class="card-header">
+                        Response Details
+                    </div>
+                    <div class="card-body">
+                        <div class="alert" role="alert" v-bind:class="{'alert-warning': RequestMetadata.status === 11, 'alert-danger': RequestMetadata.status === 12}">
+                            <p>Response status: <b>{{StatusText}}</b></p>
+                            <p>{{RequestMetadata.responseMessage}}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+                <div id="logs-container">
+                    <log-viewer style="margin-top:1rem;" :responseid="RequestMetadata.responseID"></log-viewer>
+                </div>
+
+                <kendo-dialog v-if="OpenHoldDialog" :title="'Hold Message'" :width="500" :height="250" @@close="onCloseHoldDialog">
+                    <div>
+                        <textarea class="form-control" v-model="HoldRejectMessage" rows="3"></textarea>
+                    </div>
+                    <kendo-action>
+                        <kbutton :theme-color="'primary'" @@click='onSendHold'>Send</kbutton>
+                        <kbutton @@click='onCloseHoldDialog'>Cancel</kbutton>                        
+                    </kendo-action>
+                </kendo-dialog>
+
+                <kendo-dialog v-if="OpenRejectDialog" :title="'Reject Message'" :width="500" :height="250" @@close="onCloseRejectDialog">
+                    <div>
+                        <textarea class="form-control" v-model="HoldRejectMessage" rows="3"></textarea>
+                    </div>
+                    <kendo-action>
+                        <kbutton :theme-color="'primary'" @@click='onSendReject'>Send</kbutton>
+                        <kbutton @@click='onCloseRejectDialog'>Cancel</kbutton>
+                    </kendo-action>
+                </kendo-dialog>
+
+                <kendo-dialog v-if="OpenCompleteDialog" :title="'Response Message'" :width="500" :height="250" @@close="onCloseCompleteDialog">
+                    <div class="form-group">
+                        <textarea class="form-control" v-model="HoldRejectMessage" rows="3"></textarea>
+                    </div>
+                    <kendo-action>
+                        <kbutton :theme-color="'primary'" @@click='onUploadResponse'>Complete</kbutton>
+                        <kbutton @@click='onCloseCompleteDialog'>Cancel</kbutton>
+                    </kendo-action>
+                </kendo-dialog>
+
+                <pmn-loader :is-active="LoadSpinner" :text-body="'Saving into DMCS'" :text-header="'Saving'"></pmn-loader>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </transition>
+</div>
+@section Scripts {
+    <script src="@Url.Content("~/scripts/routedetail.js")"></script>
+}
+
+@section Breadcrumbs{
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Content("~/")"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@breadcrumbTitle</li>
+        </ol>
+    </div>
+}
