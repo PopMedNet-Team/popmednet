@@ -1,0 +1,260 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: tags_2022.2$(rev:.r)
+trigger: none
+pr: none
+
+pool:
+  name: Azure Pipelines
+  vmImage: 'windows-latest'
+  demands:
+  - msbuild
+  - visualstudio
+
+variables:
+- template: Variables.yml
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: 'Install Nuget Tools'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore Lpp.Dns.Api.sln'
+  inputs:
+    restoreSolution: Lpp.Dns.Api.sln
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore DistributedNetworkSolution.sln'
+  inputs:
+    restoreSolution: DistributedNetworkSolution.sln
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore Lpp.Dns.Sso.sln'
+  inputs:
+    restoreSolution: Lpp.Dns.Sso.sln
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore Lpp.Adapters.sln'
+  inputs:
+    restoreSolution: Lpp.Adapters.sln
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Dns.Api.sln'
+  inputs:
+    solution: Lpp.Dns.Api.sln
+    msbuildArgs: '/p:WebPublishMethod=FileSystem /p:DeployOnBuild=true /p:DeployTarget=WebPublish /p:publishUrl=$(Build.ArtifactStagingDirectory)\Api /p:DeleteExistingFiles=True'
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution DistributedNetworkSolution.sln'
+  inputs:
+    solution: DistributedNetworkSolution.sln
+    msbuildArgs: '/p:WebPublishMethod=FileSystem /p:DeployOnBuild=true /p:DeployTarget=WebPublish /p:publishUrl=$(Build.ArtifactStagingDirectory)\Portal /p:DeleteExistingFiles=True'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Dns.Sso.sln'
+  inputs:
+    solution: Lpp.Dns.Sso.sln
+    msbuildArgs: '/p:WebPublishMethod=FileSystem /p:DeployOnBuild=true /p:DeployTarget=WebPublish /p:publishUrl=$(Build.ArtifactStagingDirectory)\SSO /p:DeleteExistingFiles=True'
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Adapters.sln'
+  inputs:
+    solution: Lpp.Adapters.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: DownloadSecureFile@1
+  displayName: 'Download Code Signing Cert'
+  inputs:
+    secureFile: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing API'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Build.ArtifactStagingDirectory)\Api\**\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Portal'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Build.ArtifactStagingDirectory)\Portal\**\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing DMC Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Client\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.QueryComposer Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.DataChecker Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.DataChecker\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.ESPQueryBuilder Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.ESPQueryBuilder.I2B2 Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.I2B2\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.Metadata Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.Metadata\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing Lpp.Dns.DataMart.Model.Processors Dlls'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.Processors\bin\Lpp.*.dll'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing DMC Exe'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Client\bin\Lpp.Dns.DataMart.Client.exe'
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Installers.sln'
+  inputs:
+    solution: Lpp.Installers.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+
+- task: stefankert.codesigning.codesigning-task.codesigning@2
+  displayName: 'Code Signing DMC Installer'
+  inputs:
+    secureFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+    signCertPassword: Pmn12-9-20!$
+    files: '$(Agent.BuildDirectory)\s\Lpp.DataMartClientInstaller\bin\Release\Lpp.DataMartClientInstaller.msi'
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Zip Adapters'
+  inputs:
+    Script: |
+     [Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
+     New-Item -ItemType directory $(Build.ArtifactStagingDirectory)\NewAdapters
+     $Paths = @(("Lpp.Dns.DataMart.Model.QueryComposer","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer\bin\*"),
+     ("Lpp.Dns.DataMart.Model.DataChecker","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.DataChecker\bin\*"),
+     ("Lpp.Dns.DataMart.Model.ESPQueryBuilder","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder\bin\*"),
+     ("Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Conditions\bin\*"),
+     ("Lpp.Dns.DataMart.Model.ESPQueryBuilder.I2B2","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.I2B2\bin\*"),
+     ("Lpp.Dns.DataMart.Model.Metadata","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.Metadata\bin\*"),
+     ("Lpp.Dns.DataMart.Model.Processors","$(Agent.BuildDirectory)\s\Lpp.Adapters\Lpp.Dns.DataMart.Model.Processors\bin\*"))
+     
+     $compressionLevel = [IO.Compression.CompressionLevel]::Optimal
+     
+     $version = [Diagnostics.FileVersionInfo]::GetVersionInfo("$(Agent.BuildDirectory)\s\Lpp.Dns.Api\bin\Lpp.Dns.Api.dll").FileVersion.ToString()
+             
+     foreach($p in $Paths)
+     {
+           $zipName = $p[0]
+           $zipPath = $p[1]
+           $zipPath = $zipPath.Substring(0,$zipPath.length - 2)
+           [System.IO.Compression.ZipFile]::CreateFromDirectory($zipPath, "$(Build.ArtifactStagingDirectory)\NewAdapters\$zipName.$version.zip", $compressionLevel, $false);
+     }
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Powershell Copy DMC Installer'
+  inputs:
+    Script: |
+     New-Item -ItemType directory $(Build.ArtifactStagingDirectory)\Portal\DataMartClient
+     Copy-Item $(Agent.BuildDirectory)\s\Lpp.DataMartClientInstaller\bin\Release\Lpp.DataMartClientInstaller.msi -Destination $(Build.ArtifactStagingDirectory)\Portal\DataMartClient\Setup.msi
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'PowerShell Copy Configs to Artifacts'
+  inputs:
+    Script: |
+     Copy-Item $(Agent.BuildDirectory)\s\packages\EntityFramework.6.4.0 $(Build.ArtifactStagingDirectory)\Tools -Recurse
+
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'HPHCI.PROD(5448d3e2-bf1f-45bd-92f0-d5a111fb0205)'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $storage = Get-AzStorageAccount -ResourceGroupName 'Development'-Name 'popmednetadapters'
+           $ctx = $storage.Context
+           
+           $files = Get-AzStorageBlob -Container 'adapters' -Context $ctx | select -ExpandProperty Name
+           
+           Write-Host $files
+           
+           New-Item -ItemType "directory" -Path "$(Build.ArtifactStagingDirectory)\PreviousAdapters\"
+           
+           foreach ( $file in $files)
+           {
+               Get-AzStorageblobcontent -Blob $file -Container 'adapters' -Context $ctx -Destination "$(Build.ArtifactStagingDirectory)\PreviousAdapters\$($file)"
+           }
+    azurePowerShellVersion: 'LatestVersion'
+
+- task: roshkovski.2B9619D5-7BE9-4ED7-BF10-707CB17F657A.5805278E-455E-4DC9-9E30-87B22E01993F.Artifacts-Compress@2
+  displayName: 'Artifacts Compress'
+
+- powershell: |
+   New-Item -ItemType Directory $(Build.ArtifactStagingDirectory)\API
+   New-Item -ItemType Directory $(Build.ArtifactStagingDirectory)\Web
+   
+   Copy-Item $(Build.ArtifactStagingDirectory)\API.zip -Destination  $(Build.ArtifactStagingDirectory)\API\API.zip
+   Copy-Item $(Build.ArtifactStagingDirectory)\Tools.zip -Destination  $(Build.ArtifactStagingDirectory)\API\Tools.zip
+   
+   Copy-Item $(Build.ArtifactStagingDirectory)\API.zip -Destination  $(Build.ArtifactStagingDirectory)\Web\API.zip
+   Copy-Item $(Build.ArtifactStagingDirectory)\Portal.zip -Destination  $(Build.ArtifactStagingDirectory)\Web\Portal.zip
+   Copy-Item $(Build.ArtifactStagingDirectory)\SSO.zip -Destination  $(Build.ArtifactStagingDirectory)\Web\SSO.zip
+   Copy-Item $(Build.ArtifactStagingDirectory)\NewAdapters.zip -Destination  $(Build.ArtifactStagingDirectory)\Web\NewAdapters.zip
+   Copy-Item $(Build.ArtifactStagingDirectory)\PreviousAdapters.zip -Destination  $(Build.ArtifactStagingDirectory)\Web\PreviousAdapters.zip
+  displayName: 'Move Artifacts around'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: API'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\API'
+    ArtifactName: API
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Web'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\Web'
+    ArtifactName: Web
+

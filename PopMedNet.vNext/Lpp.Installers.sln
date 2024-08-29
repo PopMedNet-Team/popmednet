@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Lpp.DataMartClientInstaller", "Lpp.DataMartClientInstaller\Lpp.DataMartClientInstaller.wixproj", "{CC9E6F01-3564-4869-BD1E-D409C3259BFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.DataMartClientChecker", "Lpp.DataMartClientChecker\Lpp.DataMartClientChecker.csproj", "{B4503821-9097-455A-9557-D5A819DE022E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Adapters|Any CPU = Adapters|Any CPU
+		Adapters|x86 = Adapters|x86
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Adapters|Any CPU.ActiveCfg = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Adapters|Any CPU.Build.0 = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Adapters|x86.ActiveCfg = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Adapters|x86.Build.0 = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Debug|Any CPU.Build.0 = Debug|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Debug|x86.ActiveCfg = Debug|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Debug|x86.Build.0 = Debug|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Release|Any CPU.ActiveCfg = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Release|Any CPU.Build.0 = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Release|x86.ActiveCfg = Release|x86
+		{CC9E6F01-3564-4869-BD1E-D409C3259BFE}.Release|x86.Build.0 = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Adapters|Any CPU.ActiveCfg = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Adapters|Any CPU.Build.0 = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Adapters|x86.ActiveCfg = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Adapters|x86.Build.0 = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Debug|Any CPU.Build.0 = Debug|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Debug|x86.ActiveCfg = Debug|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Debug|x86.Build.0 = Debug|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Release|Any CPU.ActiveCfg = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Release|Any CPU.Build.0 = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Release|x86.ActiveCfg = Release|x86
+		{B4503821-9097-455A-9557-D5A819DE022E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4ECED2C6-97B8-43FD-80BB-16EA0E708913}
+	EndGlobalSection
+EndGlobal

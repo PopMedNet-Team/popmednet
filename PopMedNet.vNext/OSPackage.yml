@@ -1,0 +1,596 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+pr: none
+
+pool:
+  name: Azure Pipelines
+  vmImage: 'windows-latest'
+  demands:
+  - msbuild
+  - visualstudio
+
+variables:
+- template: Variables.yml
+
+steps:
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Cleanse API'
+  inputs:
+    Script: |
+     param
+     (
+         [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
+         [string]$jsonDoc
+     )
+     [System.Reflection.Assembly]::LoadFrom("$(Agent.BuildDirectory)\s\Build\OpenSource\Newtonsoft.Json.dll")
+     $module = Import-Module "$(Agent.BuildDirectory)\s\Build\OpenSource\OpenSourceHelpers.dll";
+     class Cleanse{
+           [void] CleaseSolutionFile([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                   $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     if ($strOldText -match "Lpp.Utilities.Legacy")
+                                                     {
+                                                             $n.AppendLine($strOldText);
+                                                     }
+                                                     else
+                                                     {
+                                                             $guid = $strOldText.Split(',') | Select-Object -Last 1
+                                                             $keepDeleteing = $true;
+                                                             $guid = $guid.Replace("""", "");
+                                                             $guid = $guid.Trim();
+                                                             $guid = $guid.Trim('{','}');
+                                                             $guid = $guid.Trim();
+                                                             $global:ProjectGuids.Add($guid)
+                                                     }
+                                             }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                     $keepDeleteing = $false;
+                                             }
+                                     }
+                            }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseGuidsFromSolution([string] $solutionPath, [string] $startsWith){
+                     [bool] $keepDeleteing = $false;
+                     $n = [System.Text.StringBuilder]::new();
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if (-not ($strOldText -match $startsWith))
+                                     {
+                                              $n.AppendLine($strOldText);
+                                     }
+                             }
+                     }
+                      finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                      [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseFiles([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                             while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                     $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     $keepDeleteing = $true;
+                                              }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                      $keepDeleteing = $false;
+                                              }
+                                      }
+                             }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                     }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+     }
+     $global:ProjectGuids = New-Object System.Collections.Generic.List[System.Object]
+     $json = Get-SolutionConfiguration -JsonPath "$(Agent.BuildDirectory)\s\Build\Configs\OpenSource\$jsonDoc"
+     $cleanse = [Cleanse]::new()
+     $sln = $json.SolutionFile
+     
+     if($json.ProjectsToDrop.Count -gt 0)
+     {
+             foreach($proj in $json.ProjectsToDrop)
+             {
+                    $cleanse.CleaseSolutionFile("$(Agent.BuildDirectory)\s\$sln",$proj ,"EndProject")
+              }
+     }
+     if($global:ProjectGuids.Count -gt 0)
+     {
+             foreach($guid in $global:ProjectGuids)
+             {
+                    $cleanse.CleanseGuidsFromSolution("$(Agent.BuildDirectory)\s\$sln", $guid)
+             }
+     }
+     if($json.DeleteBuildConfigs.Count -gt 0)
+     {
+             foreach($config in $json.DeleteBuildConfigs)
+             {
+                    $cleanse.CleanseFiles("$(Agent.BuildDirectory)\s\$sln",$config,"EndProject")
+              }
+     }
+     if($json.FilesToEdit.Count -gt 0)
+     {
+             foreach($file in $json.FilesToEdit)
+             {
+                     $fileName = $file.FileName
+                     $spath = "$(Agent.BuildDirectory)\s\$fileName"
+                     $cleanse.CleanseFiles($spath, $file.BeginingString, $file.EndingString)
+             }
+     }
+     if($json.FilesToDelete.Count -gt 0)
+     {
+              foreach($file in $json.FilesToDelete){
+                     $item = "$(Agent.BuildDirectory)\s\$file"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Force
+                     }
+             }
+     }
+     if($json.DirectoryToDelete.Count -gt 0)
+     {
+             foreach($dir in $json.DirectoryToDelete){ 
+                     $item = "$(Agent.BuildDirectory)\s\$dir"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Recurse -Force
+                     }
+             }
+     }
+    ScriptArguments: '-jsonDoc APIConfiguration.json'
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Cleanse Portal'
+  inputs:
+    Script: |
+     param
+     (
+         [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
+         [string]$jsonDoc
+     )
+     [System.Reflection.Assembly]::LoadFrom("$(Agent.BuildDirectory)\s\Build\OpenSource\Newtonsoft.Json.dll")
+     $module = Import-Module "$(Agent.BuildDirectory)\s\Build\OpenSource\OpenSourceHelpers.dll";
+     class Cleanse{
+           [void] CleaseSolutionFile([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                   $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     if ($strOldText -match "Lpp.Utilities.Legacy")
+                                                     {
+                                                             $n.AppendLine($strOldText);
+                                                     }
+                                                     else
+                                                     {
+                                                             $guid = $strOldText.Split(',') | Select-Object -Last 1
+                                                             $keepDeleteing = $true;
+                                                             $guid = $guid.Replace("""", "");
+                                                             $guid = $guid.Trim();
+                                                             $guid = $guid.Trim('{','}');
+                                                             $guid = $guid.Trim();
+                                                             $global:ProjectGuids.Add($guid)
+                                                     }
+                                             }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                     $keepDeleteing = $false;
+                                             }
+                                     }
+                            }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseGuidsFromSolution([string] $solutionPath, [string] $startsWith){
+                     [bool] $keepDeleteing = $false;
+                     $n = [System.Text.StringBuilder]::new();
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if (-not ($strOldText -match $startsWith))
+                                     {
+                                              $n.AppendLine($strOldText);
+                                     }
+                             }
+                     }
+                      finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                      [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseFiles([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                             while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                     $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     $keepDeleteing = $true;
+                                              }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                      $keepDeleteing = $false;
+                                              }
+                                      }
+                             }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                     }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+     }
+     $global:ProjectGuids = New-Object System.Collections.Generic.List[System.Object]
+     $json = Get-SolutionConfiguration -JsonPath "$(Agent.BuildDirectory)\s\Build\Configs\OpenSource\$jsonDoc"
+     $cleanse = [Cleanse]::new()
+     $sln = $json.SolutionFile
+     
+     if($json.ProjectsToDrop.Count -gt 0)
+     {
+             foreach($proj in $json.ProjectsToDrop)
+             {
+                    $cleanse.CleaseSolutionFile("$(Agent.BuildDirectory)\s\$sln",$proj ,"EndProject")
+              }
+     }
+     if($global:ProjectGuids.Count -gt 0)
+     {
+             foreach($guid in $global:ProjectGuids)
+             {
+                    $cleanse.CleanseGuidsFromSolution("$(Agent.BuildDirectory)\s\$sln", $guid)
+             }
+     }
+     if($json.DeleteBuildConfigs.Count -gt 0)
+     {
+             foreach($config in $json.DeleteBuildConfigs)
+             {
+                    $cleanse.CleanseFiles("$(Agent.BuildDirectory)\s\$sln",$config,"EndProject")
+              }
+     }
+     
+     if($json.FilesToEdit.Count -gt 0)
+     {
+             foreach($file in $json.FilesToEdit)
+             {
+                     $fileName = $file.FileName
+                     $spath = "$(Agent.BuildDirectory)\s\$fileName"
+                     $cleanse.CleanseFiles($spath, $file.BeginingString, $file.EndingString)
+             }
+     }
+     if($json.FilesToDelete.Count -gt 0)
+     {
+              foreach($file in $json.FilesToDelete){
+                     $item = "$(Agent.BuildDirectory)\s\$file"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Force
+                     }
+             }
+     }
+     if($json.DirectoryToDelete.Count -gt 0)
+     {
+             foreach($dir in $json.DirectoryToDelete){ 
+                     $item = "$(Agent.BuildDirectory)\s\$dir"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Recurse -Force
+                     }
+             }
+     }
+    ScriptArguments: '-jsonDoc DNSConfiguration.json'
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Cleanse Adapters'
+  inputs:
+    Script: |
+     param
+     (
+         [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
+         [string]$jsonDoc
+     )
+     [System.Reflection.Assembly]::LoadFrom("$(Agent.BuildDirectory)\s\Build\OpenSource\Newtonsoft.Json.dll")
+     $module = Import-Module "$(Agent.BuildDirectory)\s\Build\OpenSource\OpenSourceHelpers.dll";
+     class Cleanse{
+           [void] CleaseSolutionFile([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                   $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     if ($strOldText -match "Lpp.Utilities.Legacy")
+                                                     {
+                                                             $n.AppendLine($strOldText);
+                                                     }
+                                                     else
+                                                     {
+                                                             $guid = $strOldText.Split(',') | Select-Object -Last 1
+                                                             $keepDeleteing = $true;
+                                                             $guid = $guid.Replace("""", "");
+                                                             $guid = $guid.Trim();
+                                                             $guid = $guid.Trim('{','}');
+                                                             $guid = $guid.Trim();
+                                                             $global:ProjectGuids.Add($guid)
+                                                     }
+                                             }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                     $keepDeleteing = $false;
+                                             }
+                                     }
+                            }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseGuidsFromSolution([string] $solutionPath, [string] $startsWith){
+                     [bool] $keepDeleteing = $false;
+                     $n = [System.Text.StringBuilder]::new();
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                            while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if (-not ($strOldText -match $startsWith))
+                                     {
+                                              $n.AppendLine($strOldText);
+                                     }
+                             }
+                     }
+                      finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                      }
+                      [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+             [void] CleanseFiles([string] $solutionPath, [string] $startsWith, [string] $endswith){
+                     $n = [System.Text.StringBuilder]::new();
+                     [bool] $keepDeleteing = $false;
+                     $reader = [System.IO.File]::OpenText($solutionPath)
+                     try {
+                             while($null -ne ($strOldText = $reader.ReadLine())) {
+                                     if ($keepDeleteing -eq $false)
+                                     {
+                                             if (-not ($strOldText -match $startsWith))
+                                             {
+                                                     $n.AppendLine($strOldText);
+                                             }
+                                             else
+                                             {
+                                                     $keepDeleteing = $true;
+                                              }
+                                     }
+                                     else
+                                     {
+                                             if ($strOldText -match $endswith)
+                                             {
+                                                      $keepDeleteing = $false;
+                                              }
+                                      }
+                             }
+                     }
+                     finally {
+                             $reader.Close()
+                             $reader.Dispose()
+                     }
+                     [System.IO.File]::WriteAllText($solutionPath, $n.ToString());
+             }
+     }
+     $global:ProjectGuids = New-Object System.Collections.Generic.List[System.Object]
+     $json = Get-SolutionConfiguration -JsonPath "$(Agent.BuildDirectory)\s\Build\Configs\OpenSource\$jsonDoc"
+     $cleanse = [Cleanse]::new()
+     $sln = $json.SolutionFile
+     
+     if($json.ProjectsToDrop.Count -gt 0)
+     {
+             foreach($proj in $json.ProjectsToDrop)
+             {
+                    $cleanse.CleaseSolutionFile("$(Agent.BuildDirectory)\s\$sln",$proj ,"EndProject")
+              }
+     }
+     if($global:ProjectGuids.Count -gt 0)
+     {
+             foreach($guid in $global:ProjectGuids)
+             {
+                    $cleanse.CleanseGuidsFromSolution("$(Agent.BuildDirectory)\s\$sln", $guid)
+             }
+     }
+     if($json.DependiciesToAdd.Count -gt 0)
+     {
+             foreach($proj in $json.DependiciesToAdd)
+             {
+                    Remove-XMLFomProject -Path "$(Agent.BuildDirectory)\s\" -Project $proj
+             }
+     }
+     if($json.FilesToEdit.Count -gt 0)
+     {
+             foreach($file in $json.FilesToEdit)
+             {
+                     $fileName = $file.FileName
+                     $spath = "$(Agent.BuildDirectory)\s\$fileName"
+                     $cleanse.CleanseFiles($spath, $file.BeginingString, $file.EndingString)
+             }
+     }
+     if($json.FilesToDelete.Count -gt 0)
+     {
+              foreach($file in $json.FilesToDelete){
+                     $item = "$(Agent.BuildDirectory)\s\$file"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Force
+                     }
+             }
+     }
+     if($json.DirectoryToDelete.Count -gt 0)
+     {
+             foreach($dir in $json.DirectoryToDelete){ 
+                     $item = "$(Agent.BuildDirectory)\s\$dir"
+                     if(Test-Path -Path $item){
+                           Remove-Item $item -Recurse -Force
+                     }
+             }
+     }
+    ScriptArguments: '-jsonDoc AdapterConfiguration.json'
+- task: NuGetCommand@2
+  displayName: 'NuGet restore After Cleanse'
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Dns.Api.sln'
+  inputs:
+    solution: Lpp.Dns.Api.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution DistributedNetworkSolution.sln'
+  inputs:
+    solution: DistributedNetworkSolution.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Adapters.sln'
+  inputs:
+    solution: Lpp.Adapters.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- powershell: |
+   Write-Host "Cleansing obj & bin"
+   Get-ChildItem "$(Agent.BuildDirectory)\s" -include bin,obj -Recurse | remove-item -force -Recurse
+   Write-Host "Finished Cleansing obj & bin"
+        
+   Get-ChildItem "$(Agent.BuildDirectory)\s" -include node_modules -Recurse | remove-item -force -Recurse
+        
+   Write-Host "Cleansing Packages"
+   Remove-Item -Recurse -Force "$(Agent.BuildDirectory)\s\packages"
+   Write-Host "Finished Packages"
+   Write-Host "Cleansing i2b2 plugin"
+   Remove-Item -Recurse -Force "$(Agent.BuildDirectory)\s\Plugins\Lpp.Dns.HealthCare.I2B2RDP"
+   Write-Host "Finished Cleansing i2b2 plugin"
+   Write-Host "Cleansing OpenSource folder"
+   Remove-Item -Recurse -Force "$(Agent.BuildDirectory)\s\Build\OpenSource"
+   Write-Host "Finished Cleansing OpenSource folder"
+   
+   Write-Host "Cleansing DMCS"
+   Remove-Item -Recurse -Force "$(Agent.BuildDirectory)\s\DMCS"
+   Write-Host "DMCS Removed"
+  displayName: 'Finish Cleaning Code'
+
+- bash: |
+   git clone "https://devops-chillpiper:$(GitHubChillPiper)@github.com/PopMedNet-Team/popmednet.git" "$(Build.ArtifactStagingDirectory)\Github"
+   cd "$(Build.ArtifactStagingDirectory)\Github"
+   git config --global user.name "PopMedNet-Team"
+   git config --global user.email "support@popmednet.org"
+   git checkout master
+  displayName: 'Checkout Github'
+
+- powershell: |
+   cd "$(Build.ArtifactStagingDirectory)\Github"      
+   
+   Get-ChildItem -Path  '$(Build.ArtifactStagingDirectory)\Github' -Exclude @("PopMedNet Build.docx") -Recurse |
+   Select -ExpandProperty FullName |
+   Where {$_ -notlike '$(Build.ArtifactStagingDirectory)\Github\.git*'} |
+   sort length -Descending |
+   Remove-Item -force 
+   
+   Copy-Item -Path '$(Agent.BuildDirectory)\s\*' -Destination "$(Build.ArtifactStagingDirectory)\Github" -Recurse -Exclude @("C:\PopMedNet\.git*", "*.yml")
+  displayName: 'Copy to Github Checkout'
+
+- bash: |
+   cd "$(Build.ArtifactStagingDirectory)\Github"
+   git add --all
+   git commit -m "PMN-${{variables.versionNumber}} Release"
+   git tag PMN-${{variables.versionNumber}}
+   git push origin master
+   git push --tags
+   x=$(git rev-parse --verify HEAD)
+   echo "##vso[task.setvariable variable=gitCommit]$x"
+  displayName: 'Commit to Github'
+
+- task: GitHubRelease@1
+  displayName: 'GitHub release (create)'
+  inputs:
+    gitHubConnection: 'PopMedNet Repo'
+    repositoryName: 'PopMedNet-Team/popmednet'
+    target: '$(gitCommit)'
+    tagPattern: 'PMN-${{variables.versionNumber}}'
+    title: 'PMN-${{variables.versionNumber}}'

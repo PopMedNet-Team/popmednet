@@ -1,0 +1,22 @@
+{
+  "name": "popmednet",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@progress/kendo-licensing": "1.2.2",
+    "@types/bootstrap": "3.4.0",
+    "@types/jquery": "2.0.34",
+    "@types/jquery.cookie": "^1.4.31",
+    "@types/jquery.form": "^3.26.30",
+    "@types/jqueryui": "1.9.27",
+    "@types/kendo-ui": "2019.3.0",
+    "@types/knockout": "^3.4.70",
+    "@types/knockout.mapping": "^2.0.35",
+    "@types/knockout.validation": "0.0.37"
+  },
+  "dependencies": {
+    "lpp.dns.api": "file:Lpp.Dns.Api"
+  }
+}

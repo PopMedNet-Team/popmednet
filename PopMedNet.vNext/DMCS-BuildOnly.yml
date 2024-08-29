@@ -1,0 +1,53 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+  name: Azure Pipelines
+  demands:
+  - msbuild
+  - visualstudio
+
+variables:
+- template: Variables.yml
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Install Nuget Tools
+
+- task: UseDotNet@2
+  displayName: 'Use .Net Core sdk 3.1.x'
+  inputs:
+    version: 3.1.x
+
+- task: NodeTool@0
+  displayName: 'Use Node 14.x'
+  inputs:
+    versionSpec: 14.x
+    checkLatest: true
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    workingDir: ./DMCS/PopMedNet.DMCS
+    verbose: true
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for DMCS
+  inputs:
+    restoreSolution: './DMCS/PopMedNet.DMCS.sln'
+
+- script: |
+   npx webpack --config webpack.config.production.js
+  workingDirectory: ./DMCS/PopMedNet.DMCS
+  displayName: 'Command Line Script'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build for DMCS'
+  inputs:
+    projects: './DMCS/PopMedNet.DMCS.sln'

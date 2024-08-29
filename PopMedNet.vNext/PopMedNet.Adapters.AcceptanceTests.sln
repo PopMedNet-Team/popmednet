@@ -1,0 +1,112 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{084DEEAF-B6C8-48F7-B53E-9BA5933F6D14}"
+	ProjectSection(SolutionItems) = preProject
+		Build\CommonAssemblyInfo.cs = Build\CommonAssemblyInfo.cs
+		Build\DataMartClientCommonAssemlbyInfo.cs = Build\DataMartClientCommonAssemlbyInfo.cs
+		Build\Lpp.Dns.Base.targets = Build\Lpp.Dns.Base.targets
+		Build\Lpp.Dns.targets = Build\Lpp.Dns.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Utilities", "Lpp.Utilities\Lpp.Utilities.csproj", "{F042377F-933E-4178-A871-AAB43006E351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Objects", "Lpp.Objects\Lpp.Objects.csproj", "{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DTO", "Lpp.Dns.DTO\Lpp.Dns.DTO.csproj", "{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.QueryComposer", "Lpp.QueryComposer\Lpp.QueryComposer.csproj", "{B3374F4B-88A0-412D-90E5-79F2014D7721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.Interfaces", "Lpp.Adapters\Lpp.Dns.DataMart.Model.Interface\Lpp.Dns.DataMart.Model.Interfaces.csproj", "{325D9B27-88F8-49D3-A347-40A22881624C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data", "Lpp.Adapters\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data\Lpp.Dns.DataMart.Model.ESPQueryBuilder.Data.csproj", "{1B945FA5-035D-49AC-A901-4570A2A64C08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data", "Lpp.Adapters\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data\Lpp.Dns.DataMart.Model.PCORIQueryBuilder.Data.csproj", "{1BCE7532-35EF-4875-A26D-FE690516983E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpp.Dns.DataMart.Model.QueryComposer", "Lpp.Adapters\Lpp.Dns.DataMart.Model.QueryComposer\Lpp.Dns.DataMart.Model.QueryComposer.csproj", "{B22805C6-4152-400A-9567-C8F5E39FA400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopMedNet.Adapters.AcceptanceTests", "Lpp.Adapters\PopMedNet.Adapters.AcceptanceTests\PopMedNet.Adapters.AcceptanceTests.csproj", "{E1FB3274-C43F-4042-B273-D9F98B4F8A15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Adapters|Any CPU = Adapters|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F042377F-933E-4178-A871-AAB43006E351}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F042377F-933E-4178-A871-AAB43006E351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3374F4B-88A0-412D-90E5-79F2014D7721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{325D9B27-88F8-49D3-A347-40A22881624C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B945FA5-035D-49AC-A901-4570A2A64C08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BCE7532-35EF-4875-A26D-FE690516983E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Adapters|Any CPU.ActiveCfg = Adapters|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Adapters|Any CPU.Build.0 = Adapters|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B22805C6-4152-400A-9567-C8F5E39FA400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Adapters|Any CPU.ActiveCfg = Release|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Adapters|Any CPU.Build.0 = Release|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1FB3274-C43F-4042-B273-D9F98B4F8A15}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F042377F-933E-4178-A871-AAB43006E351} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{AE364C16-D7A4-4CE5-B035-B741C8DDAB0C} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{DD487AA9-8099-4AA7-8CB2-BAE3A2B5104D} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{B3374F4B-88A0-412D-90E5-79F2014D7721} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{325D9B27-88F8-49D3-A347-40A22881624C} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{1B945FA5-035D-49AC-A901-4570A2A64C08} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{1BCE7532-35EF-4875-A26D-FE690516983E} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+		{B22805C6-4152-400A-9567-C8F5E39FA400} = {B3BFCA7A-7EFF-42B9-ACC3-B1B14F4B62E7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D97A316C-D385-4902-84EE-0AC703763AD3}
+	EndGlobalSection
+EndGlobal

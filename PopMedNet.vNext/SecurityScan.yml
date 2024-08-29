@@ -1,0 +1,108 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily Midnight Security Build
+  branches:
+    include:
+    - master
+  always: true
+
+trigger: none
+
+pool:
+  vmImage: 'windows-latest'
+  name: Azure Pipelines
+  demands:
+  - msbuild
+  - visualstudio
+
+variables:
+- template: Variables.yml
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Install Nuget Tools
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud PopMedNet'
+    organization: 'popmednet'
+    scannerMode: 'MSBuild'
+    projectKey: 'PopMedNet'
+    projectName: 'PopMedNet'
+    projectVersion: '${{variables.versionNumber}}'
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for API
+  inputs:
+    restoreSolution: 'Lpp.Dns.Api.sln'
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for Portal
+  inputs:
+    restoreSolution: 'DistributedNetworkSolution.sln'
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for SSO
+  inputs:
+    restoreSolution: 'Lpp.Dns.Sso.sln'
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for Adapters
+  inputs:
+    restoreSolution: 'Lpp.Adapters.sln'
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget for Installer
+  inputs:
+    restoreSolution: 'Lpp.Installers.sln'
+
+- task: VSBuild@1
+  displayName: Build API Solution
+  inputs:
+    solution: 'Lpp.Dns.Api.sln'
+    msbuildArgs: ''
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: Build Portal Solution
+  inputs:
+    solution: 'DistributedNetworkSolution.sln'
+    msbuildArgs: ''
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: Build SSO Solution
+  inputs:
+    solution: 'Lpp.Dns.Sso.sln'
+    msbuildArgs: ''
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: Build Adapters Solution
+  inputs:
+    solution: 'Lpp.Adapters.sln'
+    msbuildArgs: ''
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build solution Lpp.Installers.sln'
+  inputs:
+    solution: Lpp.Installers.sln
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+    maximumCpuCount: true
+
+- task: SonarCloudAnalyze@1

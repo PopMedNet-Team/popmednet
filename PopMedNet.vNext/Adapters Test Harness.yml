@@ -1,0 +1,115 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+resources:
+  repositories:
+    - repository: PopMedNetInternal
+      type: git
+      name: PopMedNet Internal/PopMedNet Internal
+      
+trigger: none
+pr: none
+
+variables:
+  template: variables.yml
+
+pool:
+  vmImage: 'windows-latest'
+  name: Azure Pipelines
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+steps:
+- checkout: self
+- checkout: PopMedNetInternal
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet '
+
+- task: AzurePowerShell@5
+  displayName: 'Download previous test run results'
+  inputs:
+    azureSubscription: 'HPHCI.PROD(5448d3e2-bf1f-45bd-92f0-d5a111fb0205)'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $storage = Get-AzStorageAccount -ResourceGroupName 'Development'-Name 'popmednetadapters'
+           $ctx = $storage.Context
+           
+           $files = Get-AzStorageBlob -Container 'test-results' -Context $ctx | Sort-Object -Property LastModified -Descending | select -ExpandProperty Name -f 1
+           
+           Write-Host $files
+           
+           New-Item -ItemType "directory" -Path "$(System.DefaultWorkingDirectory)\PopMedNet\PreviousResults"
+           
+           foreach ( $file in $files)
+           {
+               Get-AzStorageblobcontent -Blob $file -Container 'test-results' -Context $ctx -Destination "$(System.DefaultWorkingDirectory)\PopMedNet\PreviousResults\$($file)"
+           }
+    azurePowerShellVersion: 'LatestVersion'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore Lpp.Applications.sln'
+  inputs:
+    restoreSolution: $(System.DefaultWorkingDirectory)\PopMedNet\Lpp.Applications.sln
+
+- task: MSBuild@1
+  displayName: 'Build PopMedNet.Applications.TrxToHtml'
+  inputs:
+    solution: '$(System.DefaultWorkingDirectory)\PopMedNet\PopMedNet.TrxToHtml\PopMedNet.TrxToHtml.csproj'
+    platform: '${{variables.buildPlatform }}'
+    configuration: '${{variables.buildConfiguration}}'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore PopMedNet.Adapters.AcceptanceTests.sln'
+  inputs:
+    restoreSolution: $(System.DefaultWorkingDirectory)\PopMedNet\PopMedNet.Adapters.AcceptanceTests.sln
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Copy ConnectionString.config to execution directory'
+  inputs:
+    Script: |
+     Write-Output 'About to Copy ConnectionStrings.config to proper location'     
+     Copy-Item "$(System.DefaultWorkingDirectory)\PopMedNet Internal\Dev-Web.Configs\Test-Harness\ConnectionStrings.config"  -Destination "$(System.DefaultWorkingDirectory)\PopMedNet\Lpp.Adapters\PopMedNet.Adapters.AcceptanceTests\ConnectionStrings.config"
+
+- task: VSBuild@1
+  displayName: 'Build solution PopMedNet.Adapters.AcceptanceTests.sln'
+  inputs:
+    solution: $(System.DefaultWorkingDirectory)\PopMedNet\PopMedNet.Adapters.AcceptanceTests.sln
+
+- task: VSTest@2
+  displayName: 'VsTest - Run tests'
+  inputs:
+    testAssemblyVer2: PopMedNet.Adapters.AcceptanceTests.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)\PopMedNet\Lpp.Adapters\PopMedNet.Adapters.AcceptanceTests\bin'
+
+- task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Build-InlinePowershell.Xpirit-Vsts-Build-InlinePowershell.InlinePowershell@1
+  displayName: 'Execute transform of results from *.trx to *.htm'
+  inputs:
+    Script: |
+     $newFile =  Get-ChildItem -Filter *.trx -Path  D:\a\_temp\TestResults | select -f 1
+     $oldFile =  Get-ChildItem -Filter *.trx -Path  "$(System.DefaultWorkingDirectory)\PopMedNet\PreviousResults" | select -f 1
+     $(System.DefaultWorkingDirectory)\PopMedNet\PopMedNet.TrxToHtml\bin\PopMedNet.TrxToHtml.exe D:\a\_temp\TestResults\$newFile $(System.DefaultWorkingDirectory)\PopMedNet\PreviousResults\$oldFile
+     
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: AzureFileCopy@3
+  displayName: 'Archive test results to AzureBlob storage'
+  inputs:
+    SourcePath: 'D:\a\_temp\TestResults\*.trx'
+    azureSubscription: 'HPHCI.PROD(5448d3e2-bf1f-45bd-92f0-d5a111fb0205)'
+    Destination: 'AzureBlob'
+    storage: 'popmednetadapters'
+    ContainerName: 'test-results'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: 'D:\a\_temp\TestResults'
+  continueOnError: true
+  condition: succeededOrFailed()

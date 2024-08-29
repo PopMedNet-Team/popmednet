@@ -1,0 +1,6 @@
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  versionNumber: '2022.2'
+  codeSigningFileId: 'c0eb5595-8292-4aa0-b4e6-adc07f08b05d'
+  codeSigningPwd: 'Pmn12-9-20!$'
