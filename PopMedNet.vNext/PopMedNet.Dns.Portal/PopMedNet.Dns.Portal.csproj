@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web"> 
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+  </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Remove="node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\content\layout.less" />
+    <Content Remove="wwwroot\content\print.less" />
+    <Content Remove="wwwroot\content\Site.less" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.Development.json.template" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Build\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.7.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\content\layout.less" />
+    <None Include="wwwroot\content\print.less" />
+    <None Include="wwwroot\content\site.less" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="scripts\microsoft\signalr\" />
+    <Folder Include="wwwroot\scripts\page\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PopMedNet.Dns.DTO\PopMedNet.Dns.DTO.csproj" />
+    <ProjectReference Include="..\PopMedNet.Utilities.WebSites\PopMedNet.Utilities.WebSites.csproj" />
+  </ItemGroup>
+
+</Project>

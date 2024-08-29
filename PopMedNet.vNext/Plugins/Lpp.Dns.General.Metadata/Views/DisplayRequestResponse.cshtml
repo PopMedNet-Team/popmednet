@@ -1,0 +1,147 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetaDataResponseModel
+
+<link href="~/Content/MetadataSearch.css" rel="stylesheet" type="text/css" />
+
+<style>
+    span.whitebox {
+        background-color: white;
+        white-space: nowrap;
+        width: 100%;
+        border: solid 1px black;
+        padding: 3px;
+        display: block;
+        min-height: 1.2em;
+    }
+
+    table label {
+        display: block;
+        white-space: nowrap;
+    }
+
+
+    table.Grid tr.spacer {
+        border-top: 0;
+    }
+
+    td.spacer {
+        background-color: white;
+        height: 5px;
+        font-size: 4px;
+    }
+</style>
+
+<div class="ui-groupbox" id="requestResults">
+    <table class="table table-striped table-bordered" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 30px;">&nbsp;</th>
+                <th>Project</th>
+                <th>Request Type</th>
+                <th>Name</th>
+                <th>Submit Date</th>
+                <th>Requestor</th>
+                <th>Organization</th>
+                <th>System Number</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Results">
+            <tr>
+                <td><a href="#" data-bind="text: Expanded() ? '[-]' : '[+]', click: ExpandCollapse"></a></td>
+                <td data-bind="text: Project"></td>
+                <td data-bind="text: RequestType"></td>
+                <td><a href="#" data-bind="text: Name, attr: { href: '/request/' + ID() }"></a></td>
+                <td style="white-space: nowrap;" data-bind="text: moment(moment(SubmitDate()).format('M/D/YYYY h:mm:ss A UTC')).local().format('M/D/YYYY h:mm:ss A')"></td>
+                <td data-bind="text: SubmittedBy"></td>
+                <td data-bind="text: Organization"></td>
+                <td data-bind="text: Identifier"></td>
+            </tr>
+            <tr data-bind="visible: Expanded" style="border-top: 0px;">
+                <td style="width: 30px; background-color: white; border-top: 1px solid #A2A2A0">&nbsp;</td>
+                <td colspan="7" style="border-left: 1px solid #A2A2A0">
+                    <table style="width: 100%;" class="table table-bordered table-striped">
+                        <tr>
+                            <td>
+                                <label for="txtPriority">Priority</label>
+                                <span id="txtPriority" class="whitebox" data-bind="text: Priority"></span>
+                            </td>
+                            <td>
+                                <label for="txtDueDate">Due Date</label>
+                                <span id="txtDueDate" class="whitebox" style="width:280px;" data-bind="text: !DueDate() ? 'N/A' : moment(DueDate()).format('M-D-YYYY')"></span>
+                            </td>
+                            <td>
+                                <label for="txtPurposeOfUse">Purpose Of Use</label>
+                                <span id="txtPurposeOfUse" class="whitebox" data-bind="text: PurposeOfUse"></span>
+                            </td>
+                            <td>
+                                <label for="txtLevelofPHIDisclosure">Level of PHI Disclosure</label>
+                                <span id="txtLevelofPHIDisclosure" class="whitebox" data-bind="text: LevelofPHIDisclosure"></span>
+                            </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label for="txtDescription">Description</label>
+                                <input id="txtDescription" class="whitebox" style=" width:95%; padding: 3px; background-color: white; border: solid 1px black" data-bind="value: Description" disabled />
+                            </td>
+                            <td colspan="1">
+                                <label for="txtEmail">Requestor Email</label>
+                                <span id="txtEmail" class="whitebox"><a href="#" name="RequestorEmail" data-bind="text: RequestorEmail, attr: { href: 'mailto:' + RequestorEmail() }, visible: RequestorEmail() != null && RequestorEmail() != ''"></a></span>
+                            </td>
+                            <td colspan="1">
+                                <label for="txtReportAggregationLevel">Level of Report Aggregation</label>
+                                <input id="txtReportAggregationLevel" class="whitebox" style="width:95%; padding: 3px; background-color: white; border: solid 1px black" data-bind="value: ReportAggregationLevel" disabled />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="txtTaskOrder">Budget Task Order</label>
+                                <span id="txtTaskOrder" class="whitebox" data-bind="text: TaskOrder" disabled="true"></span>
+                            </td>
+                            <td>
+                                <label for="txtActivity">Budget Activity</label>
+                                <input id="txtActivity" class="whitebox" style="width: 260px; padding: 3px; background-color: white; border: solid 1px black" data-bind="value: Activity" disabled="true" />
+                            </td>
+                            <td>
+                                <label for="txtActivityProject">Budget Activity Project</label>
+                                <span id="txtActivityProject" class="whitebox" data-bind="text: ActivityProject" disabled="true"></span>
+                            </td>
+                            <td>
+                                <label for="txtRequesterCenter">Requester Center</label>
+                                <span id="txtRequesterCenter" class="whitebox" data-bind="text: RequesterCenter"></span>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="txtSourceTaskOrder">Source Task Order</label>
+                                <span id="txtSourceTaskOrder" class="whitebox" data-bind="text: SourceTaskOrder" disabled="true"></span>
+                            </td>
+                            <td>
+                                <label for="txtSourceActivity">Source Activity</label>
+                                <input id="txtSourceActivity" class="whitebox" style="width: 260px; padding: 3px; background-color: white; border: solid 1px black" data-bind="value: SourceActivity" disabled="true" />
+                            </td>
+                            <td>
+                                <label for="txtSourceActivityProject">Source Activity Project</label>
+                                <span id="txtSourceActivityProject" class="whitebox" data-bind="text: SourceActivityProject" disabled="true"></span>
+                            </td>
+                            <td >
+                                <label for="txtWorkplanType">Workplan Type</label>
+                                <span id="txtWorkplanType" class="whitebox" data-bind="text: WorkplanType"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr data-bind="visible: Expanded" class="spacer">
+                <td class="spacer" style="border-top: 0px;">&nbsp;</td>
+                <td colspan="7" class="spacer" style="border-top: 1px solid #A2A2A0">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src='@this.Resource("DisplayResponse.js")'></script>
+<script>
+    var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Data == null ? "{}" : Model.Data));
+    MetaData.DisplayResponse.init(data, $("#requestResults"));
+    
+</script>

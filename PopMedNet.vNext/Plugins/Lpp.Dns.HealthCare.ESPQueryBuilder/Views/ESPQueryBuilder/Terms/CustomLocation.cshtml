@@ -1,0 +1,55 @@
+﻿@* GeneratePrettyNames : true *@
+@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+    var btnID = string.Format("btnSelectCode{0}", id);
+    var codesID = string.Format("Codes{0}", id);
+}
+<div class="CustomLocationTerm Term panel panel-default">
+    <input name="TermName" value="CustomLocation" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Custom Location
+    </div>
+    <div class="CustomLocation panel-body">
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="CustomLocationName">Name</label>
+                <input name="LocationName" class="CustomLocationName CustomLocationNameTextBox form-control" type="text" maxlength="80" value="@Model.LocationNames" validationmessage="Name is required."  required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="CustomLocationZipCodes">Zip Codes</label>
+                <textarea name="LocationCodes" class="CustomLocationZipCodes CustomLocationZipCodesTextBox form-control" id="@codesID" rows="3" validationmessage="Zip code required." required></textarea>
+            </div>
+            <div class="col-md-6">
+                <br />
+                <button type="button" class="btn btn-default" id="@btnID" >Select Zip Codes</button>
+                <script>
+                    $(function ()
+                    {
+                        $('#@codesID').val('@Model.LocationCodes');
+                        $('#@btnID').click(function () {
+                            var split = ($('#@codesID').val() || '').split(',');
+                            Global.Helpers.ShowDialog(Global.Helpers.GetEnumString(Dns.Enums.ListsTranslation, 13 /* Zip Codes */), "/Dialogs/CodeSelector", ["Close"], 960, 620, {
+                                ListID: 13 /* Zip Codes */,
+                                Codes: split
+                            }).done(function (results) {
+                                if (!results)
+                                    return;
+
+                                var selectedCodes = results.map(function (i) { return i.Code; });
+                                $('#@codesID').val(selectedCodes);
+                                $("form").formChanged(true);
+                            });
+                        });
+                });
+                </script>
+
+
+            </div>
+        </div>
+    </div>
+</div>

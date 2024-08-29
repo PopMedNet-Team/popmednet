@@ -1,0 +1,12 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+@{
+    Layout = null;
+}
+<div class="DiseaseSelectorTerm Term panel panel-default">
+    <div class="panel-heading">
+        Condition<img src="/Content/img/icons/help16.gif" class="helptip" title="The Conditions listed may differ by network" />
+    </div>    
+    <div class="panel-body">
+        @Model.Base.DiseaseDisplay
+    </div>
+</div>

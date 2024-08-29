@@ -1,0 +1,153 @@
+﻿@using Lpp.Mvc;
+@model Lpp.Dns.HealthCare.DataChecker.Models.ResponseModel
+
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+<script src="@this.Resource("datachecker.charting.js")"></script>
+@*<script src="/scripts/datachecker/datachecker.charting.js"></script>*@
+<script src="@this.Resource("responses.common.js")"></script>
+<script src="@this.Resource("ViewModels/MetadataDataCompletenessResponse.js")"></script>
+@*<script src="/scripts/DataChecker/ViewModels/MetadataDataCompletenessResponse.js"></script>*@
+
+@{
+    Html.Stylesheet("/scripts/jqplot/jquery.jqplot.css");
+    this.Stylesheet("datachecker.responses.css");
+    if (Model.IsExternalView)
+    {
+        this.Stylesheet(CssMediaType.screen | CssMediaType.print, "datachecker.responses.external.css");
+    }
+}
+
+<div @Html.Section( title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer" ) id="ResponseContainer">
+    <div id="ResponseViewHeader" style="">
+        @if (Model.IsExternalView == false)
+        {
+            <a href="#" role="button" data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" id="btnOpenExternal" class="open-external btn btn-default"><img data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+        }
+        <h2>Metadata: Data Completeness</h2>
+        
+        <div style="overflow-x: auto;">
+        @*only a table is required, no charts*@
+            <table class="table table-striped" style="width:100%;" data-bind="visible:Results().length > 0">
+                <thead>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td data-bind="visible: hasDiagnosis">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDiagnosis">Diagnosis</td>
+                        <td data-bind="visible: hasDiagnosis">&nbsp;</td>
+                        <td data-bind="visible: hasDiagnosis">&nbsp;</td>
+                        <td data-bind="visible: hasProcedure">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasProcedure">Procedure</td>
+                        <td data-bind="visible: hasProcedure">&nbsp;</td>
+                        <td data-bind="visible: hasProcedure">&nbsp;</td>
+                        <td data-bind="visible: hasDispensing">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDispensing">Dispensing</td>
+                        <td data-bind="visible: hasDispensing">&nbsp;</td>
+                        <td data-bind="visible: hasDispensing">&nbsp;</td>
+                        <td data-bind="visible: hasEncounter">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEncounter">Encounter</td>
+                        <td data-bind="visible: hasEncounter">&nbsp;</td>
+                        <td data-bind="visible: hasEncounter">&nbsp;</td>
+                        <td data-bind="visible: hasEnrollment">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEnrollment">Enrollment</td>
+                        <td data-bind="visible: hasEnrollment">&nbsp;</td>
+                        <td data-bind="visible: hasEnrollment">&nbsp;</td>
+
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">Data Partner</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">MSDD</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right">DP</td>
+                        <td data-bind="visible: hasDiagnosis">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDiagnosis">Min</td>
+                        <td data-bind="visible: hasDiagnosis">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDiagnosis">Max</td>
+                        <td data-bind="visible: hasProcedure">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasProcedure">Min</td>
+                        <td data-bind="visible: hasProcedure">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasProcedure">Max</td>
+                        <td data-bind="visible: hasDispensing">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDispensing">Min</td>
+                        <td data-bind="visible: hasDispensing">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasDispensing">Max</td>
+                        <td data-bind="visible: hasEncounter">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEncounter">Min</td>
+                        <td data-bind="visible: hasEncounter">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEncounter">Max</td>
+                        <td data-bind="visible: hasEnrollment">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEnrollment">Min</td>
+                        <td data-bind="visible: hasEnrollment">&nbsp;</td>
+                        <td style="text-align:right" data-bind="visible: hasEnrollment">Max</td>
+
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">Min</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">Max</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">Min</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">Max</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ko foreach: { data: Results, as: 'row'} -->
+                    <tr>
+                        <td data-bind="text: row.DP" style="text-align:right;"></td>
+                        <td data-bind="visible: $parent.hasDiagnosis">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasDiagnosis, text: moment(row.DIA_MIN).format('MM/DD/YYYY')" style=" text-align:right"></td>
+                        <td data-bind="visible: $parent.hasDiagnosis">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasDiagnosis, text: moment(row.DIA_MAX).format('MM/DD/YYYY') " style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasProcedure">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasProcedure, text: moment(row.PRO_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasProcedure">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasProcedure, text: moment(row.PRO_MAX).format('MM/DD/YYYY') " style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasDispensing">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasDispensing, text: moment(row.DIS_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasDispensing">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasDispensing, text: moment(row.DIS_MAX).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasEncounter">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasEncounter, text: moment(row.ENC_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasEncounter">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasEncounter, text: moment(row.ENC_MAX).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasEnrollment">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasEnrollment, text: moment(row.ENR_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td data-bind="visible: $parent.hasEnrollment">&nbsp;</td>
+                        <td data-bind="visible: $parent.hasEnrollment, text: moment(row.ENR_MAX).format('MM/DD/YYYY')" style="text-align:right"></td>
+
+                        <td>&nbsp;</td>
+                        <td data-bind="text: moment(row.DP_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td>&nbsp;</td>
+                        <td data-bind="text: moment(row.DP_MAX).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td>&nbsp;</td>
+                        <td data-bind="text: moment(row.MSDD_MIN).format('MM/DD/YYYY')" style="text-align:right"></td>
+                        <td>&nbsp;</td>
+                        <td data-bind="text: moment(row.MSDD_MAX).format('MM/DD/YYYY')" style="text-align:right"></td>
+                    </tr>
+                    <!-- /ko -->
+                </tbody>
+            </table>
+            <p class="alert alert-warning" style="text-align:center;" data-bind="visible:Results().length == 0">No results were found for the specified criteria.</p>        
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        DataChecker.MetaData.init(model, $('#ResponseContainer'));
+    });
+</script>

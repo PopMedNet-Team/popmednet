@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Site-Wide Security Permissions";
+}
+@section Head {
+    
+}
+@section Scripts {
+    <script type="module" src="@Url.Content("~/js/security/AclFieldOptionViewModel.js")"></script>
+    <script type="module" src="@Url.Content("~/js/security/AclViewModel.js")"></script>
+    <script type="module" src="@Url.Content("~/js/events/EditEventPermissions.js")"></script>
+    <script type="module" src="@Url.Content("~/js/home/defaultsecuritypermissions.js")"></script>
+}
+    <article class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/defaultsecuritypermissions">Site-Wide Security Permissions</a></li>
+            </ol>
+        </div>
+        <div class="panel-body">
+            <div id="tabs" class="" data-bind="kendoTabStrip: {}, visible: true">
+                <ul>
+                    <li class="k-state-active">Portal</li>
+                    <li>Organization</li>
+                    <li>Group</li>
+                    <li>Project</li>
+                    <li>Registry</li>
+                    <li>User</li>
+                    <li>Request Metadata</li>
+                </ul>
+                <div id="#Portal" class="tab-pane active">
+                    <p class="alert alert-info">
+                        Rights in this panel apply globally across the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: Global">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: GlobalEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#Organization" class="tab-pane">
+                    <p class="alert alert-info">
+                        Rights in this panel determine who may access and modify all organizations in the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: Organization">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: OrganizationEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#Group" class="tab-pane">
+                    <p class="alert alert-info">
+                        Rights in this panel determine who may access and modify all groups in the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: Group">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: GroupEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#Project" class="tab-pane">
+                    <p class="alert alert-info">
+                        Rights in this panel determine who may access and modify all projects in the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: Project">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: ProjectEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#Registry" class="tab-pane">
+                    <p class="alert alert-info">
+                        Rights in this panel determine who may access and modify all registry objects in the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: Registry">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: RegistryEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#User" class="tab-pane">
+                    <p class="alert alert-info">
+                        Rights in this panel determine who may access and modify all user objects in the network.
+                    </p>
+                    <h2>Permissions</h2>
+                    <div data-bind="with: User">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                    <h2>Events</h2>
+                    <div data-bind="with: UserEvents">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div id="#RequestMetadata" class="tab-pane">
+                    <p class="alert alert-info">
+                        This panel determines the field configuration options for the request metadata header across all Projects. The configuration options set here may be overidden at the Project level.
+                    </p>
+                    <div data-bind="with: FieldOptions">
+                        <partial name="~/Views/Security/EditFieldOptionAcl.cshtml" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="panel-footer right">
+            <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@Url.Content("~/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save"><img src="@Url.Content("~/images/Save24.png")" alt="Save" />Save</button>
+            <br class="clear" />
+        </nav>
+    </article>

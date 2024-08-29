@@ -1,0 +1,17 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    Layout = null;
+}
+<div class="VisitsTerm Term panel panel-default">
+    <input name="TermName" value= "Visits" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Visits
+    </div>
+    <div class="Visits panel-body">
+        <div class="form-group">
+            <label for="MinVisits">Min visits</label>
+            <input name="MinVisits" class="VisitsTextBox form-control" type="text" maxlength="3" value="@Model.MinVisits" />
+        </div>        
+    </div>
+</div>

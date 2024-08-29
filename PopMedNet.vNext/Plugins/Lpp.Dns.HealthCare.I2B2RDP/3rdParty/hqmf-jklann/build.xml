@@ -1,0 +1,47 @@
+<project name="HQMF" basedir=".">
+	
+	<property name="JBOSS_HOME" value="C:/jboss-4.2.2.GA"/>
+	
+	<target name="deploy">
+		<delete dir="${JBOSS_HOME}/server/default/deploy/hqmf.war"/>
+		<copy todir="${JBOSS_HOME}/server/default/deploy/hqmf.war">
+			<fileset dir="hqmf.war"/>
+		</copy>
+		<delete file="${JBOSS_HOME}/server/default/deploy/hqmf.war/hqmf.properties"/>
+		<copy tofile="${JBOSS_HOME}/server/default/deploy/hqmf.war/hqmf.properties" 
+			file="hqmf.war/hqmf-localhost.properties"/>
+	</target>
+	
+	<!-- Stop Jboss -->
+	<target name="jboss-stop" description="Stops JBoss" >
+	    <exec executable="${JBOSS_HOME}/bin/shutdown.bat" spawn="true">
+	        <arg line="-S" />
+	    </exec>
+	    <echo>+-----------------------------+</echo>
+	    <echo>| J B O S S   S T O P P E D   |</echo>
+	    <echo>+-----------------------------+</echo>
+	</target>
+
+	<!-- Start Jboss -->
+	<target name="jboss-start" description="Starts JBoss" >
+	    <exec executable="${JBOSS_HOME}/bin/run.bat" spawn="true">
+	    </exec>
+	    <echo>+-----------------------------+</echo>
+	    <echo>| J B O S S   S T A R T E D   |</echo>
+	    <echo>+-----------------------------+</echo>
+	</target>
+
+	<!-- deploy target-->
+	<target name="jboss-deploy-restart" description="Deploy war file and restart JBoss">
+	  <sequential>
+	    <antcall target="jboss-stop" />
+		<antcall target="build-exploded" />
+		<antcall target="deploy" />
+	    <antcall target="jboss-start" />
+	    <echo>+----------------------------+</echo>
+	    <echo>|   W A R  D E P L O Y E D   |</echo>
+	    <echo>+----------------------------+</echo>
+	  </sequential>
+	</target>
+	
+</project>

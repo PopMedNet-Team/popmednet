@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PMNCommons"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-cache-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/fluent-hc-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpcore-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/jersey-client-1.12.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/jersey-core-1.12.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/jersey-server-1.12.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/jersey-servlet-1.12.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/hqmf-jklann/lib/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

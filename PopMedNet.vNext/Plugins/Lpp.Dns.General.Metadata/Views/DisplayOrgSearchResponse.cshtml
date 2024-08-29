@@ -1,0 +1,61 @@
+﻿@model string
+<style>
+    #orgResults
+    #orgResults {
+        width:100%;
+    }
+        #orgResults table {
+            width:100%;
+        }
+        #orgResults .col-name {
+            width:570px;
+        }
+        #orgResults .col-acronym {
+            width:95px
+        }
+        #orgResults .col-parent {
+            width:250px;
+        }
+        #orgResults .col-desc{            
+        }
+</style>
+<div class="ui-groupbox" id="orgResults">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Acronym</th>
+                <th>Parent</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Results">
+            <tr>
+                <td class="col-name"><a href="#" data-bind="text: Name, attr: { href: '/organizations/details?ID=' + ID }"></a></td>
+                <td class="col-acronym" data-bind="text: Acronym"></td>
+                <td class="col-parent">
+                    <div data-bind="switch: ParentID">
+                        <div data-bind="case: 0">
+
+                        </div>
+                        <div data-bind="case: $else">
+                            <a href="#" data-bind="text: ParentName, attr: { href: '/organizations/details?ID=' + ParentID }"></a>
+                        </div>
+                    </div>
+                </td>
+                <td class="col-desc" data-bind="text: Description"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(function () {
+        //Load the data here from the json that is serialized in from the model.
+        //Reuses the code from the edit and just changes the bindings
+        var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model == null ? "{}" : Model));
+        data = { Results: JSON.parse(data) };
+        ko.applyBindings(data, $("#orgResults")[0]);
+    });
+</script>

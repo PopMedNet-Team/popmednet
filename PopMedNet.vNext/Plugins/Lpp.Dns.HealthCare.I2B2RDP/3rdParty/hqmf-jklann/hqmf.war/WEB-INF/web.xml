@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    version="2.5">
+
+    <display-name>Jersey HQMF Magic</display-name>
+
+    <servlet>
+        <servlet-name>JerseyAPI</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>        
+		<init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>jklann.hqmf</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JerseyAPI</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>	
+
+</web-app>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="i2b2WebClientMod">
+        <wb-resource deploy-path="/" source-path="/js-i2b2"/>
+        <property name="context-root" value="i2b2WebClientMod"/>
+    </wb-module>
+</project-modules>

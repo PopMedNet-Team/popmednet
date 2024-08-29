@@ -1,0 +1,92 @@
+﻿@model Lpp.Dns.HealthCare.Models.ObservationPeriodPluginModel
+
+@{
+    string fldStartPeriod = string.Format("{0}_{1}", Model.ParentContext, "StartPeriod");
+    string fldEndPeriod = string.Format("{0}_{1}", Model.ParentContext, "EndPeriod");    
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#@fldStartPeriod, #@fldEndPeriod')
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: +0,
+            maxDate: '12/31/2299',
+            minDate: '01/01/1900',
+            showButtonPanel: true
+        })
+        .change(function () {
+            if (!$(this).isValidDate($(this).val())) {
+                alert('Please Enter Valid Date in MM/DD/YYYY Format');
+                return false;
+            }
+        })
+        .keyup(function (e) {
+            $(this).datepicker("hide");
+            if (e.keyCode != 8) {
+                if ($(this).val().length == 2) {
+                    $(this).val($(this).val() + "/");
+                }
+
+                if ($(this).val().length == 5) {
+                    $(this).val($(this).val() + "/");
+                }
+            }
+
+            return false;
+        })
+        .keypress(function (e) {
+            var key;
+
+            if (window.event)
+                key = window.event.keyCode;     //IE
+            else
+                key = e.which;                  //firefox
+
+            if (key == 47) {
+                return false;
+            }
+        });
+
+        $(function () {
+            $.fn.isValidDate = function jQuery$isValidDate(date) {
+                var reDate = /^(((((((0[13578])|(1[02]))[\/]((0[1-9])|([12]\d)|(3[01])))|(((0[469])|(11))[\/]((0[1-9])|([12]\d)|(30)))|((02)[\/]((0[1-9])|(1\d)|(2[0-8]))))[\/](((19)|(20)|(21)|(22))([0-9][0-9]))))|((02)[\/](29)[\/](((19)|(20)|(21)|(22))(([02468][048])|([13579][26])))))$/;
+                return reDate.test(date);
+            };
+        });
+    });
+</script>
+
+<div class="ui-groupbox">
+    <div class="ui-groupbox-header">
+        <span>Observation Period Range<img src="/Content/img/icons/help16.gif" class="helptip" title="Dates may differ by network and are based on encounter dates." /></span>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div class="ui-form">
+                    <div>
+                        @Html.LabelFor(opm => opm.StartPeriod)
+                        <label style="color: red; font-size: x-small;">
+                            (MM/DD/YYYY)</label>
+                    </div>
+                    <div>
+                        @Html.TextBox(fldStartPeriod, Model.StartPeriod.ToString("MM/dd/yyyy"), new { id = fldStartPeriod, style = "width: 80px;", maxlength = 10 })
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="ui-form">
+                    <div>
+                        @Html.LabelFor(opm => opm.EndPeriod)
+                        <label style="color: red; font-size: x-small;">(MM/DD/YYYY)</label>
+                    </div>
+                    <div>
+                        @Html.TextBox(fldEndPeriod, Model.EndPeriod.ToString("MM/dd/yyyy"), new { id = fldEndPeriod, style = "width: 80px;", maxlength = 10 })
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

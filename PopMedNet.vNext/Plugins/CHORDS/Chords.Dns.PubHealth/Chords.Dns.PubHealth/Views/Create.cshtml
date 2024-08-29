@@ -1,0 +1,18 @@
+﻿@model Lpp.Dns.PubHealth.Models.PubHealthModel
+@{ 
+    this.Stylesheet("PubHealth.css");
+    var id = Html.UniqueId();
+}
+
+ 
+<div class="SqlEditor ui-form">
+    <div class="ui-form">
+        <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+        <div class="ui-groupbox">
+            <div class="ui-groupbox-header"><span>Sql Query</span></div>
+            <label>Enter the query string to execute at DataMarts</label>
+            @Html.TextAreaFor(m => m.SqlQuery)
+        </div>
+    </div>        
+</div>
+ 

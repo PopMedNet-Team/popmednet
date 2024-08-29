@@ -1,0 +1,223 @@
+﻿@{
+    ViewBag.Title = "Details";
+}
+
+@section Head {
+    <style>
+        .tab-body {
+            min-height: 500px;
+        }
+
+        .gHideColumnHeader > .k-grid .k-header {
+            display: none;
+        }
+    </style>
+}
+@section Scripts {
+    <script type="module" src="@Url.Content("~/js/Security/AclViewModel.js")"></script>
+    <script type="module" src="@Url.Content("~/js/Events/EditEventPermissions.js")"></script>
+    <script type="module" src="@Url.Content("~/js/users/details.js")"></script>
+}
+
+    <article class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <span class="pull-right nowrap" data-bind="visible: ShowActivation">
+                <a style="margin-left: 15px; margin-top: 3px;" data-bind="toggle: User.Active, text: User.Active() ? 'Deactivate' : 'Activate', visible: AccountStatus() == 'Locked' || AccountStatus() == 'Active' || AccountStatus() == 'Pending' || AccountStatus() == 'Rejected' || AccountStatus() == 'Deactivated'" href="#"></a>
+                <a style="margin-top: 3px; margin-left: 15px;" data-bind="click: Reject, visible: AccountStatus() == 'Pending', visible: AccountStatus() == 'Pending'">Reject</a>
+            </span>
+            <span class="label label-success pull-right" style="padding: 7px;" data-bind="text: AccountStatus, css: {'label-success': AccountStatus() == 'Active', 'label-danger': AccountStatus() == 'Locked' || AccountStatus() == 'Deleted' || AccountStatus() == 'Rejected' || AccountStatus() == 'Deactivated', 'label-info': AccountStatus() == 'Pending'}"></span>
+
+
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/users">Users</a></li>
+                <li class="active"><span data-bind="text: Name"></span></li>
+            </ol>
+        </div>
+
+        <div class="panel-body">
+            <form class="form" role="form" action="None">
+                <div class="row" data-bind="visible: AccountStatus() == 'Rejected'">
+                    <div class="col-sm-12 form-group">
+                        <label>Rejection Reason</label>
+                        <p class="form-control-static well well-sm" data-bind="html: User.RejectReason"></p>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: AccountStatus() == 'Deactivated'">
+                    <div class="col-sm-12 form-group">
+                        <label>Deactivation Reason</label>
+                        <p class="form-control-static well well-sm" data-bind="html: User.DeactivationReason"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="txtFirstName">First Name<em>*</em></label>
+                        <input type="text" id="txtFirstName" name="FirstName" class="form-control" required maxlength="100" title="Please enter the user's first name" data-bind="value: User.FirstName" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtMiddleName">Middle Name</label>
+                        <input type="text" id="txtMiddleName" name="MiddleName" class="form-control" maxlength="100" data-bind="value: User.MiddleName" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtLastName">Last Name<em>*</em></label>
+                        <input type="text" id="txtLastName" name="LastName" class="form-control" required maxlength="100" title="Please enter the user's last name" data-bind="value: User.LastName" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtTitle">Title</label>
+                        <input type="text" id="txtTitle" class="form-control" maxlength="100" data-bind="value: User.Title" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="txtEmail">Email Address<em>*</em></label>
+                        <input type="email" id="txtEmail" name="Email" class="form-control" required maxlength="400" title="Please enter the user's email address" data-bind="value: User.Email" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtPhone">Phone #</label>
+                        <input type="tel" id="txtPhone" class="form-control" maxlength="50" data-bind="value: User.Phone" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtFax">Fax #</label>
+                        <input type="tel" id="txtFax" class="form-control" maxlength="50" data-bind="value: User.Fax" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="cboOrganization">Organization <span data-bind="visible: User.OrganizationID() == null, text: '(Requested: ' + User.OrganizationRequested() + ')'"></span></label>
+                        <input type="text" id="cboOrganization" title="Please select an organization" data-bind="kendoDropDownList: {value: User.OrganizationID, data: OrganizationList, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'<Not Selected>', enable: User.ID() == null || User.OrganizationID() == null}" style="width: 100%;" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="txtUserName">User Name<em>*</em></label>
+                        <input type="text" id="txtUserName" name="UserName" required title="Please enter a valid and unique user name" class="form-control" maxlength="50" data-bind="value: User.UserName, enabled: CanChangeLogin" />
+                    </div>
+                    <div class="col-sm-3 form-group" data-bind="visible: AccountStatus() == 'Pending'">
+                        <label for="txtUserName">Requested Role</label>
+                        <input type="text" id="txtRole" name="Role" readonly class="form-control" maxlength="50" data-bind="value: User.RoleRequested" />
+                    </div>
+                    <div class="col-sm-3 form-group pull-right right" style="margin-top: .8em;" data-bind="visible: CanChangePassword || IsProfile">
+                        <button class="btn btn-info" id="btnChangePassword" type="button" data-bind="click: ChangePassword.bind($root), text: User.ID() == null ? 'Set Password' : 'Change Password'"></button>
+                    </div>
+            </div>
+        </form>
+            <div id="tabs" data-bind="kendoTabStrip: {activate: onActivate.bind($root)}, visible: CanManageSecurity || CanManageNotifications" style="min-height: 500px;">
+            <ul>
+                <li class="k-state-active" data-bind="visible: CanManageSecurity, css: {'k-state-active': CanManageSecurity}">Security Groups</li>
+                <li data-bind="visible: CanManageSecurity">Permissions</li>
+                <li data-bind="visible: CanManageSecurity">Events</li>
+                <li data-bind="visible: CanManageNotifications, css: {'k-state-active': CanManageNotifications && !CanManageSecurity}">Notifications</li>
+                <li data-bind="visible: CanViewUser" id="tbAuthentication">Authentication History</li>
+            </ul>
+            <div class="tab-body" data-bind="visible: CanManageSecurity">
+                <br />
+                <p class="alert alert-info">
+                    These security groups control the membership for this user. By selecting a security group, you are adding this user to the security group and the user will automatically get the permissions assigned to that security group.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;">Name</th>
+                                <th style="width: 20%;">Parent</th>
+                                <th style="width: 20%;">Type</th>
+                                <th class="center" style="width: 10%;">X</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: SecurityGroups">
+                            <tr>
+                                <td style="white-space: pre-wrap;"><a href="#" data-bind="text: Path, attr: {href: '/securitygroups/details?ID=' + ID()}"></a></td>
+                                <td data-bind="text: ParentSecurityGroup() || '(None)'"></td>
+                                    <td data-bind="text: $root.TranslateSecurityGroupKind(Kind())"></td>
+                                <td class="right"><button id="btnSecurityGroupDelete" class="btn btn-danger btn-sm" type="button" data-bind="click: $root.RemoveSecurityGroup, attr: {id: 'btnSecurityGroupDelete' + ID()}"><img src="@Url.Content("~/images/Delete24.png")" alt="Delete" />&nbsp;Remove</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="4">
+                                    <div class="dropdown pull-right">
+                                        @*<button class="btn btn-default btn-sm dropdown-toggle" style="margin-top: 3px;" id="btnAddSecurityGroup" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" /> Add Security Group <strong class="caret"></strong></button>*@
+                                        <button class="btn btn-default btn-sm" style="margin-top: 3px;" id="btnAddSecurityGroup" type="button" data-bind="click:SelectSecurityGroup"><img src="@Url.Content("~/images/Add16.png")" alt="Add Security Group" /> Add Security Group</button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-body" data-bind="visible: CanManageSecurity">
+                <br />
+                <!--Permissions-->
+                <p class="alert alert-info">
+                    These permissions control access to this user. It is VERY important that you give permission to at least one group to access this user.
+                </p>
+               <div data-bind="with: Security">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                </div>
+            </div>
+            <div class="tab-body" data-bind="visible: CanManageSecurity">
+                <!--Events-->
+                <br />
+                <p class="alert alert-info">
+                    This allows you to control events that will be fired against the User and who will receive them.
+                </p>
+                <div data-bind="with: Events">
+                    <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                </div>
+            </div>
+            <div class="tab-body" data-bind="visible: CanManageNotifications">
+                <!--Notifications-->
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width:350px;">Frequency</th>
+                            <th>Event</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: SubscribableEventsList">
+                        <tr>
+                            <td>
+                                <div class="Row">
+                                    <div class="form-group">
+                                        <label>General Notifications:</label>
+                                        <input type="text" id="cboFrequency" data-bind="kendoDropDownList: {data: $root.FrequenciesTranslation, dataTextField: 'text', dataValueField: 'value', value: Frequency, optionLabel:'<Not Selected>'}, attr: {id: 'cboFrequency' + ID()}" style="margin-left:15px;" />
+                                    </div>
+                                </div>
+                                <div class="Row" data-bind="visible: SupportsMyFrequency">
+                                    <div class="form-group">
+                                        <label>My Notifications:</label>
+                                        <input type="text" id="cboMyFrequency" data-bind="kendoDropDownList: {data: $root.FrequenciesTranslation, dataTextField: 'text', dataValueField: 'value', value: FrequencyForMy, optionLabel:'<Not Selected>'}, attr: {id: 'cboMyFrequency' + ID()}" style="margin-left:47px;" />
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="collapse-group">
+                                <!-- ko if: $root.HasEventNotificationDetails(ID) -->
+                                <a data-toggle="collapse" data-bind="attr: { 'data-target': '#' + ID().toString() }">+</a>
+                                <!-- /ko -->
+                                <span data-bind="text: Name" style="white-space: nowrap;" class="bold"></span><br /><span data-bind="text: Description" style="font-size: 0.8em;"></span>
+                                <!-- ko if: $root.HasEventNotificationDetails(ID) -->
+                                <div class="collapse" data-bind="attr: { id: '' + ID().toString()}">
+                                    <br />
+                                    <br />
+                                    <div class="col-sm-offset-1 col-sm-6 gHideColumnHeader">
+                                        <div data-bind="kendoGrid: {data: $root.GetEventNotificationDetails(ID), columns: [{ field: 'Description', title: ' '}] }">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-body" style="padding:0px;" data-bind="visible: CanViewUser">
+                <div id="AuthGrid"></div>
+            </div>
+        </div>
+        <nav class="panel-footer right">
+            <button class="btn btn-danger btn-sm pull-right" id="btnDelete" type="button" data-bind="click: Delete, visible: CanDeleteUser" style="margin-left: 30px;"><img src="@Url.Content("~/images/Delete24.png")" alt="Delete" />Delete</button>
+            <button class="btn btn-warning btn-sm pull-right" id="btnCancel" type="button" data-bind="click: Cancel, visible: CanEditUser" style="margin-left: 10px;"><img src="@Url.Content("~/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" id="btnSave" type="button" data-bind="click: Save, visible: CanEditUser"><img src="@Url.Content("~/images/Save24.png")" alt="Save" />Save</button>
+            <br class="clear" />
+        </nav>
+
+</article>

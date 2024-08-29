@@ -1,0 +1,151 @@
+﻿@model Lpp.Dns.HealthCare.Models.ReportSelectorPluginModel
+@{
+    string fldRow = string.Format("{0}_{1}", Model.ParentContext, "Row");
+    string fldCol = string.Format("{0}_{1}", Model.ParentContext, "Column");
+    string fldGrp = string.Format("{0}_{1}", Model.ParentContext, "Group");
+    string fldOpt = string.Format("{0}_{1}", Model.ParentContext, "Option");
+    string ageSub = string.Format("{0}_{1}", Model.ParentContext, "AgeSubSelect");
+    string fnChange = string.Format("{0}_{1}", Model.ParentContext, "OnChange");
+
+    string Year = "Year";
+    string Age = "Age";
+    string Race = "Race";
+    string Gender = "Gender";
+    string BMI = "Bmi";
+    string IndexVar = "IndexVariable";
+    string InclusionDx = "Dx";
+    string InclusionPx = "Px";
+    string InclusionRx = "Rx";
+    string NotApp = "NA";        
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var RadioHandler = function () {
+            // find the checked radio button in each group, and force it to be the value of the radio button control 
+            $("#@fldRow").val($($('input[name=@fldRow]:checked')).val());
+            $("#@fldCol").val($($('input[name=@fldCol]:checked')).val());
+            $("#@fldGrp").val($($('input[name=@fldGrp]:checked')).val());
+
+            var isAge = (($("#@fldRow").val() == '@Age') || ($("#@fldCol").val() == '@Age') || ($("#@fldGrp").val() == '@Age'));
+
+            $("#@ageSub").css('display', isAge ? 'table-row' : 'none');
+        };
+
+        // hook the onchange for the "Option" radio buttons
+        $('input[name=@fldRow]').change(RadioHandler);
+        $('input[name=@fldCol]').change(RadioHandler);
+        $('input[name=@fldGrp]').change(RadioHandler);
+
+        RadioHandler();
+    });
+</script>
+
+<div class="ui-form">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Criteria</th>
+                    <th>Row</th>
+                    <th>Column</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    <label>Not Applicable</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, NotApp, Model.Row != null && Model.Row.Equals(NotApp))</td>
+                <td>@Html.RadioButton(fldCol, NotApp, Model.Column != null && Model.Column.Equals(NotApp)) </td>
+                <td>@Html.RadioButton(fldGrp, NotApp, Model.Group != null && Model.Group.Equals(NotApp))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Year</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, Year, Model.Row != null && Model.Row.Equals(Year))</td>
+                <td>@Html.RadioButton(fldCol, Year, Model.Column != null && Model.Column.Equals(Year)) </td>
+                <td>@Html.RadioButton(fldGrp, Year, Model.Group != null && Model.Group.Equals(Year))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Age</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, Age, Model.Row != null && Model.Row.Equals(Age))</td>
+                <td>@Html.RadioButton(fldCol, Age, Model.Column != null && Model.Column.Equals(Age)) </td>
+                <td>@Html.RadioButton(fldGrp, Age, Model.Group != null && Model.Group.Equals(Age))</td>
+            </tr>
+            <tr id="@ageSub">
+                <td style="text-align: right;">
+                    <label>Stratification</label>
+                </td>
+                <td colspan="3">
+                    @Html.DropDownList(fldOpt, new List<SelectListItem>() {
+                            new SelectListItem() { Text = "Yearly", Value = "1", Selected = Model.Option != null && Model.Option == "1" },
+                            new SelectListItem() { Text = "5 Year Ranges", Value = "5", Selected = Model.Option != null && Model.Option == "5" },
+                            new SelectListItem() { Text = "10 Year Ranges", Value = "10", Selected = Model.Option != null && Model.Option == "10" },
+                            new SelectListItem() { Text = "20 Year Ranges", Value = "20", Selected = Model.Option != null && Model.Option == "20" }
+                        }, new { style = "width: auto;" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Race</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, Race, Model.Row != null && Model.Row.Equals(Race))</td>
+                <td>@Html.RadioButton(fldCol, Race, Model.Column != null && Model.Column.Equals(Race)) </td>
+                <td>@Html.RadioButton(fldGrp, Race, Model.Group != null && Model.Group.Equals(Race))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Gender</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, Gender, Model.Row != null && Model.Row.Equals(Gender))</td>
+                <td>@Html.RadioButton(fldCol, Gender, Model.Column != null && Model.Column.Equals(Gender)) </td>
+                <td>@Html.RadioButton(fldGrp, Gender, Model.Group != null && Model.Group.Equals(Gender))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>BMI</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, BMI, Model.Row != null && Model.Row.Equals(BMI))</td>
+                <td>@Html.RadioButton(fldCol, BMI, Model.Column != null && Model.Column.Equals(BMI)) </td>
+                <td>@Html.RadioButton(fldGrp, BMI, Model.Group != null && Model.Group.Equals(BMI))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Index Variable</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, IndexVar, Model.Row != null && Model.Row.Equals(IndexVar))</td>
+                <td>@Html.RadioButton(fldCol, IndexVar, Model.Column != null && Model.Column.Equals(IndexVar)) </td>
+                <td>@Html.RadioButton(fldGrp, IndexVar, Model.Group != null && Model.Group.Equals(IndexVar))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Inclusion Criteria Dx</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, InclusionDx, Model.Row != null && Model.Row.Equals(InclusionDx))</td>
+                <td>@Html.RadioButton(fldCol, InclusionDx, Model.Column != null && Model.Column.Equals(InclusionDx)) </td>
+                <td>@Html.RadioButton(fldGrp, InclusionDx, Model.Group != null && Model.Group.Equals(InclusionDx))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Inclusion Criteria Px</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, InclusionPx, Model.Row != null && Model.Row.Equals(InclusionPx))</td>
+                <td>@Html.RadioButton(fldCol, InclusionPx, Model.Column != null && Model.Column.Equals(InclusionPx)) </td>
+                <td>@Html.RadioButton(fldGrp, InclusionPx, Model.Group != null && Model.Group.Equals(InclusionPx))</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Inclusion Criteria Rx</label>
+                </td>
+                <td>@Html.RadioButton(fldRow, InclusionRx, Model.Row != null && Model.Row.Equals(InclusionRx))</td>
+                <td>@Html.RadioButton(fldCol, InclusionRx, Model.Column != null && Model.Column.Equals(InclusionRx)) </td>
+                <td>@Html.RadioButton(fldGrp, InclusionRx, Model.Group != null && Model.Group.Equals(InclusionRx))</td>
+            </tr>
+        </table>
+    </div>
+</div>
+

@@ -1,0 +1,38 @@
+﻿How @model Lpp.Dns.HealthCare.SASDistribution.Models.SASDistributionModel
+@{ 
+    this.Stylesheet("SASDistribution.css");
+    var kilobyte = 1024;
+    var megabyte = kilobyte * 1024;
+    var gigabyte = megabyte * 1024;
+    var formatBodySize = new Func<long, string>((size) =>
+    {
+        if (size > gigabyte)
+        {
+            return (size / gigabyte).ToString("0.00") + " Gb";
+        }
+        if (size > megabyte)
+        {
+            return (size / megabyte).ToString("0.00") + " Mb";
+        }
+        if (size > kilobyte)
+        {
+            return (size / kilobyte).ToString("0.00") + " Kb";
+        }
+        return size + " bytes";
+    });
+    var gridID = "grid_" + Html.UniqueId();
+}
+
+<div id="@gridID" class="DocumentGrid"></div>
+<script>
+    var dataSource = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RequestFileList.Select(d => new { ID = d.ID, Name = d.FileName, MimeType = d.MimeType, Length = d.Size, LengthFormatted = formatBodySize(d.Size) })) + ';')
+    $('#@gridID').kendoGrid({
+        columns: [
+            { field: 'Name', title: 'Name' },
+            { field: 'MimeType', title: 'Type', width:200 },
+            { field: 'LengthFormatted', title: 'Size', width: 150 },
+            { field: 'ID', title: ' ', width: 110, attributes: { style: 'text-align:center;' }, template: function (item) { return '<a href="/document/' + item.ID + '/download">[download]</a>'; } }
+        ],
+        dataSource: dataSource
+    });
+</script> 

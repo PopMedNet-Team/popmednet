@@ -1,0 +1,41 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+    var defaultCondition = Model.DiseaseSelections.Select(s => s.Name).First();
+    if (Model.Disease == null)
+    {
+        Model.Disease = defaultCondition;
+    }
+    var viewModel = new {
+        Selected = Model.Disease,
+        Options = Model.DiseaseSelections.Select(s => new { s.Display, Value = s.Name })
+    };
+    }
+<div class="DiseaseSelectorTerm Term panel panel-default">
+    <input name="TermName" value= "DiseaseSelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Condition<img id="conditionTooltip" src="/Content/img/icons/help16.gif" data-toggle="tooltip" class="helptip" title="The Conditions listed may differ by network." />
+    </div>
+    <div id="@id" class="DiseaseSelector panel-body">
+        <input name="Disease" data-bind="kendoDropDownList:{ dataTextField:'Display', dataValueField:'Value', value:Selected, data:Options }" style="width:300px;" />
+        <script>
+            $(function () {
+        var bindingContainer = $('#@id');
+        var m = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel));
+        ko.applyBindings({
+        Selected: ko.observable(m.Selected),
+                    Options: ko.observableArray(m.Options)
+                }, bindingContainer[0]);
+                $('#conditionTooltip').tooltip({placement : 'bottom', trigger: 'click'});
+    })
+        </script>
+        <style>
+            #conditionTooltip + .tooltip > .tooltip-inner{
+                min-width:30px;
+            }
+        </style>
+    </div>
+</div>
+

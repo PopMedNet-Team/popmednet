@@ -1,0 +1,196 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@using Lpp.Dns.General.CriteriaGroup.Models;
+@using Lpp.Dns.General.CriteriaGroup.Views.CriteriaGroup;
+@using Lpp.Dns.General.CriteriaGroup.Views.CriteriaGroup.Terms;
+@using Lpp.Dns.HealthCare.ESPQueryBuilder.Data;
+@using Lpp.Dns.HealthCare.ESPQueryBuilder.Views.ESPQueryBuilder;
+@using Lpp.Dns.HealthCare.ESPQueryBuilder.Views.ESPQueryBuilder.Terms;
+@using Lpp.Utilities;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web.Mvc;
+@{ this.Stylesheet("ESPQueryComposition.min.css"); }
+@{
+    var criteriaGroupTipText = "Click the [+] in the upper right corner to add Criteria Groups. Criteria Groups form cohorts that are determined by the terms within each group. ICD-9 Diagnosis and Disease terms within a criteria groups are OR-ed, whereas Demographic terms (Sex, Race, Ethnicity, Age, Zip Codes) and Visit terms are AND-ed. Multiple Criteria Groups are AND-ed to determine the final cohort which will display a single or stratified patient count based on the Result Stratification options selected. You may negate a Criteria Group by checking 'exclude criteria group' box which will filter out that groups cohort from the final cohort. For more information, see <a href='https://popmednet.atlassian.net/wiki/display/DOC/Query+Composer+Request' target='_blank'>PopMedNet User's Guide: Query Composer Request</a>";
+
+    var reportsModel = new {
+        Report = (from s in (Model.Report ?? string.Empty).TrimStart(',').Split(',')
+                  where !string.IsNullOrWhiteSpace(s) && System.Text.RegularExpressions.Regex.IsMatch(s, @"\d?", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline)
+                  select Convert.ToInt32(s)).ToArray(),
+        ReportSelections = Model.ReportSelections,
+        Model.AgeStratification,
+        Model.PeriodStratification,
+        Model.ICD9Stratification
+    };
+    
+}
+<div id="ESPCompose" class="MedicalRequest ui-form">
+    <div class="ui-form">
+        @Html.HiddenFor(m => m.CriteriaGroupsJSON)
+        <div id="CriteriaGroups">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button class="btn btn-default pull-right" id="btnAddGroup" type="button" style="font-size:0.8em;position:relative;top:-5px;"><span class="glyphicon glyphicon-plus"></span> Add Group</button>
+                    Criteria Groups
+                    <img src="/Content/img/icons/help16.gif" class="helptip" title="@Html.Raw(criteriaGroupTipText)" />
+                    
+                </div>
+                <div id="CriteriaGroupsContainer" class="panel-body">
+
+                @(Html.Partial<CriteriaGroup>().WithModel(new CriteriaGroupModel { CriteriaGroupId = 0, ExcludeCriteriaGroup = false, SaveCriteriaGroup = true, Hidden = true, TermSelections = Model.TermSelections }))
+
+                @if (Model.CriteriaGroups.Count() == 0) {
+                    Model.CriteriaGroupsJSON = "[{\"CriteriaGroupName\":\"Primary\",\"ExcludeCriteriaGroup\":false,\"SaveCriteriaGroup\":true,\"Hidden\":false,\"Terms\":[]}]"; 
+                }
+
+                @{ int criteriaGroupId = 0; }
+                @foreach (var criteriaGroup in Model.CriteriaGroups)
+                {
+                    criteriaGroup.CriteriaGroupId = ++criteriaGroupId;
+                    criteriaGroup.Hidden = false;
+                    criteriaGroup.TermSelections = Model.TermSelections;
+
+                    <div class="CriteriaGroupOuter">
+                        @(Html.Partial<CriteriaGroup>().WithModel(criteriaGroup))
+
+                        <div class="CriteriaTerms">
+                            @foreach (var term in criteriaGroup.Terms)
+                            {
+                                switch (term.TermName)
+                                {
+                                    case "AgeRange":
+                                        Model.MinAge = term.Args["MinAge"];
+                                        Model.MaxAge = term.Args["MaxAge"];
+
+                                        Write(Html.Partial<AgeRange>());
+                                        break;
+                                    case "DiseaseSelector":
+                                        Model.Disease = term.Args["Disease"];
+                                        Write(Html.Partial<DiseaseSelector>().WithModel(Model));
+                                        break;
+                                    case "Gender":
+                                        var sex = 0;
+                                        Int32.TryParse(term.Args["Sex"], out sex);
+                                        Model.Sex = sex;
+                                        Write(Html.Partial<Gender>().WithModel(Model));
+                                        break;
+                                    case "ICD9CodeSelector":
+                                        Model.Codes = term.Args["Codes"];
+                                        Write(Html.Partial<ICD9CodeSelector>().WithModel(Model));
+                                        break;
+                                    case "RaceSelector":
+                                        Model.Race = term.Args["Race"];
+                                        Write(Html.Partial<RaceSelector>().WithModel(Model));
+                                        break;
+                                    case "SmokingSelector":
+                                        Model.Smoking = term.Args["Smoking"];
+                                        Write(Html.Partial<SmokingSelector>().WithModel(Model));
+                                        break;
+                                    case "EthnicitySelector":
+                                        Model.Race = term.Args["Ethnicity"];
+                                        Write(Html.Partial<EthnicitySelector>().WithModel(Model));
+                                        break;
+                                    case "ZipCodeSelector":
+                                        Model.ZipCodes = term.Args["Codes"];
+                                        Write(Html.Partial<ZipCodeSelector>().WithModel(Model));
+                                        break;
+                                    case "ObservationPeriod":
+                                        // Skip - handled by CriteriaGroup project.
+                                        break;
+                                    case "Visits":
+                                        var visits = 0;
+                                        Int32.TryParse(term.Args["MinVisits"], out visits);
+                                        Model.MinVisits = visits;
+                                        Write(Html.Partial<Visits>());
+                                        break;
+                                    case "CustomLocation":
+                                        /*need to pull the term custom values and set on the model so that they can be loaded by the partial*/
+                                        string clv;
+                                        if (term.Args.TryGetValue("LocationName", out clv))
+                                        {
+                                            Model.LocationNames = clv;
+                                        }
+                                        if (term.Args.TryGetValue("LocationCodes", out clv))
+                                        {
+                                            Model.LocationCodes = clv;
+                                        }
+                                        Write(Html.Partial<CustomLocation>().WithModel(Model));
+                                        break;
+                                    case "PredefinedLocation":
+                                        string selectedLocations;
+                                        if (term.Args.TryGetValue("PredefinedLocations", out selectedLocations))
+                                        {
+                                            Model.LocationCodes = selectedLocations;
+                                        }
+                                        Write(Html.Partial<PredefinedLocation>().WithModel(Model));                                        
+                                        break;
+                                    default:
+                                        Write(Html.Partial<Lpp.Dns.HealthCare.ESPQueryBuilder.Views.ESPQueryBuilder.Terms.Dummy>().WithoutModel());
+                                        break;
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+        <div class="ReportParameters" style="display: none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Result Stratification<img src="/Content/img/icons/help16.gif" class="helptip" title="Results are stratified according to the criteria in the Primary Criteria Group. If no option is selected, a single patient count will be returned. " />
+                </div>
+                <div class="panel-body Selections">
+                    <fieldset id="reports-container">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="checkbox-col"></th>
+                                <th>Variable</th>
+                                <th class="stratification-setting-col">Setting</th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: ReportSelections">
+                                <tr data-bind="attr:{ id:Value}">
+                                    <td class="checkbox-col">
+                                        <input type="checkbox" data-bind="value:Value, checked:$root.Report" />
+                                    </td>
+                                    <td data-bind="text:Display"></td>
+                                    <td>
+                                        <!-- ko if:SelectionList != null && SelectionList.length > 0 -->
+                                        <input data-bind="kendoDropDownList:{data:SelectionList, dataTextField:'CategoryText', dataValueField:'StratificationCategoryId', value:$root.GetReportSettingProperty(Name)}" />
+                                        <!-- /ko -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <input type="hidden" name="Report" data-bind="value:Report"/>
+                        <input type="hidden" name="AgeStratification" data-bind="value:AgeStratification" />
+                        <input type="hidden" name="PeriodStratification" data-bind="value:PeriodStratification" />
+                        <input type="hidden" name="ICD9Stratification" data-bind="value:ICD9Stratification" />
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@this.Resource("compose.js")"></script>
+<script>
+    config.reportcodes = {
+        age: @ReportSelectionCode.Age.ToString("d"),
+        center: @ReportSelectionCode.Center.ToString("d"),
+        disease: @ReportSelectionCode.Disease.ToString("d"),
+        icd9: @ReportSelectionCode.ICD9.ToString("d"),
+        period: @ReportSelectionCode.Period.ToString("d"),
+        race: @ReportSelectionCode.Race.ToString("d"),
+        ethnicity: @ReportSelectionCode.Ethnicity.ToString("d"),
+        sex: @ReportSelectionCode.Sex.ToString("d"),
+        zip: @ReportSelectionCode.Zip.ToString("d")
+    };
+    config.termSelectionUrl = '@Model.TermSelections.Url';
+
+    reportsModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(reportsModel));
+
+    initCompose();
+</script>

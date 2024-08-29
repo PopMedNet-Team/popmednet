@@ -1,0 +1,147 @@
+﻿@using Lpp.Mvc;
+@model Lpp.Dns.HealthCare.DataChecker.Models.ResponseModel
+
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+<script src="@this.Resource("datachecker.charting.js")"></script>
+@*<script src="/scripts/datachecker/datachecker.charting.js"></script>*@
+<script src="@this.Resource("responses.common.js")"></script>
+<script src="@this.Resource("ViewModels/DiagnosesResponse.js")"></script>
+@*<script src="/scripts/datachecker/ViewModels/DiagnosesResponse.js"></script>*@
+
+@{
+    Html.Stylesheet("/scripts/jqplot/jquery.jqplot.css");
+    this.Stylesheet("datachecker.responses.css");
+    if (Model.IsExternalView)
+    {
+        this.Stylesheet(CssMediaType.screen | CssMediaType.print, "datachecker.responses.external.css");
+    }
+}
+
+<div @Html.Section( title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer" ) id="ResponseContainer">
+    <div id="ResponseViewHeader">
+        @if (Model.IsExternalView == false)
+        {
+            <a href="#" role="button" data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" id="btnOpenExternal" class="open-external btn btn-default"><img data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+        }
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    
+    <div id="diagnosis_overall" class="metricview" data-bind="visible: (SelectedMetric().value == 0)">
+        <div data-bind="visible:HasResults">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Code Type</th>
+                        <th>n</th>
+                        <th style="text-align:center;">%</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: OverallMetrics">
+                    <tr>
+                        <td data-bind="text: Code"></td>
+                        <td data-bind="text: $root.formatCodeType(CodeType)"></td>
+                        <td data-bind="text: Count" class="numbers"></td>
+                        <td data-bind="text: Percent" class="percent"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="OverallMetricsChart"></div>
+            <div data-bind="text: Label"></div>
+            <div id="OverallMetricsPercentageBarChart" class="overallmetric_barchart_fullwidth"></div>
+            <div data-bind="text: Label"></div>
+            <div id="OverallMetricsPieChart" class="overallmetric_piechart_fullwidth"></div>
+            <div data-bind="text: Label"></div>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+
+    <div id="diagnosis_countbydp" class="metricview" data-bind="visible: (SelectedMetric().value == 1)">
+        <div data-bind="visible:HasResults">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align:bottom;">Code</th>
+                        <th rowspan="2" style="vertical-align:bottom;">Code Type</th>
+                        <!-- ko foreach: DataPartners -->
+                        <th data-bind="text: $data" style="padding-left:3px;text-align:center;" colspan="2"></th>
+                        <!-- /ko -->
+                    </tr>
+                    <tr>
+                        <!-- ko foreach: DataPartners -->
+                        <th style="text-align:center;">N</th>
+                        <th style="text-align:center;">%</th>
+                        <!-- /ko -->
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: PercentByDataPartner">
+                    <tr>
+                        <td data-bind="text: Code"></td>
+                        <td data-bind="text: $root.formatCodeType(CodeType)"></td>
+                        <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                        <td data-bind="text: partner.Count" class="numbers"></td>
+                        <td data-bind="text: $root.toPercent(partner.Count, partner.Total)" class="percent"></td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+            <div id="DataPartnerMetrics"></div>
+            <div id="DataPartnerMetricsPercent"></div>
+            <div id="DataPartnersMetricsPie"></div>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+    <div id="diagnosis_percentcontribution" class="metricview" data-bind="visible: (SelectedMetric().value == 2)">
+        <div data-bind="visible:HasResults">
+            <table style="width:100%;">
+                <thead>
+                    <tr>
+                        <th style="vertical-align:bottom;" rowspan="2">Code</th>
+                        <th style="vertical-align:bottom;" rowspan="2">Code Type</th>
+                        <!-- ko foreach: DataPartners -->
+                        <th data-bind="text: $data" colspan="2" style="text-align:center;"></th>
+                        <!-- /ko -->
+                    </tr>
+                    <tr>
+                        <!-- ko foreach: DataPartners -->
+                        <th style="text-align:center;">N</th>
+                        <th style="text-align:center;">%</th>
+                        <!-- /ko -->
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: { data: PercentByDataPartner, as: 'item' }">
+                    <tr>
+                        <td data-bind="text: item.Code"></td>
+                        <td data-bind="text: $root.formatCodeType(item.CodeType)"></td>
+                        <!-- ko foreach: { data: item.Partners, as: 'partner'} -->
+                        <td data-bind="text: partner.Count" class="numbers"></td>
+                        <td data-bind="text: $root.toPercent(partner.Count, item.Total)" class="percent"></td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+            <div id="PercentDataPartnerContribution"></div>
+            <div id="PercentDataPartnerContribution_Pie"></div>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    </div>
+
+
+</div>
+
+<script>
+    $(function () {
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        DataChecker.Diagnoses.init(model, $('#ResponseContainer'));
+    });
+</script>

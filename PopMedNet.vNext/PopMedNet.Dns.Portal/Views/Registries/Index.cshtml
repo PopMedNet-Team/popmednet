@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Registries";
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/registries">Registries</a></li>
+        </ol>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gHeight}">
+        <div id="gRegistries" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Registries.Index.gRegistries.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: NameAnchor },
+                {field: 'Type', title: 'Type', values:DataUpdateFrequenciesTranslation(), filterable: { ui:typeFilterUI} }
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewRegistry" data-bind="click: btnNewRegistry_Click, visible: CanCreateNew"><img src="@Url.Content("~/images/Add16.png")" alt="Add Registry" />Add Registry</button>
+    </nav>
+</article>
+@section Scripts{
+    <script type="module" src="~/scripts/pmngrid/pmngrid.js"></script>
+    <script type="module" src="~/js/registries/index.js"></script>
+}

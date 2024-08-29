@@ -1,0 +1,139 @@
+﻿@model string
+@{ 
+    this.Stylesheet("MeataDataSearch.css");    
+}
+
+<style>
+    span.form-control {
+        background-color: white;
+        white-space: nowrap;
+        width: 100%;
+        border: solid 1px black;
+        padding: 3px;
+        display: block;
+        min-height: 1.2em;
+    }
+    table.form-control {
+        background-color: white;
+        border: solid 1px black;
+        padding: 3px;
+        display: block;
+        min-height: 1.2em;
+    }
+
+    table label {
+        display: block;
+        white-space: nowrap;
+    }
+
+
+    table.Grid tr.spacer {
+        border-top: 0px; 
+    }
+
+    td.spacer {
+        background-color: white;
+        height: 5px;
+        font-size: 4px;
+    }
+</style>
+
+<div class="ui-groupbox" id="registryResults">
+    <div class="ui-groupbox-header"><span>Registries</span></div>
+
+    <table class="table table-striped table-bordered" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 30px;">&nbsp;</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Results">
+            <tr>
+                <td style="white-space: nowrap;"><a href="#" data-bind="text: Expanded() ? '[-]' : '[+]', click: ExpandCollapse"></a></td>
+                <td><a href="#" data-bind="text: Name, attr: { href: '/registries/details?ID=' + ID() }"></a></td>
+                <td data-bind="text: RegistryType"></td>
+            </tr>
+            <tr data-bind="visible: Expanded" style="border-top: 0;">
+                <td style="width: 30px; background-color: white; border-top: 1px solid #A2A2A0">&nbsp;</td>
+                <td colspan="7" style="border-left: 1px solid #A2A2A0">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="5" class="form-group">
+                                <label for="txtDescription">Description</label>
+                                <input id="txtDescription" disabled class="form-control" data-bind="value: Description"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="form-group">
+                                <label for="txtRoPRURL">RoPR URL</label>
+                                <input disabled id="txtRoPRURL" class="form-control" data-bind="value: RoPRURL"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 30%; vertical-align:text-top" class="well">
+                                <label>Classification</label>
+                                <table style="vertical-align:text-top; padding-top: 10px;">
+                                    <tbody data-bind="foreach: Classifications">
+                                        <tr>
+                                            <td data-bind="text: $data"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="width: 5%;"></td>
+                            <td style="width: 30%; vertical-align:text-top" class="well">
+                                <label>Conditions Of Interest</label>
+                                <table style="vertical-align:text-top; padding-top: 10px;">
+                                    <tbody data-bind="foreach: ConditionsOfInterest">
+                                        <tr>
+                                            <td data-bind="text: $data"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="width: 5%;"></td>
+                            <td style="width: 30%; vertical-align:text-top" class="well">
+                                <label>Purposes</label>
+                                <table style="vertical-align:text-top; padding-top: 10px;">
+                                    <tbody data-bind="foreach: Purposes">
+                                        <tr>
+                                            <td data-bind="text: $data"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="5" class="form-group">
+                                <label for="txtOrganizationsCount">Organizations with this registry:</label>
+                                <input disabled id="txtOrganizationsCount" class="form-control" data-bind="value: OrganizationCount" style="width:20px" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="form-group">
+                                <label for="txtDataMartsCount">DataMarts with this registry:</label>
+                                <input disabled id="txtDataMartsCount" class="form-control" data-bind="value: DataMartCount" style="width:20px" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr data-bind="visible: Expanded" class="spacer">
+                <td class="spacer" style="border-top: 0;">&nbsp;</td>
+                <td colspan="7" class="spacer" style="border-top: 1px solid #A2A2A0">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+
+<script src="@this.Resource("DisplayRegistryResponse.js")"></script>
+<script>
+    //Load the data here from the json that is serialized in from the model.
+    var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model == null ? "{}" : Model));
+    data = JSON.parse(data);
+    MetaData.DisplayRegistryResponse.init(data || [], $("#registryResults"));
+</script>

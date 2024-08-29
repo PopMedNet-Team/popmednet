@@ -1,0 +1,55 @@
+﻿<form class="form" role="form">
+    <div class="dropdown pull-right">
+        <button class="btn btn-default btn-sm" style="margin-top: 3px;" id="btnEventAddSecurityGroup" data-bind="click:SelectSecurityGroup"><img src="@Url.Content("/images/Add16.png")" alt="Add Security Group" /> Add Security Group</button>
+    </div>
+    <div class="form-group">
+        <label for="cboEventSecurityGroups" class="control-label" data-bind="attr: {id: 'lblSecurityGroups' + Identifier(), for: 'cboEventSecurityGroups' + Identifier()}">Select Existing Security Group</label><br />
+        <input id="cboEventSecurityGroups" style="width: 450px;" data-bind="kendoDropDownList:
+        {
+            data: dsSecurityGroups,
+            value: SelectedSecurityGroup,
+            dataTextField: 'Name',
+            dataValueField: 'ID',
+        }, attr: {id: 'cboEventSecurityGroups' + Identifier()}" />
+        <button class="btn btn-danger btn-sm" data-bind="click: RemoveSecurityGroup, visible: SelectedSecurityGroup() != null">Remove</button>
+    </div>
+
+</form>
+<br class="clear" />
+
+<table class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;" data-bind="visible: SelectedSecurityGroup() != null">
+    <colgroup>
+        <col style="white-space: nowrap;" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+        <col style="white-space: nowrap;" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th class="bold">Event</th>
+            <th class="bold center">Inherit</th>
+            <th class="bold center">Allow</th>
+            <th class="bold center">Deny</th>
+            @*<th class="bold">Calculated</th>*@
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Events">
+        <tr>
+            <td><span class="bold" data-bind="text: Name"></span><span data-bind="visible: Description() != null && Description() != ''" style="font-size: small;"><br /><small data-bind="text: Description"></small></span></td>
+            <td class="center"><input type="radio" data-bind="attr: {name: Identifier, id: 'rInherit' + Identifier}, checked: Allowed" value="inherit" /></td>
+            <td class="center"><input type="radio" data-bind="attr: {name: Identifier, id: 'rAllowed' + Identifier}, checked: Allowed" value="allow" /></td>
+            <td class="center"><input type="radio" data-bind="attr: {name: Identifier, id: 'rDenied' + Identifier}, checked: Allowed" value="deny" /></td>
+            @*<td data-bind="text: Calculated"></td>*@
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp;</td>
+            <td class="center"><a href="#" data-bind="click: InheritSelectAll">Select All</a></td>
+            <td class="center"><a href="#" data-bind="click: AllowSelectAll">Select All</a></td>
+            <td class="center"><a href="#" data-bind="click: DenySelectAll">Select All</a></td>
+            @*<td>&nbsp;</td>*@
+        </tr>
+    </tfoot>
+</table>

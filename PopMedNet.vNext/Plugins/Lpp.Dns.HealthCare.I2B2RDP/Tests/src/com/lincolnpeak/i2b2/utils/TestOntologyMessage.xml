@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?> <ns3:request xmlns:ns3='http://www.i2b2.org/xsd/hive/msg/1.1/'
+xmlns:ns4='http://www.i2b2.org/xsd/cell/ont/1.1/'
+xmlns:ns2='http://www.i2b2.org/xsd/hive/plugin/'>
+<message_header>
+	<sending_application>
+		<application_name>i2b2 Ontology</application_name>
+		<application_version>1.6</application_version>
+	</sending_application>
+	<sending_facility>
+		<facility_name>i2b2 Hive</facility_name>
+	</sending_facility>
+	<security>
+		<domain>i2b2</domain>
+		<username>PopMedNet</username>
+		<password token_ms_timeout='1800000' is_token='false'>60745CD2280C40E9AC988846B4C7DA8C</password>
+	</security>
+	<project_id>pmn</project_id>
+</message_header>
+<message_body>
+	<ns4:get_code_info hiddens='true' synonyms='true' type='core' blob='false'>
+		<match_str strategy='exact'>DEM:f</match_str>
+	</ns4:get_code_info>
+</message_body>
+</ns3:request>

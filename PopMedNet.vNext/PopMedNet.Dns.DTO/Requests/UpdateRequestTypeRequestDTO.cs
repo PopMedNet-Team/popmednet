@@ -1,0 +1,48 @@
+﻿using PopMedNet.Dns.DTO.QueryComposer;
+using System.Runtime.Serialization;
+
+namespace PopMedNet.Dns.DTO
+{
+    /// <summary>
+    /// Container class for holding the request type, template, and associated models and terms to be saved.
+    /// </summary>
+    [DataContract]
+    public class UpdateRequestTypeRequestDTO
+    {
+        /// <summary>
+        /// Gets or set the request type to save.
+        /// </summary>
+        [DataMember]
+        public RequestTypeDTO RequestType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the permissions for the request type.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<AclRequestTypeDTO> Permissions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the query templates associated with the request type.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<TemplateDTO> Queries { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of term ids to associated the request type.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<Guid> Terms { get; set; }
+
+        /// <summary>
+        /// A collection of the terms that were chosen to be excluded
+        /// </summary>
+        [DataMember]
+        public IEnumerable<SectionSpecificTermDTO> NotAllowedTerms { get; set; }
+
+        /// <summary>
+        /// Gets or sets the models to associate with the request type.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<Guid> Models { get; set; }
+    }
+}

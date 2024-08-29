@@ -1,0 +1,90 @@
+﻿
+.LeftSideControls {
+    vertical-align: top;
+    text-align: left;
+    width: 500px;
+}
+
+.RightSideControls {
+    vertical-align: top;
+    text-align: left;
+    width: 500px;
+}
+
+.clear {
+    clear: both;
+}
+
+.FileUploadControl {
+    width: 450px;
+    height: 155px;
+}
+
+.FileUploadGrid {
+    width: 470px;
+}
+
+#divFtpFolderWrapper {
+    position: absolute;
+    left: 0px;
+    top: 3em;
+    bottom: 0px;
+    right: 50%;
+    border-right: 2px solid silver;
+    overflow: auto;
+}
+
+#sftpFolders {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+    #sftpFolders li {
+        white-space: nowrap;
+    }
+
+    #sftpFolders ul {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+        margin-left: 5px;
+    }
+
+#divFtpFileWrapper {
+    position: absolute;
+    left: 50%;
+    top: 3em;
+    bottom: 0px;
+    right: 0px;
+    overflow: auto;
+}
+
+#sftpFiles {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+    #sftpFiles li {
+        margin: 0px;
+        margin-left: 3px;
+        padding: 0px;
+        white-space: nowrap;
+    }
+
+table#SFTPResults {
+    width: 100%;
+}
+
+table#SFTPResults caption {
+    background-color: #678FC0;
+    font-weight: bold;
+    color: white;
+    padding: 5px;
+}
+
+.breakword {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}

@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "~/Views/Shared/_RootLayout.cshtml";
+}
+
+@section Head {
+@RenderSection("Head", false)
+}
+<section id="frame">
+    <header id="header" class="noprint">
+        <h1>
+            <img src="" data-bind="src:Theme.LogoImage" title="" />            
+        </h1>
+        
+        <section>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="floatright">Welcome, @User.Identity.Name</span>
+            }
+            <div data-bind="text: Theme.Title"></div>
+            
+        </section>
+        <nav class="visible">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <ul id="menu" data-bind="kendoMenu: {dataSource: MainMenu}"></ul>
+            }
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="~/logout" data-bind="click: Logout">Log Off</a>
+            }
+            <a target="_blank" href="" data-bind="attr:{href:Theme.ContactUsHref}">Contact Us</a>
+            &nbsp;
+        </nav>
+
+    </header>
+    <section id="Content">
+        @RenderBody()
+        <div id="NotificationsKendo"></div>
+    </section>
+
+    <footer id="footer" class="noprint">
+        <pre>@PopMedNet.Dns.Portal.Code.Version.ApplicationVersion Release</pre>
+        <nav>|&nbsp;<a href="#" id="TermsAndConditionsFooterLink" data-bind="click: ShowTerms">Terms and Conditions</a>&nbsp;|&nbsp;<a href="#" id="InfoFooterLink" data-bind="click: ShowInfo">Info</a></nav>
+        <span data-bind="text:Theme.Footer"></span>
+    </footer>
+</section>
+@if(User.Identity.IsAuthenticated){
+<section id="sessionWarningDialog" data-session-duration="@ViewData["SessionDurationMinutes"]" data-session-warning="@ViewData["SessionWarningMinutes"]">
+        <script id="sessionWarningDialogContent" type="text/x-kendo-template">
+    <div class="alert alert-warning">
+        <p><strong class="text-uppercase">Warning:</strong></p>
+        <p>Your session will end at #:kendo.toString(sessionEnd,'t')#!</p>
+        <p>Click 'Refresh' to refresh your session or refresh the page in your browser.</p>
+    </div>
+   </script>
+
+</section>
+}
+@section Scripts {
+    <script type="module" src="~/js/_Layout.js"></script>
+    @if(User.Identity.IsAuthenticated){
+        <script type="module" src="~/scripts/page/session.js"></script>
+    }
+
+@RenderSection("scripts", false)
+}

@@ -1,0 +1,738 @@
+﻿@{
+    ViewBag.Title = "Details";
+}
+
+@section Head {
+   
+    <style>
+        .tab-body {
+            min-height: 500px;
+        }
+        #select-model-container ul.dropdown-menu {
+            left:auto;
+            top:auto;
+            bottom:110%;
+            right:0px;
+        }
+    </style>
+
+}
+@section Scripts {
+    <script type="module" src="@Url.Content("~/js/Security/AclViewModel.js")"></script>
+    <script type="module" src="@Url.Content("~/js/Security/AclRequestTypeViewModel.js")"></script>
+    <script type="module" src="@Url.Content("~/js/datamarts/details.js")"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <span class="label label-danger pull-right" style="padding: 7px;" data-bind="visible: DataMart.Deleted">Deleted</span>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/datamarts">DataMarts</a></li>
+            <li class="active" data-bind="text: DataMart.Name"></li>
+        </ol>
+    </div>
+
+    <div class="panel-body">
+        <form class="form" role="form">
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label for="txtName">DataMart Name<em>*</em></label>
+                    <input type="text" name="Name" id="txtName" class="form-control" required maxlength="255" title="Please enter a name" data-bind="value: DataMart.Name" />
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="txtAcronym">Acronym<em>*</em></label>
+                    <input type="text" name="Acronym" class="form-control" id="txtAcronym" maxlength="30" required title="The Acronym cannot be longer than 30 characters" data-bind="value: DataMart.Acronym" />
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label for="cboOrg">Organization<em>*</em></label>
+                    <input type="text" id="cboOrg" name="Organization" required title="Please select an organization" data-bind="kendoDropDownList: {dataTextField: 'Name', dataValueField: 'ID', text: DataMart.Organization, value: DataMart.OrganizationID, data: Organizations, optionLabel:'<Not Selected>'}" style="width: 100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label for="txtFirstName">Contact First Name</label>
+                    <input type="text" id="txtFirstName" maxlength="30" title="The First Name cannot be longer than 30 characters" data-bind="value: DataMart.ContactFirstName" class="form-control" />
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="txtLastName">Contact Last Name</label>
+                    <input type="text" id="txtLastName" maxlength="30" title="The Last Name cannot be longer than 30 characters" data-bind="value: DataMart.ContactLastName" class="form-control" />
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="txtPhone">Contact Phone</label>
+                    <input type="text" id="txtPhone" maxlength="30" title="The Phone cannot be longer than 30 characters" data-bind="value: DataMart.ContactPhone" class="form-control" />
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="txtEmail">Contact Email</label>
+                    <input type="text" id="txtEmail" maxlength="30" title="The Email cannot be longer than 30 characters" data-bind="value: DataMart.ContactEmail" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="txtDescription">DataMart Description <img src="@Url.Content("~/images/help16.png")" class="helptip" title="Describe any relevant characteristics about this DataMart." /></label>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: DataMart.Description" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="txtAddInfo">Collaboration Requirements and Additional Information for this DataMart</label>
+                    <textarea id="txtAddInfo" class="form-control" data-bind="value: DataMart.SpecialRequirements" rows="4" maxlength="1000"></textarea>
+                </div>
+            </div>
+            
+        </form>
+        <div class="DataMartOtherMetadata">
+            <fieldset>
+                <legend></legend>
+                <div class="col-sm-6 form-group">
+                    <div class="row">
+                        <label>Data Period Range</label>
+                        <div style="margin-left: 25px;">** Start and end years should be entered as the full 4 digit year. **</div>
+                        <!-- HPHCI wants these to be numbers. Don't change back to dates. -->
+                        <div class="col-sm-3 form-group">
+                            <label for="dtStartDate">Start Year</label>
+                            <input name="Start Year" class="form-control" type="text" id="dtStartDate" maxlength="4" pattern="\d{4}" data-bind="value: StartYear" style="width: 100%;" />
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label for="dtEndDate">End Year</label>
+                            <input name="End Year" class="form-control" type="text" id="dtEndDate" maxlength="4" pattern="\d{4}" data-bind="value: EndYear" style="width: 100%;" />
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            <label for="cboDataUpdateFreq">Data Update Frequency</label>
+                            <input type="text" id="cboDataUpdateFreq" required title="Please select frequency" data-bind="kendoDropDownList: {value: DataUpdateFrequency.DataUpdateFrequency, data: DataUpdateFrequenciesTranslation(), dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;" />
+                            <input class="form-control" type="text" id="txtOtherDataUpdateFreq" maxlength="30" title="Please enter other frequency" data-bind="value: DataUpdateFrequency.OtherDataUpdateFrequency, visible: DataUpdateFrequency.OtherFrequencySelected" style="width: 86%; margin-top:10px;" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend></legend>
+                <div class="col-sm-4 form-group">
+                    <div class="row">
+                        <label for="cboSupportedDataModel" style="width:100%">Data Model Supported</label>
+                        <input type="text" id="cboSupportedDataModel" required title="Please select data model" data-bind="kendoDropDownList: {value: DataModel, data: SupportedDataModelsTranslation(), dataTextField: 'text', dataValueField: 'value'}" style="width: 50%;" />
+                        <br />
+                        <input type="text" id="txtSupportedDataModel" maxlength="30" title="Please enter other Model" data-bind="value: DataMart.OtherDataModel, visible: DataModelOtherVisible" class="form-control" style="width: 42%; margin-top:10px;" />
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <div class="row" data-bind="visible: ShowAdaptersSupported">
+                        <label for="cboAdapter" style="width:90%">Adapter Supported</label>
+                        <input type="text" id="cboAdapter" data-bind="kendoDropDownList: {value: DataMart.AdapterID, data: QueryComposerAdapters, dataTextField:'Name', dataValueField:'ID', change: onAdapterChange }" style="width:90%;" />
+                    </div>
+                    <div class="row" data-bind="visible: DataPartnerIdentifier_Display">
+                        <label style="margin-top:12px;" for="txtDataPartnerIdentifier">Data Partner Identifier<em>*</em></label>
+                        <input type="text" id="txtDataPartnerIdentifier" title="Please enter the Identifier for the DataPartner" data-bind="value: DataMart.DataPartnerIdentifier" class="form-control" />
+                        <label for="DataPartnerCode">Data Partner Code<em>*</em></label>
+                        <input type="text" id="txtDataPartnerCode" title="Please enter the tracking table code for the DataPartner" data-bind="value: DataMart.DataPartnerCode" class="form-control" />
+                        <p style="font-style:italic"><small>An identifier and code are required for both the Analysis Center and Data Partners.</small></p>
+                    </div>
+                    <div class="row" data-bind="visible: !(CanInstallModels || CanUninstallModels)">
+                        <label style="width:90%">Adapter Supported</label>
+                        <span data-bind="text: AdapterSupported_Display"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <div class="row">
+                        <!-- ko if: FilteredDataModelProcessors().length > 2 -->
+                        <label for="cboProcessor" style="width:90%">Adapter Processor</label>
+                        <input type="text" id="cboProcessor" data-bind="kendoDropDownList: {value: DataMart.ProcessorID, data: FilteredDataModelProcessors, dataTextField:'Processor', dataValueField:'ProcessorID', optionLabel:'<Not Selected>' }" style="width:90%;" />
+                        
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend></legend>
+                <div class="col-sm-6 form-group">
+                    <div class="row"  style="display:none">
+                        <div class="col-sm-12 checkbox" style="margin-top: 10px;">
+                            <div><label><input id="chkIsLocal" type="checkbox" data-bind="checked: DataMart.IsLocal, enable: ShowAdaptersSupported && HasMetadataModelInstalled" /> Local DataMart</label></div>
+                        </div>
+                    </div>                  
+                </div>
+            </fieldset>
+        </div>
+        <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height: 500px;">
+            <ul>
+                <li class="k-state-active">Data Domains </li>
+                <li data-bind="visible: CanManageSecurity">DataMart Permissions</li>
+                <li data-bind="visible: CanManageSecurity">Request Type Permissions</li>
+                <li>Installed Models</li>
+                <li data-bind="visible: CanManageProjects">Projects</li>
+            </ul>
+            <div class="tab-body" style="height:1600px;">
+                <article>
+                    <br />
+                    <p class="alert alert-info">
+                        Specify the data domains used, including any standard code sets or other available data elements.
+                    </p>
+                    <table style="float:left;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label style="font-weight: bold"><input type="checkbox" data-bind="checked: DataMart.InpatientEncountersAny" /> Inpatient Encounters</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientEncountersEncounterID" /> Encounter ID</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientDatesOfService" /> Dates of Service</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientEncountersProviderIdentifier" /> Provider/Facility Identifier</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientICD9Procedures" /> ICD-9 Procedures</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientICD10Procedures" /> ICD-10 Procedures</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientICD9Diagnosis" /> ICD-9 Diagnosis</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientICD10Diagnosis" /> ICD-10 Diagnosis</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientSNOMED" /> SNOMED</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientHPHCS" /> HCPCS (including CPT)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientDisposition" /> Disposition</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientDischargeStatus" /> Discharge Status</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label><input type="checkbox" data-bind="checked: DataMart.InpatientOther" /> Other</label><input type="text" id="txtInpatientOtherText" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: DataMart.InpatientOtherText, visible:DataMart.InpatientOther()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                                </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientEncountersAny" for="chkOutpatientEncountersAny" style="font-weight: bold"><input aria-labelledby="lblOutpatientEncountersAny" id="chkOutpatientEncountersAny" type="checkbox" data-bind="checked: DataMart.OutpatientEncountersAny" /> Outpatient Encounters</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientEncountersEncounterID" for="chkOutpatientEncountersEncounterID"><input aria-labelledby="lblOutpatientEncountersAny" id="chkOutpatientEncountersAny" type="checkbox" data-bind="checked: DataMart.OutpatientEncountersEncounterID" /> Encounter ID</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientDatesOfService" for="chkOutpatientDatesOfService"><input aria-labelledby="lblOutpatientDatesOfService" id="chkOutpatientDatesOfService" type="checkbox" data-bind="checked: DataMart.OutpatientDatesOfService" /> Dates of Service</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientEncountersProviderIdentifier" for="chkOutpatientEncountersProviderIdentifier"><input aria-labelledby="lblOutpatientEncountersProviderIdentifier" id="chkOutpatientEncountersProviderIdentifier" type="checkbox" data-bind="checked: DataMart.OutpatientEncountersProviderIdentifier" /> Provider/Facility Identifier</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientICD9Procedures" for="chkOutpatientICD9Procedures"><input aria-labelledby="lblOutpatientICD9Procedures" id="chkOutpatientICD9Procedures" type="checkbox" data-bind="checked: DataMart.OutpatientICD9Procedures" /> ICD-9 Procedures</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientICD10Procedures" for="chkOutpatientICD10Procedures"><input aria-labelledby="lblOutpatientICD10Procedures" id="chkOutpatientICD10Procedures" type="checkbox" data-bind="checked: DataMart.OutpatientICD10Procedures" /> ICD-10 Procedures</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientICD9Diagnosis" for="chkOutpatientICD9Diagnosis"><input aria-labelledby="lblOutpatientICD9Diagnosis" id="chkOutpatientICD9Diagnosis" type="checkbox" data-bind="checked: DataMart.OutpatientICD9Diagnosis" /> ICD-9 Diagnosis</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientICD10Diagnosis" for="chkOutpatientICD10Diagnosis"><input aria-labelledby="lblOutpatientICD10Diagnosis" id="chkOutpatientICD10Diagnosis" type="checkbox" data-bind="checked: DataMart.OutpatientICD10Diagnosis" /> ICD-10 Diagnosis</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientSNOMED" for="chkOutpatientSNOMED"><input aria-labelledby="lblOutpatientSNOMED" id="chkOutpatientSNOMED" type="checkbox" data-bind="checked: DataMart.OutpatientSNOMED" /> SNOMED</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientHCPCS" for="chkOutpatientHCPCS"><input aria-labelledby="lblOutpatientHCPCS" id="chkOutpatientHCPCS" type="checkbox" data-bind="checked: DataMart.OutpatientHPHCS" /> HCPCS (including CPT)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblOutpatientOther" for="chkOutpatientOther"><input aria-labelledby="lblOutpatientOther" id="chkOutpatientOther" type="checkbox" data-bind="checked: DataMart.OutpatientOther" /> Other</label><input type="text" id="txtOutpatientOther" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: DataMart.OutpatientOtherText, visible:DataMart.OutpatientOther()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPrescriptionOrdersAny" for="chkPrescriptionOrdersAny" style="font-weight: bold"><input aria-labelledby="lblPrescriptionOrdersAny" id="chkPrescriptionOrdersAny" type="checkbox" data-bind="checked: DataMart.PrescriptionOrdersAny" /> Prescription Orders</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPrescriptionOrderDates" for="chkPrescriptionOrderDates"><input aria-labelledby="lblPrescriptionOrderDates" id="chkPrescriptionOrderDates" type="checkbox" data-bind="checked: DataMart.PrescriptionOrderDates" /> Prescription Order Dates</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPrescriptionOrderRxNorm" for="chkPrescriptionOrderRxNorm"><input aria-labelledby="lblPrescriptionOrderRxNorm" id="chkPrescriptionOrderRxNorm" type="checkbox" data-bind="checked: DataMart.PrescriptionOrderRxNorm" /> RxNorm</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPrescriptionOrderNDC" for="chkPrescriptionOrderNDC"><input aria-labelledby="lblPrescriptionOrderNDC" id="chkPrescriptionOrderNDC" type="checkbox" data-bind="checked: DataMart.PrescriptionOrderNDC" /> NDC (National Drug Codes)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPrescriptionOther" for="chkPrescriptionOther"><input aria-labelledby="lblPrescriptionOther" id="chkPrescriptionOther" type="checkbox" data-bind="checked: DataMart.PrescriptionOrderOther" /> Other</label><input type="text" id="txtPrescriptionOther" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: DataMart.PrescriptionOrderOtherText, visible:DataMart.PrescriptionOrderOther()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="float:left; margin-left:10%;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLongitudinalCaptureAny" for="chkLongitudinalCaptureAny" style="font-weight: bold"><input aria-labelledby="lblLongitudinalCaptureAny" id="chkLongitudinalCaptureAny" type="checkbox" data-bind="checked: DataMart.LongitudinalCaptureAny" /> Longitudinal Capture</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLongitudinalCapturePatientID" for="chkLongitudinalCapturePatientID"><input aria-labelledby="lblLongitudinalCapturePatientID" id="chkLongitudinalCapturePatientID" type="checkbox" data-bind="checked: DataMart.LongitudinalCapturePatientID" /> Patient ID</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLongitudinalCaptureStart" for="chkLongitudinalCaptureStart"><input aria-labelledby="lblLongitudinalCaptureStart" id="chkLongitudinalCaptureStart" type="checkbox" data-bind="checked: DataMart.LongitudinalCaptureStart" /> Capture Start</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLongitudinalCaptureStop" for="chkLongitudinalCaptureStop"><input aria-labelledby="lblLongitudinalCaptureStop" id="chkLongitudinalCaptureStop" type="checkbox" data-bind="checked: DataMart.LongitudinalCaptureStop" /> Capture Stop</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLongitudinalCaptureOther" for="chkLongitudinalCaptureOther"><input aria-labelledby="lblLongitudinalCaptureOther" id="chkLongitudinalCaptureOther" type="checkbox" data-bind="checked: DataMart.LongitudinalCaptureOther" /> Other</label><input type="text" id="txtOutpatientOther" maxlength="30" title="Text cannot be longer than 30 characters" data-bind="value: DataMart.LongitudinalCaptureOtherValue, visible:DataMart.LongitudinalCaptureOther()" style="width:150px;" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsAny" for="chkLaboratoryResultsAny" style="font-weight: bold"><input aria-labelledby="lblLaboratoryResultsAny" id="chkLaboratoryResultsAny" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsAny" /> Laboratory Test Results</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsOrderDates" for="chkLaboratoryResultsOrderDates"><input aria-labelledby="lblLaboratoryResultsOrderDates" id="chkLaboratoryResultsOrderDates" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsOrderDates" /> Order Dates</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsDates" for="chkLaboratoryResultsDates"><input aria-labelledby="lblLaboratoryResultsDates" id="chkLaboratoryResultsDates" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsDates" /> Result Dates</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsTestName" for="chkLaboratoryResultsTestName"><input aria-labelledby="lblLaboratoryResultsTestName" id="chkLaboratoryResultsTestName" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestName" /> Test Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsTestDescriptions" for="chkLaboratoryResultsTestDescriptions"><input aria-labelledby="lblLaboratoryResultsTestDescriptions" id="chkLaboratoryResultsTestDescriptions" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestDescriptions" /> Test Descriptions</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsTestLOINC" for="chkLaboratoryResultsTestLOINC"><input aria-labelledby="lblLaboratoryResultsTestLOINC" id="chkLaboratoryResultsTestLOINC" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestLOINC" /> LOINC</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsTestSNOMED" for="chkLaboratoryResultsTestSNOMED"><input aria-labelledby="lblLaboratoryResultsTestSNOMED" id="chkLaboratoryResultsTestSNOMED" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestSNOMED" /> SNOMED</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox" >
+                                                <label id="lblLaboratoryResultsTestResultsInterpretation" for="chkLaboratoryResultsTestResultsInterpretation"><input aria-labelledby="lblLaboratoryResultsTestResultsInterpretation" id="chkLaboratoryResultsTestResultsInterpretation" type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestResultsInterpretation" /> Results Interpretation</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblLaboratoryResultsTestOther" for="chkLaboratoryResultsTestOther"><input type="checkbox" data-bind="checked: DataMart.LaboratoryResultsTestOther" /> Other</label><input type="text" id="txtLaboratoryResultsTestOtherText" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: DataMart.LaboratoryResultsTestOtherText, visible:DataMart.LaboratoryResultsTestOther()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingAny" for="chkPharmacyDispensingAny" style="font-weight: bold"><input aria-labelledby="lblPharmacyDispensingAny" id="chkPharmacyDispensingAny" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingAny" /> Outpatient Pharmacy Dispensing</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingDates" for="chkPharmacyDispensingDates"><input aria-labelledby="lblPharmacyDispensingDates" id="chkPharmacyDispensingDates" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingDates" /> Pharmacy Dispensing Dates</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingNDC" for="chkPharmacyDispensingNDC"><input aria-labelledby="lblPharmacyDispensingNDC" id="chkPharmacyDispensingNDC" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingNDC" /> NDC (National Drug Codes)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingRxNorm" for="chkPharmacyDispensingRxNorm"><input aria-labelledby="lblPharmacyDispensingRxNorm" id="chkPharmacyDispensingRxNorm" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingRxNorm" /> RxNorm</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingDaysSupply" for="chkPharmacyDispensingDaysSupply"><input aria-labelledby="lblPharmacyDispensingDaysSupply" id="chkPharmacyDispensingDaysSupply" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingDaysSupply" /> Days Supply</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingAmountDispensed" for="chkPharmacyDispensingAmountDispensed"><input aria-labelledby="lblPharmacyDispensingAmountDispensed" id="chkPharmacyDispensingAmountDispensed" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingAmountDispensed" /> Amount Dispensed</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPharmacyDispensingOther" for="chkPharmacyDispensingOther"><input aria-labelledby="lblPharmacyDispensingOther" id="chkPharmacyDispensingOther" type="checkbox" data-bind="checked: DataMart.PharmacyDispensingOther" /> Other</label><input type="text" id="txtInpatientOtherText" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: DataMart.PharmacyDispensingOtherText, visible:DataMart.PharmacyDispensingOther()" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblBiorepositoriesAny" for="chkBiorepositoriesAny" style="font-weight: bold"><input aria-labelledby="lblBiorepositoriesAny" id="chkBiorepositoriesAny" type="checkbox" data-bind="checked: DataMart.BiorepositoriesAny" /> Biorepositories</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="float:left;  margin-left:10%;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsAny" for="chkDemographicsAny" style="font-weight: bold"><input aria-labelledby="lblDemographicsAny" id="chkDemographicsAny" type="checkbox" data-bind="checked: DataMart.DemographicsAny" /> Demographics</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsSex" for="chkDemographicsSex"><input aria-labelledby="lblDemographicsSex" id="chkDemographicsSex" type="checkbox" data-bind="checked: DataMart.DemographicsSex" /> Sex</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsDateOfBirth" for="chkDemographicsDateOfBirth"><input aria-labelledby="lblDemographicsDateOfBirth" id="chkDemographicsDateOfBirth" type="checkbox" data-bind="checked: DataMart.DemographicsDateOfBirth" /> Date of Birth</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsDateOfDeath" for="chkDemographicsDateOfDeath"><input aria-labelledby="lblDemographicsDateOfDeath" id="chkDemographicsDateOfDeath" type="checkbox" data-bind="checked: DataMart.DemographicsDateOfDeath" /> Date of Death</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsAddressInfo" for="chkDemographicsAddressInfo"><input aria-labelledby="lblDemographicsAddressInfo" id="chkDemographicsAddressInfo" type="checkbox" data-bind="checked: DataMart.DemographicsAddressInfo" /> Zip Code</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsRace" for="chkDemographicsRace"><input aria-labelledby="lblDemographicsRace" id="chkDemographicsRace" type="checkbox" data-bind="checked: DataMart.DemographicsRace" /> Race</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsEthnicity" for="chkDemographicsEthnicity"><input aria-labelledby="lblDemographicsEthnicity" id="chkDemographicsEthnicity" type="checkbox" data-bind="checked: DataMart.DemographicsEthnicity" /> Ethnicity</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblDemographicsOther" for="chkDemographicsOther"><input aria-labelledby="lblDemographicsOther" id="chkDemographicsOther" type="checkbox" data-bind="checked: DataMart.DemographicsOther" /> Other</label><input type="text" id="txtDemographicsOtherText" maxlength="30" style="width:150px;" title="Text cannot be longer than 30 characters" data-bind="value: DataMart.DemographicsOtherText, visible:DataMart.DemographicsOther()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPatientOutcomesAny" for="chkPatientOutcomesAny" style="font-weight: bold"><input aria-labelledby="lblPatientOutcomesAny" id="chkPatientOutcomesAny" type="checkbox" data-bind="checked: DataMart.PatientOutcomesAny" /> Patient Reported Information</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPatientOutcomesHealthBehavior" for="chkPatientOutcomesHealthBehavior"><input aria-labelledby="lblPatientOutcomesHealthBehavior" id="chkPatientOutcomesHealthBehavior" type="checkbox" data-bind="checked: DataMart.PatientOutcomesHealthBehavior" /> Health Behavior</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPatientOutcomesHRQoL" for="chkPatientOutcomesHRQoL"><input aria-labelledby="lblPatientOutcomesHRQoL" id="chkPatientOutcomesHRQoL" type="checkbox" data-bind="checked: DataMart.PatientOutcomesHRQoL" /> Health Related Quality Of Life (HRQoL)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPatientOutcomesReportedOutcome" for="chkPatientOutcomesReportedOutcome"><input aria-labelledby="lblPatientOutcomesReportedOutcome" id="chkPatientOutcomesReportedOutcome" type="checkbox" data-bind="checked: DataMart.PatientOutcomesReportedOutcome" /> Patient Reported Outcome (PRO)</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblPatientOutcomesOther" for="chkPatientOutcomesOther"><input aria-labelledby="lblPatientOutcomesOther" id="chkPatientOutcomesOther" type="checkbox" data-bind="checked: DataMart.PatientOutcomesOther" /> Other</label><input type="text" id="txtPatientOutcomesOtherText" maxlength="30" style="width:150px;" title="Text cannot be longer than 30 characters" data-bind="value: DataMart.PatientOutcomesOtherText, visible:DataMart.PatientOutcomesOther()" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend></legend>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsAny" for="chkVitalSignsAny" style="font-weight: bold"><input aria-labelledby="lblVitalSignsAny" id="chkVitalSignsAny" type="checkbox" data-bind="checked: DataMart.VitalSignsAny" />Vital Signs</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblTemperature" for="chkTemperature"><input aria-labelledby="lblTemperature" id="chkTemperature" type="checkbox" data-bind="checked: DataMart.VitalSignsTemperature" /> Temperature</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsHeight" for="chkVitalSignsHeight"><input aria-labelledby="lblVitalSignsHeight" id="chkVitalSignsHeight" type="checkbox" data-bind="checked: DataMart.VitalSignsHeight" /> Height</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsWeight" for="chkVitalSignsWeight"><input aria-labelledby="lblVitalSignsWeight" id="chkVitalSignsWeight" type="checkbox" data-bind="checked: DataMart.VitalSignsWeight" /> Weight</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsLength" for="chkVitalSignsLength"><input aria-labelledby="lblVitalSignsLength" id="chkVitalSignsLength" type="checkbox" data-bind="checked: DataMart.VitalSignsLength" /> Length</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsBMI" for="chkVitalSignsBMI"><input aria-labelledby="lblVitalSignsBMI" id="chkVitalSignsBMI" type="checkbox" data-bind="checked: DataMart.VitalSignsBMI" /> BMI</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="lblVitalSignsBloodPressure" for="chkVitalSignsBloodPressure"><input aria-labelledby="lblVitalSignsBloodPressure" id="chkVitalSignsBloodPressure" type="checkbox" data-bind="checked: DataMart.VitalSignsBloodPressure" /> Blood Pressure</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row" style="margin-left: 5px;">
+                                            <div class="col-sm-12 form-group checkbox">
+                                                <label id="VitalSignsOther" for="VitalSignsOther"><input aria-labelledby="VitalSignsOther" id="VitalSignsOther" type="checkbox" data-bind="checked: DataMart.VitalSignsOther" /> Other</label><input type="text" id="txtDemographicsOtherText" maxlength="30" style="width:150px;" title="Text cannot be longer than 30 characters" data-bind="value: DataMart.VitalSignsOtherText, visible:DataMart.VitalSignsOther()" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>                         
+                </article>
+            </div>
+            <div class="tab-body">
+                <br />
+                <!--Permissions-->
+                <p class="alert alert-info">
+                    These permissions control access to this user. It is VERY important that you give permission to at least one group to access this user.
+                </p>
+                <div data-bind="with: DataMartSecurity">
+                    <partial name="~/Views/Security/EditAcl.cshtml" />
+                </div>
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    These permissions allow you to control, on a per request type basis the permissions for the datamart.
+                </p>
+                <div data-bind="with: DataMartRequestTypesSecurity">
+                    <partial name="~/Views/Security/EditRequestTypesAcl.cshtml" />
+                </div>
+            </div>
+            <div class="tab-body overflow-visible" id="tbInstalledModels">
+                <!--Installed Models-->
+                <br />
+                <p class="alert alert-info">
+                    This DataMart supports the following request models. For more information on request models, see <a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Models' target='_blank'>https://popmednet.atlassian.net/wiki/display/DOC/Request+Models</a>
+                </p>
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <colgroup>
+                        <col style="width: 80px;" />
+                        <col style="width: 60%; vertical-align: middle;" />
+                        <col style="width: 280px; vertical-align: middle;" />
+                        <col style="width: 280px; vertical-align: middle;" />
+                        <col style="width: 80px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>S</th>
+                            <th class="bold">Model</th>
+                            <th class="bold">Last Metadata Request</th>
+                            <th class="bold">Last Metadata Response</th>
+                            <th class="bold center">X</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: InstalledDataModels.InstalledDataModels">
+                        <tr>
+                            @*<td><img data-bind="attr: {src: ShowConfig() ? '@this.ResourceUrl("/images/collapse16.png")' : '@this.ResourceUrl("/images/expand16.png")'}, click: ToggleConfig" style="cursor: pointer;" /></td>*@
+                            <td></td>
+                            <td style="white-space: nowrap;" data-bind="text: Model"></td>
+                            <td></td>
+                            <td></td>
+                            <td><button class="btn btn-danger btn-xs" data-bind="visible: $root.CanUninstallModels, click: $root.UninstallModel.bind($root,$data)">Uninstall</button></td>
+                        </tr>
+                        <tr data-bind="visible: ShowConfig">
+                            <td style="border-right: 0;">&nbsp;</td>
+                            <td colspan="4" style="border-left: 0;">
+                                Show Configuration properties here
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <div class="pull-right" style="margin-right: 4px;" data-bind="visible:$root.CanInstallModels">
+                                    <div class="dropdown" id="select-model-container">
+                                        <a href="#" id="btnInstallModel" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown"><img src="@Url.Content("~/images/Add16.png")" alt="Install Model" />&nbsp;Install Model <strong class="caret"></strong></a>
+                                        <ul class="dropdown-menu" data-bind="foreach: InstalledDataModels.UninstalledDataModels">
+                                            <li>
+                                                <a href="#" data-bind="click: $root.InstallModel.bind($root, $data), attr: {id: ID}">
+                                                    <span data-bind="text: Name"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    The DataMart is subscribed with the following Projects. You may remove your DataMart from a given project by clicking remove.
+                </p>
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <colgroup>
+                        <col style="width: 80px;" />
+                        <col style="width: 60%; vertical-align: middle;" />
+                        <col style="width: 80px; text-align: center;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>&nbsp;</th>
+                            <th>X</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: Projects">
+                        <tr>
+                            <td><a href="#" data-bind="attr: {href: '/projects/details?ID=' + ProjectID()}, text: Project"></a></td>
+                            <td>&nbsp;</td>
+                            <td><button type="button" data-bind="click: $root.RemoveProject, attr: {id: 'btnProjectRemove' + ProjectID()}" class="btn btn-danger">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: CanCopyDataMart, disable: DataMart.Deleted"><img src="@Url.Content("~/images/Copy24.png")" alt="Copy" />Copy</button>
+        <button class="btn btn-danger btn-sm pull-right" 
+                id="btnDelete" 
+                data-bind="click: Delete, visible: CanDeleteDataMart, disable: DataMart.Deleted" 
+                style="margin-left: 30px;">
+            <img src="@Url.Content("~/images/Delete24.png")" alt="Delete" />Delete
+        </button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel, visible: CanEditDataMart" style="margin-left: 10px;"><img src="@Url.Content("~/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: CanEditDataMart, disable: DataMart.Deleted"><img src="@Url.Content("~/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>
+

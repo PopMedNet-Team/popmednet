@@ -1,0 +1,293 @@
+﻿@model Lpp.Dns.General.Metadata.Models.MetadataOrgSearchModel
+<div class="ui-groupbox" id="orgSearch">
+    <div class="ui-groupbox-header"><span>Search Criteria</span></div>
+    <input type="hidden" id="hData" name="Data" /> <!--The entire model is stored in here as json-->
+    <fieldset>
+        <legend>Organization Details</legend>
+        <ol>
+            <li>
+                <label for="txtName" data-bind="visible: Name() != null && Name() != ''">Name</label>
+                <span style="font-weight: bold;"  id="txtName" data-bind="value: Name"></span>
+            </li>
+            <li>
+                <label for="txtHealthPlanSystemDescription" data-bind="visible: HealthPlanSystemDescription() != null && HealthPlanSystemDescription() != ''">Organization Description</label>
+                <span style="font-weight: bold;" id="txtHealthPlanSystemDescription" data-bind="text: HealthPlanSystemDescription"></span>
+            </li>
+            <!--keyword search on the new description field here-->
+        </ol>
+    </fieldset>
+
+
+    <fieldset>
+        <legend>Willing to Participate In:</legend>
+        <ol>
+            <li >
+                <label for="chkObservationalResearch" data-bind="visible: ObservationalResearch()">Observational Research</label>
+            </li>
+            <li >
+                <label for="chkClinicalTrials" data-bind="visible: ClinicalTrials()">Clinical Trials</label>
+            </li>
+            <li >
+                <label for="chkPragamaticClincialTrials" data-bind="visible: PragamaticClincialTrials()">Pragmatic Clinical Trials</label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset>
+        <legend></legend>
+        <div><span>Types of Data Collected By Organization</span></div>
+        <ol>
+            <li >
+                <label for="chkNone"data-bind="visible: None()">
+                    None
+                </label>
+            </li>
+            <li >
+                <label for="chkInpatient" data-bind="visible: Inpatient()">
+                    Inpatient
+                </label>
+            </li>
+            <li >
+                <label for="chkOutpatient" data-bind="visible: Outpatient()">
+                    Outpatient
+                </label>
+            </li>
+            <li >
+                <label for="chkPharmacyDispensings" data-bind="visible: PharmacyDispensings()">
+                    Pharmacy Dispensings
+                </label>
+            </li>
+            <li >
+                <label for="chkEnrollment" data-bind="visible: Enrollment()">
+                    Enrollment
+                </label>
+            </li>
+            <li >
+                <label for="chkDemographics" data-bind="visible: Demographics()">
+                    Demographics
+                </label>
+            </li>
+            <li >
+                <label for="chkLaboratoryResults" data-bind="visible: LaboratoryResults()">
+                    Laboratory Results
+                </label>
+            </li>
+            <li >
+                <label for="chkVitalSigns" data-bind="visible: VitalSigns()">
+                    Vital Signs
+                </label>
+            </li>
+            <li >
+                <label for="chkBiorepositories" data-bind="visible: Biorepositories()">
+                    Biorepositories
+                </label>
+            </li>
+            <li >
+                <label for="chkPatientReportedOutcomes" data-bind="visible: PatientReportedOutcomes()">
+                    Patient Reported Outcomes/Health Status
+                </label>
+            </li>
+            <li >
+                <label for="chPatientReportedBehaviors" data-bind="visible: PatientReportedBehaviors()">
+                    Patient Reported Behaviors
+                </label>
+            </li>
+            <li >
+                <label for="chkPrescriptionOrders" data-bind="visible: PrescriptionOrders()">
+                    Prescription Orders
+                </label>
+            </li>
+            <li >
+                <label for="chkOther" data-bind="visible: DataCollectedOther()">
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset>
+        <legend></legend>
+        <div><span>Electronic Health Record System</span></div>
+        <div>Inpatient</div>
+        <ol style="width:46%; float:left;">            
+            <li >
+                <label for="chkInpatientNone" data-bind="visible: InpatientNone()">
+                    None
+                </label>
+            </li>
+            <li >
+                <label for="chkInpatientEpic" data-bind="visible: InpatientEpic()">
+                    Epic
+                </label>
+            </li>
+            <li >
+                <label for="chkInpatientNextGenHealthCare" data-bind="visible: InpatientNextGenHealthCare()">
+                    NextGen HealthCare
+                </label>
+            </li>
+            <li >
+                <label for="chkInpatientGEHealthCare" data-bind="visible: InpatientGEHealthcare()">
+                    GE HealthCare
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientAllScripts" data-bind="visible: InpatientAllScripts()">
+                    AllScripts
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientClinicalWorks" data-bind="visible: InpatienteClinicalWorks()">
+                    eClinicalWorks
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientMckesson" data-bind="visible: InpatientMckesson()">
+                    Mckesson
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientCare360" data-bind="visible: InpatientCare360()">
+                    Care 360
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientMeditech" data-bind="visible: InpatientMeditech()">
+                    Meditech
+                </label>
+            </li>
+            
+            <li >
+                <label id="chkInpatientCPSI" data-bind="visible: InpatientCPSI()" >
+                    CPSI
+                </label>
+            </li>
+            <li >
+                <label id="chkInpatientCerner" data-bind="visible: InpatientCerner()" >
+                    Cerner
+                </label>
+            </li>
+            <li>
+                <label id="chkInpatientOther" data-bind="visible: InpatientOther()">
+                    Other
+                </label>
+            </li>
+        </ol>
+        <div>Outpatient</div>
+        <ol style="width:46%; float:left; padding-left:20px;">
+            
+            <li >
+                <label id="chkOutpatientNone" data-bind="visible: OutpatientNone()">
+                    None
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientEpic" data-bind="visible: OutpatientEpic()">
+                    Epic
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientNextGenHealthCare" data-bind="visible: OutpatientNextGenHealthCare()">
+                    NextGen HealthCare
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientGEHealthCare" data-bind="visible: OutpatientGEHealthcare()">
+                    GE HealthCare
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientAllScripts" data-bind="visible: OutpatientAllScripts()">
+                    AllScripts
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientClinicalWorks" data-bind="visible: OutpatienteClinicalWorks()">
+                    eClinicalWorks
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientMckesson" data-bind="visible: OutpatientMckesson()">
+                    Mckesson
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientCare360" data-bind="visible: OutpatientCare360()">
+                    Care 360
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientMeditech" data-bind="visible: OutpatientMeditech()">
+                    Meditech
+                </label>
+            </li>
+            
+            <li >
+                <label id="chkOutpatientCerner" data-bind="visible: OutpatientCerner()">
+                    Cerner
+                </label>
+            </li>
+            <li >
+                <label id="chkOutpatientCPSI" data-bind="visible: OutpatientCPSI()">
+                    CPSI
+                </label>
+            </li>
+            <li>
+                <label id="chkOutpatientOther" data-bind="visible: OutpatientOther()">
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset>
+        <legend></legend>
+        <div><span>Data Models</span></div>
+        <ol>
+            <li >
+                <label id="chkDataModelMSCDM" data-bind="visible: DataModelMSCDM()">
+                    MSCDM
+                </label>
+            </li>
+            <li >
+                <label id="chkDataModelESP" data-bind="visible: DataModelESP()">
+                    ESP
+                </label>
+            </li>
+            <li >
+                <label id="chkDataModelOMOP" data-bind="visible: DataModelOMOP()">
+                    OMOP
+                </label>
+            </li>
+            <li >
+                <label id="chkDataModelHMRON" data-bind="visible: DataModelHMRON()">
+                    HMORN VDW
+                </label>
+            </li>
+            <li >
+                <label id="chkDataModeli2b2" data-bind="visible: DataModeli2b2()">
+                    i2b2
+                </label>
+            </li>
+            <li>
+                <label id="chkDataModelPcori" data-bind="visible: DataModelPCORI()">
+                    PCORnet CDM
+                </label>
+            </li>
+            <li >
+                <label data-bind="visible: DataModelOther()">
+                    Other
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+
+
+    <!--More field sets for each area per the screen shot-->
+    <!--update the CreateOrgSearch.ts to have the new knockout and update the IOrgSerach interface to have the value, in the constructor set the observable and in the save set the interface data for the new field.
+        In the models/MetadataOrgSearchModel update the data class to have the new field of the valid format. You're done.-->
+</div>
+
+<script src="@Lpp.Mvc.ResourceExtensions.Resource(this, "CreateOrgSearch.js")"></script>
+<script>
+    //Load the data here from the json that is serialized in from the model.
+    //Reuses the code from the edit and just changes the bindings
+    var data = JSON.parse('@Html.Raw(Model.Data ?? "{}")');
+    MetadataQuery.CreateOrgSearch.init(data, $("#hData"), $("#orgSearch"));
+</script>

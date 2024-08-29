@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Configuration of codeSystems, demographicCodes, criteriaMappings, and modifierMappings for the translators. 
+   codeSystems is a many-to-many mapping of codeSystems to basecodes. The code in test is run on basecode to
+   codeSystem conversion, and test-reverse is run on the reverse conversion. This code is executed verbatim and 
+   so requires intimate knowledge of stylesheet variables. Better design someday! criteriaMappings is a one-to-one lookup table to convert
+   i2b2 types (3rd element of key) to criteria types - it's one-to-one because of the i2b2_rootkey specification.
+   demographicCodes are a many-to-one lookup tabls to convert i2b2 demographic subtypes (4th element of key, sans the part with the underscore in CEDD) 
+   to HQMF SNOMED demographic codes. Note that the test-reverse code is run to eliminate inappropriate HQMF->i2b2 mappings in cases where it matters.
+   modifierMappings 
+   
+   Jeff Klann, PhD - 8/9/12 
+     Initial version
+   Jeff Klann, PhD - 10/1/12
+     Much more comprehensive version, now includes criteriaMappings as well.
+   Jeff Klann, PhD - 12/12/12
+     Updates for clinquery2
+   -->
+<metaConfig xmlns="urn:jklann:hqmf:metaConfig">
+    <!-- i2b2 key name \\*\*\[x] to criteria type, given I2B2 rootkey -->
+    <criteriaMappings>
+      <!-- I2B2 Demo -->
+      <item extension="Demographics" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Demographics' i2b2_rootkey="\\I2B2"/> 
+      <item extension="Problems" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Diagnoses' i2b2_rootkey="\\I2B2"/> 
+      <item extension="Results" criteria="observationCriteria" ref="observationReference" tag_name='code'
+        i2b2_type='Labtests' i2b2_rootkey="\\I2B2"/> 
+      <item extension="Medications" criteria="substanceAdministrationCriteria" ref="substanceAdministrationReference" tag_name='code'
+        i2b2_type='Medications' i2b2_rootkey="\\I2B2"/>
+      <item extension="Procedures" criteria="procedureCriteria" ref="procedureReference" tag_name='code'
+        i2b2_type='Procedures' i2b2_rootkey="\\I2B2"/>
+      <item extension="Encounters" criteria="encounterCriteria" ref="encounterReference" tag_name='code'
+        i2b2_type='Visit Details' i2b2_rootkey="\\I2B2"/>   
+      
+      <!-- ClinQuery2-->
+      <item extension="Demographics" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Demographics' i2b2_rootkey="\\i2b2_"/> 
+      <item extension="Problems" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Diagnoses' i2b2_rootkey="\\i2b2_"/> 
+      
+      <!-- SHRINE -->
+      <item extension="Demographics" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Demographics' i2b2_rootkey="\\SHRINE"/> 
+      <item extension="Problems" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='Diagnoses' i2b2_rootkey="\\SHRINE"/> 
+      <item extension="Procedures" criteria="procedureCriteria" ref="procedureReference" tag_name='code'
+        i2b2_type='Procedures' i2b2_rootkey="\\SHRINE"/>  
+      <item extension="Medications" criteria="substanceAdministrationCriteria" ref="substanceAdministrationReference" tag_name='code'
+        i2b2_type='medications' i2b2_rootkey="\\SHRINE"/>
+      
+      <!-- CEDD -->
+      <item extension="Demographics" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='patientInformation' i2b2_rootkey="\\CEDD"/>        
+      <item extension="Problems" criteria="observationCriteria" ref="observationReference" tag_name='value'
+        i2b2_type='problem' i2b2_rootkey="\\CEDD"/>      
+      <item extension="Results" criteria="observationCriteria" ref="observationReference" tag_name='code'
+        i2b2_type='result' i2b2_rootkey="\\CEDD"/>       
+      <item extension="Medications" criteria="substanceAdministrationCriteria" ref="substanceAdministrationReference" tag_name='code'
+        i2b2_type='medication' i2b2_rootkey="\\CEDD"/> 
+      <item extension="Procedures" criteria="procedureCriteria" ref="procedureReference" tag_name='code'
+        i2b2_type='procedure' i2b2_rootkey="\\CEDD"/>  
+      <item extension="Encounters" criteria="encounterCriteria" ref="encounterReference" tag_name='code'
+        i2b2_type='encounter' i2b2_rootkey="\\CEDD"/>      
+      <item extension="Vitals" criteria="observationCriteria" ref="observationReference" tag_name='code'
+        i2b2_type='vitalSign' i2b2_rootkey="\\CEDD"/> 
+      <!-- By reusing the extension, it causes numerous problematic workarounds in the return to I2B2 because it cannot be determined which template the code refers to, making it impossible to rebuild the key. TODO: Can we add these two templates? -->
+      <item extension="Encounters" criteria="encounterCriteria" ref="encounterReference" tag_name='code' special='qualifiedEntityParticipant'
+        i2b2_type='healthcareProvider' i2b2_rootkey="\\CEDD"/>  <!-- Coding this as an encounter with special participant code, needs to be checked. -->
+      <item extension="Demographics" criteria="observationCriteria" ref="observationReference"  tag_name='value'
+        i2b2_type='socialHistory' i2b2_rootkey="\\CEDD"/>  <!-- Coding this as a demographic of social history type, not entirely sure this is correct. -->
+    </criteriaMappings>
+    <modifierMappings>
+      <item tag_name="interpretationCode" i2b2_type="result" i2b2_subtype="resultInterpretation"/>
+      <item tag_name="interpretationCode" i2b2_type="vitalSign" i2b2_subtype="resultInterpretation"/>
+      <item tag_name="code" i2b2_type="problem" i2b2_subtype="problemType"/>
+      <item tag_name="code" i2b2_type="socialHistory" i2b2_subtype="socialHistoryType"/> 
+      <item tag_name="whatever" i2b2_type="encounter" i2b2_subtype="encounterProvider" special='qualifiedEntityParticipant'/>
+      <!-- Not supported: healthcareProvider address and organization attributes, dates. -->
+    </modifierMappings>
+    <demographicCodes> 
+      <!-- i2b2 demographic key name \\*\*\*\[x] to SNOMED code -->
+      <!-- Mapping from I2B2 Ontology to SNOMED CT 
+        I2B2 Term            SNOMED Code  Display Name            Type
+        Age	                 424144002  Current Chronological Age	IVL_PQ
+        Gender 	             263495000  Gender                    CE or ST
+        Race	               103579009  Race                      CE or ST
+        Ethnicity	           364699009  Ethnic Group              CE or ST
+        Marital Status       125680007  Marital Status	          CE or ST
+        Religious Preference 160538000  Religious Affiliation     CE or ST
+        Postal Code          184102003  Patient Postal Code       CE or ST
+        City                 433178008  City of Residence         CE or ST
+        State                N/A        State/Province of Residence	CE or ST
+        NOTE: Keith's guide does not specify a preferred SNOMED code for language, but the CEDD v.01 specification states that language is a supported element.   
+      -->
+        <item displayName="Current Chronological Age" code="424144002"
+          i2b2_subtype='Age' dataType="IVL_PQ" test-reverse="not(contains($rootkey,'CEDD'))"/>
+       <item displayName="Current Chronological Age" code="424144002"
+         i2b2_subtype='ageToday' dataType="IVL_PQ" test-reverse="contains($rootkey,'CEDD')"/>     
+        <item displayName="Gender" code="263495000"
+            i2b2_subtype ='Gender'  dataType="CD"/>
+        <item displayName="Gender" code="263495000"
+            i2b2_subtype ='gender' dataType="CD"/>      
+        <item displayName="Race" code="103579009"
+          i2b2_subtype ='Race' dataType="CD"/>
+        <item displayName="Race" code="103579009"
+          i2b2_subtype ='race' dataType="CD"/>      
+        <item displayName="Marital Status" code="125680007"
+          i2b2_subtype ='Marital Status' dataType="CD"/>
+        <item displayName="Marital Status" code="125680007"
+          i2b2_subtype ='maritalStatus' dataType="CD"/>     
+        <item displayName="Language" code="102902016"
+          i2b2_subtype ='Language'  dataType="CD"/>
+        <item displayName="Language" code="102902016"
+          i2b2_subtype ='language' dataType="CD"/>
+        <item displayName="Religious Preference" code="160538000"
+          i2b2_subtype ='Religion'  dataType="CD"/>
+        <item displayName="Religious Preference" code="160538000"
+          i2b2_subtype ='religiousAffiliation' dataType="CD"/>      
+         <item displayName="Ethnic Group" code="364699009"
+          i2b2_subtype='ethnicity' dataType="CD"/>
+         <item displayName="Date of Birth" code="184099003"
+          i2b2_subtype='personDateOfBirth' dataType="IVL_TS"/>
+         <item displayName="City of Residence" code="433178008"
+           i2b2_subtype='personAddressCity' dataType="ST" noExtension='true'/>     
+        <item displayName="State/Province of Residence" code=""
+          i2b2_subtype='personAddressState' dataType="ST" noExtension='true'/>       
+        <item displayName="Country of Residence" code="416647007"
+          i2b2_subtype='personAddressCountry' dataType="ST" noExtension='true'/>  
+        <item displayName="Patient Postal Code" code="184102003"
+          i2b2_subtype='personAddressPostalCode' dataType="CD" noExtension='true'/>    
+        <item displayName="Social History" code="29762-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+          i2b2_subtype="observationValue" dataType="CD" ignore="true"/>
+    </demographicCodes>
+    <codeSystems>
+        <!-- i2b2 basecode [x]:* code system OID -->
+        <!-- Not explicitly listed: CCDA11, CEDD, LOCAL, OID -->
+
+        <!-- Below are listed in Appendix D in CCDA 1.1, p. 562 -->
+        <item codeSystemName="LOINC" codeSystem="2.16.840.1.113883.6.1" basecode="LOINC"/>
+        <item codeSystemName="ICD-9-CM Procedures" codeSystem="2.16.840.1.113883.6.104" basecode="ICD9"
+            test="string-length($code)=2 or string-length(substring-before($code,'.'))=2"/>
+        <item codeSystemName="ICD-9-CM Diagnoses" codeSystem="2.16.840.1.113883.6.103" basecode="ICD9"
+            test="string-length($code)>2"/>
+        <item codeSystemName="CPT-4" codeSystem="2.16.840.1.113883.6.12" basecode="CPT"/> 
+        <item codeSystemName="MaritalStatus" codeSystem="2.16.840.1.113883.5.2" basecode="MARITAL"/>
+        <!-- Zipcode should be mapped to an address element really. See the commented-out code in Demographics. However zipcode is
+            not currently in SHRINE -->
+        <item codeSystemName="Zipcode" codeSystem="2.16.840.1.113883.6.231" basecode="ZIPCODE"/> 
+        <item codeSystemName="Postal Code" codeSystem="2.16.840.1.113883.6.231" basecode="POSTALCODE"/> 
+        <item codeSystemName="Race and Ethnicity" codeSystem="2.16.840.1.113883.6.238" basecode="RACE"/>
+        <item codeSystemName="Religious Affiliation" codeSystem="2.16.840.1.113883.5.1076" basecode="RELIGION"/> 
+        <item codeSystemName="NDF-RT" codeSystem="2.16.840.1.113883.3.26.1.5" basecode="NDFRT"/>
+        <item codeSystemName="RxNorm" codeSystem="2.16.840.1.113883.6.88" basecode="RXNORM"/>        
+        <item codeSystemName="SNOMED" codeSystem="2.16.840.1.113883.6.96" basecode="SNOMED"
+            test-reverse="not(contains($rootkey,'CEDD'))"/>
+        <item codeSystemName="SNOMED" codeSystem="2.16.840.1.113883.6.96" basecode="SNO"
+            test-reverse="contains($rootkey,'CEDD')"/>
+        <item codeSystemName="ObservationInterpretation" codeSystem="2.16.840.1.113883.5.83" basecode="INTERP"/>
+     
+        
+        <!-- Below are code systems not specifically mentioned in CCDA 1.1 -->
+
+        <!-- The Australian Modifier American English edition of ICD-10, supported by NLM. --> 
+        <item codeSystemName="ICD-10-AMAE" codeSystem="2.16.840.1.113883.6.135.1" basecode="ICD10"/>   
+        <!-- Diagnosis related groups -->
+        <item codeSystemName="DRG" codeSystem="2.16.840.1.113883.12.416" basecode="PHSCDRGC"/>         
+        <item codeSystemName="NDC" codeSystem="2.16.840.1.113883.6.69" basecode="NDC"/> 
+        <!-- HL7 Administrative Gender -->
+        <item codeSystemName="Gender" codeSystem="2.16.840.1.113883.5.1" basecode="SEX"
+            test-reverse="not(contains($rootkey,'CEDD'))"/>
+        <item codeSystemName="Gender" codeSystem="2.16.840.1.113883.5.1" basecode="GENDER"
+            test-reverse="contains($rootkey,'CEDD')"/>
+        <!-- ISO 639-1 Language codes -->
+        <item codeSystemName="Language" codeSystem="1.0.639.1" basecode="LANGUAGE"/> 
+        
+        <!-- These are translator-specific special cases. Do not change. -->
+        <item codeSystem="AGE" basecode="AGE"/>
+    </codeSystems>
+</metaConfig>

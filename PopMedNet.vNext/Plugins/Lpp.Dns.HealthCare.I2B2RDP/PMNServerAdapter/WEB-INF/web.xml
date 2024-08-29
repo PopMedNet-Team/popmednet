@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app> 
+
+   <display-name>PMN Adapter</display-name> 
+
+   <!-- Application class name -->  
+   <context-param>  
+      <param-name>org.restlet.application</param-name>  
+      <param-value>  
+         com.lincolnpeak.i2b2.restlet.PMNAdapter
+      </param-value>  
+   </context-param>  
+
+   <!-- Restlet adapter -->  
+   <servlet>  
+      <servlet-name>RestletServlet</servlet-name>  
+      <servlet-class>  
+         org.restlet.ext.servlet.ServerServlet  
+      </servlet-class>  
+   </servlet>  
+  
+   <!-- Catch all requests -->  
+   <servlet-mapping>  
+      <servlet-name>RestletServlet</servlet-name>  
+      <url-pattern>/*</url-pattern>  
+   </servlet-mapping> 
+
+</web-app> 

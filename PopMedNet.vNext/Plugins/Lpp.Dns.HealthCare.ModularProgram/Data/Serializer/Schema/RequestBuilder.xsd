@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RequestBuilder"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="request_builder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element ref="request"/>
+        <xs:element ref="response"/>
+        <xs:element ref="datamarts"/>
+        <xs:element ref="footer" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="request_type" type="xs:string"/>
+        <xs:element name="request_name" type="xs:string"/>
+        <xs:element name="request_description" type="xs:string"/>
+        <xs:element name="due_date" type="xs:date" minOccurs="0"/>
+        <xs:element name="activity" type="xs:string" minOccurs="0"/>
+        <xs:element name="activity_description" type="xs:string" minOccurs="0"/>
+        <xs:element name="submitter_email" type="xs:string" minOccurs="0"/>
+        <xs:element name="options" type="optionsType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="PackageManifest" type="ArrayOfModularProgramItem" />
+        <xs:element minOccurs="0" maxOccurs="1" name="FileLinks" type="ArrayOfFileLinks" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Files" type="ArrayOfFiles" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="ArrayOfFileLinks">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LinkItem" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FileItem">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="MimeType" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Size" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ArrayOfFiles">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="File" nillable="true" type="FileItem" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ArrayOfModularProgramItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ModularProgramItem" nillable="true" type="ModularProgramItem" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="ModularProgramItem">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="ProgramName" type="xs:string" />
+        <xs:element minOccurs="1" maxOccurs="1" name="TypeCode" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Scenarios" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="footer"/>
+    <xs:element name="datamarts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="datamart" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name"/>
+            <xs:attribute name="organization"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="optionsType">
+    <xs:sequence>
+      <xs:element ref="option" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="option">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

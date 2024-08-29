@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Organizations";
+}
+
+@section Head {
+    <script type="module" src="~/scripts/pmngrid/pmngrid.js"></script>
+    <script type="module" src="~/js/Organizations/Index.js"></script>
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/organizations">Organizations</a></li>
+        </ol>
+    </div>
+        <div class="panel-body" data-bind="style: {height: gHeight}">
+        <div id="gOrganizations" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Organizations.Index.gOrganizations.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: NameAchor},
+                {field: 'Acronym', title: 'Acronym'},
+                {field: 'ParentOrganization', title: 'Parent', template: ParentNameAchor},
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+            <button class="btn btn-default" id="btnNewOrganization" data-bind="click: btnNewOrganization_Click.bind($root), visible: CanCreateOrganization"><img src="@Url.Content("~/images/Add16.png")" alt="Add Organization" />Add Organization</button>
+    </nav>
+</article>

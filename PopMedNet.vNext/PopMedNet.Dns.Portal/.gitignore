@@ -1,0 +1,10 @@
+﻿## Portal specific ignore patterns
+wwwroot/js/home
+wwwroot/js/datamarts
+wwwroot/js/_Layout.js
+wwwroot/js/_RootLayout.js
+wwwroot/js/security
+wwwroot/js/groups
+wwwroot/js/projects
+appsettings.Development.json
+wwwroot/scripts/microsoft

@@ -1,0 +1,115 @@
+﻿@using Lpp.Mvc;
+@model Lpp.Dns.HealthCare.DataChecker.Models.ResponseModel
+
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+<script src="@this.Resource("datachecker.charting.js")"></script>
+@*<script src="/scripts/datachecker/datachecker.charting.js"></script>*@
+<script src="@this.Resource("responses.common.js")"></script>
+<script src="@this.Resource("ViewModels/DiagnosisPDXResponse.js")"></script>
+@*<script src="/scripts/DataChecker/ViewModels/DiagnosisPDXResponse.js"></script>*@
+
+@{
+    Html.Stylesheet("/scripts/jqplot/jquery.jqplot.css");
+    this.Stylesheet("datachecker.responses.css");
+    if (Model.IsExternalView)
+    {
+        this.Stylesheet(CssMediaType.screen | CssMediaType.print, "datachecker.responses.external.css");
+    }
+}
+
+<div @Html.Section( title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer" ) id="ResponseContainer">
+    <div id="ResponseViewHeader">
+        @if (Model.IsExternalView == false)
+        {
+            <a href="#" role="button" data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" id="btnOpenExternal" class="open-external btn btn-default"><img data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+        }
+        <select id="metric_select" class="responseview_selector" data-bind="options: Metrics, optionsText: 'title', value: SelectedMetric"></select>
+        <h2 data-bind="text:SelectedMetric().title"></h2>
+    </div>
+    <div id="pdx_overall" class="metricview" data-bind="visible: (SelectedMetric().value === 0)">
+        <div data-bind="visible:HasResults">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <!-- ko foreach: EncounterTypes -->
+                    <th data-bind="text: EncType_Display" colspan="2" style="text-align:right;white-space:nowrap;"></th>
+                    <!-- /ko -->
+                </tr>
+                <tr>
+                    <th>PDX</th>
+                    <!-- ko foreach: EncounterTypes -->
+                    <th style="text-align:right;">N</th>
+                    <th style="text-align:right;">%</th>
+                    <!-- /ko -->
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: { data: OverallMetrics, as: 'item' }">
+                <tr>
+                    <td style="text-align:right;" data-bind="text: item.PDX_Display"></td>
+                    <!-- ko foreach: { data: item.Encounters, as: 'encounter'} -->
+                    <td data-bind="text: encounter.Count" class="numbers"></td>
+                    <td data-bind="text: $root.toPercent(encounter.Count, encounter.Total)" class="percent"></td>
+                    <!-- /ko -->
+                </tr>
+            </tbody>
+        </table>
+        <div id="OverallMetricsChart" data-bind="pdxPercentChart: { data: OverallMetrics, title: 'PDX Distribution by Encounter Type among Selected Data Partners*' }" class="overallmetric_barchart" style="width:100%;"></div>
+        <p>*Selected data partners include: <span data-bind="text: DataPartners.join(', ')"></span></p>
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>  
+    </div>
+    <div id="pdx_percentwithindp" class="metricview" data-bind="visible: (SelectedMetric().value === 1)">
+        <div data-bind="visible:HasResults">
+            <!-- ko foreach: { data: PercentWithinDataPartner, as: 'dp' }-->
+            <table>
+                <caption data-bind="text: dp.DP" style="text-align:right;font-weight:bold;"></caption>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <!-- ko foreach: $root.EncounterTypes -->
+                        <th data-bind="text: EncType_Display" colspan="2" style="text-align:right;white-space:nowrap;"></th>
+                        <!-- /ko -->
+                    </tr>
+                    <tr>
+                        <th>PDX</th>
+                        <!-- ko foreach: $root.EncounterTypes -->
+                        <th style="text-align:right;">N</th>
+                        <th style="text-align:right;">%</th>
+                        <!-- /ko -->
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: { data: dp.PDX, as: 'item' }">
+                    <tr>
+                        <td style="text-align:right;" data-bind="text: item.PDX_Display"></td>
+                        <!-- ko foreach: { data: item.Encounters, as: 'encounter'} -->
+                        <td data-bind="text: encounter.Count" class="numbers"></td>
+                        <td data-bind="text: $root.toPercent(encounter.Count, encounter.Total)" class="percent"></td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+            <div data-bind="attr: { id: 'pdx_percent_' + dp.DP }, pdxPercentChart: { data: dp.PDX, title: 'PDX Distribution by Encounter Type within ' + dp.DP }" class="overallmetric_barchart" style="width:100%;"></div>
+            <!-- /ko -->
+        </div>
+        <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>  
+    </div>
+    
+    
+</div>
+
+<script>
+    $(function () {
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        DataChecker.DiagnosesPDX.init(model, $('#ResponseContainer'));
+    });
+</script>

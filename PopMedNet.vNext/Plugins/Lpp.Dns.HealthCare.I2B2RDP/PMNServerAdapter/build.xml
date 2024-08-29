@@ -1,0 +1,107 @@
+<project name="PMNServerAdapter" basedir=".">
+	
+	<property name="JBOSS_HOME" value="C:/jboss-4.2.2.GA"/>
+	
+	<path id="classpathref">
+		<pathelement location="../3rdParty/restlet-jee-2.0.7/org.restlet.ext.servlet.jar"/>
+		<pathelement location="../3rdParty/restlet-jse-2.0.7/org.restlet.ext.json.jar"/>
+		<pathelement location="../3rdParty/restlet-jse-2.0.7/org.restlet.jar"/>
+		<pathelement location="../3rdParty/json2.0/org.json.jar"/>
+		<pathelement location="../3rdParty/restlet-jse-2.0.7/org.restlet.ext.xml.jar"/>
+		<pathelement location="../3rdParty/httpcomponents-client-4.2/fluent-hc-4.2.jar"/>
+		<pathelement location="../3rdParty/httpcomponents-client-4.2/httpclient-4.2.jar"/>
+		<pathelement location="../3rdParty/httpcomponents-client-4.2/httpclient-cache-4.2.jar"/>
+		<pathelement location="../3rdParty/httpcomponents-client-4.2/httpcore-4.2.jar"/>
+		<pathelement location="../3rdParty/httpcomponents-client-4.2/httpmime-4.2.jar"/>
+		<pathelement location="../3rdParty/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
+		<pathelement location="../PMNCommons/src"/>
+	</path>
+	
+	<target name="build-exploded">
+		<delete dir="deploy"/>
+		<copy todir="deploy/pmn.war/WEB-INF">
+			<fileset dir="WEB-INF"/>
+		</copy>
+		<!--
+		<copy todir="deploy/pmn.war/WEB-INF/classes">
+			<fileset dir="bin"/>
+		</copy>
+		<copy todir="deploy/pmn.war/WEB-INF/classes">
+			<fileset dir="../PMNCommons/bin"/>
+		</copy>
+		-->
+		<mkdir dir="deploy/pmn.war/WEB-INF/classes"/>
+		<copy todir="deploy/pmn.war/WEB-INF/classes">
+			<fileset dir="src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="deploy/pmn.war/WEB-INF/classes">
+			<fileset dir="../PMNCommons/src">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+		<javac debug="true" classpathref="classpathref" destdir="deploy/pmn.war/WEB-INF/classes">
+			<src path="src"/>
+			<src path="../PMNCommons/src"/>
+			<src path="../AdapterMappings/src"/>
+		</javac>
+		
+		<copy todir="deploy/pmn.war/WEB-INF/classes">
+			<fileset dir="../AdapterMappings/bin"/>
+		</copy>
+		<copy todir="deploy/pmn.war/WEB-INF/lib" flatten="true">
+			<resources>
+				<file file="../3rdParty/restlet-jee-2.0.7/org.restlet.ext.servlet.jar"/>
+				<file file="../3rdParty/restlet-jse-2.0.7/org.restlet.ext.json.jar"/>
+				<file file="../3rdParty/restlet-jse-2.0.7/org.restlet.jar"/>
+				<file file="../3rdParty/json-2.0/org.json.jar"/>
+				<file file="../3rdParty/restlet-jse-2.0.7/org.restlet.ext.xml.jar"/>
+			</resources>
+		</copy>
+		<copy todir="deploy/pmn.war/WEB-INF/lib" flatten="true">
+			<fileset dir="../3rdParty/httpcomponents-client-4.2"/>
+		</copy>
+	</target>
+	
+	<target name="deploy">
+		<!-- delete dir="${JBOSS_HOME}/server/default/deploy/pmn.war"/ -->
+		<copy todir="${JBOSS_HOME}/server/default/deploy">
+			<fileset dir="deploy"/>
+		</copy>
+	</target>
+	
+	<!-- Stop Jboss -->
+	<target name="jboss-stop" description="Stops JBoss" >
+	    <exec executable="${JBOSS_HOME}/bin/shutdown.bat" spawn="true">
+	        <arg line="-S" />
+	    </exec>
+	    <echo>+-----------------------------+</echo>
+	    <echo>| J B O S S   S T O P P E D   |</echo>
+	    <echo>+-----------------------------+</echo>
+	</target>
+
+	<!-- Start Jboss -->
+	<target name="jboss-start" description="Starts JBoss" >
+	    <exec executable="${JBOSS_HOME}/bin/run.bat" spawn="true">
+	    </exec>
+	    <echo>+-----------------------------+</echo>
+	    <echo>| J B O S S   S T A R T E D   |</echo>
+	    <echo>+-----------------------------+</echo>
+	</target>
+
+	<!-- deploy target-->
+	<target name="jboss-deploy-restart" description="Deploy war file and restart JBoss">
+	  <sequential>
+	    <antcall target="jboss-stop" />
+		<antcall target="build-exploded" />
+		<antcall target="deploy" />
+	    <antcall target="jboss-start" />
+	    <echo>+----------------------------+</echo>
+	    <echo>|   W A R  D E P L O Y E D   |</echo>
+	    <echo>+----------------------------+</echo>
+	  </sequential>
+	</target>
+	
+</project>

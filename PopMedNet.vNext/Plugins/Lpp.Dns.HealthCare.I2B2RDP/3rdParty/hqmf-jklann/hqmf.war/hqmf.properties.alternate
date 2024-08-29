@@ -1,0 +1,24 @@
+# The location of the XSL transforms
+xslloc = /Users/jklann/Documents/HMS/Integration/xsl
+
+# The location of the ontology service which will be queried for terminology and code lookups.
+ontloc = http://ec2-23-20-41-242.compute-1.amazonaws.com:9090/i2b2/rest/OntologyService
+
+# The base portion of the URL, e.g., http://localhost:8080. Afterward comes /hqmf/{service}
+baseurl = http://localhost:8080
+
+# fulli2b2 controls whether the service produces the complete i2b2 query or just the query definition
+fulli2b2 = false 
+
+# The root key for translation from HQMF to i2b2, e.g., \\I2B2, \\I2B2_DEMO, \\SHRINE.
+# The root key of \\ is special and forces use of the local concepts.xml instead of live terminology lookups.
+# A root key is used for filtering, so if you have multiple root keys (e.g., \\i2b2_demo and \\i2b2_diag)
+# then just listing \\i2b2 will work, with two exceptions.
+# 1. \\SHRINE is special and also causes SHRINE| to be prepended to the basecode. 
+# 2. The rootkey is used to construct the proper key for age range buckets, so if you intend to use
+# those then right now you need to specify a full rootkey
+rootkey = \\\\SHRINE
+
+# The subkey used when constructing keys for age buckets.
+# Format is {rootkey}\*{subkey_age}\[bucket name]
+subkey_age = Age

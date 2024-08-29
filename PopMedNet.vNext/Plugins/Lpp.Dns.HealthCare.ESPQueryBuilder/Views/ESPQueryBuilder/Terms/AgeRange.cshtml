@@ -1,0 +1,23 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    Layout = null;
+}
+<div class="AgeRangeTerm Term panel panel-default">
+    <input name="TermName" value="AgeRange" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Age Range
+    </div>
+    <div class="AgeRange panel-body">
+        <div class="row">
+            <div class="col-md-3 form-group">
+                <label for="MinAge">Min</label>
+                <input name="MinAge" class="MinAge AgeTextBox form-control" type="text" maxlength="3" value="@Model.MinAge" data-format="#####" />
+            </div>
+            <div class="col-md-3 form-group">
+                <label for="MaxAge">Max</label>
+                <input name="MaxAge" class="MaxAge AgeTextBox form-control" type="text" maxlength="3" value="@Model.MaxAge" data-format="#####" />
+            </div>
+        </div>
+    </div>
+</div>

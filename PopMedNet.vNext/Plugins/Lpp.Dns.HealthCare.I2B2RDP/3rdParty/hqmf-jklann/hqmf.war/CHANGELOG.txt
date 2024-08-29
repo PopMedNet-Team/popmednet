@@ -1,0 +1,12 @@
+7/9/12: Jeff Klann
+ Initial Version
+7/16/12: Jeff Klann
+ Web services no longer throw exceptions. Intended to help debug when some services don't produce a response.
+7/17/12: Jeff Klann
+ Added getChildren service.
+7/23/12: Jeff Klann
+ Now uses the two step conversion to HQMF and passes the subkey-age parameter through. 
+ 
+TODO list:
+- Pass out the i2b2 auth information after HQMF conversion: wrapper/stuff in comments?
+

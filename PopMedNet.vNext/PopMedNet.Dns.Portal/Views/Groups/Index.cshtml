@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Groups";
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/groups">Groups</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="gGroups" style="min-height: 400px;" data-bind="pmnGrid: {
+            dataSource: ds,
+            height: '75vh',
+            autoBind: false,
+            savedSetting: {
+                Key: 'Groups.Index.gGroups.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                { field: 'Name', title: 'Name', template: NameAnchor }
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewGroup" data-bind="click: btnNewGroup_Click, visible: CanCreateNew"><img src="@Url.Content("~/images/Add16.png")" alt="Add Group" />Add Group</button>
+    </nav>
+</article>
+@section Scripts{
+    <script type="module" src="~/scripts/pmngrid/pmngrid.js"></script>
+    <script type="module" src="~/js/groups/index.js"></script>
+}

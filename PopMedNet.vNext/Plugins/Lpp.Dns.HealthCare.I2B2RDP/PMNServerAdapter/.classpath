@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/3rdParty/restlet-jee-2.0.7/org.restlet.ext.servlet.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/restlet-jse-2.0.7/org.restlet.ext.json.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/restlet-jse-2.0.7/org.restlet.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/json-2.0/org.json.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/restlet-jse-2.0.7/org.restlet.ext.xml.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/fluent-hc-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-cache-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpcore-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpmime-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AdapterMappings"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PMNCommons"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

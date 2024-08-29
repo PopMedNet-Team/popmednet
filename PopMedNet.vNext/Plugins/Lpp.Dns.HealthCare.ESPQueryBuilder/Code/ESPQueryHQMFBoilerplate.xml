@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<QualityMeasureDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:hl7-org:v3 ../../schemas/EMeasureNew.xsd" xmlns="urn:hl7-org:v3"
+	classCode="DOC">
+
+	<!-- START of the HEADER SECTION -->
+
+	<!-- TypeId Root indicates the HL7 OID, and the extension indicates the HL7v3 R1 Model indicating this is derived from that.. -->
+	<typeId root="2.16.840.1.113883.1.3" extension="POQM_HD00001"/>
+
+	<!-- Unique Id for the query request, PMN should get an OID so that the root attribute can be the OID, the extension can be internal id -->
+	<id root="[[PMN_OID]]" extension="[[REQUEST_ID]]" />
+
+	<!-- This identifies that this is a HQMF document based on LOINC code system -->
+	<code code="57024-2" codeSystem="2.16.840.1.113883.6.1"/>
+
+	<!-- Title for the query -->
+	<title>[[REQUEST_HEADER_NAME]]</title>
+
+	<!-- Indicates that the query request is complete, always the same value -->
+	<statusCode code="final"/>
+
+	<!-- The Set Id is to group quality measures or query requests by common set of requests, not using this for Query Health -->
+	<setId root="0"/>
+
+	<!-- The version number of the query, to allow tracking multiple versions, for Query Health this is always 1 -->
+	<versionNumber value="1"/>
+
+	<!-- Author element to identify the query author, Change the given/family/prefix if required for queries. -->
+	<author typeCode="AUT" contextControlCode="OP">
+		<assignedPerson classCode="ASSIGNED">
+			<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+				<name>
+					<given>[[USER_FIRSTNAME]]</given>
+					<family>[[USER_LASTNAME]]</family>
+					<prefix>[[USER_TITLE]]</prefix>
+				</name>
+			</assignedPerson>
+		</assignedPerson>
+	</author>
+
+	<!-- Custodian element to identify the owner of the query. For Query Health, change the id to indicate the PMN OID, change the name if
+	     required -->
+	<custodian typeCode="CST">
+		<assignedPerson classCode="ASSIGNED">
+			<representedOrganization classCode="ORG" determinerCode="INSTANCE">
+				<id root="[[PMN_OID]]" extension="[[NETWORK_IDENTIFIER]]" />
+				<contactParty classCode="CON">
+					<contactPerson classCode="PSN" determinerCode="INSTANCE">
+						<name>
+							<given>[[USER_FIRSTNAME]]</given>
+							<family>[[USER_LASTNAME]]</family>
+							<prefix>[[USER_TITLE]]</prefix>
+						</name>
+					</contactPerson>
+				</contactParty>
+			</representedOrganization>
+		</assignedPerson>
+	</custodian>
+
+	<!-- END of HEADER SECTION -->
+	<!-- START of the BODY SECTION -->
+
+	<!-- Measure Period is the place to enter the dates based on which data is being queried, For MDPHNet the Observation period should be 
+	     represented.  Change the high and low values to be the dates that are relevant -->
+	<controlVariable>
+		<localVariableName>MeasurePeriod</localVariableName>
+		<measurePeriod>
+			<id root="[[PMN_OID]]" extension="MeasurePeriod"/>
+			<value>
+				<low value="[[OBSERVATION_PERIOD_START_DATE]]" />
+				<high value="[[OBSERVATION_PERIOD_END_DATE]]" />
+			</value>
+		</measurePeriod>
+	</controlVariable>
+
+	<!-- The measure description is used for providing more information on what the query is -->
+	<component>
+		<measureDescriptionSection>
+
+			<!-- Request Type can be added as the title -->
+			<title>[[REQUEST_TYPE_NAME]]</title>
+
+			<!-- Request Description can be entered here in text -->
+			<text>[[REQUEST_HEADER_DESCRIPTION]]</text>
+		</measureDescriptionSection>
+	</component>
+
+	<component>
+
+		<!-- This section documents the event selection criteria using HQMF -->
+		<dataCriteriaSection>
+
+			<!-- This is unique code and meta data for the section, should not be changed for Query Health -->
+			<code code="57025-9" codeSystem="2.16.840.1.113883.6.1"/>
+			<title>Data Criteria Section</title>
+			<text>This section describes the data criteria.</text>
+			<languageCode/>
+			<author>
+				<assignedPerson classCode="SGNOFF"/>
+			</author>
+
+			<!-- This section maps the data criteria to implementation tables -->
+			<definition>
+				<observationDefinition>
+					<id root="[[PMN_OID]]" extension="Demographics"/>
+				</observationDefinition>
+			</definition>
+			<definition>
+				<encounterDefinition>
+					<id root="[[PMN_OID]]" extension="Encounters"/>
+				</encounterDefinition>
+			</definition>
+			<definition>
+				<observationDefinition>
+					<id root="[[PMN_OID]]" extension="Problems"/>
+				</observationDefinition>
+			</definition>
+			<definition>
+				<observationDefinition>
+					<id root="[[PMN_OID]]" extension="Allergies"/>
+				</observationDefinition>
+			</definition>
+			<definition>
+				<procedureDefinition>
+					<id root="[[PMN_OID]]" extension="Procedures"/>
+				</procedureDefinition>
+			</definition>
+			<definition>
+				<observationDefinition>
+					<id root="[[PMN_OID]]" extension="Results"/>
+				</observationDefinition>
+			</definition>
+			<definition>
+				<observationDefinition>
+					<id root="[[PMN_OID]]" extension="Vitals"/>
+				</observationDefinition>
+			</definition>
+			<definition>
+				<substanceAdministrationDefinition>
+					<id root="[[PMN_OID]]" extension="Medications"/>
+				</substanceAdministrationDefinition>
+			</definition>
+			<definition>
+				<supplyDefinition>
+					<id root="[[PMN_OID]]" extension="RX"/>
+				</supplyDefinition>
+			</definition>
+
+			<definition>
+				<valueSet>
+					<!-- Value Set for Race -->
+					<id root='1.1.1.1.1.1.1' />
+					<text>
+						<reference value='https://localhost/RetrieveValueSet?id=1.1.1.1.1.1.1'/>
+						<RetrieveValueSetResponse xmlns="urn:ihe:iti:svs:2008">
+							<ValueSet id="1.1.1.1.1.1.1" displayName="Common Race Values" version="1">
+								<ConceptList xml:lang="en-US">
+									<!-- Concept code="[[RACE_ID]]" displayName="[[RACE_NAME]]" codeSystem="[[PMN_OID]]" -->
+								</ConceptList>
+							</ValueSet>
+						</RetrieveValueSetResponse>
+					</text>
+				</valueSet>
+			</definition>
+
+			<definition>
+				<valueSet>
+					<!-- Value Set for Diagnosis -->
+					<id root='1.1.1.1.1.1.2' />
+					<text>
+						<reference value='https://localhost/RetrieveValueSet?id=1.1.1.1.1.1.2'/>
+						<RetrieveValueSetResponse xmlns="urn:ihe:iti:svs:2008">
+							<ValueSet id="1.1.1.1.1.1.2" displayName="Common Race Values" version="1">
+								<ConceptList xml:lang="en-US">
+									<!-- Concept code="[[DIAGNOSIS_CODE]]" displayName="[[DIAGNOSIS_NAME]]" codeSystem="2.16.840.1.113883.6.103" -->
+								</ConceptList>
+							</ValueSet>
+						</RetrieveValueSetResponse>
+					</text>
+				</valueSet>
+			</definition>
+
+			<!-- Define the criteria elements -->
+
+			<!-- Demographics Criteria for AGE -->
+			<entry>
+				<!-- The local variable name is used for debugging purposes, use something meaningful -->
+				<localVariableName>[[AGE_RANGE_IDENTIFIER]]</localVariableName>
+				<observationCriteria>
+					<!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+					<id root="[[PMN_OID]]" extension="[[AGE_RANGE_IDENTIFIER]]" />
+					<!-- For AGE the code, does not change in Query Health, just change hte low and high values -->
+					<code code="424144002" codeSystem="2.16.840.1.113883.6.96" displayName="Age"/>
+					<value xsi:type="IVL_PQ">
+						<low value="[[MIN_AGE]]" unit="a" inclusive="true"/>
+						<high value="[[MAX_AGE]]" unit="a" inclusive="true"/>
+					</value>
+					<!-- Indicate the type of data the criteria is referencing -->
+					<definition>
+						<observationReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.4" extension="Demographics"/>
+						</observationReference>
+					</definition>
+				</observationCriteria>
+			</entry>
+
+			<!-- Demographics Criteria for GENDER -->
+			<entry>
+				<!-- The local variable name is used for debugging purposes, use something meaningful -->
+				<localVariableName>genderMale</localVariableName>
+				<observationCriteria>
+					<!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+					<id root="[[PMN_OID]]" extension="genderMale" />
+					<!-- For GENDER the code, does not change in Query Health, just change gender code in the value element -->
+					<code code="263495000" codeSystem="2.16.840.1.113883.6.96" displayName="Gender"/>
+					<value xsi:type="CD" codeSystem="2.16.840.1.113883.5.1" code="M" />
+					<!-- Indicate the type of data the criteria is referencing -->
+					<definition>
+						<observationReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.4" extension="Demographics"/>
+						</observationReference>
+					</definition>
+				</observationCriteria>
+			</entry>
+			<entry>
+				<!-- The local variable name is used for debugging purposes, use something meaningful -->
+				<localVariableName>genderFemale</localVariableName>
+				<observationCriteria>
+					<!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+					<id root="[[PMN_OID]]" extension="genderFemale" />
+					<!-- For GENDER the code, does not change in Query Health, just change gender code in the value element -->
+					<code code="263495000" codeSystem="2.16.840.1.113883.6.96" displayName="Gender"/>
+					<value xsi:type="CD" codeSystem="2.16.840.1.113883.5.1" code="F" />
+					<!-- Indicate the type of data the criteria is referencing -->
+					<definition>
+						<observationReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.4" extension="Demographics"/>
+						</observationReference>
+					</definition>
+				</observationCriteria>
+			</entry>
+
+			<!-- Demographics Criteria for RACE -->
+			<entry>
+				<!-- The local variable name is used for debugging purposes, use something meaningful -->
+				<localVariableName>raceCriteria</localVariableName>
+				<observationCriteria>
+					<!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+					<id root="[[PMN_OID]]" extension="raceCriteria" />
+					<!-- For RACE the code, does not change in Query Health, just change Value Set referenced in the value element -->
+					<code code="103579009" codeSystem="2.16.840.1.113883.6.96" displayName="Race"/>
+					<value xsi:type="CD" valueSet="1.1.1.1.1.1.1" />
+					<!-- Indicate the type of data the criteria is referencing -->
+					<definition>
+						<observationReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.4" extension="Demographics"/>
+						</observationReference>
+					</definition>
+				</observationCriteria>
+			</entry>
+
+			<entry>
+				<!-- *** ICD 9 DIAGNOSIS REQUESTS ONLY *** Encounter Criteria for Diagnosis codes -->
+				<localVariableName>ICD9Diagnosis</localVariableName>
+				<encounterCriteria>
+					<id root="[[PMN_OID]]" extension="ICD9Diagnosis" />
+					<!-- EDorInpatientEncounterValueSet based on ICD9 codes -->
+					<code valueSet="1.1.1.1.1.1.2" />
+					<definition>
+						<encounterReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.5" extension="Encounters"/>
+						</encounterReference>
+					</definition>
+				</encounterCriteria>
+			</entry>
+
+			<entry>
+				<!-- *** REPORTABLE DISEASE REQUESTS ONLY *** Encounter Criteria to search free text codes -->
+				<localVariableName>diseaseFreeText</localVariableName>
+				<encounterCriteria>
+					<id root="[[PMN_OID]]" extension="diseaseFreeText" />
+					<code displayName="[[DISEASE_NAME]]"/>
+					<text description="[[DISEASE_NAME]]"/>
+					<definition>
+						<encounterReference moodCode="DEF">
+							<id root="1.1.1.1.0.0.5" extension="Encounters"/>
+						</encounterReference>
+					</definition>
+				</encounterCriteria>
+			</entry>
+            
+            <!-- Demographics Criteria for Tobacco Use -->
+            <entry>
+                <!-- The local variable name is used for debugging purposes, use something meaningful -->
+                <localVariableName>tobaccouseCriteria</localVariableName>
+                <observationCriteria>
+                    <!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+                    <id root="[[PMN_OID]]" extension="tobaccouseCriteria" />
+                    <!-- For RACE the code, does not change in Query Health, just change Value Set referenced in the value element -->
+                    <code code="103579009" codeSystem="2.16.840.1.113883.6.96" displayName="Tobacco Use"/>
+                    <value xsi:type="CD" valueSet="1.1.1.1.1.1.1" />
+                    <!-- Indicate the type of data the criteria is referencing -->
+                    <definition>
+                        <observationReference moodCode="DEF">
+                            <id root="1.1.1.1.0.0.4" extension="Demographics"/>
+                        </observationReference>
+                    </definition>
+                </observationCriteria>
+            </entry>
+		</dataCriteriaSection>
+	</component>
+
+	<component>
+
+		<!-- This section documents the event selection criteria using HQMF -->
+		<populationCriteriaSection>
+			<!-- Enter the PMN or MDPHNet OID for root, the combination of Root/Extension have to be unique in the document. -->
+			<id root="[[PMN_OID]]" extension="POP" />
+			<!-- The Code represents the Population Criteria section and does not change for Query Health -->
+			<code code="57026-7" codeSystem="2.16.840.1.113883.6.1"/>
+			<title>[[REQUEST_TYPE_NAME_NO_SPACES]]</title>
+			<text>
+				This section describes the Initial Patient Population, Numerator, Denominator,
+				Denominator Exceptions, and Measure Populations
+			</text>
+			<entry>
+				<patientPopulationCriteria>
+					<id root="[[PMN_OID]]" extension="IPP"/>
+
+					<!-- SAMPLE PRECONDITION NODE:
+					<precondition>
+						<observationReference *OR* encounterReference>
+							<id root="[[PMN_OID]]" extension="[[IDENTIFIER]]" />
+						</observationReference *OR* encounterReference>
+					</precondition>
+					-->
+
+				</patientPopulationCriteria>
+			</entry>
+
+			<entry>
+				<localVariableName>Stratifications</localVariableName>
+				<stratifierCriteria>
+					<id root="[[PMN_OID]]" extension="CLASSIFIER1" />
+
+					<!-- SAMPLE PRECONDITION NODE:
+					<precondition>
+						<observationReference *OR* encounterReference>
+							<id root="[[PMN_OID]]" extension="[[IDENTIFIER]]" />
+						</observationReference *OR* encounterReference>
+					</precondition>
+					-->
+
+				</stratifierCriteria>
+			</entry>
+
+		</populationCriteriaSection>
+	</component>
+</QualityMeasureDocument>

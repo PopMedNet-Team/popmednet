@@ -1,0 +1,63 @@
+﻿@using Lpp.Mvc;
+@model Lpp.Dns.HealthCare.DataChecker.Models.ResponseModel
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+<script src="@this.Resource("responses.common.js")"></script>
+<script src="@this.Resource("ViewModels/NDCResponse.js")"></script>
+
+@{
+    Html.Stylesheet("/scripts/jqplot/jquery.jqplot.css");
+    this.Stylesheet("datachecker.responses.css");
+    if (Model.IsExternalView)
+    {
+        this.Stylesheet(CssMediaType.screen | CssMediaType.print, "datachecker.responses.external.css");
+    }
+}
+
+<div @Html.Section( title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer" ) id="ResponseContainer">
+    <div id="ResponseViewHeader">
+        @if (Model.IsExternalView == false)
+        {
+            <a href="#" role="button" data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" id="btnOpenExternal" class="open-external btn btn-default"><img data-bind="click: function() { window.open('/response/@Model.RequestID/external/@Model.ResponseToken') }" src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+        }
+        <h2>Presence by Data Partner</h2>
+    </div>
+    <div data-bind="visible:HasResults">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:right;">Code</th>
+                    <!-- ko foreach: DataPartners -->
+                    <th style="text-align:right;" data-bind="text: $data"></th>
+                    <!-- /ko -->
+                    <th style="text-align:right;">Total DP Presence</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: CountByDataPartner">
+                <tr>
+                    <td style="text-align:right;" data-bind="text: NDC"></td>
+                    <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                    <td data-bind="text: partner.Count" style="text-align:right;"></td>
+                    <!-- /ko -->
+                    <td  data-bind="text: TotalCount" style="text-align:right;padding-right:24px;"></td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+</div>
+
+<script>
+    $(function () {        
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        DataChecker.NDC.init(model, $('#ResponseContainer'));
+    });
+</script>

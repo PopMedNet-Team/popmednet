@@ -1,0 +1,40 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryBuilderModel
+@{
+    var id = Html.UniqueId();
+    Layout = null;
+}
+<div class="SmokingSelectorTerm Term panel panel-default">
+    <input name="TermName" value="SmokingSelector" hidden="hidden" style="display:none" />
+    <div class="panel-heading">
+        <div class="ui-button-remove"></div>
+        Tobacco Use
+    </div>
+    <div id="@string.Format("binding-container{0}", id)" class="panel-body SmokingSelector">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20px;"></th>
+                    <th>Tobacco Use</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach:Smokings">
+                <tr>
+                    <td><input type="checkbox" data-bind="value:StratificationCategoryId, checked: $root.SelectedSmokings" /></td>
+                    <td data-bind="text:CategoryText"></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="Smoking" id="@string.Format("Smoking{0}", id)" data-bind="value: SelectedSmokings" />
+    </div>
+
+    <script>
+        $(function () {
+            ko.applyBindings({
+                Smokings: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.SmokingSelections)),
+                SelectedSmokings: ko.observableArray(('@Model.Smoking' || '').split(','))
+            }, $('#@string.Format("binding-container{0}", id)')[0]);
+        });
+
+    </script>
+
+</div>

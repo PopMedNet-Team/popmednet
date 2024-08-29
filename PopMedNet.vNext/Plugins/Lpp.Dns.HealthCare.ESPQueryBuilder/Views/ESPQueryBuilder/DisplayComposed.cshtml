@@ -1,0 +1,176 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+@using Lpp.Dns.General.CriteriaGroup.Views.CriteriaGroup.Terms;
+@using Lpp.Dns.General.CriteriaGroup.Models;
+@using Lpp.Dns.HealthCare.ESPQueryBuilder.Views.ESPQueryBuilder.Terms;
+@using Lpp.Utilities;
+@using System.Collections.Generic;
+@using System.Linq;
+@{ 
+    this.Stylesheet("ESPQueryComposition.min.css");
+    Lpp.Dns.Data.LookupListValue[] lookupListValues = Model.Codes.ToArray();
+}
+
+<div class="MedicalRequest Display ui-form">
+        <div id="CriteriaGroups" class="panel panel-default">
+            <div class="panel-heading">
+                Criteria Groups
+            </div>
+            <div class="panel-body">
+
+                @foreach (var criteriaGroup in Model.CriteriaGroups)
+                {
+                    <div class="CriteriaGroup panel panel-default">
+                        <div class="panel-heading">
+                            Criteria Group: @criteriaGroup.CriteriaGroupName
+                        </div>
+                        <div class="panel-body">
+                            <div class="InputParameters">
+                                @foreach (var term in criteriaGroup.Terms)
+                                {
+                                    // if the term uses the codes list, the list will be trashed when filtered... this lets us restore it!
+                                    var safeList = Model.Codes;
+
+                                    switch (term.TermName)
+                                    {
+                                        case "AgeRange":
+                                            Model.Base.MinAge = term.Args["MinAge"];
+                                            Model.Base.MaxAge = term.Args["MaxAge"];
+                                            Write(Html.Partial<DisplayAgeRange>());
+                                            break;
+                                        case "DiseaseSelector":
+                                            Model.Base.Disease = term.Args["Disease"];
+                                            Write(Html.Partial<DisplayDiseaseSelector>().WithModel(Model));
+                                            break;
+                                        case "Gender":
+                                            var sex = 0;
+                                            Int32.TryParse(term.Args["Sex"], out sex);
+                                            Model.Base.Sex = sex;
+                                            Write(Html.Partial<DisplayGender>().WithModel(Model));
+                                            break;
+                                        case "ICD9CodeSelector":
+                                            string[] codes = term.Args["Codes"].Split(',').Select(c => c.Trim()).ToArray();
+                                            Model.Codes = lookupListValues.Where(c => codes.Contains(c.ItemCode.Trim())).ToArray();
+                                            Write(Html.Partial<DisplayICD9CodeSelector>().WithModel(Model));
+                                            break;
+                                        case "RaceSelector":
+                                            Model.Codes = Model.Codes.Where(c => term.Args["Race"].Split(',').Contains(c.ItemCode.Trim()));
+                                            Write(Html.Partial<DisplayRaceSelector>().WithModel(Model));
+                                            break;
+                                        case "SmokingSelector":
+                                            Model.Codes = Model.Codes.Where(c => term.Args["Smoking"].Split(',').Contains(c.ItemCode.Trim()));
+                                            Write(Html.Partial<DisplaySmokingSelector>().WithModel(Model));
+                                            break;
+                                        case "EthnicitySelector":
+                                            Model.Codes = Model.Codes.Where(c => term.Args["Ethnicity"].Split(',').Contains(c.ItemCode.Trim()));
+                                            Write(Html.Partial<DisplayEthnicitySelector>().WithModel(Model));
+                                            break;
+
+                                        case "ZipCodeSelector":
+                                            Model.Base.ZipCodes = term.Args["Codes"];                                            
+                                            Write(Html.Partial<DisplayZipCodeSelector>().WithModel(Model));
+                                            break;
+                                        case "CustomLocation":
+                                            string clv;
+                                            if (term.Args.TryGetValue("LocationName", out clv))
+                                            {
+                                                Model.Base.LocationNames = clv;
+                                            }
+                                            if (term.Args.TryGetValue("LocationCodes", out clv))
+                                            {
+                                                Model.Base.LocationCodes = clv;
+                                            }
+                                            Write(Html.Partial<DisplayCustomLocation>().WithModel(Model));
+                                            break;
+                                        case "PredefinedLocation":
+                                            string selectedLocations;
+                                            if (term.Args.TryGetValue("PredefinedLocations", out selectedLocations))
+                                            {
+                                                Model.Base.LocationCodes = selectedLocations;
+                                            }
+                                            Write(Html.Partial<DisplayPredefinedLocation>().WithModel(Model));
+                                            break;
+                                        case "ObservationPeriod":
+                                            DateTime sp = DateTime.MinValue;
+                                            DateTime ep = DateTime.MaxValue;
+                                            if (term.Args.ContainsKey("StartPeriod") && !string.IsNullOrWhiteSpace(term.Args["StartPeriod"]))
+                                            {
+                                                DateTime.TryParse(term.Args["StartPeriod"], out sp);
+                                            }
+
+                                            if (term.Args.ContainsKey("EndPeriod") && !string.IsNullOrWhiteSpace(term.Args["EndPeriod"]))
+                                            {
+                                                DateTime.TryParse(term.Args["EndPeriod"], out ep);
+                                            }
+                                       
+                                            Write(Html.Partial<DisplayObservationPeriod>().WithModel(new ObservationPeriodModel
+                                            {                                                
+                                                StartPeriod = sp != DateTime.MinValue ? (DateTime?) sp : null,
+                                                EndPeriod = ep != DateTime.MaxValue ? (DateTime?) ep : null,
+                                            }));
+                                            break;
+                                        case "Visits":
+                                            var visits = 0;
+                                            Int32.TryParse(term.Args["MinVisits"], out visits);
+                                            Model.Base.MinVisits = visits;        
+                                            Write(Html.Partial<DisplayVisits>());
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    
+                                    Model.Codes = safeList;
+                                }
+                            </div>
+                            <div class="CriteriaGroupFooter">
+                                @if (criteriaGroup.ExcludeCriteriaGroup) {
+                                    <text>
+                                <div class="CriteriaGroupOptions" >
+                                    @Html.CheckBox("ExcludeCriteriaGroup", criteriaGroup.ExcludeCriteriaGroup, new { @class = "ExcludeCriteriaGroup" }) Exclude Criteria Group <img src="/Content/img/icons/help16.gif" class="helptip" title="Excluding this Criteria Group will subtract it from the final patient cohort." /><br />
+                                    @*@Html.CheckBox("SaveCriteriaGroup", criteriaGroup.SaveCriteriaGroup, new { @class = "SaveCriteriaGroup" }) Save Criteria Group*@
+                                </div>
+                                    </text>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+            <div class="ReportParameters">
+                @*<div class="panel panel-default">
+                    <div class="panel-heading">Races Selected</div>
+                    <div class="panel-body">
+                        <ul>
+                                @Html.Raw( string.Join( "", 
+                                    from rc in Model.Base.RaceSelections
+                                    join id in (Model.Base.Race??"").Split(',') on rc.StratificationCategoryId.ToString() equals id
+                                    select "<li>" + rc.CategoryText + "</li>"))
+                            </ul>
+                    </div>
+                </div>*@
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Reports Selected
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group SelectionList">
+                            @Html.Raw(string.Join("",
+                            from rp in Model.Base.ReportSelections
+                            join id in (Model.Base.Report ?? "").Split(',') on rp.Value.ToString() equals id
+                            let stratId = rp.Name.StartsWith("Age") ? Model.Base.AgeStratification :
+                                            rp.Name.StartsWith("Period") ? Model.Base.PeriodStratification :
+                                                rp.Name.StartsWith("ICD9") ? Model.Base.ICD9Stratification :
+                                            null
+                            let strat = rp.SelectionList.EmptyIfNull()
+                                            .Where(s => s.StratificationCategoryId == stratId)
+                                            .Select(s => " (" + s.CategoryText + ")")
+                                            .FirstOrDefault()
+                            select "<li class=\"list-group-item SelectedItems\">" + rp.Display + strat + "</li>"))
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+</div>

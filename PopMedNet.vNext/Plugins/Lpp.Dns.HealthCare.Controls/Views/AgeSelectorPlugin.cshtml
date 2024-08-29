@@ -1,0 +1,61 @@
+﻿@model AgeSelectorPluginModel
+
+@{
+    var fldAge = string.Format("{0}_{1}", Model.ParentContext, "Age");    
+    var fldAgeOp = string.Format("{0}_{1}", Model.ParentContext, "AgeOperator");
+    var fldAgeAsOfDate = string.Format("{0}_{1}", Model.ParentContext, "AgeAsOfDate");
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#@fldAgeAsOfDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: +0,
+            maxDate: '12/31/2299',
+            minDate: '01/01/1900',
+            showButtonPanel: true
+        });
+    });
+</script>
+
+<div class="ui-groupbox">
+    <div class="ui-groupbox-header"><span>Age Selector</span></div>
+    <div class="ui-form">
+        <table>
+            <tr>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(asm => asm.AgeOperator)
+                            @Html.DropDownList(fldAgeOp, AgeSelectorPluginModel.AgeOperators, new { id = fldAgeOp, style = "width: auto;" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(asm => asm.Age)
+                            @Html.TextBox(fldAge, Model.Age, new { id = fldAge, style = "width: 30px;", maxlength = 3 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(asm => asm.AgeAsOfDate)
+                            @if (!String.IsNullOrEmpty(Model.AgeAsOfDatePreset))
+                            {
+                                @Model.AgeAsOfDatePreset
+                            }
+                            else
+                            {                               
+                                @Html.TextBox(fldAgeAsOfDate, Model.AgeAsOfDate.ToString("MM/dd/yyyy"), new { id = fldAgeAsOfDate, style = "width: 80px;", maxlength = 10 })                                                   
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

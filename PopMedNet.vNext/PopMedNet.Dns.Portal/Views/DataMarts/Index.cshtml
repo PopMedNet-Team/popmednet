@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "DataMarts";
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Content("~/")">Home</a></li>
+            <li class="active"><a href="@Url.Content("~/datamarts")">DataMarts</a></li>
+        </ol>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gHeight}">
+        <div id="gDataMarts" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting: dsSetting,
+            savedSetting:{
+                Key: 'DataMarts.Index.gDataMarts.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: NameAnchor, hidden: false},
+                {field: 'Acronym', title: 'Acronym', hidden: false},
+                {field: 'Organization', title: 'Organization', hidden: false },
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewDataMart" data-bind="click: btnNewDataMart_Click, visible: CanCreateNew"><img src="@Url.Content("~/images/Add16.png")" alt="Add DataMart" />Add DataMart</button>
+    </nav>
+</article>
+@section Scripts{
+    <script type="module" src="~/scripts/pmngrid/pmngrid.js"></script>
+    <script type="module" src="~/js/datamarts/index.js"></script>
+}

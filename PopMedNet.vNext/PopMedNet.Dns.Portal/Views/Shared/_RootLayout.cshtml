@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "Distributed Network Solution")</title>
+
+    <link rel="stylesheet" href="~/content/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/content/bootstrap/css/bootstrap-theme.min.css" />
+
+    <link rel="stylesheet" href="~/content/kendo/2021.3.914/kendo.common-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/content/kendo/2021.3.914/kendo.bootstrap.min.css" />
+    
+    <environment include="Development">
+        <link rel="stylesheet" href="~/content/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/content/layout.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/content/print.css" media="print" asp-append-version="true" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/content/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/content/layout.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/content/print.min.css" media="print" asp-append-version="true" />
+    </environment>
+
+    <link rel="stylesheet" href="~/PopMedNet.Dns.Portal.styles.css" asp-append-version="true" />
+
+    <script>
+        var ServiceUrl = "@ViewData["ServiceUrl"]";
+    </script>
+
+    @await RenderSectionAsync("Head", required: false)
+
+</head>
+<body>
+    @RenderBody()
+
+    <script>
+        var exports = {};
+        </script>
+
+    <environment include="Development">
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
+         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.js"></script>       
+        @*<script src="//ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>*@
+        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js"></script>
+        <script src="~/scripts/knockout-bootstrap/knockout-bootstrap.min.js"></script>
+        @*<script src="~/scripts/linq/linq.js"></script>
+        <script src="~/scripts/linq/jquery.linq.js"></script>*@
+        <script src="~/scripts/kendo/2021.3.914/kendo.web.min.js"></script>
+        <script src="~/scripts/knockout-kendo/knockout-kendo.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+        @*<script src="//ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>*@
+        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+        <script src="~/scripts/knockout-bootstrap/knockout-bootstrap.min.js"></script>
+        @*<script src="~/scripts/linq/linq.min.js"></script>
+        <script src="~/scripts/linq/jquery.linq.min.js"></script>*@
+        <script src="~/scripts/kendo/2021.3.914/kendo.web.min.js"></script>
+        <script src="~/scripts/knockout-kendo/knockout-kendo.min.js"></script>
+    </environment>
+
+    @*<script src="https://cdn.jsdelivr.net/npm/date-fns@2.28.0/index.min.js"></script>*@
+
+    @*<script src="~/scripts/kendo/2021.3.914/kendo.data.webapi.js"></script>*@
+
+    <script src="~/scripts/custombindings/customknockoutbindings.js"></script>
+
+    <script type="module" src="~/js/Dns.Structures.js"></script>
+    <script type="module" src="~/js/Dns.Enums.js"></script>
+    <script type="module" src="~/js/Dns.Interfaces.js"></script>
+    <script type="module" src="~/js/Lpp.Dns.ViewModels.js"></script>
+    <script type="module" src="~/js/Lpp.Dns.WebApi.js"></script>
+
+    <script type="module" src="~/scripts/page/constants.js"></script>
+    <script type="module" src="~/scripts/page/global.js"></script>
+    <script type="module" src="~/scripts/page/page.js"></script>
+    <script type="module" src="~/scripts/expandomenu/expandomenu.js"></script>
+
+    @*<script src="~/scripts/termvalidators/termvalidators.js"></script>*@
+    <script type="module" src="~/js/_rootlayout.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,22 @@
+<query_result_instance>
+  <result_instance_id>${QUERY_RESULT_INSTANCE_ID}</result_instance_id>
+  <query_instance_id>${QUERY_INSTANCE_ID}</query_instance_id>
+  <description>Number of patients</description>
+  <query_result_type>
+    <result_type_id>4</result_type_id>
+    <name>PATIENT_COUNT_XML</name>
+    <display_type>CATNUM</display_type>
+    <visual_attribute_type>LA</visual_attribute_type>
+    <description>Number of patients</description>
+  </query_result_type>
+  <set_size>6</set_size>
+  <obfuscate_method></obfuscate_method>
+  <start_date>2012-06-08T15:57:30.217-04:00</start_date>
+  <end_date>2012-06-08T15:57:35.020-04:00</end_date>
+  <message/>
+  <query_status_type>
+    <status_type_id>3</status_type_id>
+    <name>FINISHED</name>
+    <description>FINISHED</description>
+  </query_status_type>
+</query_result_instance>

@@ -1,0 +1,79 @@
+﻿.MedicalRequest .RequestSubtype,
+.MedicalRequest .AgeStratification {
+  display: inline-block;
+  width: 200px;
+  margin-bottom: 20px;
+  margin-right: 30px;
+}
+.MedicalRequest.Display {
+  padding: 10px;
+}
+label.Selector {
+  font-weight: bold;
+  font-size: small;
+}
+div.Parameters {
+  width: 60%;
+  float: left;
+}
+div.Report {
+  width: 39%;
+  float: right;
+}
+div.AgeBlock {
+  width: 49%;
+  float: left;
+}
+div.SexBlock {
+  width: 49%;
+  float: right;
+}
+div.LeftParamBlock {
+  width: 49%;
+  float: left;
+}
+div.RightParamBlock {
+  width: 49%;
+  float: right;
+}
+#ReportComboBoxes {
+  width: 70%;
+}
+.clear {
+  clear: both;
+}
+div.Selector {
+  border: 1px solid #678FC0;
+  padding: 10px 15px;
+}
+div.Selections {
+  border: 2px solid #678FC0;
+  padding: 0px 0px;
+  background-color: White;
+}
+div.Selections.Display {
+  padding: 10px;
+}
+div.DisplayField {
+  border: 1px solid black;
+  background: white;
+  padding: 3px 7px;
+  margin-left: 7px;
+}
+div.Selections .Grid {
+  width: 100%;
+}
+.ui-form > div input[type=text].AgeTextBox {
+  width: 35px;
+}
+.ui-form > div select.SexCheckBox {
+  width: 90%;
+}
+#StartPeriod,
+#EndPeriod {
+  width: 80px;
+}
+p.Exception {
+  color: red;
+}
+

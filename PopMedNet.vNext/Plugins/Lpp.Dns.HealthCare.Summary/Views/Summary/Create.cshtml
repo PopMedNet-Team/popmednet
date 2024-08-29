@@ -1,0 +1,141 @@
+﻿@using Lpp.Dns.DTO.Enums
+@model Lpp.Dns.HealthCare.Summary.Models.SummaryRequestModel
+@{ 
+    this.Stylesheet("Medical.css"); 
+    
+    var viewModel = new {
+        Model.RequestType.Name,
+        Model.RequestType.IsMetadataRequest,
+        Model.RequestType.ShowCategory,
+        Model.RequestType.LookupList,
+        Model.RequestType.ShowMetricType,
+        Model.RequestType.ShowOutputCriteria,
+        Model.RequestType.ShowSetting,
+        Model.RequestType.ShowCoverage,
+        Model.RequestType.ShowAge,
+        Model.RequestType.ShowSex,
+        Model.YearsDataAvailabilityPeriods,
+        Model.QuartersDataAvailabilityPeriods,
+        Model.AgeStratification,
+        Model.SexStratification,
+        Model.Setting,
+        Model.MetricType,
+        Model.MetricTypes,
+        Model.OutputCriteria,
+        Model.Coverage,
+        Model.ByYearsOrQuarters,
+        Model.StartPeriod,
+        Model.EndPeriod,
+        Model.StartQuarter,
+        Model.EndQuarter,
+        Model.Codes
+    };   
+}
+
+<script src='@this.Resource("Create.js")'></script>
+<script>
+    Summary.Create.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel));
+</script>
+
+<div class="MedicalRequest ui-form" id="fsCriteria">
+    <input type="hidden" id="hiddenDataControl"/>
+    @Html.HiddenFor(m => m.AgeStratification, new { id = "AgeStratification" })
+    @Html.HiddenFor(m => m.SexStratification, new { id = "SexStratification" })
+    @Html.HiddenFor(m => m.MetricType, new { id = "MetricType" })
+    @Html.HiddenFor(m => m.OutputCriteria, new { id = "OutputCriteria" })
+    @Html.HiddenFor(m => m.Setting, new { id = "Setting" })
+    @Html.HiddenFor(m => m.Coverage, new { id = "Coverage" })
+    @Html.HiddenFor(m => m.ByYearsOrQuarters, new { id = "ByYearsOrQuarters" })
+    @Html.HiddenFor(m => m.StartPeriod, new { id = "StartPeriod" })
+    @Html.HiddenFor(m => m.EndPeriod, new { id = "EndPeriod" })
+    @Html.HiddenFor(m => m.StartQuarter, new { id = "StartQuarter" })
+    @Html.HiddenFor(m => m.EndQuarter, new { id = "EndQuarter" })
+    @Html.HiddenFor(m => m.Codes, new { id = "Codes" })
+    <div class="form-group" data-bind="visible: NotMetadataRequest">
+        <fieldset data-bind="visible: ShowCategory">
+            <legend data-bind="text: LookupList"></legend>
+            <div class="ui-groupbox">
+                <label>Code Set</label>
+                <div class="form-group">
+                    <button type="button" class="btn btn-default" id="btnSelectCode" data-bind="click: SelectCode">Select...</button>
+                    <label>Selected Codes:&nbsp;</label>
+                    <span style="word-break:break-all;word-wrap:break-word;" data-bind="html: Codes"></span>
+                </div> 
+            </div>
+        </fieldset>
+        <div class="Parameters">
+            <div class="LeftParamBlock">
+                <fieldset data-bind="visible: ShowMetricType">
+                    <legend>Metric Type</legend>
+                    <select data-bind="kendoDropDownList: { value: MetricType, data: Metrics, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+                </fieldset>
+                <fieldset data-bind="visible: ShowOutputCriteria">
+                    <legend>Output Criteria<img src="/Content/img/icons/help16.gif" class="helptip" title="Output the top XX by age group, sex. For example, selecting 20 will output the 20 most frequent occurrences identified in the specific table." /></legend>
+                    <select data-bind="kendoDropDownList: { value: OutputCriteria, data: Dns.Enums.OutputCriteriaTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+                </fieldset>
+                <fieldset data-bind="visible: ShowSetting">
+                    <legend>Setting</legend>
+                    <select data-bind="kendoDropDownList: { value: Setting, data: Dns.Enums.SettingsTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+                </fieldset>
+                <fieldset data-bind="visible: ShowCoverage">
+                    <legend>Coverage</legend>
+                    <select data-bind="kendoDropDownList: { value: Coverage, data: Dns.Enums.CoveragesTranslation, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+                </fieldset>
+                <fieldset data-bind="visible: ShowAge">
+                    <legend>Age Stratification<img src="/Content/img/icons/help16.gif" class="helptip" title="Age is defined as the age as of the date of first utilization during the observation period year." /></legend>
+                    <select data-bind="kendoDropDownList: { value: AgeStratification, data: AgeStratificationOptions, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+                </fieldset>
+                <fieldset data-bind="visible: ShowSex">
+                    <legend>Sex Stratification</legend>
+                    <select data-bind="kendoDropDownList: { value: SexStratification, data: SexStratificationOptions, dataTextField: 'text', dataValueField: 'value'}" style="width: 100%;"></select>
+            </fieldset>
+            </div>
+            <fieldset class="RightParamBlock" data-bind="visible: ShowObservationPeriod">
+                <legend>Observation Period<img src="/Content/img/icons/help16.gif" class="helptip" title="Select the start and end year for the observation period. Results are stratified by year or quarter." /></legend>
+                <div data-bind="visible: ShowQuartersYearsRadio">
+                    <label for="rdByYears">By Years</label>
+                    <input id="rdByYears" type="radio" value="ByYears" data-bind="checked: ByYearsOrQuarters" />
+                    <label for="rdByQuarters">By Quarters</label>
+                    <input id="rdByQuarters" type="radio" value="ByQuarters" data-bind="checked: ByYearsOrQuarters" />
+                </div>
+                <div data-bind="visible: NoQuarterlyData">
+                    Quarterly data not available.
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <label for="txStartPeriod">Start Period<em>*</em></label>
+                        <input type="number"
+                               id="txStartPeriod"
+                               name="txStartPeriod"
+                               maxlength="4"
+                               validationmessage="Field is required"
+                               data-bind="kendoNumericTextBox: {value: StartPeriod, min: 1800, max: 9999, decimals: 0, format: '0000'}, attr: { required: NotMetadataRequest }"  />
+                        <span class="k-invalid-msg" data-for="txStartPeriod"></span>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label for="txEndPeriod">End Period<em>*</em></label>
+                        <input type="number"
+                               id="txEndPeriod"
+                               name="txEndPeriod"
+                               maxlength="4"
+                               validationmessage="Field is required"
+                               data-bind="kendoNumericTextBox: {value: EndPeriod, min: 1800, max: 9999, decimals: 0, format: '0000'}, attr: { required: NotMetadataRequest }" />
+                        <span class="k-invalid-msg" data-for="txEndPeriod"></span>
+                    </div>  
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group" data-bind="visible: ShowQuarters">
+                        <label for="cbStartQuarter">Start Quarter</label>
+                        <select id="cbStartQuarter" data-bind="kendoDropDownList: { value: StartQuarter, data: DataAvailableQuarters, dataTextField: 'text', dataValueField: 'value'}" style="width: 50%"></select>
+                    </div>
+                    <div class="col-sm-4 form-group" data-bind="visible: ShowQuarters">
+                        <label for="cbEndQuarter">End Quarter</label>
+                        <select id="cbEndQuarter" data-bind="kendoDropDownList: { value: EndQuarter, data: DataAvailableQuarters, dataTextField: 'text', dataValueField: 'value'}" style="width: 50%"></select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+                                     
+</div>
+

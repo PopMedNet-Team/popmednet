@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/3rdParty/axis2-1.1/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/axis2-1.1/axiom-api-1.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/fluent-hc-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpclient-cache-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpcore-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/httpcomponents-client-4.2/httpmime-4.2.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/axis2-1.1/jaxen-1.1-beta-10.jar"/>
+	<classpathentry kind="lib" path="/3rdParty/axis2-1.1/axis2-kernel-1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PMNCommons"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

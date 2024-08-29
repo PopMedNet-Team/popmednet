@@ -1,0 +1,44 @@
+﻿@model Lpp.Dns.HealthCare.ModularProgram.Models.ModularProgramModel
+@{ 
+    this.Stylesheet("ModularProgram.css");
+    var id = Html.UniqueId();
+    var idFileLinks = Html.UniqueId();
+    var idPrograms = Html.UniqueId();
+}
+
+<!-- ko stopBinding:true -->
+<div id="DisplayPanel" class="MedicalRequest ui-form">
+    <div class="ui-form">
+        <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+        <div class="ui-groupbox">
+            <div class="ui-groupbox-header"><span>Signature File Information</span></div>
+            <table id="SignatureData" class="Grid" style="width: 100%" data-bind="visible: SignatureData().length > 0">
+                <thead>
+                    <tr>
+                        <th class="nowrap">Variables</th>
+                        <th class="right">Values</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: SignatureData">
+                    <tr>
+                        <td class="nowrap" data-bind="text: Variable"></td>
+                        <td class="right" data-bind="text: Value"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-bind="visible: SignatureData().length <= 0 && !HasResponses()">This area will populate upon the first data partner's completion of this request.</p>
+            <p data-bind="visible: SignatureData().length <= 0 && HasResponses()">The signature file used to populate this area was not found.</p>
+        </div>
+        @(Html.Render<Lpp.Dns.HealthCare.FileUpload>().With(Model.RequestId, Model.RequestFileList))
+    </div>
+    <br class="clear"/>
+</div>        
+<script src="@this.Resource("Programs.js")"></script>
+<script>
+    $(document).ready(function () {
+        var hasResponses = @Model.HasResponses.ToString().ToLower();
+        var json = '@(Html.Raw(Model.SignatureData))' || "{}";
+        ModularProgram.Display.init(hasResponses, $.parseJSON(json), $('#DisplayPanel'));
+    });
+</script>
+<!-- /ko -->

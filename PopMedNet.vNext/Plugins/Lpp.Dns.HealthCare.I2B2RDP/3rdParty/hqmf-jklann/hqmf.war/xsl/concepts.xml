@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns6:concepts xmlns:ns6="http://www.i2b2.org/xsd/cell/ont/1.1/" >
+<concept>
+  <level>3</level>
+  <key>\\i2b2_DEMO\i2b2\Demographics\Age\18-34 years old\</key>
+  <name>  18-34 years old</name>
+  <synonym_cd>N</synonym_cd>
+  <visualattributes>FA </visualattributes>
+  <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+  <facttablecolumn>patient_num</facttablecolumn>
+  <tablename>patient_dimension</tablename>
+  <columnname>birth_date</columnname>
+  <columndatatype>N</columndatatype>
+  <operator>BETWEEN</operator>
+  <dimcode>sysdate - (365.25*35) AND sysdate - (365.25*18) </dimcode>
+  <tooltip>Demographics \ Age \ 18-34 years old</tooltip>
+</concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Age\35-44 years old\</key>
+    <name>  35-44 years old</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>patient_num</facttablecolumn>
+    <tablename>patient_dimension</tablename>
+    <columnname>birth_date</columnname>
+    <columndatatype>N</columndatatype>
+    <operator>BETWEEN</operator>
+    <dimcode>sysdate - (365.25*45) AND sysdate - (365.25*35) </dimcode>
+    <tooltip>Demographics \ Age \ 35-44 years old</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Age\45-54 years old\</key>
+    <name>  45-54 years old</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>patient_num</facttablecolumn>
+    <tablename>patient_dimension</tablename>
+    <columnname>birth_date</columnname>
+    <columndatatype>N</columndatatype>
+    <operator>BETWEEN</operator>
+    <dimcode>sysdate - (365.25*55) AND sysdate - (365.25*45) </dimcode>
+    <tooltip>Demographics \ Age \ 45-54 years old</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Age\55-64 years old\</key>
+    <name>  55-64 years old</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>patient_num</facttablecolumn>
+    <tablename>patient_dimension</tablename>
+    <columnname>birth_date</columnname>
+    <columndatatype>N</columndatatype>
+    <operator>BETWEEN</operator>
+    <dimcode>sysdate - (365.25*65) AND sysdate - (365.25*55) </dimcode>
+    <tooltip>Demographics \ Age \ 55-64 years old</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\i2b2_DIAG\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</key>
+    <name>Diabetes mellitus</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>ICD9:250</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</dimcode>
+    <tooltip>Diagnoses \ Endocrine disorders \ Other endocrine gland diseases \ Diabetes mellitus</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\i2b2_DIAG\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</key>
+    <name>Diabetes mellitus due to insulin receptor antibodies</name>
+    <synonym_cd>Y</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>ICD9:250</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</dimcode>
+    <tooltip>Diagnoses \ Endocrine disorders \ Other endocrine gland diseases \ Diabetes mellitus</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\i2b2_DIAG\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</key>
+    <name>Secondary diabetes mellitus NOS</name>
+    <synonym_cd>Y</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>ICD9:250</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Diagnoses\Endocrine disorders (240-259)\Other endocrine gland diseases (250-259)\(250) Diabetes mellitus\</dimcode>
+    <tooltip>Diagnoses \ Endocrine disorders \ Other endocrine gland diseases \ Diabetes mellitus</tooltip>
+  </concept>
+  <concept>
+    <level>5</level>
+    <key>\\i2b2_LABS\i2b2\Labtests\LAB\(LLB53) Hematology\(LLB58) Hemoglobin Electrophoresis\HBA1\LOINC:4547-6\</key>
+    <name>A1 (LOINC:4547-6)</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>LOINC:4547-6</basecode>
+    <metadataxml>
+      <ValueMetadata>
+        <Version>3.02</Version>
+        <CreationDateTime>04/15/2007 01:22:49</CreationDateTime>
+        <TestID>HBA1</TestID>
+        <TestName>Hemoglobin A1</TestName>
+        <DataType>PosFloat</DataType>
+        <CodeType>GRP</CodeType>
+        <Loinc>4547-6</Loinc>
+        <Flagstouse>HL</Flagstouse>
+        <Oktousevalues>Y</Oktousevalues>
+        <MaxStringLength />
+        <LowofLowValue>94.0</LowofLowValue>
+        <HighofLowValue>96.5</HighofLowValue>
+        <LowofHighValue>98.0</LowofHighValue>
+        <HighofHighValue>98.5</HighofHighValue>
+        <LowofToxicValue />
+        <HighofToxicValue />
+        <EnumValues />
+        <CommentsDeterminingExclusion>
+          <Com />
+        </CommentsDeterminingExclusion>
+        <UnitValues>
+          <NormalUnits>%</NormalUnits>
+          <EqualUnits>%</EqualUnits>
+          <ExcludingUnits />
+          <ConvertingUnits>
+            <Units />
+            <MultiplyingFactor />
+          </ConvertingUnits>
+        </UnitValues>
+        <Analysis>
+          <Enums />
+          <Counts />
+          <New />
+        </Analysis>
+      </ValueMetadata>
+    </metadataxml>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>like</operator>
+    <dimcode>\i2b2\Labtests\LAB\(LLB53) Hematology\(LLB58) Hemoglobin Electrophoresis\HBA1\LOINC:4547-6\</dimcode>
+    <tooltip>Labtests \ Hematology \ Hemoglobin Electrophoresis \ Hemoglobin A1 (Group:HBA1) \ A1 (LOINC:4547-6)</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Gender\Female\</key>
+    <name>Female</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>DEM|SEX:f</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Gender\Female\</dimcode>
+    <tooltip>Demographic \ Gender \ Female</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Marital Status\Married\</key>
+    <name>Married</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>MA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Marital Status\Married\</dimcode>
+    <tooltip>Demographic \ Marital Status \ Married</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Race\Asian\</key>
+    <name>Asian</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>MA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>PATIENT_NUM</facttablecolumn>
+    <tablename>PATIENT_DIMENSION</tablename>
+    <columnname>RACE_CD</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>IN</operator>
+    <dimcode>'a','asian'</dimcode>
+    <tooltip>Demographic \ Race \ Asian</tooltip>
+  </concept>
+  <concept>
+    <level>2</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Religion\</key>
+    <name>Religion</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Religion\</dimcode>
+    <tooltip>Demographic \ Religion</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Religion\Agnostic\</key>
+    <name>Agnostic</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>MA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Religion\Agnostic\</dimcode>
+    <tooltip>Demographic \ Religion \ Agnostic</tooltip>
+  </concept><concept>
+    <level>3</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Zip codes\Kansas\</key>
+    <name>Kansas</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Zip codes\Kansas\</dimcode>
+    <tooltip>Demographics \ Zip codes \ Kansas</tooltip>
+  </concept>
+  <concept>
+    <level>5</level>
+    <key>\\i2b2_DEMO\i2b2\Demographics\Zip codes\Rhode Island\Providence\02908\</key>
+    <name>02908</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>DEM|ZIPCODE:02908</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Demographics\Zip codes\Rhode Island\Providence\02908\</dimcode>
+    <tooltip>Demographics \ Zip codes \ Rhode Island \ Providence \ 02908</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_MEDS\i2b2\Medications\MUL\(LME148) hormones\(LME150) antidiabetic agents\</key>
+    <name>Antidiabetic agents</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>like</operator>
+    <dimcode>\i2b2\Medications\MUL\(LME148) hormones\(LME150) antidiabetic agents\</dimcode>
+    <tooltip>medications \ hormones \ antidiabetic agents</tooltip>
+  </concept>
+  <concept>
+    <level>5</level>
+    <key>\\i2b2_PROC\i2b2\Procedures\PRC\ICD9 (Inpatient)\(42-54) Operations on digestive system\(p51) Operations on gallbladder a~\(p51-2) Cholecystectomy4\</key>
+    <name>Cholecystectomy</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>ICD9:51.2</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Procedures\PRC\ICD9 (Inpatient)\(42-54) Operations on digestive system\(p51) Operations on gallbladder a~\(p51-2) Cholecystectomy4\</dimcode>
+    <tooltip>Procedures \ ICD9 (Inpatient) \ Operations on digestive system \ Operations on gallbladder and biliary tract \ Cholecystectomy</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_VISIT\i2b2\Visit Details\Visit type\Inpatient visit\</key>
+    <name>Inpatient visit</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>I</basecode>
+    <facttablecolumn>encounter_num</facttablecolumn>
+    <tablename>visit_dimension</tablename>
+    <columnname>inout_cd</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>=</operator>
+    <dimcode>I</dimcode>
+    <tooltip>Visit Details \ Visit type \ Inpatient visit</tooltip>
+  </concept>
+  <concept>
+    <level>5</level>
+    <key>\\i2b2_LABS\i2b2\Labtests\LAB\(LLB16) Chemistry\Hemoglobin\GHBA1C\LOINC:4548-4\</key>
+    <name>HGB A1C (LOINC:4548-4)</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>LOINC:4548-4</basecode>
+    <metadataxml>
+      <ValueMetadata>
+        <Version>3.02</Version>
+        <CreationDateTime>04/15/2007 01:22:15</CreationDateTime>
+        <TestID>GHBA1C</TestID>
+        <TestName>GHBA1C</TestName>
+        <DataType>PosFloat</DataType>
+        <CodeType>GRP</CodeType>
+        <Loinc>4548-4</Loinc>
+        <Flagstouse>LNH</Flagstouse>
+        <Oktousevalues>Y</Oktousevalues>
+        <MaxStringLength>0</MaxStringLength>
+        <LowofLowValue>3.5</LowofLowValue>
+        <HighofLowValue>4.7</HighofLowValue>
+        <LowofHighValue>5.7</LowofHighValue>
+        <HighofHighValue>6.5</HighofHighValue>
+        <LowofToxicValue />
+        <HighofToxicValue />
+        <EnumValues />
+        <CommentsDeterminingExclusion>
+          <Com />
+        </CommentsDeterminingExclusion>
+        <UnitValues>
+          <NormalUnits>%</NormalUnits>
+          <EqualUnits>%</EqualUnits>
+          <ExcludingUnits />
+          <ConvertingUnits>
+            <Units />
+            <MultiplyingFactor />
+          </ConvertingUnits>
+        </UnitValues>
+        <Analysis>
+          <Enums />
+          <Counts />
+          <New />
+        </Analysis>
+      </ValueMetadata>
+    </metadataxml>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>like</operator>
+    <dimcode>\i2b2\Labtests\LAB\(LLB16) Chemistry\Hemoglobin\GHBA1C\LOINC:4548-4\</dimcode>
+    <tooltip>Labtests \ Chemistry \ Hemoglobin \ GHBA1C (Group:GHBA1C) \ Hgb a1c (LOINC:4548-4)</tooltip>
+  </concept>
+  
+  <!-- These concepts added by JGK from the demo ontology for testing procedures, meds, encounters -->
+  <concept>
+    <level>6</level>
+    <key>\\i2b2_PROC\i2b2\Procedures\PRC\ICD9 (Inpatient)\(35-39) Operations on cardiovascular system\(p36) Operations on vessels of he~\(p36-1) Bypass anastomosis for he~\(p36-17) Abdominal - coronary art~\</key>
+    <name>Abdominal - coronary artery bypass</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>ICD9:36.17</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\i2b2\Procedures\PRC\ICD9 (Inpatient)\(35-39) Operations on cardiovascular system\(p36) Operations on vessels of he~\(p36-1) Bypass anastomosis for he~\(p36-17) Abdominal - coronary art~\</dimcode>
+    <tooltip>Procedures \ ... \ Operations on cardiovascular system \ Operations on vessels of heart \ Bypass anastomosis for heart revascularization \ Abdominal - coronary artery bypass</tooltip>
+  </concept>
+  <concept>
+    <level>5</level>
+    <key>\\i2b2_MEDS\i2b2\Medications\MUL\(LME92) central nervous system agents\(LME121) muscle relaxants\(LME124) skeletal muscle relaxants\baclofen\</key>
+    <name>Baclofen</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>like</operator>
+    <dimcode>\i2b2\Medications\MUL\(LME92) central nervous system agents\(LME121) muscle relaxants\(LME124) skeletal muscle relaxants\baclofen\</dimcode>
+    <tooltip>medications \ central nervous system agents \ muscle relaxants \ skeletal muscle relaxants \ baclofen</tooltip>
+  </concept>
+  <concept>
+    <level>6</level>
+    <key>\\i2b2_MEDS\i2b2\Medications\MUL\(LME92) central nervous system agents\(LME121) muscle relaxants\(LME124) skeletal muscle relaxants\baclofen\00364231290\</key>
+    <name>Baclofen 10mg tablet Schein Pharmaceuticals Inc</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>NDC:00364231290</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>like</operator>
+    <dimcode>\i2b2\Medications\MUL\(LME92) central nervous system agents\(LME121) muscle relaxants\(LME124) skeletal muscle relaxants\baclofen\00364231290\</dimcode>
+    <tooltip>medications \ central nervous system agents \ muscle relaxants \ skeletal muscle relaxants \ baclofen \ baclofen 10mg tablet schein pharmaceuticals inc</tooltip>
+  </concept>
+  <!-- SHRINE Concepts -->
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\medications\MS000\MS200\1292\</key>
+    <name>Baclofen</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|RXNORM:1292</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\medications\MS000\MS200\1292\</dimcode>
+    <tooltip>medications\MS000\MS200\1292</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\</key>
+    <name>Diabetes mellitus without complication</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum>0</totalnum>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Acetonuria\</key>
+    <name>Acetonuria</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:791.6</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Acetonuria\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Acetonuria</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Encounter for insulin pump training\</key>
+    <name>Encounter for insulin pump training</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:V65.46</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Encounter for insulin pump training\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Encounter for insulin pump training</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Fitting and adjustment of insulin pump Insulin pump titration\</key>
+    <name>Fitting and adjustment of insulin pump Insulin pump titration</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:V53.91</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Fitting and adjustment of insulin pump Insulin pump titration\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Fitting and adjustment of insulin pump Insulin pump titration</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Glycosuria\</key>
+    <name>Glycosuria</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:791.5</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Glycosuria\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Glycosuria</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired fasting glucose\</key>
+    <name>Impaired fasting glucose</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:790.21</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired fasting glucose\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired fasting glucose</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired glucose tolerance test (oral)\</key>
+    <name>Impaired glucose tolerance test (oral)</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:790.22</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired glucose tolerance test (oral)\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Impaired glucose tolerance test (oral)</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Insulin pump status\</key>
+    <name>Insulin pump status</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:V45.85</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Insulin pump status\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Insulin pump status</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Other abnormal glucose\</key>
+    <name>Other abnormal glucose</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:790.29</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Other abnormal glucose\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Other abnormal glucose</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Secondary diabetes mellitus, not stated as uncontrolled, or unspecified\</key>
+    <name>Secondary diabetes mellitus, not stated as uncontrolled, or unspecified</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:249.00</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Secondary diabetes mellitus, not stated as uncontrolled, or unspecified\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\Secondary diabetes mellitus, not stated as uncontrolled, or unspecified</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type I diabetes mellitus (insulin dependent type) (IDDM) (juvenile type), not stated as uncontrolled, without mention of complication\</key>
+    <name>type I diabetes mellitus (insulin dependent type) (IDDM) (juvenile type), not stated as uncontrolled, without mention of complication</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:250.01</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type I diabetes mellitus (insulin dependent type) (IDDM) (juvenile type), not stated as uncontrolled, without mention of complication\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type I diabetes mellitus (insulin dependent type) (IDDM) (juvenile type), not stated as uncontrolled, without mention of complication</tooltip>
+  </concept>
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type II diabetes mellitus (non-insulin dependent type) (NIDDM type) (adult-onset type) or unspecified type, not stated as uncontrolled, without mention of complication\</key>
+    <name>type II diabetes mellitus (non-insulin dependent type) (NIDDM type) (adult-onset type) or unspecified type, not stated as uncontrolled, without mention of complication</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|ICD9:250.00</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type II diabetes mellitus (non-insulin dependent type) (NIDDM type) (adult-onset type) or unspecified type, not stated as uncontrolled, without mention of complication\</dimcode>
+    <tooltip>Diagnoses\Endocrine, nutritional, and metabolic diseases and immunity disorders\Diabetes mellitus without complication\type II diabetes mellitus (non-insulin dependent type) (NIDDM type) (adult-onset type) or unspecified type, not stated as uncontrolled, without mention of complication</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Labs\cbc\hct\</key>
+    <name>Hematocrit</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|PHSCDRGC:HCT</basecode>
+    <metadataxml>
+      <ValueMetadata>
+        <Version>3.02</Version>
+        <CreationDateTime>04/15/2007 01:22:49</CreationDateTime>
+        <TestID>HCT</TestID>
+        <TestName>HCT</TestName>
+        <DataType>PosFloat</DataType>
+        <CodeType>GRP</CodeType>
+        <Loinc>4544-3</Loinc>
+        <Flagstouse>HL</Flagstouse>
+        <Oktousevalues>The tests in this group do not have comparable values, therefore numeric comparisons between the tests are not possible.</Oktousevalues>
+        <MaxStringLength />
+        <LowofLowValue />
+        <HighofLowValue />
+        <LowofHighValue />
+        <HighofHighValue />
+        <LowofToxicValue />
+        <HighofToxicValue />
+        <EnumValues />
+        <CommentsDeterminingExclusion>
+          <Com />
+        </CommentsDeterminingExclusion>
+        <UnitValues>
+          <NormalUnits>%</NormalUnits>
+          <EqualUnits>%</EqualUnits>
+          <ExcludingUnits />
+          <ConvertingUnits>
+            <Units />
+            <MultiplyingFactor />
+          </ConvertingUnits>
+        </UnitValues>
+        <Analysis>
+          <Enums />
+          <Counts />
+          <New />
+        </Analysis>
+      </ValueMetadata>
+    </metadataxml>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Labs\cbc\hct\</dimcode>
+    <tooltip>Labs\cbc\hct</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Labs\cbc\hgb\</key>
+    <name>Hemoglobin</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|PHSCDRGC:HGB</basecode>
+    <metadataxml>
+      <ValueMetadata>
+        <Version>3.02</Version>
+        <CreationDateTime>04/15/2007 01:22:22</CreationDateTime>
+        <TestID>HGB</TestID>
+        <TestName>HGB</TestName>
+        <DataType>PosFloat</DataType>
+        <CodeType>GRP</CodeType>
+        <Loinc>718-7</Loinc>
+        <Flagstouse>HL</Flagstouse>
+        <Oktousevalues>The units in this set of tests are not equivalent, therefore numeric comparisons between the tests are not possible.</Oktousevalues>
+        <MaxStringLength />
+        <LowofLowValue />
+        <HighofLowValue />
+        <LowofHighValue />
+        <HighofHighValue />
+        <LowofToxicValue />
+        <HighofToxicValue />
+        <EnumValues />
+        <CommentsDeterminingExclusion>
+          <Com />
+        </CommentsDeterminingExclusion>
+        <UnitValues>
+          <NormalUnits>g/dl</NormalUnits>
+          <NormalUnits>gm/dl</NormalUnits>
+          <NormalUnits>mg/dl</NormalUnits>
+          <NormalUnits>g/l</NormalUnits>
+          <EqualUnits>g/dl</EqualUnits>
+          <EqualUnits>gm/dl</EqualUnits>
+          <EqualUnits>mg/dl</EqualUnits>
+          <EqualUnits>g/l</EqualUnits>
+          <ExcludingUnits />
+          <ConvertingUnits>
+            <Units />
+            <MultiplyingFactor />
+          </ConvertingUnits>
+        </UnitValues>
+        <Analysis>
+          <Enums />
+          <Counts />
+          <New />
+        </Analysis>
+      </ValueMetadata>
+    </metadataxml>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Labs\cbc\hgb\</dimcode>
+    <tooltip>Labs\cbc\hgb</tooltip>
+  </concept>
+  <!-- Encounter-related concepts -->
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_VISIT\i2b2\Visit Details\Visit type\Outpatient visit\</key>
+    <name>Outpatient visit</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>O</basecode>
+    <facttablecolumn>encounter_num</facttablecolumn>
+    <tablename>visit_dimension</tablename>
+    <columnname>inout_cd</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>=</operator>
+    <dimcode>O</dimcode>
+    <tooltip>Visit Details \ Visit type \ Outpatient visit</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_VISIT\i2b2\Visit Details\Length of stay\ 1 day\</key>
+    <name>  1 day</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <basecode>1</basecode>
+    <facttablecolumn>encounter_num</facttablecolumn>
+    <tablename>visit_dimension</tablename>
+    <columnname>length_of_stay</columnname>
+    <columndatatype>N</columndatatype>
+    <operator>=</operator>
+    <dimcode>1</dimcode>
+    <tooltip>Visit Details \ Length of stay \ 1 day</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\i2b2_VISIT\i2b2\Visit Details\Age at visit\0-9 years old\</key>
+    <name> Visit at age 9 or less</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>FA </visualattributes>
+    <totalnum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <facttablecolumn>encounter_num</facttablecolumn>
+    <tablename>visit_dimension</tablename>
+    <columnname>start_date</columnname>
+    <columndatatype>N</columndatatype>
+    <operator>&lt;</operator>
+    <dimcode>((select birth_date from I2B2DEMODATA.PATIENT_DIMENSION where patient_num = I2B2DEMODATA.VISIT_DIMENSION.PATIENT_NUM) + (365.25 * 10)-1)</dimcode>
+    <tooltip>Visit Details \ Age at visit \ 0-9 years old</tooltip>
+  </concept>
+  <!-- SHRINE Demographics -->
+  <concept>
+    <level>4</level>
+    <key>\\SHRINE\SHRINE\Demographics\Race\Hispanic or Latino\Latin American\</key>
+    <name>Latin American</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|RACE:2178-2</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Demographics\Race\Hispanic or Latino\Latin American\</dimcode>
+    <tooltip>Demographics\Race\Hispanic or Latino\Latin American</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Demographics\Marital Status\Divorced\</key>
+    <name>Divorced</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|MARITAL:D</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Demographics\Marital Status\Divorced\</dimcode>
+    <tooltip>Demographics\Marital Status\Divorced</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Demographics\Language\Arabic\</key>
+    <name>Arabic</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|LANGUAGE:ar</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Demographics\Language\Arabic\</dimcode>
+    <tooltip>Demographics\Language\Arabic</tooltip>
+  </concept>
+  <concept>
+    <level>3</level>
+    <key>\\SHRINE\SHRINE\Demographics\Gender\Female\</key>
+    <name>Female</name>
+    <synonym_cd>N</synonym_cd>
+    <visualattributes>LA </visualattributes>
+    <totalnum>0</totalnum>
+    <basecode>SHRINE|SEX:F</basecode>
+    <facttablecolumn>concept_cd</facttablecolumn>
+    <tablename>concept_dimension</tablename>
+    <columnname>concept_path</columnname>
+    <columndatatype>T</columndatatype>
+    <operator>LIKE</operator>
+    <dimcode>\SHRINE\Demographics\Gender\Female\</dimcode>
+    <tooltip>Demographics\Gender\Female</tooltip>
+  </concept>
+</ns6:concepts>

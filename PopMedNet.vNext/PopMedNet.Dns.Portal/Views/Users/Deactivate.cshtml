@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "RejectRegistration";
+    Layout = "~/Views/Shared/_DialogLayout.cshtml";
+}
+
+@section Head {
+    <script type="module" src="~/js/Users/deactivate.js"></script>
+}
+
+    <form role="form">
+        <fieldset>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="txtReason">Reason<em>*</em></label>
+                    <textarea id="txtReason" class="form-control" rows="12" data-bind="textInput: Reason" style="resize:none;"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <nav class="footer">
+        <button id="btnSave" class="btn btn-success btn-sm" data-bind="click: Save.bind($root)"><img src="@Url.Content("~/images/Save24.png")" alt="Save" />Save</button>
+        <button id="btnCancel" class="btn btn-warning btn-sm" data-bind="click: Cancel.bind($root)"><img src="@Url.Content("~/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+    </nav>

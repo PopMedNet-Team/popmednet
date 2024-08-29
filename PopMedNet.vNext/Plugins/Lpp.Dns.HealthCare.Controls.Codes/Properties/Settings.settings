@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Lpp.Dns.HealthCare.Controls.Code.Serializer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DataSourceName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PMNCodeUpdate</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,17 @@
+<response>
+   <message_header>
+   </message_header>
+   <response_header>
+      <result_status>
+         <status type="ERROR">${MESSAGE}</status>
+         <returnUrl url='${RETURN_URL}'/>
+      </result_status>
+   </response_header>
+   <message_body>
+      <response>
+         <status>
+            <condition type="DONE">DONE</condition>
+         </status>
+      </response>
+   </message_body>
+</response>

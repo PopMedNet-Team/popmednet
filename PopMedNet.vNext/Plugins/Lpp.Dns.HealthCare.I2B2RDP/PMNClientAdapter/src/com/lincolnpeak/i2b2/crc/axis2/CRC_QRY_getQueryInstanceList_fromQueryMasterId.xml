@@ -1,0 +1,61 @@
+<ns5:response
+  	xmlns:ns7="http://www.i2b2.org/xsd/cell/crc/psm/analysisdefinition/1.1/"
+	xmlns:ns2="http://www.i2b2.org/xsd/hive/pdo/1.1/"
+	xmlns:ns8="http://www.i2b2.org/xsd/cell/pm/1.1/"
+	xmlns:ns3="http://www.i2b2.org/xsd/cell/crc/pdo/1.1/"
+	xmlns:ns5="http://www.i2b2.org/xsd/hive/msg/1.1/"
+	xmlns:ns6="http://www.i2b2.org/xsd/cell/crc/psm/querydefinition/1.1/"
+	xmlns:ns10="http://www.i2b2.org/xsd/hive/msg/result/1.1/"
+	xmlns:ns9="http://www.i2b2.org/xsd/cell/ont/1.1/"
+	xmlns:ns4="http://www.i2b2.org/xsd/cell/crc/psm/1.1/">
+  <message_header>
+	<i2b2_version_compatible>1.1</i2b2_version_compatible>
+	<hl7_version_compatible>2.4</hl7_version_compatible>
+	<sending_application>
+	   <application_name>CRC Cell</application_name>
+	   <application_version>1.601</application_version>
+	</sending_application>
+	<sending_facility>
+	   <facility_name>i2b2 Hive</facility_name>
+	</sending_facility>
+	<receiving_application>
+	   <application_name>i2b2_QueryTool</application_name>
+	   <application_version>1.6</application_version>
+	</receiving_application>
+	<receiving_facility>
+	   <facility_name>i2b2 Hive</facility_name>
+	</receiving_facility>
+	<message_control_id>
+	   <instance_num>1</instance_num>
+	</message_control_id>
+	<project_id>${PROJECT_ID}</project_id>
+  </message_header>
+  <response_header>
+	<info>Log information</info>
+	<result_status>
+	   <status type="DONE">DONE</status>
+	   <polling_url interval_ms="100"/>
+	</result_status>
+  </response_header>
+  <message_body>
+	<ns4:response xsi:type="ns4:instance_responseType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<status>
+	        <condition type="DONE">DONE</condition>
+	    </status>
+	    <query_instance>
+	        <query_instance_id>${QUERY_INSTANCE_ID}</query_instance_id>
+	        <query_master_id>${QUERY_INSTANCE_ID}</query_master_id>
+	        <user_id>${USER_ID}</user_id>
+	        <group_id>${GROUP_ID}</group_id>
+	        <start_date>2012-06-08T15:57:30.210-04:00</start_date>
+	        <end_date>2012-06-08T15:57:35.040-04:00</end_date>
+	        <message></message>
+	        <query_status_type>
+	          	<status_type_id>6</status_type_id>
+	          	<name>COMPLETED</name>
+	          	<description>COMPLETED</description>
+	        </query_status_type>
+	    </query_instance>
+	</ns4:response>
+  </message_body>
+</ns5:response>

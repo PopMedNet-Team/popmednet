@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Criteria Group Templates";
+}
+@section Head{
+    <script type="module" src="@Url.Content("~/scripts/pmngrid/pmngrid.js")"></script>
+    <script type="module" src="@Url.Content("~/js/templates/index.js")"></script>
+}
+
+    <article class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/templates">Criteria Group Templates</a></li>
+            </ol>
+        </div>
+        <div class="panel-body" data-bind="style: {height: gHeight}">
+            <div id="gTemplates" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Templates.Index.gTemplates.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: { virtual: true },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: NameAchor}
+            ]
+             }">
+            </div>
+        </div>
+        <nav class="panel-footer right">
+            &nbsp;
+        </nav>
+    </article>

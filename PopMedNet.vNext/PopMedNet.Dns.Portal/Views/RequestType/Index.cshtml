@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Request Types";
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/RequestType">Request Types</a></li>
+        </ol>
+    </div>
+    <div class="panel-body" data-bind="style: {height: gHeight}" style="height:400px;">
+        <div id="gRequestTypes" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'RequestType.Index.gRequestTypes.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual:true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: NameAchor},
+                {field: 'Template', title: 'Template'},
+                {field: 'Workflow', title: 'Work Flow'}
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewRequestType" data-bind="click: onNewRequestType, visible: CanCreateRequestType"><img src="@Url.Content("~/images/Add16.png")" alt="Add Template" />Add Request Type</button>
+    </nav>
+</article>
+@section Scripts{
+    <script type="module" src="~/scripts/pmngrid/pmngrid.js"></script>
+    <script type="module" src="~/js/requesttype/index.js"></script>
+}

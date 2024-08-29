@@ -1,0 +1,4 @@
+{
+  "extends": "../../../Build/baseTSConfig.json",
+  "compileOnSave": false
+}

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RequestBuilder"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="request_builder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element ref="request"/>
+        <xs:element ref="response"/>
+        <xs:element ref="datamarts"/>
+        <xs:element ref="footer" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="request_type" type="xs:string"/>
+        <xs:element name="request_name" type="xs:string"/>
+        <xs:element name="request_description" type="xs:string"/>
+        <xs:element name="due_date" type="xs:date" minOccurs="0"/>
+        <xs:element name="activity" type="xs:string" minOccurs="0"/>
+        <xs:element name="activity_description" type="xs:string" minOccurs="0"/>
+        <xs:element name="submitter_email" type="xs:string" minOccurs="0"/>
+        <xs:element name="options" type="optionsType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>      
+  </xs:element>
+
+  <xs:element name="request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="variables" minOccurs="0"/>
+        <xs:element ref="criteria" minOccurs="0"/>
+        
+        <!-- The following will be deprecated. -->
+        <xs:element ref="inclusion_criteria" minOccurs="0"/>
+        <xs:element ref="exclusion_criteria" minOccurs="0"/>
+      </xs:sequence>      
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="report"/>
+      </xs:sequence>
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:element name="footer"/>
+
+  <xs:element name="variables" type="variablesType"/>
+
+  <xs:element name="variable">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="value" type="xs:string"/>
+      <xs:attribute name="operator" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="operation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="operation" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="options" type="optionsType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="operator"/>
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:element name="criteria">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Implicit operation between inclusion_criteria is AND, between exclusion_criteria is AND NOT. -->
+        <xs:element ref="inclusion_criteria" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="exclusion_criteria" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="inclusion_criteria" type="variablesType"/>
+  <xs:element name="exclusion_criteria" type="variablesType"/>
+
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="options" type="optionsType"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="row" type="xs:string" use="optional"/>
+      <xs:attribute name="column" type="xs:string" use="optional"/>
+      <xs:attribute name="group" type="xs:string" use="optional"/>      
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:element name="datamarts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="datamart" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name"/>
+            <xs:attribute name="organization"/>
+          </xs:complexType>
+        </xs:element>          
+      </xs:sequence>        
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:complexType name="optionsType">
+    <xs:sequence>
+      <xs:element ref="option" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="option">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="variablesType">
+      <xs:all>
+        <xs:element ref="variable" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="operation" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="options" type="optionsType" minOccurs="0" maxOccurs="1"/>
+      </xs:all>
+      <xs:attribute name="name" type="xs:string" use="optional"/>
+  </xs:complexType>
+  
+</xs:schema>

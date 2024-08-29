@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Users";
+}
+
+@section Scripts {
+    <script type="module" src="@Url.Content("~/scripts/PmnGrid/PmnGrid.js")"></script>
+    <script type="module" src="@Url.Content("~/js/Users/Index.js")"></script>
+}
+    <article class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/users">Users</a></li>
+            </ol>
+        </div>
+        <div class="panel-body" data-bind="style: {height: gHeight}">
+            <div id="gUsers" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Users.Index.gUsers.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,            
+            columns: [
+                {field: 'UserName', title: 'User Name', template: NameAchor, width: 170},
+                {field: 'FirstName', title: 'First Name'},
+                {field: 'LastName', title: 'Last Name'},
+                {field: 'Email', title: 'Email', width: 220},
+                {field: 'Organization', title: 'Organization'},
+                {field: 'Active', title: 'Active', width: 90, values: UserTypesTranslation, filterable: {ui: typeFilterUI}},
+            ]
+             }">
+            </div>
+        </div>
+        <nav class="panel-footer right">
+            <button class="btn btn-default" id="btnNewUsers" data-bind="click: btnNewUser_Click, visible: CanCreateUser"><img src="@Url.Content("~/images/Add16.png")" alt="Add User" />Add User</button>
+        </nav>
+    </article>
+
+    @*
+        
+
+    *@

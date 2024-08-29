@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.Title = "Details";
+}
+@section Head {   
+    <style>
+        .tab-body {
+            min-height: 500px;
+        }
+    </style>
+}
+@section Scripts {
+    <script type="module" src="~/js/Security/AclViewModel.js"></script>
+    <script type="module" src="~/js/Events/EditEventPermissions.js"></script>
+    <script type="module" src="~/js/Organizations/Details.js"></script>
+}
+
+    <article class="panel panel-default" data-bind="css: {visible: true}">
+        <!-- forcing visible as MainMenu appear to create a problem -->
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/organizations">Organizations</a></li>
+                <li class="active" data-bind="text: Organization.Name"></li>
+            </ol>
+        </div>
+
+        <div class="panel-body">
+            <form class="form" role="form">
+                <div class="row">
+                    <div class="col-md-5 form-group">
+                        <label for="txtName">Organization Name<em>*</em></label>
+                        <input type="text" id="txtName" class="form-control" required maxlength="255" title="Please enter a name" data-bind="value: Organization.Name" />
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="txtAcronym">Acronym<em>*</em></label>
+                        <input type="text" class="form-control" id="txtAcronym" required maxlength="30" title="Please enter a Acronym" data-bind="value: Organization.Acronym" />
+                    </div>
+                    <div class="col-md-5 form-group">
+                        <label for="cboOrg">Parent Organization</label>
+                        <input type="text" id="cboOrg" title="Please select an organization" data-bind="kendoDropDownList: {value: Organization.ParentOrganizationID, data: Organizations, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'None'}" style="width: 100%;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="txtFirstName">Contact First Name</label>
+                        <input type="text" class="form-control" id="txtFirstName" maxlength="30" title="The First Name cannot be longer than 30 characters" data-bind="value: Organization.ContactFirstName" style="width: 100%;" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="txtLastName">Contact Last Name</label>
+                        <input type="text" class="form-control" id="txtLastName" maxlength="30" title="The Last Name cannot be longer than 30 characters" data-bind="value: Organization.ContactLastName" style="width: 100%;" />
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="txtPhone">Contact Phone</label>
+                        <input type="text" class="form-control" id="txtPhone" maxlength="30" title="The Phone cannot be longer than 30 characters" data-bind="value: Organization.ContactPhone" style="width: 100%;" />
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="txtEmail">Contact Email</label>
+                        <input type="text" class="form-control" id="txtEmail" maxlength="30" title="The Email cannot be longer than 30 characters" data-bind="value: Organization.ContactEmail" style="width: 100%;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label for="txtDescription">Organization Description <img src="@Url.Content("~/images/help16.png")" class="helptip" title="Please provide an overview of the organization, including size of population, type of healthcare or provider setting, and geographic area." /></label>
+                        <textarea id="txtDescription" class="form-control" data-bind="value: Organization.OrganizationDescription" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label for="txtAddInfo">Collaboration Requirements and Additional Information for this Organization</label>
+                        <textarea id="txtAddInfo" class="form-control" data-bind="value: Organization.SpecialRequirements" rows="4" maxlength="1000"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label for="txtAddInfo">Research Capabilities</label>
+                        <textarea id="txtAddInfo" class="form-control" data-bind="value: Organization.UsageRestrictions" rows="4" maxlength="1000"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label for="txtAddInfo">Willing to Participate In</label>
+                        <ul class="checkbox" style="margin-top: 10px; margin-bottom: 20px;">
+                            <li class="col4"><label id="lblObservationalParticipation" for="chkObservationalParticipation"><input type="checkbox" aria-labelledby="lblObservationalParticipation" id="chkObservationalParticipation" data-bind="checked: Organization.ObservationalParticipation" /> Observational Research</label></li>
+                            <li class="col4"><label id="lblProspectiveTrials" for="chkProspectiveTrials"><input type="checkbox" aria-labelledby="lblProspectiveTrials" id="chkProspectiveTrials" data-bind="checked: Organization.ProspectiveTrials" /> Clinical Trials</label></li>
+                            <li class="col4"><label id="lblPragmaticClinicalTrials" for="chkPragmaticClinicalTrials"><input type="checkbox" aria-labelledby="lblPragmaticClinicalTrials" id="chkPragmaticClinicalTrials" data-bind="checked: Organization.PragmaticClinicalTrials" /> Pragmatic Clinical Trials</label></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+            <div id="tabs" data-bind="kendoTabStrip: {}" style="min-height: 500px;">
+                <ul>
+                    <li class="k-state-active">Organization Data</li>
+                    <li>Registry and Research Data Sets</li>
+                    <li data-bind="visible: CanManageSecurity">Organization Permissions</li>
+                    <li data-bind="visible: CanManageSecurity">Organization Events</li>
+                    <li>DataMarts</li>
+                    <li>Users</li>
+                    <li data-bind="visible: CanManageSecurity">Security Groups</li>
+                </ul>
+                <div class="tab-body">
+                    <article>
+                        <div class="row" style="margin-left: 5px;">
+                            <ul class="checkbox" style="margin-top: 30px;">
+                                <li style="list-style:none;"><span style="font-weight:bold">Type of Data Collected by the Organization <img src="@Url.Content("~/images/help16.png")" class="helptip" title="Please indicate the types of data collected and available for use internally at the organization." /></span><br style="clear:both;" /></li>
+
+                                <li class="col3"><label id="lblnoClaims" for="chknoClaims"><input type="checkbox" aria-labelledby="lblnoClaims" id="chknoClaims" data-bind="checked: NoClaims" /> None</label></li>
+                                <li class="col3"><label id="lblInpatientClaims" for="chkInpatientClaims"><input type="checkbox" aria-labelledby="lblInpatientClaims" id="chkInpatientClaims" data-bind="checked: Organization.InpatientClaims, disable: NoClaims" /> Inpatient</label></li>
+                                <li class="col3"><label id="lblOutpatientClaims" for="chkOutpatientClaims"><input type="checkbox" aria-labelledby="lblOutpatientClaims" id="chkOutpatientClaims" data-bind="checked: Organization.OutpatientClaims, disable: NoClaims" /> Outpatient</label></li>
+                                <li class="col3"><label id="lblOutpatientPharmacyClaims" for="chkOutpatientPharmacyClaims"><input type="checkbox" aria-labelledby="lblOutpatientPharmacyClaims" id="chkOutpatientPharmacyClaims" data-bind="checked: Organization.OutpatientPharmacyClaims, disable: NoClaims" /> Pharmacy Dispensings</label></li>
+                                <li class="col3"><label id="lblEnrollmentClaims" for="chkEnrollmentClaims"><input type="checkbox" aria-labelledby="lblEnrollmentClaims" id="chkEnrollmentClaims" data-bind="checked: Organization.EnrollmentClaims, disable: NoClaims" /> Enrollment</label></li>
+                                <li class="col3"><label id="lblDemographicsClaims" for="chkDemographicsClaims"><input type="checkbox" aria-labelledby="lblDemographicsClaims" id="chkDemographicsClaims" data-bind="checked: Organization.DemographicsClaims, disable: NoClaims" /> Demographics</label></li>
+                                <li class="col3"><label id="lblLaboratoryResultsClaims" for="chkLaboratoryResultsClaims"><input type="checkbox" aria-labelledby="lblLaboratoryResultsClaims" id="chkLaboratoryResultsClaims" data-bind="checked: Organization.LaboratoryResultsClaims, disable: NoClaims" /> Laboratory Results</label></li>
+                                <li class="col3"><label id="lblVitalSignsClaims" for="chkVitalSignsClaims"><input type="checkbox" aria-labelledby="lblVitalSignsClaims" id="chkVitalSignsClaims" data-bind="checked: Organization.VitalSignsClaims, disable: NoClaims" /> Vital Signs</label></li>
+                                <li class="col3"><label id="lblBiorepositories" for="chkBiorepositories"><input type="checkbox" aria-labelledby="lblBiorepositories" id="chkBiorepositories" data-bind="checked: Organization.Biorepositories, disable: NoClaims" /> Biorepositories</label></li>
+                                <li class="col3"><label id="lblPatientReportedOutcomes" for="chkPatientReportedOutcomes"><input type="checkbox" aria-labelledby="lblPatientReportedOutcomes" id="chkPatientReportedOutcomes" data-bind="checked: Organization.PatientReportedOutcomes, disable: NoClaims" /> Patient Reported Outcomes/Health Status</label></li>
+                                <li class="col3"><label id="lblPatientReportedBehaviors" for="chkPatientReportedBehaviors"><input type="checkbox" aria-labelledby="lblPatientReportedBehaviors" id="chkPatientReportedBehaviors" data-bind="checked: Organization.PatientReportedBehaviors, disable: NoClaims" />  Patient Reported Behaviors</label></li>
+                                <li class="col3"><label id="lblPrescriptionOrders" for="chkPrescriptionOrders"><input type="checkbox" aria-labelledby="lblPrescriptionOrders" id="chkPrescriptionOrders" data-bind="checked: Organization.PrescriptionOrders, disable: NoClaims" /> Prescription Orders</label></li>
+                                <li class="col3"><label id="lblOtherClaims" for="chkOtherClaims"><input type="checkbox" aria-labelledby="lblOtherClaims" id="chkOtherClaims" data-bind="checked: Organization.OtherClaims, disable: NoClaims" /> Other</label><input type="text" id="txtOutpatientOther" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: Organization.OtherClaimsText, visible: Organization.OtherClaims(), disable: NoClaims" class="form-control" /></li>
+                            </ul>
+                        </div>
+                        <div class="row" style="margin-left: 5px;">
+                            <ul class="checkbox" style="margin-top: 30px;">
+                                <li style="list-style:none;"><span style="font-weight:bold">Data Models</span><br style="clear: both;" /></li>
+                                <li class="col4"><label id="lblMSCDM" for="chkMSCDM"><input type="checkbox" aria-labelledby="lblMSCDM" id="chkMSCDM" data-bind="checked: Organization.DataModelMSCDM" /> MSCDM</label></li>
+                                <li class="col4"><label id="lblHMORNVDW" for="chkHMORNVDW"><input type="checkbox" aria-labelledby="lblHMORNVDW" id="chkHMORNVDW" data-bind="checked: Organization.DataModelHMORNVDW" /> HMORN VDW</label></li>
+                                <li class="col4"><label id="lblESP" for="chkESP"><input type="checkbox" aria-labelledby="lblESP" id="chkESP" data-bind="checked: Organization.DataModelESP" /> ESP</label></li>
+                                <li class="col4"><label id="lblI2B2" for="chkI2B2"><input type="checkbox" aria-labelledby="lblI2B2" id="chkI2B2" data-bind="checked: Organization.DataModelI2B2" /> I2B2</label></li>
+                                <li class="col4"><label id="lblOMOP" for="chkOMOP"><input type="checkbox" aria-labelledby="lblOMOP" id="chkOMOP" data-bind="checked: Organization.DataModelOMOP" /> OMOP</label></li>
+                                <li class="col4"><label id="lblPcori" for="chkPcori"><input type="checkbox" aria-labelledby="lblPcori" id="chkPcori" data-bind="checked: Organization.DataModelPCORI" /> PCORnet CDM</label></li>
+                                <li class="col4"><label id="lblOther" for="chkOther"><input type="checkbox" aria-labelledby="lblOther" id="chkOther" data-bind="checked: Organization.DataModelOther" /> Other</label><input type="text" id="txtDataModelOther" maxlength="30" title="Text cannot be longer than 30 characters" style="width:150px;" data-bind="value: Organization.DataModelOtherText, visible: Organization.DataModelOther()" class="form-control" /></li>
+                            </ul>
+
+                        </div>
+                        <br />
+                        <div class="row" style="margin-left: 40px;">
+                            <span class="bold">Electronic Health Records Systems</span>
+                            <table class="table table-striped table-hover table-condensed table-bordered" style="width: 95%;">
+                                <colgroup>
+                                    <col style="width: 25%;" />
+                                    <col style="width: 25%;" />
+                                    <col style="width: 15%;" />
+                                    <col style="width: 15%;" />
+                                    <col style="width: 10%;" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+
+                                        <th class="bold center">Type</th>
+                                        <th class="bold center">EHR System</th>
+                                        <th class="bold center">Start Year</th>
+                                        <th class="bold center">End Year</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach:OrganizationEHRS">
+                                    <tr>
+                                        <td><input data-bind="kendoDropDownList:{dataTextField: 'text', dataValueField: 'value', data: $root.EHRSTypesTranslation(), value: Type}" /></td>
+                                        <td>
+                                            <input data-bind="kendoDropDownList:{dataTextField: 'text', dataValueField: 'value', data: $root.EHRSSystemsTranslation(), value: System }" />
+                                            <input class="form-control" type="text" id="txtOtherDataUpdateFreq" maxlength="30" title="Please enter other" data-bind="value: Other, visible: System() == $root.EHRSSystems_Other" style="width: 86%; margin-top:10px;" />
+                                        </td>
+                                        <td><input data-bind="value: StartYear" /></td>
+                                        <td><input data-bind="value: EndYear" /></td>
+                                        <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveEHRS.bind($root), visible: $root.CanEditOrganization">Remove</button></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="panel-footer" data-bind="visible: $root.CanEditOrganization">
+                                    <tr>
+                                        <td colspan="5">
+
+                                            <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnAddEHRS" data-bind="click: $root.AddEHRS.bind($root)"><img src="@Url.Content("~/images/Add16.png")" alt="Add EHRS" />Add</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+                <div class="tab-body overflow-visible">
+                    <table class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 25%;" />
+                            <col style="width: 10%;" />
+                            <col style="width: 75%;" />
+                            <col style="width: 15%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+
+                                <th class="bold center">Name</th>
+                                <th class="bold center">Type</th>
+                                <th class="bold center">Description<img src="@Url.Content("~/images/help16.png")" class="helptip" title="In the Description field, describe any relevant site-specific characteristics about this registry/research data set." /></th>
+                                <th class="bold"></th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach:Registries">
+                            <tr>
+                                <td><a data-bind="text:Registry, href: '/registries/details?ID='+ RegistryID()"></a></td>
+                                <td class="center nowrap"><span data-bind="data: Type, text: TypeTranslated"></span></td>
+                                <td><div class="form-group" style="width: 95%;"><input type="text" class="form-control" data-bind="value: Description" maxlength="400" /></div></td>
+                                <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveRegistry, visible: $root.CanEditOrganization">Remove</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer" data-bind="visible: CanEditOrganization">
+                            <tr>
+                                <td colspan="4">
+
+                                    <div class="pull-right" data-bind="visible: AddableRegistryList().length > 0">
+                                        <div class="dropdown">
+                                            <a href="#" id="btnAddRegistry" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown"><img src="@Url.Content("~/images/Add16.png")" alt="Add Registry" />&nbsp;Add Registry <strong class="caret"></strong></a>
+                                            <ul class="dropdown-menu" data-bind="foreach: AddableRegistryList">
+                                                <li>
+                                                    <a href="#" data-bind="click: $root.AddRegistry, attr: {id: ID}">
+                                                        <span data-bind="text: Name"></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="tab-body">
+                    <div data-bind="with: Security">
+                        <partial name="~/Views/Security/EditAcl.cshtml" />
+                    </div>
+                </div>
+                <div class="tab-body">
+                    <div data-bind="with: Events">
+                        <partial name="~/Views/Events/EditEventPermissions.cshtml" />
+                    </div>
+                </div>
+                <div class="tab-body">
+                    <table class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 100%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="bold">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach:DataMarts">
+                            <tr>
+                                <td class=""><a data-bind="text:Name, href: '/DataMarts/details?ID='+ ID"></a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="1">
+                                    <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnAddDataMart" data-bind="click: $root.AddDataMart.bind($root), visible: CanCreateDataMarts"><img src="@Url.Content("~/images/Add16.png")" alt="Add DataMart" />Add DataMart</button>
+
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="tab-body">
+                    <table class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 10%;" />
+                            <col style="width: 25%;" />
+                            <col style="width: 15%;" />
+                            <col style="width: 75%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="bold center">Username</th>
+                                <th class="bold center">First Name</th>
+                                <th class="bold center">Middle name</th>
+                                <th class="bold center">Last Name</th>
+                                <th class="bold center">Email</th>
+                                <th class="bold center">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach:Users">
+                            <tr>
+                                <td class="center"><a data-bind="text:UserName, href: '/users/details?ID='+ ID"></a></td>
+                                <td class="center"><span data-bind="text:FirstName"></span></td>
+                                <td class="center"><span data-bind="text:MiddleName"></span></td>
+                                <td class="center"><span data-bind="text:LastName"></span></td>
+                                <td class="center"><span data-bind="text:Email"></span></td>
+                                <td class="center"><span data-bind="text: Active == true ? 'Active': 'Inactive'"></span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="6">
+                                    <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnAddUser" data-bind="click: AddUser.bind($root), visible: CanCreateUsers"><img src="@Url.Content("~/images/Add16.png")" alt="Add User" />Add User</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="tab-body">
+                    <table class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 50%;" />
+                            <col style="width: 50%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="bold center">Name</th>
+                                <th class="bold center">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach:SecurityGroups">
+                            <tr>
+                                <td><a data-bind="text:Name, href: '/securitygroups/details?ID='+ ID()"></a></td>
+                                <td class="center"><span data-bind="text:KindTranslated"></span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="2">
+                                    <button class="btn btn-default pull-right" style="margin-right: 4px;" id="btnAddUser" data-bind="click: AddSecurityGroup.bind($root) , visible: CanManageSecurity"><img src="@Url.Content("~/images/Add16.png")" alt="Add Security Group" />Add Security Group</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <nav class="panel-footer right">
+            <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: CanCopyOrganization"><img src="@Url.Content("~/images/Copy24.png")" alt="Copy" />Copy</button>
+            <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: CanDeleteOrganization" style="margin-left: 30px;"><img src="@Url.Content("~/images/Delete24.png")" alt="Delete" />Delete</button>
+            <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@Url.Content("~/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: CanEditOrganization"><img src="@Url.Content("~/images/Save24.png")" alt="Save" />Save</button>
+            <br class="clear" />
+        </nav>
+    </article>

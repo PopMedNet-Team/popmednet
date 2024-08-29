@@ -1,0 +1,29 @@
+﻿@model Lpp.Dns.HealthCare.ModularProgram.Models.ModularProgramModel
+@{ 
+    this.Stylesheet("ModularProgram.css");
+    var id = Html.UniqueId();
+    var idFileLinks = Html.UniqueId();
+    var idPrograms = Html.UniqueId();
+}
+<div class="MedicalRequest ui-form">
+    <div class="ui-form">
+        <div id='errorLocation' style="font-size: small; color: Gray;"></div>
+
+            <fieldset id="fsPrograms">
+
+            </fieldset>
+
+            @(Html.Render<Lpp.Dns.HealthCare.FileUpload>().With(Model.RequestId, Model.RequestFileList, "UploadedFileList", "RemovedFileList"))
+
+    </div>
+    <br class="clear"/>
+</div>        
+<input type="hidden" name="ModularProgramList" id="ModularProgramList" value=""/>
+<script src="@this.Resource("Programs.js")"></script>
+<script>
+    $(document).ready(function() {
+        var json = '@(Html.Raw(Model.ModularProgramList))' || "{}";
+        var programTypes = @Html.Raw(JsonConvert.SerializeObject(ModularProgramType.ModularProgramTypes))
+        ModularProgram.Create.init($.parseJSON(json), programTypes, $("#fsPrograms"), $("#ModularProgramList"));
+    });
+</script>

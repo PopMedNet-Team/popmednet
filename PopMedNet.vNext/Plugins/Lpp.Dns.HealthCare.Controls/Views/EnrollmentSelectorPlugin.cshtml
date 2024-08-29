@@ -1,0 +1,43 @@
+﻿@model Lpp.Dns.HealthCare.Models.EnrollmentSelectorPluginModel
+
+@{
+    string fldPrior = string.Format("{0}_{1}", Model.ParentContext, "Prior");    
+    string fldAfter = string.Format("{0}_{1}", Model.ParentContext, "After");
+    string fldContinuous = string.Format("{0}_{1}", Model.ParentContext, "Continuous");
+}
+
+<div class="ui-groupbox">
+    <div class="ui-groupbox-header">
+        <span>Enrollment Criteria</span>
+    </div>
+    <div class="ui-form">
+        <table>
+            <tr>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(esm => esm.Prior)
+                            @Html.TextBox(fldPrior, Model.Prior, new { id = fldPrior, style = "width: 30px", maxlength = 3 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(esm => esm.After)
+                            @Html.TextBox(fldAfter, Model.After, new { id = fldAfter, style = "width: 30px", maxlength = 3 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ui-form">
+                        <div>
+                            @Html.LabelFor(esm => esm.Continuous)
+                            @Html.CheckBox(fldContinuous, Model.Continuous, new { id = fldContinuous })
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

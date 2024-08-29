@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Model xmlns="http://lincolnpeak.com/schemas/DNS4/ModelConfiguration" 
+       Id="{97DFECA3-5356-4CFF-A4E5-E402A29E2F39}" 
+       ModelProcessorId="{55C48A42-B800-4A55-8134-309CC9954D4C}"
+       Name="I2B2 Query Builder" Version="1.0">
+  <Description>Launch an i2b2 web client to build query.</Description>
+  <RequestType Id="{6EB513D8-C916-4FEE-BA10-70E7ACE3AAB5}" Name="I2B2">
+    <Description>Construct a request type that is an i2b2 query.</Description>
+    <CreateRequestUrl>http://FDAPilotI2B2.lincolnpeak.com?sessionToken={0}&amp;service={1}&amp;isrequest=1</CreateRequestUrl>
+    <RetrieveResponseUrl>http://FDAPilotI2B2.lincolnpeak.com?sessionToken={0}&amp;service={1}&amp;isresponse=1</RetrieveResponseUrl>
+  </RequestType>
+</Model>

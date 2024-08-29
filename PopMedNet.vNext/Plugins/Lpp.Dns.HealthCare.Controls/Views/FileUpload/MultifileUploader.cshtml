@@ -1,0 +1,136 @@
+﻿@model Lpp.Dns.HealthCare.Models.FileUploadModel
+<style>
+    ul.sFtpTree {
+        list-style-type: none;
+    }
+</style>
+<section id="fileUpload">
+    <div class="row">
+        <!--Direct File Upload-->
+        <div class="col-sm-6">
+            <article id="Normal_FileUpload" class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Upload Local Files<img src='../Content/img/icons/help16.gif' class="helptip" title="Upload one or more files. Each file must be less than 2GB." /></h4>
+                </div>
+                <div class="panel-body">
+                    <input name="files" id="files" type="file" data-bind="kendoUpload: {async: {autoUpload: true, saveUrl: '/uploadfiles?RequestID=@Model.RequestID'}, success: OnFileUploadCompleted}" />
+                    <input type="hidden" name="@Model.UploadedFilesFieldName" id="@Model.UploadedFilesFieldName" value="" />
+                </div>
+            </article>
+        </div>
+        <!--SFTP Upload-->
+        <div class="col-sm-6">
+            <article id='SFTP_FileUpload' class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Upload from FTP<img src='../Content/img/icons/help16.gif' class="helptip" title="Transfer one or more files from an FTP Server. Each file must be less than 2GB. The FTP server must have an open port and you must have valid user credentials to connect to the FTP server." /></h4>
+                </div>
+                <div class="panel-body">
+                    <div id="sftpCredentialsDialog" data-bind="visible: !sFtpConnected()">
+                        <fieldset id="fsFTPCredentials">
+                            <legend>Please enter your FTP credentials below:</legend>
+                            <div class="row">
+                                <div class="col-sm-8 form-group">
+                                    <label for="sftpAddress">Address<em>*</em></label>
+                                    <input id="sftpAddress" type="text" class="form-control" maxlength="255" placeholder="i.e. sftp.example.com" data-bind="value: sFtpAddress" />
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label for="sftpPort">Port<em>*</em></label>
+                                    <input id="sftpPort" type="text" data-bind="kendoNumericTextBox: {value: sFtpPort, min: 0, max:64000, format: '#####'}" style="width: 100px;" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="sftpLogin">Login<em>*</em></label>
+                                    <input id="sftpLogin" type="text" maxlength="255" class="form-control" data-bind="value: sFtpLogin" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="sftpPassword">Password<em>*</em></label>
+                                    <input id="sftpPassword" type="password" maxlength="255" class="form-control" data-bind="value: sFtpPassword" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <br />
+                                    <button class="btn btn-default" id="btnSftpConnect" data-bind="click: sFTPConnect">Connect</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div id="sftpSelector" class="row" style="display: none;" data-bind="visible: sFtpConnected">
+                        <label>Please navigate the folders on the left and choose one or more files on the right.</label>
+                        <div class="row">
+                            <div id="divFtpFolderWrapper" class="col-sm-6">
+                                <ul id="sftpFolders" class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: sFtpFolders }"></ul>
+                            </div>
+                            <div id="divFtpFileWrapper" class="col-sm-6">
+                                <ul id="sftpFiles" class="sFtpTree" data-bind="foreach: sFtpCurrentPath().Files">
+                                    <li>
+                                        <input type="checkbox" data-bind="attr: { id: Path }, value: Path, checked: $root.sFtpSelectedFiles" />
+                                        <label data-bind="text: Name, attr: { id: 'lbl' + Path(), 'for': Path }"></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row" data-bind="visible: sFtpSelectedFiles().length > 0">
+                            <hr />
+                            <div class="col-sm-12" style="text-align: right;">
+                                <button class="btn btn-default" style="margin-right: 5px;" id="btnSftpUpload" data-bind="click: sFtpAddFiles">Upload Selected Files</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+    <br class="clear" />
+    <article>
+        <div class="panel-heading">
+            <h4 class="panel-title">Previously uploaded for this request</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered" style="width: 100%;">
+                <colgroup>
+                    <col style="width: 60%; vertical-align: middle;" />
+                    <col style="width: 280px; vertical-align: middle;" />
+                    <col style="width: 80px;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="bold">File Name</th>
+                        <th class="bold">Size</th>
+                        <th class="bold">X</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: { data:RequestFileList, as:'file'}">
+                    <tr>
+                        <td data-bind="text:file.FileName"></td>
+                        <td data-bind="text:file.FileSize"></td>
+                        <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveFile">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="@Model.RemovedFilesFieldName" id="@Model.RemovedFilesFieldName" data-bind="value: RemovedFilesList()" />
+        </div>
+    </article>
+    <br class="clear" />
+</section>
+
+<script src='@this.Resource("MultifileUploader.js")'></script>
+<script id="treeNode" type="text/html">
+    <li>
+        <a href="#" data-bind="click: $root.sFtpSelect"><img src="" data-bind="attr: {src: Selected() ? '@this.Resource("images/Folder_Closed16.png") ' : '@this.Resource("images/Folder_Open16.png")'}" style="vertical-align: middle; text-align: left;" />&nbsp;<span data-bind="text: Name, attr: { id: Path }"></span></a>
+        <!-- ko if: Selected() -->
+        <ul class="sFtpTree" data-bind="template: { name: 'treeNode', foreach: Folders }, visible: Selected"></ul>
+        <!-- /ko -->
+    </li>
+</script>
+
+<script>
+    $(function() {
+        var requestFileList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RequestFileList));
+        Controls.MultifileUploader.init(requestFileList, '@Model.RequestID');   
+    });
+</script>

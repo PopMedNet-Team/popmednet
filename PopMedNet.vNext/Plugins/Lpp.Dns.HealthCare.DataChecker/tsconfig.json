@@ -1,0 +1,12 @@
+{
+  "extends": "../../Build/baseTSConfig",
+  "compilerOptions": {
+    "target": "es5",
+    "module": "none",
+    "declaration": false,
+    "baseUrl": ".",
+    "paths": {
+      "moment": [ "node_modules/moment/moment" ] // This mapping is relative to "baseUrl"
+    }
+  }
+}

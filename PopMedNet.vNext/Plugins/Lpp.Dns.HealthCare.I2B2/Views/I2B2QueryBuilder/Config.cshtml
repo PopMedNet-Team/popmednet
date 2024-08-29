@@ -1,0 +1,38 @@
+﻿@using Lpp.Dns
+@model ConfigModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+
+<div class="Value ModelConfigForm" id="@id">
+    <a href="#" class="Link">[configure]</a>
+    <script type="text/javascript">
+        $(function () {
+            var dlg = $("#@(id) > .ModelConfig");
+            var link = $("#@(id) > a.Link");
+            link.click(function () {
+                dlg.dialog({
+                    modal: true, title: "@Model.Model.Name",
+                    width: 540, buttons: {
+                        OK: function () {
+                            dlg.dialog("close");
+                        },
+                        Cancel: function () { dlg.dialog("close"); }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+    <div id="@Model.Model.ID" class="ModelConfig" style="display: none;">
+        <div class="ui-form">
+            <div class="Field">
+                <label>Service URL</label>
+                <input id="ServiceURL" name="ServiceURL" type="text" value="@(Model.Properties.ContainsKey("ServiceURL") ? Model.Properties["ServiceURL"] : "")" />
+            </div>
+        </div>
+    </div>
+
+</div>

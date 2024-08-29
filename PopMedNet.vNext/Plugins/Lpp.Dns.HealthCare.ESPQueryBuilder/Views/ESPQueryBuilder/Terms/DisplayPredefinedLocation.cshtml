@@ -1,0 +1,29 @@
+﻿@model Lpp.Dns.HealthCare.ESPQueryBuilder.Models.ESPQueryViewModel
+@{
+    Layout = null;
+    var id = Html.UniqueId();
+}
+<!-- ko stopBinding: true -->
+<div class="CustomLocationTerm Term panel panel-default">
+    <div class="panel-heading">Locations</div>
+    <div class="panel-body" id="@string.Format("binding-container{0}", id)">
+        <ul style="list-style:none;width:860px;float:left;" data-bind="foreach:LocationNames">
+            <li style="float:left;margin-right:24px;" data-bind="text:$data"></li>
+        </ul>
+        <div class="Clearfix"></div>
+    </div>
+<script>
+    $(function ()
+    {
+        function ViewModel() {
+            var self = this;
+            this.SelectedLocations = ko.observableArray(@Html.Raw(Model.Base.LocationCodes));
+            this.LocationNames = ko.pureComputed(function () { return ko.utils.arrayMap(self.SelectedLocations(), function (item) { return item.Location + ', ' + item.StateAbbrev; }) }, this)
+        };
+
+        var vm = new ViewModel();
+        ko.applyBindings(vm, $('#@string.Format("binding-container{0}", id)')[0]);
+    });
+</script>
+</div>
+<!-- /ko -->

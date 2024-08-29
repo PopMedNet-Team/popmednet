@@ -1,0 +1,19 @@
+﻿@model Lpp.Dns.General.CriteriaGroup.Models.ObservationPeriodModel
+@{ this.Stylesheet("CriteriaGroup.min.css"); }
+<div class="ObservationPeriodTerm Term panel panel-default">
+    <div class="panel-heading">
+        Observation Period Range<img src="/Content/img/icons/help16.gif" class="helptip" title="Dates may differ by network and are based on encounter dates." />
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th>Start Period</th>
+                <th>End Period</th>
+            </tr>
+            <tr>
+                <td>@(Model.StartPeriod == null ? "" : Model.StartPeriod.Value.ToString("MM/dd/yyyy"))</td>
+                <td>@(Model.EndPeriod == null ? "" : Model.EndPeriod.Value.ToString("MM/dd/yyyy"))</td>
+            </tr>
+        </table>
+    </div>    
+</div>
