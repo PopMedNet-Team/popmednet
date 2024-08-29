@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @Html.Partial("_HeadLayout")
+
+    @RenderSection("head", false)
+</head>
+<body>
+    <section id="MainContainer">
+        <header id="header">
+            <h1>
+                <img data-bind="src: this.ResourceUrl + ThemeIMG.LogoImage()  " alt="PopMedNet" />
+            </h1>
+            <section data-bind="text: Theme.Title"></section>
+            <nav class="visible">
+                <a target="_blank" data-bind="attr:{href:Theme.ContactUsHref}">Contact Us</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="/account/logoff" data-bind="click: lLogout_Click">Log Off</a>
+                }
+            </nav>
+
+
+        </header>
+        <section id="Content">
+            @RenderBody()
+        </section>
+
+        <footer id="footer">
+            <pre style="background-color: transparent; border: 0;">@Lpp.Dns.Sso.MvcApplication.ApplicationVersion Release</pre>
+            <nav>|&nbsp;<a href="#" id="TermsAndConditionsFooterLink">Terms and Conditions</a>&nbsp;|&nbsp;<a href="#" id="InfoFooterLink">Info</a></nav>
+            <span data-bind="text:Theme.Footer"></span>
+        </footer>
+    </section>
+    <script src="/js/shared/_layout.js"></script>
+    @RenderSection("scripts", false)
+</body>
+</html>

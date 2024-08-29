@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Single Sign On Home";
+}
+
+<section id="sContainer" style="display: none;" data-bind="visible: true">
+    <h2>@ViewBag.Title</h2>
+    <p>Thank you for signing on. Please choose from the available sites below:</p>
+    <ul class="cleanlist" data-bind="foreach: Endpoints" style="margin-left: 50px; margin-top: 30px;">
+        <li style="margin-bottom: 30px;">
+            <a class="normal" href="#" data-bind="attr: {href: '/account/sitelogin?ID=' + ID()}">
+                <h4 data-bind="text: Name" style="margin-bottom: 3px;"></h4>
+                <small data-bind="text: Description"></small>
+            </a>
+        </li>
+    </ul>
+</section>
+
+@section head {
+    <script>
+        var groupID = "@System.Web.Configuration.WebConfigurationManager.AppSettings["SsoGroups"]";
+    </script>
+    <script src="~/js/Home/Index.js"></script>
+    <script>
+        Home.Index.init(groupID);
+    </script>
+}

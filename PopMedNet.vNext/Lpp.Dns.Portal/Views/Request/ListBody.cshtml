@@ -1,0 +1,205 @@
+@model RequestListModel
+@using Lpp.Utilities.Legacy
+
+@{ 
+    Layout = null;  
+    this.Stylesheet( "Request.min.css" );
+    var id = Html.UniqueId();
+    Func<RequestListGetModel, string> reloadUrl = m => Url.Action( ( RequestController cr ) => cr.ListBody( m ) );
+} 
+
+@(Html.Render<IGrid>()
+    .From( Model.List )
+    .Attributes( new { @class = "Grid RequestsGrid " + id } )
+    .ReloadUrl( Url.ForList<RequestController>().ForReload( Model.List ) )
+    .Id( r => r.Request.ID )
+    
+    .Column( @<a href="@(Url.Action<RequestController>( c => c.RequestView( item.Request.ID, Model.Folder ) ))" title="@item.Request.Name">@item.Request.Name</a>,
+             c => c.Title( "Name" ).Sortable( "Name" ).Class( "Name" ) )
+
+    .Column( r => r.Request.ID, o => o.Title( "Id" ).Sortable("ID").Class( "Id" ) )
+
+    .Column(r => ((DateTime)r.Request.UpdatedOn).ToString("MM/dd/yyyy hh:mm tt"),
+             c => c.Title( @<text>Date @DateFilter()</text> ).Sortable( "Date" ).Class( "Date" ) )
+
+    //.Column( r => r.Request.CreatedBy.UserName, o => o = o.Title( "User" ).Sortable( "UserName" ).Class( "User" ).CellAttribute( "title", r => r.Request.CreatedBy.UserName ) )
+
+    .Column( @<text>@StatusName( item )</text>,
+             c => c.Title( @<text>Status @StatusFilter()</text> ).Sortable( "Status" ).Class( "Status" ) )
+
+    .Column( @<text>@RequestHelpers.RequestTypeName(Model, item)</text>,
+             c => c.Title( @<text>Type @RequestHelpers.RequestTypeFilter(Html, Model, reloadUrl)</text> )
+                    .Sortable( "Type" ).Class( "Type" ) )
+
+    .If( Model.Project == null, g => g
+        .Column( r => Maybe.Value( r.Request.Project ).Select( p => p.Name ),
+                 c => c.Title( "Project" ).Sortable( "Project" ).Class( "Project" ) )
+    )
+
+                     .FooterSuffix(_ => RequestHelpers.PageSizeSelector(Html, Model, reloadUrl))
+    .FooterPrefix(
+        @<div class="ActionButtons">
+            @if ( Model.GrantedRequestTypes.Any() )
+            {
+                <button id="@(id)CreateRequestButton" class="ui-standard-button ui-short-button">New</button>
+                <div class="@(id) CreateRequestDialog" style="display: none">
+                    <div class="Prompt">Please choose a model, then click a request type to create a request</div>
+                    @{ var models = Model.GrantedRequestTypes.Values.OrderBy( r => r.Model.Name ).ToLookup( r => r.Model.ID ); }
+                    @Html.DropDownList( "Model",
+                        models
+                        .Select( mdl => new SelectListItem { Value = mdl.Key.ToString(), Text = mdl.First().Model.Name, Selected = models.Count() == 1 } )
+                        .If( models.Count() > 1, ii => ii.StartWith( new SelectListItem { Value = "", Text = "Select Model" } ) ),
+                        new { @class = "NewModelDropDown " + id }
+                    )
+                
+                    <div class="RequestTypesContainer">
+                        @foreach ( var mdl in models )
+                        {
+                            <div class="RequestTypes @(id) RTS@(mdl.Key)"@Html.Raw( models.Count() == 1 ? " style=\"display: block;\"" : "" )>
+                            @foreach ( var r in mdl.OrderBy( r => r.RequestType.Name ) )
+                            { 
+                                <a class="RequestTypeLink" href="@(Url.Action<RequestController>( c => c.Create( Model.ProjectID, r.RequestType.ID ) ))">@r.RequestType.Name</a>
+                            }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function($){
+                        $("#@(id)CreateRequestButton").click(function () {
+                            $(".@(id).CreateRequestDialog").dialog({ modal: true, width: 700, height: 500, title: "Choose Request Type",
+                                buttons: [{ text: "Cancel", click: function () { $(this).dialog("close"); }, 'class': "ui-standard-button" }]
+                            });
+                            return false;
+                        });
+
+                        var allRequestTypeGroups = $(".@(id).CreateRequestDialog .RequestTypesContainer .RequestTypes");
+                        $(".@(id).NewModelDropDown").bind("change keydown keypress", function () {
+                            setTimeout(function () {
+                                var targetGroup = $(".@(id).RTS" + $(".@(id).NewModelDropDown").val());
+                                if (targetGroup.is(":visible")) return;
+                                allRequestTypeGroups.slideUp(100);
+                                targetGroup.slideDown(100);
+
+                                var firstOption = $(".@(id).NewModelDropDown > option").eq(0);
+                                if (!firstOption.val()) firstOption.remove();
+                            }, 50);
+                        });
+
+                        $(".@(id).CreateRequestDialog .RequestTypeLink").click(function () {
+                            window.location.href = $(this).attr("href");
+                            $(".@(id).CreateRequestDialog").dialog("destroy");
+                            return false;
+                        });
+
+                        //setTimeout(function () { $(".@(id)").gridReload(); }, 30000);
+                    });
+                </script>
+            }
+    
+            <script src="/__r/lpp.mvc.controls/dropdown.js"></script>
+            <script>
+                $(function ($) {
+                    $(".Grid.@(id) th .ui-dropdown-button").dropdown();
+
+                    $(".Grid.@(id) td.Name > a").draggable({
+                        helper: "clone",
+                        appendTo: "body",
+                        revert: true,
+                        revertDuration: 100,
+                        scope: "Request",
+                        zIndex: 500,
+                        opacity: 0.7
+                    });
+                });
+            </script>
+
+            @if ( Model.AllProjects != null )
+            {
+                var m = Model.List.ModelForReload();
+                foreach( var p in Model.AllProjects.StartWith( (Project) null ) ) {
+                    m.ProjectID = p == null ? new Guid?() : p.ID;
+                    <a style="display: none"
+                        class="ProjectFilterLink GridReloadLink@( p == Model.Project ? " Selected" : "" )"
+                        href="@Url.Action( (RequestController c) => c.ListBody( m ) )"
+                        data-project="@( p == null ? "" : p.ID.ToString() )">@( p == null ? "All Projects" : p.Name )</a>
+                }
+            }
+        </div> )
+)
+
+@helper Description( RequestStatusFilter f )
+{
+    var da = f.GetType().GetMember( f.ToString() ).First().GetCustomAttributes( typeof( System.ComponentModel.DescriptionAttribute ), true ).FirstOrDefault() as System.ComponentModel.DescriptionAttribute;
+    @(da == null ? null : da.Description)
+}
+
+@helper StatusName( RequestListRowModel item )
+{
+    @(
+        item.Request.Scheduled                            ? "Scheduled" :
+        !item.Request.SubmittedOn.HasValue                    ? "Draft" :        
+        ( item.RejectedRoutings || item.RejectedResults )   ? "Rejected" :
+        ( item.UnapprovedRoutings || item.UnapprovedResults )? "Approval" :
+        item.CompletedDataMarts == 0                        ? "Submitted" :
+        item.CompletedDataMarts == item.TotalDataMarts      ? "Completed" :
+        item.CompletedDataMarts + "/" + item.TotalDataMarts + " completed"
+    )
+}
+
+@helper StatusFilter()
+{
+    if ( Model.List.OriginalRequest.HideStatusFilter ?? false ) { return; }
+    
+    <div class="ui-dropdown-button ui-has-hint FilterButton@( Model.StatusFilter == RequestStatusFilter.All ? "" : " Active")" 
+         hint-text="Showing @Description( Model.StatusFilter )">&nbsp;</div>
+    <div class="ui-dropdown FilterOptions" style="display: none">
+        @foreach ( RequestStatusFilter f in Enum.GetValues( typeof( RequestStatusFilter ) ) )
+        {
+            var desc = Description( f ).ToHtmlString();
+            if ( desc.NullOrEmpty() ) { continue; }
+            
+            var m = Model.List.OriginalRequest;
+            m.StatusFilter = f;
+            
+            <a href="@(Url.Action<RequestController>( rc => rc.ListBody( m ) ))" 
+                class="GridReloadLink@( f == Model.StatusFilter ? " Selected" : "")">@Html.Raw( desc )</a>
+        }
+    </div>
+   
+}
+
+@helper DateFilter()
+{
+    if ( Model.List.OriginalRequest.HideDateFilter ?? false ) { return; }
+
+    var from = Model.List.OriginalRequest.FromDateFilter;
+    var to = Model.List.OriginalRequest.ToDateFilter;
+    var openUpperBound = to == null || to >= DateTime.Today;
+    var active = from != null || to != null;
+    var possibleValues = new[] { 30, 60, 180 }.Select( daysBack => new { daysBack, fromDate = DateTime.Today.AddDays( -daysBack ) } );
+    var currentFilterStr = 
+        (from != null && openUpperBound) ? 
+        possibleValues.Where( x => x.fromDate == from.Value ).Select( x => "Showing last " + x.daysBack + " days" ).FirstOrDefault() :
+        "Filter by date";
+    var m = Model.List.OriginalRequest;
+    m.FromDateFilter = m.ToDateFilter = null;
+    var matchingPeriodFound = false;
+    
+    <div class="ui-dropdown-button ui-has-hint ui-has-header FilterButton@( active ? " Active" : "")" hint-text="@currentFilterStr">&nbsp;</div>
+    <div class="ui-dropdown FilterOptions" style="display: none">
+        <a href="@(Url.Action<RequestController>( rc => rc.ListBody( m ) ))" class="GridReloadLink@( !active ? " Selected" : "")">All requests</a>
+        @foreach ( var x in possibleValues )
+        {
+            m.FromDateFilter = x.fromDate;
+            var matching = from == x.fromDate && openUpperBound;
+            matchingPeriodFound |= matching;
+            <a href="@(Url.Action<RequestController>( rc => rc.ListBody( m ) ))" 
+               class="GridReloadLink@( matching ? " Selected" : "")">Last @x.daysBack days</a>
+        }
+        @if ( !matchingPeriodFound && active )
+        {
+            <a href="@(Url.ForList<RequestController>().WithModel( Model.List.OriginalRequest ))" class="GridReloadLink Selected">Custom period</a>
+        }
+    </div>
+}

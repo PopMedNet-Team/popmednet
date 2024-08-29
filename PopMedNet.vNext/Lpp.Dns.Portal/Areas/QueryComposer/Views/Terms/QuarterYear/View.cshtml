@@ -1,0 +1,21 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.QuarterYearID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold">Year/Quarter Observation Period:</div>
+        <div class="col-sm-8">
+            <div class="row">
+                <div class="col-sm-4">Search by: <span data-bind="text:Values.ByYearsOrQuarters == 'ByYears' ? 'By Years' : 'By Quarters'"></span></div>                
+            </div>
+            <div class="row row-noborder">
+                <div class="col-sm-4">
+                    Start:&nbsp;<span data-bind="text: Values.StartYear"></span>&nbsp;<span data-bind="visible:Values.ByYearsOrQuarters == 'ByQuarters', text: Values.StartQuarter"></span>
+                </div>
+                <div class="col-sm-4">
+                    End:&nbsp;<span data-bind="text: Values.EndYear"></span>&nbsp;<span data-bind="visible:Values.ByYearsOrQuarters == 'ByQuarters', text: Values.EndQuarter"></span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</script>

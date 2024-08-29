@@ -1,0 +1,19 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_DiagnosisCodes">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-3 bold">Diagnosis Codes:</div>
+        <div class="col-sm-3" style="text-align:right;">
+            <strong>Code Set:</strong><br />
+            <strong>Search Method:</strong><br />
+            <strong>Selected Codes:</strong>
+        </div>
+        <div class="col-sm-6">
+            <span data-bind="text: Plugins.Requests.QueryBuilder.View.ViewModel.TranslateDataCheckerDiagnosisCodeType( Values.CodeType)"></span><br />
+            "<span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.TextSearchMethodTypeTranslation, Values.SearchMethodType || Dns.Enums.TextSearchMethodType.ExactMatch)"></span>"<br />
+            <span data-bind="text:Values.CodeValues"></span>
+        </div>
+    </div>
+</script>

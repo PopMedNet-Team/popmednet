@@ -1,0 +1,10 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.TrialID">
+		<p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
+		<div class="row row-noborder">
+				<div class="col-sm-3 bold">Trial</div>
+				<div class="col-sm-9">
+						<span data-bind="text:  Values.Trial"></span>
+				</div>
+		</div>
+</script>

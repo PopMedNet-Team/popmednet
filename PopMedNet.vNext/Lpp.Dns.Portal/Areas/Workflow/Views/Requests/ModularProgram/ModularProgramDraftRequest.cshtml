@@ -1,0 +1,18 @@
+﻿<script src="~/Areas/Workflow/js/Requests/ModularProgram/DraftRequest.js"></script>
+<section id="MPDraftRequest" style="margin-top:15px;">
+    <div data-bind="visible:$root.HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+            <!-- ko stopBinding: true -->
+            <article id="mp_draftreq_upload">
+                @Html.Partial("~/areas/controls/views/wffileupload/fortask.cshtml")
+            </article>
+            <!-- /ko-->
+    </div>
+
+    <nav class="form-group">
+        @*<input type="button" class="btn btn-info pull-right" style="margin-left:15px" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="click: Complete, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" value="Save" />*@
+        <input type="button" class="btn btn-info pull-right" style="margin-left:15px" data-bind="click: onSave, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" value="Save" />
+        <input type="button" class="btn btn-info pull-right" style="margin-left:15px" value="Submit" data-bind="click: onSubmit, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)" />
+        <div style="clear:both"></div>
+    </nav>
+
+</section>

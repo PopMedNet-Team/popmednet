@@ -1,0 +1,24 @@
+﻿<section id="WFHistory" class="panel panel-default tabPanel">
+    <div class="panel-body" style="padding:1px;">
+        <div id="gWorkflowHistory" data-bind="pmnGrid: {
+            dataSource: DataSource,
+            reorderable:false,
+            scrollable:true,
+            pageable: false,
+            groupable: false,
+            columns: [
+                {field: 'WorkflowActivityID', title:'WorkflowActivityID', hidden:true, groupHeaderTemplate: $root.formatTaskGroupHeader, width:300 },
+                {field: 'TaskID', title: 'Task', hidden: true, width: 200},
+                {field: 'TaskName', title: 'Task', hidden: true, width:200 },
+                {field: 'UserID', title: 'UserID', hidden:true, width:300 },
+                {field: 'UserName', title: 'UserName', hidden:true, width:140 },
+                {field: 'UserFullName', title: 'User', width:180 },
+                {field: 'Message', title: 'Action', encoded:false },
+                {field: 'Date', title: 'Date', format:Constants.DateTimeFormatter, width:155 },
+                {field: 'RoutingID', title: 'RoutingID', hidden:true, width:300 },
+                {field: 'DataMart', title: 'DataMart', hidden:true, width:160 }
+            ]
+        }">
+        </div>
+    </div>
+</section>

@@ -1,0 +1,18 @@
+@model PageSizeSelectorModel
+@{ var id = Html.UniqueId();  }
+<link rel="stylesheet" href="~/__r/Lpp.Mvc.Controls/-/dropdown.css" />
+<div class="PageSizeSelector">
+    <a href="#" class="ui-dropdown-button" id="@id">@Model.CurrentText</a>
+    <div class="ui-dropdown FilterOptions" style="display: none">
+    @foreach ( var lines in Model.Options )
+    {
+        <a href="@Html.Raw( Model.ReloadUrl( lines ) )" class="GridReloadLink@( lines == Model.CurrentSize ? " Selected" : "")">@Model.Text( lines )</a>
+    }
+    </div>
+    <script src="~/__r/Lpp.Mvc.Controls/-/dropdown.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@(id)").dropdown();
+        });
+    </script>
+</div>

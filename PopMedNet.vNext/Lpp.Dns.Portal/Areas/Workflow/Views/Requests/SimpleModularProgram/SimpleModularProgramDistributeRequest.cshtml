@@ -1,0 +1,42 @@
+﻿<script src="/areas/workflow/js/requests/simplemodularprogram/distributerequest.js"></script>
+<!-- ko stopBinding:true -->
+<section id="MPDistributeRequest" style="margin-top:15px;display:none;" data-bind="visible:true">
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Distribute Request</h4>
+        </div>
+        <div class="panel-body">
+						<div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+								<!-- ko stopBinding: true -->
+								<div id="mpupload">
+										@Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
+								</div>
+								<!-- /ko-->
+
+								<h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
+								<div class="cleanlist">
+										@Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+								</div>
+
+								<!-- ko stopBinding: true -->
+								<article id="attachments_upload" class="panel panel-default" data-bind="visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments) && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)">
+										<div class="panel-heading">
+												<h3>Attachments</h3>
+										</div>
+										<div>
+												<article>
+														@Html.Partial("~/areas/controls/views/wffileupload/forattachments.cshtml")
+												</article>
+										</div>
+								</article>
+								<!-- /ko-->
+						</div>
+        </div>
+    </article>
+    <nav>
+        <button class="btn btn-primary pull-right" style="width:115px;" data-resultid="5445DC6E-72DC-4A6B-95B6-338F0359F89E" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),enable:CanSubmit,click:Complete">Submit Request</button>   
+        <button class="btn btn-primary pull-right" style="width:115px; margin-right:15px;" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask),click:Complete">Save</button>   
+        <div class="clearfix"></div>
+    </nav>
+</section>
+<!-- /ko -->

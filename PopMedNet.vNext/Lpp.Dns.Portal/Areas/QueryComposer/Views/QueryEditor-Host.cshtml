@@ -1,0 +1,102 @@
+﻿@using Lpp.Dns.Portal.Areas.QueryComposer;
+
+<script src="~/Areas/QueryComposer/js/mdq-common.js"></script>
+<script src="~/Areas/QueryComposer/js/termsobserver.js"></script>
+<script src="~/Areas/QueryComposer/js/termvaluefilter.js"></script>
+<script src="~/Areas/QueryComposer/js/queryeditor-termprovider.js"></script>
+<script src="~/Areas/QueryComposer/js/queryeditor-mdq.js"></script>
+<script src="~/Areas/QueryComposer/js/queryeditor-host.js"></script>
+
+<section id="QueryComposerHost">
+    <div class="collapse-group" data-bind="foreach:{ data: Queries, as:'query' }">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" data-bind="attr:{ 'id':query.Header.ID() }">
+                <h4 class="panel-title">
+                    <button class="btn btn-link pull-right" data-bind="click:$parent.onRemoveCohort.bind($parent), visible: $index() > 0"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button class="btn btn-link trigger" data-toggle="collapse" aria-expanded="true" data-bind="attr:{'id':'query-header-' + query.Header.ID(), 'data-target':'#query-container-' + query.Header.ID(), 'aria-controls':'query-container-' + query.Header.ID()}"><span>Cohort: </span><span data-bind="text:query.Header.Name"></span></button>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" data-bind="attr:{ 'id':'query-container-' + query.Header.ID(), 'aria-labelledby':query.Header.ID()}">
+                <div class="panel-body-header">
+                    <form class="form" role="form">
+                        <div class="row" data-bind="visible:$parent.Options.TemplateType == Dns.Enums.TemplateTypes.Request">
+                            <div class="col-md-10 form-group">
+                                <label data-bind="attr:{ 'for':'qe-name-' + query.Header.ID() }">Cohort Name <em>*</em></label>
+                                <input type="text" class="form-control" maxlength="100" title="Enter a name for the cohort." data-bind="value:query.Header.Name, attr:{ 'id': 'qe-name-' + query.Header.ID() }" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 form-group">
+                                <label data-bind="attr:{ 'for':'qe-adapterDetail-' + query.Header.ID() }">Data Adapter Detail</label>
+                                <input class="form-control" data-bind="attr:{'id':'qe-adapterDetail-' + query.Header.ID()}, kendoDropDownList: {value: query.Header.QueryType, data: Dns.Enums.QueryComposerQueryTypesTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:'<None>'}" style="width:100%" />
+                            </div>
+                            <div class="col-md-5 form-group" data-bind="visible:$parent.Options.TemplateType == Dns.Enums.TemplateTypes.Request && $parent.Options.IsTemplateEdit">
+                                <label data-bind="attr:{ 'for':'qe-composerInterface-' + query.Header.ID() }">Query Composer Interface<em>*</em></label>
+                                <input title="Please select a Query Composer Interface" class="form-control" data-bind="attr:{ 'id': 'qe-composerInterface-' + query.Header.ID(), required: $parent.Options.TemplateType == Dns.Enums.TemplateTypes.Request && $parent.Options.IsTemplateEdit }, kendoDropDownList:{value: query.Header.ComposerInterface, data: $parent.QueryComposerInterfaceTypes(), dataTextField: 'text', dataValueField: 'value'}" style="width:100%" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <queryeditor-mdq data-bind="attr:{'id': 'queryeditor-mdq-' + query.Header.ID() }" params="CriteriaGroupTemplates: $parent.CriteriaGroupTemplates,
+                            FieldOptions: [],
+                            IsTemplateEdit: $parent.Options.IsTemplateEdit,
+                            RequestTypeModelIDs: $parent.Options.RequestTypeModelIDs || ko.observableArray(),
+                            Query: query,
+                            RequestTypeID: $parent.RequestTypeID,
+                            TemplateID: query.Header.ID(),
+                            TemplateType: $parent.Options.TemplateType,
+                            VisualTerms: $parent.VisualTerms,
+                            RequestTypeTerms: $parent.Options.RequestTypeTerms || ko.observableArray(),
+                            RegisterForHiddenTermExport: $parent.RegisterHiddenTermExporter.bind($parent),
+                            HiddenTerms: $parent.Options.HiddenTerms,
+                            TermsObserver: $parent.Options.TermsObserver">
+                    </queryeditor-mdq>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="nav navbar-nav navbar-right">
+                <button class="btn btn-default navbar-btn" style="margin-right:3px;" data-bind="visible:Options.TemplateType == Dns.Enums.TemplateTypes.Request && Options.SupportsMultiQuery(), click:onNewCohort"><span class="glyphicon glyphicon-plus"></span> Add Cohort</button>
+            </div>
+            <div class="nav navbar-nav">
+                <a class="btn btn-default navbar-btn" href="#" download="request.json" data-bind="attr:{ href: $root.onExportJSON.bind($root)()}"><span class="glyphicon glyphicon-export"></span> Export JSON</a>
+            </div>
+        </div>
+    </div>
+
+
+    @foreach (var term in QueryComposerAreaRegistration.Terms)
+    {
+        if (term.CriteriaEditRelativePath != null)
+        {
+            @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.CriteriaEditRelativePath)
+        }
+        if (term.StratifierEditRelativePath != null)
+        {
+            @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.StratifierEditRelativePath)
+        }
+        if (term.ProjectionEditRelativePath != null)
+        {
+            @Html.Partial("~/Areas/QueryComposer/Views/Terms/" + term.ProjectionEditRelativePath)
+        }
+    }
+
+    <script type="text/html" id="s_NULL">
+        <div class="row">
+            <div class="col-sm-2">&nbsp;</div>
+            <div class="col-sm-4 form-group">
+                &nbsp;
+            </div>
+            <div class="col-sm-4 form-group">
+                &nbsp;
+            </div>
+            <div class="col-sm-2">
+                &nbsp;
+            </div>
+        </div>
+    </script>
+
+</section>

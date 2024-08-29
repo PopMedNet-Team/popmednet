@@ -1,0 +1,35 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_Ethnicity">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-3 bold"><h4 class="TermHeader bold">Ethnicity<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-7 form-group">
+            <div class="checkbox">
+                <label><input type="checkbox" data-bind="CheckAllCheckboxExtender:{ valuesCollection: Values().EthnicityValue, allValues:['0','1','2','3'] }" />Select All</label>
+            </div>
+            <div style="border-bottom: solid; border-width: 1px; width: 280px; padding-left:0; margin-left:-50px; border-bottom-color: lightgray;"></div>
+            <div id="EthnicityGrid">
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().EthnicityValue" value="0" id="ethnicityUnknown" />Unknown</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().EthnicityValue" value="1" id="ethnicityHispanic" />Hispanic</label>
+                </div>
+
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().EthnicityValue" value="2" id="ethnicityNotHispanic" />Not Hispanic</label>
+                </div>
+
+                <div class="checkbox">
+                    <label><input type="checkbox" data-bind="checked: Values().EthnicityValue" value="3" id="ethnicityMissing" />Missing</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteDC_EthnicityTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
+    </div>
+</script>

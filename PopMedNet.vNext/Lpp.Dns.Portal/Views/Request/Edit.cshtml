@@ -1,0 +1,334 @@
+@model Lpp.Dns.Portal.Models.RequestEditModel
+@using Lpp.Composition
+@using Lpp.Mvc
+@using Lpp.Mvc.Controls
+@using Lpp.Dns.Portal.Controllers
+@using Lpp.Dns.Portal.Models
+
+@section Head{
+    <script src="~/Scripts/Common.js"></script>
+    <link href="~/Content/forms.min.css" rel="stylesheet" />
+    <style>
+        section.ExpandoFrame > h2 {
+            font-weight: 600;
+        }
+
+        .content-container {
+            background-color: #e3e6eb;
+            border: 2px solid #678fc0;
+            margin: 10px 20px 10px 20px;
+            padding: 0 4px;
+        }
+
+            .content-container .Body {
+                margin-bottom: 10px;
+            }
+
+        .RequestType {
+            margin-bottom: 15px;
+        }
+
+            .RequestType .Name {
+                font-size: 1.3em;
+                display: block;
+            }
+
+            .RequestType .Description {
+                display: block;
+            }
+
+        #Header_Description,
+        #Header_AdditionalInstructions {
+            width: 100%;
+            height: 64px;
+        }
+
+        .RequestHeader .Field {
+            display: inline-block;
+            margin-right: 35px;
+            margin-bottom: 5px;
+            vertical-align: top;
+        }
+
+        .Request-Footer {
+            padding: 10px 15px;
+        }
+
+        .Request-Footer-DataMarts {
+            /*width: 560px;
+            display: inline-block;
+            vertical-align: top;
+            text-align: left;*/
+            width:100%;
+        }
+
+        #ProjectSelectionContainer a {
+            cursor: pointer;
+        }
+
+        #request-actions > input[type=submit] {
+            margin-top:8px;
+            width:150px;
+            background-color: #2d6ca2;
+            background-position: 0 -15px;
+            border-color: #285e8e;
+        }
+        #request-actions > input[type=submit].pull-right{
+            margin-left: 3px;
+        }
+        #request-actions > input[type=submit].pull-left{
+            margin-right: 3px;
+        }
+    </style>
+}
+
+@using (Html.BeginForm<Lpp.Dns.Portal.Controllers.RequestController>(c => c.Edit(new RequestPostModel { RequestID = Model.Request.ID, Folder = Model.OriginalFolder }), attributes: new { id = "frm", @class = "form trackChanges", role = "form" }))
+{
+    <div id="dialogContainer"></div>
+    <article class="panel panel-default visible">
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="/">Network</a></li>
+                <li><a href="/requests">Requests</a></li>
+                <li class="active">@Model.Request.Name</li>
+            </ol>
+        </div>
+
+        <div class="panel-body">
+            @Html.ValidationSummary("", new { @class = "alert alert-sm alert-danger validation-summary" })
+            <div class="RequestType">
+                <div class="Name">@Model.RequestType.Name <img class="helptip" src="/Content/img/icons/help16.gif" title="@Model.RequestType.Description" /></div>
+                <div class="Description ui-has-hint">
+                    @( string.IsNullOrEmpty(Model.RequestType.ShortDescription) ? Model.RequestType.Description : Model.RequestType.ShortDescription)
+                </div>
+            </div>
+            <div id="binding-container">
+
+                <div class="row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Name')" class="col-md-3 form-group">
+                        <label for="Header_Name">Name<em data-bind="visible: $root.IsFieldRequired('Request-Name')" style="color:red;">* </em></label>
+                        <input type="text" id="Header_Name" name="Header.Name" class="form-control" data-bind="value: Name" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Priority')" class="col-md-3 form-group">
+                        <label for="Header_Priority">Priority<em data-bind="visible: $root.IsFieldRequired('Request-Priority')" , style="color:red;">*</em><img src="/Content/img/icons/help16.gif" class="helptip" id="PriorityToolTip" title="The priority selected here will apply to all DataMarts selected for this request in the DataMart routing panel. Individual DataMart priorities can be applied before distributing the request to data partners." /></label>
+                        <input type="text" id="Header_Priority" name="Header.Priority" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Priority')}, kendoDropDownList: { value: Priority, data: Priorities, dataTextField: 'Name', dataValueField: 'Value' }" style="width:100%" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Due-Date')" class="col-md-3 form-group">
+                        <label for="Header_DueDate">Due Date<em data-bind="visible: $root.IsFieldRequired('Request-Due-Date')" , style="color:red;">* </em><img src="/Content/img/icons/help16.gif" class="helptip" id="DueDateToolTip" title="The due date selected here will apply to all DataMarts selected for this request in the DataMart routing panel. Individual DataMart due dates can be applied before distributing the request to data partners." /></label>
+                        <input type="text" name="Header.DueDate" id="Header_DueDate" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Due-Date')}, kendoDatePicker: DueDate" style="width:100%;" />
+                        <span class="k-invalid-msg" data-for="Header.DueDate"></span>
+                    </div>
+                    @if (string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["HideONCFields"]) || System.Configuration.ConfigurationManager.AppSettings["HideONCFields"].ToLower() != "true")
+                    {
+                        <div data-bind="visible: $root.IsFieldVisible('Request-Purpose-Of-Use')" class="col-md-3 form-group">
+                            <label for="Header_PurposeOfUse">Purpose of use<em data-bind="visible: $root.IsFieldRequired('Request-Purpose-Of-Use')" , style="color:red;">* </em><img src="/Content/img/icons/help16.gif" class="helptip" title="Purpose of use values are consistent with ONC S&I Framework specifications for the Query Envelope. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Purpose+of+Use' target='_blank'>PopMedNet User's Guide: Purpose of Use</a>" /></label>
+                            <input type="text" id="Header_PurposeOfUse" name="Header.PurposeOfUse" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Purpose-Of-Use')}, kendoDropDownList: { value: PurposeOfUse, data: PurposeOfUseOptions, dataTextField: 'Name', dataValueField: 'Value', optionLabel: { Name: '<not specified>', Value: '' } }" style="width:100%" />
+                        </div>
+                    }
+                </div>
+
+                <div class="row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Level-Of-PHI-Disclosure')" class="col-md-3 form-group">
+                        <label for="Header_PhiDisclosureLevel">Level of PHI Disclosure<em data-bind="visible: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')" , style="color:red;">* </em></label>
+                        <input type="text" id="Header_PhiDisclosureLevel" name="Header.PhiDisclosureLevel" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Level-Of-PHI-Disclosure')}, kendoDropDownList: { value: PhiDisclosureLevel, data: PhiDisclosureLevelOptions, dataTextField: 'Name', dataValueField: 'Value', optionLabel: { Name: '<not specified>', Value: '' }}" style="width:100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Requester-Center')" class="col-md-3 form-group">
+                        <label for="">Requester Center<em data-bind="visible: $root.IsFieldRequired('Request-Requester-Center')" , style="color:red;">* </em></label>
+                        <input type="text" name="Header.RequesterCenterID" id="Header_RequesterCenterID" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Requester-Center')}, kendoDropDownList: { value: RequesterCenterID, data: RequesterCenters, dataTextField: 'Name', dataValueField: 'ID', optionLabel: { Name: '<not specified>', ID: '' }}" style="width:100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Report-Aggregation-Level')" class="col-md-3 form-group">
+                        <label for="Header_ReportAggregationLevelID">Level of Report Aggregation<em data-bind="visible: $root.IsFieldRequired('Request-Report-Aggregation-Level')" , style="color:red;">* </em> <img src="/Content/img/icons/help16.gif" class="helptip" title="This field captures the level of aggregation by which data will be presented in reports generated from this request’s results. For more information, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Request+Metadata' target='_blank'>PopMedNet User's Guide: Request Metadata</a>" /></label>
+                        <input type="text" name="Header.ReportAggregationLevelID" id="Header_ReportAggregationLevelID" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Report-Aggregation-Level')}, kendoDropDownList: {value: ReportAggregationLevelID, data: ReportAggregationLevels, dataTextField: 'Name', dataValueField: 'ID', optionLabel: {Name: '<not specified>', ID: ''}}" style="width:100%" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-RequestID')" class="col-md-3 form-group">
+                        <label for="Header_MSRequestID">Request ID</label><em data-bind="visible: $root.IsFieldRequired('Request-RequestID')" style="color:red;">*</em>
+                        <input class="form-control" id="Header_MSRequestID" name="Header.MSRequestID" maxlength="100" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-RequestID')}, value: MSRequestID, enable: EditRequestIDAllowed" />
+                        <span class="k-invalid-msg" data-for="Header_MSRequestID"></span>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-3 form-group">
+                        <label>Project</label>
+                        <input type="hidden" name="ProjectId" id="ProjectID" data-bind="value: ProjectID" />
+                        <div id="ProjectSelectionContainer">
+                            <a id="ProjectLink" data-bind="text: (ProjectID() == '' || ProjectID() == null) ? '<none>' : ProjectName, click: onSelectProject"></a>
+                            <a id="ProjectClear" data-bind="visible:(ProjectID() != '' && ProjectID() != null), click: onClearProject">[x]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Description')" class="col-md-12 form-group">
+                        <label for="Header_Description">Description<em data-bind="visible: $root.IsFieldRequired('Request-Description')" style="color:red;">* </em> <img id='DescriptionQtip' class="helptip" title="Provide a brief description of the request and its purpose." src='/Content/img/icons/help16.gif' /></label>
+                        <textarea name="Header.Description" id="Header_Description" rows="3" cols="25" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Description')}, value: Description" class="form-control" maxlength="400"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="col-md-12 form-group">
+                        <label for="Header_AdditionalInstructions">Additional Instructions<em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" style="color:red;">* </em></label>
+                        <textarea name="Header.AdditionalInstructions" id="Header_AdditionalInstructions" rows="3" cols="25" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: AdditionalInstructions" class="form-control" maxlength="3000"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order-Originating-Group')" class="col-md-3 form-group">
+                        <label id="lblSourceTask" for="Header_SourceTaskOrderID">Source Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order-Originating-Group')" , style="color:red;">* </em><img src="/Content/img/icons/help16.gif" class="helptip" title="Use of the Task Order, Activity, and Activity Project fields is network specific. These fields may not be relevant for all networks."></label>
+                        <input type="text" name="Header.SourceTaskOrderID" id="Header_SourceTaskOrderID" aria-labelledby="lblSourceTask" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Task-Order-Originating-Group')}, kendoDropDownList: {value: SourceTaskOrderID, dataSource: dsSourceTaskOrders, dataTextField: 'Name', dataValueField: 'ID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Originating-Group')" class="col-md-3 form-group">
+                        <label id="lblSourceActivity" for="Header_SourceActivityID">Source Activity<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Originating-Group')" , style="color:red;">* </em></label>
+                        <input type="text" name="Header.SourceActivityID" id="Header_SourceActivityID" class="smalltext" aria-labelledby="lblSourceActivity" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity-Originating-Group')}, kendoDropDownList: {value: SourceActivityID, dataSource: dsSourceActivities, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'Header_SourceTaskOrderID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project-Originating-Group')" class="col-md-3 form-group">
+                        <label id="lblSourceActivityProject" for="cboSourceActivityProject">Source Activity Project<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')" , style="color:red;">* </em></label>
+                        <input type="text" name="Header.SourceActivityProjectID" id="Header_SourceActivityProjectID" aria-labelledby="lblSourceActivityProject" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Activity-Project-Originating-Group')}, kendoDropDownList: {value: SourceActivityProjectID, dataSource: dsSourceActivityProjects, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'Header_SourceActivityID', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Workplan-Type')" class="col-md-3 form-group">
+                        <label for="Header_WorkplanTypeID">Workplan Type<em data-bind="visible: $root.IsFieldRequired('Request-Workplan-Type')" , style="color:red;">* </em></label>
+                        <input type="text" id="Header_WorkplanTypeID" name="Header.WorkplanTypeID" validationmessage="Field is Required" data-bind="attr:{required: $root.IsFieldRequired('Request-Workplan-Type')}, kendoDropDownList: { value: WorkplanTypeID, data: WorkplanTypes, dataTextField: 'Name', dataValueField: 'ID', optionLabel: { Name: '<not specified>', ID: '' } }" style="width:100%;" />
+                    </div>
+                </div>
+                <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order' && 'Request-Task-Order-Originating-Group' && 'Budget-Source-CheckBox')" class="row">
+                    <div class="col-md-3 form-group Checkbox">
+                        <label for="chkSetSource" style="font-weight:normal" id="lblSetSource"><input style="margin-bottom:5px;" id="Header_MirrorBudgetFields" name="Header.MirrorBudgetFields" type="checkbox" aria-labelledby="lblSetSource" validationmessage="Check box is Required" data-bind="attr:{required: $root.IsFieldRequired('Budget-Source-CheckBox')}, checked: isCheckedSource, checkedValue: isCheckedSource, enable:EnableBudgetMirroringCheckbox" /> Budget = Source?<em data-bind="visible: $root.IsFieldRequired('Budget-Source-CheckBox')" style="color:red;">*</em></label>
+                        <span class="k-invalid-msg" data-for="chkSetSource"></span>
+                    </div>
+                </div>
+
+                <!--Budget Fields when Budget=Source is NOT checked-->
+                <div class="row" >
+                    <input type="hidden" id="hdnSelectedActivity" name="Header.ActivityID" data-bind="value:SelectedActivityID" />
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Task-Order') && isCheckedSource()==false" class="col-md-3 form-group">
+                        <label for="cboTask">Budget Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order')" , style="color:red;">* </em><img src="/Content/img/icons/help16.gif" class="helptip" title="Use of the Task Order, Activity, and Activity Project fields is network specific. These fields may not be relevant for all networks." /></label>
+                        <input id="cboTask" name="ParentActivity" aria-labelledby="lblTask" validationmessage="Field is Required" data-bind="click: $root.isCheckedBudgetChange, attr:{required: $root.IsFieldRequired('Request-Task-Order')}, kendoDropDownList: {value: BudgetTaskOrderID, dataSource: dsTaskOrders, dataTextField: 'Name', dataValueField: 'ID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity') && isCheckedSource()==false" class="col-md-3 form-group">
+                        <label for="cboActivity">Budget Activity<em data-bind="visible: $root.IsFieldRequired('Request-Activity')" , style="color:red;">* </em></label>
+                        <input id="cboActivity" name="Header.TaskActivity" class="smalltext" aria-labelledby="lblActivity" validationmessage="Field is Required" data-bind="click: $root.isCheckedBudgetChange, attr:{required: $root.IsFieldRequired('Request-Activity')}, kendoDropDownList: {value: BudgetActivityID, dataSource: dsActivities, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'cboTask', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project') && isCheckedSource()==false" class="col-md-3 form-group">
+                        <label for="cboActivityProject">Budget Activity Project<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project')" , style="color:red;">* </em></label>
+                        <input id="cboActivityProject" name="Header.ProjectActivityID" aria-labelledby="lblActivityProject" validationmessage="Field is Required" data-bind="click: $root.isCheckedBudgetChange, attr:{required: $root.IsFieldRequired('Request-Activity-Project')}, kendoDropDownList: {value: BudgetActivityProjectID, dataSource: dsActivityProjects, dataTextField: 'Name', dataValueField: 'ID', cascadeFrom: 'cboActivity', cascadeFromField: 'ParentActivityID', optionLabel:{ Name:'Not Selected', ID:'' }, autoBind:true}" style="width: 100%;" />
+                    </div>
+                </div>
+
+                <!--Budget Fields when Budget=Source IS checked-->
+                <div class="row" data-bind="visible: $root.IsFieldVisible('Request-Task-Order') && isCheckedSource" style="margin-bottom: 10px;">
+                    <div class="col-md-3 form-group">
+                        <label id="lblTask" for="Header_Task">Budget Task Order<em data-bind="visible: $root.IsFieldRequired('Request-Task-Order')" style="color:red;">* </em><img src="/Content/img/icons/help16.gif" class="helptip" title="Use of the Task Order, Activity, and Activity Project fields is network specific. These fields may not be relevant for all networks." />: </label><br>
+                        <span id="Header_Task" data-bind="text: $root.UpdateBudgetTaskOrder_DisplayName()"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity')" class="col-md-3 form-group">
+                        <label id="lblActivity" for="Header_Activity">Budget Activity<em data-bind="visible: $root.IsFieldRequired('Request-Activity')" style="color:red;">* </em>: </label><br>
+                        <span id="Header_Activity" data-bind="text: $root.UpdateBudgetActivity_DisplayName()"></span>
+                    </div>
+                    <div data-bind="visible: $root.IsFieldVisible('Request-Activity-Project')" class="col-md-3 form-group">
+                        <label id="lblActivityProject" for="Header_ActivityProject">Budget Activity Project<em data-bind="visible: $root.IsFieldRequired('Request-Activity-Project')" style="color:red;">* </em>: </label><br>
+                        <span id="Header_ActivityProject" data-bind="text: $root.UpdateBudgetActivityProject_DisplayName()"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Run Mode <img src="/Content/img/icons/help16.gif" class="helptip" title="Requests may be submitted immediately or scheduled for submission later or on a recurring basis. For more information on scheduling requests, see ><a href='https://popmednet.atlassian.net/wiki/display/DOC/Scheduling+Requests' target='_blank'>PopMedNet User's Guide: Scheduling Requests</a>" /></div>
+                <div class="panel-body">@Html.Partial("~/Views/Request/Scheduler.cshtml", Model)</div>
+            </div>
+            <!--ko stopBinding:true-->
+            <div class="Body">
+                @( Model.PluginBody == null ? null : Model.PluginBody(Html))
+            </div>
+            <!--/ko-->
+        </div>
+    </article>
+    <article class="panel panel-default visible">
+        <div class="panel-heading">
+            DataMart Routing
+        </div>
+
+        <div class="panel-body">
+            <!--ko stopBinding:true-->
+            <article class="Request-Footer-DataMarts" id="RequestDataMarts">
+                <label>Please select DataMarts to which this query will be sent</label>
+                <input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />
+                <input type="hidden" name="SelectedRequestDataMarts" id="SelectedRequestDataMarts" data-bind="value: SerializedSelectedDataMarts" />
+                <div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px " data-bind="kendoGrid: {
+                data: DataMarts,
+                sortable: false,
+                filterable: false,
+                reorderable: false,
+                columnMenu: false,
+                scrollable: false,
+                pageable: false,
+                rowTemplate: 'dataMartsRowTmpl',
+                altRowTemplate: 'dataMartsAltRowTmpl',
+                useKOTemplates: true,
+                columns:[
+                    {field: 'Selected', title: ' ', width:35 },
+                    {field: 'Name', title: 'Name'},
+                    {field: 'Organization', title:'Organization'},
+                    {field: 'Priority', title: 'Priority'},
+                    {field: 'DueDate', title: 'Due Date'}
+                    ]
+            }">
+                </div>
+                <div style="margin-top: 5px;">
+                    <a role="button" id="btnDataMartsSelectAll" data-bind="click: DataMartsSelectAll" class="btn btn-primary">Select All</a>
+                    <a role="button" id="btnDataMartsClearAll" data-bind="click: DataMartsClearAll" class="btn btn-primary">Clear All</a>
+                    <button id="btnBulkEdit" data-bind="click: DataMartsBulkEdit, enable: SelectedDataMartIDs().length > 0" class="btn btn-primary pull-right">Bulk Edit</button>
+                </div>
+            </article>
+            <!--/ko-->
+            <hr />
+            <nav id="request-actions" class="clearfix">
+                @if (Model.AllowSubmit)
+                {
+                    <input type="submit" name="submit" id="btnSubmit" value="Submit" class="btn btn-primary pull-right" onclick="$('form.trackChanges').formChanged(false); LoadSpinner();return true;" @Html.Raw(Model.Request.Scheduled ? "disabled=\"disabled\"" : "") />
+                }
+                <input type="submit" name="save" id="btnSave" value="Save" class="btn btn-primary pull-right" disabled="disabled" onclick="$('form.trackChanges').formChanged(false); LoadSpinner(); return true" />
+                <input type="submit" name="Copy" id="btnCopy" value="Copy" class="btn btn-primary pull-left" onclick="        $('form.trackChanges').formChanged(false); LoadSpinner();" />
+                @if (Model.AllowDelete)
+                {
+                    <input type="submit" name="Delete" id="btnDelete" value="Delete" class="btn btn-primary pull-left"
+                           onclick="if (confirm('Are you sure you want to delete this request? This operation is irreversible.')) { LoadSpinner(); $('form.trackChanges').formChanged(false); return true; } return false;" />
+                }
+            </nav>
+        </div>
+    </article>
+    <script id="dataMartsRowTmpl" type="text/html">
+        <tr role="row">
+            <td><input type="checkbox" class="dataMartMetadata" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Organization"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id: 'RoutePriority_' + ID }"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id: 'RouteDueDate_' + ID }"></td>
+        </tr>
+    </script>
+    <script id="dataMartsAltRowTmpl" type="text/html">
+        <tr role="row" class="k-alt">
+            <td><input type="checkbox" class="dataMartMetadata" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Organization"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id: 'RoutePriority_' + ID }"></td>
+            <td><input type="text" class="dataMartMetadata" data-bind="kendoDatePicker:{ value: DueDate }, attr:{ id: 'RouteDueDate_' + ID }"></td>
+        </tr>
+    </script>
+}
+
+@section Scripts{
+    <script src="/scripts/FormChangeWarning.js"></script>
+    <script src="/js/Request/Edit.js"></script>
+    <script>
+        $(function () {
+            $("form.trackChanges").bind("formChanged", function () {
+                $('#btnSave').removeAttr('disabled');
+            });
+        
+            $("#btnDelete").bind("click", function () {
+                $("#txStartPeriod").removeAttr("required");
+                $("#txEndPeriod").removeAttr("required");
+            });
+        });
+
+        Requests.Edit.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model, new Newtonsoft.Json.JsonSerializerSettings { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore }) + ';')
+        Requests.Edit.init();
+    </script>
+}

@@ -1,0 +1,15 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.CodeMetricID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row row-noborder">
+        <div class="col-sm-4 bold"><h4 id="lblCodeMetric" class="TermHeader bold">Code Metric Type<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-6 form-group">
+            <input type="text" aria-labelledby="lblCodeMetric" id="cboCodeMetric" name="CodeMetric" data-bind="kendoDropDownList: {value: Values().Metric, dataSource: Dns.Enums.CodeMetricTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:'<Not Selected>' },attr:{ required: $component.Options.IsTemplateEdit == false }" validationmessage="Code Metric is required" style="width: 250px;" />
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteMetricTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
+    </div>
+</script>

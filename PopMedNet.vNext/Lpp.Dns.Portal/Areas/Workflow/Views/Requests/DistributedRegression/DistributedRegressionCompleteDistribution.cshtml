@@ -1,0 +1,157 @@
+﻿<script src="~/areas/workflow/js/requests/DistributedRegression/CompleteDistribution.js"></script>
+<!-- ko stopBinding:true -->
+<section id="DRCompleteDistribution" style="margin-top:15px;display:none;" data-bind="fadeVisible:true">
+    <div class="modal fade" id="responseHistoryDialog" role="dialog" aria-labelledby="responseHistoryDialogTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="responseHistoryDialogTitle">History</h4>
+                </div>
+                <div class="modal-body" data-bind="foreach: RoutingHistory">
+                    <table class="table table-hover">
+                        <caption data-bind="text:DataMartName"></caption>
+                        <tbody data-bind="foreach:HistoryItems">
+                            <tr>
+                                <td data-bind="text:moment(DateTime).format('M/D/YYYY h:mm:ss A')"></td>
+                                <td>
+                                    <span data-bind="text:Action"></span> by <span data-bind="text:UserName"></span><span data-bind="visible:$.trim(Message || '') != ''">;</span>
+                                    <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <br class="clearfix" />
+
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Completed Routings</h4>
+        </div>
+        <table class="panel-body table table-striped table-bordered table-hover">
+            <colgroup>
+                <col style="width: 30px;" />
+                <col style="width: 250px;" />
+                <col style="width: 100px;" />
+                <col />
+                <col style="width: 80px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:completedRoutesSelectAll, indeterminateValue:SelectedCompleteRoutings().length > 0 && SelectedCompleteRoutings().length < VirtualRoutings.length" />
+                    </th>
+                    <th>DataMart</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                    <th>History</th>
+                </tr>
+            </thead>
+            <tbody data-bind="visible:CompletedRoutings().length == 0">
+                <tr>
+                    <td colspan="5" style="text-align:center;color:lightgray;">No Completed Routings</td>
+                </tr>
+            </tbody>
+            <tbody data-bind="foreach: VirtualRoutings">
+                <tr>
+                    <td><input type="checkbox" data-bind="value: ID, checked:$root.SelectedCompleteRoutings" /></td>
+                    <td><i class="k-icon k-i-plus-sm" data-bind="click:$root.OpenChildDetail.bind($data, ID),attr: {ID: 'img-' + ID}, visible: Children().length > 0"></i><a href="#" data-bind="text: Name"></a></td>
+                    <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                    <td data-bind="html: Messages "></td>
+                    <td><a data-bind="click: $root.onShowRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
+                </tr>
+                <tr data-bind="attr: {ID: 'response-' + ID}, visible:false">
+                    <td colspan="1">&nbsp;</td>
+                    <td colspan="4">
+                        <div>
+                            <table class="panel-body table table-stripped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Submitted On</th>
+                                        <th>Responded On</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Children">
+                                    <tr>
+                                        <td colspan="1"><a data-bind="click:$root.ViewChildResponse.bind($data, ID), text: Name" /></td>
+                                        <td colspan="1" data-bind="text:moment(SubmittedOn).format('M/D/YYYY h:mm:ss A')"></td>
+                                        <td colspan="1" data-bind="text:moment(ResponseTime).format('M/D/YYYY h:mm:ss A ')"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav style="margin:15px 0px;">
+            <button class="btn btn-default pull-right" style="margin-right: 15px;" data-resultid="5C5E0001-10A6-4992-A8BE-A3F4012D5FEB" data-bind="enable:HasSelectedCompleteRoutings,click:onResubmitRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)">Resubmit</button>
+            <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-bind="visible:HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask) || HasViewResponseDetailPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewTask),click:onViewResponses,enable:HasSelectedCompleteRoutings">View Results</button>
+            <div class="clearfix"></div>
+        </nav>
+
+    </article>
+    <br class="clearfix" />
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Incomplete Routings</h4>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+            <colgroup>
+                <col style="width: 30px;" />
+                <col style="width: 250px;" />
+                <col style="width: 110px;" />
+                <col />
+                <col />
+                <col />
+                <col style="width: 80px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" title="Select All/None" data-bind="checked:incompleteRoutesSelectAll, indeterminateValue:SelectedIncompleteRoutings().length > 0 && SelectedIncompleteRoutings().length < IncompleteRoutings().length" />
+                    </th>
+                    <th>DataMart</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Message</th>
+                    <th>History</th>
+                </tr>
+            </thead>
+            <tbody data-bind="visible:IncompleteRoutings().length == 0">
+                <tr>
+                    <td colspan="7" style="text-align:center;color:lightgray;">All Routings Complete</td>
+                </tr>
+            </tbody>
+            <tbody data-bind="foreach: IncompleteRoutings">
+                <tr>
+                    <td><input type="checkbox" data-bind="value: ID, checked:$root.SelectedIncompleteRoutings" style="width: 20px;" /></td>
+                    <td><a href="#" data-bind="text: DataMart"></a></td>
+                    <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RoutingStatusTranslation, Status)"></td>
+                    <td data-bind="text: $root.TranslatePriority(Priority)"></td>
+                    <td data-bind="text: DueDate != null ? moment(DueDate).format('MM/D/YYYY') : '' "></td>
+                    <td>
+                        <span data-bind="visible:(ErrorMessage || '').length > 0, text: ErrorMessage"></span>
+                        <br data-bind="visible:(ErrorMessage || '').length > 0 && (ResponseMessage || '').length > 0" />
+                        <span data-bind="visible:(ResponseMessage || '').length > 0, text: ResponseMessage"></span>
+                    </td>
+                    <td><a data-bind="click: $root.onShowIncompleteRoutingHistory, visible: $root.AllowViewRoutingHistory">[History]</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <nav style="margin:15px 0px;">
+            <button class="btn btn-default pull-left" data-bind="click: onDataMartsBulkEdit, enable: $root.SelectedIncompleteRoutings().length > 0, visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditRequestMetadata)" , style="margin-left:5px">Bulk Edit</button>
+            <button class="btn btn-default pull-right" data-resultid="5E010001-1353-44E9-9204-A3B600E263E9" data-bind="click:onRemoveDataMart, enable:HasSelectedIncompleteRoutings, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Remove DataMart</button>
+            <button class="btn btn-default pull-right" data-resultid="15BDEF13-6E86-4E0F-8790-C07AE5B798A8" data-bind="click:onAddDataMartDialog, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Add DataMart</button>
+            <button class="btn btn-default pull-right" data-bind="click:onCompleteRouting, enable:HasSelectedIncompleteRoutings && SelectedIncompleteRoutings().length == 1, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)" style="margin-right:15px;">Complete Routing</button>
+            <div class="clearfix"></div>
+        </nav>
+    </article>
+</section>
+<!-- /ko -->

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "DataMarts";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+    <script src="~/js/DataMarts/Index.js"></script>
+}
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/datamarts">DataMarts</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="gDataMarts" style="min-height: 400px;" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting: dsSetting,
+            savedSetting:{
+                Key: 'DataMarts.Index.gResults.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: false,
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: DataMarts.Index.NameAchor, hidden: false},
+                {field: 'Acronym', title: 'Acronym', hidden: false},
+                {field: 'Organization', title: 'Organization', hidden: false },
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewDataMart" data-bind="click: btnNewDataMart_Click, visible: HasPermission(PMNPermissions.Organization.CreateDataMarts)"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add DataMart" />Add DataMart</button>
+    </nav>
+</article>

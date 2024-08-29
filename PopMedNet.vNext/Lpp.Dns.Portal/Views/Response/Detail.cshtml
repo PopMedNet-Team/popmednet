@@ -1,0 +1,153 @@
+@model ResponseViewModel
+@*@{ this.Stylesheet( "Export.css" ); }*@
+
+@section Head{
+    <link href="~/Content/forms.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Common.js"></script>
+    <script src="~/js/Response/Detail.js"></script>
+    <script>
+        Responses.Detail.InitialGroupName = '@string.Join( ", ", Model.Responses.Select( r => r.DataMart.Name ) )';
+        Responses.Detail.init('@Model.Request.ProjectID');
+    </script>
+    <style>
+        .Buttons {
+            float: right;
+        }
+
+        #ResponseActions button {
+            display: block;
+            width: 190px;
+            margin-bottom: 2px;
+        }
+
+        #ExportFormats {
+            width: 190px;
+        }
+
+        .SourceDataMarts h4 {
+            float: left;
+            margin-right: 4px;
+        }
+
+        .SourceDataMarts li {
+            border: 1px solid #ccc;
+            background-color: #eee;
+            border-radius: 4px;
+            height: 28px;
+        }
+
+        .RequestBody {
+            clear: both;
+        }
+
+        #efResponseContent {
+            min-height: 400px;
+        }
+    </style>
+}
+
+<article class="panel panel-default visible">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/requests">Requests</a></li>
+            <li><a href="@(Url.Action<RequestController>(c => c.View(Model.Request.ID, string.Empty)))">@Model.Request.Name</a></li>
+            <li class="active">Results</li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        @*@Lpp.Dns.Portal.UI.ValidationSection(Html)*@
+
+        <div id="ResponseActions" class="Buttons">
+            @if (Model.ExportFormats.Any())
+            {
+                <div class="btn-group">
+                    <button id="ExportButton" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Download these results <span class="caret"></span></button>
+                    <ul id="ExportFormats" class="dropdown-menu" role="menu">
+                        @foreach (var f in Model.ExportFormats)
+                        {
+                            <li><a class="nav-download" href="@(Url.Action<ResponseController>( c => c.Export( Model.Request.ID, Model.ResponseToken, f.ID, Model.AggregationMode, null ) ))">@f.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (Model.AllowUngroup || Model.AllowGroup || Model.AllowApprove)
+            {
+                using (Html.BeginForm<ResponseController>(c => c.Group(new ResponseGroupPostModel { RequestID = Model.Request.ID, ResponseToken = Model.ResponseToken, AggregationMode = Model.AggregationMode }), FormMethod.Post, new { id = "frmActions" }))
+                {
+                    <input type="hidden" name="SubmitAction" id="SubmitAction" data-bind="value:SubmitAction" />
+                    <input type="hidden" name="GroupName" id="GroupName" data-bind="value:GroupName" />
+                    <input type="hidden" name="RejectMessage" id="RejectMessage" data-bind="value:RejectMessage" />
+
+                    if (Model.AllowGroup)
+                    {
+                        <button type="button" name="Group" class="btn btn-default" data-bind="click:onPromptForGroup">Group these results</button>
+                        if (Model.AllowApprove)
+                        {
+                            <button type="button" name="GroupAndApprove" class="btn btn-default" data-bind="click:onPromptForGroupAndApprove">Group and approve</button>
+                        }
+                    }
+                    if (Model.AllowApprove)
+                    {
+                        <button type="button" name="Approve" class="btn btn-default" data-bind="click:onApprove">Approve these results</button>
+                        <button type="button" name="Reject" class="btn btn-default" data-bind="click:onPromptForRejectMessage">Reject these results</button>
+                    }
+                    if (Model.AllowUngroup)
+                    {
+                        <button type="button" name="Ungroup" class="btn btn-default" data-bind="click:onUngroup">Ungroup these results</button>
+                    }
+                }
+            }
+
+            @*<div data-bind="kendoWindow: { isOpen: ShowGroupNamePrompt, visible: false, actions: ['Close'], modal:true, resizable: false }">
+                    <p>Please specify a name for this group.</p>
+                    <input type="text" name="GroupName" data-bind="value: $root.GroupName"/>
+                    <div style="text-align:center; margin-top: 50px;">
+                        <button class="btn btn-default" data-bind="click:SubmitForm">OK</button>
+                    </div>
+                </div>
+
+                <div data-bind="kendoWindow: { isOpen: ShowMessagePrompt, visible: false, actions: ['Close'], modal:true, resizable: false }">
+                    <p>Please enter rejection message</p>
+                    <input type="text" name="Message" data-bind="value: $root.Message"/>
+                    <div style="text-align:center; margin-top: 50px;">
+                        <button class="btn btn-default" data-bind="click:SubmitForm">OK</button>
+                    </div>
+                </div>*@
+
+
+        </div>
+
+        <div id="frmDetails" class="Header ui-form">
+            @(Html.Partial("~/Views/Request/RequestHeader.cshtml", new RequestHeaderViewModel
+            {
+                Request = Model.Request,
+                Type = Model.RequestType,
+                RequesterCenterName = Model.RequesterCenterName,
+                WorkplanTypeName = Model.WorkplanTypeName,
+                ReportAggregationLevelName = Model.ReportAggregationLevelName
+            }))
+        </div>
+
+        <div class="SourceDataMarts">
+            <h4>Source DataMarts:</h4>
+            <ul class="list-inline">
+                @foreach (var d in Model.Responses.Select(r => r.DataMart).Distinct())
+                {
+                    <li>@d.Name</li>
+                }
+            </ul>
+        </div>
+
+        <div class="RequestBody">
+            @Model.RequestBodyView(Html)
+        </div>
+    </div>
+</article>
+<article class="panel panel-default visible">
+    <div class="panel-heading">Response</div>
+    <div class="panel-body">
+        @Model.BodyView(Html)
+    </div>
+</article>

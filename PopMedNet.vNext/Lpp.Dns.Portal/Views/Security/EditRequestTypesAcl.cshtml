@@ -1,0 +1,52 @@
+﻿<form class="form" role="form">
+    <div class="dropdown pull-right">
+        <button class="btn btn-default btn-sm" style="margin-top: 3px;" id="btnAddSecurityGroup" data-bind="click:SelectSecurityGroup"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" /> Add Security Group</button>
+    </div>
+    <div class="form-group">
+        <label for="cboRequestTypeSecurityGroups" class="control-label" data-bind="attr: {id: 'lblSecurityGroups' + Identifier(), for: 'cboRequestTypeSecurityGroups' + Identifier()}">Select Existing Security Group</label><br />
+        <input id="cboRequestTypeSecurityGroups" style="width: 450px;" data-bind="kendoDropDownList:
+        {
+            data: dsSecurityGroups,
+            value: SelectedSecurityGroup,
+            dataTextField: 'Name',
+            dataValueField: 'ID',
+        }, attr: {id: 'cboRequestTypeSecurityGroups' + Identifier()}" />
+        <button class="btn btn-danger btn-sm" data-bind="click: RemoveSecurityGroup, visible: SelectedSecurityGroup() != null">Remove</button>
+    </div>
+
+</form>
+<br class="clear" />
+
+<table id="dsSecurityGroupTable" class="table table-striped table-hover table-condensed table-bordered" style="width: 100%;" data-bind="visible: ViewTable">
+    <colgroup>
+        <col style="white-space: nowrap;" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+        <col style="width: 90px;" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th class="bold">Request Type</th>
+            <th class="bold center">Manual</th>
+            <th class="bold center">Automatic</th>
+            <th class="bold center">Deny</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: RequestTypes">
+        <tr>
+            <td><span class="bold" data-bind="text: Name"></span><span data-bind="visible: Description() != null && Description() != ''" style="font-size: small;"><br /><small data-bind="text: Description"></small></span></td>
+            <td class="center"><input type="checkbox" data-bind="attr: {id: 'rManual' + Identifier}, checked: Manual" /></td>
+            <td class="center"><input type="checkbox" data-bind="attr: {id: 'rAutomatic' + Identifier}, checked: Automatic" /></td>
+            <td class="center"><input type="checkbox" data-bind="attr: {id: 'rDenied' + Identifier}, checked: Denied" /></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp;</td>
+            <td class="center"><a href="#" data-bind="click: ManualSelectAll">Select All</a><br /><a href="#" data-bind="click: ManualClearAll">Clear All</a></td>
+            <td class="center"><a href="#" data-bind="click: AutoSelectAll">Select All</a><br /><a href="#" data-bind="click: AutoClearAll">Clear All</a></td>
+            <td class="center"><a href="#" data-bind="click: DenySelectAll">Select All</a><br /><a href="#" data-bind="click: DenyClearAll">Clear All</a></td>
+        </tr>
+    </tfoot>
+</table>
+

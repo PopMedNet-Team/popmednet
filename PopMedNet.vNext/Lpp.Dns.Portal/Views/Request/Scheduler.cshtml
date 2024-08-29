@@ -1,0 +1,263 @@
+@model RequestEditModel 
+<style>
+    #WeeklyGroup, #MonthlyGroup, #YearlyGroup {
+        display: none;
+    }
+
+    #CreateScheduleButton.Disabled {
+        display: none;
+    }
+    #btnCloseSchedulerDialog {
+        width:150px;
+    }
+</style> 
+           
+<div class="radio">
+    <label>
+        <input type="radio" name="MakeScheduled" value="" @( Model.Request.Scheduled ? "" : "checked=\"checked\"" ) /> 
+        Run Immediately After I Click &quot;Submit&quot;
+    </label>
+</div>
+<div class="radio">
+    <label>
+    <input type="radio" name="MakeScheduled" value="yes" id="ScheduledRadio" @( Model.Request.Scheduled ? "checked=\"checked\"" : "" ) /> 
+    Schedule to Run Later <a href="#" id="CreateScheduleButton">[Set Schedule...]</a>
+    </label>
+</div>
+
+<div class="CreateScheduleDialog" style="display: none">
+    <p class="alert alert-info">Schedule a Recurring Request Submission</p>
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                @Html.CheckBoxFor(m => m.Schedule.PauseJob, new { id = "PauseJob" }) Pause Job
+            </label>
+        </div>       
+    </div>        
+    <div class="panel panel-default">
+        <div class="panel-heading"><span>Recurrence pattern</span></div>
+        <div class="panel-body">
+        <div id="recurrencePattern">
+            <label class="radio-inline">@Html.RadioButtonFor(m => m.Schedule.RecurrenceType, "Daily", new { id = "Daily" }) Daily</label>
+            <label class="radio-inline">@Html.RadioButtonFor(m => m.Schedule.RecurrenceType, "Weekly", new { id = "Weekly" }) Weekly</label>
+            <label class="radio-inline">@Html.RadioButtonFor(m => m.Schedule.RecurrenceType, "Monthly", new { id = "Monthly" }) Monthly</label>
+            <label class="radio-inline">@Html.RadioButtonFor(m => m.Schedule.RecurrenceType, "Yearly", new { id = "Yearly" }) Yearly</label>
+        </div>
+        <hr />
+        <div id="DailyGroup">
+            <div class="form-group">
+                @Html.RadioButtonFor(m => m.Schedule.DailyType, "EveryNDays", new { id = "EveryDay"}) Every @Html.TextBoxFor(m => m.Schedule.NDays, new { id = "DaySchedule", maxlength = 3, style="width:50px;" }) day(s)
+            </div>
+            <div class="radio">
+                <label>
+                @Html.RadioButtonFor(m => m.Schedule.DailyType, "EveryWeekDay", new { id = "Weekday"}) Every weekday
+                </label>
+            </div>
+        </div>
+        <div id="WeeklyGroup">
+            Recur every week on:
+            <div>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Sunday) Sunday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Monday) Monday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Tuesday) Tuesday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Wednesday) Wednesday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Thursday) Thursday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Friday) Friday</label>
+            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Schedule.Saturday) Saturday</label>
+            </div>
+        </div>
+        <div id="MonthlyGroup">
+            <div class="form-group">
+            @Html.RadioButtonFor(m => m.Schedule.MonthlyType, "DayOfMonth", new { id = "MonthlyDay" }) Day @Html.TextBoxFor(m => m.Schedule.MonthDay, new { id = "DayForMonthly", maxlength = 3, style="width:50px;" }) 
+            of every @Html.TextBoxFor(m => m.Schedule.NMonthsForMonthDay, new { id = "MonthlyMonth", maxlength = 2, style="width:50px;" }) month(s)
+            </div>
+            <div class="form-group">
+            @Html.RadioButtonFor(m => m.Schedule.MonthlyType, "WeekDayOfMonth", new { id = "WeekDayMonth" }) The 
+                @Html.DropDownListFor(m => m.Schedule.NthWeekDay, Enum.GetValues(typeof(NthWeekDays)).OfType<NthWeekDays>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }), new { id = "DrpMonthlyWeek", disabled = "disabled" })
+                @Html.DropDownListFor(m => m.Schedule.WeekDay, Enum.GetValues(typeof(DayOfWeek)).OfType<DayOfWeek>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }), new { id = "DrpMonthlyDay", disabled = "disabled" })
+            of every @Html.TextBoxFor(m => m.Schedule.NMonthsForWeekDay, new { id = "MonthlyWeek", maxlength = 2, disabled = "disabled" }) month(s)
+            </div>
+        </div>
+        <div id="YearlyGroup">
+            <p>Recur every year on:</p>
+            <div class="form-group">
+            @Html.RadioButtonFor(m => m.Schedule.YearlyType, "YearlyDayOfMonth", new { id = "YearDayMonth" }) On @Html.DropDownListFor(m => m.Schedule.Month, Enum.GetValues(typeof(Months)).OfType<Months>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }),new {id ="YearlyRecurMonth"}) @Html.TextBoxFor(m => m.Schedule.DayOfMonth,new {id ="YearlyRecurDay",maxlength=2})
+            </div>
+            <div class="form-group">
+            @Html.RadioButtonFor(m => m.Schedule.YearlyType, "YearlyWeekDayOfMonth", new { id = "YearWeekDayMonth" }) On the 
+                @Html.DropDownListFor(m => m.Schedule.NthWeekDay, Enum.GetValues(typeof(NthWeekDays)).Cast<NthWeekDays>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }), new { id = "DrpYearlyWeek", disabled = "disabled" })
+                @Html.DropDownListFor(m => m.Schedule.WeekDay, Enum.GetValues( typeof( DayOfWeek ) ).Cast<DayOfWeek>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }), new { id = "DrpYearlyDay", disabled = "disabled" })
+                of @Html.DropDownListFor(m => m.Schedule.Month, Enum.GetValues( typeof( Months ) ).Cast<Months>().Select(s => new SelectListItem { Text = s.ToString(), Value = s.ToString() }), new { id = "DrpYearlyMonth", disabled = "disabled" })
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span>Range of recurrence</span></div>
+        <div class="panel-body">
+            <div class="form-group">
+                <span>Start:</span>
+                @Html.TextBox("Schedule.StartDate", Model.Schedule.StartDate.ToString("MM/dd/yyyy"), new { id = "StartDate",maxlength=10, required="true" })
+                <span>at:</span>
+                <input type="text" name="Schedule.RunTime" id="RunTime" maxlength="10" value="@Model.Schedule.RunTime.ToString("t")" required="required" data-validTime-msg='Please enter a valid time.' />
+            </div>
+            <div>
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButtonFor(m => m.Schedule.RecurrenceRangeType, "NoEndDate", new { id = "NoEndDate" }) No end date
+                        </label>
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Schedule.RecurrenceRangeType, "EndBy", new { id = "EndBy" }) End by:
+                    </label>
+                     @Html.TextBox("Schedule.EndDate", Model.Schedule.EndDate == null ? "" : Model.Schedule.EndDate.Value.ToString("MM/dd/yyyy"), new { id = "EndDate", maxlength = 10 })
+                </div>
+                <script type="text/javascript">
+                    $("#StartDate").kendoDatePicker();
+                    $("#RunTime").kendoTimePicker();
+                    $("#EndDate").kendoDatePicker();
+                    $("#StartDate ~ span.k-select").removeAttr('unselectable');
+                    $("#EndDate ~ span.k-select").removeAttr('unselectable');
+                    $("#RunTime ~ span.k-select").removeAttr('unselectable');
+                    $(function () {
+                        $('input[id$=StartDate],input[id$=EndDate],input[id$=RunTime],input[id$=DaySchedule],input[id$=DayForMonthly],input[id$=MonthlyMonth],input[id$=MonthlyWeek],input[id$=YearlyRecurDay]').bind('paste', function (e) { e.preventDefault(); });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary pull-right" id="btnCloseSchedulerDialog">Close</button>
+</div>  
+
+<script type="text/javascript">
+    //$("#RunTime").keydown(function () {
+    //    alert('Please Choose time'); return false;
+    //});
+    $("#DaySchedule,#DayForMonthly,#MonthlyMonth,#MonthlyWeek,#YearlyRecurDay").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#DaySchedule,#DayForMonthly,#MonthlyMonth,#MonthlyWeek").blur(function () {
+        if ($(this).val().length < 1 || $(this).val() == 0) {
+            alert('Day or Month Value can not be blank or zero');
+            $(this).val("1");
+        }
+    });
+    $("#MonthlyDay").change(function () {
+        $("#MonthlyWeek").val("1");
+        $("#DrpMonthlyWeek").get(0).selectedIndex = 0;
+        $("#DrpMonthlyDay").get(0).selectedIndex = 0;
+        $("#MonthlyWeek,#DrpMonthlyWeek,#DrpMonthlyDay").attr("disabled", "disabled");
+        $("#MonthlyMonth,#DayForMonthly").removeAttr("disabled", "disabled");
+    });
+    $("#WeekDayMonth").change(function () {
+        $("#MonthlyMonth,#DayForMonthly").val("1");
+        $("#MonthlyWeek,#DrpMonthlyWeek,#DrpMonthlyDay").removeAttr("disabled", "disabled");
+        $("#MonthlyMonth,#DayForMonthly").attr("disabled", "disabled");
+    });
+    $("#Weekday").change(function () {
+        $("#DaySchedule").val("1");
+        $("#DaySchedule").attr("disabled", "disabled");
+    });
+    $("#EveryDay").change(function () {
+        $("#DaySchedule").removeAttr("disabled", "disabled");
+    });
+    $("#NoEndDate").change(function () {
+        var picker = $("#EndDate").data('kendoDatePicker');
+        picker.value(new Date());
+        picker.enable(false);
+    });
+    $("#EndBy").change(function () {
+        var picker = $("#EndDate").data('kendoDatePicker');
+        picker.enable(true);
+    });
+    $("#YearDayMonth").change(function () {
+        $("#DrpYearlyWeek").get(0).selectedIndex = 0;
+        $("#DrpYearlyDay").get(0).selectedIndex = 0;
+        $("#DrpYearlyMonth").get(0).selectedIndex = 0;
+        $("#DrpYearlyWeek,#DrpYearlyDay,#DrpYearlyMonth").attr("disabled", "disabled");
+        $("#YearlyRecurMonth,#YearlyRecurDay").removeAttr("disabled", "disabled");
+    });
+    $("#YearWeekDayMonth").change(function () {
+        $("#YearlyRecurDay").val("1");
+        $("#YearlyRecurMonth").get(0).selectedIndex = 0;
+        $("#DrpYearlyWeek,#DrpYearlyDay,#DrpYearlyMonth").removeAttr("disabled", "disabled");
+        $("#YearlyRecurMonth,#YearlyRecurDay").attr("disabled", "disabled");
+    });
+    $("#YearlyRecurDay").blur(function () {
+        var arr = [3, 5, 8, 10];
+        var array = [1];
+        if (($(this).val() < 1 || $(this).val() > 31) || (jQuery.inArray($("#YearlyRecurMonth").get(0).selectedIndex, arr) == 0 && $(this).val() > 30) || (jQuery.inArray($("#YearlyRecurMonth").get(0).selectedIndex, array) == 0 && $(this).val() > 28)) {
+            alert('Please Enter Valid Day for selected month');
+            $(this).val("1"); return false;
+        }
+    });
+    $("#YearlyRecurMonth").change(function () {
+        $("#YearlyRecurDay").val("1");
+    });
+    $(function () {
+
+        var endDatePicker = $("#EndDate").data('kendoDatePicker');
+        endDatePicker.enable($('#EndBy').attr('checked') == 'checked');
+
+        function onScheduledChanged() {
+            var makeSchedule = $("#ScheduledRadio").prop("checked");
+            $("input[name=submit]").prop("disabled", makeSchedule);
+            $("#CreateScheduleButton").toggleClass("Disabled", !makeSchedule);
+        }
+        $("input[name=MakeScheduled]").bind("change click", onScheduledChanged);
+        onScheduledChanged();
+
+        $('.CreateScheduleDialog').kendoWindow({
+            appendTo: '#dialogContainer',
+            draggable: false,
+            modal: true,
+            width: 700,
+            height: 640,
+            title: 'Schedule Request',
+            visible: false,
+            resizable: false,
+            iframe: false
+        });
+
+        var dialog = $('.CreateScheduleDialog').data('kendoWindow');
+
+        $("#CreateScheduleButton").click(function (e) {
+            dialog.center();
+            dialog.open();
+        });
+
+        var validator = $('.CreateScheduleDialog').kendoValidator({
+            rules: {
+                validTime: function (input) {
+                    if (input.is('[data-validTime-msg]')) {
+                        var t = $(input).data("kendoTimePicker").value();
+                        return t != null;
+                    }
+                    return true;
+                }
+            }
+        }).data('kendoValidator');
+
+
+        $('#btnCloseSchedulerDialog').click(function () {
+            if (validator.validate()) {
+                dialog.close();
+            }
+        });
+
+        function toggleGroups() {
+            $("#DailyGroup").toggle($("#Daily").prop("checked"));
+            $("#WeeklyGroup").toggle($("#Weekly").prop("checked"));
+            $("#MonthlyGroup").toggle($("#Monthly").prop("checked"));
+            $("#YearlyGroup").toggle($("#Yearly").prop("checked"));
+        }
+        $("#Daily, #Weekly, #Monthly, #Yearly").click(toggleGroups);
+        toggleGroups();
+    });
+
+</script>                                                       

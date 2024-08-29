@@ -1,0 +1,23 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.LOINCCodesID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
+    <div class="row row-noborder">
+        <div class="col-sm-3 bold">LOINC</div>
+        <div class="col-sm-3" style="text-align:right;">
+            <strong>Code Set:</strong><br />
+            <strong>Search Method:</strong><br />
+            <strong>Selected Codes:</strong><br />
+            <strong>Result Range:</strong><br />
+            <strong>Qualitative Result:</strong><br />
+            <strong>Result Modifier:</strong>
+        </div>
+        <div class="col-sm-6">
+            <span>LOINC</span><br />
+            "<span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.TextSearchMethodTypeTranslation, Values.SearchMethodType || Dns.Enums.TextSearchMethodType.ExactMatch)"></span>"<br />
+            <span data-bind="text:Plugins.Requests.QueryBuilder.View.PrepareCollectionForDisplay((Values.CodeValues || ''), ';')"></span><br />
+            <strong>Min:</strong><span data-bind="text: Values.ResultRangeMin"></span>&nbsp; <strong>Max:</strong><span data-bind="text: Values.ResultRangeMax"></span><br />
+            <span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.LOINCQualitativeResultTypeTranslation, Values.QualitativeResult)"></span><br />
+            <span data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.LOINCResultModifierTypeTranslation, Values.ResultModifier)"></span>
+        </div>
+    </div>
+</script>

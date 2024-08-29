@@ -1,0 +1,56 @@
+﻿@model Lpp.Dns.Sso.Models.LoginViewModel
+@using Newtonsoft.Json;
+@{
+    
+    ViewBag.Title = "PopMedNet Single Sign On";
+}
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "fLogin", data_bind="submit: Submit" }))
+{
+    <fieldset id="fsLogin" style="display: none; margin: auto; width: 60%;" data-bind="visible: true">
+        <legend style="display: none;">@ViewBag.Title</legend>
+        <p class="center">Welcome to PopMedNet. Please enter your login and password below and indicate your acceptance of the terms of service and click sign on to continue:</p>
+        <br />
+        <div class="row form-group">
+            <label for="txtUserName">User Name<em>*</em></label>
+            <input id="txtUserName" class="form-control" data-bind="value: Login.UserName" name="UserName" style="width: 100%;" required tabindex="10" title="Please enter your username" />
+        </div>
+        <div class="row form-group">
+            <label for="txtPassword">Password<em>*</em></label>
+            <input type="password" id="txtPassword" class="form-control" data-bind="value: Login.Password" name="Password" style="width: 100%;" required tabindex="20" title="Please enter your password" />
+        </div>
+        <div class="row form-group">
+            <div class="floatleft">
+                <a tabindex="100" href="#" id="lForgotPassword" style="cursor: pointer;" data-bind="click: ForgotPassword">Forgot Password?</a>
+            </div>
+            <div class="floatright">
+                <a tabindex="100" data-bind="click: Register" style="cursor: pointer;">Register for a New Account</a>
+            </div>
+        </div>
+        <div class="row form-group">
+            <p class="form-control-static">By clicking Login you are agreeing to the <a tabindex="21" style="cursor: pointer;" data-bind="click: ShowTerms" href="#">Terms and Conditions</a> of use.</p>
+        </div>
+        <br />
+        <nav class="center">                
+            <button type="submit" class="btn btn-primary" tabindex="40" style="width: 200px;" >Sign On</button><br />
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Error)) { 
+            <br />
+            <label class="alert alert-sm alert-danger">@ViewBag.Error</label>
+            }
+        </nav>
+        <div class="form-group">
+            <p class="form-control-static">
+                You are accessing a U.S. government information system. Your use of this system indicates consent to monitoring and recording. Usage of this system may be monitored, recorded, and subject to audit. Unauthorized use of this system is prohibited and subject to criminal and civil penalties.
+            </p>
+        </div>
+    </fieldset>
+}
+
+@section head {
+
+    <script src="~/js/Account/Login.js"></script>
+    <script>
+        $(function() {
+            Account.Login.init(@Html.Raw(JsonConvert.SerializeObject(@Model)), $("#fLogin"));
+        });
+    </script>
+}

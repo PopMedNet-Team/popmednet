@@ -1,0 +1,123 @@
+.Users .Grid {
+    width: 100%;
+
+    td {
+        overflow: hidden;
+    }
+}
+
+.Profile-ContactInfo {
+    .Field {
+        &.FirstName,
+        &.MiddleName,
+        &.LastName,
+        &.Title,
+        &.Email,
+        &.Phone,
+        &.Fax,
+        &.Organization,
+        &.Username,
+        &.Password,
+        &.RepeatPassword {
+            display: inline-block;
+        }
+
+        &.Certificate {
+            display: block;
+        }
+
+        &.Certificate .Value input {
+            display: block;
+        }
+
+        &.Certificate .Value #UploadCertButton, &.Certificate .Value #ClearCertButton {
+            display: inline;
+        }
+
+        &.Certificate .Value span.Thumbprint {
+            font-family: courier new;
+            font-weight: bold;
+            margin-left: 1em;
+        }
+
+        &.Certificate .Value span.CertWillBeRemoved {
+            display: block;
+        }
+
+        &.FirstName > *,
+        &.MiddleName > *,
+        &.LastName > *,
+        &.Title > * {
+            width: 195px;
+        }
+
+		&.Email > *, &.Organization > * {
+			width: 230px;
+		}
+
+		&.Organization .Value {
+			padding: 1px 10px;
+		}
+
+		&.Phone > *, &.Fax > * {
+			width: 150px;
+		}
+
+		&.Description > * {
+			width: 910px;
+		}
+
+		&.LockStatus {
+			font-weight: bold;
+			font-size: 13px;
+			a { font-size: 13px; }
+			.Locked { color: maroon; 
+					  &.WillUnlock { color: darkorange; }
+			}
+			.Unlocked { color: darkgreen; 
+			}
+		}
+    }
+
+    .Groups {
+        width: 400px;
+    }
+}
+
+.Profile-Credentials {
+    .Field {
+        &.Username, &.Password, &.RepeatPassword {
+            display: inline-block;
+        }
+
+        &.Username > *, &.Password > *, &.RepeatPassword > * {
+            width: 200px;
+        }
+
+        &.Hidden {
+            display: none;
+        }
+    }
+
+    .PasswordStrength {
+        display: inline-block;
+        margin-left: 15px;
+        font-size: 14px;
+    }
+}
+
+.Profile-Notifications {
+    &.ui-section {
+        padding: 0;
+    }
+
+    td.Name {
+        white-space: nowrap;
+    }
+
+    .Grid {
+        width: 100%;
+    }
+}
+
+.Profile-Groups .Grid, .SubjectGroupsSelector table.Grid { width: 100% }

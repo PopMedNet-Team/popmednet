@@ -1,0 +1,10 @@
+@model RequestDataMartsListModel
+@{ Layout = null; } 
+
+@(Html.Render<IGrid>()
+    .From( Model.List )
+    .Attributes( new { @class = "Grid DataMartGrid" } )
+    .ReloadUrl( Url.Action<RequestController>( c => c.TemplateDataMartsListBody( Model.List.ModelForReload() ) ) )
+    .Column( dm => dm.Name, c => c.Title( "DataMart" ).Class( "DataMartName" ).Sortable( "Name" ) )
+    .Column( dm => string.IsNullOrWhiteSpace(dm.Organization) ? "N/A" : dm.Organization, c => c.Title( "Organization" ).Class( "DataMartOrg" ) )
+)

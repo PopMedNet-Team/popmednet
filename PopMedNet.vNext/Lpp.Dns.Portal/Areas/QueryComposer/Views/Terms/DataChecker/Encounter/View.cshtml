@@ -1,0 +1,22 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_Encounter">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Encounter:</div>
+        <div class="col-sm-10">
+            <span data-bind="foreach:Values.Encounters">
+                <span data-bind="visible: ($index() > 0)">or</span>
+                <span data-bind="visible: $data == 'ALL', text: 'All'"></span>
+                <span data-bind="visible: $data == 'AV', text: 'Ambulatory Visit (AV)'"></span>
+                <span data-bind="visible: $data == 'ED', text: 'Emergency Department (ED)'"></span>
+                <span data-bind="visible: $data == 'IP', text: 'Inpatient Hospital Stay (IP)'"></span>
+                <span data-bind="visible: $data == 'IS', text: 'Non-Acute Institutional Stay (IS)'"></span>
+                <span data-bind="visible: $data == 'OA', text: 'Other Ambulatory Visit (OA)'"></span>
+                <span data-bind="visible: $data == 'MISSING', text: 'Missing'"></span>
+            </span>
+            <span data-bind="visible: Values.Encounters.length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

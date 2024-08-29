@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+    <script src="~/js/Users/Index.js"></script>
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/users">Users</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="gUsers" data-bind="pmnGrid: {
+            dataSource: ds,
+            height: '75vh',
+            autoBind: false,
+            savedSetting:{
+                Key: 'Users.Index.gUsers.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'UserName', title: 'User Name', template: Users.Index.NameAchor, width: 170},
+                {field: 'FirstName', title: 'First Name'},
+                {field: 'LastName', title: 'Last Name'},
+                {field: 'Email', title: 'Email', width: 220},
+                {field: 'Organization', title: 'Organization'},
+                {field: 'Active', title: 'Active', width: 90, values: Users.Index.UserTypesTranslation, filterable: {ui: Users.Index.typeFilterUI}},
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewUsers" data-bind="click: btnNewUser_Click, visible: HasPermission(PMNPermissions.Organization.CreateUsers)"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add User" />Add User</button>
+    </nav>
+</article>

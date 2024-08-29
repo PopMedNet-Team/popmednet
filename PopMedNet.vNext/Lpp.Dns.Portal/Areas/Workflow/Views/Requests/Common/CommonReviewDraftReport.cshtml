@@ -1,0 +1,35 @@
+﻿<!-- ko stopBinding:true -->
+<section id="CommonReviewDraftReport" style="margin-top:15px;">
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Review Draft Report</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered" style="width: 100%;">
+                <colgroup>
+                    <col style="width: 60%; vertical-align: middle;" />
+                    <col style="width: 90px; vertical-align: middle;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="bold">File Name</th>
+                        <th class="bold" style="text-align:center;">Size</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: { data:Documents, as:'file'}">
+                    <tr>
+                        <td><a data-bind="text:file.FileName, attr:{ href: Controls.WFDocuments.List.Utils.buildDownloadUrl(file.ID, file.FileName) }"></a></td>
+                        <td data-bind="text:Global.Helpers.formatFileSize(file.Length)" style="text-align:right;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <nav>        
+        <button class="btn btn-primary pull-right" data-resultid="36F8F9BA-849A-493F-A9FA-B443370EF5AD" data-bind="click:Complete, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)" style="width:110px;">Approve</button>        
+        <button class="btn btn-primary pull-right" data-resultid="687360E2-8389-48E3-A3FE-71248F0D6192" data-bind="click:Complete, visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask)" style="margin-right:15px;">Return for Revision</button>
+    </nav>
+    <div class="clearfix"></div>
+</section>
+<!-- /ko -->
+<script src="/areas/workflow/js/requests/common/reviewdraftreport.js"></script>

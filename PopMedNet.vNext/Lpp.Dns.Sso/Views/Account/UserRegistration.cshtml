@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "User Registration";
+    Layout = "~/Views/Shared/_DialogLayout.cshtml";
+}
+
+@section Head {
+    <script src="/js/Account/UserRegistration.js"></script>
+}
+<form role="form">
+    <fieldset>
+        <legend>Contact Information</legend>
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label for="txtFirstName">First Name<em>*</em></label>
+                <input type="text" id="txtFirstName" name="firstname" class="form-control" title="Please enter your first name" required maxlength="100" data-bind="value: Registration.FirstName" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtmiddleName">Middle Name</label>
+                <input type="text" id="txtmiddleName" name="middlename" maxlength="100" class="form-control" data-bind="value: Registration.MiddleName" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtLastName">Last Name<em>*</em></label>
+                <input type="text" id="txtLastName" name="lastname" required title="Please enter your last name" maxlength="100" class="form-control" data-bind="value: Registration.LastName" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtTitle">Title</label>
+                <input type="text" id="txtTitle" name="title" class="form-control" maxlength="50" data-bind="value: Registration.Title" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="txtEmail">Email<em>*</em></label>
+                <input type="email" id="txtEmail" class="form-control" title="Please enter your email address" required maxlength="400" name="email" data-bind="value: Registration.Email" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtPhone">Phone</label>
+                <input type="tel" id="txtPhone" name="phone" maxlength="50" class="form-control" data-bind="value: Registration.Phone" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtFax">Fax</label>
+                <input type="tel" id="txtFax" name="fax" maxlength="50" class="form-control" data-bind="value: Registration.Fax" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="txtOrganization">Requested Organization<em>*</em></label>
+                <input type="text" id="txtOrganization" name="organization" title="Please enter your requested Organization" required maxlength="255" class="form-control" data-bind="value: Registration.OrganizationRequested" />
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="txtRole">Requested Role</label>
+                <input type="text" id="txtRole" name="role" maxlength="255" class="form-control" data-bind="value: Registration.RoleRequested" />
+            </div>        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Credentials</legend>
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label for="txtUserName">User Name<em>*</em></label>
+                <input type="text" id="txtUserName" name="username" class="form-control" title="Please enter your User Name" required maxlength="50" data-bind="value: Registration.UserName" />
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtPassword">Password<em>*</em></label>
+                <input type="password" id="txtPassword" class="form-control" title="Please enter your password" required maxlength="20" name="password" data-bind="value: Registration.Password, valueUpdate: 'input'" />
+                <div class="progress" style="margin-top: 3px;">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="style: {width: (PasswordScore() * 20) + '%'}, css: { 'progress-bar-danger': PasswordScore() <= 1, 'progress-bar-warning': PasswordScore() < 5, 'progress-bar-success': PasswordScore() == 5 }"></div>
+                </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="txtConfirmPassword">Confirm Password<em>*</em></label>
+                <input type="password" id="txtConfirmPassword" maxlength="20" required title="Please re-enter your password" class="form-control" name="confirmPassword" data-bind="value: ConfirmPassword, valueUpdate: 'input'" />
+            </div>
+        </div>
+    </fieldset>
+</form>
+<nav class="footer">
+    <button id="btnSubmit" class="btn btn-success btn-sm" data-bind="click: Save, enabled: Email() !='' || UserName() != ''"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Submit" />Submit</button>
+    <button id="btnCancel" class="btn btn-warning btn-sm" data-bind="click: Cancel"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+</nav>

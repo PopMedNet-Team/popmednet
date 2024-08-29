@@ -1,0 +1,32 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DrugNameID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>   
+    <div class="row row-noborder">
+        <div class="col-sm-2 bold"><h4 id="lblDrugName" class="TermHeader bold">Drug Name<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-8">
+            <button id="btnAddDrugName" style="margin-bottom:10px;" class="btn btn-primary" data-bind="click: function(data, event) {$component.OpenCodeSelector(data, Dns.Enums.Lists.GenericName, event);}"><span class="glyphicon glyphicon-pencil"></span> Select Drug Name</button>
+            <p data-bind="visible:Values == null || Values().CodeValues == null || Values().CodeValues().length == 0">&lt;None Selected&gt;</p>
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteDrugNameTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
+    </div>
+    <div class="row row-noborder">
+        <div class="col-sm-12">
+            <!-- ko if: Values().Codes != null && Values().Codes.length > 0 -->
+            <strong>Selected:</strong><span data-bind="visible:Values != null && Values().Codes != null && Values().Codes().length > 0, text:Values().Codes().join()"></span>
+            <!-- /ko -->
+            <div id="lblCodes" data-bind="visible:Values != null && Values().CodeValues != null && Values().CodeValues().length > 0">
+                <!-- ko if: Values().CodeValues != null && Values().CodeValues().length > 0 -->
+                <ul data-bind="foreach: Values().CodeValues()">
+                    <li>
+                        <span style="font-weight:bold;" data-bind="text: Code"></span> - <span data-bind="text: Name"></span>
+                    </li>
+                </ul>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</script>

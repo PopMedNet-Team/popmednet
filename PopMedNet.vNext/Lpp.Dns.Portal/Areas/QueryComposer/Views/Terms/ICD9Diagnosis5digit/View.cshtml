@@ -1,0 +1,22 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.ICD9DiagnosisCodes5digitID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p> 
+    <div class="row row-noborder">
+        <div class="col-sm-3 bold">ICD 9 Diagnosis (5 digit):</div>
+        <div class="col-sm-9">
+            <!-- ko if: Values.Codes != null && Values.Codes.length > null -->
+            <span data-bind="visible:Values != null && Values.Codes != null && Values.Codes.length > 0, text:Values.Codes.join()"></span>
+            <!-- /ko -->
+            <div data-bind="visible:Values != null && Values.CodeValues != null && Values.CodeValues.length > 0">
+                <!-- ko if: Values.CodeValues != null && Values.CodeValues.length > null -->
+                <ul data-bind="foreach: Values.CodeValues">
+                    <li>
+                        <span style="font-weight:bold;" data-bind="text: Code"></span> - <span data-bind="text: Name"></span>
+                    </li>
+                </ul>
+                <!-- /ko -->
+            </div>
+            <span data-bind="visible:Values == null || Values.CodeValues == null || Values.CodeValues.length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

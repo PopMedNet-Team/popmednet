@@ -1,0 +1,21 @@
+﻿<br />
+<!-- ko stopBinding: true -->
+<div id="DefaultRequestReview">
+    
+    <!-- ko stopBinding: true -->
+    <div id="qcViewWrapper">
+        @Html.Partial("~/areas/QueryComposer/Views/view.cshtml")
+    </div>
+    <!-- /ko-->
+
+    @* datamart table here read only for selected DM*@
+    <div style="margin-top: 15px; padding-top: 15px; border-top: solid 1px silver;">
+        @*<button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="48B20001-BD0B-425D-8D49-A3B5015A2258" data-bind="click: Complete">Copy</button>*@
+        <button class="btn btn-primary pull-left" data-bind="click: Requests.Details.rovm.onCopy, visible: Requests.Details.rovm.AllowCopy()">Copy</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="EA120001-7A35-4829-9F2D-A3B600E25013" data-bind="click: Complete, visible: AllowApproveReject">Reject</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="50C60001-891F-40E6-B95F-A3B600E25C2B" data-bind="click: Complete, visible: AllowApproveReject">Approve</button>        
+    </div>
+    <br style="clear: both;" />
+</div>
+<script src="~/Areas/Workflow/js/Requests/Default/RequestReview.js"></script>
+<!-- /ko-->

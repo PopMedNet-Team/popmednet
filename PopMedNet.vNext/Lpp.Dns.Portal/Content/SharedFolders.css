@@ -1,0 +1,10 @@
+﻿.SharedFolder.DropActive
+{
+    background: #F0FFF0;
+}
+
+.SharedFolder.DropHover
+{
+    background: navy;
+    color: white;
+}

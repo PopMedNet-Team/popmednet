@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="~/areas/workflow/js/requests/common/addrequestuserdialog.js"></script>
+    <style>
+        section#Content {
+            margin-bottom:5px;
+        }
+        .btn {
+            width:80px;
+        }
+        #NewRequestUserDialog label {
+            display:block;
+        }
+    </style>
+} 
+
+<p class="alert alert-info">Please choose an Organization, User, and Workflow Role.</p>
+<section id="NewRequestUserDialog">
+    <fieldset>
+        
+    <div class="row" style="margin-bottom:12px;">        
+        <div class="col-md-4" style="display:inline-block;width:275px;">
+            <label for="cboUser">User Organization<em>*</em></label>
+            <div data-bind="pmnGrid:{
+            dataSource: dsOrganizations,
+            height:300,
+            selectable: 'row',
+            columnMenu: false,
+            change: onSelectOrganization,
+            columns: [
+                {field: 'Name', title: 'Organization', width: 90, attributes: { style: 'cursor: pointer;'}},
+            ]
+        }" style="height:300px;"></div>
+        </div>
+        <div class="col-md-8" style="display:inline-block;width:427px;padding-right:0px;">
+            <label for="cboUser">User<em>*</em></label>
+            <div id="grdUsers" data-bind="pmnGrid:{
+            dataSource: FilteredUsers,
+            height:300,
+            autoBind: false,
+            selectable: 'row',
+            columnMenu: false,
+            change: onSelectUser,
+            columns: [
+                {field:'UserName', title:'Username', width:215, attributes: { style: 'cursor: pointer;'} },
+                {field:'Email', title:'Email', width:275, attributes: { style: 'cursor: pointer;'} },
+                {field: 'LastName', title:'Last Name', width:170, attributes: { style: 'cursor: pointer;'} },
+                {field: 'FirstName', title:'First Name', width: 170, attributes: { style: 'cursor: pointer;'} }
+            ]
+        }" style="height:300px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="cboRole">Workflow Role<em>*</em></label>
+            <input id="cboRole" name="WorkflowRole" required data-bind="kendoDropDownList: { data:WorkflowRoles, dataTextField: 'Name', dataValueField: 'ID', value:SelectedWorkflowRoleID}" style="width:100%;" />
+        </div>
+    </div>    
+    </fieldset>
+    <nav class="footer">
+        <button class="btn btn-default pull-right" style="margin-left:8px;" data-bind="click:onCancel, enable:NotWorking">Cancel</button>
+        <button class="btn btn-default pull-right" data-bind="click:onSave, enable:NotWorking && SelectedUser() != null">Save</button>
+    </nav>
+</section>

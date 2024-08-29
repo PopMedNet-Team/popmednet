@@ -1,0 +1,39 @@
+﻿@model RequestIFrameViewModel
+@using System.Web.Configuration
+
+@{  
+    this.Stylesheet( "Request.min.css" );
+    var iframeUrl = string.Format("{0}/{1}", WebConfigurationManager.AppSettings["WbdPortalUrl"], Model.IFrameUrl);
+
+    if (iframeUrl.Contains("?")) {
+        iframeUrl += "&";   
+    } else {
+        iframeUrl += "?";
+    }
+
+    iframeUrl += "ID=" + Model.Request.ID;
+    iframeUrl += "&DnsFrame=true";
+    iframeUrl += "&Auth=" + Request.Cookies["BasicAuth"].Value;
+    iframeUrl += "&AllowCopy=" + Model.AllowCopy.ToString();
+    iframeUrl += "&AllowSave=" + Model.IsScheduled.ToString();
+} 
+<script>
+    //Add the authentication info from the cookie here.
+    window.addEventListener("message", function (event) {
+        if (event.origin !== '@WebConfigurationManager.AppSettings["WbdPortalUrl"]')
+            return;
+        if (event.data.height) {
+            if (isNaN(event.data.height))
+                return; //Here is where we'll detect what it's passing and if it's a submit etc it will redirect to whatever page it would normally.
+            var height = parseInt(event.data.height);
+
+            $("#requestFrame").height(height + 10);
+        } else if (event.data.goHome) {
+            window.location.href = "/";
+        } else if (event.data.requestId) {
+            window.location.href = "/request/" + event.data.requestId;
+        }
+    });
+</script>
+@*@(Html.Render<Breadcrumbs>().For( Model.TreeNode ))*@
+<iframe id="requestFrame" src="@iframeUrl" style="width: 100%; height: 100%; display: block; overflow-x: auto; overflow-y: hidden; border: none; margin: 0px; margin-left: 3px; padding: 0px;" scrolling="no"></iframe>

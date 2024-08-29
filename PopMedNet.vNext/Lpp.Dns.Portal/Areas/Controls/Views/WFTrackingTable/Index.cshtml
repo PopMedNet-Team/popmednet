@@ -1,0 +1,17 @@
+﻿<section id="WFTrackingTable" class="panel panel-default tabPanel" style="padding:8px;display:none;" data-bind="visible:true">
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon" data-bind="css:ExpandoCss(AnalysisCenterExpanded()), click:ToggleAnalysisCenterExpando, visible:DisplayAnalysisCenterTrackingTable"></span> Analysis Center</div>
+        <div id="gAnalysisCenterTrackingTable" style="min-height:250px;" data-bind="visible:DisplayAnalysisCenterTrackingTable() && AnalysisCenterExpanded()"></div>
+        <div class="panel-body" data-bind="hidden:DisplayAnalysisCenterTrackingTable">
+            <p class="alert alert-info" role="alert" style="text-align:center;">No tracking table information to display.</p>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon" data-bind="css:ExpandoCss(DataPartnerExpanded()), click:ToggleDataPartnerExpando, visible: DisplayDataPartnerTrackingTable"></span> Data Partners</div>
+        <div id="gDataPartnersTrackingTable" style="min-height:250px;" data-bind="visible:DisplayDataPartnerTrackingTable() && DataPartnerExpanded()"></div>
+        <div class="panel-body" data-bind="hidden:DisplayDataPartnerTrackingTable">
+            <p class="alert alert-info" role="alert" style="text-align:center;">No tracking table information to display.</p>
+        </div>
+    </div>
+    
+</section>

@@ -1,0 +1,58 @@
+.DataMarts 
+{
+	.Grid { width: 100% }
+	.ModelButtons { display: inline-block; vertical-align: top; }
+}
+
+.DataMart-Info .Field
+{
+    &.Organization > *
+    {
+        width: 230px;
+		.Value { padding: 1px 10px; }
+    }
+    textarea { width: 920px; }
+}
+
+.DataMart-Downloads a { display: block; }
+
+.DataMart-Models
+{
+	padding: 0;
+	.InstallModelsDialog { display: none; }
+	.InstalledModelsGrid {
+		 display: inline-block; vertical-align: top; width: 1004px; min-width: 1004px; max-width: 1004px; 
+		.Model { width: 100%; white-space: nowrap; overflow: hidden }
+		.DateTime { width: 260px; min-width: 260px; max-width: 260px; white-space: nowrap; overflow: hidden }
+		.PreHidden tr { display: none }
+		tr.NoData td { text-align: center }
+	}
+}
+
+.DataMart
+{
+    .RequestType
+    {
+        margin-bottom: 15px;
+
+        div
+        {
+            display: inline-block;
+        }
+
+        .Name
+        {
+            font-size: 16pt;
+            display: block;
+        }
+
+        .Description
+        {
+            display: block;
+        }
+
+    }
+}
+
+.NotInstalledModelsGrid { max-height: 400px; overflow-y: scroll; overflow-x: hidden; margin: 0 auto; }
+.NotInstalledModelsGrid td.Model { width: 400px; min-width: 400px }

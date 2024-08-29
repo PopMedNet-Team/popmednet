@@ -1,0 +1,162 @@
+﻿@using Lpp.Mvc 
+@using Lpp.Dns.Portal
+<style>
+    #ResultWrapper {
+        overflow-x: auto;
+    }
+    @@media print {
+        .reportContent {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -sand-transform: rotate(0deg);
+        }
+        .ui-section-header {
+            display: none;
+        }
+
+        #ResultWrapper {
+            overflow-x: visible;
+        }
+    }
+</style>
+<section id="reportContainer">
+    <div class="noprint">
+        <article class="panel panel-default" data-bind="css: {visible: true}">
+            <div class="panel-heading">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li class="active"><a href="/reports/networkactivityreport">Network Activity Report</a></li>
+                </ol>
+            </div>
+            <div class="panel-body">
+                <form role="form">
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="dtStartDate">Start Date</label>
+                                <input type="text" id="dtStartDate" data-bind="kendoDatePicker: { value: StartDate }" />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="dtEndDate">End Date</label>
+                                <input type="text" id="dtEndDate" data-bind="kendoDatePicker: { value: EndDate }" />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ulProjects">Projects</label>
+                                <ul id="ulProjects" data-bind="foreach: ProjectList" style="list-style-type: none; margin: 0; padding: 0;">
+                                    <li>
+                                        <input type="checkbox" data-bind="checkedValue: ID, checked: $root.SelectedProjects, attr: { id: 'chk' + ID }" />
+                                        <label data-bind="text: Name, attr: { for: 'chk' + ID }"></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <nav class="panel-footer right">
+                <button id="btnExecute" data-bind="click: btnExecute_Click" class="btn btn-default">Run Report</button>
+            </nav>
+        </article>
+    </div>
+    <div data-bind="visible: ShowResults" style="display: none;" class="reportContent">
+        <article class="panel panel-default">
+            <div class="panel-heading">
+                <a href="#" class="pull-right noprint" data-bind="click: Print">Print</a>
+                Results
+            </div>
+            <div class="panel-body">
+                <h2>Network Activity Report: Distributed Network Solution</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered" style="width: 100%;">
+                        <tr>
+                            <td class="bold nowrap">Project(s):</td>
+                            <td style="width: 100%;" data-bind="text: HeaderSelectedProjectText"></td>
+                        </tr>
+                        <tr>
+                            <td class="bold nowrap" style="white-space: nowrap;">Start Date:</td>
+                            <td data-bind="text: HeaderStartDate"></td>
+                        </tr>
+                        <tr>
+                            <td class="bold nowrap" style="white-space: nowrap;">End Date:</td>
+                            <td data-bind="text: HeaderEndDate"></td>
+                        </tr>
+                    </table>
+                </div>
+                <hr />
+                <br />
+                <h3>Summary</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="nowrap">Type of Request</th>
+                                <th class="right"># of Requests Sent</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Summary">
+                            <tr>
+                                <td class="nowrap" data-bind="text: RequestType"></td>
+                                <td class="right" data-bind="text: Count"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="bold nowrap">Total</td>
+                                <td class="right" data-bind="text: Total"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <br />
+                <br />
+                <h3>Details</h3>
+                <div id="ResultWrapper" class="table-responsive">
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th class="nowrap">Request ID</th>
+                                <th>Name</th>
+                                <th class="nowrap">Request Model</th>
+                                <th class="nowrap">Request Type</th>
+                                <th>Description</th>
+                                <th class="right" style="white-space: normal;">Sent To</th>
+                                <th class="right" style="white-space: normal;">Responded</th>
+                                <th>Task Order</th>
+                                <th>Activity</th>
+                                <th>Activity Project</th>
+                                <th>Submit Date</th>
+                                <th style="white-space: normal;">Most Recent Response Date</th>
+                                <th style="white-space: normal;">Status of Request</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Results">
+                            <tr>
+                                <td class="nowrap" data-bind="text: Project"></td>
+                                <td data-bind="text: Identifier"></td>
+                                <td data-bind="text: Name"></td>
+                                <td data-bind="text: RequestModel"></td>
+                                <td data-bind="text: RequestType"></td>
+                                <td data-bind="html: Description"></td>
+                                <td data-bind="text: NoDataMartsSentTo" class="right"></td>
+                                <td data-bind="text: NoDataMartsResponded" class="right"></td>
+                                <td data-bind="text: TaskOrder"></td>
+                                <td data-bind="text: Activity"></td>
+                                <td data-bind="text: ActivityProject"></td>
+                                <td class="nowrap" data-bind="text: moment(SubmitDate).format('MMM Do YYYY')"></td>
+                                <td class="nowrap" data-bind="text: MostRecentResonseDate ? moment(MostRecentResonseDate).format('MMM Do YYYY') : '<None>'"></td>
+                                <td data-bind="text: Status"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+@section scripts {
+<script src="/js/Reports/NewActivityReport.js"></script>
+}

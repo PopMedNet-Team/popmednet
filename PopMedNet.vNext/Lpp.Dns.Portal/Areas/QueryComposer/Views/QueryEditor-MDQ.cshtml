@@ -1,0 +1,239 @@
+﻿@using Lpp.Dns.Portal.Areas.QueryComposer;
+@using Lpp.QueryComposer;
+<section data-bind="attr:{ id: 'mdq-' + Options.Query.Header.ID() }">
+    <div style="margin-bottom:1em;display:none;" data-bind="visible: !IsPresetQuery && !IsCriteriaGroupEdit">
+        <div class="row">
+            <div class="col-sm-2">
+                <h2>Criteria Groups</h2>
+            </div>
+            <div class="col-sm-10">
+                <button class="btn btn-primary btn-sm pull-right" style="margin-left:8px;margin-top:-10px;" data-bind="visible: TermProvider.CanImportCodeList, click: onUploadCodeList.bind(Options.Query)"><span class="glyphicon glyphicon-import"></span> Import Codes</button>
+                <button class="btn btn-primary btn-sm pull-right" style="margin-left:15px;margin-top:-10px;" data-bind="click: onAddCriteriaGroup" ><span class="glyphicon glyphicon-plus"></span> New Group</button>
+            </div>
+        </div>
+
+        <p class="alert alert-info">Click the [+ New Group] button to add criteria groups. Criteria groups form cohorts that are determined by terms within each group. ICD9 Diagnosis and Disease terms within a criteria groups are OR-ed, whereas demographic terms (Gender, Race, Age) and Visit terms are AND-ed. Multiple Criteria Groups are AND-ed to determine the final cohort which will display a single or stratified patient count based on the Report Selector options selected. You may negate a Criteria Group by checking "Exclude Criteria Group" box which will filter out the group's cohort from the final cohort.</p>
+    </div>
+
+    <ol class="cleanlist" data-bind="foreach: Options.Query.Where.Criteria">
+        <li>
+
+            <h3 class="center" data-bind="visible:$index() > 0, text: Exclusion() ? 'And Not' : 'And'"></h3>
+
+
+            <article class="panel panel-default">
+                <div class="panel-heading">
+
+                    <button class="btn btn-danger btn-sm pull-right" style="margin-left:15px;" data-bind="visible: ($index() > 0) && !$parents[0].IsPresetQuery(), click: $parents[0].onRemoveCriteriaGroup.bind($parents[1], $data)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+                    <button class="btn btn-primary btn-sm pull-right" style="margin-left:15px;" data-bind="click: $component.onSaveCriteriaGroup.bind($component, $data), visible:!$component.IsCriteriaGroupEdit && !$component.IsPresetQuery"><span class="glyphicon glyphicon-share"></span> Save as Template</button>
+                    <div class="dropdown pull-right" data-bind="visible:$component.FilteredCriteriaGroupTemplates().length > 0 && !$component.IsCriteriaGroupEdit && !$component.IsPresetQuery">
+                        <button id="btnCriteriaGroupDropDown" type="button" data-toggle="dropdown" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-briefcase"></span> Criteria Templates <span class="caret"></span></button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnCriteriaGroupDropDown" data-bind="foreach: $component.FilteredCriteriaGroupTemplates">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="text: Name, click: $component.ApplyCriteriaGroupTemplate.bind($component, $parent, $data)"></a></li>
+                        </ul>
+                    </div>
+
+                    <h3>Criteria Group: <span data-bind="text: Name"></span><small><span class="glyphicon glyphicon-question-sign" data-bind="tooltip:{ title: 'Each additional criteria group reduces the overall patient cohort. Multiple criteria groups are AND-ed together.', trigger: 'click'}"></span></small></h3>
+                </div>
+
+                <div class="panel-body">
+                    <fieldset>
+                        <legend style="display: none;">Criteria Group Details</legend>
+                        <div class="row mdq" data-bind="visible: $parent.IsPresetQuery() == false">
+                            <div class="col-sm-6 form-group">
+                                <label data-bind="attr:{'for': $component.Options.Query.Header.ID() + '_txtGroupName_' + $index() }, 'id': $component.Options.Query.Header.ID() + '_lblGroupName_' + $index()">Group Name<em>*</em></label>
+                                <input class="form-control" maxlength="150" data-bind="enable: true, value: Name, attr:{id: $component.Options.Query.Header.ID() + '_txtGroupName_' + $index(), 'name': $component.Options.Query.Header.ID() + '_txtGroupName_' + $index() }" validationmessage="Criteria Group Name is Required" style="width: 100%;" required />
+                            </div>
+                        </div>
+                        <div class="row mdq">
+                            <div class="col-sm-12 checkbox" data-bind="visible: $index() > 0">
+                                <label><input type="checkbox" data-bind="checked: Exclusion" /> Exclusion Criteria</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br class="clear" />
+                    <section style="min-height: 225px;">
+                        <nav class="panel panel-warning" style="float: left; margin-right: 15px; width: 150px;" data-bind="visible: $parent.TermsColumnVisible">
+                            <div class="panel-heading">Add Terms</div>
+                            <div class="panel-body" style="padding: 0px;">
+                                <ul data-bind="attr:{ 'id':'TermSelector_' + ID(), 'class':'TermSelectorFor_' + $component.Options.Query.Header.ID() }, foreach: $parent.CriteriaTermList, kendoMenu:{orientation: 'vertical'}" style="width: 100%;">
+                                    <!--ko if: Terms != null && Terms.length > 0-->
+                                    <li class="k-item k-state-default" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed" style="padding:0px;">
+                                        <span class="k-link" style="padding-left:11px;"><span data-bind="html: $data.Name"></span><span class="k-icon k-i-arrow-e pull-right"></span></span>
+                                        <ul class="k-group k-menu-group" data-bind="foreach: $component.FilterTermsForCriteria(Terms)">
+                                            <li class="k-item k-state-default" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed, " style="padding: 11px; width: 250px">
+                                                <div style="float:right;" data-bind="visible: $component.Options.IsTemplateEdit">
+                                                    <input type="checkbox" data-bind="checked: $data.Allowed" />
+                                                </div>
+                                                <div style="width:200px; cursor:pointer;" data-bind="click: $component.onAddTermToCriteria.bind($component, $data, $parents[1], event), clickBubble: false">
+                                                    <span data-bind="html:$data.Name"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--/ko-->
+                                    <!--ko if: (Terms == null || Terms.length == 0) && TermID != null -->
+                                    <li class="k-item k-state-default" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed" style="padding: 11px;">
+                                        <div>
+                                            <span data-bind="html: $data.Name, click: $component.onAddTermToCriteria.bind($component, $data, $parent, event), clickBubble: false"></span>
+                                            <!--ko if: $component.Options.IsTemplateEdit-->
+                                            <input type="checkbox" data-bind="checked:$data.Allowed" style="float: right;" />
+                                            <!--/ko-->
+                                        </div>
+                                    </li>
+                                    <!--/ko-->
+                                </ul>
+                            </div>
+                        </nav>
+                        <fieldset style="margin-left: 180px;">
+                            <legend style="display: none;">Selected Terms</legend>
+                            <!-- Show the terms that are being OR'd together -->
+                            <div data-bind="foreach:{ data: Criteria, as : 'crit'}">
+
+                                <div data-bind="visible:$component.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                <div data-bind="template: {name: $component.TemplateSelector, foreach: crit.Terms, afterRender: $component.onUpdateTemplateElements}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
+
+                            </div>
+
+                            <div data-bind="visible:Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                            <div data-bind="template: {name: $component.TemplateSelector, foreach: Terms, afterRender: $component.onUpdateTemplateElements}"></div>
+                        </fieldset>
+                        <br class="clear" />
+                    </section>
+                </div>
+            </article>
+        </li>
+    </ol>
+    <section style="display:none;" data-bind="hidden:IsCriteriaGroupEdit">
+        <h2>Report Selector</h2>
+        <p>Based on the criteria specified in the <strong>primary criteria group</strong>, the following report stratifications are available. Please choose the stratifications you wish to use and specify any settings that may be required:</p>
+        <div class="cleanlist">
+            <article class="panel panel-default" data-bind="css: {visible: true}">
+                <div class="panel-heading">
+                    <h3>Selected Stratifications: <small><span class="glyphicon glyphicon-question-sign" data-bind="tooltip:{title: 'Results are stratified according to the criteria in the Primary Criteria Group. If no option is selected, a single patient count will be returned.', trigger: 'click'}"></span></small></h3>
+                </div>
+                <div class="panel-body" data-bind="with: Options.Query.Select">
+                    <br class="clear" />
+                    <section style="min-height: 225px;">
+                        <nav class="panel panel-warning" style="float: left; margin-right: 15px; width: 150px;" data-bind="visible: $parents[0].StratifiersColumnVisible">
+                            <div class="panel-heading">Add Fields</div>
+                            <div class="panel-body" style="padding: 0px;">
+                                <ul data-bind="foreach: $component.StratifiersTermList, kendoMenu:{orientation: 'vertical' }" style="width: 100%;">
+                                    <!--ko if: Terms != null && Terms.length > 0-->
+                                    <li class="k-item k-state-default" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed" style="padding:0px;">
+                                        <span class="k-link" style="padding-left:11px;"><span data-bind="html: $data.Name"></span><span class="k-icon k-i-arrow-e pull-right"></span></span>
+                                        <ul class="k-group k-menu-group" data-bind="foreach: $component.FilterTermsForStratification(Terms)">
+                                            <li class="k-item k-state-default" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed" style="padding: 11px; width: 260px;">
+                                                <div style="float:right;" data-bind="visible: $component.Options.IsTemplateEdit">
+                                                    <input type="checkbox" data-bind="checked: $data.Allowed" />
+                                                </div>
+                                                <div style="width:200px;cursor:pointer;" data-bind="click: $component.AddField.bind($component, $data, $parents[1], event), clickBubble: false">
+                                                    <span data-bind="text:$data.Name"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--/ko-->
+                                    <!--ko if: (Terms == null || Terms.length == 0) && TermID != null -->
+                                    <li class="k-item k-state-default" style="padding: 11px;" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed">
+                                        <div>
+                                            <span class="k-link" data-bind="html: $data.Name, click: $component.AddField.bind($component, $data, $parent, event)"></span>
+                                            <!--ko if: $component.Options.IsTemplateEdit-->
+                                            <input type="checkbox" data-bind="checked:$data.Allowed" style="float: right;" />
+                                            <!--/ko-->
+                                        </div>
+                                    </li>
+                                    <!--/ko-->
+                                </ul>
+                            </div>
+                        </nav>
+                        <fieldset style="margin-left: 180px;">
+                            <legend style="display: none;">Selected Fields</legend>
+                            <div class="stratifier-terms-container" data-bind="template: {name: $component.StratifierTemplateSelector, foreach: $component.NonAggregateFields, afterRender: $component.onUpdateTemplateElements}"></div>
+                        </fieldset>
+                        <br class="clear" />
+                    </section>
+                </div>
+            </article>
+        </div>
+    </section>
+    <section>
+        <article data-bind="foreach: Options.Query.TemporalEvents">
+            <section>
+                <div class="cleanlist">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>Temporal Events</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row row-noborder">
+                                <div class="col-sm-6 form-group">
+                                    <label for="txtIndexEventDateIdentifier">Index Event Identifier</label>
+                                    <input id="txtIndexEventDateIdentifier" type="text" class="form-control" data-bind="value: IndexEventDateIdentifier" required validationmessage="Index Event Identifier is required" />
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label for="txtDaysBefore" style="display:block;">Time Window</label>
+                                    <span>Days Before: </span><input id="txtDaysBefore" name="txtDaysBefore" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysBefore}" style="width:90px;" required validationmessage="&nbsp;" />
+                                    <span class="k-invalid-msg" data-for="txtDaysBefore"></span>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label for="txtDaysAfter" style="display:block;">&nbsp;</label>
+                                    <span>Days After: </span><input id="txtDaysAfter" name="txtDaysAfter" data-bind="kendoNumericTextBox:{ min: 0, format:'#####', decimals:0, value: DaysAfter}" style="width:90px;" required validationmessage="&nbsp;" />
+                                    <span class="k-invalid-msg" data-for="txtDaysAfter"></span>
+                                </div>
+                            </div>
+                            <div class="row row-noborder">
+                                <div class="col-sm-6">&nbsp;</div>
+                                <div class="col-sm-6"><div data-bind="patientReportedOutcomeEncounterTermValidator: {values: $data, termValidators: $component.TermValidators}"></div></div>
+                            </div>
+                            <section data-bind="visible:$component.HasTemporalEventTerms">
+
+                                <nav class="panel panel-warning" style="float:left;margin-right:15px; width:150px;">
+                                    <div class="panel-heading">Add Terms</div>
+                                    <div class="panel-body" style="padding:0px;">
+                                        <ul data-bind="foreach: $component.TemporalEventsTermList, kendoMenu:{orientation:'vertical'}" style="width:100%">
+                                            <li style="padding: 11px;" data-bind="visible: $component.Options.IsTemplateEdit || $data.Allowed">
+                                                <div>
+                                                    <span data-bind="html:$data.Name, click: $component.onAddTemporalEventTerm.bind($component, $data, $parents[0], event), clickBubble: false"></span>
+                                                    <!--ko if: $root.IsTemplateEdit-->
+                                                    <input type="checkbox" data-bind="checked:$data.Allowed" style="float: right;" />
+                                                    <!--/ko-->
+                                                </div>
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                                <fieldset style="margin-left:180px;">
+                                    <legend style="display:none;">Selected Terms</legend>
+                                    <div data-bind="foreach:{ data: Criteria, as : 'parentCrit' }">
+                                        <p><label><input type="checkbox" data-bind="checked:parentCrit.Exclusion" /> Exclusion Criteria</label></p>
+
+                                        <div data-bind="foreach:{ data: parentCrit.Criteria, as : 'crit'}">
+
+                                            <div data-bind="visible:$component.ShowSubCriteriaConjuction($parent, crit), css:{'single-subcriteria-term ': crit.Terms().length == 1 }" style="text-align:center;font-weight:bold;padding-bottom:4px;"><span>And</span></div>
+
+                                            <div data-bind="template: {name: $component.TemplateSelector, foreach: crit.Terms, afterRender: $component.onUpdateTemplateElements}, css:{'criteria-block': crit.Terms().length > 1 }"></div>
+
+                                        </div>
+
+                                        <div data-bind="visible:parentCrit.Terms().length > 0 && Criteria().length > 0" style="text-align:center;font-weight:bold;"><br><span>And</span></div>
+
+                                        <div data-bind="template: {name: $component.TemplateSelector, foreach: parentCrit.Terms, afterRender: $component.onUpdateTemplateElements}"></div>
+
+                                    </div>
+                                </fieldset>
+                                <br class="clear" />
+
+
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+    </section>
+</section>

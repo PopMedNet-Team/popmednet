@@ -1,0 +1,54 @@
+@model LoginModel
+@section Head {
+<script src="/js/Home/login.js"></script>
+    <style>
+        #confirmYes, #confirmNo {
+            width:100px;
+            margin-left:12px;
+            margin-right:12px;
+        }
+    </style>
+}
+
+<form id="fLogin" action="/login" method="post">
+    <input type="hidden" name="returnUrl" value="@(Request.QueryString["returnUrl"] ?? Model.ReturnUrl)" />
+    <p class="right">@Lpp.Dns.Portal.Root.Global.ApplicationVersion Release</p>
+    <font color="Red">@TempData["Error"]</font>
+    <br /><br />
+    <section style="width: 600px; margin: auto;">
+        <div class="form-group">
+            <label for="txtUserName">User Name:</label>
+            <input tabindex="1" type="text" id="txtUserName" name="username" class="form-control" placeholder="Please enter your username as supplied" required title="Please enter your User Name" />
+        </div>
+        <div class="form-group">
+            <label for="txtPassword">Password:</label>
+            <input tabindex="2" type="password" id="txtPassword" name="password" class="form-control" placeholder="Please enter your password" required title="Please enter your password" />
+        </div>
+
+        <div class="floatleft">
+            <a tabindex="100" href="#" id="lForgotPassword" style="cursor: pointer;" data-bind="click: ForgotPassword">Forgot Password?</a>
+        </div>
+        <div class="floatright">
+            <a tabindex="100" data-bind="click: Registration" style="cursor: pointer;">Register for a New Account</a>
+        </div>
+        <br class="clear" />
+        <br />
+
+        <div class="form-group">
+            <p class="form-control-static">
+                 By clicking Login you are agreeing to the <a tabindex="101" style="cursor: pointer;" data-bind="click: ShowTerms" href="#">Terms and Conditions</a> of use.
+            </p>
+        </div>
+        <div class="center" style="margin-top: 30px;">            
+            <button id="btnLogin" tabindex="4" type="button" data-bind="click: Submit" class="btn btn-primary" style="width: 300px;">Login</button>
+            <br />
+            <br />
+            @Html.ValidationSummary("", new { @class = "alert alert-sm alert-danger validation-summary" })
+        </div>
+        <div class="form-group">
+            <p class="form-control-static">
+                You are accessing a U.S. government information system. Your use of this system indicates consent to monitoring and recording. Usage of this system may be monitored, recorded, and subject to audit. Unauthorized use of this system is prohibited and subject to criminal and civil penalties.
+            </p>
+        </div>
+    </section>
+</form>

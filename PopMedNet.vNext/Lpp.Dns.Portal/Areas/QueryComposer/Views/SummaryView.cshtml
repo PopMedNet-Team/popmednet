@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/views/_rootlayout.cshtml";
+}
+@section Head{
+    <style>
+        body {
+            margin:4px 20px;
+        }
+        #summaryviewloadingcontainer {
+            width:220px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        #summaryviewloadingcontainer img {
+            height:32px;
+            float:left;
+        }
+        #summaryviewloadingcontainer h3 {
+            float:left;
+        }
+    </style>
+}
+
+<div id="summaryviewloadingcontainer">
+    <img src="/images/loading.gif" />
+    <h3>&nbsp;Loading...</h3>  
+    <div class="clearfix"></div>  
+</div>
+
+<!-- ko stopBinding: true -->
+<div id="overview-queryview">
+    @Html.Partial("~/Areas/QueryComposer/Views/View.cshtml")
+</div>
+<!-- /ko -->
+<script src="/areas/querycomposer/js/termvaluefilter.js"></script>
+<script src="~/areas/querycomposer/js/summaryview.js"></script>

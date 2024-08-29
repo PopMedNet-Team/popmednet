@@ -1,0 +1,67 @@
+@model LegacyReportCreateModel
+<style>
+    #Content > article{
+        opacity:1 !important;
+    }
+    .DataMart {
+        width: 275px;
+    }
+
+    .Order {
+        width: 275px;
+    }
+
+    label > span {
+        padding-left: 5px;
+    }
+
+    .k-dropdown {
+        margin-left: 4px;
+    }
+</style>
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/reports/DataMartAuditReport">DataMart Audit Report</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <form role="form" action="/reports/DataMartAuditResult" method="post" target="_new">
+            <div style="padding-left:25px; padding-top:25px;">
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        @Html.Field("Start Date", @<input type="text" name="from" />)
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        @Html.Field("End Date", @<input type="text" name="to" />)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        @Html.Field("DataMart", Html.DropDownList("DataMartID", Model.DataMarts.Select(dm => new SelectListItem { Value = dm.ID.ToString(), Text = dm.Name }), new { style = "width: 72%;" }))
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        @Html.Field("Order By", Html.DropDownList("orderby", Model.OrderBy.Select(o => new SelectListItem { Value = o, Text = o }), new { style = "width: 72%;" }))
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create Report" class="btn btn-default" />
+                </div>
+            </div>
+        </form>
+    </div>
+</article>
+   
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("input[name=from], input[name=to]").kendoDatePicker();
+            $("select[name=DataMartID], select[name=orderby]").kendoDropDownList();
+        });
+
+    </script>
+}

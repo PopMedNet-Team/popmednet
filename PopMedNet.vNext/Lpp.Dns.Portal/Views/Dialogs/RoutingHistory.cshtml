@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+
+<script src="~/js/dialogs/RoutingHistory.js"></script>
+
+
+<section id="RoutingHistoryDialog">
+    <div>
+        <table class="table table-hover">
+            <caption data-bind="text:ResponseHistory.DataMartName"></caption>
+            <tbody data-bind="foreach: ResponseHistory.HistoryItems">
+                <tr>
+                    <td data-bind="text: moment(DateTime).format('M/D/YYYY h:mm a')"></td>
+                    <td>
+                        <span data-bind="text:Action"></span> by <span data-bind="text:UserName + ($.trim(Message || '') == '' ? '' : ';')"></span>
+                        <div data-bind="visible:$.trim(Message || '') != '', text:(Message || '')"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</section>

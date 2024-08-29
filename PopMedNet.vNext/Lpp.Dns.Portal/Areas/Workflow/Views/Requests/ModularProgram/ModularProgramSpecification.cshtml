@@ -1,0 +1,18 @@
+﻿<!-- ko: stopBinding:true-->
+<section id="MPSubmitSpecifications" style="margin-top:15px;">
+    <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+    <!-- ko stopBinding: true -->
+    <article id="mpupload">        
+        @Html.Partial("~/areas/controls/views/wffileupload/fortask.cshtml")
+    </article>
+    <!-- /ko-->
+    </div>
+    <nav>
+        <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:onSpecificationReview">Submit for Specification Review</button>
+        <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:onEditWorkingSpecification" style="margin-right:15px;">Edit Working Specifications</button>
+        <button class="btn btn-primary pull-right" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask),click:onSave" style="margin-right:15px;width:115px;">Save</button>
+        <div class="clearfix"></div>
+    </nav>
+</section>
+<!-- /ko -->
+<script src="/areas/workflow/js/requests/modularprogram/specification.js"></script>

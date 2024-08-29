@@ -1,0 +1,9 @@
+﻿{
+  "version": 3,
+  "file": "Registries.css",
+  "sources": [
+    "Registries.less"
+  ],
+  "names": [],
+  "mappings": "AAAA,WAEI;AADJ,eACI;EACI,WAAA;EACA,gCAAA;;AAJR,WAEI,MAII,GAAE;AALV,eACI,MAII,GAAE;EACE,WAAA;;AAPZ,WAEI,MAQI;AATR,eACI,MAQI;EACI,gBAAA;;AAIZ,KAAK;EACD,0BAAA;;AAGJ;AAAU;EACN,YAAA"
+}

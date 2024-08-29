@@ -1,0 +1,144 @@
+﻿
+<!--[if lt IE 9]><script type="text/javascript" src="/scripts/excanvas.js"></script><![endif]-->
+<script src="/scripts/jqplot/jquery.jqplot.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.categoryAxisRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.pointLabels.js"></script>
+<script src="/scripts/jqplot/plugins/jqplot.highlighter.js"></script>
+
+<script src="/Areas/DataChecker/js/datachecker.charting.js"></script>
+
+<script src="/Areas/DataChecker/js/Common.js"></script>
+<script src="/Areas/DataChecker/js/RxAmtResponse.js"></script>
+<script src="/Areas/DataChecker/js/RxSupResponse.js"></script>
+<script src="/Areas/DataChecker/js/DiagnosisPDXResponse.js"></script>
+<script src="/Areas/DataChecker/js/MetadataResponse.js"></script>
+<script src="/Areas/DataChecker/js/RaceResponse.js"></script>
+<script src="/Areas/DataChecker/js/EthnicityResponse.js"></script>
+<script src="/Areas/DataChecker/js/NDCResponse.js"></script>
+<script src="/Areas/DataChecker/js/SexResponse.js"></script>
+<script src="/Areas/DataChecker/js/AgeDistributionResponse.js"></script>
+<script src="~/Areas/DataChecker/js/WeightResponse.js"></script>
+<script src="~/Areas/DataChecker/js/HeightResponse.js"></script>
+<script src="~/Areas/DataChecker/js/ProcedureResponse.js"></script>
+<script src="~/Areas/DataChecker/js/DiagnosisResponse.js"></script>
+<script src="~/Areas/DataChecker/js/SqlResponse.js"></script>
+<script src="~/areas/workflow/js/response/datachecker/responsedetails.js"></script>
+
+<link rel="stylesheet" href="~/Content/jqplot/jquery.jqplot.min.css" />
+<link rel="stylesheet" href="/Content/DataChecker/Responses.css" />
+
+<style>
+    .Highlight {
+        /*background-color: yellow;*/
+        display: none;
+    }
+
+    /*Hack cause Bootstrap tabs/panel and Kendo grid dont play well.*/
+    /*Make sure this is always 20px below what is set in the grid markup in the TS...*/
+    .k-grid-content {
+        height: 500px;
+    }
+</style>
+
+<!-- ko stopBinding:true -->
+<section id="DataCheckerResponseDetails" style="margin-top:15px">
+    <article class="alert alert-info" data-bind="hidden:ResponseContentComplete" style="width:600px;margin:24px auto;text-align:center;">
+        <p>Loading...</p>
+    </article>
+    <section style="margin-top:15px;display:none;" data-bind="visible:true">
+        <article class="panel panel-default" data-bind="visible: IsResponseVisible() != null && IsResponseVisible() == false">
+            <div class="panel-heading">
+                <h4 class="panel-title">Response Pending Approval</h4>
+            </div>
+            <div class="panel-body">
+                <span>
+                    The response is pending approval and can't be viewed as you don't have permission to view unapproved responses.
+                </span>
+            </div>
+        </article>
+
+            <div data-bind="visible: IsResponseVisible">
+                <article class="panel panel-default" data-bind="visible:ResponseView() != 'AggregateResponse'">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Response Documents</h4>
+                    </div>
+
+                    <table class="panel-body table table-striped table-bordered">
+                        <colgroup>
+                            <col style="width:30%; vertical-align:middle;" />
+                            <col style="vertical-align: middle;" />
+                            <col style="width: 110px; vertical-align: middle;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="bold">Source</th>
+                                <th class="bold">File Name</th>
+                                <th class="bold" style="text-align:center;">Size</th>
+                                <th class="bold">Document Type</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: { data:Documents, as:'file'}">
+                            <tr>
+                                <td data-bind="text:file.ItemTitle"></td>
+                                <td data-bind="html:Workflow.Response.WFDataChecker.ResponseDetails.Utils.buildDownloadLink(file.ID, file.FileName, file.Name)"></td>
+                                <td data-bind="text:Global.Helpers.formatFileSize(file.Length)" style="text-align:right;"></td>
+                                <td>
+                                    <!--ko if: file.DocumentType == 0-->
+                                    <i class="glyphicon glyphicon-arrow-left"></i>
+                                    <!--/ko-->
+                                    <!--ko if: file.DocumentType == 2-->
+                                    <i class="glyphicon glyphicon-arrow-left"></i>
+                                    <!--/ko-->
+                                    <!--ko if: file.DocumentType == 1-->
+                                    <i class="glyphicon glyphicon-arrow-right"></i>
+                                    <!--/ko-->
+                                    <!--ko if: file.DocumentType == 3-->
+                                    <i class="glyphicon glyphicon-arrow-right"></i>
+                                    <!--/ko-->
+                                    <span data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RequestDocumentTypeTranslation, file.DocumentType)"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <br style="clear:both;" />
+                <article class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Response</h4>
+                    </div>
+                    <br style="clear:both;" />
+                    <div data-bind="visible: SuppressedValues">
+                        <p class="alert alert-warning" style="text-align:center;">Low cells < X were suppressed.</p>
+                    </div>
+                    <div class="panel-body">
+                        <div style="padding-bottom:25px;">
+                            <a role="button" href="#" data-bind="href:ExternalWindowUrl, click:onOpenExternalWindow, attr:{target:'_blank'}" id="btnOpenExternal" class="open-external btn btn-default"><img src="/content/img/icons/open_in_new_window.png" height="24" alt="Open results in a new window." /></a>
+                        </div>
+                        
+                        <div data-bind="component: { name: DataCheckerResponseBinding, params: { ResponseID: CurrentResponseID, RequestID: RequestID }}"></div>
+                    </div>
+                </article>
+            </div>
+            <br style="clear:both;" />
+            <nav style="border-top:1px solid silver;padding-top:15px;">
+                <button class="btn btn-default pull-right" data-resultid="0FEE0001-ED08-48D8-8C0B-A3B600EEF30F" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onApprove">Approve</button>
+                <button class="btn btn-default pull-right" data-resultid="F1B10001-B0B3-45A9-AAFF-A3B600EEFC49" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onReject">Reject</button>
+                <button class="btn btn-default pull-right" style="margin-right:15px;width:120px" data-bind="visible:HasPermission(PMNPermissions.Request.ApproveRejectResponse) && showApproveReject, click:onResubmit">Resubmit</button>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;">Download Results <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a data-bind="href:ExportCSVUrl">CSV</a></li>
+                        <li><a data-bind="href:ExportExcelUrl">Excel</a></li>
+                    </ul>
+                    <a data-bind="visible: isDownloadAllVisible, href:ExportDownloadAllUrl"><button class="btn btn-default pull-right" style="margin-right:15px;width:120px" data-bind="href:ExportDownloadAllUrl">Download All</button></a>
+                </div>
+                <div class="clearfix"></div>
+            </nav>
+    </section>
+</section>
+<!-- /ko -->

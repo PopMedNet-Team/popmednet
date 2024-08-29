@@ -1,0 +1,111 @@
+﻿<script src="~/Areas/Workflow/js/Requests/VerticalDistributedRegression/Distribution.js"></script>
+<!-- ko stopBinding:true -->
+<section id="DRDistribution" style="margin-top:15px;display:none;" data-bind="visible:true">
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Distribute Request</h4>
+        </div>
+        <div class="panel-body">
+            <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)">
+                <!-- ko stopBinding: true -->
+                <div id="DRUpload">
+                    @Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
+                </div>
+                <!-- /ko-->
+
+                <h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
+                <div class="cleanlist">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            <h3>Selected DataMarts: <small><span class="glyphicon glyphicon-question-sign" title="Results are stratified according to the criteria in the Primary Criteria Group. If no option is selected, a single patient count will be returned." data-html="true"></span></small></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="margin:3px;">
+                                <article class="Request-Footer-DataMarts" id="RequestDataMarts">
+                                    @*<input type="hidden" name="SelectedDataMartIDs" id="SelectedDataMartIDs" data-bind="value: SelectedDataMartIDs" />*@
+                                    <div id="gDataMarts" style="padding: 0; overflow-y: auto; min-height: 250px; max-height: 920px;" data-bind="pmnGrid: {
+                                        dataSource: DataMarts,
+                                        sortable: false,
+                                        filterable: false,
+                                        reorderable: false,
+                                        columnMenu: false,
+                                        pageable: false,
+                                        scrollable: false,
+                                        rowTemplate: 'dataMartsRowTmpl',
+                                        altRowTemplate: 'dataMartsAltRowTmpl',
+                                        useKOTemplates: true,
+                                        columns:[
+                                            {field: 'DataMartID', title: ' ', width:35 },
+                                            {field: 'Name', title: 'Name'},
+                                            {field: 'Organization', title:'Organization'},
+                                            {field: 'Priority', title: 'Priority'},
+                                            {field: 'RoutingType', title: 'DataMart Type'},
+                                            {field: 'DueDate', title: 'Due Date'}
+                                            ]
+                                    }">
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        <button role="button" id="btnDataMartsSelectAll" data-bind="click: $root.DataMartsSelectAll, clickBubble:false" class="btn btn-primary">Select All</button>
+                                        <button role="button" id="btnDataMartsClearAll" data-bind="click: $root.DataMartsClearAll, clickBubble:false" class="btn btn-primary">Clear All</button>
+                                        <button id="btnBulkEdit" data-bind="click: $root.DataMartsBulkEdit, enable: $root.SelectedDataMartIDs().length > 0, clickBubble:false" class="btn btn-primary pull-right">Bulk Edit</button>
+                                    </div>
+                                </article>
+                            </div>
+                            <br />
+                            <div data-bind="visible: $root.IsFieldVisible('Request-Additional-Instructions')" class="Row" style="margin:3px;">
+                                <label for="AdditionalInstructions">Additional Instructions <em data-bind="visible: $root.IsFieldRequired('Request-Additional-Instructions')" , style="color:red;">* </em></label>
+                                <textarea name="DataMartsAdditionalInstructions" id="DataMarts_AdditionalInstructions" rows="3" class="form-control" maxlength="3000" style="margin-right:10px;" data-bind="attr:{required: $root.IsFieldRequired('Request-Additional-Instructions')}, value: $root.DataMartAdditionalInstructions"></textarea>
+                            </div>
+                        </div>
+                    </article>
+
+                    <script id="dataMartsRowTmpl" type="text/html">
+                        <tr role="row">
+                            <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
+                            <td data-bind="text: Name"></td>
+                            <td data-bind="text: Organization"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + DataMartID }"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1}}, attr:{ id:'RouteType_' + DataMartID }" validationmessage="DataMart Type is required" /></td>
+                            <td><input type="text" data-bind="kendoDatePicker: DueDate, attr:{ id:'RouteDueDate_' + DataMartID }"></td>
+                        </tr>
+                    </script>
+                    <script id="dataMartsAltRowTmpl" type="text/html">
+                        <tr role="row" class="k-alt">
+                            <td><input type="checkbox" data-bind="value:DataMartID, checked: $root.SelectedDataMartIDs" /></td>
+                            <td data-bind="text: Name"></td>
+                            <td data-bind="text: Organization"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: Priority, data: Dns.Enums.PrioritiesTranslation, dataTextField: 'text', dataValueField: 'value'}, attr:{ id:'RoutePriority_' + DataMartID }"></td>
+                            <td><input type="text" data-bind="kendoDropDownList: {value: RoutingType, dataSource: Dns.Enums.RoutingTypeTranslation, dataTextField: 'text', dataValueField: 'value', optionLabel:{ text:'<Not Selected>', value:-1} }, attr:{ id:'RouteType_' + DataMartID }" validationmessage="DataMart Type is required" /></td>
+                            <td><input type="text" data-bind="kendoDatePicker: DueDate, attr:{ id:'RouteDueDate_' + DataMartID }"></td>
+                        </tr>
+                    </script>
+                </div>
+
+                <div class="cleanlist">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Trust Matrix</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                <tbody data-bind="foreach: FilteredMatrixBody">
+                                    <tr data-bind="style:{backgroundColor: Editable() ? 'white' : '#FCFCFC'}">
+                                        <td data-bind="style: {color: Editable() ? 'black' : 'grey'}"><span data-bind="text:DataPartner1Name"></span></td>
+                                        <td data-bind="style: {color: Editable() ? 'black' : 'grey'}"><span data-bind="text:DataPartner2Name"></span></td>
+                                        <td><input type="checkbox" data-bind="enable: Editable, checked: Trusted" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+    <nav>
+        <button class="btn btn-primary pull-right" style="width:115px;" data-resultid="5445DC6E-72DC-4A6B-95B6-338F0359F89E" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),enable:CanSubmit,click:Complete">Submit Request</button>
+        <button class="btn btn-primary pull-right" style="width:115px; margin-right:15px;" data-resultid="DFF3000B-B076-4D07-8D83-05EDE3636F4D" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask),click:Complete">Save</button>
+        <div class="clearfix"></div>
+    </nav>
+</section>
+<!-- /ko -->

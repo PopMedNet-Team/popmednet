@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@section Head {
+    <script src="~/js/Requests/Index.js"></script>
+    <style>
+        .breadcrumb {
+            margin-bottom:0px;
+        }
+        #new-request-dropdown {
+            margin-right:14px;
+        }
+    </style>
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-10">
+                <ol class="breadcrumb">
+                    <li><a href="~/">Home</a></li>
+                    <li class="active"><a href="/requests">Requests</a></li>
+                </ol>
+            </div>
+            <div class="dropdown right" style="float:right" id="new-request-dropdown">
+                <button id="ddNewRequest" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    New Request <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right clear" role="menu" aria-labelledby="ddNewRequest" data-bind="foreach: RequestableProjects">
+                    <li><a role="menuitem" data-bind="text:Name,click:$root.onCreateRequest"></a></li>
+                </ul>
+            </div>
+        </div>        
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs" data-bind="foreach: Projects">
+            <li data-bind="css: {active: $root.SelectedProjectID() == ID()}"><a href="#" data-bind="text: Name, click: $root.SelectProject"></a></li>
+        </ul>
+        <div class="tab-body">
+            <div id="gResults" data-bind="pmnGrid: {
+            dataSource: dataSource,
+            height: 800,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Requests.Index.gResults.User:',
+                Setting: dataSourceSetting !== null ? dataSourceSetting.Setting : null,
+                dateColumns:['SubmittedOn', 'DueDate']
+            },
+            scrollable: {
+                virtual: true
+            },
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: Requests.Index.NameAchor, width: 180},
+                {field: 'Identifier', title: 'System Number', width: 90, filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: '####',
+                            decimals: 0
+                        });
+                    }
+                } },
+                {field: 'SubmittedOn', title: 'Date Submitted', format: Constants.DateTimeFormatter, width: 165},
+                {field: 'SubmittedByName', title: 'Submitter', width: 125},
+                {field: 'CreatedBy', title: 'Created By', width: 125},
+                {field: 'StatusText', title: 'Status', width: 125},
+                {field: 'RequestType', title: 'Type', width: 125},
+                {field: 'Project', title: 'Project', width: 125},
+                {field: 'Priority', title: 'Priority', values: Dns.Enums.PrioritiesTranslation, width: 100 },
+                {field: 'DueDate', title: 'Due Date', template: Requests.Index.DueDateTemplate, width: 120},
+                {field: 'MSRequestID', title: 'Request ID', width:120},
+            ]
+            }">
+            </div>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,22 @@
+﻿@{
+    this.Layout = "~/Views/_DialogLayout.cshtml";   
+}
+
+<form role="form">    
+    <p class="alert alert-sm alert-info">Please enter a name and description below to save your criteria</p>
+    <div class="form-group">
+        <label for="txtName">Name<em>*</em></label>
+        <input type="text" maxlength="255" required id="txtName" name="Name" data-bind="value: Template.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="txtDescription">Description</label>
+        <textarea id="txtDescription" class="form-control" name="Description" style="height: 100px;" data-bind="value: Template.Description"></textarea>
+    </div>
+</form>
+<nav class="footer">
+    <button class="btn btn-primary" id="btnSave" data-bind="click: Save"><span class="glyphicon glyphicon-ok-circle"></span> Save</button>
+</nav>
+
+@section Scripts {
+<script src="~/Areas/QueryComposer/js/SaveCriteriaGroup.js"></script>
+}

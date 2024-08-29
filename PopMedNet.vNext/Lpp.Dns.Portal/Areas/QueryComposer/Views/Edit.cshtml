@@ -1,0 +1,40 @@
+﻿
+
+<script src="/Areas/QueryComposer/js/edit.js"></script>
+
+<div id="ComposerControl">
+    <section id="QueryEditorHostContainer" style="display:none" data-bind="visible:MDQ_Host != null">
+        <!-- ko stopBinding:true -->
+        @Html.Partial("~/areas/QueryComposer/Views/QueryEditor-Host.cshtml")
+        <!-- /ko -->
+    </section>
+    <section id="FileUploadContainer" style="display:none" data-bind="visible:MDQ_Host == null">
+        <!-- ko stopBinding:true -->
+        <div id="FileUploadControl">
+            @Html.Partial("~/areas/controls/views/wffileupload/Index.cshtml")
+        </div>
+        <!-- /ko -->
+    </section>
+    <!-- ko stopBinding: true-->
+    <section id="DataMartsControl" class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <h3>DataMart Routing</h3>
+            <p>Select the DataMarts to send this request to</p>
+        </div>
+        <div class="panel-body cleanlist" style="margin:0px;padding:0px;">
+            @Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+        </div>
+    </section>
+    <!-- /ko -->
+    <!-- ko stopBinding: true -->
+    <section id="attachments_upload" class="panel panel-default" data-bind="visible: HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ViewAttachments) && HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.ModifyAttachments)">
+        <div class="panel-heading">
+            <h3>Attachments</h3>
+            <p>Upload any additional documents you wish to include with this request</p>
+        </div>
+        <div class="panel-body" style="margin:0px;padding:0px;">
+            @Html.Partial("~/areas/controls/views/wffileupload/forattachments.cshtml")
+        </div>
+    </section>
+    <!-- /ko-->
+</div>

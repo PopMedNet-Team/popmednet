@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    @Html.Partial("_HeadLayout")
+    <link href="@this.ResourceUrl("/content/dialog.css")" rel="stylesheet" />
+    @RenderSection("head", false)
+</head>
+    <body>
+        <section id="Content" class="container-fluid">
+        @RenderBody()
+        </section>
+
+        @RenderSection("scripts", false)
+    </body>
+</html>

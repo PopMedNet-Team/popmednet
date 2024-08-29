@@ -1,0 +1,20 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.AgeRangeID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p> 
+    <div class="row row-noborder">
+        <div class="col-sm-2 bold">Age Range:</div>
+        <div class="col-sm-4">
+            Min:&nbsp;<span data-bind="text: Values.MinAge"></span>
+        </div>
+        <div class="col-sm-4">
+            Max:&nbsp;<span data-bind="text: Values.MaxAge"></span>
+        </div>
+    </div>
+    <div class="row" style="border-top:none;">
+        <div class="col-sm-2">&nbsp;</div>
+        <div class="col-sm-10">
+            <span data-bind="text:Values.CalculationType == null || Values.CalculationType == '7' ? '' : Global.Helpers.GetEnumString(Dns.Enums.AgeRangeCalculationTypeTranslation, Values.CalculationType)"></span>
+            <span data-bind="text: Values.CalculateAsOf != null && Values.CalculationType == '7' ? 'As of ' + moment(Values.CalculateAsOf).format('L') : ''"></span>
+        </div>
+    </div>
+</script>

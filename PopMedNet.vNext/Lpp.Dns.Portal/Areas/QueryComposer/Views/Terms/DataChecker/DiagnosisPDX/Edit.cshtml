@@ -1,0 +1,26 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.DC_DiagnosisPDX">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-3 bold"><h4 id="DiagnosisPDX" class="TermHeader bold">Diagnosis PDX<em data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        <div class="col-sm-7 form-group">
+            <div class="checkbox">
+                <label><input type="checkbox" data-bind="checked: Values().PDXes" value="P" />Principle</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" data-bind="checked: Values().PDXes" value="S" />Secondary</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" data-bind="checked: Values().PDXes" value="X" />Other PDX</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" data-bind="checked: Values().PDXes" value="MISSING" />Missing</label>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <button id="btnDeleteDiagnosisPDXTerm" class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
+    </div>
+</script>

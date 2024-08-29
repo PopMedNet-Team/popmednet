@@ -1,0 +1,14 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.ObservationPeriodID">
+    <div class="row">
+        <div class="col-sm-2"><h4 id="lblModular" class="TermHeader" style="font-weight:bold;">Observation Period</h4></div>
+        <div class="col-sm-4 form-group">
+            <input type="text" id="cboObservationPeriodStratifyBy" name="cboObservationPeriodStratifyBy" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: Dns.Enums.PeriodStratificationTranslation, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'},attr:{ required: $component.Options.IsTemplateEdit == false }" style="width: 250px;" validationmessage="Observation Period stratification is required." />
+            <span class="k-invalid-msg" data-for="cboObservationPeriodStratifyBy"></span> 
+        </div>
+        <div class="col-sm-4 form-group"></div>
+        <div class="col-sm-2">
+            <button id="btnDeleteObservationPeriodField" class="btn btn-danger" data-bind="click: $component.onDeleteField.bind($component, $data, $parent)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,54 @@
+﻿@model IList<DataMartMetadataModel>
+
+@section Head {
+    <script src="~/js/Home/MetadataList.js"></script>
+    @*<script>
+        Home.MetadataList.RawModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    </script>*@
+
+    @* These styles allow you to apply a max-height to the grid, but have it scale to that max height and then start scrolling after that *@
+    @*<style>
+        #gTasks .k-grid-content {
+            max-height: 400px;
+        }
+    </style>*@
+
+}
+
+@foreach(var dm in Model)
+{ 
+    <article id="pMetadata" class="panel panel-default" data-bind="css: {visible: true}">
+        <div class="panel-heading">
+            <h4 class="panel-title">DataMart: @dm.DataMartName</h4>
+        </div>
+
+        @if(dm.ModelMetadataList != null && !dm.ModelMetadataList.IsEmpty())
+        {
+            foreach(var m in dm.ModelMetadataList)
+            {
+                <fieldset style="margin: 10px 10px 10px 10px;">
+                    <legend>Model: @m.ModelName</legend>
+
+                    @if(m.Responses != null && !m.Responses.IsEmpty())
+                    {
+                        foreach (var mm in m.Responses)
+                        {
+                            <div>
+                                <h4>@mm.RequestTypeName</h4>
+                            </div>
+                            @mm.BodyView(Html);
+                        }
+                    }
+                    else
+                    {
+                        <div style="margin: 10px 10px 10px 10px;">No metadata available.</div>
+                    }
+                </fieldset>
+            }
+        }
+        else
+        {
+            <div style="margin: 10px 10px 10px 10px;">No metadata request type granted for viewing.</div>
+        }        
+    </article>
+}

@@ -1,0 +1,69 @@
+@model RoutingsListModel
+@using System.Linq;
+
+@{ Layout = null;  } 
+
+@*@(Html.Render<IGrid>()
+    .From( Model.List )
+    .ReloadUrl( Url.Action<RequestController>( c => c.RoutingsListBody( Model.List.ModelForReload() ) ) )
+    .Id( r => r.ID )
+    .CheckboxColumn( "SelectedDataMarts", "allRoutedDataMartIds" )
+    .Column( @<span title="@item.Response.RequestDataMart.DataMart.Name">@item.Response.RequestDataMart.DataMart.Name</span>, 
+                c => c.Title( "DataMart" ).Sortable( "DataMart" ).Class("DataMart") )
+    .Column( r => 
+        r.Routing.RequestStatus == Lpp.Dns.DTO.RoutingStatus.RequestRejected ? "Request Rejected by Request Administrator" :
+        r.Routing.RequestStatus == Lpp.Dns.DTO.RoutingStatus.ResponseRejectedBeforeUpload ? "Request Rejected at DMC" :
+        r.Routing.RequestStatus.ToString(), 
+        c => c.Title("Status").Sortable("Status").Class("Status") 
+    )
+		
+		.Column( @<text>@{
+				var msg = item.Routing.Instances.Where( i => i.IsCurrent ).Select( i => i.ResponseMessage ).FirstOrDefault();
+				<span title="@msg" class="response-message">@msg</span>
+			}</text>, 
+		c => c.Title( "Message" ).Class("Message") )
+		
+    .If( Model.ShowHistory, g => g.Column( @<a href="#" data-popup-parent="#Body"
+        data-get-url="@Url.Action( ( RequestController c ) => c.History( Model.Request.ID, null, item.ID ) )" 
+        data-controller="lpp.mvc.controls/dynamicPopup" class="has-controller" data-popup-class="ui-dropdown RequestRoutingHistory-DropDown">[history]</a>, c => { } ) )
+
+    .With( s => s.NoDataMessage = @<text>No outstanding routings</text> )
+    .If( Model.AllowChangeRoutings, grid => grid.FooterPrefix( @<div class="ActionButtons">
+        <button id="AddDataMartsButton" class="ui-standard-button">Add DataMarts</button>
+        <script type="text/javascript">
+            $(function () {
+                var button = $("#AddDataMartsButton");
+                var dialog = $("#RequestView-DataMartsForAdding");
+                var field = $("#AddDataMarts");
+
+                if ($(".Grid tr[id]", dialog).length == 0) {
+                    button.prop("disabled", true);
+                    return;
+                }
+
+                button.click(function () {
+                    dialog.dialog({
+                        dialogClass: "RequestView-DataMartsForAdding",
+                        title: "Add DataMarts",
+                        modal: true,
+                        width: 600,
+                        buttons: {
+                            OK: function () {
+                                if (field.val().length == 0) alert("Please choose at least one DataMart to add");
+                                else {
+                                    dialog.dialog("destroy");
+                                    field.parents("form").submit();
+                                }
+                            },
+                            Cancel: function () { dialog.dialog("close"); }
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+
+        <input type="submit" name="RemoveDataMarts" id="RemoveDataMarts" value="Remove DataMarts" class="ui-standard-button"
+                @( Model.List.Entities.Any( r => r.Routing.RequestStatus != Lpp.Dns.DTO.RoutingStatus.Canceled ) ? "" : "disabled=\"disabled\"" ) />
+    </div> ) )
+)*@

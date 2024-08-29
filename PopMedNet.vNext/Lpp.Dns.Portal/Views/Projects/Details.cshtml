@@ -1,0 +1,414 @@
+﻿@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/_Layout.cshtml";
+}
+@using Lpp.Dns.DTO.Enums
+
+@section Head {
+    <script src="~/js/Security/AclViewModel.js"></script>
+    <script src="~/js/Events/EditEventPermissions.js"></script>
+    <script src="~/js/Security/AclRequestTypeViewModel.js"></script>
+    <script src="~/js/Security/AclFieldOptionViewModel.js"></script>
+    <script src="~/js/Projects/Details.js"></script>
+    <style>
+        .tab-body {
+            min-height: 500px;
+        }
+        #select-datamart-container ul.dropdown-menu {
+            left:auto;
+            top:auto;
+            bottom:110%;
+            right:0px;
+            height:500px; 
+            overflow-y:scroll;
+        }
+        .chevron-button
+        {
+            font-size:11px;
+            padding:2px 4px 2px 4px !important;
+        }
+        .delete-button {
+            font-size:11px;
+        }
+    </style>
+    <script type="text/html" id="tAcl">
+        @Html.Partial("~/Views/Security/EditAcl.cshtml")
+    </script>
+    <script type="text/html" id="tRequestTypeAcl">
+        @Html.Partial("~/Views/Security/EditRequestTypesAcl.cshtml")
+    </script>
+
+    <script type="text/html" id="tEvents">
+        @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+    </script>
+}
+
+<div id="PageLoadingMessage">
+    <div style="width:350px;margin-left:auto;margin-right:auto;margin-top:50px;">
+        <div class="panel panel-default">
+            <div class="panel-body" style="text-align:center;padding:24px;">
+                <img src="@this.ResourceUrl("/images/loading.gif")" height="40" />
+                <span style="padding-left:8px;font-weight:bold;color:dimgray">Loading project details...</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li class="active" data-bind="text: Project.Name"></li>
+        </ol>
+    </div>
+
+    <div class="panel-body" style="padding:10px;">
+        <form class="form" role="form" id="frmProjectDetails">
+            <div class="row">
+                <div class="col-md-5 form-group">
+                    <label for="txtName">Name<em>*</em></label>
+                    <input type="text" id="txtName" name="Name" class="form-control" required maxlength="255" title="Please enter a name" data-bind="value: Project.Name" />
+                    <span id="sNameValidation" class="help-block k-invalid-msg" data-for="Name"></span>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="txtAcronym">Acronym<em>*</em></label>
+                    <input type="text" class="form-control" id="txtAcronym" name="Acronym" maxlength="30" title="Please enter an acronym" data-bind="value: Project.Acronym" required />
+                    <span class="help-block k-invalid-msg" data-for="Acronym"></span>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="cboGroup">Group<em>*</em></label>
+                    <input type="text" id="cboGroup" name="Group" required title="Please select a group" data-bind="kendoDropDownList: {value: Project.GroupID, data: Groups, dataTextField: 'Name', dataValueField: 'ID', optionLabel:'<Not Selected>', enable: Project.GroupID() == null}" style="width: 100%;" />
+                    <span class="help-block k-invalid-msg" data-for="Group"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 form-group">
+                    <label for="dtStartDate">Start Date<em>*</em></label>
+                    <input type="text" id="dtStartDate" name="Start Date" data-bind="kendoDatePicker: Project.StartDate" style="width: 100%;" required title="The Start date is required" />
+                    <span class="help-block k-invalid-msg" data-for="Start Date"></span>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="dtEndDate">End Date</label>
+                    <input type="text" id="dtEndDate" data-bind="kendoDatePicker: Project.EndDate" style="width: 100%;" />
+                </div>
+                <div class="col-md-4 checkbox" style="margin-top: 30px;">
+                    <label>
+                        <input type="checkbox" data-bind="checked: Project.Active" /> Allow Submission of Requests
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="txtDescription">Description</label>
+                    <textarea id="txtDescription" class="form-control" data-bind="value: Project.Description" rows="4"></textarea>
+                </div>
+            </div>
+        </form>
+        <div id="tabs" data-bind="kendoTabStrip: {}, visible: HasPermission(PMNPermissions.Project.ManageSecurity)" style="min-height: 500px;width: 1022px;">
+            <ul>
+                <li class="k-state-active">Project Permissions</li>                
+                <li>DataMarts</li>
+                <li>Organizations</li>
+                <li>Security Groups</li>
+                <li>Events</li>
+                <li data-bind="visible: CanManageSecurityTypes">Request Types</li>
+                <li data-bind="visible: CanManageSecurityTypes">Request Type Permissions</li>
+                <li>Request Metadata</li>
+            </ul>
+            <div class="tab-body">
+                <br />
+                <!--Project Permissions-->
+                <p class="alert alert-info">
+                    These permissions control access to the project and set default permissions for requests, DataMarts and other options.
+                </p>
+                <div data-bind="with: ProjectSecurity">
+                    @Html.Partial("~/Views/Security/EditAcl.cshtml")
+                </div>
+            </div>
+            <div class="tab-body overflow-visible">
+                <!--Data Marts-->
+                <br />
+                <p class="alert alert-info">
+                    Rights in this panel apply to the individual DataMarts within this project and determine who may access and administer the specific DataMart and who may submit specified request types to the DataMart.
+                </p>
+                <article>
+                    <div id="DataMartTable">
+                        <table class="table table-striped table-bordered" style="width: 100%;">
+                            <colgroup>
+                                <col style="width: 80px;" />
+                                <col style="width: 250px;" />
+                                <col style="width: 100%; vertical-align: middle;" />
+                                <col style="width: 80px;" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>S</th>
+                                    <th class="bold">Name</th>
+                                    <th class="bold">Organization</th>
+                                    <th class="bold center">X</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: ProjectDataMarts">
+                                <tr>
+                                    <td><img data-bind="attr: {src: ShowAcls() ? '@this.ResourceUrl("/images/collapse16.png")' : '@this.ResourceUrl("/images/expand16.png")'}, click: ToggleAcls" style="cursor: pointer;" /></td>
+                                    <td style="white-space: nowrap;" data-bind="text: DataMart"></td>
+                                    <td data-bind="text: Organization"></td>
+                                    <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveDataMart">Remove</button></td>
+                                </tr>
+                                <tr data-bind="visible: ShowAcls, attr:{id: 'acl' + DataMartID()}">
+                                    <td style="border-right: 0;">&nbsp;</td>
+                                    <td colspan="3" style="border-left: 0;">
+                                        <div id="tabs" data-bind="kendoTabStrip: {}">
+                                            <ul>
+                                                <li class="k-state-active">Overall</li>
+                                                <li data-bind="visible: $root.CanManageSecurityTypes">By Request Type</li>
+                                                <li>Events</li>
+                                            </ul>
+                                            <div class="tab-body">
+                                                <p class="alert alert-info">These permissions control how the DataMart will respond to requests within the context of the project. These permissions override more general permissions on the DataMart and the Organization.</p>
+                                                <div data-bind="template: {name: 'tAcl', data: DataMartSecurity}">
+                                                </div>
+                                            </div>
+                                            <div class="tab-body">
+                                                <p class="alert alert-info">These permissions override the default DataMart permissions on a per request type basis and allow you to specify exactly how specific types of requests will be handled and secured.</p>
+                                                <div data-bind="template: {name: 'tRequestTypeAcl', data: DataMartRequestTypeSecurity}">
+                                                </div>
+
+                                            </div>
+                                            <div class="tab-body">
+                                                <p class="alert alert-info">This allows you to control events that will be fired against the DataMart and who will receive them.</p>
+                                                <div data-bind="with: DataMartEvents">
+                                                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="panel-footer">
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="pull-right">
+                                            <div class="dropdown" id="select-datamart-container">
+                                                <a href="#" id="btnAddDataMart" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add DataMart" />&nbsp;Add DataMart to Project <strong class="caret"></strong></a>
+                                                <ul class="dropdown-menu" data-bind="foreach: AddableDataMartList">
+                                                    <li>
+                                                        <a href="#" data-bind="click: $root.AddDataMart, attr: {id: ID}">
+                                                            <span data-bind="text: Name"></span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </article>
+            </div>
+            <div class="tab-body overflow-visible">
+                <!--Organizations-->
+                <br />
+                <p class="alert alert-info">
+                    These organizations will have the security permissions selected against this project and will be able to participate in the project subject to those security permissions. These permissions will also control whom in that organization has rights against the project. All project specific permissions override these permissions.
+                </p>
+                <div>
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <colgroup>
+                            <col style="width: 80px;" />
+                            <col style="width: 100%; vertical-align: middle;" />
+                            <col style="width: 80px;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>S</th>
+                                <th class="bold">Name</th>
+                                <th class="bold center">X</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Organizations">
+                            <tr>
+                                <td><img data-bind="attr: {src: ShowAcls() ? '@this.ResourceUrl("/images/collapse16.png")' : '@this.ResourceUrl("/images/expand16.png")'}, click: ToggleAcls" style="cursor: pointer;" /></td>
+                                <td style="white-space: nowrap;" data-bind="text: Organization"></td>
+                                <td><button class="btn btn-danger btn-xs" data-bind="click: $root.RemoveOrganization">Remove</button></td>
+                            </tr>
+                            <tr data-bind="visible: ShowAcls, attr:{id: 'acl' + OrganizationID()}">
+                                <td style="border-right: 0;">&nbsp;</td>
+                                <td colspan="3" style="border-left: 0;">
+                                    <p class="alert alert-info">These permissions control how the DataMart will respond to requests within the context of the project. These permissions override more general permissions on the DataMart and the Organization.</p>
+                                    <div id="tabs" data-bind="kendoTabStrip: {}">
+                                        <ul>
+                                            <li class="k-state-active">Overall</li>
+                                            <li>Events</li>
+                                        </ul>
+                                        <div class="tab-body">
+                                            <div data-bind="template: {name: 'tAcl', data: OrganizationSecurity}">
+                                            </div>
+                                        </div>
+                                        <div data-bind="with: OrganizationEvents">
+                                            @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="3">
+                                    <div class="pull-right">
+                                        <div class="dropdown">
+                                            <a href="#" id="btnAddOrganization" role="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" data-bind="disable: $root.AddableOrganizationList().length == 0"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Organzation" />&nbsp;Add Organization to Project <strong class="caret"></strong></a>
+                                            <ul class="dropdown-menu" data-bind="foreach: $root.AddableOrganizationList">
+                                                <li>
+                                                    <a href="#" data-bind="click: $root.AddOrganization, attr: {id: ID}">
+                                                        <span data-bind="text: Name"></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    These security groups are specific to the project and allow custom security groupings specifcally for the project and override any organizational security groups already established.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: SecurityGroups">
+                            <tr>
+                                <td><a href="#" data-bind="text: Name, attr: {href: '/securitygroups/details?ID=' + ID()}"></a></td>
+                                <td data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.SecurityGroupKindsTranslation, Kind())"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="panel-footer">
+                            <tr>
+                                <td colspan="2">
+                                    <div class="pull-right">
+                                        <a href="#" role="button" data-bind="click: AddSecurityGroup, visible: HasPermission(PMNPermissions.Project.ManageSecurity)" id="btnAddSecurityGroup" class="btn btn-default"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Security Group" />&nbsp;Add Security Group</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    This allows you to control events that will be fired against the Project and who will receive them.
+                </p>
+                <div data-bind="with: ProjectEventSecurity">
+                    @Html.Partial("~/Views/Events/EditEventPermissions.cshtml")
+                </div>
+            </div>
+            <div class="tab-body overflow-visible">
+                <p class="alert alert-info">
+                    This allows you to control which Request Types are allowed to be created under the project. Note: Once Request Types are added to the project, you can then control them with the standard Request Type Permissions. This only applies to new request types based on Query Composer and not legacy request types.
+                </p>
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <colgroup>
+                        <col style="width:32px;text-align:center;" />
+                        <col />
+                        <col style="width:125px;" />
+                        <col style="width:50px;text-align:center;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Work Flow</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: ProjectRequestTypes">
+                        <tr>
+                            <td><button class="btn btn-default btn-xs glyphicon chevron-button" data-bind="css: {'glyphicon-chevron-right': !Selected(), 'glyphicon-chevron-down': Selected}, click: onSelected, visible: Workflow() != null"></button></td>
+                            <td><a href="#" data-bind="text: RequestType, attr: {href: '/RequestType/details?ID=' + RequestTypeID()}"></a></td>
+                            <td data-bind="text: Workflow"></td>
+                            <td><button id="btnRequestTypeDelete" data-bind="click: $root.DeleteProjectRequestType, attr: {id: 'btnRequestTypeDelete' + RequestTypeID()}" class="btn btn-danger btn-sm delete-button glyphicon glyphicon-trash" title="Click to delete this request type."></button></td>
+                        </tr>
+                        <tr data-bind="visible: Selected">
+                            <td></td>
+                            <td colspan="3" style="padding: 0px;">
+                                <table class="table table-striped table-bordered" style="width: 100%; margin: 0;">
+                                    <colgroup>
+                                        <col style="width: 32px;" />
+                                        <col />
+                                    </colgroup>
+                                    <tbody data-bind="foreach: Activities">
+                                        <tr>
+                                            <td><button class="btn btn-xs btn-default glyphicon chevron-button" data-bind="css: {'glyphicon-chevron-right': !Selected(), 'glyphicon-chevron-down': Selected}, click: onSelected"></button></td>
+
+                                            <td data-bind="text: Name"></td>
+                                        </tr>
+                                        <tr data-bind="visible: Selected">
+                                            <td></td>
+                                            <td>
+                                                <div data-bind="template: {name: 'tAcl', data: Security}">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="panel-footer">
+                        <tr>
+                            <td colspan="4">
+                                <div class="dropdown pull-right">
+                                    <a href="#" class="dropdown-toggle btn btn-default" id="ddAddRequestType" data-toggle="dropdown"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add RequestType" />&nbsp;Add Request Type <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="ddAddRequestType" data-bind="foreach: AddableRequestTypeList">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: $root.AddProjectRequestType, text: Name"></a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    These permissions allow you to control, on a per request type basis the permissions for the project. <strong>Note: These are overriden by the request type permissions on the DataMart on this Project.</strong>
+                </p>
+                <div data-bind="with: ProjectRequestTypesSecurity">
+                    @Html.Partial("~/Views/Security/EditRequestTypesAcl.cshtml")
+                </div>
+            </div>
+            <div class="tab-body">
+                <br />
+                <p class="alert alert-info">
+                    This panel determines the field configuration options for the request metadata header for requests in this Project.
+                </p>
+                <div data-bind="with: FieldOptions">
+                    @Html.Partial("~/Views/Security/EditFieldOptionAcl.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default btn-sm pull-left" id="btnCopy" data-bind="click: Copy, visible: HasPermission(PMNPermissions.Project.Copy)"><img src="@this.ResourceUrl("/images/Copy24.png")" alt="Copy" />Copy</button>
+        <button class="btn btn-danger btn-sm pull-right" id="btnDelete" data-bind="click: Delete, visible: HasPermission(PMNPermissions.Project.Delete)" style="margin-left: 30px;"><img src="@this.ResourceUrl("/images/Delete24.png")" alt="Delete" />Delete</button>
+        <button class="btn btn-warning btn-sm pull-right" id="btnCancel" data-bind="click: Cancel" style="margin-left: 10px;"><img src="@this.ResourceUrl("/images/Cancel24.png")" alt="Cancel" />Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" id="btnSave" data-bind="click: Save, visible: HasPermission(PMNPermissions.Project.Edit)"><img src="@this.ResourceUrl("/images/Save24.png")" alt="Save" />Save</button>
+        <br class="clear" />
+    </nav>
+</article>

@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="/areas/controls/js/wfdocuments/upload.js"></script>
+    <style>
+        #upload-panel button.k-upload-selected {
+            display:none;
+        }
+        #upload-panel button.k-clear-selected {
+            display: none;
+        }
+    </style>
+}
+<p class="alert alert-info">After selecting a file, enter any comments and then click "Upload".</p>
+<div class="panel panel-default">    
+    <div class="panel-body"> 
+        <div id="upload-panel" class="row">
+            <div class="col-md-12">
+                <input type="file" name="files" id="files" data-bind="kendoUpload:{
+					async: {
+						withCredentials: false,
+					    autoUpload: false,
+                        saveUrl: '@System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceUrl"]/Documents/UploadChunked',
+						chunkSize: 25000000,
+						concurrent: false, 
+						autoRetryAfter: 300, 
+						maxAutoRetries: 5
+					},
+					multiple: false,
+                    localization: {
+                        select: 'Select file...'
+                    },
+                    select: $root.onSelectFile,
+                    upload: $root.onUploadFile,
+                    success: $root.onSuccess,
+                    error: $root.onError
+                }" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="txtName"><span data-bind="text:UploadDocumentType"></span> Name<em>*</em></label>
+                <input type="text" id="txtName" name="txtName" data-bind="value:DocumentName" class="form-control" maxlength="255" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="txtDescription"><span data-bind="text:UploadDocumentType"></span> Description <small>(optional)</small></label>
+                <textarea id="txtDescription" name="txtDescription" rows="3" data-bind="value:Description" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="txtComments">Uploader Comments <small>(optional)</small></label>
+                <textarea id="txtComments" name="txtComments" rows="3" data-bind="value:Comments" class="form-control"></textarea>
+            </div>
+        </div>
+              
+    </div>    
+</div>
+@*<div class="panel panel-default">
+    <div class="panel-heading">
+        Priority Notification <small>(optional)</small>
+    </div>
+    <div class="panel-body">
+        <p class="alert alert-info">Users selected here will receive notification emails with a special subject header to draw their attention.</p>
+        <p>TODO: implement kendo multi-select to chose users.</p>
+    </div>
+</div>*@
+<nav id="uploadFooter" class="footer">
+    <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:120px;" data-bind="click:onCancel" id="btnCancel">Cancel</button>
+    <button class="btn btn-default pull-right" type="button" style="width:120px;" id="btnSave" data-bind="click:onSave">Upload</button>    
+    <div class="clear"></div>
+</nav>

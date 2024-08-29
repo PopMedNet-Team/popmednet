@@ -1,0 +1,18 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="e_@ModelTermsFactory.SqlDistributionID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator()), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-10 bold"><h4 class="TermHeader bold">SQL Distribution<em  data-bind="visible:Design.Locked" style="color:red">*</em></h4></div>
+        
+        <div class="col-sm-2">
+            <button class="btn btn-danger pull-right" data-bind="click: $component.onDeleteTermFromCriteria.bind($component, $data, $parent), visible: $component.Options.IsTemplateEdit || !Design.Locked()"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+            <label class="design-lock" data-bind="visible: $component.Options.IsTemplateEdit"><input type="checkbox" data-bind="checked: Design.Locked" /> Locked</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <textarea name="txtSql" class="form-control" rows="10" data-bind="value:Values().Sql, attr:{ required: $component.Options.IsTemplateEdit == false }" />
+        </div>
+    </div>
+</script>

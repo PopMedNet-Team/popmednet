@@ -1,0 +1,23 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_SexDistribution">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Sex Distribution:</div>
+        <div class="col-sm-10">
+            <span data-bind="foreach:Values.SexDistributions">
+                <span data-bind="visible: $index() > 0">or</span>
+                <span data-bind="visible: $data == 0, text: 'Ambiguous'"></span>
+                <span data-bind="visible: $data == 1, text: 'Female'"></span>
+                <span data-bind="visible: $data == 2, text: 'Male'"></span>
+                <span data-bind="visible: $data == 3, text: 'No Information'"></span>
+                <span data-bind="visible: $data == 4, text: 'NULL or Missing'"></span>
+                <span data-bind="visible: $data == 5, text: 'Other'"></span>
+                <span data-bind="visible: $data == 6, text: 'Unknown'"></span>
+                <span data-bind="visible: $data == 7, text: 'Values Outside of CDM Specifications'"></span>
+            </span>
+            <span data-bind="visible: Values.SexDistributions.length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

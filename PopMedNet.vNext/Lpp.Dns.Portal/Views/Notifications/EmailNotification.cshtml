@@ -1,0 +1,13 @@
+@model EmailNotificationModel
+@{ Layout = null; }
+
+<html>
+<body>
+    @Model.User.FullName, here are your most recent notifications<br />
+    <br />
+    @foreach ( var e in Model.Events )
+    {
+        @e.VisualizedEvent( Html );
+    }
+</body>
+</html>

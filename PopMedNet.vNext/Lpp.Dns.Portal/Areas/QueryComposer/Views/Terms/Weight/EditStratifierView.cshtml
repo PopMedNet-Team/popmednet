@@ -1,0 +1,15 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.WeightID">
+    <div class="row">
+        <div class="col-sm-2"><h4 class="TermHeader bold">Weight</h4></div>
+        <div class="col-sm-4 form-group">
+            <input type="text" id="cboWightGroupBy" name="cboWightGroupBy" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: Dns.Enums.WeightStratificationTranslation, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'}, attr:{ required: $component.Options.IsTemplateEdit == false }" validationmessage="Weight stratification is required" style="width: 250px;" />
+            <span class="k-invalid-msg" data-for="cboWightGroupBy"></span>
+        </div>
+        <div class="col-sm-4 form-group">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteAgeRangeField" class="btn btn-danger" data-bind="click: $component.onDeleteField.bind($component, $data, $parent)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="~/js/Request/SelectDataMartDialog.js"></script>
+    <style>
+     .k-grid-content{
+        height:300px;
+    }
+     section#Content{
+         margin-bottom:0px;
+     }
+    .action-btns {
+        width:150px;
+    }
+</style>
+}
+<div id="gDataMarts" data-bind="kendoGrid: {
+                    data: DataMarts,
+                    sortable: false,
+                    filterable: false,
+                    reorderable: false,
+                    columnMenu: false,
+                    pageable: false,
+                    rowTemplate: 'dataMartsRowTmpl',
+                    altRowTemplate: 'dataMartsAltRowTmpl',
+                    useKOTemplates: true,
+                    height: 330,
+                    scrollable: { virutal: true },
+                    columns:[
+                        {field: 'Selected', title: ' ', width:35 },
+                        {field: 'Name', title: 'Name'},
+                        {field: 'Organization', title:'Organization'}
+                        ]
+                }">
+</div>
+<nav>
+    <button type="button" id="btnContinue" class="btn btn-primary action-btns" data-bind="click: onContinue, enable: SelectedDataMartIDs().length > 0">Continue</button>
+    <button type="button" id="btnCancel" class="btn btn-default action-btns" data-bind="click: onCancel">Cancel</button>
+</nav>
+
+<script id="dataMartsRowTmpl" type="text/html">
+    <tr role="row">
+        <td><input type="checkbox" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+        <td data-bind="text: Name"></td>
+        <td data-bind="text: Organization"></td>
+    </tr>
+</script>
+<script id="dataMartsAltRowTmpl" type="text/html">
+    <tr role="row" class="k-alt">
+        <td><input type="checkbox" data-bind="value:ID, checked: $root.SelectedDataMartIDs" /></td>
+        <td data-bind="text: Name"></td>
+        <td data-bind="text: Organization"></td>
+    </tr>
+</script> 

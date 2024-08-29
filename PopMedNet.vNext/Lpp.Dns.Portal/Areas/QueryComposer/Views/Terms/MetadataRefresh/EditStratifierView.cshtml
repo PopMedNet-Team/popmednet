@@ -1,0 +1,18 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.MetaDataRefreshID">
+    <div class="row metadata-refresh-term">
+        <div class="col-sm-2"><h4 id="lblmetadata-refresh-term" class="TermHeader" style="font-weight:bold;">Metadata Refresh</h4></div>
+        <div class="col-sm-4 form-group">
+            <div class="form-group">
+                <div data-bind="hidden: $root.IsMetadataRefreshValid">
+                    <span role="alert" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"><span class="k-icon k-i-warning"></span><small>When the Metadata Refresh term is selected, no other Terms can be selected and their can only be one criteria group.</small></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 form-group">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeletemetadata-refresh-termField" class="btn btn-danger" data-bind="click: function(data, event) { $root.DeleteField(data, $parent, event);}"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

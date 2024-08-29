@@ -1,0 +1,14 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="s_@ModelTermsFactory.YearID">
+    <div class="row">
+        <div class="col-sm-2"><h4 id="lblYear" class="TermHeader bold">Year</h4></div>
+        <div class="col-sm-4 form-group">
+            <input type="text" id="cboYearGroupBy" name="cboYearGroupBy" data-bind="kendoDropDownList: {value: StratifyBy, dataSource: Dns.Enums.PeriodStratificationTranslation, dataValueField: 'value', dataTextField: 'text', optionLabel:'<Not Selected>'}" style="width: 250px;" />
+        </div>
+        <div class="col-sm-4 form-group">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnDeleteYearField" class="btn btn-danger" data-bind="click: $component.onDeleteField.bind($component, $data, $parent)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+        </div>
+    </div>
+</script>

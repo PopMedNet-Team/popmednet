@@ -1,0 +1,8 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.SexID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p> 
+    <div class="row row-noborder">
+        <div class="col-sm-2 bold">Sex:</div>
+        <div class="col-sm-10" data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.SexStratificationsTranslation, Values.Sex)"></div>
+    </div>
+</script>

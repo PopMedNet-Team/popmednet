@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "SecurityGroupWindow";
+    Layout = "~/Views/_RootLayout.cshtml";
+}
+<style>
+    .k-grid-content{
+        height:269px;
+    }
+    html{
+            overflow-y:hidden;
+        }
+</style>
+<section id="SecurityGroupWindow" style="width:900px; margin-left:10px;">
+    <ul id="tabs" class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#Organizations" role="tab" data-toggle="tab">Organizations</a></li>
+        <li><a href="#Projects" role="tab" data-toggle="tab">Projects</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="Organizations">
+            <div class="row" style="margin-top:20px;">
+                <div class="col-sm-5">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            Organizations
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div id="gOrgResults" data-bind="pmnGrid: {
+                                dataSource: dsOrgResults,
+                                selectable: 'row',
+                                columns: [
+                                    {field: 'Name', title: 'Organization', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                ],
+                                change: AddOrganization
+                            }" style="height: 300px;">
+
+                                </div>
+                        </div>
+                    </div>
+                    </article>
+                </div>
+                <div class="col-sm-7">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            Organization Security Groups
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div id="gOrgSecResults" data-bind="pmnGrid: {
+                                    dataSource: dsOrgSecResults,
+                                    autoBind: false,
+                                    selectable: 'row',
+                                    columns: [
+                                        {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                        {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                    ],
+                                        change: AddOrgGrp
+                                }" style="height: 300px;"></div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="Projects">
+            <div class="row" style="margin-top:20px;">
+                <div class="col-sm-5">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            Projects
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div id="gProjResults" data-bind="pmnGrid: {
+                                    dataSource: dsProjResults,
+                                    selectable: 'row',
+                                    columns: [
+                                        {field: 'Name', title: 'Projects', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                    ],
+                                    change: AddProject
+                            }" style="height: 300px;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-sm-7">
+                    <article class="panel panel-default" data-bind="css: {visible: true}">
+                        <div class="panel-heading">
+                            Project Security Groups
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div id="gProjSecResults" data-bind="pmnGrid: {
+                                        dataSource: dsProjSecResults,
+                                        selectable: 'row',
+                                        columns: [
+                                            {field: 'Name', title: 'Security Groups', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                            {field: 'Path', title: 'Path', width: 90, attributes: { style: 'cursor: pointer;'}},
+                                        ],
+                                    change: AddProjectGrp
+                            }" style="height: 300px;"></div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/js/Security/SecurityGroupWindow.js"></script>

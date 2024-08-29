@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Add Users";
+    Layout = "~/Views/_DialogLayout.cshtml";
+}
+@section Head{
+    <script src="~/areas/tests/scripts/addrequestobservers.js"></script>
+    <style>  
+        #Content {
+            margin-bottom: 0px !important;
+        }
+        .row {
+            box-sizing:border-box;
+        }
+    </style>
+}
+<section class="panel panel-default">
+       
+    <div class="panel-body">
+        <div style="margin-bottom:12px;">
+            <select data-bind="kendoMultiSelect: { data: [], value: null, dataTextField: 'text', dataValueField: 'value', selectedValue: '-1' }" style="min-width: 200px;"></select>
+        </div>
+            <div id="tabs" data-bind="kendoTabStrip:{}" style="margin-bottom:12px;">
+                <ul>
+                    <li class="k-state-active">Add Existing User or Security Group</li>
+                    <li>Add Email Address</li>
+                </ul>
+                <div class="tab-body">
+                    <p>Enter a user's name, email, or a Security Group name</p>
+                        <div class="row">
+                            <div class="col-sm-8 form-group">
+                                <input class="form-control" />
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-default">Add</button>
+                            </div>
+                        </div>
+                    
+                </div>
+                <div class="tab-body">
+
+                        <div class="row" style="box-sizing:border-box;">
+                           <div class="col-sm-8">
+
+                               <div class="row form-group">
+                                   <label>Email</label>
+                                   <input type="text" class="form-control" />
+                               </div>
+                               <div class="row form-group">
+                                   <label>Display Name</label>
+                                   <input type="text" class="form-control" />
+                               </div>
+
+                           </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-default">Add</button>
+                            </div>
+                        </div>
+                    
+
+                </div>
+            </div>
+            <table class="table table-bordered table-condensed">
+                <colgroup>
+                    <col style="width:50px; text-align:center;"/>
+                    <col style="width:100%"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" />
+                        </th>
+                        <th>
+                            Notification
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>New Request Submitted</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>New Request Draft Submitted</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>Request Assigned</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>New Comment on Request</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>New Document Attached to Request</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>Request Status Changed</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>Request Workflow Activity Changed</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>Request DataMart Routing Status Changed</td>
+                    </tr>                    
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+</section>
+<nav class="footer">
+    <button class="btn btn-default pull-right" type="button" style="margin-left:10px;width:120px;" id="btnCancel">Cancel</button>
+    <button class="btn btn-default pull-right" type="button" style="width:120px;" id="btnSave">Save</button>    
+    <div class="clear"></div>
+</nav>

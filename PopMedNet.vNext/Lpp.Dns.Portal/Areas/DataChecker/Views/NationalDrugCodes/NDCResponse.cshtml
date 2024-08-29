@@ -1,0 +1,32 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    <div id="ResponseViewHeader">
+        <h2>Presence by Data Partner</h2>
+    </div>
+    <div data-bind="visible:HasResults">
+        <div class="table-container">
+            <table style="width:90%;">
+                <thead>
+                    <tr>
+                        <th class="overallmetric-header">Code</th>
+                        <!-- ko foreach: DataPartners -->
+                        <th class="overallmetric-header" data-bind="text: $data"></th>
+                        <!-- /ko -->
+                        <th class="overallmetric-header">Total DP Presence</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: CountByDataPartner">
+                    <tr>
+                        <td class="overallmetric-body" data-bind="text: NDC"></td>
+                        <!-- ko foreach: { data: Partners, as: 'partner'} -->
+                        <td class="overallmetric-body" data-bind="text: partner.Count"></td>
+                        <!-- /ko -->
+                        <td class="overallmetric-body" data-bind="text: TotalCount" style="padding-right:24px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>
+    <!-- /ko -->
+</div>

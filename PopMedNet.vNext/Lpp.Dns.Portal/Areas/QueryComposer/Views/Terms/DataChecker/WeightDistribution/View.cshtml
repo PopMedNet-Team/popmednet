@@ -1,0 +1,35 @@
+﻿@using Lpp.QueryComposer
+
+<script type="text/html" id="v_@ModelTermsFactory.DC_WeightDistribution">
+    <br />
+    <span class="bold center" style="margin-left:45%;" data-bind="visible:$index() > 0">And</span>
+    <div class="row">
+        <div class="col-sm-2 bold">Weight Distribution:</div>
+        <div class="col-sm-10">
+            <span data-bind="foreach:Values.WeightDistributions">
+                <span data-bind="visible: $index() > 0">or</span>
+                <span data-bind="visible: $data == 0, text: '<0 lbs'"></span>
+                <span data-bind="visible: $data == 1, text: '0-1 lbs'"></span>
+                <span data-bind="visible: $data == 2, text: '2-6 lbs'"></span>
+                <span data-bind="visible: $data == 3, text: '7-12 lbs'"></span>
+                <span data-bind="visible: $data == 4, text: '13-20 lbs'"></span>
+                <span data-bind="visible: $data == 5, text: '21-35 lbs'"></span>
+                <span data-bind="visible: $data == 6, text: '36-50 lbs'"></span>
+                <span data-bind="visible: $data == 7, text: '51-75 lbs'"></span>
+                <span data-bind="visible: $data == 8, text: '76-100 lbs'"></span>
+                <span data-bind="visible: $data == 9, text: '101-125 lbs'"></span>
+                <span data-bind="visible: $data == 10, text: '126-150 lbs'"></span>
+                <span data-bind="visible: $data == 11, text: '151-175 lbs'"></span>
+                <span data-bind="visible: $data == 12, text: '176-200 lbs'"></span>
+                <span data-bind="visible: $data == 13, text: '201-225 lbs'"></span>
+                <span data-bind="visible: $data == 14, text: '226-250 lbs'"></span>
+                <span data-bind="visible: $data == 15, text: '251-275 lbs'"></span>
+                <span data-bind="visible: $data == 16, text: '276-300 lbs'"></span>
+                <span data-bind="visible: $data == 17, text: '301-350 lbs'"></span>
+                <span data-bind="visible: $data == 18, text: '350+ lbs'"></span>
+                <span data-bind="visible: $data == 19, text: 'NULL or Missing'"></span>
+            </span>
+            <span data-bind="visible: Values.WeightDistributions.length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

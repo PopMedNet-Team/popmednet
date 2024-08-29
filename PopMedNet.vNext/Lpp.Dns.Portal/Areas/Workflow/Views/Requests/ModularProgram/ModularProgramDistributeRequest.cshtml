@@ -1,0 +1,36 @@
+﻿<script src="/areas/workflow/js/requests/modularprogram/distributerequest.js"></script>
+<!-- ko stopBinding:true -->
+<section id="MPDistributeRequest" style="margin-top:15px;">
+    <article class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Distribute Request</h4>
+        </div>
+        <div class="panel-body">
+            <div data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.EditTask)"> 
+                <!-- ko stopBinding: true -->
+                <div id="mpupload">        
+                @Html.Partial("~/areas/controls/views/wffileupload/index.cshtml")
+                </div>
+                <!-- /ko-->
+
+                <div style="margin-bottom:36px;">
+                    <h2 style="font-size:1.4em;">Additional Instructions <small>(Optional)</small></h2>
+                    <textarea data-bind="value:Requests.Details.rovm.Request.AdditionalInstructions" rows="3" cols="25" class="form-control" maxlength="3000"></textarea>
+                </div>
+
+                <h2 style="font-size:1.4em;">Available DataMarts <small>Please select the DataMarts to which this query will be sent to:</small></h2>
+                <div class="cleanlist">        
+                    @Html.Partial("~/Areas/QueryComposer/Views/DataMartRouting.cshtml")
+                </div>
+
+
+            </div>
+        </div>
+    </article>
+    <nav>
+        <button class="btn btn-primary pull-right" style="width:115px;" data-resultid="5445DC6E-72DC-4A6B-95B6-338F0359F89E" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),enable:CanSubmit,click:Complete">Submit Request</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 15px;" data-resultid="E970F48E-A072-41C1-B8C3-CC34C5826A46" data-bind="visible:HasPermission(PMNPermissions.ProjectRequestTypeWorkflowActivities.CloseTask),click:Complete">Modify Working Specifications</button>        
+        <div class="clearfix"></div>
+    </nav>
+</section>
+<!-- /ko -->

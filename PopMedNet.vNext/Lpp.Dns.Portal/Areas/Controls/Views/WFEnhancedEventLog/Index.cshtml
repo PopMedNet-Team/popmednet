@@ -1,0 +1,24 @@
+﻿<section id="WFEnhancedEventLog" class="panel panel-default tabPanel" style="padding:8px;display:none;" data-bind="visible:true">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="btn-group pull-right">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 15px;" data-bind="enable:DisplayEventLog">Download Results <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a data-bind="href:ExportCSVUrl">CSV</a></li>
+                    <li><a data-bind="href:ExportExcelUrl">Excel</a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <style scoped="true">
+            .alternate-block {
+                background-color: #f5f5f5;
+            }
+        </style>
+        <div id="gEnhancedEventLog" style="min-height:250px;" data-bind="visible:DisplayEventLog"></div>
+        <div class="panel-body" data-bind="hidden:DisplayEventLog">
+            <p class="alert alert-info" role="alert" style="text-align:center;">No events to display.</p>
+        </div>
+    </div>
+    
+</section>

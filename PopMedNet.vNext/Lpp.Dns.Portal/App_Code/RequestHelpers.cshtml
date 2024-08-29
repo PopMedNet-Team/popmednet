@@ -1,0 +1,37 @@
+@* Generator: WebPagesHelper *@
+@using System
+@using System.Linq
+@using System.Web.Mvc.Html
+@using Lpp.Dns.Portal
+@using Lpp.Dns.Portal.Models
+@using Lpp
+@using System.Reactive
+@using Lpp.Utilities.Legacy
+
+@helper PageSizeSelector( System.Web.Mvc.HtmlHelper html, RequestListModel model, Func<RequestListGetModel, string> reloadUrl )
+{
+    @html.PageSizeSelector( "requests", model.List, reloadUrl )
+}
+
+@helper RequestTypeFilter( System.Web.Mvc.HtmlHelper html, RequestListModel model, Func<RequestListGetModel, string> reloadUrl )
+{
+    var current = model.RequestTypeFilter;
+
+    <div class="ui-dropdown-button ui-has-hint FilterButton@( model.RequestTypeFilter == null ? "" : " Active")"
+        hint-text="@( current == null ? "Filter by type" : "Showing " + current.RequestType.Name)">&nbsp;</div>
+    <div class="ui-dropdown ui-scrolling FilterOptions" style="display: none">
+        @foreach ( var rt in model.UsedRequestTypes.Select(rt => new RequestTypeFilterItem((PluginRequestType)rt)).OrderBy(rt => rt.Name).StartWith( new RequestTypeFilterItem()))
+        {
+            var m = model.List.OriginalRequest;
+            m.RequestTypeFilter = rt.ID;
+            <a href="@html.Raw( reloadUrl( m ) )" class="GridReloadLink@( rt.ID == model.List.OriginalRequest.RequestTypeFilter ? " Selected" : "")">@rt.Name</a>
+        }
+    </div>
+}
+
+@helper RequestTypeName( RequestListModel model, RequestListRowModel r )
+{
+    Lpp.Dns.Portal.PluginRequestType rt = model.AllRequestTypes[r.Request.RequestTypeID];
+    string name = rt.RequestType.Name;
+    <span title="@(name ?? "")">@(string.IsNullOrEmpty(name) ? "(unknown)" : name)</span>
+}

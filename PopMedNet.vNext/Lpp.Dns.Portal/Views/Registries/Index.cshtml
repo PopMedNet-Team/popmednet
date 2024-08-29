@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Registries";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+@section Head {
+    <script src="~/js/Registries/Index.js"></script>
+}
+<article class="panel panel-default" data-bind="css: {visible: true}">
+    <div class="panel-heading">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/registries">Registries</a></li>
+        </ol>
+    </div>
+    <div class="panel-body">
+        <div id="gRegistries" style="min-height: 400px;" data-bind="pmnGrid: {
+            dataSource: ds,
+            autoBind: false,
+            savedSetting:{
+                Key: 'Registries.Index.gRegistries.User:',
+                Setting: dsSetting !== null ? dsSetting.Setting : null
+            },
+            scrollable: false,
+            pageable: false,
+            columns: [
+                {field: 'Name', title: 'Name', template: Registries.Index.NameAchor},
+                {field: 'Type', title: 'Type', values:Dns.Enums.RegistryTypesTranslation, filterable: { ui:Registries.Index.typeFilterUI} }
+            ]
+             }">
+        </div>
+    </div>
+    <nav class="panel-footer right">
+        <button class="btn btn-default" id="btnNewRegistry" data-bind="click: btnNewRegistry_Click, visible: HasPermission(PMNPermissions.Portal.CreateRegistry)"><img src="@this.ResourceUrl("/images/Add16.png")" alt="Add Registry" />Add Registry</button>
+    </nav>
+</article>

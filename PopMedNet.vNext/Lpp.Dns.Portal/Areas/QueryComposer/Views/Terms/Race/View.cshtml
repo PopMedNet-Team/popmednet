@@ -1,0 +1,14 @@
+﻿@using Lpp.QueryComposer
+<script type="text/html" id="v_@ModelTermsFactory.RaceID">
+    <p class="bold center operator" data-bind="text:Global.Helpers.GetEnumString(Dns.Enums.QueryComposerOperatorsTranslation, Operator), visible:$index() > 0"></p>
+    <div class="row">
+        <div class="col-sm-2 bold">Race:</div>
+        <div class="col-sm-10">
+            <span data-bind="foreach:Values.Race">
+                <span data-bind="visible: ($index() > 0)">OR,</span>
+                <span data-bind="text: Global.Helpers.GetEnumString(Dns.Enums.RaceTranslation, $data)"></span>
+            </span>
+            <span data-bind="visible: Values.Race.length == 0">&lt;None Selected&gt;</span>
+        </div>
+    </div>
+</script>

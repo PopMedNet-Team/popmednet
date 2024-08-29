@@ -1,0 +1,12 @@
+@model Document
+
+<div class="alert alert-warning" role="alert">
+    <div style="width:500px;margin:0px auto;">
+        <p>Unable to determine how to visualize the document.</p>
+        <p>
+            Name: @Model.Name<br />
+            Type: @Model.MimeType<br />
+            Size: @Model.Length bytes
+        </p>
+    </div>
+</div>

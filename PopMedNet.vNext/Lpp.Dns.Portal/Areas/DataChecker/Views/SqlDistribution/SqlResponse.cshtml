@@ -1,0 +1,22 @@
+﻿<div @Html.Section(title: "Response", cssClass: "ui-form", settingsKey: "ResponseContainer") id="ResponseContainer">
+    <!-- ko if: isLoaded() == true -->
+    @*<div id="ResponseViewHeader">
+        <h2>Presence by Data Partner</h2>
+    </div>
+    <div data-bind="visible:HasResults">
+        <div class="table-container">
+            <article id="gResults"></article>
+        </div>
+    </div>
+    <p class="alert alert-warning" style="text-align:center;" data-bind="visible:HasResults == false">No results were found for the specified criteria.</p>*@
+    
+    <article class="alert alert-info" data-bind="hidden:true" style="width:600px;margin:24px auto;text-align:center;">
+        <p>Loading Response Documents...</p>
+    </article>
+    <section style="margin-top:15px;display:none;" data-bind="visible:true;">
+        <article class="panel panel-default">
+            <article id="gResults"></article>
+        </article>
+    </section>
+    <!-- /ko -->
+</div>

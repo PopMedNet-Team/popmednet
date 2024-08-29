@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "~/Views/Shared/_DialogLayout.cshtml";
+}
+<div data-bind="html:Info">
+
+</div>
+<nav class="footer">
+    <button id="btnClose" class="btn btn-success btn-sm">Close</button>
+</nav>
+<script>
+    $(function () {
+        $("#btnClose").click(function (e) {
+            var win = Global.Helpers.GetDialogWindow();
+            win.close();
+        });
+    });
+</script>
+<script src="~/js/Home/Info.js"></script>
