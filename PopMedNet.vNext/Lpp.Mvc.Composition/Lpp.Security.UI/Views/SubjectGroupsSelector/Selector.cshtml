@@ -1,0 +1,66 @@
+﻿@model SubjectGroupsListModel
+@{ 
+   this.Stylesheet( "security.min.css" );
+   var id = Html.UniqueId();
+   var subjectSelectorHandle = Html.UniqueId();
+   var noGroupsMessage = "This user is not a member of any group";
+}
+@*<div class="SubjectGroupsSelector" id="@id">
+    <input type="hidden" name="@Model.FieldName" value="@string.Join(",", Model.MemberOf.EmptyIfNull().Select( g => g.ID ))" />
+    @(Html.Render<IGrid>()
+        .From( Model.MemberOf.EmptyIfNull() )
+        .Id( s => s.ID )
+        .Column( @<a class="Remove" href="#">[remove]</a>, c => { } )
+        .ClientSideSortColumn( s => s.DisplayName, setOptions: c => c.Title( "Groups" ).Class( "Group" ) )
+        .With( o => o.NoDataMessage = @<text>@noGroupsMessage</text> )
+        .FooterPrefix( @<div class="ActionButtons">
+                            <button class="ui-standard-button Add">Add...</button>
+                        </div>
+        )
+    )
+</div>
+@Model.GroupSelector.Render( Html, subjectSelectorHandle )
+<script src="~/__r/Lpp.Mvc.Controls/-/utilities.js"></script>
+<script type="text/javascript">
+    //$$(['@subjectSelectorHandle', 'lpp.mvc.controls/utilities'], function ($, ss) {
+    $(function Selector(ss) {
+        function allRows() { return $("#@id .Grid tbody tr").filter( function() { return !!$(this).attr("id"); } ); }
+        function updateHiddenField() {
+            $("#@id input[name=@Model.FieldName]")
+                .val( $.map( allRows(), function(row) { return $(row).attr("id"); } ).join() )
+                .trigger( "change" );
+        }
+
+        $("#@id .Add").click(function () {
+            ss.selectSubject( function(groups) {
+                var groupsBody = $("#@id .Grid tbody");
+                groupsBody.children().filter( function() { return !$(this).attr("id"); } ).remove();
+                $.each( groups, function() { 
+                    if ( allRows().filter("[id=" + this.Id + "]").size() ) return;
+                    groupsBody.append( 
+                        $("<tr>").attr("id", this.Id||"")
+                            .append( '<td><a class="Remove" href="#">[remove]</a></td>' )
+                            .append( $("<td>").text(this.Name) ) 
+                    ); 
+                } );
+                allRows().alternateClasses( "", "Alt" );
+                updateHiddenField();
+            } );
+            return false;
+        });
+
+        $("#@id .Remove").live( "click", function () {
+            $(this).closest("tr").remove();
+            updateHiddenField();
+
+            var rows = allRows();
+            if ( rows.size() == 0 ) {
+                $("#@id .Grid tbody").append( "<tr><td colspan=2>@noGroupsMessage</td></tr>" );
+            } else {
+                rows.alternateClasses( "", "Alt" );
+            }
+
+            return false;
+        });
+    });
+</script>*@

@@ -1,0 +1,97 @@
+﻿@model PropertyFilterUIModel
+@using System.Linq
+@{
+    var id = Html.UniqueId();
+    this.Stylesheet( "PropertyFilter.css" );
+}
+
+<script type="text/javascript">
+    var onChange_@(id) = (function() {
+        var state = [ @string.Join( ",", Model.Properties.Select( p => "'" + p.ValueSelector.ValueAsString.Replace( ",", ",," ) + "'" ) ) ];
+
+        return function( index, value ) { 
+            if ( typeof index == "number" ) state[index] = value;
+            if ( index == "remove" && typeof value == "number" ) state.splice(value, 1);
+
+            var val = 
+                $.map( $(".@(id)"), function(row, idx) { 
+                    var $row = $(row);
+                    return $row.find(".Property").val() + ":" + $row.find(".Comparison").val() + ":" + (state[idx]||"").replace(',',',,');
+                } )
+                .join();
+
+            (@Html.Raw(Model.OnChangeFunction))( val );
+        };
+    } )();
+
+    $(function() {
+        $("#@(id)_add").click( function() { 
+            var $this = $(this);
+            $("#@(id)_template").clone().insertBefore( $this ).removeAttr("id").addClass("@(id)").show(); 
+            $this.hide();
+        } );
+
+        $(".@(id) > .Comparison").live( "change", onChange_@(id) );
+
+        $(".@(id) > .Remove").live( "click", function() {
+            var $this = $(this);
+            var row = $this.parent();
+            var index = row.parent().children().index(row);
+            if ( !row.find(".Property > option:first").attr("value") ) $("#@(id)_add").show();
+            row.remove();
+            onChange_@(id)( "remove", index );
+        } );
+
+        $(".@(id) > .Property").live( "change", function() {
+            var firstOption = $( "option:first", this );
+            if ( !firstOption.attr("value") ) {
+                firstOption.remove();
+                $("#@(id)_add").show();
+            }
+
+            var $this = $(this);
+            var row = $this.parent();
+            $( ".Comparison", row ).show();
+            var propId = $this.val();
+            var index = row.parent().children().index(row);
+            row.find(".Value").remove()
+            var placeholder = $("<span>Loading...</span>").appendTo( row );
+            $.get( '@Html.Raw(Url.Action<PropertyValueSelectorsController>( c => 
+                        c.GetSelector( "__prop__", string.Format( "function(value){{onChange_{0}(__index__,value);}}", id ) ))
+                        .Replace( "__prop__", "'+propId+'" ).Replace( "__index__", "'+index+'" )
+                    )', 
+                    function(sel) { placeholder.replaceWith( "<div class=\"Value\">" + sel + "</div>" ); } 
+            );
+        } );
+    });
+</script>
+
+<div class="PropertyFilter">
+    @{ var index = 0; }
+    @foreach( var p in Model.Properties )
+    {
+        <div class="@id Row">
+            <div class="Remove">[x]</div>
+            @Dropdowns( id, p.Property, p.Comparison )
+            <div class="Value">
+                @p.ValueSelector.Render( Html, string.Format( "function( value ) {{ onChange_{0}( {1}, value ); }}", id, index ) )
+            </div>
+        </div>
+    }
+    <div id="@(id)_template" style="display: none" class="Row">
+        <div class="Remove">[x]</div>
+        @Dropdowns( id, null, PropertyValueComparison.Eq )
+    </div>
+    <div><a href="#" class="Add" id="@(id)_add">Add Property...</a></div>
+</div>
+
+@helper Dropdowns( string id, IAuditProperty selectedProperty, PropertyValueComparison selectedComp )
+{
+    @Html.DropDownList( "p" + id, Model.AllPossibleProperties.Select( x =>
+        new SelectListItem { Text = x.Name, Value = x.ID.ToString(), Selected = x == selectedProperty } )
+        .StartWith( new SelectListItem { Selected = selectedProperty == null, Value = "", Text = "select property" } ),
+        new { @class = "Property" } )
+    @Html.DropDownList( "c" + id, Enum.GetValues( typeof( PropertyValueComparison ) ).Cast<PropertyValueComparison>().Select( c =>
+        new SelectListItem { Text = c.ToString(), Value = c.ToString(), Selected = selectedComp == c } ),
+        new { @class = "Comparison", style = "display: none" } )
+}

@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{C23669A6-FA1C-4779-8444-2171DE828B70}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Utilities</RootNamespace>
+    <AssemblyName>Lpp.Utilities</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    </ItemGroup>
+  <ItemGroup>
+    
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\CommaDelimitedExtensions.cs"><Link>CommaDelimitedExtensions.cs</Link></Compile>
+    
+<Compile Include="..\MimeType.cs"><Link>MimeType.cs</Link></Compile>
+    
+<Compile Include="..\ReactiveExtensions.cs"><Link>ReactiveExtensions.cs</Link></Compile>
+    
+<Compile Include="..\OpResult.cs"><Link>OpResult.cs</Link></Compile>
+    
+<Compile Include="..\HomomorphismRestriction.cs"><Link>HomomorphismRestriction.cs</Link></Compile>
+    
+<Compile Include="..\Lazy.cs"><Link>Lazy.cs</Link></Compile>
+    
+<Compile Include="..\FunctionalTricks\Func.cs"><Link>FunctionalTricks\Func.cs</Link></Compile>
+    
+<Compile Include="..\FunctionalTricks\Memoizer.cs"><Link>FunctionalTricks\Memoizer.cs</Link></Compile>
+    
+<Compile Include="..\Expandable\ExpandableExtensions.cs"><Link>Expandable\ExpandableExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Expandable\ExpandableQuery.cs"><Link>Expandable\ExpandableQuery.cs</Link></Compile>
+    
+<Compile Include="..\FunctionalTricks\ExpressionComposition.cs"><Link>FunctionalTricks\ExpressionComposition.cs</Link></Compile>
+    
+<Compile Include="..\Maybe.cs"><Link>Maybe.cs</Link></Compile>
+    
+<Compile Include="..\ObjectDictionary.cs"><Link>ObjectDictionary.cs</Link></Compile>
+    
+<Compile Include="..\FunctionalTricks\Predicate.cs"><Link>FunctionalTricks\Predicate.cs</Link></Compile>
+    
+<Compile Include="..\Pair.cs"><Link>Pair.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+    
+<Compile Include="..\UtilityExtensions.cs"><Link>UtilityExtensions.cs</Link></Compile>
+  
+<Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+</ItemGroup>
+</Project>

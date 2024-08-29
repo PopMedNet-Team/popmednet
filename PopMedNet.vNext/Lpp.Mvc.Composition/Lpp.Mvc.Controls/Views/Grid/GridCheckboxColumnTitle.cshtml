@@ -1,0 +1,12 @@
+﻿@model GridCheckboxColumnModel
+@{
+    Layout = null;
+    var id = "CBColumn_" + Guid.NewGuid().ToString().Substring( 0, 6 ).Replace( "-", "" );
+}
+<input type="checkbox" id="@id" />
+<script type="text/javascript">
+    //@@ sourceURL=http://lpp/GridCheckboxColumnTitle.cshtml
+    require(['jQuery', '@this.Resource( "gridCheckboxColumn.js" )'], function($) { 
+        $("#@(id)").gridCheckboxColumn( '@Model.HiddenFieldName', @Html.Raw( Model.JsFnGetAllPossibleIdsCommaSeparated ?? "null" ) ); 
+    });
+</script>

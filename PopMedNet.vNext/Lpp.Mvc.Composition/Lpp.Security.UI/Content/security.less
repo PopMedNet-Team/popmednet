@@ -1,0 +1,56 @@
+﻿.SubjectGroupsSelector .Grid {
+    width: 400px;
+
+    .Group {
+        width: 100%;
+    }
+}
+
+.Acl {
+    .PrivilegesBox {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    > .Grid {
+        display: inline-block;
+        vertical-align: top;
+
+        &.Subjects {
+            .Subject {
+                cursor: pointer;
+                width: 300px;
+            }
+
+            tr.Selected {
+                &, a:link, a:visited {
+                    color: White;
+                    background: navy;
+                }
+            }
+        }
+    }
+}
+
+.Acl-InheritedResetPopup {
+    display: none;
+    border: 1px solid black;
+    padding: 15px;
+    position: absolute;
+    margin: 3px;
+    background: white;
+	z-index: 2000;
+
+    .InheritedFromBox {
+        margin-left: 15px;
+    }
+
+    .InheritedFromName {
+        display: inline;
+        font-weight: bold;
+    }
+}
+
+.Acl-Privileges.Grid {
+	margin-bottom: 1em;
+}

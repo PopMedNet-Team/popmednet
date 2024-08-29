@@ -1,0 +1,62 @@
+﻿@model AuditEventFiltersUIModel
+@{    
+    var id = Html.UniqueId();
+    this.Stylesheet( "FiltersUI.css" );
+}
+
+<input type="hidden" name="@Model.FieldName" id="f@(id)" value="" />
+<script type="text/javascript">
+    var onChanged_@(id) = (function(){
+        var state = { @string.Join( ",", from k in Model.InitialState
+                                         from d in k
+                                         where d != null 
+                                         select string.Format( "'{0}/{1}': '{2}'", k.Key.ID, d.FactoryId, d.Display.ValueAsString.Replace(",", ",,") )
+                    ) };
+
+        var field = $("#f@(id)");
+        function updateField() {
+            var val = $.map( 
+                $("#@(id) input[name=EventKinds]:checked"), function(cb) {
+                    var evt = $(cb).attr("value");
+                    var flt = $(cb).closest("tr").find(".Filter").attr("filter-id");
+                    if ( !evt ) return null;
+                    var key = evt + "/" + (flt||"");
+                    return key + ":" + (state[key]||"").replace(",", ",,")
+                } )
+                .join();
+
+            field.val( val );
+        }
+
+        return function ( kind, filter, st ) { 
+            if ( typeof kind != "undefined" ) state[kind + '/' + filter] = st; 
+            updateField(); 
+        };
+    })();
+
+    $(function() {
+        $("#@(id) input[name=EventKinds]").bind("click change", function() {
+            $(this).closest("tr").find(".Filter.ui-groupbox").toggle( $(this).prop("checked") );
+            onChanged_@(id)();
+        } );
+    });
+</script>
+<table id="@id" class="FiltersUI">
+@foreach ( var k in Model.DefaultFilterUIs )
+{
+    var kindFilters = Model.InitialState[k.Key].EmptyIfNull();
+    <tr>
+        <td class="Checkbox"><input type="checkbox" name="EventKinds" value="@k.Key.ID" @Html.Raw( kindFilters.Any() ? "checked=\"checked\" " : "" )/></td>
+        <td class="EventName">@k.Key.Name</td>
+        <td class="EventFilter">
+            @foreach( var s in kindFilters.DefaultIfEmpty( k.Value ).Where( x => x != null && x.Display != null ) )
+            {
+                <div class="Filter ui-groupbox"@Html.Raw( kindFilters.Any() ? "" : " style=\"display: none\"" ) filter-id="@s.FactoryId">
+                    <div class="ui-groupbox-header"><span>Filter</span></div>
+                    @s.Display.Render( Html, string.Format( "function( state ) {{ onChanged_{0}( '{1}', '{2}', state ) }}", id, k.Key.ID, s.FactoryId ) )
+                </div>
+            }
+        </td>
+    </tr>
+}
+</table>

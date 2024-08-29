@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{6443849F-D962-4034-94E5-5A4A727C2B01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc.Composition</RootNamespace>
+    <AssemblyName>Lpp.Mvc.Composition</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Interactive, Version=1.1.10823.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.ServiceModel.Channels" />
+    <Reference Include="System.ServiceModel.Routing" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{d4f2cad5-58ec-4783-ba3e-6bb5b92d262a}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Compile Include="..\Application\BaseController.cs"><Link>Application\BaseController.cs</Link></Compile>
+    
+<Compile Include="..\Application\CompositionWcfRoutingExtensions.cs"><Link>Application\CompositionWcfRoutingExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Application\FullyQualifiedTypeVirtualPathFactory.cs"><Link>Application\FullyQualifiedTypeVirtualPathFactory.cs</Link></Compile>
+    
+<Compile Include="..\Application\JSonFormatter.cs"><Link>Application\JSonFormatter.cs</Link></Compile>
+    
+<Compile Include="..\Application\LppMvcComposableApplication.cs"><Link>Application\LppMvcComposableApplication.cs</Link></Compile>
+    
+<Compile Include="..\Application\ThemeService.cs"><Link>Application\ThemeService.cs</Link></Compile>
+    
+<Compile Include="..\AutoRouting\AutoRoute.cs"><Link>AutoRouting\AutoRoute.cs</Link></Compile>
+    
+<Compile Include="..\CompositionControllerActivator.cs"><Link>CompositionControllerActivator.cs</Link></Compile>
+    
+<Compile Include="..\ExportControllerAttribute.cs"><Link>ExportControllerAttribute.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\AnonymousUIWidgetFactory.cs"><Link>UIWidgets\AnonymousUIWidgetFactory.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\UIWidget.cs"><Link>UIWidgets\UIWidget.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\PlainUIWidget.cs"><Link>UIWidgets\PlainUIWidget.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\IUIWidget.cs"><Link>UIWidgets\IUIWidget.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\UIWidgetExtensions.cs"><Link>UIWidgets\UIWidgetExtensions.cs</Link></Compile>
+    
+<Compile Include="..\UIWidgets\IUIWidgetFactory.cs"><Link>UIWidgets\IUIWidgetFactory.cs</Link></Compile>
+    
+<Compile Include="..\WcfExtensions.cs"><Link>WcfExtensions.cs</Link></Compile>
+    
+<Compile Include="..\WebCompositionExtensions.cs"><Link>WebCompositionExtensions.cs</Link></Compile>
+    
+<Compile Include="..\AutoRouting\AutoRoutingExtensions.cs"><Link>AutoRouting\AutoRoutingExtensions.cs</Link></Compile>
+    
+<Compile Include="..\ExportModelBinderAttribute.cs"><Link>ExportModelBinderAttribute.cs</Link></Compile>
+    
+<Compile Include="..\IRouteRegistrar.cs"><Link>IRouteRegistrar.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+  
+</ItemGroup>
+</Project>

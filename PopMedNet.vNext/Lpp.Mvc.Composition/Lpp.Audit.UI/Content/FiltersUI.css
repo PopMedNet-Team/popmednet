@@ -1,0 +1,3 @@
+﻿table.FiltersUI td { vertical-align: top; }
+table.FiltersUI td.EventName { padding-top: 10px; padding-right: 15px; }
+table.FiltersUI td.Checkbox { padding-top: 10px }

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{22116AA2-D508-43FD-AB00-12A383D02C6B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Auth</RootNamespace>
+    <AssemblyName>Lpp.Auth</AssemblyName>
+    <RestorePackages>true</RestorePackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex">
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{a51b3e7c-4c5e-4120-bbfc-5667736d7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{f8002042-0bdf-4205-939e-c8ff5b6e3b46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Compile Include="..\AuthenticationFilter.cs"><Link>AuthenticationFilter.cs</Link></Compile>
+    
+<Compile Include="..\AuthenticationService.cs"><Link>AuthenticationService.cs</Link></Compile>
+    
+<Compile Include="..\Auth.cs"><Link>Auth.cs</Link></Compile>
+    
+<Compile Include="..\IUserProvider.cs"><Link>IUserProvider.cs</Link></Compile>
+    
+<Compile Include="..\IAuthenticationService.cs"><Link>IAuthenticationService.cs</Link></Compile>
+    
+<Compile Include="..\IUser.cs"><Link>IUser.cs</Link></Compile>
+    
+<Compile Include="..\Principal.cs"><Link>Principal.cs</Link></Compile>
+    
+<Compile Include="..\Properties\AssemblyInfo.cs"><Link>Properties\AssemblyInfo.cs</Link></Compile>
+  
+</ItemGroup>
+</Project>

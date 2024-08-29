@@ -1,0 +1,3 @@
+﻿@model ValueSelectorModel
+@Model.Selector.Render( Html, Model.OnChangeFunction )
+<script type="text/javascript">(@Html.Raw(Model.OnChangeFunction))( '@Html.Raw(Model.Selector.ValueAsString)' );</script>

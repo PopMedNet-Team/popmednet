@@ -1,0 +1,4 @@
+﻿@model DateValueModel
+@{ var id = Html.UniqueId(); }           
+<input type="text" value="@Model.Value" onchange="(@Html.Raw(Model.OnChangeFunction))( $(this).val() )" id="@id" />
+<script type="text/javascript">$("#@(id)").datepicker();</script>

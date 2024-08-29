@@ -1,0 +1,49 @@
+﻿@model LoginModel
+@{
+    this.Stylesheet( "Login.css" );
+}
+
+<div class="OpenIdLogins">
+@foreach ( var p in Model.Providers )
+{
+    <a class="OpenIdLogin@( p.RequireUsername ? " UN" : "" )" id="@p.Guid" title="@p.Name"
+        href="@( p.RequireUsername ? "#" : Url.Action( (AuthController c) => c.DoLogin( p.Guid.ToString(), null, Model.ReturnTo ) ) )">
+        <img src="@p.ImageUrl( Url )" alt="@p.Name" />
+    </a>
+}
+</div>
+
+<div class="OpenIdExplicitUsername">
+    Enter your <span id="OpenIdProvider"></span> user name:<br />
+    <input type="text" id="OpenIdUsername" />
+    <input type="submit" id="OpenIdLoginButton" value="Login" />
+</div>
+
+<script>
+    $$(function ($) {
+        var onExplicitUsernameLoginClick = null;
+
+        $(".OpenIdLogins a.UN").click(function () {
+            var guid = $(this).attr("id");
+            if (!guid) return;
+
+            var dlg = $(".OpenIdExplicitUsername");
+            if (!dlg.is(":visible")) dlg.fadeIn("fast");
+
+            $("#OpenIdProvider").text(name);
+            var username = $("#OpenIdUsername").focus();
+            onExplicitUsernameLoginClick = function () {
+                if (!dlg.is(":visible") || !username.val()) return;
+                location.href = '@Html.Raw( Url.Action<AuthController>( c => c.DoLogin( "__guid__", "__un__", Model.ReturnTo ) )
+                                    .Replace( "__guid__", "' + guid + '" )
+                                    .Replace( "__un__", "' + username.val() + '" ) 
+                                  )';
+            };
+        });
+
+        $("#OpenIdLoginButton").button().click(function () {
+            if (onExplicitUsernameLoginClick) onExplicitUsernameLoginClick();
+            return false;
+        });
+    });
+</script>

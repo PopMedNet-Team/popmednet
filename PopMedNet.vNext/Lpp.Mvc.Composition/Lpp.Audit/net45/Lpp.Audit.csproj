@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{76B912C7-386A-4579-8AD6-62ED2E658A78}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Audit</RootNamespace>
+    <AssemblyName>Lpp.Audit</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Superdoodads\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\..\..\packages\Ix_Experimental-Main.1.1.10823\lib\Net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex, Version=4.1.2.0, Culture=neutral, PublicKeyToken=13e5ffd4e05db186, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{A51B3E7C-4C5E-4120-BBFC-5667736D7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Composition\net45\Lpp.Data.Composition.csproj">
+      <Project>{FE9A12AE-5A14-4D1D-8650-7022B698E9F5}</Project>
+      <Name>Lpp.Data.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{F8002042-0BDF-4205-939E-C8FF5B6E3B46}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Security\net45\Lpp.Security.csproj">
+      <Project>{FCCB5726-D818-4816-9714-D323834CEBC9}</Project>
+      <Name>Lpp.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+  
+
+</ItemGroup>
+<ItemGroup>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  
+
+  
+
+</ItemGroup>
+<ItemGroup><Compile Include="..\..\CommonAssemblyInfo.cs"><Link>..\CommonAssemblyInfo.cs</Link><Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+<Compile Include="..\CodeFirst.cs"><Link>CodeFirst.cs</Link></Compile>
+    
+<Compile Include="..\GlobalSuppressions.cs"><Link>GlobalSuppressions.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\PropertyFilter.cs"><Link>Implementations\PropertyFilter.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\PassThroughFilter.cs"><Link>Implementations\PassThroughFilter.cs</Link></Compile>
+    
+<Compile Include="..\Implementations\SimpleScheduler.cs"><Link>Implementations\SimpleScheduler.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IAuditEventFilter.cs"><Link>Interfaces\IAuditEventFilter.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\INotificationScheduler.cs"><Link>Interfaces\INotificationScheduler.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\INotificationChannel.cs"><Link>Interfaces\INotificationChannel.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IFactory.cs"><Link>Interfaces\IFactory.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\IHaveId.cs"><Link>Interfaces\IHaveId.cs</Link></Compile>
+    
+<Compile Include="..\Properties\Resources.Designer.cs"><Link>Properties\Resources.Designer.cs</Link><AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+<Compile Include="..\Service\AuditExtensions.cs"><Link>Service\AuditExtensions.cs</Link></Compile>
+    
+<Compile Include="..\Service\NotificationService.cs"><Link>Service\NotificationService.cs</Link></Compile>
+    
+<Compile Include="..\Service\INotificationService.cs"><Link>Service\INotificationService.cs</Link></Compile>
+    
+<Compile Include="..\Interfaces\ISubscription.cs"><Link>Interfaces\ISubscription.cs</Link></Compile>
+    
+<Compile Include="..\Data\PersistenceDefinition.cs"><Link>Data\PersistenceDefinition.cs</Link></Compile>
+    
+<Compile Include="..\Definitions\AuditEventKind.cs"><Link>Definitions\AuditEventKind.cs</Link></Compile>
+    
+<Compile Include="..\Aud.cs"><Link>Aud.cs</Link></Compile>
+    
+<Compile Include="..\Definitions\AuditProperty.cs"><Link>Definitions\AuditProperty.cs</Link></Compile>
+    
+<Compile Include="..\Data\AuditPropertyValue.cs"><Link>Data\AuditPropertyValue.cs</Link></Compile>
+    
+<Compile Include="..\Data\AuditEvent.cs"><Link>Data\AuditEvent.cs</Link></Compile>
+    
+<Compile Include="..\Definitions\IAuditProperty.cs"><Link>Definitions\IAuditProperty.cs</Link></Compile>
+    
+<Compile Include="..\Service\AuditService.cs"><Link>Service\AuditService.cs</Link></Compile>
+    
+<Compile Include="..\Service\IAuditEventBuilder.cs"><Link>Service\IAuditEventBuilder.cs</Link></Compile>
+    
+<Compile Include="..\Service\IAuditService.cs"><Link>Service\IAuditService.cs</Link></Compile>
+  
+<Content Include="..\Data\DDL.sql"><Link>Data\DDL.sql</Link></Content>
+  
+<EmbeddedResource Include="..\Properties\Resources.resx"><Link>Properties\Resources.resx</Link><Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+</ItemGroup>
+</Project>

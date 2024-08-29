@@ -1,0 +1,484 @@
+﻿using Lpp.Dns.Data;
+using Lpp.Dns.DTO.Security;
+using Lpp.Utilities;
+using Lpp.Utilities.Logging;
+using Lpp.Workflow.Engine;
+using Lpp.Workflow.Engine.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lpp.Dns.Workflow.SummaryQuery.Activities
+{
+    public class DistributeRequest : ActivityBase<Request>
+    {
+        static readonly Guid SaveResultID = new Guid("DFF3000B-B076-4D07-8D83-05EDE3636F4D");
+        static readonly Guid SubmitResultID = new Guid("80FD6F76-2E32-4D35-9797-0B541507CB56");
+        static readonly Guid ModifyResultID = new Guid("94513F48-4C4A-4449-BA95-5B0CD81DB642");
+        static readonly Guid TerminateResultID = new Guid("53579F36-9D20-47D9-AC33-643D9130080B");
+
+        private const string DocumentKind = "Lpp.Dns.Workflow.SummaryQuery.Activities.Request";
+
+        public override Guid ID
+        {
+            get { return SummaryQueryWorkflowConfiguration.DistributeRequestID; }
+        }
+
+        public override string ActivityName
+        {
+            get
+            {
+                return "Distribution";
+            }
+        }
+
+        public override string Uri
+        {
+            get { return "requests/details?ID=" + _entity.ID; }
+        }
+        public override string CustomTaskSubject
+        {
+            get
+            {
+                return "Distribute Request";
+            }
+        }
+
+        public override async Task<ValidationResult> Validate(Guid? activityResultID)
+        {
+            if (activityResultID == null)
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Errors = CommonMessages.ActivityResultIDRequired
+                };
+            }
+
+            var permissions = await db.GetGrantedWorkflowActivityPermissionsForRequestAsync(_workflow.Identity, _entity);
+
+            if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.EditTask) && (activityResultID.Value == SaveResultID || activityResultID.Value == ModifyResultID))
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Errors = CommonMessages.RequirePermissionToEditTask
+                };
+            }
+
+            if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask) && (activityResultID.Value == SubmitResultID))
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Errors = CommonMessages.RequirePermissionToCloseTask
+                };
+            }
+
+            if (!permissions.Contains(PermissionIdentifiers.ProjectRequestTypeWorkflowActivities.CloseTask) && (activityResultID.Value == TerminateResultID))
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Errors = CommonMessages.RequirePermissionToTerminateWorkflow
+                };
+            }
+
+            var errors = new StringBuilder();
+            if (activityResultID.Value == SubmitResultID)
+            {
+                if (_entity.ProjectID == null)
+                    errors.AppendHtmlLine("Please ensure that you have selected a project for the request.");
+
+                if (_entity.DueDate.HasValue && _entity.DueDate.Value < DateTime.UtcNow)
+                    errors.AppendHtmlLine("The Request Due Date must be set in the future.");
+
+                var dataMartsDueDate = false;
+                foreach (var dm in _entity.DataMarts)
+                {
+                    if (dm.DueDate.HasValue && dm.DueDate.Value.Date < DateTime.UtcNow.Date)
+                        dataMartsDueDate = true;
+                }
+                if (dataMartsDueDate)
+                    errors.AppendHtmlLine("The Request's DataMart Due Dates must be set in the future.");
+
+                if (_entity.SubmittedOn.HasValue)
+                    errors.AppendHtmlLine("Cannot submit a request that has already been submitted");
+
+                if (_entity.Template)
+                    errors.AppendHtmlLine("Cannot submit a request template");
+
+                if (_entity.Scheduled)
+                    errors.AppendHtmlLine("Cannot submit a scheduled request");
+
+                await db.LoadReference(_entity, (r) => r.Project);
+
+                //If a project loaded successfully check it.
+                if (_entity.Project != null)
+                {
+                    if (!_entity.Project.Active || _entity.Project.Deleted)
+                        errors.AppendHtmlLine("Cannot submit a request for an inactive or deleted project.");
+
+                    if (_entity.Project.EndDate < DateTime.UtcNow)
+                        errors.AppendHtmlLine("Cannot submit a request for a project that has ended.");
+
+                    await db.LoadCollection(_entity.Project, (p) => p.DataMarts);
+
+                    if (_entity.DataMarts.Any(dm => !_entity.Project.DataMarts.Any(pdm => pdm.DataMartID == dm.DataMartID)))
+                        errors.AppendHtmlLine("The request contains datamarts that are not part of the project specified and thus cannot be processed. Please remove these datamarts and try again.");
+                }
+
+                await db.LoadCollection(_entity, (r) => r.DataMarts);
+                var dataMarts = _entity.GetGrantedDataMarts(db, _workflow.Identity);
+
+                if (_entity.DataMarts.Any(dm => !dataMarts.Any(gdm => gdm.ID == dm.DataMartID)))
+                    errors.AppendHtmlLine("This request contains datamarts you are not permitted to submit to. Please remove them and try again.");
+
+
+                var filters = new ExtendedQuery
+                {
+                    Projects = (a) => a.ProjectID == _entity.ProjectID,
+                    ProjectOrganizations = a => a.ProjectID == _entity.ProjectID && a.OrganizationID == _entity.OrganizationID,
+                    Organizations = a => a.OrganizationID == _entity.OrganizationID,
+                    Users = a => a.UserID == _entity.CreatedByID
+                };
+
+                if (_entity.DataMarts.Count < 2)
+                {
+                    var skip2DataMartRulePerms = await db.HasGrantedPermissions<Request>(_workflow.Identity, _entity, filters, PermissionIdentifiers.Portal.SkipTwoDataMartRule);
+
+                    if (!skip2DataMartRulePerms.Contains(PermissionIdentifiers.Portal.SkipTwoDataMartRule))
+                        errors.AppendHtmlLine("Cannot submit a request with less than 2 datamarts");
+                }
+            }
+
+
+            if (errors.Length > 0)
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Errors = errors.ToString()
+                };
+            }
+            else
+            {
+                return new ValidationResult
+                {
+                    Success = true
+                };
+            }
+        }
+
+        public override async Task<CompletionResult> Complete(string data, Guid? activityResultID)
+        {
+            if (!activityResultID.HasValue)
+                throw new ArgumentNullException(CommonMessages.ActivityResultIDRequired);
+
+            var task = PmnTask.GetActiveTaskForRequestActivity(_entity.ID, ID, db);
+
+            if (activityResultID.Value == SaveResultID)
+            {
+                if (_entity.Private)
+                {
+                    await db.Entry(_entity).ReloadAsync();
+
+                    _entity.Private = false;
+
+                    await task.LogAsModifiedAsync(_workflow.Identity, db);
+                    await db.SaveChangesAsync();
+                }
+
+                return new CompletionResult
+                {
+                    ResultID = SaveResultID
+                };
+            }
+            else if (activityResultID.Value == SubmitResultID)
+            {
+                var requestJSON = ParseRequestJSON();
+                IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> fileUploadTerms = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, requestJSON);
+
+                if (fileUploadTerms.Any())
+                {
+                    await db.LoadCollection(_entity, (r) => r.DataMarts);
+
+                    if (!_entity.DataMarts.Any())
+                        throw new Exception("At least one routing needs to be specified when submitting a requests.");
+
+                    //prepare the request documents, save created documents same as legacy
+                    //IList<Guid> documentRevisionSets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<Guid>>(data);
+
+                    Guid[] documentRevisionSets = await (from d in db.Documents.AsNoTracking()
+                                                         join ar in db.ActionReferences on d.ItemID equals ar.TaskID
+                                                         where ar.ItemID == _entity.ID
+                                                         && d.RevisionSetID.HasValue
+                                                         select d.RevisionSetID.Value).Distinct().ToArrayAsync();
+
+                    IEnumerable<Document> documents = await (from d in db.Documents.AsNoTracking()
+                                                             join x in (
+                                                                 db.Documents.Where(dd => documentRevisionSets.Contains(dd.RevisionSetID.Value))
+                                                                 .GroupBy(k => k.RevisionSetID)
+                                                                 .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                             ) on d.ID equals x
+                                                             orderby d.ItemID descending, d.RevisionSetID descending, d.CreatedOn descending
+                                                             select d).ToArrayAsync();
+
+                    var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                    && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                    && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                   )
+                                                   .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                    var attachments = await (from doc in db.Documents.AsNoTracking()
+                                             join x in (
+                                                     db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                     .GroupBy(k => k.RevisionSetID)
+                                                     .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                 ) on doc.ID equals x
+                                             where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                             orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                             select doc).ToArrayAsync();
+
+                    await db.Entry(_entity).Reference(r => r.Activity).LoadAsync();
+                    await db.Entry(_entity).Reference(r => r.RequestType).LoadAsync();
+                    string submitterEmail = await db.Users.Where(u => u.ID == _workflow.Identity.ID).Select(u => u.Email).SingleAsync();
+
+                    //update the request
+                    var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.RequestPendingDistribution).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
+                    _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
+                    _entity.RejectedByID = null;
+                    _entity.RejectedOn = null;
+                    _entity.Private = false;
+
+
+                    //save the changes to the request now since the trigger for routings will change the status invalidating the object before save
+                    await db.SaveChangesAsync();
+                    await db.Entry(_entity).ReloadAsync();
+
+                    var originalStatus = _entity.Status;
+                    await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
+
+                    foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == 0 || dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval || dm.Status == DTO.Enums.RoutingStatus.Draft))
+                    {
+                        dm.Status = DTO.Enums.RoutingStatus.Submitted;
+
+                        var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                        if (currentResponse == null)
+                        {
+                            currentResponse = dm.AddResponse(previousStatus.UserID);
+                        }
+
+                        currentResponse.SubmittedByID = previousStatus.UserID;
+                        currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
+
+                        //add the request document associations
+                        for (int i = 0; i < documentRevisionSets.Count(); i++)
+                        {
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == documentRevisionSets[i]))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = documentRevisionSets[i], ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                            }
+                        }
+
+                        foreach (var attachment in attachments)
+                        {
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                            }
+                        }
+                    }
+
+                    await db.SaveChangesAsync();
+                    //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
+                    await db.Entry(_entity).ReloadAsync();
+
+                    var fileUploadTerm = fileUploadTerms.FirstOrDefault();
+                    var termValues = Newtonsoft.Json.JsonConvert.DeserializeObject<FileUploadValues>(fileUploadTerm.Values["Values"].ToString());
+
+                    //update the request.json term value to include system generated documents revisionsetIDs
+                    termValues.Documents.Clear();
+
+                    for (int i = 0; i < documentRevisionSets.Count(); i++)
+                    {
+                        termValues.Documents.Add(new FileUploadValues.Document { RevisionSetID = documentRevisionSets[i] });
+                    }
+
+                    fileUploadTerm.Values["Values"] = termValues;
+                    _entity.Query = Newtonsoft.Json.JsonConvert.SerializeObject(requestJSON);
+
+                    await db.SaveChangesAsync();
+
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Submitted);
+
+
+                }
+                else
+                {
+                    //This forces a reload because of a trigger issue that results in the timestamp not being updated.
+                    await db.Entry(_entity).ReloadAsync();
+                    await db.LoadCollection(_entity, (r) => r.DataMarts);
+
+                    var parentDocument = db.Documents.FirstOrDefault(d => d.ItemID == _entity.ID && d.Kind == DocumentKind && d.ParentDocumentID == null);
+
+                    byte[] documentContent = System.Text.UTF8Encoding.UTF8.GetBytes(_entity.Query ?? string.Empty);
+                    var document = new Document
+                    {
+                        Name = "Request Criteria",
+                        MajorVersion = parentDocument == null ? 1 : parentDocument.MajorVersion,
+                        MinorVersion = parentDocument == null ? 0 : parentDocument.MinorVersion,
+                        RevisionVersion = parentDocument == null ? 0 : parentDocument.RevisionVersion,
+                        MimeType = "application/json",
+                        Viewable = false,
+                        UploadedByID = _workflow.Identity.ID,
+                        FileName = "request.json",
+                        CreatedOn = DateTime.UtcNow,
+                        BuildVersion = parentDocument == null ? 0 : parentDocument.BuildVersion,
+                        ParentDocumentID = parentDocument == null ? (Guid?)null : parentDocument.ID,
+                        ItemID = task.ID,
+                        Length = documentContent.LongLength,
+                        Kind = Dns.DTO.Enums.DocumentKind.Request
+                    };
+
+                    db.Documents.Add(document);
+                    document.RevisionSetID = document.ID;
+                    await db.SaveChangesAsync();
+
+                    document.SetData(db, documentContent);
+
+                    var previousStatus = await db.LogsRequestStatusChanged.Where(x => x.RequestID == _entity.ID && x.NewStatus == DTO.Enums.RequestStatuses.DraftReview).OrderByDescending(x => x.TimeStamp).FirstOrDefaultAsync();
+
+                    _entity.SubmittedByID = previousStatus.UserID;
+                    _entity.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
+                    _entity.AdapterPackageVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location).FileVersion;
+                    _entity.Private = false;
+                    _entity.RejectedByID = null;
+                    _entity.RejectedOn = null;
+
+                    await db.SaveChangesAsync();
+
+                    var originalStatus = _entity.Status;
+                    await SetRequestStatus(DTO.Enums.RequestStatuses.Submitted, false);
+
+                    var allTasks = await db.ActionReferences.Where(tr => tr.ItemID == _entity.ID
+                                                   && tr.Type == DTO.Enums.TaskItemTypes.Request
+                                                   && tr.Task.Type == DTO.Enums.TaskTypes.Task
+                                                  )
+                                                  .Select(tr => tr.Task.ID).ToArrayAsync();
+
+                    var attachments = await (from doc in db.Documents.AsNoTracking()
+                                             join x in (
+                                                     db.Documents.Where(dd => allTasks.Contains(dd.ItemID))
+                                                     .GroupBy(k => k.RevisionSetID)
+                                                     .Select(k => k.OrderByDescending(d => d.MajorVersion).ThenByDescending(d => d.MinorVersion).ThenByDescending(d => d.BuildVersion).ThenByDescending(d => d.RevisionVersion).Select(y => y.ID).Distinct().FirstOrDefault())
+                                                 ) on doc.ID equals x
+                                             where allTasks.Contains(doc.ItemID) && doc.Kind == "Attachment.Input"
+                                             orderby doc.ItemID descending, doc.RevisionSetID descending, doc.CreatedOn descending
+                                             select doc).ToArrayAsync();
+
+                    foreach (var dm in _entity.DataMarts.Where(dm => dm.Status == 0 || dm.Status == DTO.Enums.RoutingStatus.AwaitingRequestApproval || dm.Status == DTO.Enums.RoutingStatus.Draft))
+                    {
+                        dm.Status = DTO.Enums.RoutingStatus.Submitted;
+
+                        var currentResponse = db.Responses.Include(rsp => rsp.RequestDocument).FirstOrDefault(r => r.RequestDataMartID == dm.ID && r.Count == r.RequestDataMart.Responses.Max(rr => rr.Count));
+                        if (currentResponse == null)
+                        {
+                            currentResponse = dm.AddResponse(previousStatus.UserID);
+                        }
+
+                        currentResponse.SubmittedByID = previousStatus.UserID;
+                        currentResponse.SubmittedOn = previousStatus.TimeStamp.UtcDateTime;
+
+                        if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == document.RevisionSetID.Value))
+                        {
+                            db.RequestDocuments.Add(new RequestDocument { RevisionSetID = document.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.Input });
+                        }
+
+                        foreach (var attachment in attachments)
+                        {
+                            if (!currentResponse.RequestDocument.Any(rd => rd.RevisionSetID == attachment.RevisionSetID.Value))
+                            {
+                                db.RequestDocuments.Add(new RequestDocument { RevisionSetID = attachment.RevisionSetID.Value, ResponseID = currentResponse.ID, DocumentType = DTO.Enums.RequestDocumentType.AttachmentInput });
+                            }
+                        }
+                    }
+
+                    await db.SaveChangesAsync();
+                    //reload the request since altering the routings triggers a change of the request status in the db by a trigger.
+                    await db.Entry(_entity).ReloadAsync();
+
+                    await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.Submitted);
+
+                    await MarkTaskComplete(task);
+                }
+
+                return new CompletionResult
+                {
+                    ResultID = SubmitResultID
+                };
+            }
+            else if (activityResultID.Value == ModifyResultID)
+            {
+                await db.Entry(_entity).ReloadAsync();
+                //moves back to Request Review
+                var originalStatus = _entity.Status;
+                await SetRequestStatus(DTO.Enums.RequestStatuses.DraftReview);
+
+                await NotifyRequestStatusChanged(originalStatus, DTO.Enums.RequestStatuses.DraftReview);
+
+                await MarkTaskComplete(task);
+
+                IEnumerable<DTO.QueryComposer.QueryComposerTermDTO> fileUploadTerms = GetAllTerms(QueryComposer.ModelTermsFactory.FileUploadID, ParseRequestJSON());
+                if (fileUploadTerms.Any())
+                {
+                    return new CompletionResult
+                    {
+                        ResultID = ModifyResultID
+                    };
+                }
+                else
+                {
+
+                    return new CompletionResult
+                    {
+                        ResultID = ModifyResultID
+                    };
+                }
+            }
+            else if (activityResultID.Value == TerminateResultID)
+            {
+                _entity.CancelledByID = _workflow.Identity.ID;
+                _entity.CancelledOn = DateTime.UtcNow;
+
+                if (task != null)
+                {
+                    task.Status = DTO.Enums.TaskStatuses.Cancelled;
+                }
+
+                await db.SaveChangesAsync();
+
+                return null;
+            }
+            else
+            {
+                throw new NotSupportedException(CommonMessages.ActivityResultNotSupported);
+            }
+        }
+        
+        internal class FileUploadValues
+        {
+            public IList<Document> Documents { get; set; }
+
+            public class Document
+            {
+                public Guid RevisionSetID { get; set; }
+            }
+        }
+    }
+}

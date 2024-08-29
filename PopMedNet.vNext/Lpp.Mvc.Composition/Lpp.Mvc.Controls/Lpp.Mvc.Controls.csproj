@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="..\Lpp.Mvc.Composition.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{39A1B5D5-583A-4735-B897-9B5352C20E7E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc</RootNamespace>
+    <AssemblyName>Lpp.Mvc.Controls</AssemblyName>
+    <RestorePackages>true</RestorePackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Interactive, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ix-Main.1.2.5\lib\net45\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientSettings\ClientSettingsService.cs" />
+    <Compile Include="ClientSettings\ClientSettingsController.cs" />
+    <Compile Include="Package.cs" />
+    <Compile Include="Grid\DataTableGrid.cs" />
+    <Compile Include="Grid\GridClientSortColumn.cs" />
+    <Compile Include="Grid\GridCheckboxColumn.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Menu\Menu.cs" />
+    <Compile Include="Models\GridClientSortColumnModel.cs" />
+    <Compile Include="Models\GridCheckboxColumnModel.cs" />
+    <Compile Include="Tree\TreeChildrenModel.cs" />
+    <Compile Include="Tree\TreeController.cs" />
+    <Compile Include="Tree\TreeModel.cs" />
+    <Compile Include="Tree\Tree.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="Views\ClientSettings.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientSettings.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Field.cs">
+      <DependentUpon>Field.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\Grid\Grid.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Grid.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Grid\GridClientSortColumnTitle.cs">
+      <DependentUpon>GridClientSortColumnTitle.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\Grid\GridCheckboxColumnTitle.cs">
+      <DependentUpon>GridCheckboxColumnTitle.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\Menu.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menu.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tree\Tree.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tree.cshtml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Content\dynamicPopup.js">
+      <DependentUpon>dynamicPopup.ts</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\groupboxes.js" />
+    <Content Include="Content\dynamicPopup.min.js">
+      <DependentUpon>dynamicPopup.ts</DependentUpon>
+    </Content>
+    <Compile Include="Routes.cs" />
+    <Compile Include="Grid\Grid.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <EmbeddedResource Include="Content\grid.css" />
+    <EmbeddedResource Include="Content\img\arrow-down.png" />
+    <EmbeddedResource Include="Content\img\arrow-up.png" />
+    <EmbeddedResource Include="Content\gridCheckboxColumn.js" />
+    <EmbeddedResource Include="Content\img\filter.png" />
+    <EmbeddedResource Include="Content\img\filter-active.png" />
+    <Content Include="Content\groupboxes.less" />
+    <None Include="App.config" />
+    <EmbeddedResource Include="Content\dropdown.js" />
+    <EmbeddedResource Include="Content\dropdown.css" />
+    <EmbeddedResource Include="Content\img\bigbox_bg.png" />
+    <EmbeddedResource Include="Content\img\maximize.png" />
+    <EmbeddedResource Include="Content\img\minimize.png" />
+    <EmbeddedResource Include="Content\menu.js" />
+    <EmbeddedResource Include="Content\gridClientSortColumn.js" />
+    <EmbeddedResource Include="Content\img\grid-loading.gif" />
+    <EmbeddedResource Include="Content\img\demaximize.png" />
+    <None Include="packages.config" />
+    <TypeScriptCompile Include="Content\dynamicPopup.ts" />
+    <EmbeddedResource Include="Content\img\help.png" />
+    <EmbeddedResource Include="Content\ellipsisEditor.css" />
+    <EmbeddedResource Include="Content\tree.js" />
+    <EmbeddedResource Include="Content\tree.css" />
+    <EmbeddedResource Include="Content\img\minus.png" />
+    <EmbeddedResource Include="Content\img\plus.png" />
+    <EmbeddedResource Include="Content\contextMenu.js" />
+    <EmbeddedResource Include="Content\contextMenu.css" />
+    <Content Include="Views\Grid\Grid.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Grid.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Grid\GridCheckboxColumnTitle.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>GridCheckboxColumnTitle.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Menu.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Menu.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Grid\GridClientSortColumnTitle.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>GridClientSortColumnTitle.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Field.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Field.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Tree\Tree.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Tree.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\ClientSettings.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ClientSettings.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lpp.Composition\Lpp.Composition.csproj">
+      <Project>{a51b3e7c-4c5e-4120-bbfc-5667736d7521}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Composition\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc.Controls.Interfaces\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895DFA-14A7-4113-817A-E2AEF16AAC63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Mvc\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lpp.Utilities.Legacy\Lpp.Utilities.Legacy.csproj">
+      <Project>{76FFE23E-47D1-46B6-8EC3-6554361FBFB0}</Project>
+      <Name>Lpp.Utilities.Legacy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

@@ -1,0 +1,519 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{4FFE4C8F-F9F5-44BE-A21F-C44F6087DFB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lpp.Mvc</RootNamespace>
+    <AssemblyName>Lpp.Mvc.Boilerplate</AssemblyName>
+    <RestorePackages>true</RestorePackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+  </PropertyGroup>
+  <Import Project="..\..\Lpp.Mvc.Composition.targets" />
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration.CodePlex">
+      <HintPath>..\..\..\MEF2\System.ComponentModel.Composition.Registration.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Superdoodads\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Superdoodads\packages\Rx-Interfaces.2.0.21114\lib\Net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Superdoodads\packages\Rx-Linq.2.0.21114\lib\Net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Superdoodads\packages\Rx-PlatformServices.2.0.21114\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Context.CodePlex">
+      <HintPath>..\..\..\MEF2\System.Reflection.Context.CodePlex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lpp.Auth.UI\net45\Lpp.Auth.UI.csproj">
+      <Project>{a6d0722b-0e1a-4762-9793-49c6cbf9a270}</Project>
+      <Name>Lpp.Auth.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Auth\net45\Lpp.Auth.csproj">
+      <Project>{22116aa2-d508-43fd-ab00-12a383d02c6b}</Project>
+      <Name>Lpp.Auth</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Composition\net45\Lpp.Composition.csproj">
+      <Project>{d4f2cad5-58ec-4783-ba3e-6bb5b92d262a}</Project>
+      <Name>Lpp.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Data.Interfaces\net45\Lpp.Data.Interfaces.csproj">
+      <Project>{797693aa-b573-4103-afce-6c11cc6fabd0}</Project>
+      <Name>Lpp.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Composition\net45\Lpp.Mvc.Composition.csproj">
+      <Project>{6443849f-d962-4034-94e5-5a4a727c2b01}</Project>
+      <Name>Lpp.Mvc.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc.Controls.Interfaces\net45\Lpp.Mvc.Controls.Interfaces.csproj">
+      <Project>{10895dfa-14a7-4113-817a-e2aef16aac63}</Project>
+      <Name>Lpp.Mvc.Controls.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Mvc\net45\Lpp.Mvc.csproj">
+      <Project>{cfe8be40-6dc0-44de-be79-f1c667ce0ac3}</Project>
+      <Name>Lpp.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lpp.Utilities\net45\Lpp.Utilities.csproj">
+      <Project>{76ffe23e-47d1-46b6-8ec3-6554361fbfb0}</Project>
+      <Name>Lpp.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Require.JS - LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>..\CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Boilerplate.cs">
+      <Link>Boilerplate.cs</Link>
+    </Compile>
+    <EmbeddedResource Include="..\Content\require\css.js">
+      <Link>Content\require\css.js</Link>
+    </EmbeddedResource>
+    <Content Include="..\jsBootstrap.d.ts">
+      <Link>jsBootstrap.d.ts</Link>
+    </Content>
+    <Compile Include="..\Crud\CrudController.cs">
+      <Link>Crud\CrudController.cs</Link>
+    </Compile>
+    <Compile Include="..\Crud\ICrudCreateModel.cs">
+      <Link>Crud\ICrudCreateModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Crud\ICrudListModel.cs">
+      <Link>Crud\ICrudListModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Crud\ICrudPostModel.cs">
+      <Link>Crud\ICrudPostModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ErrorHandler.cs">
+      <Link>ErrorHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Views\JsBootstrap.cs">
+      <Link>Views\JsBootstrap.cs</Link>
+      <DependentUpon>JsBootstrap.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Content Include="..\Views\JsBootstrap.cshtml">
+      <Link>Views\JsBootstrap.cshtml</Link>
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>JsBootstrap.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="..\Content\require\cs.js">
+      <Link>Content\require\cs.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\domReady.js">
+      <Link>Content\require\domReady.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\i18n.js">
+      <Link>Content\require\i18n.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\r.js">
+      <Link>Content\require\r.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\require.js">
+      <Link>Content\require\require.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\require.min.js">
+      <Link>Content\require\require.min.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\require\text.js">
+      <Link>Content\require\text.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_flat_75_ffffff_40x100.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_flat_75_ffffff_40x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_glass_65_ffffff_1x400.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_glass_65_ffffff_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_glass_75_dadada_1x400.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_glass_75_dadada_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <Link>Content\jQuery\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-icons_222222_256x240.png">
+      <Link>Content\jQuery\themes\base\images\ui-icons_222222_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-icons_2e83ff_256x240.png">
+      <Link>Content\jQuery\themes\base\images\ui-icons_2e83ff_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-icons_454545_256x240.png">
+      <Link>Content\jQuery\themes\base\images\ui-icons_454545_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-icons_888888_256x240.png">
+      <Link>Content\jQuery\themes\base\images\ui-icons_888888_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\images\ui-icons_cd0a0a_256x240.png">
+      <Link>Content\jQuery\themes\base\images\ui-icons_cd0a0a_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery-ui.css">
+      <Link>Content\jQuery\themes\base\jquery-ui.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.accordion.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.accordion.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.all.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.all.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.autocomplete.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.autocomplete.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.base.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.base.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.button.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.button.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.core.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.core.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.datepicker.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.datepicker.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.dialog.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.dialog.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.menu.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.menu.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.progressbar.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.progressbar.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.resizable.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.resizable.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.selectable.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.selectable.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.slider.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.slider.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.spinner.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.spinner.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.tabs.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.tabs.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.theme.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.theme.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\jquery.ui.tooltip.css">
+      <Link>Content\jQuery\themes\base\jquery.ui.tooltip.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-icons_222222_256x240.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-icons_222222_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-icons_2e83ff_256x240.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-icons_2e83ff_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-icons_454545_256x240.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-icons_454545_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-icons_888888_256x240.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-icons_888888_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\images\ui-icons_cd0a0a_256x240.png">
+      <Link>Content\jQuery\themes\base\minified\images\ui-icons_cd0a0a_256x240.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery-ui.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery-ui.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.accordion.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.accordion.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.autocomplete.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.autocomplete.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.button.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.button.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.core.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.core.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.datepicker.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.datepicker.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.dialog.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.dialog.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.menu.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.menu.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.progressbar.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.progressbar.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.resizable.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.resizable.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.selectable.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.selectable.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.slider.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.slider.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.spinner.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.spinner.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.tabs.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.tabs.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.theme.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.theme.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\themes\base\minified\jquery.ui.tooltip.min.css">
+      <Link>Content\jQuery\themes\base\minified\jquery.ui.tooltip.min.css</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\jquery-1.8.2.js">
+      <Link>Content\jQuery\jquery-1.8.2.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\jquery-1.8.2.min.js">
+      <Link>Content\jQuery\jquery-1.8.2.min.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\jquery-ui-1.9.0.js">
+      <Link>Content\jQuery\jquery-ui-1.9.0.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Content\jQuery\jquery-ui-1.9.0.min.js">
+      <Link>Content\jQuery\jquery-ui-1.9.0.min.js</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

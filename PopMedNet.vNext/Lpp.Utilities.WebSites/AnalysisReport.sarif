@@ -1,0 +1,971 @@
+﻿{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Dependency Analysis",
+          "semanticVersion": "0.3.310801",
+          "informationUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview",
+          "rules": [
+            {
+              "id": "UA103",
+              "name": "ReferenceToBeDeleted",
+              "fullDescription": {
+                "text": "References that need to be deleted in order to upgrade the project to chosen TFM"
+              },
+              "helpUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview"
+            },
+            {
+              "id": "UA106",
+              "name": "PackageToBeAdded",
+              "fullDescription": {
+                "text": "Packages that need to be added in order to upgrade the project to chosen TFM"
+              },
+              "helpUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview"
+            },
+            {
+              "id": "UA108",
+              "name": "FrameworkReferenceToBeAdded",
+              "fullDescription": {
+                "text": "Framework Reference that need to be added in order to upgrade the project to chosen TFM"
+              },
+              "helpUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Net.Http.WebRequest needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.Helpers needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.Mvc needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.Razor needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.WebPages needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.WebPages.Deployment needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web.WebPages.Razor needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package System.Net.Http, Version=4.3.0 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.310801 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA108",
+          "message": {
+            "text": "Framework Reference to Microsoft.AspNetCore.App needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Lpp.Utilities.WebSites.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.310801 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Objects/Lpp.Objects.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Configuration needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Net.Http.WebRequest needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Web needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package System.Configuration.ConfigurationManager, Version=5.0.0 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package System.Net.Http, Version=4.3.0 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.310801 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA108",
+          "message": {
+            "text": "Framework Reference to Microsoft.AspNetCore.App needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities/Lpp.Utilities.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA103",
+          "message": {
+            "text": "Reference to System.Net.Http.WebRequest needs to be deleted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.WorkFlow.Engine/Lpp.WorkFlow.Engine.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package System.Net.Http, Version=4.3.0 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.WorkFlow.Engine/Lpp.WorkFlow.Engine.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.310801 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.WorkFlow.Engine/Lpp.WorkFlow.Engine.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits"
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "API Upgradability",
+          "semanticVersion": "0.3.310801",
+          "informationUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview",
+          "rules": [
+            {
+              "id": "UA0002",
+              "fullDescription": {
+                "text": "Types should be upgraded"
+              },
+              "helpUri": "about:blank"
+            },
+            {
+              "id": "UA0005",
+              "fullDescription": {
+                "text": "Do not use HttpContext.Current"
+              },
+              "helpUri": "about:blank"
+            },
+            {
+              "id": "UA0013_F",
+              "fullDescription": {
+                "text": "Replace usage of System.Web.Security.Membership, System.Web.Security.FormsAuthentication"
+              },
+              "helpUri": "about:blank"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Filters/FeatureFlagFilter.cs"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthentication.cs"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthentication.cs"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/NoCacheAttribute.cs"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/NoCacheAttribute.cs"
+                },
+                "region": {
+                  "startLine": 13
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Controllers/LppApiController.cs"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Filters/NoCookieReset.cs"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Filters/NoCookieReset.cs"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0013_F",
+          "message": {
+            "text": "ASP.NET membership should be replaced with ASP.NET Core identity. For more details, see https://docs.microsoft.com/aspnet/core/migration/proper-to-2x/membership-to-core-identity"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Filters/NoCookieReset.cs"
+                },
+                "region": {
+                  "startLine": 13
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0002",
+          "message": {
+            "text": "This type is not supported on .NET Core/.NET 5+ and should be replaced with a modern equivalent."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Filters/ValidationActionFilter.cs"
+                },
+                "region": {
+                  "startLine": 18
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Models/LoginResponseModel.cs"
+                },
+                "region": {
+                  "startLine": 72
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Models/LoginResponseModel.cs"
+                },
+                "region": {
+                  "startLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Handlers/RequireHttpsMessageHandler.cs"
+                },
+                "region": {
+                  "startLine": 17
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 103
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 29
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 42
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 52
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 68
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 75
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 80
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Attributes/BasicAuthenticationFilter.cs"
+                },
+                "region": {
+                  "startLine": 84
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 39
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 71
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 79
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 93
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 100
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 105
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 108
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA0005",
+          "message": {
+            "text": "HttpContext does not have a Current property; get the context from a controller or use HttpContextAccessor instead."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///E:/PopMedNet.vNext/Lpp.Utilities.WebSites/Security/BasicAuthenticationHandler.cs"
+                },
+                "region": {
+                  "startLine": 109
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}
