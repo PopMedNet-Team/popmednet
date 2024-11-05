@@ -1,3 +1,7 @@
+[![Unmaintained Project](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+Please note that this project is no longer maintained.
+
 # PopMedNet&trade;
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04062/status.svg)](https://doi.org/10.21105/joss.04062)
 
