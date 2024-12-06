@@ -15,7 +15,7 @@
     "formvalidation": "^0.6.2-dev",
     "history.js": "^1.8.0",
     "jqplot": "^1.0.9",
-    "jquery": "2.2.4",
+    "jquery": "3.5.0",
     "jquery-form": "^3.50.0",
     "jquery-migrate": "^1.2.1",
     "jquery.cookie": "^1.4.1",
